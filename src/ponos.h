@@ -1,4 +1,6 @@
 #include "log/debug.h"
+#include "core/differential_geometry.h"
+#include "core/shape.h"
 #include "geometry/bbox.h"
 #include "geometry/quaternion.h"
 #include "geometry/matrix.h"

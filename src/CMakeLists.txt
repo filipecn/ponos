@@ -1,6 +1,8 @@
 include_directories("${PONOS_SOURCE_DIR}/src")
 
 set(HEADERS
+core/differential_geometry.h
+core/shape.h
 geometry/bbox.h
 geometry/matrix.h
 geometry/normal.h
@@ -11,10 +13,12 @@ geometry/transform.h
 geometry/utils.h
 geometry/vector.h
 log/debug.h
+shapes/sphere.h
 ponos.h
 )
 
 set(SOURCES
+core/shape.cpp
 geometry/bbox.cpp
 geometry/matrix.cpp
 geometry/normal.cpp
@@ -23,6 +27,7 @@ geometry/quaternion.cpp
 geometry/ray.cpp
 geometry/transform.cpp
 geometry/vector.cpp
+shapes/sphere.cpp
 )
 
 add_library(ponos ${SOURCES} ${HEADERS})

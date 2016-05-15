@@ -1,5 +1,6 @@
 #pragma once
 
+#include "geometry/bbox.h"
 #include "geometry/matrix.h"
 #include "geometry/normal.h"
 #include "geometry/point.h"
@@ -15,6 +16,18 @@ namespace ponos {
     Transform(const Matrix4x4& mat, const Matrix4x4 inv_mat);
     Transform(const float mat[4][4]);
     friend Transform inverse(const Transform& t);
+    BBox operator()(const BBox &b) const {
+      const Transform &M = *this;
+      BBox ret(             M(Point3(b.pMin.x, b.pMin.y, b.pMin.z)));
+      ret = make_union(ret, M(Point3(b.pMax.x, b.pMin.y, b.pMin.z)));
+      ret = make_union(ret, M(Point3(b.pMin.x, b.pMax.y, b.pMin.z)));
+      ret = make_union(ret, M(Point3(b.pMin.x, b.pMin.y, b.pMax.z)));
+      ret = make_union(ret, M(Point3(b.pMin.x, b.pMax.y, b.pMax.z)));
+      ret = make_union(ret, M(Point3(b.pMax.x, b.pMax.y, b.pMin.z)));
+      ret = make_union(ret, M(Point3(b.pMax.x, b.pMin.y, b.pMax.z)));
+      ret = make_union(ret, M(Point3(b.pMin.x, b.pMax.y, b.pMax.z)));
+      return ret;
+    }
     Point3 operator()(const Point3& p) const {
       float x = p.x, y = p.y, z = p.z;
       float xp = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2] * z + m.m[0][3];
@@ -61,6 +74,7 @@ namespace ponos {
       Matrix4x4 m1_inv = Matrix4x4::mul(t.m_inv, m_inv);
       return Transform(m1, m1_inv);
     }
+    bool swapsHandedness() const;
   private:
     Matrix4x4 m, m_inv;
   };

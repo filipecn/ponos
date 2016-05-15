@@ -12,7 +12,7 @@ Vector2::Vector2(float _x, float _y)
 }
 
 bool Vector2::HasNaNs() const {
-  return isnan(x) || isnan(y);
+  return std::isnan(x) || std::isnan(y);
 }
 
 Vector3::Vector3() { x = y = z = 0.0f; }
@@ -26,7 +26,7 @@ Vector3::Vector3(const Normal& n)
   : x(n.x), y(n.y), z(n.z) {}
 
 bool Vector3::HasNaNs() const {
-  return isnan(x) || isnan(y) || isnan(z);
+  return std::isnan(x) || std::isnan(y) || std::isnan(z);
 }
 
 } // ponos namespace

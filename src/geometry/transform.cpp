@@ -18,6 +18,13 @@ namespace ponos {
     m_inv = inverse(m);
   }
 
+  bool Transform::swapsHandedness() const {
+    float det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
+                (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
+                (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
+    return det < 0.f;
+  }
+
   Transform inverse(const Transform& t) {
     return Transform(t.m_inv, t.m);
   }

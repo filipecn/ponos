@@ -10,6 +10,8 @@ namespace ponos {
   public:
     explicit Normal(float _x, float _y, float _z);
     explicit Normal(const Vector3& v);
+    Normal() { x = y = z = 0.; }
+
     Normal operator-() const {
       return Normal(-x, -y, -z);
     }
