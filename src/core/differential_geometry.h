@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/shape.h"
 #include "geometry/normal.h"
 #include "geometry/point.h"
 #include "geometry/vector.h"
@@ -10,11 +9,11 @@ namespace ponos {
   class Shape;
 
   struct DifferentialGeometry {
-    DifferentialGeometry() {
-      u = v = 0.;
-      shape = NULL;
-    }
-
+    DifferentialGeometry();
+    DifferentialGeometry(const Point3 &_p,
+                         const Vector3 &_dpdu, const Vector3 &_dpdv,
+                         const Normal &_dndu, const Normal &_dndv,
+                         float _u, float _v, const Shape *_shape);
     point p;
     Normal n;
     float u, v;

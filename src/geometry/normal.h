@@ -15,7 +15,12 @@ namespace ponos {
     Normal operator-() const {
       return Normal(-x, -y, -z);
     }
-
+    Normal& operator*=(float f) {
+      x *= f;
+      y *= f;
+      z *= f;
+      return *this;
+    }
     float x, y, z;
   };
 

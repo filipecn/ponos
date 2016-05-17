@@ -69,6 +69,10 @@ namespace ponos {
       (*this)(ret.d, &ret.d);
       return ret;
     }
+    void operator()(const Ray& r, Ray* ret) const {
+      (*this)(r.o, &ret->o);
+      (*this)(r.d, &ret->d);
+    }
     Transform operator*(const Transform& t) const {
       Matrix4x4 m1 = Matrix4x4::mul(m, t.m);
       Matrix4x4 m1_inv = Matrix4x4::mul(t.m_inv, m_inv);

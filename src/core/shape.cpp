@@ -1,4 +1,6 @@
 #include "core/shape.h"
+
+#include "core/differential_geometry.h"
 #include "log/debug.h"
 
 namespace ponos {
@@ -9,12 +11,6 @@ namespace ponos {
     : objectToWorld(o2w), worldToObject(w2o), reverseOrientation(ro),
       transformSwapsHandedness(o2w->swapsHandedness()),
       shapeId(nextShapeId++) {}
-
-  void Shape::getShadingGeometry(const Transform &o2w,
-                          const DifferentialGeometry &dg,
-                          DifferentialGeometry *dgShading) const {
-    *dgShading = dg;
-  }
 
   BBox Shape::worldBound() const {
     return (*objectToWorld)(objectBound());

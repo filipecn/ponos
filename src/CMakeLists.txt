@@ -18,6 +18,7 @@ ponos.h
 )
 
 set(SOURCES
+core/differential_geometry.cpp
 core/shape.cpp
 geometry/bbox.cpp
 geometry/matrix.cpp

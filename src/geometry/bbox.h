@@ -3,7 +3,7 @@
 #include "geometry/point.h"
 #include "geometry/vector.h"
 
-#include <iostream>
+#include <algorithm>
 
 namespace ponos {
 
