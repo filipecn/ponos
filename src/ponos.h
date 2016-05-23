@@ -8,3 +8,5 @@
 #include "geometry/ray.h"
 #include "geometry/transform.h"
 #include "geometry/vector.h"
+#include "structures/regular_grid.h"
+#include "structures/z_grid.h"

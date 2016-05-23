@@ -14,7 +14,6 @@ namespace aergia {
     height = h;
     title = windowTitle;
     window = nullptr;
-
     init();
   }
 

@@ -8,6 +8,21 @@
 #include "geometry/vector.h"
 
 namespace ponos {
+  class Transform2D {
+  public:
+    Transform2D() {}
+    void reset();
+    void translate(const Vector2 &d);
+    void scale(float x, float y);
+    friend Transform2D inverse(const Transform2D& t);
+    Vector2 operator()(const Vector2& v) const {
+      float x = v.x, y = v.y;
+      return Vector2(m.m[0][0] * x + m.m[0][1] * y,
+      m.m[1][0] * x + m.m[1][1] * y);
+    }
+  private:
+    Matrix3x3 m;
+  };
 
   class Transform {
   public:
@@ -48,8 +63,8 @@ namespace ponos {
     Vector3 operator()(const Vector3& v) const {
       float x  = v.x, y = v.y, z = v.z;
       return Vector3(m.m[0][0] * x + m.m[0][1] * y + m.m[0][2] * z,
-                     m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z,
-                     m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z);
+      m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z,
+      m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z);
     }
     void operator()(const Vector3& v, Vector3* r) const {
       float x  = v.x, y = v.y, z = v.z;
@@ -60,8 +75,8 @@ namespace ponos {
     Normal operator()(const Normal& n) const {
       float x = n.x, y = n.y, z = n.z;
       return Normal(m_inv.m[0][0] * x + m_inv.m[1][0] * y + m_inv.m[2][0] * z,
-                    m_inv.m[0][1] * x + m_inv.m[1][1] * y + m_inv.m[2][1] * z,
-                    m_inv.m[0][2] * x + m_inv.m[1][2] * y + m_inv.m[2][2] * z);
+      m_inv.m[0][1] * x + m_inv.m[1][1] * y + m_inv.m[2][1] * z,
+      m_inv.m[0][2] * x + m_inv.m[1][2] * y + m_inv.m[2][2] * z);
     }
     Ray operator()(const Ray& r) {
       Ray ret = r;

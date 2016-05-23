@@ -4,11 +4,25 @@
 
 namespace ponos {
 
+  void Transform2D::reset() {
+    m.setIdentity();
+  }
+
+  void Transform2D::translate(const Vector2 &d) {
+    m.m[0][2] += d.x;
+    m.m[1][2] += d.y;
+  }
+
+  void Transform2D::scale(float x, float y) {
+    m.m[0][0] *= x;
+    m.m[1][1] *= y;
+  }
+
   Transform::Transform(const Matrix4x4& mat)
-    : m(mat), m_inv(inverse(mat)) {}
+  : m(mat), m_inv(inverse(mat)) {}
 
   Transform::Transform(const Matrix4x4& mat, const Matrix4x4 inv_mat)
-    : m(mat), m_inv(inv_mat) {}
+  : m(mat), m_inv(inv_mat) {}
 
   Transform::Transform(const float mat[4][4]) {
     m = Matrix4x4(mat[0][0], mat[0][1], mat[0][2], mat[0][3],

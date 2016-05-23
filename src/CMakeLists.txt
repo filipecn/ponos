@@ -14,6 +14,8 @@ geometry/utils.h
 geometry/vector.h
 log/debug.h
 shapes/sphere.h
+structures/c_grid_interface.h
+structures/z_grid.h
 ponos.h
 )
 

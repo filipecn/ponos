@@ -67,4 +67,16 @@ namespace ponos {
     return r;
   }
 
+  Matrix3x3::Matrix3x3() {
+    memset(m, 0, sizeof(m));
+    for (int i = 0; i < 3; i++)
+      m[i][i] = 1.f;
+  }
+
+  void Matrix3x3::setIdentity() {
+    memset(m, 0, sizeof(m));
+    for (int i = 0; i < 3; i++)
+      m[i][i] = 1.f;
+  }
+
 }; // ponos namespace
