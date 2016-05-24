@@ -8,6 +8,8 @@ endif()
 
 link_libraries(${GLFW_LIB} ${aergia_LIBRARIES} ${VULKAN_LIBRARY})
 
+link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
+
 link_libraries(poseidon)
 include_directories("${POSEIDON_SOURCE_DIR}/src")
 link_libraries(ponos)
@@ -15,7 +17,9 @@ include_directories("${PONOS_SOURCE_DIR}/src")
 link_libraries(aergia)
 include_directories("${AERGIA_SOURCE_DIR}/src")
 
-add_executable(hello_flip_test WIN32 hello_flip.cpp)
+include_directories("${POSEIDON_SOURCE_DIR}/examples")
+
+add_executable(hello_flip_test WIN32 hello_flip.cpp flip_drawer.h)
 
 set(WINDOWS_BINARIES hello_flip_test)
 

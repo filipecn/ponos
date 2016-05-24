@@ -144,4 +144,31 @@ namespace ponos {
     return Transform(inverse(cam_to_world), cam_to_world);
   }
 
+  Transform ortho(float left, float right, float bottom, float top, float near, float far) {
+    float m[4][4];
+
+    m[0][0] = 2.f / (right - left);
+    m[1][0] = 0.f;
+    m[2][0] = 0.f;
+    m[3][0] = 0.f;
+
+    m[0][1] = 0.f;
+    m[1][1] = 2.f / (top - bottom);
+    m[2][1] = 0.f;
+    m[3][1] = 0.f;
+
+    m[0][2] = 0.f;
+    m[1][2] = 0.f;
+    m[2][2] = 2.f / (far - near);
+    m[3][2] = 0.f;
+
+    m[0][3] = -(right + left) / (right - left);
+    m[1][3] = -(top + bottom) / (top - bottom);
+    m[2][3] = -(far + near) / (far - near);
+    m[3][3] = 1.f;
+
+    Matrix4x4 projection(m);
+    return Transform(projection, inverse(projection));
+  }
+
 }; // ponos namespace

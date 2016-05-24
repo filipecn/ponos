@@ -5,6 +5,7 @@ link_libraries(ponos)
 include_directories("${PONOS_SOURCE_DIR}/src")
 
 set(HEADERS
+algorithms/flip.h
 elements/particle.h
 structures/particle_grid.h
 structures/particle_set.h
@@ -12,6 +13,7 @@ poseidon.h
 )
 
 set(SOURCES
+algorithms/flip.cpp
 elements/particle.cpp
 structures/particle_grid.cpp
 )

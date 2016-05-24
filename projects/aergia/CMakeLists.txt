@@ -12,5 +12,8 @@ if (WIN32)
 #  message(FATAL_ERROR "${VULKAN_LIB}")
 endif()
 
+link_libraries(ponos)
+include_directories("${PONOS_SOURCE_DIR}/src")
+
 add_subdirectory(src)
 add_subdirectory(examples)

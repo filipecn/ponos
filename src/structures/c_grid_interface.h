@@ -24,7 +24,6 @@ namespace ponos {
     T border;
     bool useBorder;
 
-  protected:
     uint32_t width, height;
     Vector2 offset;
     Transform2D toWorld;

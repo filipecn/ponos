@@ -98,6 +98,9 @@ namespace ponos {
       ASSERT(i >= 0 && i <= 2);
       return (&x)[i];
     }
+    Vector2 xy() {
+      return Vector2(x, y);
+    }
     // arithmetic
     Vector3 operator+(const Vector3& v) const {
       return Vector3(x + v.x, y + v.y, z + v.z);

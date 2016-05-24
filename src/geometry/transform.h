@@ -8,6 +8,7 @@
 #include "geometry/vector.h"
 
 namespace ponos {
+
   class Transform2D {
   public:
     Transform2D() {}
@@ -19,6 +20,9 @@ namespace ponos {
       float x = v.x, y = v.y;
       return Vector2(m.m[0][0] * x + m.m[0][1] * y,
       m.m[1][0] * x + m.m[1][1] * y);
+    }
+    Vector2 getTranslate() {
+      return Vector2(m.m[0][2], m.m[1][2]);
     }
   private:
     Matrix3x3 m;
@@ -94,6 +98,12 @@ namespace ponos {
       return Transform(m1, m1_inv);
     }
     bool swapsHandedness() const;
+    const float* c_matrix() const {
+      return &m.m[0][0];
+    }
+    Vector3 getTranslate() {
+      return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]);
+    }
   private:
     Matrix4x4 m, m_inv;
   };
@@ -106,5 +116,6 @@ namespace ponos {
   Transform rotateZ(float angle);
   Transform rotate(float angle, const Vector3& axis);
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up);
+  Transform ortho(float left, float right, float bottom, float top, float near = -1.f, float far = 1.f);
 
 }; // ponos namespace
