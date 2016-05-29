@@ -6,12 +6,14 @@
 #include "geometry/point.h"
 #include "geometry/ray.h"
 #include "geometry/vector.h"
+#include "log/debug.h"
 
 namespace ponos {
 
   class Transform2D {
   public:
     Transform2D() {}
+    Transform2D(const Matrix3x3& mat, const Matrix3x3 inv_mat);
     void reset();
     void translate(const Vector2 &d);
     void scale(float x, float y);
@@ -21,12 +23,25 @@ namespace ponos {
       return Vector2(m.m[0][0] * x + m.m[0][1] * y,
       m.m[1][0] * x + m.m[1][1] * y);
     }
-    Vector2 getTranslate() {
+    Point2 operator()(const Point2& p) const {
+      float x = p.x, y = p.y;
+      float xp = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2];
+      float yp = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2];
+      float wp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2];
+      if (wp == 1.f) return Point2(xp, yp);
+      return Point2(xp / wp, yp / wp);
+    }
+    Vector2 getTranslate() const {
       return Vector2(m.m[0][2], m.m[1][2]);
     }
+    void computeInverse() {
+      m_inv = inverse(m);
+    }
   private:
-    Matrix3x3 m;
+    Matrix3x3 m, m_inv;
   };
+
+  Transform2D inverse(const Transform2D& t);
 
   class Transform {
   public:
@@ -100,6 +115,9 @@ namespace ponos {
     bool swapsHandedness() const;
     const float* c_matrix() const {
       return &m.m[0][0];
+    }
+    const Matrix4x4& matrix() {
+      return m;
     }
     Vector3 getTranslate() {
       return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]);

@@ -7,12 +7,15 @@ namespace aergia {
 
   Camera2D::Camera2D() {
     pos = vec2(0.f, 0.f);
+    zoom = 1.f;
   }
 
   void Camera2D::look() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glMultMatrixf(projection.c_matrix());
+    float pm[16];
+    projection.matrix().row_major(pm);
+    glMultMatrixf(pm);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     //glMultMatrixf(view.c_matrix());
@@ -31,6 +34,11 @@ namespace aergia {
 
   void Camera2D::setZoom(float z) {
     zoom = z;
+    update();
+  }
+
+  void Camera2D::setPos(vec2 p) {
+    pos = p;
     update();
   }
 

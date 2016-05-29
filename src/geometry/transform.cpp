@@ -4,6 +4,9 @@
 
 namespace ponos {
 
+  Transform2D::Transform2D(const Matrix3x3& mat, const Matrix3x3 inv_mat)
+  : m(mat), m_inv(inv_mat) {}
+
   void Transform2D::reset() {
     m.setIdentity();
   }
@@ -16,6 +19,10 @@ namespace ponos {
   void Transform2D::scale(float x, float y) {
     m.m[0][0] *= x;
     m.m[1][1] *= y;
+  }
+
+  Transform2D inverse(const Transform2D& t) {
+    return Transform2D(t.m_inv, t.m);
   }
 
   Transform::Transform(const Matrix4x4& mat)

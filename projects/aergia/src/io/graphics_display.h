@@ -30,7 +30,8 @@ namespace aergia {
     void registerMouseFunc(void (*f)(double,double));
     void registerScrollFunc(void (*f)(double,double));
     void registerResizeFunc(void (*f)(int,int));
-
+    // graphics
+    void clearScreen(float r, float g, float b, float a);
   private:
     static GraphicsDisplay instance_;
     GraphicsDisplay();

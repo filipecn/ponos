@@ -1,3 +1,4 @@
+#include "helpers/circle.h"
 #include "io/graphics_display.h"
 #include "scene/camera_2d.h"
 #include "utils/open_gl.h"

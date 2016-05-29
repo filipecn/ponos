@@ -7,7 +7,7 @@
 
 namespace ponos {
 
-  template<typename T>
+  template<class T>
   class RegularGrid : public CGrid2DInterface<T> {
   public:
     RegularGrid();
@@ -21,8 +21,6 @@ namespace ponos {
 
     void set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize);
     void setAll(T v);
-
-  protected:
 
   private:
     std::vector<std::vector<T> >data;

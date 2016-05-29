@@ -5,6 +5,19 @@
 
 namespace ponos {
 
+  class Point2 {
+  public:
+    Point2();
+    explicit Point2(float _x, float _y);
+
+    Point2 operator+(const Vector2& v) const {
+      return Point2(x + v.x, y + v.y);
+    }
+
+    bool HasNaNs() const;
+    float x, y;
+  };
+
   class Point3 {
   public:
     Point3();

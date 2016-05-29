@@ -13,6 +13,7 @@ namespace aergia {
     void look();
     void resize(float w, float h);
     void setZoom(float z);
+    void setPos(vec2 p);
     void update();
 
   private:

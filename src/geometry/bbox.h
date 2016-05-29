@@ -7,6 +7,14 @@
 
 namespace ponos {
 
+  class BBox2D {
+  public:
+    BBox2D();
+    BBox2D(const Point2& p1, const Point2& p2);
+
+    Point2 pMin, pMax;
+  };
+
   class BBox {
   public:
     BBox();

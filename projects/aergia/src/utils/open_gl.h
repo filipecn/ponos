@@ -8,7 +8,13 @@
 #include <GLFW/glfw3.h>
 
 #include <ponos.h>
+using ponos::Point2;
+using ponos::vec2;
+using ponos::vec3;
 
 namespace aergia {
+
+  void glVertex(Point2 v);
+  void glVertex(vec2 v);
 
 } // aergia namespace

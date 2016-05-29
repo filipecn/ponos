@@ -3,6 +3,7 @@ include_directories("${AERGIA_SOURCE_DIR}/src")
 link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
 
 set(HEADERS
+helpers/circle.h
 io/graphics_display.h
 scene/camera_2d.h
 utils/open_gl.h
@@ -13,6 +14,7 @@ aergia.h
 set(SOURCES
 io/graphics_display.cpp
 scene/camera_2d.cpp
+utils/open_gl.cpp
 )
 
 add_library(aergia ${SOURCES} ${HEADERS})

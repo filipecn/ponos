@@ -47,7 +47,7 @@ namespace aergia {
     glfwSetWindowSizeCallback(window, resize_callback);
     return true;
   }
-  
+
   void GraphicsDisplay::start(){
     while(!glfwWindowShouldClose(this->window)){
 
@@ -75,6 +75,11 @@ namespace aergia {
 
   void GraphicsDisplay::stop(){
   	glfwSetWindowShouldClose(window, GL_TRUE);
+  }
+
+  void GraphicsDisplay::clearScreen(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   void GraphicsDisplay::error_callback(int error, const char* description){

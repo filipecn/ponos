@@ -52,6 +52,9 @@ namespace ponos {
   template<class T>
   T& ZGrid<T>::operator()(uint32_t i, uint32_t j) {
     uint32_t ind = morton_code(i, j);
+    if(ind < 0 || ind >= data.size()) {
+
+    }
     return data[ind];
   }
 

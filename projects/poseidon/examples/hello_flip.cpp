@@ -4,31 +4,32 @@
 
 #include "flip_drawer.h"
 
+aergia::GraphicsDisplay& gd = aergia::GraphicsDisplay::instance();
 aergia::Camera2D camera;
 poseidon::FLIP flip;
 FLIPDrawer fd(&flip);
 
 void render(){
-	glClearColor(1,0,0,0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  gd.clearScreen(1.f, 1.f, 1.f, 0.f);
+  glEnable (GL_BLEND);
+  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   camera.look();
-  glPointSize(5.0);
-  glColor3f(1,1,1);
-  glBegin(GL_POINTS);
-    glVertex2f(0.0,0.0);
-  glEnd();
-  fd.drawGrid();
+  //fd.drawGrid<poseidon::ParticleGrid::ParticleCell>(flip.particleGrid.grid);
+  fd.drawParticles();
+  fd.drawMACGrid();
 }
 
 int main() {
   WIN32CONSOLE();
   // set camera
-  camera.setZoom(15.f);
+  camera.setPos(ponos::vec2(2.25, 2.25));
+  camera.setZoom(3.f);
   camera.resize(800,800);
   // init FLIP
-  flip.set(10, 10, ponos::vec2(0.f,0.f), 1.f);
+  flip.set(10, 10, ponos::vec2(0.f,0.f), 0.5f);
+  flip.fillCell(5, 5);
   // init window
-  aergia::GraphicsDisplay& gd = aergia::createGraphicsDisplay(800, 800, "Hello Aergia");
+  aergia::createGraphicsDisplay(800, 800, "FLIP - 2D");
   gd.registerRenderFunc(render);
   gd.start();
 

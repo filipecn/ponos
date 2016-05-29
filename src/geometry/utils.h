@@ -5,6 +5,7 @@
 namespace ponos {
 
   #define PI 3.14159265359
+  #define PI_2 6.28318530718
 
   #define TO_RADIANS(A) \
     ((A) * 180.f / PI)
