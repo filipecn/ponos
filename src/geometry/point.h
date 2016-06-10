@@ -13,10 +13,66 @@ namespace ponos {
     Point2 operator+(const Vector2& v) const {
       return Point2(x + v.x, y + v.y);
     }
+    Vector2 operator-(const Point2& p) const {
+      return Vector2(x - p.x, y - p.y);
+    };
+    Point2 operator*(float f) const {
+      return Point2(x * f, y * f);
+    }
+    Point2& operator-=(const Vector2& v) {
+      x -= v.x;
+      y -= v.y;
+      return *this;
+    }
 
     bool HasNaNs() const;
     float x, y;
   };
+
+  inline Point2 operator*(float f, const Point2& p) {
+    return p * f;
+  }
+
+  inline float distance(const Point2& a, const Point2& b) {
+    return (a - b).length();
+  }
+
+  template<class T, int D>
+  class Point {
+  public:
+    Point();
+    explicit Point(Point2 p);
+
+    T operator[](int i) const {
+      ASSERT(i >= 0 && i <= size);
+      return v[i];
+    }
+    T& operator[](int i) {
+      ASSERT(i >= 0 && i <= size);
+      return v[i];
+    }
+
+    uint32_t size;
+    T v[D];
+  };
+
+  template<class T, int D>
+  Point<T, D>::Point(Point2 p) {
+    size = D;
+    v[0] = static_cast<T>(p.x);
+    v[1] = static_cast<T>(p.y);
+  }
+
+  template<class T, int D>
+  inline bool operator==(const Point<T, D>& lhs, const Point<T, D>& rhs) {
+    for (int i = 0; i < lhs.size; ++i)
+      if (lhs[i] != rhs[i])
+        return false;
+    return true;
+  }
+
+  template<class T, int D>
+  inline bool operator!=(const Point<T, D>& lhs, const Point<T, D>& rhs){ return !(lhs == rhs); }
 
   class Point3 {
   public:
@@ -61,6 +117,9 @@ namespace ponos {
       y /= d;
       z /= d;
       return *this;
+    }
+    Point2 xy() {
+      return Point2(x, y);
     }
     bool HasNaNs() const;
 

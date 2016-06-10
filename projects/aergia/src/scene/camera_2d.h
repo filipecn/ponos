@@ -15,6 +15,7 @@ namespace aergia {
     void setZoom(float z);
     void setPos(vec2 p);
     void update();
+    Transform getTransform();
 
   private:
     float ratio;

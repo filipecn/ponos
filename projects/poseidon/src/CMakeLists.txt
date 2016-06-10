@@ -1,12 +1,16 @@
 include_directories("${POSEIDON_SOURCE_DIR}/src")
+include_directories("${POSEIDON_SOURCE_DIR}/external")
 
 link_libraries(ponos)
 
 include_directories("${PONOS_SOURCE_DIR}/src")
 
+include_directories("C:/Users/fuiri/Downloads")
+
 set(HEADERS
 algorithms/flip.h
 elements/particle.h
+math/conjugate_gradient.h
 structures/particle_grid.h
 structures/particle_set.h
 poseidon.h
@@ -15,6 +19,7 @@ poseidon.h
 set(SOURCES
 algorithms/flip.cpp
 elements/particle.cpp
+math/conjugate_gradient.cpp
 structures/particle_grid.cpp
 )
 

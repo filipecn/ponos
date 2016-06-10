@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ponos.h>
-using ponos::vec2;
 #include <utils/open_gl.h>
 
 #include <functional>
@@ -18,7 +17,8 @@ namespace aergia {
 
     void set(int w, int h, const char* windowTitle);
     void getWindowSize(int &w, int &h);
-    vec2 getMousePos();
+    ponos::Point2 getMousePos();
+    ponos::Point2 getMouseNPos();
 
     // run
     void start();

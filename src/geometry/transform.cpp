@@ -19,6 +19,8 @@ namespace ponos {
   void Transform2D::scale(float x, float y) {
     m.m[0][0] *= x;
     m.m[1][1] *= y;
+    // TODO
+    s = Vector2(x, y);
   }
 
   Transform2D inverse(const Transform2D& t) {

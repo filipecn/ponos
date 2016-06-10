@@ -24,9 +24,12 @@ include_directories("C:/Users/fuiri/Downloads")
 
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
-add_executable(hello_flip_test WIN32 hello_flip.cpp flip_drawer.h)
+add_executable(advection_test WIN32 advection.cpp)
+add_executable(pressure_test WIN32 pressure.cpp solver.h solver.cpp)
 
-set(WINDOWS_BINARIES hello_flip_test)
+set(WINDOWS_BINARIES
+advection_test
+pressure_test)
 
 if (MSVC)
     # Tell MSVC to use main instead of WinMain for Windows subsystem executables

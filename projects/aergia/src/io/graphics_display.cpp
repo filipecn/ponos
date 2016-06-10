@@ -67,10 +67,17 @@ namespace aergia {
     h = this->height;
   }
 
-  vec2 GraphicsDisplay::getMousePos(){
+  ponos::Point2 GraphicsDisplay::getMousePos(){
     double x, y;
     glfwGetCursorPos(this->window, &x, &y);
-    return vec2(x, this->height - y);
+    return ponos::Point2(x, this->height - y);
+  }
+
+  ponos::Point2 GraphicsDisplay::getMouseNPos() {
+    float viewport[] = {0, 0, width, height};
+    ponos::Point2 mp = getMousePos();
+    return ponos::Point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
+                         (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
   }
 
   void GraphicsDisplay::stop(){

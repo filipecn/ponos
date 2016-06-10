@@ -47,4 +47,11 @@ namespace aergia {
 							    pos.y - clipSize.y, pos.y + clipSize.y, -1.f, 1.f);
 	}
 
+  Transform Camera2D::getTransform() {
+    model.computeInverse();
+    view.computeInverse();
+    projection.computeInverse();
+    return model * view * projection;
+  }
+
 } // aergia namespace

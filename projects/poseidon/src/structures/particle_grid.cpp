@@ -30,13 +30,14 @@ namespace poseidon {
     ponos::Point2 p1 = grid.toGrid(bbox.pMin);
     ponos::Point2 p2 = grid.toGrid(bbox.pMax);
     int xmin = std::max(0, static_cast<int>(p1.x));
-    int xmax = std::min(static_cast<int>(p2.x), static_cast<int>(grid.width - 1));
+    int xmax = std::min(static_cast<int>(p2.x + 0.5f), static_cast<int>(grid.width - 1));
     int ymin = std::max(0, static_cast<int>(p1.y));
-    int ymax = std::min(static_cast<int>(p2.y), static_cast<int>(grid.height - 1));
+    int ymax = std::min(static_cast<int>(p2.y + 0.5f), static_cast<int>(grid.height - 1));
     for (int i = xmin; i <= xmax; ++i)
-    for (int j = ymin; j < ymax; ++j) {
-      const std::vector<uint32_t>& pindices = grid(i, j).particles;
-      for (uint32_t pind : pindices) {
+    for (int j = ymin; j <= ymax; ++j) {
+      const std::vector<int>& pindices = grid(i, j).particles;
+      for (int pind : pindices) {
+        if (pind != -1)
         f(particles[pind]);
       }
     }

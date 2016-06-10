@@ -27,3 +27,20 @@
 
 #define PRINT(A) \
   std::cout << A << std::endl;
+
+#define DUMP_VECTOR(V) \
+  { \
+    std::cout << "VECTOR in " << LOG_LOCATION << std::endl; \
+    for (int i = 0; i < V.size(); ++i) \
+      std::cout << V[i] << " "; \
+    std::cout << std::endl; \
+  } \
+
+#define DUMP_MATRIX(M) \
+  { \
+    std::cout << "MATRIX in " << LOG_LOCATION << std::endl; \
+    for (int i = 0; i < M.size(); ++i) { \
+      for (int j = 0; j < M[i].size(); ++j) \
+        std::cout << M[i][j] << " "; \
+      } std::cout << std::endl; \
+  }

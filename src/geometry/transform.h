@@ -34,11 +34,15 @@ namespace ponos {
     Vector2 getTranslate() const {
       return Vector2(m.m[0][2], m.m[1][2]);
     }
+    Vector2 getScale() const {
+      return s;
+    }
     void computeInverse() {
       m_inv = inverse(m);
     }
   private:
     Matrix3x3 m, m_inv;
+    Vector2 s;
   };
 
   Transform2D inverse(const Transform2D& t);
@@ -121,6 +125,9 @@ namespace ponos {
     }
     Vector3 getTranslate() {
       return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]);
+    }
+    void computeInverse() {
+      m_inv = inverse(m);
     }
   private:
     Matrix4x4 m, m_inv;
