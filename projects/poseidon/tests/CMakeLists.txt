@@ -14,6 +14,7 @@ link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
 
 link_libraries(poseidon)
 include_directories("${POSEIDON_SOURCE_DIR}/src")
+include_directories("${POSEIDON_SOURCE_DIR}/examples")
 include_directories("${POSEIDON_SOURCE_DIR}/external")
 link_libraries(ponos)
 include_directories("${PONOS_SOURCE_DIR}/src")
@@ -25,10 +26,16 @@ include_directories("C:/Users/fuiri/Downloads")
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
 add_executable(advection_test WIN32 advection.cpp)
+add_executable(gather_test WIN32 gather.cpp)
+add_executable(scatter_test WIN32 scatter.cpp)
 add_executable(pressure_test WIN32 pressure.cpp solver.h solver.cpp)
+add_executable(flip_test WIN32 flip_test.cpp solver.h solver.cpp)
 
 set(WINDOWS_BINARIES
 advection_test
+gather_test
+scatter_test
+flip_test
 pressure_test)
 
 if (MSVC)

@@ -5,7 +5,7 @@
 
 #include "flip_drawer.h"
 
-int w = 10, h = 10;
+int w = 7, h = 7;
 aergia::GraphicsDisplay& gd = aergia::GraphicsDisplay::instance();
 aergia::Camera2D camera;
 poseidon::FLIP flip;
@@ -43,8 +43,8 @@ int main() {
   for(int i = 0; i < h; i++)
     flip.isSolid(0, i) = flip.isSolid(w - 1, i) = 1;
 
-  for (int i = 3; i < 8; ++i) {
-    for (int j = 2; j < 8; ++j) {
+  for (int i = 2; i < 5; ++i) {
+    for (int j = 2; j < 5; ++j) {
       flip.fillCell(i, j);
     }
   }

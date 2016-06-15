@@ -11,20 +11,24 @@ public:
     flip = f;
   }
 
+  void drawParticle(Particle2D particle) {
+    aergia::Circle c;
+    c.r = 0.1 * flip->dx;
+    c.p.x = particle.p.x;
+    c.p.y = particle.p.y;
+    c.draw();
+    glColor4f(0.f,0.5f,0.4f,1.0f);
+    glBegin(GL_LINES);
+    aergia::glVertex(c.p);
+    aergia::glVertex(c.p + particle.v * flip->dt);
+    glEnd();
+  }
+
   void drawParticles() {
     const std::vector<Particle2D> &particles = flip->particleGrid.getParticles();
     for (auto particle : particles) {
-      aergia::Circle c;
-      c.r = 0.1 * flip->dx;
-      c.p.x = particle.p.x;
-      c.p.y = particle.p.y;
       glColor4f(0.f,0.5f,0.2f,0.5f);
-      c.draw();
-      glColor4f(0.f,0.5f,0.4f,1.0f);
-    glBegin(GL_LINES);
-      aergia::glVertex(c.p);
-      aergia::glVertex(c.p + particle.v * flip->dt);
-    glEnd();
+      drawParticle(particle);
     }
   }
 
@@ -54,7 +58,7 @@ public:
         aergia::glVertex(wp);
         vec2 v;
         v[component] = grid(i, j).v;
-        aergia::glVertex(wp + v);
+        aergia::glVertex(wp + flip->dt * v);
       }
     }
     glEnd();

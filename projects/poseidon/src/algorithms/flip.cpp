@@ -57,19 +57,23 @@ namespace poseidon {
       for(int x = xmin; x <= xmin + 1; x++)
       for(int y = ymin; y <= ymin + 1; y++) {
         if(x < 0 || x >= grid.width || y < 0 || y >= grid.height)
-          continue;
+        continue;
         Point2 gwp = grid.toWorld(Point2(x, y));
         vec2 d = wp - gwp;
         float k = ponos::trilinear_hat_function(d.x / dx) *
-                  ponos::trilinear_hat_function(d.y / dx);
+        ponos::trilinear_hat_function(d.y / dx);
         grid(x, y).v += particleGrid.getParticle(i).v[component] * k;
         grid(x, y).wsum += k;
       }
     }
     grid.reset([](VelocityCell& vc){
-      if(vc.wsum != 0.f)
+      if(vc.wsum != 0.f) {
         vc.v = vc.v / vc.wsum;
+      }
     });
+    for(int i = 0; i < grid.width; i++)
+      for(int j = 0; j < grid.height; j++)
+        vCopy[component](i,j) = grid(i, j).v;
   }
 
   void FLIP::addForces(ZGrid<VelocityCell> &grid, uint32_t component) {
@@ -79,13 +83,13 @@ namespace poseidon {
   }
 
   void FLIP::scatter(ZGrid<VelocityCell> &grid, uint32_t component) {
-    //for(int i = 0; i < grid.width; i++)
-    //for(int j = 0; j < grid.height; j++)
-    //grid(i,j).v -= vCopy[component](i, j);
+    for(int i = 0; i < grid.width; i++)
+    for(int j = 0; j < grid.height; j++)
+      grid(i,j).v -= vCopy[component](i, j);
     int size = particleGrid.size();
     for(int i = 0; i < size; i++) {
       Point2 p = particleGrid.getParticle(i).p;
-      particleGrid.getParticleReference(i).v[component] =
+      particleGrid.getParticleReference(i).v[component] +=
         grid.sample(p.x, p.y, [](VelocityCell& vc){ return vc.v; });
     }
   }
@@ -110,7 +114,7 @@ namespace poseidon {
         u(i, j).v = usolid(i, j);
         u(i + 1, j).v = usolid(i + 1, j);
         v(i, j).v = vsolid(i, j);
-        v(i, j + 1).v = usolid(i, j + 1);
+        v(i, j + 1).v = vsolid(i, j + 1);
       }
     }
   }
@@ -181,24 +185,28 @@ namespace poseidon {
     enforceBoundary();
   }
 
+  ponos::Point2 FLIP::newPosition(Particle2D pa) {
+    ponos::Point2 e = pa.p + dt * pa.v;
+    int curCell = cell.dSample(e.x, e.y, -1);
+    if(curCell < 0 || curCell == CellType::SOLID) {
+      while(ponos::distance(pa.p, e) > 1e-5 && (curCell < 0 || curCell == CellType::SOLID)) {
+        Vector2 m = 0.5f * Vector2(pa.p.x, pa.p.y) + 0.5f * Vector2(e.x, e.y);
+        curCell = cell.dSample(m.x, m.y, -1);
+        if(curCell < 0 || curCell == CellType::SOLID)
+        e = ponos::Point2(m.x, m.y);
+        else pa.p = ponos::Point2(m.x, m.y);
+        curCell = cell.dSample(e.x, e.y, -1);
+      }
+      e -= (dt / 10.0f) * ponos::normalize(pa.v);
+    }
+    return e;
+  }
+
   void FLIP::advect() {
     int size = particleGrid.size();
     for(int i = 0; i < size; i++) {
       Particle2D pa = particleGrid.getParticle(i);
-      Point2 e = pa.p + dt * pa.v;
-      int curCell = cell.dSample(e.x, e.y, -1);
-      if(curCell < 0 || curCell == CellType::SOLID) {
-        while(ponos::distance(pa.p, e) > 1e-5 && (curCell < 0 || curCell == CellType::SOLID)) {
-          Vector2 m = 0.5f * Vector2(pa.p.x, pa.p.y) + 0.5f * Vector2(e.x, e.y);
-          curCell = cell.dSample(m.x, m.y, -1);
-          if(curCell < 0 || curCell == CellType::SOLID)
-          e = Point2(m.x, m.y);
-          else pa.p = Point2(m.x, m.y);
-          curCell = cell.dSample(e.x, e.y, -1);
-        }
-        e -= (dt / 10.0f) * pa.v;
-      }
-      particleGrid.setPos(i, e);
+      particleGrid.setPos(i, newPosition(pa));
     }
   }
 

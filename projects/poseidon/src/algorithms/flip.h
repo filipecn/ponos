@@ -39,7 +39,7 @@ namespace poseidon {
     // pressure solve
     ConjugateGradient ps;
 
-  private:
+  // private:
     void gather(ZGrid<VelocityCell>& grid, uint32_t component);
     void addForces(ZGrid<VelocityCell>& grid, uint32_t component);
     void scatter(ZGrid<VelocityCell>& grid, uint32_t component);
@@ -47,6 +47,7 @@ namespace poseidon {
     void enforceBoundary();
     void solvePressure();
     void advect();
+    ponos::Point2 newPosition(Particle2D pa);
   };
 
 } // poseidon namespace
