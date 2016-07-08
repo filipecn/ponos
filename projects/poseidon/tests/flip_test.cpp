@@ -5,7 +5,7 @@
 #include "solver.h"
 #include "flip_drawer.h"
 
-int w = 16, h = 16;
+int w = 64, h = 64;
 aergia::GraphicsDisplay& gd = aergia::GraphicsDisplay::instance();
 aergia::Camera2D camera;
 poseidon::FLIP flip;
@@ -73,7 +73,7 @@ void solvePressure() {
     scale = flip.dt / (flip.rho * flip.dx);
     for(int i = 0; i < w; i++)
     for(int j = 0; j < h; j++){
-      if(flip.cell(i, j) == FLUID){
+      if(flip.cell(i, j) == FLUID) {
         flip.u(i, j).v -= scale * s.X(ij(i,j));
         flip.u(i + 1, j).v += scale * s.X(ij(i,j));
         flip.v(i, j).v -= scale * s.X(ij(i,j));
@@ -120,13 +120,13 @@ int main() {
   for(int i = 0; i < h; i++)
     flip.isSolid(0, i) = flip.isSolid(w - 1, i) = 1;
 
-  for (int i = 10; i < 15; ++i) {
-    for (int j = 10; j < 15; ++j) {
+  for (int i = 5; i < 7; ++i) {
+    for (int j = 9; j < 10; ++j) {
       flip.fillCell(i, j);
     }
   }
 
-  for (int i = 1; i < w-1; ++i) {
+  for (int i = 7; i < w-1; ++i) {
     for (int j = 1; j < 6; ++j) {
       flip.fillCell(i, j);
     }

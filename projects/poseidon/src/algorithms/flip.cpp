@@ -85,19 +85,22 @@ namespace poseidon {
   void FLIP::scatter(ZGrid<VelocityCell> &grid, uint32_t component) {
     for(int i = 0; i < grid.width; i++)
     for(int j = 0; j < grid.height; j++)
-      grid(i,j).v -= vCopy[component](i, j);
+      grid(i,j).wsum = grid(i,j).v - vCopy[component](i, j);
     int size = particleGrid.size();
+    float alpha = 0.02f;
     for(int i = 0; i < size; i++) {
       Point2 p = particleGrid.getParticle(i).p;
-      particleGrid.getParticleReference(i).v[component] +=
-        grid.sample(p.x, p.y, [](VelocityCell& vc){ return vc.v; });
+      particleGrid.getParticleReference(i).v[component] =
+        alpha * grid.sample(p.x, p.y, [](VelocityCell& vc){ return vc.v; })
+        + (1.f - alpha) * (particleGrid.getParticleReference(i).v[component]
+        + grid.sample(p.x, p.y, [](VelocityCell& vc){ return vc.wsum; }));
     }
   }
 
   void FLIP::classifyCells() {
     cell.setAll(0);
     for(int i = 0; i < cell.width; i++)
-    for(int j = 0; j < cell.height; j++){
+    for(int j = 0; j < cell.height; j++) {
       // each cell containing at least one particle is a FLUID cell
       if(particleGrid.grid(i, j).numberOfParticles() > 0)
       cell(i, j) = FLUID;
