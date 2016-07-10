@@ -1,0 +1,10 @@
+language: cpp
+compiler:
+  - gcc
+python:
+  - "2.7"
+install:
+  - sudo apt-get update
+  - sudo apt-get install libcppunit-dev libcppunit-1.12-1
+script:
+  - python build.py

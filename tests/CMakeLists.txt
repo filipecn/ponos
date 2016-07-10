@@ -1,9 +1,14 @@
 link_libraries(ponos)
 
+find_package(CppUnit REQUIRED)
+include_directories(${CPPUNIT_INCLUDE_DIR})
+LIST(APPEND UnitTestLibs ${CPPUNIT_LIBRARY})
+
 include_directories("${PONOS_SOURCE_DIR}/src")
 
-add_executable(bbox_test bbox_test.cpp)
-add_executable(point_test point_test.cpp)
-add_executable(ray_test ray_test.cpp)
-add_executable(vector_test vector_test.cpp)
-add_executable(grid_test grid_test.cpp)
+set(TESTS
+test_bbox.cpp
+)
+
+add_executable(run_tests main.cpp ${TESTS})
+target_link_libraries(run_tests cppunit)

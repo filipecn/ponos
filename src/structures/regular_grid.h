@@ -28,14 +28,14 @@ namespace ponos {
 
   template<typename T>
   RegularGrid<T>::RegularGrid(){
-    width = height = 0;
-    useBorder = false;
+    this->width = this->height = 0;
+    this->useBorder = false;
   }
 
   template<typename T>
   RegularGrid<T>::RegularGrid(uint32_t w, uint32_t h) {
-    width = w;
-    height = h;
+    this->width = w;
+    this->height = h;
   }
 
   template<typename T>
@@ -52,27 +52,27 @@ namespace ponos {
 
   template<typename T>
   T& RegularGrid<T>::operator() (int i, int j) {
-    CHECK_IN_BETWEEN(i, 0, width);
-    CHECK_IN_BETWEEN(j, 0, height);
+    CHECK_IN_BETWEEN(i, 0, this->width);
+    CHECK_IN_BETWEEN(j, 0, this->height);
     return data[i][j];
   }
 
   template<typename T>
   T RegularGrid<T>::operator() (int i, int j) const {
-    CHECK_IN_BETWEEN(i, 0, width);
-    CHECK_IN_BETWEEN(j, 0, height);
+    CHECK_IN_BETWEEN(i, 0, this->width);
+    CHECK_IN_BETWEEN(j, 0, this->height);
     return data[i][j];
   }
 
   template<typename T>
   void RegularGrid<T>::setAll(T v){
-    for (int i = 0; i < width; i++)
-    for (int j = 0; j < height; j++)
+    for (int i = 0; i < this->width; i++)
+    for (int j = 0; j < this->height; j++)
     data[i][j] = v;
   }
 
   template<typename T>
   T RegularGrid<T>::safeData(int i, int j) const{
-    return data[max(0, min(width-1,i))][max(0, min(height-1,j))];
+    return data[max(0, min(this->width-1,i))][max(0, min(this->height-1,j))];
   }
 }  // ponos namespace

@@ -53,20 +53,20 @@ namespace ponos {
 
   template<class T>
   ZGrid<T>::ZGrid(uint32_t w, uint32_t h) {
-    setDimensions(w,h);
+    this->setDimensions(w,h);
     init();
   }
 
   template<class T>
   void ZGrid<T>::init() {
-    data.resize(morton_code(width, height));
+    data.resize(morton_code(this->width, this->height));
   }
 
   template<class T>
   T& ZGrid<T>::operator()(uint32_t i, uint32_t j) {
     uint32_t ind = morton_code(i, j);
     if(ind < 0 || ind >= data.size()) {
-      return border;
+      return this->border;
     }
     return data[ind];
   }
@@ -75,26 +75,26 @@ namespace ponos {
   T ZGrid<T>::operator()(uint32_t i, uint32_t j) const {
     uint32_t ind = morton_code(i, j);
     if(ind < 0 || ind >= data.size()) {
-      return border;
+      return this->border;
     }
     return data[ind];
   }
 
   template<class T>
   float ZGrid<T>::sample(float x, float y, std::function<float(T& t)> f) const {
-    Point2 gp = toGrid(Point2(x, y));
+    Point2 gp = this->toGrid(Point2(x, y));
     int x0 = static_cast<int>(gp.x);
     int y0 = static_cast<int>(gp.y);
     int x1 = x0 + 1;
     int y1 = y0 + 1;
 
-    x0 = std::max(0, std::min(static_cast<int>(width) - 1, x0));
-    y0 = std::max(0, std::min(static_cast<int>(height) - 1, y0));
-    x1 = std::max(0, std::min(static_cast<int>(width) - 1, x1));
-    y1 = std::max(0, std::min(static_cast<int>(height) - 1, y1));
+    x0 = std::max(0, std::min(static_cast<int>(this->width) - 1, x0));
+    y0 = std::max(0, std::min(static_cast<int>(this->height) - 1, y0));
+    x1 = std::max(0, std::min(static_cast<int>(this->width) - 1, x1));
+    y1 = std::max(0, std::min(static_cast<int>(this->height) - 1, y1));
 
-    Point2 wp = toWorld(Point2(x0, y0));
-    Vector2 scale = toWorld.getScale();
+    Point2 wp = this->toWorld(Point2(x0, y0));
+    Vector2 scale = this->toWorld.getScale();
 
     float p[4][4];
     int delta[] = {-1, 0, 1, 2};
@@ -106,8 +106,8 @@ namespace ponos {
 
   template<typename T>
   T ZGrid<T>::dSample(float x, float y, T r){
-    ponos::Point<int, 2> gp = cell(Point2(x,y));
-    if (!belongs(gp))
+    ponos::Point<int, 2> gp = this->cell(Point2(x,y));
+    if (!this->belongs(gp))
     return r;
     int ind = morton_code(gp[0], gp[1]);
     return data[ind];
@@ -115,8 +115,8 @@ namespace ponos {
 
   template<typename T>
   T ZGrid<T>::safeData(uint32_t i, uint32_t j) const{
-    uint32_t ind = morton_code(std::max(static_cast<uint32_t>(0), std::min(width - 1, i)),
-                               std::max(static_cast<uint32_t>(0), std::min(height - 1, j)));
+    uint32_t ind = morton_code(std::max(static_cast<uint32_t>(0), std::min(this->width - 1, i)),
+                               std::max(static_cast<uint32_t>(0), std::min(this->height - 1, j)));
     return data[ind];
   }
 
