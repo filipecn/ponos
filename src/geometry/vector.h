@@ -178,4 +178,4 @@ namespace ponos {
   typedef Vector2 vec2;
   typedef Vector3 vec3;
 
-}; // ponos namespace
+} // ponos namespace

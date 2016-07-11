@@ -28,4 +28,4 @@ namespace ponos {
 //    return (dot(n, v) < 0.f) ? -n : n;
 //  }
 
-}; // ponos namespace
+} // ponos namespace

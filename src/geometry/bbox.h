@@ -71,4 +71,4 @@ namespace ponos {
 
   typedef BBox bbox;
 
-}; // ponos namespace
+} // ponos namespace

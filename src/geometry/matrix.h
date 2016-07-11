@@ -56,4 +56,4 @@ namespace ponos {
 
   typedef Matrix3x3 mat3;
 
-}; // ponos namespace
+} // ponos namespace

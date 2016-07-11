@@ -143,4 +143,4 @@ namespace ponos {
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up);
   Transform ortho(float left, float right, float bottom, float top, float near = -1.f, float far = 1.f);
 
-}; // ponos namespace
+} // ponos namespace

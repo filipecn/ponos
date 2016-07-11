@@ -24,4 +24,4 @@ namespace ponos {
 
   typedef Ray ray;
 
-}; // ponos namespace
+} // ponos namespace

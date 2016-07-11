@@ -136,4 +136,4 @@ namespace ponos {
 
   typedef Point3 point;
 
-}; // ponos namespace
+} // ponos namespace
