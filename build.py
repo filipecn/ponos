@@ -15,11 +15,12 @@ os.chdir(build_path)
 call(["cmake", cur_path])
 make_result = call(["make"])
 
-# run tests
-if make_result == 0 :
-    tests = filter(lambda x: x.find('test', 0) == 0, os.listdir(cur_path + "/tests"))
-    os.chdir(build_path + "/tests")
-    call(["./run_tests"] + tests)
-else :
+if make_result != 0 :
     sys.exit(1)
-sys.exit(0)
+
+# run tests
+tests = filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/tests"))
+os.chdir(build_path + "/tests")
+result = call(["./run_tests"] + map(lambda test : test[:-4], tests))
+
+sys.exit(result)

@@ -11,7 +11,34 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
 
+static void
+dump(CppUnit::Test* test)
+{
+    if (test == NULL) {
+        std::cerr << "Error: no tests found\n";
+        return;
+    }
+
+    std::cout << test->getName() << std::endl;
+    for (int i = 0; i < test->getChildTestCount(); i++) {
+        dump(test->getChildTestAt(i));
+    }
+}
+
 int main(int argc, char *argv[]) {
+	dump(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
+
+	bool verbose = false;
+	std::vector<std::string> tests;
+	std::cout << "Initiating tests for\n";
+	for (int i = 1; i < argc; ++i) {
+		const std::string arg = argv[i];
+		tests.push_back(argv[i]);
+		std::cout << argv[i] << std::endl;
+	}
+	if (tests.empty())
+		return EXIT_SUCCESS;
+
 	try {
 		CppUnit::TestFactoryRegistry& registry =
 			CppUnit::TestFactoryRegistry::getRegistry();
@@ -26,16 +53,12 @@ int main(int argc, char *argv[]) {
 
 		CppUnit::TextTestProgressListener progress;
 		CppUnit::BriefTestProgressListener vProgress;
-/*		if (verbose) {
 			controller.addListener(&vProgress);
-		} else {
-			controller.addListener(&progress);
-		}
 
 		for (size_t i = 0; i < tests.size(); ++i) {
 			runner.run(controller, tests[i]);
 		}
-*/
+
 		CppUnit::CompilerOutputter outputter(&result, std::cerr);
 		outputter.write();
 
@@ -46,5 +69,5 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
