@@ -45,5 +45,4 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
-  - env: COMPILER=clang++-3.7
-  - python2.7 build.py
+  - python2.7 build.py -DCMAKE_CXX_COMPILER=$COMPILER

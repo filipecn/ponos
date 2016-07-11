@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake/modules")
-
+#-Werror
 set(DEBUG_FLAGS "-std=c++11 -g -O1 -Wall -Wextra -pedantic")
 set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra -pedantic")
 

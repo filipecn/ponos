@@ -12,7 +12,8 @@ if os.path.exists(build_path):
 
 os.mkdir(build_path)
 os.chdir(build_path)
-call(["cmake", cur_path])
+print 'Argument List:', str(sys.argv[1:])
+call(["cmake"] + sys.argv + [cur_path])
 make_result = call(["make"])
 
 if make_result != 0 :
