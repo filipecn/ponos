@@ -2,6 +2,7 @@
 import os
 import shutil
 from subprocess import call
+import sys
 
 cur_path = os.getcwd()
 build_path = os.getcwd() + "/build"
@@ -19,3 +20,6 @@ if make_result == 0 :
     tests = filter(lambda x: x.find('test', 0) == 0, os.listdir(cur_path + "/tests"))
     os.chdir(build_path + "/tests")
     call(["./run_tests"] + tests)
+else :
+    sys.exit(1)
+sys.exit(0)
