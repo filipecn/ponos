@@ -1,6 +1,6 @@
 language: cpp
 compiler:
-  - gcc
+  - g++
 python:
   - "2.7"
 install:
