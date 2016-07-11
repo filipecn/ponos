@@ -7,4 +7,4 @@ install:
   - sudo apt-get update
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
-  - python build.py
+  - python2.7 build.py
