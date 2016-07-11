@@ -1,3 +1,14 @@
+addons:
+  apt:
+    sources:
+      # add PPAs with more up-to-date toolchains
+      - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.6
+    packages:
+      # install toolchains
+      - gcc-5
+    - g++-5
+    - clang-3.6
 language: cpp
 - compiler: gcc
   addons:
@@ -7,9 +18,9 @@ language: cpp
       packages:
         - g++-4.9
       env: COMPILER=g++-4.9
-  python:
-    - "2.7"
-  install:
+python:
+  - "2.7"
+install:
   - sudo apt-get update
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
