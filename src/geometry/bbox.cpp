@@ -25,4 +25,4 @@ namespace ponos {
     pMax = Point3(std::max(p1.x, p2.x), std::max(p1.y, p2.y), std::max(p1.z, p2.z));
   }
 
-};
+} // ponos namespace

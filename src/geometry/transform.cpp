@@ -180,4 +180,4 @@ namespace ponos {
     return Transform(projection, inverse(projection));
   }
 
-}; // ponos namespace
+} // ponos namespace

@@ -1,6 +1,6 @@
 link_libraries(aergia)
 
-link_libraries(${GLFW_LIB} ${aergia_LIBRARIES} ${VULKAN_LIBRARY})
+link_libraries(glfw ${aergia_LIBRARIES} ${OPENGL_LIBRARIES})
 
 include_directories("${AERGIA_SOURCE_DIR}/src")
 

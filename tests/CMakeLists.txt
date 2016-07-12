@@ -2,7 +2,6 @@ link_libraries(ponos)
 
 find_package(CppUnit REQUIRED)
 include_directories(${CPPUNIT_INCLUDE_DIR})
-LIST(APPEND UnitTestLibs ${CPPUNIT_LIBRARY})
 
 include_directories("${PONOS_SOURCE_DIR}/src")
 

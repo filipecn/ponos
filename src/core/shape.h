@@ -10,28 +10,28 @@
 
 namespace ponos {
 
-  class Shape {
-  public:
-    Shape(const Transform *o2w, const Transform *w2o, bool ro);
+	class Shape {
+		public:
+			Shape(const Transform *o2w, const Transform *w2o, bool ro);
 
-    virtual BBox objectBound() const;
-    virtual void getShadingGeometry(const Transform &o2w,
-                                    const DifferentialGeometry &dg,
-                                    DifferentialGeometry *dgShading) const {
-      *dgShading = dg;
-    }
+			virtual BBox objectBound() const;
+			virtual void getShadingGeometry(const Transform &o2w,
+					const DifferentialGeometry &dg,
+					DifferentialGeometry *dgShading) const {
+				*dgShading = dg;
+			}
 
-    BBox worldBound() const;
-    bool canIntersect() const;
-    void refine(std::vector<std::shared_ptr<Shape> > &refined) const;
-    bool intersect(const Ray &ray, float *tHit, float &rayEpsilon, DifferentialGeometry *gd) const;
-    bool intersectP(const Ray &ray) const;
-    float surfaceArea() const;
+			BBox worldBound() const;
+			bool canIntersect() const;
+			void refine(std::vector<std::shared_ptr<Shape> > &refined) const;
+			bool intersect(const Ray &ray, float *tHit, float &rayEpsilon, DifferentialGeometry *gd) const;
+			bool intersectP(const Ray &ray) const;
+			float surfaceArea() const;
 
-    const Transform *objectToWorld, *worldToObject;
-    const bool reverseOrientation, transformSwapsHandedness;
-    const uint32_t shapeId;
-    static uint32_t nextShapeId;
-  };
+			const Transform *objectToWorld, *worldToObject;
+			const bool reverseOrientation, transformSwapsHandedness;
+			const uint32_t shapeId;
+			static uint32_t nextShapeId;
+	};
 
 } // ponos namespace

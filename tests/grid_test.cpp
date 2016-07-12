@@ -1,6 +1,7 @@
 #include <ponos.h>
 #include <iostream>
 
+
 int main(int argc, char* argv[]) {
     ponos::ZGrid<int> grid(8, 8);
     int k = 1;

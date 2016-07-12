@@ -26,4 +26,4 @@ namespace ponos {
     return std::isnan(x) || std::isnan(y) || std::isnan(z);
   }
 
-}; // ponos namespace
+} // ponos namespace

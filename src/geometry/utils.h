@@ -85,4 +85,4 @@ namespace ponos {
     return cubicInterpolate(arr, x);
   }
 
-}; // ponos namespace
+} // ponos namespace

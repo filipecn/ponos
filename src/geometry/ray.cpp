@@ -15,4 +15,4 @@ namespace ponos {
                  : o(origin), d(direction), min_t(start),
                    max_t(end), time(parent.time), depth(parent.depth + 1) {}
 
-}; // ponos namespace
+} // ponos namespace

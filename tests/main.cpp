@@ -28,7 +28,6 @@ dump(CppUnit::Test* test)
 int main(int argc, char *argv[]) {
 	dump(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
 
-	bool verbose = false;
 	std::vector<std::string> tests;
 	std::cout << "Initiating tests for\n";
 	for (int i = 1; i < argc; ++i) {

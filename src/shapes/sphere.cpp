@@ -91,8 +91,8 @@ namespace ponos {
   }
 
   bool Sphere::intersectP(const Ray &r) const {
-    float phi;
-    Point3 phit;
+    // float phi;
+    // Point3 phit;
     // transform ray to object space
     // compute quadratic sphere coefficients
     // solve quadratic equation for t values

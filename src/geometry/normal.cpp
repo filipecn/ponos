@@ -8,4 +8,4 @@ namespace ponos {
   Normal::Normal(const Vector3& v)
     : x(v.x), y(v.y), z(v.z) {}
 
-}; // ponos namespacec
+} // ponos namespacec

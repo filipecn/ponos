@@ -45,4 +45,4 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
-  - python2.7 build.py -DCMAKE_CXX_COMPILER=$COMPILER
+  - python2.7 build.py -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1

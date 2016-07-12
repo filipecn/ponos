@@ -120,4 +120,4 @@ namespace ponos {
     return data[ind];
   }
 
-}; // ponos namespace
+} // ponos namespace

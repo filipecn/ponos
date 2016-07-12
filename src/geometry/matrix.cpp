@@ -98,4 +98,4 @@ namespace ponos {
     return r;
   }
 
-}; // ponos namespace
+} // ponos namespace

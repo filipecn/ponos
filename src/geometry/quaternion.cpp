@@ -10,4 +10,4 @@ namespace ponos {
   Quaternion::Quaternion(Vector3 _v, float _w)
     : v(_v), w(_w) {}
 
-};
+} // ponos namespace

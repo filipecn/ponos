@@ -66,4 +66,4 @@ namespace ponos {
     return q / sqrtf(dot(q, q));
   }
 
-}; // ponos namespace
+} // ponos namespace

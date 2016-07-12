@@ -41,9 +41,9 @@ namespace aergia {
     bool init();
 
     // window
-    int width, height;
     GLFWwindow* window;
     const char* title;
+    int width, height;
 
     // USER CALLBACKS
     std::function<void()> renderCallback;

@@ -26,4 +26,4 @@ namespace aergia {
     vec2 p;
   };
 
-};
+}
