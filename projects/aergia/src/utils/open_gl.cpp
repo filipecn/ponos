@@ -2,11 +2,15 @@
 
 namespace aergia {
 
-  void glVertex(Point2 v) {
+  void glVertex(ponos::Point3 v) {
+    glVertex3f(v.x, v.y, v.z);
+  }
+
+  void glVertex(ponos::Point2 v) {
     glVertex2f(v.x, v.y);
   }
 
-  void glVertex(vec2 v) {
+  void glVertex(ponos::vec2 v) {
     glVertex2f(v.x, v.y);
   }
 

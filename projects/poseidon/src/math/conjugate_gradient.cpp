@@ -27,7 +27,7 @@ namespace poseidon {
 
   void ConjugateGradient::reset() {
     const ACell emptyCell;
-    for (int i = 0; i < A.size(); ++i)
+    for(uint32_t i = 0; i < A.size(); ++i)
       std::fill(std::begin(A[i]), std::end(A[i]), emptyCell);
   }
 
@@ -46,8 +46,8 @@ namespace poseidon {
     // set up the MIC(0) preconditioner
     precon(0, 0) = 0.f;
     float tal = 0.97f, sigma = 0.25f;
-    for(int i = 1; i < width; ++i)
-    for(int j = 1; j < height; j++) {
+    for(uint32_t i = 1; i < width; ++i)
+    for(uint32_t j = 1; j < height; j++) {
       //if(cell(i, j) == FLUID) {
       float e = Adiag(i, j)
       - SQR(Aplusi(i - 1, j) * precon(i - 1, j))
@@ -63,8 +63,8 @@ namespace poseidon {
     // apply the preconditioner
     // first solve Lq = r
     Q(0, 0) = 0.f;
-    for(int i = 1; i < width; ++i)
-    for(int j = 1; j < height; j++) {
+    for(uint32_t i = 1; i < width; ++i)
+    for(uint32_t j = 1; j < height; j++) {
       //if(cell(i, j) == FLUID) {
       float t = R(i, j)
       - Aplusi(i - 1, j) * precon(i - 1, j) * Q(i - 1, j)
@@ -73,8 +73,8 @@ namespace poseidon {
       //}
     }
     // solve L^Tz = q
-    for(int i = width - 2; i >= 0; --i)
-    for(int j = height - 2; j >= 0; --j) {
+    for(int i = static_cast<int>(width) - 2; i >= 0; --i)
+    for(int j = static_cast<int>(height) - 2; j >= 0; --j) {
       //if(cell(i, j) == FLUID) {
       float t = Q(i, j)
       - Aplusi(i, j) * precon(i, j) * Z(i + 1, j)
@@ -140,8 +140,8 @@ namespace poseidon {
 
   void ConjugateGradient::applyA() {
     // z = As
-    for (int i = 0; i < width; ++i)
-    for (int j = 0; j < height; ++j) {
+    for(uint32_t i = 0; i < width; ++i)
+    for(uint32_t j = 0; j < height; ++j) {
       uint32_t ind = ij(i, j);
       z[ind]  = A[i][j].diag * s[ind];
       if (i > 0)

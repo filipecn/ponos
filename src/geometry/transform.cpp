@@ -23,6 +23,15 @@ namespace ponos {
     s = Vector2(x, y);
   }
 
+  Transform2D rotate(float angle) {
+    float sin_a = sinf(TO_RADIANS(angle));
+    float cos_a = cosf(TO_RADIANS(angle));
+    Matrix3x3 m(cos_a, -sin_a, 0.f,
+                sin_a, cos_a,  0.f,
+                0.f,   0.f,    1.f);
+    return Transform2D(m, transpose(m));
+  }
+
   Transform2D inverse(const Transform2D& t) {
     return Transform2D(t.m_inv, t.m);
   }
@@ -124,6 +133,42 @@ namespace ponos {
     return Transform(mat, transpose(mat));
   }
 
+	Transform frustrum(float left, float right, float bottom, float top, float near, float far) {
+		float tnear = 2.f * near;
+		float lr = right - left;
+		float bt = top - bottom;
+		float nf = far - near;
+		float m[4][4];
+		m[0][0] = tnear / lr;
+		m[1][0] = 0.f;
+		m[2][0] = (right + left) / lr;
+		m[3][0] = 0.f;
+
+		m[0][1] = 0.f;
+		m[1][1] = tnear / bt;
+		m[2][1] = (top + bottom) / bt;
+		m[3][1] = 0.f;
+
+		m[0][2] = 0.f;
+		m[1][2] = 0.f;
+		m[2][2] = (-far - near) / nf;
+		m[3][2] = (-tnear * far) / nf;
+
+		m[0][3] = 0.f;
+		m[1][3] = 0.f;
+		m[2][3] = -1.f;
+		m[3][3] = 0.f;
+
+		Matrix4x4 projection(m);
+    return Transform(projection, inverse(projection));
+	}
+
+	Transform perspective(float fovy, float aspect, float zNear, float zFar) {
+		float ymax = zNear * tanf(TO_RADIANS(fovy));
+		float xmax = ymax * aspect;
+		return frustrum(-xmax, xmax, -ymax, ymax, zNear, zFar);
+	}
+
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up) {
     Vector3 dir = normalize(target - pos);
     Vector3 left = normalize(cross(normalize(up), dir));
@@ -151,6 +196,35 @@ namespace ponos {
 
     Matrix4x4 cam_to_world(m);
     return Transform(inverse(cam_to_world), cam_to_world);
+  }
+
+  Transform lookAtRH(const Point3& pos, const Point3& target, const Vector3& up) {
+    Vector3 dir = normalize(pos - target);
+    Vector3 left = normalize(cross(normalize(up), dir));
+    Vector3 new_up = cross(dir, left);
+    float m[4][4];
+    m[0][0] = left.x;
+    m[1][0] = left.y;
+    m[2][0] = left.z;
+    m[3][0] = -dot(left, Vector3(pos - Point3()));
+
+    m[0][1] = new_up.x;
+    m[1][1] = new_up.y;
+    m[2][1] = new_up.z;
+    m[3][1] = -dot(new_up, Vector3(pos - Point3()));
+
+    m[0][2] = dir.x;
+    m[1][2] = dir.y;
+    m[2][2] = dir.z;
+    m[3][2] = -dot(dir, Vector3(pos - Point3()));
+
+    m[0][3] = 0;
+    m[1][3] = 0;
+    m[2][3] = 0;
+    m[3][3] = 1;
+
+    Matrix4x4 cam_to_world(m);
+    return Transform(cam_to_world, inverse(cam_to_world));
   }
 
   Transform ortho(float left, float right, float bottom, float top, float near, float far) {

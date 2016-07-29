@@ -17,8 +17,8 @@ namespace poseidon {
     void applyPreconditioner();
 
     void printA() {
-      for(int i = 0; i < width; i++) {
-        for (int j = 0; j < height; ++j)
+      for(uint32_t i = 0; i < width; i++) {
+        for (uint32_t j = 0; j < height; ++j)
         {
           std::cout << "["
           << A[i][j].diag << " "

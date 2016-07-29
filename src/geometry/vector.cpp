@@ -29,4 +29,16 @@ bool Vector3::HasNaNs() const {
   return std::isnan(x) || std::isnan(y) || std::isnan(z);
 }
 
+Vector4::Vector4() { x = y = z = w = 0.0f; }
+
+Vector4::Vector4(float _x, float _y, float _z, float _w)
+  : x(_x), y(_y), z(_z), w(_w) {
+  ASSERT(!HasNaNs());
+}
+
+bool Vector4::HasNaNs() const {
+  return std::isnan(x) || std::isnan(y) || std::isnan(z) || std::isnan(w);
+}
+
+
 } // ponos namespace

@@ -24,14 +24,19 @@ namespace ponos {
       m.m[1][0] * x + m.m[1][1] * y);
     }
     Point2 operator()(const Point2& p) const {
-      float x = p.x, y = p.y;
-      float xp = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2];
-      float yp = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2];
-      float wp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2];
-      if (wp == 1.f) return Point2(xp, yp);
-      return Point2(xp / wp, yp / wp);
-    }
-    Vector2 getTranslate() const {
+			float x = p.x, y = p.y;
+				float xp = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2];
+				float yp = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2];
+				float wp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2];
+				if (wp == 1.f) return Point2(xp, yp);
+					return Point2(xp / wp, yp / wp);
+		}
+		Transform2D operator*(const Transform2D& t) const {
+			Matrix3x3 m1 = Matrix3x3::mul(m, t.m);
+			Matrix3x3 m1_inv = Matrix3x3::mul(t.m_inv, m_inv);
+				return Transform2D(m1, m1_inv);
+		}
+		Vector2 getTranslate() const {
       return Vector2(m.m[0][2], m.m[1][2]);
     }
     Vector2 getScale() const {
@@ -45,6 +50,7 @@ namespace ponos {
     Vector2 s;
   };
 
+  Transform2D rotate(float angle);
   Transform2D inverse(const Transform2D& t);
 
   class Transform {
@@ -116,11 +122,14 @@ namespace ponos {
       Matrix4x4 m1_inv = Matrix4x4::mul(t.m_inv, m_inv);
       return Transform(m1, m1_inv);
     }
+		Point3 operator*(const Point3& p) const {
+			return Point3((transpose(m) * vec4(p.x, p.y, p.z, 1.f)).xyz());
+		}
     bool swapsHandedness() const;
     const float* c_matrix() const {
       return &m.m[0][0];
     }
-    const Matrix4x4& matrix() {
+    const Matrix4x4& matrix() const {
       return m;
     }
     Vector3 getTranslate() {
@@ -140,7 +149,10 @@ namespace ponos {
   Transform rotateY(float angle);
   Transform rotateZ(float angle);
   Transform rotate(float angle, const Vector3& axis);
+	Transform frustrum(float left, float right, float bottom, float top, float near, float far);
+	Transform perspective(float fovy, float aspect, float zNear, float zFar);
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up);
+  Transform lookAtRH(const Point3& pos, const Point3& target, const Vector3& up);
   Transform ortho(float left, float right, float bottom, float top, float near = -1.f, float far = 1.f);
 
 } // ponos namespace

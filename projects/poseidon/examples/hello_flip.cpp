@@ -1,7 +1,7 @@
 #include <aergia.h>
 #include <poseidon.h>
 #include <ponos.h>
-#include <windows.h>
+// #include <windows.h>
 
 #include "flip_drawer.h"
 
@@ -22,17 +22,17 @@ void render(){
   fd.drawGridVelocities(flip.u, 0);
   fd.drawCells();
 
-  static int k = 1;
+  // static int k = 1;
  // if(k++ > 50)
   //  return;
     std::cout << "STEP\n";
   flip.step();
     std::cout << "STEP END\n";
-    Sleep(100);
+    //Sleep(100);
 }
 
 int main() {
-  WIN32CONSOLE();
+  // WIN32CONSOLE();
   // init FLIP
   flip.set(w, h, ponos::vec2(0.f,0.f), 0.1f);
   flip.gravity = ponos::vec2(0.f, -9.8f);

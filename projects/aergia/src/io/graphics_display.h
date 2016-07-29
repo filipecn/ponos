@@ -1,5 +1,7 @@
 #pragma once
 
+#include "scene/camera.h"
+
 #include <ponos.h>
 #include <utils/open_gl.h>
 
@@ -15,23 +17,33 @@ namespace aergia {
       return instance_;
     }
 
+		// display
     void set(int w, int h, const char* windowTitle);
     void getWindowSize(int &w, int &h);
     ponos::Point2 getMousePos();
     ponos::Point2 getMouseNPos();
-
+		ponos::Point3 viewCoordToNormDevCoord(ponos::Point3 p);
+		ponos::Point3 unProject(const Camera& c, ponos::Point3 p);
     // run
     void start();
     void stop();
+		bool isRunning();
     // IO
     void registerRenderFunc(void (*f)());
+		void registerRenderFunc(std::function<void()> f);
     void registerButtonFunc(void (*f)(int,int));
     void registerKeyFunc(void (*f)(int,int));
     void registerMouseFunc(void (*f)(double,double));
     void registerScrollFunc(void (*f)(double,double));
     void registerResizeFunc(void (*f)(int,int));
     // graphics
+		void beginFrame();
+		void endFrame();
     void clearScreen(float r, float g, float b, float a);
+		// events
+		void processInput();
+		// user input
+		int keyState(int key);
   private:
     static GraphicsDisplay instance_;
     GraphicsDisplay();

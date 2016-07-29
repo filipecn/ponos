@@ -37,12 +37,12 @@ public:
     float hdx = flip->dx / 2.f;
     vec2 offset = grid.toWorld.getTranslate();
     glBegin(GL_LINES);
-    for (int i = 0; i <= grid.width; ++i) {
+    for(uint32_t i = 0; i <= grid.width; ++i) {
       glVertex2f(static_cast<float>(i) * flip->dx + offset.x - hdx, offset.y - hdx);
       glVertex2f(static_cast<float>(i) * flip->dx + offset.x - hdx,
       offset.y + flip->dx * grid.height - hdx);
     }
-    for (int i = 0; i <= grid.height; ++i) {
+    for(uint32_t i = 0; i <= grid.height; ++i) {
       glVertex2f(offset.x - hdx, static_cast<float>(i) * flip->dx + offset.y - hdx);
       glVertex2f(offset.x + flip->dx * grid.width - hdx,
       static_cast<float>(i) * flip->dx + offset.y - hdx);
@@ -52,8 +52,8 @@ public:
 
   void drawGridVelocities(const ZGrid<FLIP::VelocityCell>& grid, int component) {
     glBegin(GL_LINES);
-    for (int i = 0; i < grid.width; ++i) {
-      for (int j = 0; j < grid.height; ++j) {
+    for(uint32_t i = 0; i < grid.width; ++i) {
+      for(uint32_t j = 0; j < grid.height; ++j) {
         Point2 wp = grid.toWorld(Point2(i, j));
         aergia::glVertex(wp);
         vec2 v;
@@ -104,7 +104,7 @@ public:
     int ymin = static_cast<int>(gp.y);
     for(int x = xmin; x <= xmin + 1; x++)
     for(int y = ymin; y <= ymin + 1; y++) {
-      if(x < 0 || x >= flip->v.width || y < 0 || y >= flip->v.height)
+      if(x < 0 || x >= static_cast<int>(flip->v.width) || y < 0 || y >= static_cast<int>(flip->v.height))
       continue;
       Point2 gwp = flip->v.toWorld(Point2(x, y));
       aergia::glVertex(gwp);
@@ -115,8 +115,8 @@ public:
   void drawCells() {
     float hdx = flip->dx / 2.f;
     glBegin(GL_QUADS);
-      for(int i = 0; i < flip->cell.width; i++)
-      for (int j = 0; j < flip->cell.height; ++j)
+      for(uint32_t i = 0; i < flip->cell.width; i++)
+      for(uint32_t j = 0; j < flip->cell.height; ++j)
       {
         glColor4f(1.f, 1.f, 1.f, 0.0f);
         if(flip->cell(i, j) == FLUID)

@@ -13,6 +13,9 @@ namespace ponos {
     Point2 operator+(const Vector2& v) const {
       return Point2(x + v.x, y + v.y);
     }
+    Point2 operator-(const Vector2& v) const {
+      return Point2(x - v.x, y - v.y);
+    }
     Vector2 operator-(const Point2& p) const {
       return Vector2(x - p.x, y - p.y);
     };
@@ -44,17 +47,28 @@ namespace ponos {
     explicit Point(Point2 p);
 
     T operator[](int i) const {
-      ASSERT(i >= 0 && i <= size);
+      ASSERT(i >= 0 && i <= static_cast<int>(size));
       return v[i];
     }
     T& operator[](int i) {
-      ASSERT(i >= 0 && i <= size);
+      ASSERT(i >= 0 && i <= static_cast<int>(size));
       return v[i];
     }
+
+		Point2 floatXY(size_t x = 0, size_t y = 1) {
+			return Point2(static_cast<float>(v[x]), static_cast<float>(v[y]));
+		}
 
     uint32_t size;
     T v[D];
   };
+
+  template<class T, int D>
+  Point<T, D>::Point() {
+		size = D;
+		for(int i = 0; i < D; i++)
+			v[D] = static_cast<T>(0);
+	}
 
   template<class T, int D>
   Point<T, D>::Point(Point2 p) {
@@ -65,7 +79,7 @@ namespace ponos {
 
   template<class T, int D>
   inline bool operator==(const Point<T, D>& lhs, const Point<T, D>& rhs) {
-    for (int i = 0; i < lhs.size; ++i)
+    for (size_t i = 0; i < lhs.size; ++i)
       if (lhs[i] != rhs[i])
         return false;
     return true;
@@ -78,6 +92,7 @@ namespace ponos {
   public:
     Point3();
     explicit Point3(float _x, float _y, float _z);
+		explicit Point3(const Vector3& v);
     // access
     float operator[](int i) const {
       ASSERT(i >= 0 && i <= 2);

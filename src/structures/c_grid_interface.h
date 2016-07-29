@@ -46,7 +46,7 @@ namespace ponos {
 				}
 
 				bool belongs(ponos::Point<int, 2> c) {
-					return 0 <= c[0] && c[0]< width && 0 <= c[1] && c[1] < height;
+					return 0 <= c[0] && c[0]< static_cast<int>(width) && 0 <= c[1] && c[1] < static_cast<int>(height);
 				}
 
 				T border;

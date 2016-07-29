@@ -3,6 +3,7 @@
 #include "geometry/point.h"
 #include "geometry/vector.h"
 
+#include <iostream>
 #include <algorithm>
 
 namespace ponos {
@@ -12,8 +13,24 @@ namespace ponos {
     BBox2D();
     BBox2D(const Point2& p1, const Point2& p2);
 
+		Point2 center() {
+			std::cout << pMin.x << " " << pMin.y << std::endl;
+			std::cout << pMax.x << " " << pMax.y << std::endl;
+			return pMin + (pMax - pMin) * .5f;
+		}
+
     Point2 pMin, pMax;
   };
+
+  inline BBox2D make_union(const BBox2D& b, const Point2& p) {
+    BBox2D ret = b;
+    ret.pMin.x = std::min(b.pMin.x, p.x);
+    ret.pMin.y = std::min(b.pMin.y, p.y);
+    ret.pMax.x = std::max(b.pMax.x, p.x);
+    ret.pMax.y = std::max(b.pMax.y, p.y);
+    return ret;
+  }
+
 
   class BBox {
   public:

@@ -1,9 +1,14 @@
 include_directories("${AERGIA_SOURCE_DIR}/src")
 
 set(HEADERS
+	helpers/cartesian_grid.h
 	helpers/circle.h
 	io/graphics_display.h
+	scene/camera.h
 	scene/camera_2d.h
+	ui/trackball.h
+	ui/trackball_interface.h
+	ui/track_mode.h
 	utils/open_gl.h
 	utils/win32_utils.h
 	aergia.h
@@ -11,6 +16,7 @@ set(HEADERS
 
 set(SOURCES
 	io/graphics_display.cpp
+	scene/camera.cpp
 	scene/camera_2d.cpp
 	utils/open_gl.cpp
 	)

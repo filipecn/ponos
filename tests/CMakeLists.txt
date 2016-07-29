@@ -7,6 +7,8 @@ include_directories("${PONOS_SOURCE_DIR}/src")
 
 set(TESTS
 TestBBox.cpp
+TestMatrix.cpp
+TestTransform.cpp
 )
 
 add_executable(run_tests main.cpp ${TESTS})

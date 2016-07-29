@@ -31,7 +31,7 @@
 #define DUMP_VECTOR(V) \
   { \
     std::cout << "VECTOR in " << LOG_LOCATION << std::endl; \
-    for (int i = 0; i < V.size(); ++i) \
+    for (size_t i = 0; i < V.size(); ++i) \
       std::cout << V[i] << " "; \
     std::cout << std::endl; \
   } \

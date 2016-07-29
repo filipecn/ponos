@@ -1,6 +1,7 @@
 #include <ponos.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+
 class TestBBox : public CppUnit::TestCase {
 	public:
 		CPPUNIT_TEST_SUITE(TestBBox);

@@ -23,12 +23,12 @@ namespace ponos {
     T dSample(float x, float y, T r);
 
     void reset(std::function<void(T& t)> f) {
-      for (int i = 0; i < data.size(); ++i)
+      for (uint32_t i = 0; i < data.size(); ++i)
         f(data[i]);
     }
 
     void setAll(const T t) {
-      for(int i = 0; i < data.size(); i++)
+      for(uint32_t i = 0; i < data.size(); i++)
         data[i] = t;
     }
 
@@ -97,10 +97,10 @@ namespace ponos {
     Vector2 scale = this->toWorld.getScale();
 
     float p[4][4];
-    int delta[] = {-1, 0, 1, 2};
-    for(int i = 0; i < 4; i++)
-    for(int j = 0; j < 4; j++)
-    p[i][j] = f(safeData(x0 + delta[i], y0 + delta[j]));
+    //int delta[] = {-1, 0, 1, 2};
+    //for(int i = 0; i < 4; i++)
+    //for(int j = 0; j < 4; j++)
+    // p[i][j] = f(safeData(x0 + delta[i], y0 + delta[j]));
     return ponos::bicubicInterpolate<float>(p, (x - wp.x) / scale.x, (y - wp.y) / scale.y);
   }
 

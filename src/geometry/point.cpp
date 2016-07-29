@@ -1,5 +1,6 @@
 #include "geometry/point.h"
 
+#include <iostream>
 #include <cmath>
 
 namespace ponos {
@@ -19,6 +20,11 @@ namespace ponos {
 
   Point3::Point3(float _x, float _y, float _z)
   : x(_x), y(_y), z(_z) {
+    ASSERT(!HasNaNs());
+  }
+
+	Point3::Point3(const Vector3& v)
+  : x(v.x), y(v.y), z(v.z) {
     ASSERT(!HasNaNs());
   }
 

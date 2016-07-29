@@ -39,7 +39,6 @@ namespace aergia {
       return false;
     }
     glfwMakeContextCurrent(window);
-    glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, key_callback);
     glfwSetMouseButtonCallback (window, button_callback);
     glfwSetCursorPosCallback (window, pos_callback);
@@ -48,12 +47,10 @@ namespace aergia {
     return true;
   }
 
-  void GraphicsDisplay::start(){
+  void GraphicsDisplay::start() {
     while(!glfwWindowShouldClose(this->window)){
-
       glfwGetFramebufferSize(window, &this->width, &this->height);
       glViewport(0, 0, this->width, this->height);
-
       if(this->renderCallback) {
         this->renderCallback();
       }
@@ -61,6 +58,10 @@ namespace aergia {
       glfwPollEvents();
     }
   }
+
+	bool GraphicsDisplay::isRunning() {
+    return !glfwWindowShouldClose(this->window);
+	}
 
   void GraphicsDisplay::getWindowSize(int &w, int &h){
     w = this->width;
@@ -80,20 +81,54 @@ namespace aergia {
                          (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
   }
 
+	ponos::Point3 GraphicsDisplay::viewCoordToNormDevCoord(ponos::Point3 p) {
+		float v[] = {0, 0, static_cast<float>(width), static_cast<float>(height)};
+		return ponos::Point3(
+				(p.x - v[0]) / (v[2] / 2.0) - 1.0,
+				(p.y - v[1]) / (v[3] / 2.0) - 1.0,
+				2 * p.z - 1.0);
+	}
+
+	ponos::Point3 unProject(const Camera& c, ponos::Point3 p) {
+		return ponos::inverse(c.getTransform()) * p;
+	}
+
   void GraphicsDisplay::stop(){
   	glfwSetWindowShouldClose(window, GL_TRUE);
   }
+
+	void GraphicsDisplay::beginFrame() {
+		glfwGetFramebufferSize(window, &this->width, &this->height);
+		glViewport(0, 0, this->width, this->height);
+
+	}
+
+	void GraphicsDisplay::endFrame() {
+		glfwSwapBuffers(window);
+	}
 
   void GraphicsDisplay::clearScreen(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
+	void GraphicsDisplay::processInput() {
+      glfwPollEvents();
+	}
+
+	int GraphicsDisplay::keyState(int key) {
+		return glfwGetKey(window, key);
+	}
+
   void GraphicsDisplay::error_callback(int error, const char* description){
   	fputs(description, stderr);
   }
 
   void GraphicsDisplay::registerRenderFunc(void (*f)()){
+  	this->renderCallback = f;
+  }
+
+  void GraphicsDisplay::registerRenderFunc(std::function<void()> f){
   	this->renderCallback = f;
   }
 

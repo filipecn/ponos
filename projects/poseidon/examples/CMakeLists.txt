@@ -10,7 +10,7 @@ find_library(LAPACK_LIB NAMES liblapack PATHS ${POSEIDON_SOURCE_DIR}/external)
 
 link_libraries(${GLFW_LIB} ${aergia_LIBRARIES} ${VULKAN_LIBRARY} ${POSEIDON_SOURCE_DIR}/external/libcblas.dll.a)
 
-link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
+# link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
 
 link_libraries(poseidon)
 include_directories("${POSEIDON_SOURCE_DIR}/src")
@@ -24,7 +24,7 @@ include_directories("C:/Users/fuiri/Downloads")
 
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
-add_executable(hello_flip_test WIN32 hello_flip.cpp flip_drawer.h)
+# add_executable(hello_flip_test WIN32 hello_flip.cpp flip_drawer.h)
 
 set(WINDOWS_BINARIES hello_flip_test)
 
@@ -33,3 +33,5 @@ if (MSVC)
     set_target_properties(${WINDOWS_BINARIES} PROPERTIES
                           LINK_FLAGS "/ENTRY:mainCRTStartup")
 endif()
+
+add_subdirectory(openvdb)

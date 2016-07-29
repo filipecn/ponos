@@ -4,9 +4,12 @@ set(HEADERS
 core/differential_geometry.h
 core/shape.h
 geometry/bbox.h
+geometry/interval.h
+geometry/line.h
 geometry/matrix.h
 geometry/normal.h
 geometry/point.h
+geometry/plane.h
 geometry/quaternion.h
 geometry/ray.h
 geometry/transform.h
@@ -14,7 +17,10 @@ geometry/utils.h
 geometry/vector.h
 log/debug.h
 shapes/sphere.h
+structures/brep.hpp
 structures/c_grid_interface.h
+structures/c_object_pool.hpp
+structures/object_pool.hpp
 structures/z_grid.h
 ponos.h
 )

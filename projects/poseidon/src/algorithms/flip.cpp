@@ -49,14 +49,14 @@ namespace poseidon {
 				vc.wsum = 0.f;
 				});
 		uint32_t size = particleGrid.size();
-		for(int i = 0; i < size; i++) {
+		for(uint32_t i = 0; i < size; i++) {
 			Point2 wp = particleGrid.getParticle(i).p;
 			Point2 gp = grid.toGrid(wp);
 			int xmin = static_cast<int>(gp.x);
 			int ymin = static_cast<int>(gp.y);
 			for(int x = xmin; x <= xmin + 1; x++)
 				for(int y = ymin; y <= ymin + 1; y++) {
-					if(x < 0 || x >= grid.width || y < 0 || y >= grid.height)
+					if(x < 0 || x >= static_cast<int>(grid.width) || y < 0 || y >= static_cast<int>(grid.height))
 						continue;
 					Point2 gwp = grid.toWorld(Point2(x, y));
 					vec2 d = wp - gwp;
@@ -71,8 +71,8 @@ namespace poseidon {
 				vc.v = vc.v / vc.wsum;
 				}
 				});
-		for(int i = 0; i < grid.width; i++)
-			for(int j = 0; j < grid.height; j++)
+		for(uint32_t i = 0; i < grid.width; i++)
+			for(uint32_t j = 0; j < grid.height; j++)
 				vCopy[component](i,j) = grid(i, j).v;
 	}
 
@@ -83,8 +83,8 @@ namespace poseidon {
 	}
 
 	void FLIP::scatter(ZGrid<VelocityCell> &grid, uint32_t component) {
-		for(int i = 0; i < grid.width; i++)
-			for(int j = 0; j < grid.height; j++)
+		for(uint32_t i = 0; i < grid.width; i++)
+			for(uint32_t j = 0; j < grid.height; j++)
 				grid(i,j).wsum = grid(i,j).v - vCopy[component](i, j);
 		int size = particleGrid.size();
 		float alpha = 0.02f;
@@ -99,8 +99,8 @@ namespace poseidon {
 
 	void FLIP::classifyCells() {
 		cell.setAll(0);
-		for(int i = 0; i < cell.width; i++)
-			for(int j = 0; j < cell.height; j++) {
+		for(uint32_t i = 0; i < cell.width; i++)
+			for(uint32_t j = 0; j < cell.height; j++) {
 				// each cell containing at least one particle is a FLUID cell
 				if(particleGrid.grid(i, j).numberOfParticles() > 0)
 					cell(i, j) = FLUID;
@@ -111,8 +111,8 @@ namespace poseidon {
 	}
 
 	void FLIP::enforceBoundary() {
-		for(int i = 0; i < cell.width; i++)
-			for(int j = 0; j < cell.height; j++){
+		for(uint32_t i = 0; i < cell.width; i++)
+			for(uint32_t j = 0; j < cell.height; j++){
 				if(cell(i, j) == SOLID){
 					u(i, j).v = usolid(i, j);
 					u(i + 1, j).v = usolid(i + 1, j);
@@ -125,8 +125,8 @@ namespace poseidon {
 	void FLIP::solvePressure() {
 		// construct RHS
 		float scale = 1.0 / dx;
-		for(int i = 0; i < width; i++)
-			for(int j = 0; j < height; j++){
+		for(uint32_t i = 0; i < width; i++)
+			for(uint32_t j = 0; j < height; j++){
 				if(cell(i, j) == FLUID){
 					// negative divergence
 					ps.rhs(i, j) = -scale * (u(i + 1, j).v - u(i, j).v
@@ -147,8 +147,8 @@ namespace poseidon {
 
 		// set up the matrix
 		scale = dt / (rho * dx * dx);
-		for(int i = 0; i < width; i++)
-			for(int j = 0; j < height; j++){
+		for(uint32_t i = 0; i < width; i++)
+			for(uint32_t j = 0; j < height; j++){
 				char curCell = cell(i, j);
 				if(curCell == FLUID && cell(i + 1, j) == FLUID) {
 					ps.Adiag(i, j) += scale;
@@ -176,8 +176,8 @@ namespace poseidon {
 
 		// update velocities
 		scale = dt / (rho * dx);
-		for(int i = 0; i < width; i++)
-			for(int j = 0; j < height; j++){
+		for(uint32_t i = 0; i < width; i++)
+			for(uint32_t j = 0; j < height; j++){
 				if(cell(i, j) == FLUID){
 					u(i, j).v -= scale * ps.P(i, j);
 					u(i + 1, j).v += scale * ps.P(i, j);
