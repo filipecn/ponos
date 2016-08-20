@@ -1,5 +1,7 @@
 #include "geometry/intersections.h"
 
+#include <utility>
+
 namespace ponos {
 
 	bool plane_line_intersection(const Plane pl, const Line l, Point3& p) {
@@ -28,5 +30,26 @@ namespace ponos {
 			return true;
 	}
 
+	bool bbox_ray_intersection(const BBox& box, const Ray3& ray, float& hit0, float& hit1) {
+		float t0 = 0.f, t1 = INFINITY;
+		for(int i = 0; i < 3; i++) {
+			float invRayDir = 1.f / ray.d[i];
+			float tNear = (box.pMin[i] - ray.o[i]) * invRayDir;
+			float tFar  = (box.pMax[i] - ray.o[i]) * invRayDir;
+			if(tNear > tFar)
+				std::swap(tNear, tFar);
+			t0 = tNear > t0 ? tNear : t0;
+			t1 = tFar  > t1 ? tFar  : t1;
+			if(t0 > t1)
+				return false;
+		}
+		hit0 = t0;
+		hit1 = t1;
+		return true;
+	}
+
+	bool bbox_ray_intersection(const BBox& box, const Ray3& ray, float& hit0) {
+		return bbox_ray_intersection(box, ray, hit0);
+	}
 
 } // ponos namespace

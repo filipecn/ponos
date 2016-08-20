@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HELIOS_SHAPES_H_SPHERE_H
+#define HELIOS_SHAPES_H_SPHERE_H
 
 #include "core/shape.h"
 #include "geometry/h_ray.h"
@@ -24,3 +25,5 @@ namespace helios {
   };
 
 } // helios namespace
+
+#endif

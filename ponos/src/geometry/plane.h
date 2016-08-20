@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_PLANE_H
+#define PONOS_GEOMETRY_PLANE_H
 
 #include "geometry/point.h"
 #include "geometry/normal.h"
@@ -27,3 +28,4 @@ namespace ponos {
 
 } // ponos namespace
 
+#endif

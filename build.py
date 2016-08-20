@@ -3,15 +3,33 @@ import os
 import shutil
 from subprocess import call
 import sys
+import glob
+import subprocess
 
 cur_path = os.getcwd()
 build_path = os.getcwd() + "/build"
 
 if len(sys.argv) < 2 :
-    print 'all - remove cache, make and test'
-    print 'make - just make'
-    print 'test - make and test'
+    print('all - remove cache, make, test and generate docs')
+    print('make - just make')
+    print('test - make and test')
+    print('docs - generate docs')
     sys.exit(1)
+
+if sys.argv[1] == 'docs' or sys.argv[1] == 'all':
+    cldoc_command = "cldoc generate -std=c++11 -Iponos/src -Ihelios/src -fPIC -- --report --merge docs --output html --type html --static"
+    for filename in glob.iglob('ponos/**/*.c*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('ponos/**/*.h*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('helios/**/*.c*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('helios/**/*.h*', recursive=True):
+        cldoc_command += " " + filename
+    print(cldoc_command)
+    call([cldoc_command], shell=True)
+    if sys.argv[1] == 'docs':
+        sys.exit(1)
 
 if os.path.exists(build_path) and sys.argv[1] == 'all':
     shutil.rmtree(build_path)

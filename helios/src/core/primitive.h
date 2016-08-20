@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HELIOS_CORE_PRIMITIVE_H
+#define HELIOS_CORE_PRIMITIVE_H
 
 #include "core/intersection.h"
 #include "core/light.h"
@@ -14,6 +15,10 @@
 
 namespace helios {
 
+	/* Scene element.
+	 * A primitive is a simple scene element which can interact with light
+	 * and compute intersections with other elements.
+	 */
 	class Primitive {
 		public:
 			Primitive()
@@ -23,6 +28,14 @@ namespace helios {
 			virtual ponos::BBox worldBound() const = 0;
 			// intersection
 			virtual bool canIntersect() const;
+			/* as
+			 * @r ray to be intersected
+			 * @in intersection
+			 *
+			 * asd
+			 *
+			 * @return true if intersection exists
+			 */
 			virtual bool intersect(const HRay &r, Intersection *in) const = 0;
 			virtual bool intersectP(const HRay &r) const = 0;
 			virtual void refine(std::vector<std::shared_ptr<Primitive> >& refined) const;
@@ -42,7 +55,7 @@ namespace helios {
 				material(m),
 				areaLight(a) {}
 			// intersection
-			virtual bool canIntersect() const;
+			virtual bool canIntersect() const override;
 			bool intersect(const HRay &r, Intersection *isect) const override;
 			// bool intersectP(const HRay &r) const override;
 			// void refine(std::vector<std::shared_ptr<Primitive> >& refined) const override;
@@ -69,3 +82,4 @@ namespace helios {
 
 } // helios namespace
 
+#endif

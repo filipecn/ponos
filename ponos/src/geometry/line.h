@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_LINE_H
+#define PONOS_GEOMETRY_LINE_H
 
 #include "geometry/point.h"
 #include "geometry/vector.h"
@@ -41,3 +42,4 @@ namespace ponos {
 
 } // ponos namespace
 
+#endif

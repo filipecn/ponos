@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_RAY_H
+#define PONOS_GEOMETRY_RAY_H
 
 #include "geometry/point.h"
 #include "geometry/vector.h"
@@ -26,3 +27,5 @@ namespace ponos {
 	typedef Ray3 ray3;
 
 } // ponos namespace
+
+#endif

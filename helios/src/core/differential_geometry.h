@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HELIOS_CORE_DIFFERENTIAL_GEOMETRY_H
+#define HELIOS_CORE_DIFFERENTIAL_GEOMETRY_H
 
 #include <ponos.h>
 
@@ -22,3 +23,5 @@ namespace helios {
   };
 
 } // helios namespace
+
+#endif

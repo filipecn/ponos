@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_QUATERNION_H
+#define PONOS_GEOMETRY_QUATERNION_H
 
 #include "geometry/transform.h"
 #include "geometry/vector.h"
@@ -143,3 +144,5 @@ namespace ponos {
 	}
 
 } // ponos namespace
+
+#endif

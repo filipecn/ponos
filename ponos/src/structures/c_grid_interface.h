@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_STRUCTURES_C_GRID_INTERFACE_H
+#define PONOS_STRUCTURES_C_GRID_INTERFACE_H
 
 #include "geometry/point.h"
 #include "geometry/transform.h"
@@ -58,3 +59,5 @@ namespace ponos {
 		};
 
 } // ponos namespace
+
+#endif

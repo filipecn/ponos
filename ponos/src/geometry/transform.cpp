@@ -73,6 +73,18 @@ namespace ponos {
     return Transform(m, m_inv);
   }
 
+  Transform scale(float x, float y, float z) {
+		Matrix4x4 m(x, 0, 0, 0,
+				        0, y, 0, 0,
+								0, 0, z, 0,
+								0, 0, 0, 1);
+		Matrix4x4 inv(1.f / x, 0,             0, 0,
+				        	0,       1.f / y,       0, 0,
+									0,       0,       1.f / z, 0,
+									0,       0,       0,       1);
+		return Transform(m, inv);
+	}
+
   Transform rotateX(float angle) {
     float sin_a = sinf(TO_RADIANS(angle));
     float cos_a = cosf(TO_RADIANS(angle));
@@ -169,6 +181,17 @@ namespace ponos {
 		return frustumTransform(-xmax, xmax, -ymax, ymax, zNear, zFar);
 	}
 
+	Transform perspective(float fov, float n, float f) {
+		// perform projectiev divide
+		Matrix4x4 persp = Matrix4x4(1, 0,           0,                0,
+																0, 1,           0,                0,
+																0, 0, f / (f - n), -f * n / (f - n),
+																0, 0,           1,                0);
+		// scale to canonical viewing volume
+		float invTanAng = 1.f / tanf(TO_RADIANS(fov) / 2.f);
+		return scale(invTanAng, invTanAng, 1) * Transform(persp);
+	}
+
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up) {
     Vector3 dir = normalize(target - pos);
     Vector3 left = normalize(cross(normalize(up), dir));
@@ -253,5 +276,9 @@ namespace ponos {
     Matrix4x4 projection(m);
     return Transform(projection, inverse(projection));
   }
+
+	Transform orthographic(float znear, float zfar) {
+		return scale(1.f, 1.f, 1.f / (zfar - znear)) * translate(vec3(0.f, 0.f, -znear));
+	}
 
 } // ponos namespace

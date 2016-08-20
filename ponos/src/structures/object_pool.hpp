@@ -1,4 +1,7 @@
-#pragma once
+#ifndef PONOS_STRUCTURES_OBJECT_POOL_H
+#define PONOS_STRUCTURES_OBJECT_POOL_H
+
+#include "common/defs.h"
 
 #include <vector>
 
@@ -9,7 +12,7 @@ namespace ponos {
 			T* next;
 		};
 
-	template<class T, size_t S = 0>
+	template<class T, uint S = 0>
 		class ObjectPool {
 			public:
 				ObjectPool();
@@ -23,7 +26,7 @@ namespace ponos {
 				std::vector<T> pool;
 		};
 
-	template<class T, size_t S>
+	template<class T, uint S>
 		ObjectPool<T, S>::ObjectPool() {
 			limitSize = S;
 			firstFree = nullptr;
@@ -31,7 +34,7 @@ namespace ponos {
 				pool.resize(S);
 				firstFree = &pool[0];
 				FreeListNode<T> *fl;
-				for(size_t i = 0; i < S - 1; i++) {
+				for(uint i = 0; i < S - 1; i++) {
 					fl = reinterpret_cast<FreeListNode<T> *>(&pool[i]);
 					fl->next = &pool[i + 1];
 				}
@@ -40,7 +43,7 @@ namespace ponos {
 			}
 		}
 
-	template<class T, size_t S>
+	template<class T, uint S>
 		T* ObjectPool<T, S>::create() {
 			if(firstFree != nullptr) {
 				T* first = firstFree;
@@ -53,7 +56,7 @@ namespace ponos {
 			return &pool[pool.size() - 1];
 		}
 
-	template<class T, size_t S>
+	template<class T, uint S>
 		void ObjectPool<T, S>::destroy(T* object) {
 			if(object) {
 				FreeListNode<T> *fl = reinterpret_cast<FreeListNode<T> *>(object);
@@ -63,3 +66,5 @@ namespace ponos {
 		}
 
 } // ponos namespace
+
+#endif

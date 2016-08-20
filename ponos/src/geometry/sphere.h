@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_SPHERE_H
+#define PONOS_GEOMETRY_SPHERE_H
 
 #include "geometry/point.h"
 
@@ -26,3 +27,4 @@ namespace ponos {
 
 } // ponos namespace
 
+#endif

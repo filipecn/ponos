@@ -1,5 +1,7 @@
 #include "geometry/vector.h"
 
+#include "geometry/point.h"
+
 #include <cmath>
 
 namespace ponos {
@@ -34,6 +36,9 @@ Vector3::Vector3(float _x, float _y, float _z)
 
 Vector3::Vector3(const Normal& n)
   : x(n.x), y(n.y), z(n.z) {}
+
+Vector3::Vector3(const Point3& p)
+  : x(p.x), y(p.y), z(p.z) {}
 
 bool Vector3::HasNaNs() const {
   return std::isnan(x) || std::isnan(y) || std::isnan(z);

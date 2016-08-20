@@ -1,4 +1,7 @@
-#pragma once
+#ifndef PONOS_STRUCTURES_C_OBJECT_POOL_H
+#define PONOS_STRUCTURES_C_OBJECT_POOL_H
+
+#include "common/defs.h"
 
 #include <vector>
 
@@ -13,7 +16,7 @@ namespace ponos {
 			}
 		};
 */
-	template <class T, size_t S>
+	template <class T, uint S>
 	class CObjectPool {
   	public:
 	 		CObjectPool();
@@ -23,8 +26,9 @@ namespace ponos {
 
 		private:
 			T pool[S];
-			size_t activeObjects;
+			uint activeObjects;
 	};
 
 } // ponos namespace
 
+#endif

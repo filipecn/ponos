@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_TRANSFORM_H
+#define PONOS_GEOMETRY_TRANSFORM_H
 
 #include "geometry/bbox.h"
 #include "geometry/matrix.h"
@@ -160,8 +161,11 @@ namespace ponos {
   Transform rotate(float angle, const Vector3& axis);
 	Transform frustumTransform(float left, float right, float bottom, float top, float near, float far);
 	Transform perspective(float fovy, float aspect, float zNear, float zFar);
+	Transform perspective(float fovy, float zNear, float zFar);
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up);
   Transform lookAtRH(const Point3& pos, const Point3& target, const Vector3& up);
   Transform ortho(float left, float right, float bottom, float top, float near = -1.f, float far = 1.f);
-
+Transform orthographic(float znear, float zfar);
 } // ponos namespace
+
+#endif

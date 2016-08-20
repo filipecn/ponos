@@ -1,5 +1,7 @@
-#pragma once
+#ifndef HELIOS_GEOMETRY_ANIMATED_TRANSFORM_H
+#define HELIOS_GEOMETRY_ANIMATED_TRANSFORM_H
 
+#include "geometry/h_ray.h"
 #include <ponos.h>
 
 namespace helios {
@@ -36,6 +38,10 @@ namespace helios {
 				// interpolate scale at dt
 				// compute interpolated matrix as product of interpolated components
 			}
+
+			void operator()(const HRay& r, HRay* ret) const {
+				// TODO
+			}
 			virtual ~AnimatedTransform() {}
 
 		private:
@@ -49,3 +55,4 @@ namespace helios {
 
 } // helios namespace
 
+#endif // HELIOS_GEOMETRY_ANIMATED_TRANSFORM_H

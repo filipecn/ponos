@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_FRUSTUM_H
+#define PONOS_GEOMETRY_FRUSTUM_H
 
 #include "geometry/plane.h"
 #include "geometry/point.h"
@@ -56,3 +57,4 @@ namespace ponos {
 
 } // ponos namespace
 
+#endif

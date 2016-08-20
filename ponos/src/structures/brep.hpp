@@ -1,5 +1,7 @@
-#pragma once
+#ifndef PONOS_STRUCTURES_BREP_H
+#define PONOS_STRUCTURES_BREP_H
 
+#include "common/defs.h"
 #include "geometry/point.h"
 
 #include <vector>
@@ -41,7 +43,7 @@ namespace ponos {
 					Edge() {
 						a = b = l = r = leftPred = leftSucc = rightPred = rightSucc = -1;
 					}
-					Edge(size_t _a, size_t _b) {
+					Edge(uint _a, uint _b) {
 						a = _a;
 						b = _b;
 						l = r = leftPred = leftSucc = rightPred = rightSucc = -1;
@@ -50,12 +52,12 @@ namespace ponos {
 
 				int addVertex(Vertex v);
 				int addVertex(Point<T, D> p);
-				void removeVertex(size_t i);
+				void removeVertex(uint i);
 				int addEdge(Edge e);
-				int addEdge(size_t a, size_t b);
-				void removeEdge(size_t i);
+				int addEdge(uint a, uint b);
+				void removeEdge(uint i);
 				int addFace(const std::vector<int>& vs);
-				void removeFace(size_t i);
+				void removeFace(uint i);
 
 				std::vector<Vertex> vertices;
 				std::vector<int> faces;
@@ -63,7 +65,7 @@ namespace ponos {
 
 			private:
 				// update vertex edges information
-				void updateVertex(size_t v);
+				void updateVertex(uint v);
 		};
 
 	template<class T, int D>
@@ -78,7 +80,7 @@ namespace ponos {
 		}
 
 	template<class T, int D>
-		void Brep<T, D>::removeVertex(size_t i) { }
+		void Brep<T, D>::removeVertex(uint i) { }
 
 	template<class T, int D>
 		int Brep<T, D>::addEdge(Edge e) {
@@ -87,7 +89,7 @@ namespace ponos {
 		}
 
 	template<class T, int D>
-		int Brep<T, D>::addEdge(size_t a, size_t b) {
+		int Brep<T, D>::addEdge(uint a, uint b) {
 			edges.emplace_back(a, b);
 			updateVertex(a);
 			updateVertex(b);
@@ -95,7 +97,7 @@ namespace ponos {
 		}
 
 	template<class T, int D>
-		void Brep<T, D>::removeEdge(size_t i) { }
+		void Brep<T, D>::removeEdge(uint i) { }
 
 	template<class T, int D>
 		int Brep<T, D>::addFace(const std::vector<int>& vs) {
@@ -116,10 +118,12 @@ namespace ponos {
 		}
 
 	template<class T, int D>
-		void Brep<T, D>::removeFace(size_t i) { }
+		void Brep<T, D>::removeFace(uint i) { }
 
 	template<class T, int D>
-		void Brep<T, D>::updateVertex(size_t v) {
+		void Brep<T, D>::updateVertex(uint v) {
 
 		}
 } // ponos namespace
+
+#endif

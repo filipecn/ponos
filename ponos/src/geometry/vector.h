@@ -1,12 +1,11 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_VECTOR_H
+#define PONOS_GEOMETRY_VECTOR_H
 
 #include "geometry/normal.h"
 #include "geometry/utils.h"
 #include "log/debug.h"
 
 namespace ponos {
-
-	class Normal;
 
 	class Vector2 {
 		public:
@@ -93,12 +92,14 @@ namespace ponos {
 		return Vector2(n.y, -n.x);
 	}
 
+	class Point3;
 	class Vector3 {
 		public:
 			Vector3();
 			explicit Vector3(float _f);
 			explicit Vector3(float _x, float _y, float _z);
 			explicit Vector3(const Normal& n);
+			explicit Vector3(const Point3& p);
 			// boolean
 			bool operator==(const Vector3& v) {
 				return IS_EQUAL(x, v.x) && IS_EQUAL(y, v.y) && IS_EQUAL(z, v.z);
@@ -173,7 +174,7 @@ namespace ponos {
 	};
 
 	inline Vector3 operator*(float f, const Vector3& v) {
-		return v*f;
+		return v * f;
 	}
 
 	inline float dot(const Vector3& a, const Vector3& b) {
@@ -276,3 +277,5 @@ namespace ponos {
 	typedef Vector4 vec4;
 
 } // ponos namespace
+
+#endif

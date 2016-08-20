@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_MATRIX_H
+#define PONOS_GEOMETRY_MATRIX_H
 
 #include "geometry/vector.h"
 
@@ -105,3 +106,5 @@ namespace ponos {
 	typedef Matrix3x3 mat3;
 
 } // ponos namespace
+
+#endif

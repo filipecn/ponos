@@ -1,13 +1,14 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_UTILS_H
+#define PONOS_GEOMETRY_UTILS_H
 
 #include <cmath>
 #include <algorithm>
 
 namespace ponos {
-	
+
 #define PI 3.14159265359
 #define PI_2 6.28318530718
-		
+	
 #define SQR(A) \
 		((A) * (A))
 		
@@ -23,10 +24,18 @@ namespace ponos {
 #define IS_EQUAL(A, B) \
 		(fabs((A) - (B)) < 1e-7)
 		
+		inline float lerp(float t, float a, float b) {
+			return (1.f - t) * a + t * b;
+		}
+
 		template <typename T>
 		T clamp(const T& n, const T& l, const T& u) {
 			return std::max(l, std::min(n, u));
 		}
+
+	inline int round2Int(float f) {
+		return f + .5f;
+	}
 
 	template <typename T>
 		void swap(T &a, T &b) {
@@ -90,3 +99,5 @@ namespace ponos {
 		}
 	
 } // ponos namespace
+
+#endif

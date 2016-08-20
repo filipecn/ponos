@@ -1,6 +1,8 @@
 project(PONOS)
 
 set(HEADERS
+	src/common/defs.h
+	src/common/memory.h
 	src/geometry/bbox.h
 	src/geometry/frustum.h
 	src/geometry/intersections.h

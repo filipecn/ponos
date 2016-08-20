@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_STRUCTURES_Z_GRID_H
+#define PONOS_STRUCTURES_Z_GRID_H
 
 #include "log/debug.h"
 #include "structures/c_grid_interface.h"
@@ -121,3 +122,5 @@ namespace ponos {
   }
 
 } // ponos namespace
+
+#endif

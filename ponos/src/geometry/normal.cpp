@@ -1,4 +1,5 @@
 #include "geometry/normal.h"
+#include "geometry/vector.h"
 
 namespace ponos {
 

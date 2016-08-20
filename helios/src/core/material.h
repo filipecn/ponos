@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HELIOS_CORE_MATERIAL_H
+#define HELIOS_CORE_MATERIAL_H
 
 namespace helios {
 
@@ -9,4 +10,6 @@ namespace helios {
 	};
 
 } // helios namespace
+
+#endif
 

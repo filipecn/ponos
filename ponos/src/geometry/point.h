@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_POINT_H
+#define PONOS_GEOMETRY_POINT_H
 
 #include "geometry/utils.h"
 #include "geometry/vector.h"
@@ -72,7 +73,7 @@ namespace ponos {
 			return os;
 		}
 
-		uint32_t size;
+		size_t size;
 		T v[D];
 	};
 
@@ -167,3 +168,5 @@ namespace ponos {
   typedef Point3 point;
 
 } // ponos namespace
+
+#endif

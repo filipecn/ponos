@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HELIOS_CORE_LIGHT_H
+#define HELIOS_CORE_LIGHT_H
 
 namespace helios {
 
@@ -10,3 +11,4 @@ namespace helios {
 
 } // helios namespace
 
+#endif

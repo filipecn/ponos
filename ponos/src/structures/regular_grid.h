@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_STRUCTURES_REGULAR_GRID_H
+#define PONOS_STRUCTURES_REGULAR_GRID_H
 
 #include "log/debug.h"
 #include "structures/c_grid_interface.h"
@@ -76,3 +77,5 @@ namespace ponos {
     return data[max(0, min(this->width-1,i))][max(0, min(this->height-1,j))];
   }
 }  // ponos namespace
+
+#endif

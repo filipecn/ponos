@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_BBOX_H
+#define PONOS_GEOMETRY_BBOX_H
 
 #include "geometry/point.h"
 #include "geometry/vector.h"
@@ -86,6 +87,13 @@ namespace ponos {
     return ret;
   }
 
+	inline BBox make_union(const BBox& a, const BBox& b) {
+    BBox ret = make_union(a, b.pMin);
+    return make_union(ret, b.pMax);
+  }
+
   typedef BBox bbox;
 
 } // ponos namespace
+
+#endif

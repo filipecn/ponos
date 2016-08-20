@@ -1,6 +1,5 @@
-#pragma once
-
-#include "geometry/vector.h"
+#ifndef PONOS_GEOMETRY_NORMAL_H
+#define PONOS_GEOMETRY_NORMAL_H
 
 #include <iostream>
 
@@ -35,3 +34,5 @@ namespace ponos {
 //  }
 
 } // ponos namespace
+
+#endif

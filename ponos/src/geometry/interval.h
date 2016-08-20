@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PONOS_GEOMETRY_INTERVAL_H
+#define PONOS_GEOMETRY_INTERVAL_H
 
 namespace ponos {
 
@@ -12,3 +13,4 @@ namespace ponos {
 
 } // ponos namespace
 
+#endif

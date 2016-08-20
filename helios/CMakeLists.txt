@@ -1,10 +1,17 @@
 project(HELIOS)
 
 set(HEADERS
+	src/accelerators/aggregate.h
+	src/accelerators/grid.h
+	src/cameras/orthographic.h
+	src/cameras/perspective.h
+	src/core/camera.h
 	src/core/differential_geometry.h
+	src/core/film.h
 	src/core/intersection.h
 	src/core/light.h
 	src/core/material.h
+	src/core/sampler.h
 	src/core/shape.h
 	src/core/primitive.h
 	src/geometry/h_ray.h
@@ -13,6 +20,10 @@ set(HEADERS
 	)
 
 set(SOURCES
+	src/accelerators/grid.cpp
+	src/cameras/orthographic.cpp
+	src/cameras/perspective.cpp
+	src/core/camera.cpp
 	src/core/differential_geometry.cpp
 	src/core/shape.cpp
 	src/core/primitive.cpp
