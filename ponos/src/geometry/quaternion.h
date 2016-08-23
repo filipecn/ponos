@@ -1,6 +1,7 @@
 #ifndef PONOS_GEOMETRY_QUATERNION_H
 #define PONOS_GEOMETRY_QUATERNION_H
 
+#include "geometry/matrix.h"
 #include "geometry/transform.h"
 #include "geometry/vector.h"
 
@@ -33,6 +34,9 @@ namespace ponos {
 			}
 			Quaternion operator*(float d) const {
 				return Quaternion(v * d, w * d);
+			}
+			Quaternion operator*(const Quaternion &q) const {
+				return Quaternion(w * q.v + q.w * v + cross(v, q.v), w * q.w - dot(v, q.v));
 			}
 			bool operator==(const Quaternion& q) {
 				return IS_EQUAL(w, q.w) && v == q.v;
@@ -81,11 +85,23 @@ namespace ponos {
 				}
 				if(m.m[W][W] != 1.0) {
 					s = 1.0 / sqrtf(m.m[W][W]);
-				w *= s; v *= s;
+					w *= s; v *= s;
+				}
 			}
-		}
 
-    Transform toTransform() const {
+			Matrix3x3 toRotationMatrix() const {
+				return Matrix3x3(
+						1.f - 2.f * (v.y * v.y + v.z * v.z),
+						2.f * (v.x * v.y - v.z * w),
+						2.f * (v.x * v.z + v.y * w),
+						2.f * (v.x * v.y + v.z * w),
+						1.f - 2.f * (v.x * v.x + v.z * v.z),
+						2.f * (v.y * v.z - v.x * w),
+						2.f * (v.x * v.z - v.y * w),
+						2.f * (v.y * v.z + v.x * w),
+						1.f - 2.f * (v.x * v.x + v.y * v.y));
+			}
+			Transform toTransform() const {
       float m[4][4];
       m[0][0] = 1.f - 2.f * (v.y * v.y + v.z * v.z);
       m[1][0] = 2.f * (v.x * v.y + v.z * w);
@@ -132,6 +148,11 @@ namespace ponos {
   inline Quaternion normalize(const Quaternion& q) {
     return q / sqrtf(dot(q, q));
   }
+
+	inline Quaternion operator*(Vector3 v, const Quaternion& q) {
+		return Quaternion(v, 0)  * q;
+	}
+
 
 	inline Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
 		float cosTheta = dot(q1, q2);

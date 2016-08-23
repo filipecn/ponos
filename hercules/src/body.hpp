@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HERCULES_BODY_H
+#define HERCULES_BODY_H
 
 #include "fixture.hpp"
 
@@ -15,3 +16,4 @@ namespace hercules {
 
 } // hercules namespace
 
+#endif

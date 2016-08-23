@@ -17,7 +17,7 @@ if len(sys.argv) < 2 :
     sys.exit(1)
 
 if sys.argv[1] == 'docs' or sys.argv[1] == 'all':
-    cldoc_command = "cldoc generate -std=c++11 -Iponos/src -Ihelios/src -fPIC -- --report --merge docs --output html --type html --static"
+    cldoc_command = "cldoc generate -std=c++11 -Iponos/src -Ihelios/src -Ihercules/src -fPIC -- --report --merge docs --output html --type html --static"
     for filename in glob.iglob('ponos/**/*.c*', recursive=True):
         cldoc_command += " " + filename
     for filename in glob.iglob('ponos/**/*.h*', recursive=True):
@@ -25,6 +25,10 @@ if sys.argv[1] == 'docs' or sys.argv[1] == 'all':
     for filename in glob.iglob('helios/**/*.c*', recursive=True):
         cldoc_command += " " + filename
     for filename in glob.iglob('helios/**/*.h*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('hercules/**/*.c*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('hercules/**/*.h*', recursive=True):
         cldoc_command += " " + filename
     print(cldoc_command)
     call([cldoc_command], shell=True)

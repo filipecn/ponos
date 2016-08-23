@@ -8,6 +8,7 @@
 #include "geometry/line.h"
 #include "geometry/quaternion.h"
 #include "geometry/matrix.h"
+#include "geometry/numeric.h"
 #include "geometry/plane.h"
 #include "geometry/point.h"
 #include "geometry/ray.h"

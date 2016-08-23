@@ -1,14 +1,17 @@
 project(HERCULES)
 
 set(HEADERS
+	src/shapes/box.h
 	src/body.hpp
 	src/fixture.hpp
+	src/rigid_body.h
 	src/shape.hpp
 	src/world.hpp
 	src/hercules.h
 	)
 
 set(SOURCES
+	src/shapes/box.cpp
 	)
 
 link_libraries(ponos)

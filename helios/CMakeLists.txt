@@ -14,8 +14,10 @@ set(HEADERS
 	src/core/sampler.h
 	src/core/shape.h
 	src/core/primitive.h
+	src/core/texture.h
 	src/geometry/h_ray.h
 	src/shapes/h_sphere.h
+	src/shapes/triangle_mesh.h
 	src/helios.h
 	)
 
@@ -29,6 +31,7 @@ set(SOURCES
 	src/core/primitive.cpp
 	src/geometry/h_ray.cpp
 	src/shapes/h_sphere.cpp
+	src/shapes/triangle_mesh.cpp
 	)
 
 link_libraries(ponos)

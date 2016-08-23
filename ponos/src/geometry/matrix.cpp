@@ -290,6 +290,11 @@ namespace ponos {
                      m.m[0][2], m.m[1][2], m.m[2][2]);
   }
 
+	Matrix3x3 star(const Vector3 a) {
+		return Matrix3x3(    0, -a[2],  a[1],
+										  a[2],     0, -a[0],
+										 -a[1],  a[0],     0);
+	}
 	std::ostream& operator<<(std::ostream& os, const Matrix3x3& m) {
 		for(int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++)
@@ -298,5 +303,53 @@ namespace ponos {
 		}
 		return os;
 	}
+
+
+	Matrix2x2::Matrix2x2() {
+    memset(m, 0, sizeof(m));
+    for (int i = 0; i < 2; i++)
+      m[i][i] = 1.f;
+  }
+
+
+	Matrix2x2::Matrix2x2(float m00, float m01,
+			float m10, float m11) {
+    m[0][0] = m00; m[0][1] = m01;
+    m[1][0] = m10; m[1][1] = m11;
+	}
+
+  void Matrix2x2::setIdentity() {
+    memset(m, 0, sizeof(m));
+    for (int i = 0; i < 2; i++)
+      m[i][i] = 1.f;
+  }
+
+  Matrix2x2 inverse(const Matrix2x2& m) {
+		Matrix2x2 r;
+    float det = m.m[0][0] * m.m[1][1] - m.m[0][1] * m.m[1][0];
+		if(det == 0.f)
+			return r;
+		float k = 1.f / det;
+		r.m[0][0] = m.m[1][1] * k;
+		r.m[0][1] = -m.m[0][1] * k;
+		r.m[1][0] = -m.m[1][0] * k;
+		r.m[1][1] = m.m[0][0] * k;
+    return r;
+  }
+
+  Matrix2x2 transpose(const Matrix2x2& m) {
+    return Matrix2x2(m.m[0][0], m.m[1][0],
+                     m.m[0][1], m.m[1][1]);
+  }
+
+	std::ostream& operator<<(std::ostream& os, const Matrix2x2& m) {
+		for(int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++)
+				os << m.m[i][j] << " ";
+			os << std::endl;
+		}
+		return os;
+	}
+
 
 } // ponos namespace

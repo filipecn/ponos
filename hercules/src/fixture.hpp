@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HERCULES_FIXTURE_H
+#define HERCULES_FIXTURE_H
 
 #include "shape.hpp"
 
@@ -15,3 +16,4 @@ namespace hercules {
 
 } // hercules namespace
 
+#endif

@@ -2,7 +2,7 @@
 #define PONOS_GEOMETRY_VECTOR_H
 
 #include "geometry/normal.h"
-#include "geometry/utils.h"
+#include "geometry/numeric.h"
 #include "log/debug.h"
 
 namespace ponos {

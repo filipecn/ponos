@@ -10,6 +10,7 @@ set(HEADERS
 	src/geometry/line.h
 	src/geometry/matrix.h
 	src/geometry/normal.h
+	src/geometry/numeric.h
 	src/geometry/point.h
 	src/geometry/plane.h
 	src/geometry/ray.h

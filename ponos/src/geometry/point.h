@@ -11,6 +11,15 @@ namespace ponos {
   public:
     Point2();
     explicit Point2(float _x, float _y);
+    // access
+    float operator[](int i) const {
+      ASSERT(i >= 0 && i <= 1);
+      return (&x)[i];
+    }
+    float& operator[](int i) {
+      ASSERT(i >= 0 && i <= 1);
+      return (&x)[i];
+    }
 
     bool operator==(const Point2& p) const {
       return IS_EQUAL(x, p.x) && IS_EQUAL(y, p.y);

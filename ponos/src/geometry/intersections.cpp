@@ -52,4 +52,35 @@ namespace ponos {
 		return bbox_ray_intersection(box, ray, hit0);
 	}
 
+	bool triangle_ray_intersection(const Point3& p1, const Point3& p2, const Point3& p3, const Ray3& ray, float *tHit, float* b1, float* b2) {
+		// Compute s1
+		vec3 e1 = p2 - p1;
+		vec3 e2 = p3 - p1;
+		vec3 s1 = cross(ray.d, e2);
+		float divisor = dot(s1, e1);
+		if(divisor == 0.f)
+			return false;
+		float invDivisor = 1.f / divisor;
+		// Compute first barycentric coordinate
+		vec3 d = ray.o - p1;
+		float b1_ = dot(d, s1) * invDivisor;
+		if(b1_ < 0.f || b1_ > 1.f)
+			return false;
+		// Compute second barycentric coordinate
+		vec3 s2 = cross(d, e1);
+		float b2_ = dot(ray.d, s2) * invDivisor;
+		if(b2_ < 0. || b1_ + b2_ > 1.)
+			return false;
+		// Compute t to intersection point
+		float t = dot(e2, s2) * invDivisor;
+		if(t < 0.)
+			return false;
+		*tHit = t;
+		if(b1)
+			*b1 = b1_;
+		if(b2)
+			*b2 = b2_;
+		return true;
+	}
+
 } // ponos namespace

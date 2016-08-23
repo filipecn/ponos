@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HERULES_SHAPE_H
+#define HERULES_SHAPE_H
 
 #include <ponos.h>
 #include <vector>
@@ -24,3 +25,4 @@ namespace hercules {
 
 } // hercules namespace
 
+#endif

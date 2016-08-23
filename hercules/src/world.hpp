@@ -1,4 +1,7 @@
-#pragma once
+#ifndef HERCULES_WORLD_H
+#define HERCULES_WORLD_H
+
+#include "body.hpp"
 
 #include <ponos.h>
 
@@ -21,3 +24,5 @@ namespace hercules {
 	}
 
 } // hercules namespace
+
+#endif
