@@ -58,7 +58,7 @@ if make_result != 0 :
     sys.exit(1)
 
 if sys.argv[1] != 'test':
-    sys.exit(1)
+    sys.exit(0)
 
 # run tests
 tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/ponos/tests")))
