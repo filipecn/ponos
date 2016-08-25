@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GeometricPrimitive</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::GeometricPrimitive</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#helios.Primitive%2Bhelios.Primitive">Primitive<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Scene element.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.GeometricPrimitive.GeometricPrimitive">GeometricPrimitive<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.GeometricPrimitive.canIntersect">canIntersect<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p>intersection</p>
+                    </div>
+                </li>
+                <li><a href="#helios.GeometricPrimitive.intersect">intersect<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::GeometricPrimitive"><span><span class="keyword">Class</span><span>helios::GeometricPrimitive</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="helios::Primitive+helios::Primitive">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="helios.Primitive.html#helios.Primitive">Primitive</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>Scene element.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::GeometricPrimitive::GeometricPrimitive">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">GeometricPrimitive</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::shared_ptr&lt;helios::Shape&gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::shared_ptr&lt;helios::Material&gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.AreaLight.html#helios.AreaLight">AreaLight</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">a</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::GeometricPrimitive::GeometricPrimitive::s">
+                            <td>s</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::GeometricPrimitive::GeometricPrimitive::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::GeometricPrimitive::GeometricPrimitive::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::GeometricPrimitive::canIntersect">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">canIntersect</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>intersection</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Primitive.html#helios.Primitive.canIntersect">Primitive::canIntersect</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::GeometricPrimitive::intersect">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersect</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Intersection.html#helios.Intersection">Intersection</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">isect</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::GeometricPrimitive::intersect::r">
+                            <td>r</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::GeometricPrimitive::intersect::isect">
+                            <td>isect</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Primitive.html#helios.Primitive.intersect">Primitive::intersect</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

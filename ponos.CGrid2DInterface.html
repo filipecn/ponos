@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CGrid2DInterface</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>CGrid2DInterface&lt;T&gt;</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Template Parameters</div>
+            <ul>
+                <li><a href="#ponos.CGrid2DInterface.T">T<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#ponos.CGrid2DInterface.border">border<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.useBorder">useBorder<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.width">width<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.height">height<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.offset">offset<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.toWorld">toWorld<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.toGrid">toGrid<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.CGrid2DInterface.setTransform">setTransform<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.setDimensions">setDimensions<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.set">set<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.cell">cell<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.safeCell">safeCell<span class="counter"></span></a></li>
+                <li><a href="#ponos.CGrid2DInterface.belongs">belongs<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::CGrid2DInterface"><span><span class="keyword">Class</span><span>CGrid2DInterface&lt;T&gt;</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="template parameters">Template Parameters</h2>
+        <table class="template_parameters">
+            <tbody>
+                <tr id="ponos::CGrid2DInterface::T">
+                    <td>T</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="ponos::CGrid2DInterface::border">
+                    <td class="field_name identifier">border</td>
+                    <td class="field_type"><span class="type"><span class="name ">T</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::CGrid2DInterface::useBorder">
+                    <td class="field_name identifier">useBorder</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::CGrid2DInterface::width">
+                    <td class="field_name identifier">width</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::CGrid2DInterface::height">
+                    <td class="field_name identifier">height</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::CGrid2DInterface::offset">
+                    <td class="field_name identifier">offset</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::CGrid2DInterface::toWorld">
+                    <td class="field_name identifier">toWorld</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::CGrid2DInterface::toGrid">
+                    <td class="field_name identifier">toGrid</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::CGrid2DInterface::setTransform">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setTransform</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                                </td>
+                                <td class="argument_name">_offset,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                                </td>
+                                <td class="argument_name">_cellSize</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::CGrid2DInterface::setTransform::_offset">
+                            <td>_offset</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::CGrid2DInterface::setTransform::_cellSize">
+                            <td>_cellSize</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::CGrid2DInterface::setDimensions">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setDimensions</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">h</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::CGrid2DInterface::setDimensions::w">
+                            <td>w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::CGrid2DInterface::setDimensions::h">
+                            <td>h</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::CGrid2DInterface::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">h,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                                </td>
+                                <td class="argument_name">_offset,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                                </td>
+                                <td class="argument_name">_cellSize</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::CGrid2DInterface::set::w">
+                            <td>w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::CGrid2DInterface::set::h">
+                            <td>h</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::CGrid2DInterface::set::_offset">
+                            <td>_offset</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::CGrid2DInterface::set::_cellSize">
+                            <td>_cellSize</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::CGrid2DInterface::cell">
+                    <div class="return_type"><span class="type"><span class="name ">Point&lt;int, 2&gt;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">cell</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">wp</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::CGrid2DInterface::cell::wp">
+                            <td>wp</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::CGrid2DInterface::safeCell">
+                    <div class="return_type"><span class="type"><span class="name ">Point&lt;int, 2&gt;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">safeCell</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">wp</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::CGrid2DInterface::safeCell::wp">
+                            <td>wp</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::CGrid2DInterface::belongs">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">belongs</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">Point&lt;int, 2&gt;</span></span>
+                                </td>
+                                <td class="argument_name">c</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::CGrid2DInterface::belongs::c">
+                            <td>c</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

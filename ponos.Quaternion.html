@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Quaternion</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>ponos::Quaternion</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#ponos.Quaternion.v">v<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.w">w<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#ponos.Quaternion.Quaternion">Quaternion<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.Quaternion">Quaternion<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.Quaternion">Quaternion<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.Quaternion">Quaternion<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.Quaternion.fromAxisAndAngle">fromAxisAndAngle<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.fromMatrix">fromMatrix<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator%2B">operator+<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator%2B%3D">operator+=<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator-">operator-<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator-%3D">operator-=<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator">operator/<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.operator%3D%3D">operator==<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.toRotationMatrix">toRotationMatrix<span class="counter"></span></a></li>
+                <li><a href="#ponos.Quaternion.toTransform">toTransform<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::Quaternion"><span><span class="keyword">Class</span><span>ponos::Quaternion</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="ponos::Quaternion::v">
+                    <td class="field_name identifier">v</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Quaternion::w">
+                    <td class="field_name identifier">w</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::Quaternion">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Quaternion</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::Quaternion">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Quaternion</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                                </td>
+                                <td class="argument_name">_v,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">_w</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::Quaternion::_v">
+                            <td>_v</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Quaternion::Quaternion::_w">
+                            <td>_w</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::Quaternion">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Quaternion</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::Quaternion::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::Quaternion">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Quaternion</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::Quaternion::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::fromAxisAndAngle">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fromAxisAndAngle</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">_v,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">angle</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::fromAxisAndAngle::_v">
+                            <td>_v</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Quaternion::fromAxisAndAngle::angle">
+                            <td>angle</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::fromMatrix">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fromMatrix</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::fromMatrix::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">d</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator*::d">
+                            <td>d</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator*::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator+">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator+</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator+::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator+=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator+=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator+=::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator-">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator-</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator-::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator-=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator-=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator-=::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator/">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator/</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">d</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator/::d">
+                            <td>d</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::operator==">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator==</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Quaternion::operator==::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::toRotationMatrix">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">toRotationMatrix</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Quaternion::toTransform">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">toTransform</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

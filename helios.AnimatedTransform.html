@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AnimatedTransform</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::AnimatedTransform</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.AnimatedTransform.AnimatedTransform">AnimatedTransform<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#helios.AnimatedTransform.~AnimatedTransform">~AnimatedTransform<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.AnimatedTransform.decompose">decompose<span class="counter"></span></a></li>
+                <li><a href="#helios.AnimatedTransform.interpolate">interpolate<span class="counter"></span></a></li>
+                <li><a href="#helios.AnimatedTransform.operator()">operator()<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::AnimatedTransform"><span><span class="keyword">Class</span><span>helios::AnimatedTransform</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::AnimatedTransform::AnimatedTransform">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">AnimatedTransform</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">time1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t2,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">time2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::AnimatedTransform::AnimatedTransform::t1">
+                            <td>t1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::AnimatedTransform::time1">
+                            <td>time1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::AnimatedTransform::t2">
+                            <td>t2</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::AnimatedTransform::time2">
+                            <td>time2</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="helios::AnimatedTransform::~AnimatedTransform">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~AnimatedTransform</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::AnimatedTransform::decompose">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">decompose</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.mat4">ponos::mat4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">T,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">ponos::Quaternion</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">Rquat,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.mat4">ponos::mat4</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">s</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::AnimatedTransform::decompose::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::decompose::T">
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::decompose::Rquat">
+                            <td>Rquat</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::decompose::s">
+                            <td>s</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::AnimatedTransform::interpolate">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">interpolate</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">time,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::AnimatedTransform::interpolate::time">
+                            <td>time</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::interpolate::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::AnimatedTransform::operator()">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator()</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">ret</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::AnimatedTransform::operator()::r">
+                            <td>r</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::AnimatedTransform::operator()::ret">
+                            <td>ret</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

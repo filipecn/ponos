@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Frustum</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>ponos::Frustum</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#ponos.Frustum.near">near<span class="counter"></span></a></li>
+                <li><a href="#ponos.Frustum.far">far<span class="counter"></span></a></li>
+                <li><a href="#ponos.Frustum.left">left<span class="counter"></span></a></li>
+                <li><a href="#ponos.Frustum.right">right<span class="counter"></span></a></li>
+                <li><a href="#ponos.Frustum.bottom">bottom<span class="counter"></span></a></li>
+                <li><a href="#ponos.Frustum.top">top<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#ponos.Frustum.Frustum">Frustum<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.Frustum.set">set<span class="counter"></span></a>
+                    <div class="brief">
+                        <p><a href="http://gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf">http://gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf</a></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::Frustum"><span><span class="keyword">Class</span><span>ponos::Frustum</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="ponos::Frustum::near">
+                    <td class="field_name identifier">near</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Frustum::far">
+                    <td class="field_name identifier">far</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Frustum::left">
+                    <td class="field_name identifier">left</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Frustum::right">
+                    <td class="field_name identifier">right</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Frustum::bottom">
+                    <td class="field_name identifier">bottom</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Frustum::top">
+                    <td class="field_name identifier">top</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="ponos::Frustum::Frustum">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Frustum</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::Frustum::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>it t is the projection matrix, then frustum is in view space it t is the M <em> V </em> P matrix, then frustum is in model space</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Frustum::set::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

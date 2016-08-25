@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Brep</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>Brep&lt;T, int D&gt;</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Template Parameters</div>
+            <ul>
+                <li><a href="#ponos.Brep.T">T<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.D">D<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="ponos.Brep.Vertex.html#ponos.Brep.Vertex">Vertex<span class="counter"></span></a></li>
+                <li><a href="ponos.Brep.Edge.html#ponos.Brep.Edge">Edge<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#ponos.Brep.vertices">vertices<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.faces">faces<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.edges">edges<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.Brep.addVertex">addVertex<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.addVertex">addVertex<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.removeVertex">removeVertex<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.addEdge">addEdge<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.addEdge">addEdge<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.removeEdge">removeEdge<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.addFace">addFace<span class="counter"></span></a></li>
+                <li><a href="#ponos.Brep.removeFace">removeFace<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::Brep"><span><span class="keyword">Class</span><span>Brep&lt;T, int D&gt;</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>l_s r_p \ / \ / x b | l | r | x a / \ / \ l_p r_s</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="template parameters">Template Parameters</h2>
+        <table class="template_parameters">
+            <tbody>
+                <tr id="ponos::Brep::T">
+                    <td>T</td>
+                    <td></td>
+                </tr>
+                <tr id="ponos::Brep::D">
+                    <td><span class="type"><span class="name builtin">int</span> D</span>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="ponos.Brep.Vertex.html#ponos.Brep.Vertex">Vertex</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Brep.Edge.html#ponos.Brep.Edge">Edge</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="ponos::Brep::vertices">
+                    <td class="field_name identifier">vertices</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;_Tp, _Alloc&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Brep::faces">
+                    <td class="field_name identifier">faces</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;int, std::allocator&lt;int&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="ponos::Brep::edges">
+                    <td class="field_name identifier">edges</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;_Tp, _Alloc&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::addVertex">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addVertex</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Brep.Vertex.html#ponos.Brep.Vertex">Brep&lt;T, D&gt;::Vertex</a></span></span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::addVertex::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::addVertex">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addVertex</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point.html#ponos.Point">Point&lt;T, D&gt;</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::addVertex::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::removeVertex">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">removeVertex</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">i</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::removeVertex::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::addEdge">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addEdge</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Brep.Edge.html#ponos.Brep.Edge">Brep&lt;T, D&gt;::Edge</a></span></span>
+                                </td>
+                                <td class="argument_name">e</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::addEdge::e">
+                            <td>e</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::addEdge">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addEdge</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::addEdge::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Brep::addEdge::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::removeEdge">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">removeEdge</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">i</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::removeEdge::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::addFace">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addFace</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::vector&lt;int, std::allocator&lt;int&gt; &gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">vs</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::addFace::vs">
+                            <td>vs</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Brep::removeFace">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">removeFace</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">i</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Brep::removeFace::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

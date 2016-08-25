@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Triangle</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::Triangle</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#helios.Shape%2Bhelios.Shape">Shape<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Geometric shape Interface.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.Triangle.Triangle">Triangle<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.Triangle.canIntersect">canIntersect<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> if is intersectable.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Triangle.getShadingGeometry">getShadingGeometry<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#helios.Triangle.intersect">intersect<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> compute intersection.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Triangle.objectBound">objectBound<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> Shape bounding box.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Triangle.surfaceArea">surfaceArea<span class="counter"></span></a></li>
+                <li><a href="#helios.Triangle.worldBound">worldBound<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Shape bounding box.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::Triangle"><span><span class="keyword">Class</span><span>helios::Triangle</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Stores a pointer to the parent <a href="helios.TriangleMesh.html#helios.TriangleMesh">helios::TriangleMesh</a> that it came from and a pointer to its 3 vertex indices in the mesh.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="helios::Shape+helios::Shape">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="helios.Shape.html#helios.Shape">Shape</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>Geometric shape Interface.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::Triangle">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Triangle</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">o2w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">w2o,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">ro,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.TriangleMesh.html#helios.TriangleMesh">TriangleMesh</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">n</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Triangle::Triangle::o2w">
+                            <td>o2w</td>
+                            <td>
+                                <div class="doc">
+                                    <p>object to world transformation</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::Triangle::w2o">
+                            <td>w2o</td>
+                            <td>
+                                <div class="doc">
+                                    <p>world to object transformation</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::Triangle::ro">
+                            <td>ro</td>
+                            <td>
+                                <div class="doc">
+                                    <p>reverse ortientation: indicates if the surface normal directions should be reversed from default (default = normals pointing outside)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::Triangle::m">
+                            <td>m</td>
+                            <td>
+                                <div class="doc">
+                                    <p>parent <a href="helios.TriangleMesh.html#helios.TriangleMesh">helios::TriangleMesh</a> pointer</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::Triangle::n">
+                            <td>n</td>
+                            <td>
+                                <div class="doc">
+                                    <p>first vertex index</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::canIntersect">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">canIntersect</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Indicates if the shape can compute <a href="helios.HRay.html#helios.HRay">helios::HRay</a> intersections.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Shape.html#helios.Shape.canIntersect">Shape::canIntersect</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::getShadingGeometry">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getShadingGeometry</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">o2w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.DifferentialGeometry.html#helios.DifferentialGeometry">DifferentialGeometry</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">dg,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.DifferentialGeometry.html#helios.DifferentialGeometry">DifferentialGeometry</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">dgShading</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc"></div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Triangle::getShadingGeometry::o2w">
+                            <td>o2w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::Triangle::getShadingGeometry::dg">
+                            <td>dg</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::Triangle::getShadingGeometry::dgShading">
+                            <td>dgShading</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Shape.html#helios.Shape.getShadingGeometry">Shape::getShadingGeometry</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::intersect">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersect</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ray,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">tHit,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">rayEpsilon,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.DifferentialGeometry.html#helios.DifferentialGeometry">DifferentialGeometry</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">dg</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>The rays passed into intersection routines are in world space!</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Triangle::intersect::ray">
+                            <td>ray</td>
+                            <td>
+                                <div class="doc">
+                                    <p>ray to be intersected (in world space).</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::intersect::tHit">
+                            <td>tHit</td>
+                            <td>
+                                <div class="doc">
+                                    <p>if an intersection is found, **tHit receives the parametric distance along the ray to the intersection point.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::intersect::rayEpsilon">
+                            <td>rayEpsilon</td>
+                            <td>
+                                <div class="doc">
+                                    <p>if an intersection is found, **rayEpsilon is initialized with the maximum numeric error in the intersection calculation (it helps the ray tracing algorithms to avoid incorrect self-intersections)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Triangle::intersect::dg">
+                            <td>dg</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>true if an intersection was found</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Shape.html#helios.Shape.intersect">Shape::intersect</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::objectBound">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">ponos::BBox</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">objectBound</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Shape bounding box.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>bounding box of the shape (in object space)</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Shape.html#helios.Shape.objectBound">Shape::objectBound</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::surfaceArea">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">surfaceArea</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Shape.html#helios.Shape.surfaceArea">Shape::surfaceArea</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Triangle::worldBound">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">ponos::BBox</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">worldBound</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Shape bounding box.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>bounding box of the shapet (in world space)</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Shape.html#helios.Shape.worldBound">Shape::worldBound</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

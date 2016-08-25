@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RigidBody</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>hercules::RigidBody</span></span>
+                </div><a href="hercules.html"><span class="arrow">↵</span> <span>hercules</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Subclasses</div>
+            <ul>
+                <li><a href="hercules.Box.html#hercules.Box">Box<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Box rigid body.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#hercules.RigidBody.density">density<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>constant quantities</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.mass">mass<span class="counter"></span></a></li>
+                <li><a href="#hercules.RigidBody.IbodyInv">IbodyInv<span class="counter"></span></a></li>
+                <li><a href="#hercules.RigidBody.x">x<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>state variables</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.q">q<span class="counter"></span></a></li>
+                <li><a href="#hercules.RigidBody.P">P<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>linear momentum</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.L">L<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>angular momentum</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.inertiaTensor">inertiaTensor<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>derived quantities</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.inertiaTensorInv">inertiaTensorInv<span class="counter"></span></a></li>
+                <li><a href="#hercules.RigidBody.R">R<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>rotation matrix</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.v">v<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>velocity</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.omega">omega<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>rotation</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.force">force<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>computed quantities</p>
+                    </div>
+                </li>
+                <li><a href="#hercules.RigidBody.torque">torque<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#hercules.RigidBody.RigidBody">RigidBody<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#hercules.RigidBody.~RigidBody">~RigidBody<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#hercules.RigidBody.computeForceAndTorque">computeForceAndTorque<span class="counter"></span></a></li>
+                <li><a href="#hercules.RigidBody.dxdt">dxdt<span class="counter"></span></a></li>
+                <li><a href="#hercules.RigidBody.update">update<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Update state derived quantities.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="hercules::RigidBody"><span><span class="keyword">Class</span><span>hercules::RigidBody</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Stores the state of a rigid body for physical simulations.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
+        <table class="subclasses">
+            <tbody>
+                <tr id="hercules::Box+hercules::Box">
+                    <td class="keyword"></td>
+                    <td><a href="hercules.Box.html#hercules.Box">Box</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>Box rigid body.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="hercules::RigidBody::density">
+                    <td class="field_name identifier">density</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>constant quantities</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::mass">
+                    <td class="field_name identifier">mass</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="hercules::RigidBody::IbodyInv">
+                    <td class="field_name identifier">IbodyInv</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.mat3">ponos::mat3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="hercules::RigidBody::x">
+                    <td class="field_name identifier">x</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>state variables</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::q">
+                    <td class="field_name identifier">q</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.quat">ponos::quat</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="hercules::RigidBody::P">
+                    <td class="field_name identifier">P</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>linear momentum</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::L">
+                    <td class="field_name identifier">L</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>angular momentum</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::inertiaTensor">
+                    <td class="field_name identifier">inertiaTensor</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.mat3">ponos::mat3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>derived quantities</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::inertiaTensorInv">
+                    <td class="field_name identifier">inertiaTensorInv</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.mat3">ponos::mat3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="hercules::RigidBody::R">
+                    <td class="field_name identifier">R</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.mat3">ponos::mat3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>rotation matrix</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::v">
+                    <td class="field_name identifier">v</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>velocity</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::omega">
+                    <td class="field_name identifier">omega</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>rotation</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::force">
+                    <td class="field_name identifier">force</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>computed quantities</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="hercules::RigidBody::torque">
+                    <td class="field_name identifier">torque</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="hercules::RigidBody::RigidBody">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RigidBody</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="hercules::RigidBody::~RigidBody">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~RigidBody</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="hercules::RigidBody::computeForceAndTorque">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">computeForceAndTorque</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="hercules::RigidBody::dxdt">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">dxdt</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">t,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="hercules.DdtBodyState.html#hercules.DdtBodyState">DdtBodyState</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">xdot</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="hercules::RigidBody::dxdt::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                        <tr id="hercules::RigidBody::dxdt::xdot">
+                            <td>xdot</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="hercules::RigidBody::update">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">update</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>After the quantities of force and torque were updated, other quantities must be computed. This function assumes that <a href="#hercules.RigidBody.computeForceAndTorque">hercules::RigidBody::computeForceAndTorque</a> has already been
+                        called for the current step of the simulation.</p>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

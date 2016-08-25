@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ProjectiveCamera</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::ProjectiveCamera</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#helios.Camera%2Bhelios.Camera">Camera<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Camera base class.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Subclasses</div>
+            <ul>
+                <li><a href="helios.PerspectiveCamera.html#helios.PerspectiveCamera">PerspectiveCamera<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Perspective Camera model.</p>
+                    </div>
+                </li>
+                <li><a href="helios.OrthoCamera.html#helios.OrthoCamera">OrthoCamera<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Orthographic Camera model.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#helios.ProjectiveCamera.cameraToScreen">cameraToScreen<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#helios.ProjectiveCamera.rasterToCamera">rasterToCamera<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#helios.ProjectiveCamera.screenToRaster">screenToRaster<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#helios.ProjectiveCamera.rasterToScreen">rasterToScreen<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#helios.ProjectiveCamera.focalDistance">focalDistance<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#helios.ProjectiveCamera.lensRadius">lensRadius<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.ProjectiveCamera.ProjectiveCamera">ProjectiveCamera<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::ProjectiveCamera"><span><span class="keyword">Class</span><span>helios::ProjectiveCamera</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Base for models that use a 4x4 projective transformation matrix.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="helios::Camera+helios::Camera">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="helios.Camera.html#helios.Camera">Camera</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>Camera base class.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
+        <table class="subclasses">
+            <tbody>
+                <tr id="helios::PerspectiveCamera+helios::PerspectiveCamera">
+                    <td class="keyword"></td>
+                    <td><a href="helios.PerspectiveCamera.html#helios.PerspectiveCamera">PerspectiveCamera</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>Perspective Camera model.</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="helios::OrthoCamera+helios::OrthoCamera">
+                    <td class="keyword"></td>
+                    <td><a href="helios.OrthoCamera.html#helios.OrthoCamera">OrthoCamera</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>Orthographic Camera model.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="helios::ProjectiveCamera::cameraToScreen">
+                    <td class="field_name identifier">cameraToScreen</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::ProjectiveCamera::rasterToCamera">
+                    <td class="field_name identifier">rasterToCamera</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::ProjectiveCamera::screenToRaster">
+                    <td class="field_name identifier">screenToRaster</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::ProjectiveCamera::rasterToScreen">
+                    <td class="field_name identifier">rasterToScreen</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::ProjectiveCamera::focalDistance">
+                    <td class="field_name identifier">focalDistance</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::ProjectiveCamera::lensRadius">
+                    <td class="field_name identifier">lensRadius</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::ProjectiveCamera::ProjectiveCamera">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ProjectiveCamera</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.AnimatedTransform.html#helios.AnimatedTransform">AnimatedTransform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">cam2world,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">proj,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span><span class="array_size">[4]</span></span>
+                                </td>
+                                <td class="argument_name">screenWindow,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sopen,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sclose,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">lensr,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">focald,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Film.html#helios.Film">Film</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::cam2world">
+                            <td>cam2world</td>
+                            <td>
+                                <div class="doc">
+                                    <p>camera to world transform.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::proj">
+                            <td>proj</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@screenWindow</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::screenWindow">
+                            <td>screenWindow</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::sopen">
+                            <td>sopen</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@sclose</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::sclose">
+                            <td>sclose</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::lensr">
+                            <td>lensr</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@focald</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::focald">
+                            <td>focald</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::ProjectiveCamera::ProjectiveCamera::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

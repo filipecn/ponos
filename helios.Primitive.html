@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Primitive</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::Primitive</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Subclasses</div>
+            <ul>
+                <li><a href="helios.GeometricPrimitive.html#helios.GeometricPrimitive">GeometricPrimitive<span class="counter"></span></a></li>
+                <li><a href="helios.Aggregate.html#helios.Aggregate">Aggregate<span class="counter"></span></a></li>
+                <li><a href="helios.TransformedPrimitive.html#helios.TransformedPrimitive">TransformedPrimitive<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#helios.Primitive.primitiveId">primitiveId<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>virtual BSDF *getBSDF(const DifferentialGeometry &amp;gd, const ponos::Transform &amp;o2w, MemoryArena &amp;arena) const = 0;</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Variables</div>
+            <ul>
+                <li><a href="#helios.Primitive.nextPrimitiveId">nextPrimitiveId<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.Primitive.Primitive">Primitive<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#helios.Primitive.~Primitive">~Primitive<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.Primitive.canIntersect">canIntersect<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p>intersection</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Primitive.fullyRefine">fullyRefine<span class="counter"></span></a></li>
+                <li><a href="#helios.Primitive.getAreaLight">getAreaLight<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p>material</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Primitive.intersect">intersect<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> as</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Primitive.intersectP">intersectP<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#helios.Primitive.refine">refine<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#helios.Primitive.worldBound">worldBound<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::Primitive"><span><span class="keyword">Class</span><span>helios::Primitive</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>A primitive is a simple scene element which can interact with light and compute intersections with other elements.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
+        <table class="subclasses">
+            <tbody>
+                <tr id="helios::GeometricPrimitive+helios::GeometricPrimitive">
+                    <td class="keyword"></td>
+                    <td><a href="helios.GeometricPrimitive.html#helios.GeometricPrimitive">GeometricPrimitive</a></td>
+                    <td></td>
+                </tr>
+                <tr id="helios::Aggregate+helios::Aggregate">
+                    <td class="keyword"></td>
+                    <td><a href="helios.Aggregate.html#helios.Aggregate">Aggregate</a></td>
+                    <td></td>
+                </tr>
+                <tr id="helios::TransformedPrimitive+helios::TransformedPrimitive">
+                    <td class="keyword"></td>
+                    <td><a href="helios.TransformedPrimitive.html#helios.TransformedPrimitive">TransformedPrimitive</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="helios::Primitive::primitiveId">
+                    <td class="field_name identifier">primitiveId</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc">
+                        <div class="doc">
+                            <p>virtual BSSRDF *getBSSRDF(const DifferentialGeometry &amp;gd, const Transform &amp;o2w, MemoryArena &amp;arena) const = 0;</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="variables">Variables</h2>
+        <table class="variables">
+            <tbody>
+                <tr id="helios::Primitive::nextPrimitiveId">
+                    <td class="variable_name identifier">nextPrimitiveId</td>
+                    <td class="variable_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::Primitive">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Primitive</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::~Primitive">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~Primitive</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::canIntersect">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">canIntersect</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>intersection</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::fullyRefine">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fullyRefine</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::vector&lt;std::shared_ptr&lt;helios::Primitive&gt;, std::allocator&lt;std::shared_ptr&lt;helios::Primitive&gt; &gt; &gt;</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">refined</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Primitive::fullyRefine::refined">
+                            <td>refined</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::getAreaLight">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="helios.AreaLight.html#helios.AreaLight">AreaLight</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                        </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getAreaLight</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>material</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::intersect">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersect</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Intersection.html#helios.Intersection">Intersection</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">in</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>asd</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Primitive::intersect::r">
+                            <td>r</td>
+                            <td>
+                                <div class="doc">
+                                    <p>ray to be intersected</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Primitive::intersect::in">
+                            <td>in</td>
+                            <td>
+                                <div class="doc">
+                                    <p>intersection</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>true if intersection exists</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::intersectP">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersectP</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Primitive::intersectP::r">
+                            <td>r</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::refine">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">refine</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::vector&lt;std::shared_ptr&lt;helios::Primitive&gt;, std::allocator&lt;std::shared_ptr&lt;helios::Primitive&gt; &gt; &gt;</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">refined</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Primitive::refine::refined">
+                            <td>refined</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Primitive::worldBound">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">ponos::BBox</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">worldBound</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

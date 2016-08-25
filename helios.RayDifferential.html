@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RayDifferential</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::RayDifferential</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#helios.HRay%2Bhelios.HRay">HRay<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Implements <a href="ponos.Ray3.html#ponos.Ray3">ponos::Ray3</a>.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#helios.RayDifferential.hasDifferentials">hasDifferentials<span class="counter"></span></a></li>
+                <li><a href="#helios.RayDifferential.rxOrigin">rxOrigin<span class="counter"></span></a></li>
+                <li><a href="#helios.RayDifferential.ryOrigin">ryOrigin<span class="counter"></span></a></li>
+                <li><a href="#helios.RayDifferential.rxDirection">rxDirection<span class="counter"></span></a></li>
+                <li><a href="#helios.RayDifferential.ryDirection">ryDirection<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.RayDifferential.RayDifferential">RayDifferential<span class="counter"></span></a></li>
+                <li><a href="#helios.RayDifferential.RayDifferential">RayDifferential<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.RayDifferential.RayDifferential">RayDifferential<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.RayDifferential.RayDifferential">RayDifferential<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.RayDifferential.scaleDifferentials">scaleDifferentials<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Updates the differential rays</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::RayDifferential"><span><span class="keyword">Class</span><span>helios::RayDifferential</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Has 2 auxiliary rays to help algorithms like antialiasing.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="helios::HRay+helios::HRay">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>Implements <a href="ponos.Ray3.html#ponos.Ray3">ponos::Ray3</a>.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="helios::RayDifferential::hasDifferentials">
+                    <td class="field_name identifier">hasDifferentials</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RayDifferential::rxOrigin">
+                    <td class="field_name identifier">rxOrigin</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RayDifferential::ryOrigin">
+                    <td class="field_name identifier">ryOrigin</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RayDifferential::rxDirection">
+                    <td class="field_name identifier">rxDirection</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RayDifferential::ryDirection">
+                    <td class="field_name identifier">ryDirection</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::RayDifferential::RayDifferential">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RayDifferential</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::RayDifferential::RayDifferential">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RayDifferential</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">origin,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">ponos::Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">direction,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">start,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">end,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">t,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">d</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::RayDifferential::RayDifferential::origin">
+                            <td>origin</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@direction</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::direction">
+                            <td>direction</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::start">
+                            <td>start</td>
+                            <td>
+                                <div class="doc">
+                                    <p>parametric coordinate start</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::end">
+                            <td>end</td>
+                            <td>
+                                <div class="doc">
+                                    <p>parametric coordinate end (how far this ray can go)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p>parametric coordinate</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p>depth of recursion</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::RayDifferential::RayDifferential">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RayDifferential</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">origin,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">ponos::Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">direction,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">parent,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">start,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">end</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::RayDifferential::RayDifferential::origin">
+                            <td>origin</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@direction</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::direction">
+                            <td>direction</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::parent">
+                            <td>parent</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@start parametric coordinate start</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::start">
+                            <td>start</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::RayDifferential::RayDifferential::end">
+                            <td>end</td>
+                            <td>
+                                <div class="doc">
+                                    <p>parametric coordinate end (how far this ray can go)</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::RayDifferential::RayDifferential">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RayDifferential</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ray</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::RayDifferential::RayDifferential::ray">
+                            <td>ray</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::RayDifferential::scaleDifferentials">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">scaleDifferentials</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">s</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Updates the differential rays for a sample spacing <a href="#helios.RayDifferential.scaleDifferentials.s">s</a>.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::RayDifferential::scaleDifferentials::s">
+                            <td>s</td>
+                            <td>
+                                <div class="doc">
+                                    <p>smaple spacing</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

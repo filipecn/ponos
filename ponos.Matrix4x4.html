@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Matrix4x4</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>ponos::Matrix4x4</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#ponos.Matrix4x4.m">m<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#ponos.Matrix4x4.Matrix4x4">Matrix4x4<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.Matrix4x4">Matrix4x4<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.Matrix4x4">Matrix4x4<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.Matrix4x4.column_major">column_major<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.isIdentity">isIdentity<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.mul">mul<span class="counter"></span></a><span class="static">s</span></li>
+                <li><a href="#ponos.Matrix4x4.operator!%3D">operator!=<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.operator%3D%3D">operator==<span class="counter"></span></a></li>
+                <li><a href="#ponos.Matrix4x4.row_major">row_major<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::Matrix4x4"><span><span class="keyword">Class</span><span>ponos::Matrix4x4</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="ponos::Matrix4x4::m">
+                    <td class="field_name identifier">m</td>
+                    <td class="field_type"><span class="type"><span class="sub-type"><span class="sub-type"><span class="name builtin">float</span></span><span class="array_size">[4]</span></span><span class="array_size">[4]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::Matrix4x4">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Matrix4x4</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::Matrix4x4">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Matrix4x4</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="sub-type"><span class="name builtin">float</span></span><span class="array_size">[4]</span></span><span class="array_size">[4]</span></span>
+                                </td>
+                                <td class="argument_name">mat</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::mat">
+                            <td>mat</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::Matrix4x4">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Matrix4x4</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m00,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m01,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m02,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m03,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m10,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m11,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m12,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m13,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m20,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m21,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m22,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m23,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m30,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m31,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m32,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">m33</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m00">
+                            <td>m00</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m01">
+                            <td>m01</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m02">
+                            <td>m02</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m03">
+                            <td>m03</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m10">
+                            <td>m10</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m11">
+                            <td>m11</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m12">
+                            <td>m12</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m13">
+                            <td>m13</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m20">
+                            <td>m20</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m21">
+                            <td>m21</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m22">
+                            <td>m22</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m23">
+                            <td>m23</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m30">
+                            <td>m30</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m31">
+                            <td>m31</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m32">
+                            <td>m32</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::Matrix4x4::m33">
+                            <td>m33</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::column_major">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">column_major</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">a</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::column_major::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::isIdentity">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">isIdentity</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::mul">
+                    <ul class="specifiers">
+                        <li class="static">static</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">mul</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::mul::m1">
+                            <td>m1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Matrix4x4::mul::m2">
+                            <td>m2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::operator!=">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator!=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">_m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::operator!=::_m">
+                            <td>_m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">mat</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::operator*::mat">
+                            <td>mat</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector4.html#ponos.Vector4">Vector4</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector4.html#ponos.Vector4">Vector4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::operator*::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::operator==">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator==</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">_m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::operator==::_m">
+                            <td>_m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Matrix4x4::row_major">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">row_major</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">a</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Matrix4x4::row_major::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

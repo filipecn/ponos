@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OrthoCamera</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::OrthoCamera</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#helios.ProjectiveCamera%2Bhelios.ProjectiveCamera">ProjectiveCamera<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Projective Camera model.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.OrthoCamera.OrthoCamera">OrthoCamera<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#helios.OrthoCamera.~OrthoCamera">~OrthoCamera<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.OrthoCamera.generateRay">generateRay<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> Generates ray for a given image sample.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.OrthoCamera.generateRayDifferential">generateRayDifferential<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> .</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::OrthoCamera"><span><span class="keyword">Class</span><span>helios::OrthoCamera</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Camera based on the orthographic projection transformation.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="helios::ProjectiveCamera+helios::ProjectiveCamera">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="helios.ProjectiveCamera.html#helios.ProjectiveCamera">ProjectiveCamera</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>Projective Camera model.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::OrthoCamera::OrthoCamera">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">OrthoCamera</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.AnimatedTransform.html#helios.AnimatedTransform">AnimatedTransform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">cam2world,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span><span class="array_size">[4]</span></span>
+                                </td>
+                                <td class="argument_name">screenWindow,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sopen,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sclose,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">lensr,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">focald,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Film.html#helios.Film">Film</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::OrthoCamera::OrthoCamera::cam2world">
+                            <td>cam2world</td>
+                            <td>
+                                <div class="doc">
+                                    <p>camera to world transform.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::OrthoCamera::screenWindow">
+                            <td>screenWindow</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::OrthoCamera::sopen">
+                            <td>sopen</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@sclose</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::OrthoCamera::sclose">
+                            <td>sclose</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::OrthoCamera::lensr">
+                            <td>lensr</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@focald</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::OrthoCamera::focald">
+                            <td>focald</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::OrthoCamera::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="helios::OrthoCamera::~OrthoCamera">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~OrthoCamera</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::OrthoCamera::generateRay">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">generateRay</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.CameraSample.html#helios.CameraSample">CameraSample</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">sample,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.HRay.html#helios.HRay">HRay</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">ray</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>the camera must normalize the direction of <a href="#helios.OrthoCamera.generateRay.ray">ray</a>.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::OrthoCamera::generateRay::sample">
+                            <td>sample</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@ray</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::generateRay::ray">
+                            <td>ray</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>a weight of how much light is arriving at the film plane.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Camera.html#helios.Camera.generateRay">Camera::generateRay</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::OrthoCamera::generateRayDifferential">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">generateRayDifferential</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.CameraSample.html#helios.CameraSample">CameraSample</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">sample,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.RayDifferential.html#helios.RayDifferential">RayDifferential</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">rd</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Also computes the corresponding rays for pixels shifted one pixel in the x and y directions on the plane.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::OrthoCamera::generateRayDifferential::sample">
+                            <td>sample</td>
+                            <td>
+                                <div class="doc">
+                                    <p>@rd</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::OrthoCamera::generateRayDifferential::rd">
+                            <td>rd</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>a weight of how much light is arriving at the film plane.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Camera.html#helios.Camera.generateRayDifferential">Camera::generateRayDifferential</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

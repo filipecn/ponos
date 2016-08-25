@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RWMutexLock</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Struct</span><span>ponos::RWMutexLock</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#ponos.RWMutexLock.RWMutexLock">RWMutexLock<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>@m <a href="ponos.RWMutex.html#ponos.RWMutex">ponos::RWMutex</a> reference.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#ponos.RWMutexLock.~RWMutexLock">~RWMutexLock<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.RWMutexLock.downgradeToRead">downgradeToRead<span class="counter"></span></a></li>
+                <li><a href="#ponos.RWMutexLock.upgradeToWrite">upgradeToWrite<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::RWMutexLock"><span><span class="keyword">Struct</span><span>ponos::RWMutexLock</span></span></h1>
+        <div class="description">
+            <div class="brief">
+                <p>Helper structure that acquires and releases reader-writer mutexes.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="ponos::RWMutexLock::RWMutexLock">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RWMutexLock</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.RWMutex.html#ponos.RWMutex">RWMutex</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.RWMutexLock">RWMutexLock</a></span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>@m <a href="ponos.RWMutex.html#ponos.RWMutex">ponos::RWMutex</a> reference.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::RWMutexLock::RWMutexLock::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::RWMutexLock::RWMutexLock::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p>Type of the lock: read-only(<a href="ponos.html#ponos.READ">ponos::READ</a>) or write(<a href="ponos.html#ponos.WRITE">ponos::WRITE</a>).</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="ponos::RWMutexLock::~RWMutexLock">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~RWMutexLock</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::RWMutexLock::downgradeToRead">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">downgradeToRead</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::RWMutexLock::upgradeToWrite">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">upgradeToWrite</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

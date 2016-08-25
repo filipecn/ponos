@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MemoryArena</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>ponos::MemoryArena</span></span>
+                </div><a href="ponos.html"><span class="arrow">↵</span> <span>ponos</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#ponos.MemoryArena.MemoryArena">MemoryArena<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>@bs amount of bytes the region to be allocated (<a href="#ponos.MemoryArena.blockSize">ponos::MemoryArena::blockSize</a>).</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#ponos.MemoryArena.~MemoryArena">~MemoryArena<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#ponos.MemoryArena.alloc">alloc&lt;T&gt;<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> alloc allocates space for <a href="#ponos.MemoryArena.alloc.count">count</a> objects.</p>
+                    </div>
+                </li>
+                <li><a href="#ponos.MemoryArena.alloc">alloc<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>alloc allocates <a href="#ponos.MemoryArena.alloc.sz">sz</a> bytes.</p>
+                    </div>
+                </li>
+                <li><a href="#ponos.MemoryArena.freeAll">freeAll<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos::MemoryArena"><span><span class="keyword">Class</span><span>ponos::MemoryArena</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>objects of different size in this region. Does not support freeing of individual blocks.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="ponos::MemoryArena::MemoryArena">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">MemoryArena</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">bs</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>@bs amount of bytes the region to be allocated (<a href="#ponos.MemoryArena.blockSize">ponos::MemoryArena::blockSize</a>).</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::MemoryArena::MemoryArena::bs">
+                            <td>bs</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="ponos::MemoryArena::~MemoryArena">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~MemoryArena</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="ponos::MemoryArena::alloc">
+                    <div class="return_type"><span class="type"><span class="name ">T</span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">alloc&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">count</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> alloc allocates space for <a href="#ponos.MemoryArena.alloc.count">count</a> objects.</p>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::MemoryArena::alloc::count">
+                            <td>count</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::MemoryArena::alloc">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">alloc</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">sz</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>alloc allocates <a href="#ponos.MemoryArena.alloc.sz">sz</a> bytes.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::MemoryArena::alloc::sz">
+                            <td>sz</td>
+                            <td>
+                                <div class="doc">
+                                    <p>block size to be allocated.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::MemoryArena::freeAll">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">freeAll</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

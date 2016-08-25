@@ -1,0 +1,3449 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ponos</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Namespace</span><span>ponos</span></span>
+                </div><a href="index.html"><span class="arrow">↵</span> <span>Index</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Typedefs</div>
+            <ul>
+                <li><a href="#ponos.bbox">bbox<span class="counter"></span></a></li>
+                <li><a href="#ponos.mat2">mat2<span class="counter"></span></a></li>
+                <li><a href="#ponos.mat3">mat3<span class="counter"></span></a></li>
+                <li><a href="#ponos.mat4">mat4<span class="counter"></span></a></li>
+                <li><a href="#ponos.point">point<span class="counter"></span></a></li>
+                <li><a href="#ponos.quat">quat<span class="counter"></span></a></li>
+                <li><a href="#ponos.ray3">ray3<span class="counter"></span></a></li>
+                <li><a href="#ponos.vec2">vec2<span class="counter"></span></a></li>
+                <li><a href="#ponos.vec3">vec3<span class="counter"></span></a></li>
+                <li><a href="#ponos.vec4">vec4<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Classes</div>
+            <ul>
+                <li><a href="ponos.BBox.html#ponos.BBox">BBox<span class="counter"></span></a></li>
+                <li><a href="ponos.BBox2D.html#ponos.BBox2D">BBox2D<span class="counter"></span></a></li>
+                <li><a href="ponos.Brep.html#ponos.Brep">Brep&lt;T, int D&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.CGrid2DInterface.html#ponos.CGrid2DInterface">CGrid2DInterface&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.Circle.html#ponos.Circle">Circle<span class="counter"></span></a></li>
+                <li><a href="ponos.CObjectPool.html#ponos.CObjectPool">CObjectPool&lt;T, uint S&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.Frustum.html#ponos.Frustum">Frustum<span class="counter"></span></a></li>
+                <li><a href="ponos.Interval.html#ponos.Interval">Interval&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.Line.html#ponos.Line">Line<span class="counter"></span></a></li>
+                <li><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2<span class="counter"></span></a></li>
+                <li><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3<span class="counter"></span></a></li>
+                <li><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4<span class="counter"></span></a></li>
+                <li><a href="ponos.MemoryArena.html#ponos.MemoryArena">MemoryArena<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>MemoryArena allocates a large contiguous region of memory and manages</p>
+                    </div>
+                </li>
+                <li><a href="ponos.Normal.html#ponos.Normal">Normal<span class="counter"></span></a></li>
+                <li><a href="ponos.ObjectPool.html#ponos.ObjectPool">ObjectPool&lt;T, uint S = 0&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.Plane.html#ponos.Plane">Plane<span class="counter"></span></a></li>
+                <li><a href="ponos.Point.html#ponos.Point">Point&lt;T, int D&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.Point2.html#ponos.Point2">Point2<span class="counter"></span></a></li>
+                <li><a href="ponos.Point3.html#ponos.Point3">Point3<span class="counter"></span></a></li>
+                <li><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion<span class="counter"></span></a></li>
+                <li><a href="ponos.Ray3.html#ponos.Ray3">Ray3<span class="counter"></span></a></li>
+                <li><a href="ponos.RegularGrid.html#ponos.RegularGrid">RegularGrid&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.RNG.html#ponos.RNG">RNG<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Random Number Generator</p>
+                    </div>
+                </li>
+                <li><a href="ponos.RWMutex.html#ponos.RWMutex">RWMutex<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>RWMutex provides reader-writer mutexes, which allow</p>
+                    </div>
+                </li>
+                <li><a href="ponos.Sphere.html#ponos.Sphere">Sphere<span class="counter"></span></a></li>
+                <li><a href="ponos.Transform.html#ponos.Transform">Transform<span class="counter"></span></a></li>
+                <li><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D<span class="counter"></span></a></li>
+                <li><a href="ponos.Vector2.html#ponos.Vector2">Vector2<span class="counter"></span></a></li>
+                <li><a href="ponos.Vector3.html#ponos.Vector3">Vector3<span class="counter"></span></a></li>
+                <li><a href="ponos.Vector4.html#ponos.Vector4">Vector4<span class="counter"></span></a></li>
+                <li><a href="ponos.ZGrid.html#ponos.ZGrid">ZGrid&lt;T&gt;<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="ponos.FreeListNode.html#ponos.FreeListNode">FreeListNode&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="ponos.RWMutexLock.html#ponos.RWMutexLock">RWMutexLock<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Helper structure that acquires and releases reader-writer mutexes.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Enumerations</div>
+            <ul>
+                <li><a href="#ponos.RWMutexLockType">RWMutexLockType<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Functions</div>
+            <ul>
+                <li><a href="#ponos.allocAligned">allocAligned&lt;T&gt;<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>allocAligned allocate cache-aligned <a href="#ponos.allocAligned.count">count</a> objects.</p>
+                    </div>
+                </li>
+                <li><a href="#ponos.bicubicInterpolate">bicubicInterpolate&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.bilinearInterpolation">bilinearInterpolation&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.clamp">clamp&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.cubicInterpolate">cubicInterpolate&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator!%3D">operator!=&lt;T, int D&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator%3D%3D">operator==&lt;T, int D&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.swap">swap&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.allocAligned">allocAligned<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>allocAligned allocate cache-aligned memory blocks of <a href="#ponos.allocAligned.size">size</a> bytes.</p>
+                    </div>
+                </li>
+                <li><a href="#ponos.bbox_ray_intersection">bbox_ray_intersection<span class="counter"></span></a></li>
+                <li><a href="#ponos.bbox_ray_intersection">bbox_ray_intersection<span class="counter"></span></a></li>
+                <li><a href="#ponos.cross">cross<span class="counter"></span></a></li>
+                <li><a href="#ponos.decompose">decompose<span class="counter"></span></a></li>
+                <li><a href="#ponos.distance">distance<span class="counter"></span></a></li>
+                <li><a href="#ponos.distance">distance<span class="counter"></span></a></li>
+                <li><a href="#ponos.distance2">distance2<span class="counter"></span></a></li>
+                <li><a href="#ponos.dot">dot<span class="counter"></span></a></li>
+                <li><a href="#ponos.dot">dot<span class="counter"></span></a></li>
+                <li><a href="#ponos.dot">dot<span class="counter"></span></a></li>
+                <li><a href="#ponos.floor2Int">floor2Int<span class="counter"></span></a></li>
+                <li><a href="#ponos.freeAligned">freeAligned<span class="counter"></span></a></li>
+                <li><a href="#ponos.frustumTransform">frustumTransform<span class="counter"></span></a></li>
+                <li><a href="#ponos.inverse">inverse<span class="counter"></span></a></li>
+                <li><a href="#ponos.inverse">inverse<span class="counter"></span></a></li>
+                <li><a href="#ponos.inverse">inverse<span class="counter"></span></a></li>
+                <li><a href="#ponos.inverse">inverse<span class="counter"></span></a></li>
+                <li><a href="#ponos.inverse">inverse<span class="counter"></span></a></li>
+                <li><a href="#ponos.lerp">lerp<span class="counter"></span></a></li>
+                <li><a href="#ponos.lookAt">lookAt<span class="counter"></span></a></li>
+                <li><a href="#ponos.lookAtRH">lookAtRH<span class="counter"></span></a></li>
+                <li><a href="#ponos.make_union">make_union<span class="counter"></span></a></li>
+                <li><a href="#ponos.make_union">make_union<span class="counter"></span></a></li>
+                <li><a href="#ponos.make_union">make_union<span class="counter"></span></a></li>
+                <li><a href="#ponos.makeCoordinateSystem">makeCoordinateSystem<span class="counter"></span></a></li>
+                <li><a href="#ponos.normalize">normalize<span class="counter"></span></a></li>
+                <li><a href="#ponos.normalize">normalize<span class="counter"></span></a></li>
+                <li><a href="#ponos.normalize">normalize<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#ponos.ortho">ortho<span class="counter"></span></a></li>
+                <li><a href="#ponos.orthographic">orthographic<span class="counter"></span></a></li>
+                <li><a href="#ponos.orthonormal">orthonormal<span class="counter"></span></a></li>
+                <li><a href="#ponos.perspective">perspective<span class="counter"></span></a></li>
+                <li><a href="#ponos.perspective">perspective<span class="counter"></span></a></li>
+                <li><a href="#ponos.plane_line_intersection">plane_line_intersection<span class="counter"></span></a></li>
+                <li><a href="#ponos.quadraticBSpline">quadraticBSpline<span class="counter"></span></a></li>
+                <li><a href="#ponos.rotate">rotate<span class="counter"></span></a></li>
+                <li><a href="#ponos.rotate">rotate<span class="counter"></span></a></li>
+                <li><a href="#ponos.rotateX">rotateX<span class="counter"></span></a></li>
+                <li><a href="#ponos.rotateY">rotateY<span class="counter"></span></a></li>
+                <li><a href="#ponos.rotateZ">rotateZ<span class="counter"></span></a></li>
+                <li><a href="#ponos.round2Int">round2Int<span class="counter"></span></a></li>
+                <li><a href="#ponos.scale">scale<span class="counter"></span></a></li>
+                <li><a href="#ponos.slerp">slerp<span class="counter"></span></a></li>
+                <li><a href="#ponos.solve_quadratic">solve_quadratic<span class="counter"></span></a></li>
+                <li><a href="#ponos.sphere_line_intersection">sphere_line_intersection<span class="counter"></span></a></li>
+                <li><a href="#ponos.star">star<span class="counter"></span></a></li>
+                <li><a href="#ponos.translate">translate<span class="counter"></span></a></li>
+                <li><a href="#ponos.transpose">transpose<span class="counter"></span></a></li>
+                <li><a href="#ponos.transpose">transpose<span class="counter"></span></a></li>
+                <li><a href="#ponos.transpose">transpose<span class="counter"></span></a></li>
+                <li><a href="#ponos.triangle_ray_intersection">triangle_ray_intersection<span class="counter"></span></a></li>
+                <li><a href="#ponos.trilinear_hat_function">trilinear_hat_function<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="ponos"><span><span class="keyword">Namespace</span><span>ponos</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="typedefs">Typedefs</h2>
+        <table class="typedefs">
+            <tbody>
+                <tr class="typedef" id="ponos::bbox">
+                    <td class="typedef_name identifier">bbox</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::mat2">
+                    <td class="typedef_name identifier">mat2</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::mat3">
+                    <td class="typedef_name identifier">mat3</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::mat4">
+                    <td class="typedef_name identifier">mat4</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::point">
+                    <td class="typedef_name identifier">point</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::quat">
+                    <td class="typedef_name identifier">quat</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::ray3">
+                    <td class="typedef_name identifier">ray3</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::vec2">
+                    <td class="typedef_name identifier">vec2</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::vec3">
+                    <td class="typedef_name identifier">vec3</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::vec4">
+                    <td class="typedef_name identifier">vec4</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Vector4.html#ponos.Vector4">Vector4</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="classes">Classes</h2>
+        <table class="classes">
+            <tbody>
+                <tr class="short">
+                    <td><a href="ponos.BBox.html#ponos.BBox">BBox</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.BBox2D.html#ponos.BBox2D">BBox2D</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Brep.html#ponos.Brep">Brep&lt;T, int D&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.CGrid2DInterface.html#ponos.CGrid2DInterface">CGrid2DInterface&lt;T&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Circle.html#ponos.Circle">Circle</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.CObjectPool.html#ponos.CObjectPool">CObjectPool&lt;T, uint S&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Frustum.html#ponos.Frustum">Frustum</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Interval.html#ponos.Interval">Interval&lt;T&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Line.html#ponos.Line">Line</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.MemoryArena.html#ponos.MemoryArena">MemoryArena</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>MemoryArena allocates a large contiguous region of memory and manages</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Normal.html#ponos.Normal">Normal</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.ObjectPool.html#ponos.ObjectPool">ObjectPool&lt;T, uint S = 0&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Plane.html#ponos.Plane">Plane</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Point.html#ponos.Point">Point&lt;T, int D&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Point2.html#ponos.Point2">Point2</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Point3.html#ponos.Point3">Point3</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.RegularGrid.html#ponos.RegularGrid">RegularGrid&lt;T&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.RNG.html#ponos.RNG">RNG</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>Random Number Generator</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.RWMutex.html#ponos.RWMutex">RWMutex</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>RWMutex provides reader-writer mutexes, which allow</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Sphere.html#ponos.Sphere">Sphere</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Transform.html#ponos.Transform">Transform</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.Vector4.html#ponos.Vector4">Vector4</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.ZGrid.html#ponos.ZGrid">ZGrid&lt;T&gt;</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="ponos.FreeListNode.html#ponos.FreeListNode">FreeListNode&lt;T&gt;</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
+                    <td><a href="ponos.RWMutexLock.html#ponos.RWMutexLock">RWMutexLock</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>Helper structure that acquires and releases reader-writer mutexes.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="enumerations">Enumerations</h2>
+        <div class="enumerations">
+            <div id="ponos::RWMutexLockType"><span class="keyword">enum</span> <span class="identifier">RWMutexLockType</span></div>
+            <table>
+                <tbody>
+                    <tr id="ponos::READ">
+                        <td class="name identifier">READ</td>
+                        <td class="value">0</td>
+                        <td class="doc"></td>
+                    </tr>
+                    <tr id="ponos::WRITE">
+                        <td class="name identifier">WRITE</td>
+                        <td class="value">1</td>
+                        <td class="doc"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="functions">Functions</h2>
+        <div class="functions">
+            <div class="function">
+                <div class="declaration" id="ponos::allocAligned">
+                    <div class="return_type"><span class="type"><span class="name ">T</span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">allocAligned&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">count</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>allocAligned allocate cache-aligned <a href="#ponos.allocAligned.count">count</a> objects.</p>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::allocAligned::count">
+                            <td>count</td>
+                            <td>
+                                <div class="doc">
+                                    <p>number of objects.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::bicubicInterpolate">
+                    <div class="return_type"><span class="type"><span class="name ">T</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">bicubicInterpolate&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="sub-type"><span class="name ">T</span></span><span class="array_size">[4]</span></span><span class="array_size">[4]</span></span>
+                                </td>
+                                <td class="argument_name">p,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">y</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::bicubicInterpolate::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bicubicInterpolate::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bicubicInterpolate::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::bilinearInterpolation">
+                    <div class="return_type"><span class="type"><span class="name ">T</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">bilinearInterpolation&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">f00,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">f10,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">f11,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">f01,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">y</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::bilinearInterpolation::f00">
+                            <td>f00</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bilinearInterpolation::f10">
+                            <td>f10</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bilinearInterpolation::f11">
+                            <td>f11</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bilinearInterpolation::f01">
+                            <td>f01</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bilinearInterpolation::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bilinearInterpolation::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::clamp">
+                    <div class="return_type"><span class="type"><span class="name ">T</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">clamp&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">n,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">l,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">u</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::clamp::n">
+                            <td>n</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::clamp::l">
+                            <td>l</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::clamp::u">
+                            <td>u</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::cubicInterpolate">
+                    <div class="return_type"><span class="type"><span class="name ">T</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">cubicInterpolate&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name ">T</span></span><span class="array_size">[4]</span></span>
+                                </td>
+                                <td class="argument_name">p,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span></span>
+                                </td>
+                                <td class="argument_name">x</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::cubicInterpolate::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::cubicInterpolate::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator!=">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator!=&lt;T, int D&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point.html#ponos.Point">Point&lt;T, D&gt;</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">lhs,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point.html#ponos.Point">Point&lt;T, D&gt;</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">rhs</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator!=::lhs">
+                            <td>lhs</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator!=::rhs">
+                            <td>rhs</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator==">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator==&lt;T, int D&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point.html#ponos.Point">Point&lt;T, D&gt;</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">lhs,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point.html#ponos.Point">Point&lt;T, D&gt;</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">rhs</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator==::lhs">
+                            <td>lhs</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator==::rhs">
+                            <td>rhs</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::swap">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">swap&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">T</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="function-template-parameters">
+                    <tbody>
+                        <tr>
+                            <td>T</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::swap::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::swap::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::allocAligned">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">allocAligned</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">size</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>allocAligned allocate cache-aligned memory blocks of <a href="#ponos.allocAligned.size">size</a> bytes.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::allocAligned::size">
+                            <td>size</td>
+                            <td>
+                                <div class="doc">
+                                    <p>bytes</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::bbox_ray_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">bbox_ray_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">box,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ray,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">hit1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">hit2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::bbox_ray_intersection::box">
+                            <td>box</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bbox_ray_intersection::ray">
+                            <td>ray</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bbox_ray_intersection::hit1">
+                            <td>hit1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bbox_ray_intersection::hit2">
+                            <td>hit2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::bbox_ray_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">bbox_ray_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">box,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ray,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">hit1</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::bbox_ray_intersection::box">
+                            <td>box</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bbox_ray_intersection::ray">
+                            <td>ray</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::bbox_ray_intersection::hit1">
+                            <td>hit1</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::cross">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">cross</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::cross::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::cross::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::decompose">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">decompose</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">s</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::decompose::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::decompose::r">
+                            <td>r</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::decompose::s">
+                            <td>s</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::distance">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">distance</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::distance::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::distance::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::distance">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">distance</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::distance::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::distance::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::distance2">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">distance2</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::distance2::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::distance2::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::dot">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">dot</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::dot::q1">
+                            <td>q1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::dot::q2">
+                            <td>q2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::dot">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">dot</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::dot::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::dot::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::dot">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">dot</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::dot::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::dot::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::floor2Int">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">floor2Int</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::floor2Int::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::freeAligned">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">freeAligned</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">void</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">ptr</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::freeAligned::ptr">
+                            <td>ptr</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::frustumTransform">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">frustumTransform</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">left,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">right,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">bottom,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">top,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">near,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">far</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::frustumTransform::left">
+                            <td>left</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::frustumTransform::right">
+                            <td>right</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::frustumTransform::bottom">
+                            <td>bottom</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::frustumTransform::top">
+                            <td>top</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::frustumTransform::near">
+                            <td>near</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::frustumTransform::far">
+                            <td>far</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::inverse">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">inverse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::inverse::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::inverse">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">inverse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::inverse::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::inverse">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">inverse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::inverse::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::inverse">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">inverse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::inverse::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::inverse">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">inverse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::inverse::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::lerp">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">lerp</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">t,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::lerp::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::lerp::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::lerp::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::lookAt">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">lookAt</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">pos,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">target,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">up</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::lookAt::pos">
+                            <td>pos</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::lookAt::target">
+                            <td>target</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::lookAt::up">
+                            <td>up</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::lookAtRH">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">lookAtRH</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">pos,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">target,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">up</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::lookAtRH::pos">
+                            <td>pos</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::lookAtRH::target">
+                            <td>target</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::lookAtRH::up">
+                            <td>up</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::make_union">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox2D.html#ponos.BBox2D">BBox2D</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">make_union</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox2D.html#ponos.BBox2D">BBox2D</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::make_union::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::make_union::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::make_union">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">make_union</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::make_union::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::make_union::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::make_union">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">make_union</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::make_union::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::make_union::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::makeCoordinateSystem">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">makeCoordinateSystem</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.vec3">vec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.vec3">vec3</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">v2,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.vec3">vec3</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">v3</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::makeCoordinateSystem::v1">
+                            <td>v1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::makeCoordinateSystem::v2">
+                            <td>v2</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::makeCoordinateSystem::v3">
+                            <td>v3</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::normalize">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">normalize</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::normalize::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::normalize">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">normalize</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::normalize::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::normalize">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">normalize</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::normalize::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">Point2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                                </td>
+                                <td class="argument_name">v,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::q">
+                            <td>q</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::operator*::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::ortho">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ortho</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">left,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">right,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">bottom,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">top,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">near,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">far</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::ortho::left">
+                            <td>left</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::ortho::right">
+                            <td>right</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::ortho::bottom">
+                            <td>bottom</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::ortho::top">
+                            <td>top</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::ortho::near">
+                            <td>near</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::ortho::far">
+                            <td>far</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::orthographic">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">orthographic</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">znear,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">zfar</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::orthographic::znear">
+                            <td>znear</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::orthographic::zfar">
+                            <td>zfar</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::orthonormal">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">orthonormal</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector2.html#ponos.Vector2">Vector2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">first</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::orthonormal::v">
+                            <td>v</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::orthonormal::first">
+                            <td>first</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::perspective">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">perspective</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">fovy,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">aspect,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">zNear,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">zFar</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::perspective::fovy">
+                            <td>fovy</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::perspective::aspect">
+                            <td>aspect</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::perspective::zNear">
+                            <td>zNear</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::perspective::zFar">
+                            <td>zFar</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::perspective">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">perspective</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">fovy,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">zNear,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">zFar</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::perspective::fovy">
+                            <td>fovy</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::perspective::zNear">
+                            <td>zNear</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::perspective::zFar">
+                            <td>zFar</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::plane_line_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">plane_line_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">Plane</a></span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">pl,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Line.html#ponos.Line">Line</a></span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">l,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::plane_line_intersection::pl">
+                            <td>pl</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::plane_line_intersection::l">
+                            <td>l</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::plane_line_intersection::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::quadraticBSpline">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">quadraticBSpline</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">r</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::quadraticBSpline::r">
+                            <td>r</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::rotate">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform2D.html#ponos.Transform2D">Transform2D</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">rotate</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">angle</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::rotate::angle">
+                            <td>angle</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::rotate">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">rotate</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">angle,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">axis</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::rotate::angle">
+                            <td>angle</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::rotate::axis">
+                            <td>axis</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::rotateX">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">rotateX</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">angle</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::rotateX::angle">
+                            <td>angle</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::rotateY">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">rotateY</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">angle</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::rotateY::angle">
+                            <td>angle</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::rotateZ">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">rotateZ</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">angle</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::rotateZ::angle">
+                            <td>angle</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::round2Int">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">round2Int</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::round2Int::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::scale">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">scale</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">y,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">z</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::scale::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::scale::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::scale::z">
+                            <td>z</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::slerp">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">slerp</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">t,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Quaternion.html#ponos.Quaternion">Quaternion</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">q2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::slerp::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::slerp::q1">
+                            <td>q1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::slerp::q2">
+                            <td>q2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::solve_quadratic">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">solve_quadratic</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">A,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">B,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">C,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">t0,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">t1</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::solve_quadratic::A">
+                            <td>A</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::solve_quadratic::B">
+                            <td>B</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::solve_quadratic::C">
+                            <td>C</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::solve_quadratic::t0">
+                            <td>t0</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::solve_quadratic::t1">
+                            <td>t1</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::sphere_line_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">sphere_line_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Sphere.html#ponos.Sphere">Sphere</a></span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Line.html#ponos.Line">Line</a></span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">l,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">p1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">p2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::sphere_line_intersection::s">
+                            <td>s</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::sphere_line_intersection::l">
+                            <td>l</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::sphere_line_intersection::p1">
+                            <td>p1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::sphere_line_intersection::p2">
+                            <td>p2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::star">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">star</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">a</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::star::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::translate">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">translate</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">d</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::translate::d">
+                            <td>d</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::transpose">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">transpose</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix4x4.html#ponos.Matrix4x4">Matrix4x4</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::transpose::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::transpose">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">transpose</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix3x3.html#ponos.Matrix3x3">Matrix3x3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::transpose::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::transpose">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">transpose</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Matrix2x2.html#ponos.Matrix2x2">Matrix2x2</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::transpose::m">
+                            <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::triangle_ray_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">triangle_ray_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p2,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p3,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ray,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">tHit,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">b1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">b2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::triangle_ray_intersection::p1">
+                            <td>p1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::triangle_ray_intersection::p2">
+                            <td>p2</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::triangle_ray_intersection::p3">
+                            <td>p3</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::triangle_ray_intersection::ray">
+                            <td>ray</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::triangle_ray_intersection::tHit">
+                            <td>tHit</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::triangle_ray_intersection::b1">
+                            <td>b1</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::triangle_ray_intersection::b2">
+                            <td>b2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::trilinear_hat_function">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">trilinear_hat_function</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">r</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::trilinear_hat_function::r">
+                            <td>r</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->
