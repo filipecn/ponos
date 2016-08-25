@@ -1,5 +1,6 @@
 #include "common/defs.h"
 #include "common/memory.h"
+#include "common/random.h"
 #include "log/debug.h"
 #include "geometry/bbox.h"
 #include "geometry/frustum.h"

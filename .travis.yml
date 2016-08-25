@@ -40,9 +40,9 @@ matrix:
             - clang-3.7
       env: COMPILER=clang++-3.7
 python:
-  - "2.7"
+  - "3.5"
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
-  - python2.7 build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
+  - python build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1

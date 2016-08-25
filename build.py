@@ -13,11 +13,15 @@ if len(sys.argv) < 2 :
     print('all - remove cache, make, test and generate docs')
     print('make - just make')
     print('test - make and test')
-    print('docs - generate docs')
+    print('docs [optional - output dir] - generate docs')
     sys.exit(1)
 
-if sys.argv[1] == 'docs' or sys.argv[1] == 'all':
-    cldoc_command = "cldoc generate -std=c++11 -Iponos/src -Ihelios/src -Ihercules/src -fPIC -- --report --merge docs --output html --type html --static"
+if sys.argv[1] == 'docs':
+    cldoc_command = "cldoc generate -std=c++11 -Iponos/src -Ihelios/src -Ihercules/src -fPIC -- --report --merge docs --type html --static --output "
+    outputdir = 'html'
+    if len(sys.argv) > 2:
+        outputdir = sys.argv[2]
+    cldoc_command += outputdir
     for filename in glob.iglob('ponos/**/*.c*', recursive=True):
         cldoc_command += " " + filename
     for filename in glob.iglob('ponos/**/*.h*', recursive=True):
@@ -57,8 +61,9 @@ if sys.argv[1] != 'test':
     sys.exit(1)
 
 # run tests
-tests = filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/ponos/tests"))
-os.chdir(build_path + "/tests")
-result = call(["./run_tests"] + map(lambda test : test[:-4], tests))
+tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/ponos/tests")))
+print(tests)
+os.chdir(build_path + "/ponos/tests")
+result = call(["./run_tests"] +[x[:-4] for x in tests])
 
 sys.exit(result)

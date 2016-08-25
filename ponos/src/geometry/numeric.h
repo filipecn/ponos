@@ -33,6 +33,9 @@ namespace ponos {
 			return std::max(l, std::min(n, u));
 		}
 
+		inline int floor2Int(float f) {
+			return static_cast<int>(f);
+		}
 	inline int round2Int(float f) {
 		return f + .5f;
 	}

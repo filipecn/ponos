@@ -53,7 +53,7 @@ namespace hercules {
 
 			/* Update state derived quantities.
 			 * After the quantities of force and torque were updated, other
-			 * quantities must be computed. This function assumes that <ComputeForceAndTorque> has already been called for the current step of the simulation.
+			 * quantities must be computed. This function assumes that <computeForceAndTorque> has already been called for the current step of the simulation.
 			 */
 			void update() {
 				// compute new velocity v(t) = P(t) / M

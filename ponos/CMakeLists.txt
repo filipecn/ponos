@@ -3,6 +3,7 @@ project(PONOS)
 set(HEADERS
 	src/common/defs.h
 	src/common/memory.h
+	src/common/random.h
 	src/geometry/bbox.h
 	src/geometry/frustum.h
 	src/geometry/intersections.h
@@ -50,4 +51,4 @@ set_target_properties(ponos PROPERTIES
 target_link_libraries(ponos ${ponos_LIBRARIES})
 
 # tests
-# add_subdirectory(tests)
+add_subdirectory(tests)

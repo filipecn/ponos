@@ -6,11 +6,11 @@ include_directories(${CPPUNIT_INCLUDE_DIR})
 include_directories("${PONOS_SOURCE_DIR}/src")
 
 set(TESTS
-TestBBox.cpp
-TestQuaternion.cpp
-TestMatrix.cpp
-TestTransform.cpp
-)
+	TestBBox.cpp
+	TestQuaternion.cpp
+	TestMatrix.cpp
+	TestTransform.cpp
+	)
 
 add_executable(run_tests main.cpp ${TESTS})
 target_link_libraries(run_tests cppunit)
