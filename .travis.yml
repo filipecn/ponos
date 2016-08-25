@@ -46,11 +46,8 @@ before_install:
   - sudo apt-get update -qq
   - sudo pip install codecov
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
-#install:
-  #  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
 script:
   - python build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
   - python build.py test
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
-    #  - codecov
+  - codecov
