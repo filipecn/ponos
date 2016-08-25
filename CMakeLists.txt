@@ -2,8 +2,8 @@ project(PONOS)
 
 cmake_minimum_required(VERSION 2.8.7)
 
-set(DEBUG_FLAGS "-std=c++11 -g -O1 -Wall -Wextra -Werror -pedantic -Wno-unused-parameter -fprofile-arcs -ftest-coverage")
-set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra -Werror -pedantic -Wno-unused-parameter -fprofile-arcs -ftest-coverage")
+set(DEBUG_FLAGS "-std=c++11 -g -O1 -Wall -Wextra -Werror -pedantic -Wno-unused-parameter -fprofile-arcs -ftest-coverage --coverage")
+set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra -Werror -pedantic -Wno-unused-parameter -fprofile-arcs -ftest-coverage --coverage")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 
 set(CMAKE_CXX_FLAGS ${RELEASE_FLAGS})

@@ -62,8 +62,9 @@ if sys.argv[1] != 'test':
 
 # run tests
 tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/ponos/tests")))
-print(tests)
 os.chdir(build_path + "/ponos/tests")
 result = call(["./run_tests"] +[x[:-4] for x in tests])
+# get code coverage
+
 
 sys.exit(result)
