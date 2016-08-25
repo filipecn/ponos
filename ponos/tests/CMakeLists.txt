@@ -13,4 +13,4 @@ set(TESTS
 	)
 
 add_executable(run_tests main.cpp ${TESTS})
-target_link_libraries(run_tests cppunit)
+target_link_libraries(run_tests cppunit gcov)

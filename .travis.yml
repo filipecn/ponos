@@ -42,7 +42,11 @@ matrix:
 python:
   - "3.5"
 before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
+  - sudo pip install codecov
   - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
   - python build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
+after_success:
+  - codecov
