@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_IO_GRAPHICS_DISPLAY_H
+#define AERGIA_IO_GRAPHICS_DISPLAY_H
 
 #include "scene/camera.h"
 #include "utils/open_gl.h"
@@ -88,3 +89,5 @@ namespace aergia {
   }
 
 } // aergia namespace
+
+#endif // AERGIA_IO_GRAPHICS_DISPLAY_H

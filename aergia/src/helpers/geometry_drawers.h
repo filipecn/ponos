@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_HELPERS_GEOMETRY_DRAWERS_H
+#define AERGIA_HELPERS_GEOMETRY_DRAWERS_H
 
 #include "utils/open_gl.h"
 
@@ -54,4 +55,6 @@ namespace aergia {
 		}
 		glEnd();
 	}
-}
+} // aergia namespace
+
+#endif // AERGIA_HELPERS_GEOMETRY_DRAWERS_H

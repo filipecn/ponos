@@ -5,6 +5,15 @@
 
 namespace ponos {
 
+	/* local coordinate system
+	 * @v1  base vector
+	 * @v2  receives the second axis
+	 * @v3  receives the third axis
+	 *
+	 * Construct a local coordinate system given only a single vector.
+	 *
+	 * Assumes that **v1** is already normalized.
+	 */
 	inline void makeCoordinateSystem(const vec3& v1, vec3* v2, vec3* v3) {
 		if(fabsf(v1.x) > fabsf(v1.y)) {
 			float invLen = 1.f / sqrtf(v1.x * v1.x + v1.z * v1.z);
@@ -19,4 +28,4 @@ namespace ponos {
 
 } // ponos namespace
 
-#endif
+#endif // PONOS_GEOMETRY_UTILS_H

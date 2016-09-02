@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_HELPERS_CAMERA_MODEL_H
+#define AERGIA_HELPERS_CAMERA_MODEL_H
 
 #include "scene/camera.h"
 #include "utils/open_gl.h"
@@ -67,3 +68,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_HELPERS_CAMERA_MODEL_H

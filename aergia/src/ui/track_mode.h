@@ -1,5 +1,7 @@
-#pragma once
+#ifndef AERGIA_UI_TRACK_MODE_H
+#define AERGIA_UI_TRACK_MODE_H
 
+#include "helpers/geometry_drawers.h"
 #include "scene/camera.h"
 #include "ui/trackball.h"
 
@@ -82,7 +84,7 @@ namespace aergia {
 			RotateMode()
 				: TrackMode() {}
 			~RotateMode() {}
-			void draw(const Trackball& tb) {
+			void draw(const Trackball& tb) override {
 				ponos::Sphere s(tb.center, tb.radius * 2.f);
 				glColor4f(0,0,0,0.5);
 				draw_sphere(s);
@@ -177,3 +179,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_UI_TRACK_MODE_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_SCENE_CAMERA_H
+#define AERGIA_SCENE_CAMERA_H
 
 #include <ponos.h>
 
@@ -40,3 +41,5 @@ namespace aergia {
 			ponos::Frustum frustum;
 	};
 } // aergia namespace
+
+#endif // AERGIA_SCENE_CAMERA_H

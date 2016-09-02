@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_UI_APP_H
+#define AERGIA_UI_APP_H
 
 #include "io/graphics_display.h"
 #include "io/viewport_display.h"
@@ -17,3 +18,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_UI_APP_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_SCENE_SCENE_OBJECT_H
+#define AERGIA_SCENE_SCENE_OBJECT_H
 
 #include <ponos.h>
 
@@ -16,3 +17,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_SCENE_SCENE_OBJECT_H

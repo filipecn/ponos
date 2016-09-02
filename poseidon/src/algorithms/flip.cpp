@@ -193,7 +193,7 @@ namespace poseidon {
 		int curCell = cell.dSample(e.x, e.y, -1);
 		if(curCell < 0 || curCell == CellType::SOLID) {
 			while(ponos::distance(pa.p, e) > 1e-5 && (curCell < 0 || curCell == CellType::SOLID)) {
-				Vector2 m = 0.5f * Vector2(pa.p.x, pa.p.y) + 0.5f * Vector2(e.x, e.y);
+				vec2 m = 0.5f * vec2(pa.p.x, pa.p.y) + 0.5f * vec2(e.x, e.y);
 				curCell = cell.dSample(m.x, m.y, -1);
 				if(curCell < 0 || curCell == CellType::SOLID)
 					e = ponos::Point2(m.x, m.y);

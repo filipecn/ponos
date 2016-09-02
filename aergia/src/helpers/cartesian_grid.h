@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_HELPERS_CARTESIAN_GRID_H
+#define AERGIA_HELPERS_CARTESIAN_GRID_H
 
 #include <ponos.h>
 
@@ -67,3 +68,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_HELPERS_CARTESIAN_GRID_H

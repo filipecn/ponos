@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_UI_TRACKBALL_H
+#define AERGIA_UI_TRACKBALL_H
 
 #include <ponos.h>
 
@@ -19,3 +20,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_UI_TRACKBALL_H

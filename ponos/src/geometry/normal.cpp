@@ -9,4 +9,8 @@ namespace ponos {
   Normal::Normal(const Vector3& v)
     : x(v.x), y(v.y), z(v.z) {}
 
+	Normal::operator Vector3() const {
+		return Vector3(x, y, z);
+	}
+
 } // ponos namespacec

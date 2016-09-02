@@ -22,6 +22,12 @@ namespace ponos {
 			 * @return int in the range [0, 2^32)
 			 */
 			ulong randomInt() const { return 0; }
+			/* pseudo-rangom integer number.
+			 *
+			 * @return unsigned int in the range [0, 2^32)
+			 */
+			ulong randomUInt() const { return 0; }
+
 			virtual ~RNG() {}
 	};
 

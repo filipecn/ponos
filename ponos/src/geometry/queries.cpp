@@ -1,4 +1,6 @@
-#include "geometry/intersections.h"
+#include "geometry/queries.h"
+
+#include "geometry/numeric.h"
 
 #include <utility>
 
@@ -83,4 +85,57 @@ namespace ponos {
 		return true;
 	}
 
+	Point3 closest_point_plane(const Point3& p, const Plane& pl) {
+		float t = (dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset) /
+			dot(static_cast<vec3>(pl.normal), static_cast<vec3>(pl.normal));
+		return p - t * static_cast<vec3>(pl.normal);
+	}
+
+	Point3 closest_point_n_plane(const Point3& p, const Plane& pl) {
+		float t = dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset;
+		return p - t * static_cast<vec3>(pl.normal);
+	}
+
+	Point3 closest_point_bbox(const Point3& p, const BBox& b) {
+		Point3 cp;
+		for(int i = 0; i < 3; i++) {
+			float v = p[i];
+			if(v < b.pMin[i]) v = b.pMin[i];
+			if(v > b.pMax[i]) v = b.pMax[i];
+			cp[i] = v;
+		}
+		return cp;
+	}
+
+	float distance_point_plane(const Point3& p, const Plane& pl) {
+		return (dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset) /
+				dot(static_cast<vec3>(pl.normal), static_cast<vec3>(pl.normal));
+	}
+
+	float distance_point_n_plane(const Point3& p, const Plane& pl) {
+		return dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset;
+	}
+
+	template<typename T>
+		float distance2_point_segment(const T& p, const Segment<T>& s) {
+			float e = dot(p - s.a, s.b - s.a);
+			if(e <= 0.f)
+				return (p - s.a).length2();
+			float f = s.length2();
+			if(e <= f)
+				return (p - s.b).length2();
+			return s.length2() - e * e / f;
+		}
+
+	float distance2_point_bbox(const Point3& p, const BBox& b) {
+		float sdist = 0.f;
+		for(int i = 0; i < 3; i++) {
+			float v = p[i];
+			if(v < b.pMin[i])
+				sdist += SQR(b.pMin[i] - v);
+			if(v > b.pMax[i])
+				sdist += SQR(v - b.pMax[i]);
+		}
+		return sdist;
+	}
 } // ponos namespace

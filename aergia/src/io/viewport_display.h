@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_IO_VIEWPORT_DISPLAY_H
+#define AERGIA_IO_VIEWPORT_DISPLAY_H
 
 #include "scene/camera.h"
 
@@ -30,3 +31,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_IO_VIEWPORT_DISPLAY_H

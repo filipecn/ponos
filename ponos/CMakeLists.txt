@@ -6,7 +6,7 @@ set(HEADERS
 	src/common/random.h
 	src/geometry/bbox.h
 	src/geometry/frustum.h
-	src/geometry/intersections.h
+	src/geometry/queries.h
 	src/geometry/interval.h
 	src/geometry/line.h
 	src/geometry/matrix.h
@@ -15,6 +15,7 @@ set(HEADERS
 	src/geometry/point.h
 	src/geometry/plane.h
 	src/geometry/ray.h
+	src/geometry/segment.h
 	src/geometry/sphere.h
 	src/geometry/quaternion.h
 	src/geometry/transform.h
@@ -31,7 +32,7 @@ set(HEADERS
 
 set(SOURCES
 	src/geometry/bbox.cpp
-	src/geometry/intersections.cpp
+	src/geometry/queries.cpp
 	src/geometry/matrix.cpp
 	src/geometry/normal.cpp
 	src/geometry/point.cpp

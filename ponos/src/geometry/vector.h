@@ -5,6 +5,8 @@
 #include "geometry/numeric.h"
 #include "log/debug.h"
 
+#include <cstring>
+
 namespace ponos {
 
 	class Vector2 {
@@ -271,10 +273,76 @@ namespace ponos {
 			float x, y, z, w;
 	};
 
-
 	typedef Vector2 vec2;
 	typedef Vector3 vec3;
 	typedef Vector4 vec4;
+
+	template<size_t D = 3, typename T = float>
+		class Vector {
+			public:
+				Vector() {
+					size = D;
+					memset(v, 0, D * sizeof(T));
+				}
+
+				T operator[](int i) const {
+					ASSERT(i >= 0 && i <= static_cast<int>(size));
+					return v[i];
+				}
+				T& operator[](int i) {
+					ASSERT(i >= 0 && i <= static_cast<int>(size));
+					return v[i];
+				}
+				bool operator<=(const Vector<D, T>& _v) const {
+					for(size_t i = 0; i < size; i++)
+						if(v[i] > _v[i])
+							return false;
+					return true;
+				}
+				bool operator<(const Vector<D, T>& _v) const {
+					for(size_t i = 0; i < size; i++)
+						if(v[i] >= _v[i])
+							return false;
+					return true;
+				}
+				bool operator>=(const Vector<D, T>& _v) const {
+					for(size_t i = 0; i < size; i++)
+						if(v[i] < _v[i])
+							return false;
+					return true;
+				}
+				bool operator>(const Vector<D, T>& _v) const {
+					for(size_t i = 0; i < size; i++)
+						if(v[i] <= _v[i])
+							return false;
+					return true;
+				}
+
+				Vector<D, T> operator+(const Vector<D, T>& _v) const {
+					Vector<D, T> v_;
+					for(size_t i = 0; i < D; i++)
+						v_[i] = _v[i];
+					return v_;
+				}
+
+				Vector<2, T> floatXY(size_t x = 0, size_t y = 1) {
+					return Vector<2, T>(static_cast<float>(v[x]), static_cast<float>(v[y]));
+				}
+
+				friend std::ostream& operator<<(std::ostream& os, const Vector& v) {
+					os << "Vector[<" << D << ">]";
+					for(int i = 0; i < v.size; i++)
+						os << v[i] << " ";
+					os << std::endl;
+					return os;
+				}
+
+				size_t size;
+				T v[D];
+		};
+
+	typedef Vector<3, int> ivec3;
+	typedef Vector<3, uint> uivec3;
 
 } // ponos namespace
 

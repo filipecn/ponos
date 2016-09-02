@@ -1,45 +1,21 @@
-if (WIN32)
-  find_library(GLFW_LIB NAMES glfw3 PATHS ${AERGIA_SOURCE_DIR}/external/GLFW)
-  include_directories("${AERGIA_SOURCE_DIR}/external")
-  #find_library(VULKAN_LIB NAMES vulkan-1 vulkan)
-  find_package(Vulkan REQUIRED)
-  #message(FATAL_ERROR "${GLFW_LIB}")
-endif()
-
-find_library(LAPACK_LIB NAMES liblapack PATHS ${POSEIDON_SOURCE_DIR}/external)
-
-link_libraries(${GLFW_LIB} ${aergia_LIBRARIES} ${VULKAN_LIBRARY} ${POSEIDON_SOURCE_DIR}/external/libcblas.dll.a)
-
-link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
-
-link_libraries(poseidon)
-include_directories("${POSEIDON_SOURCE_DIR}/src")
-include_directories("${POSEIDON_SOURCE_DIR}/examples")
-include_directories("${POSEIDON_SOURCE_DIR}/external")
 link_libraries(ponos)
+link_libraries(poseidon)
+
+find_package(CppUnit REQUIRED)
+include_directories(${CPPUNIT_INCLUDE_DIR})
+
 include_directories("${PONOS_SOURCE_DIR}/src")
-link_libraries(aergia)
-include_directories("${AERGIA_SOURCE_DIR}/src")
+include_directories("${POSEIDON_SOURCE_DIR}/src")
+include_directories("/home/filipecn/gitclones/OpenVDB/include")
 
-include_directories("C:/Users/fuiri/Downloads")
+set(TESTS
+	TestVDBGrid.cpp
+	TestVDBMacGrid.cpp
+	TestVDBParticleGrid.cpp
+	)
 
-include_directories("${POSEIDON_SOURCE_DIR}/examples")
+add_executable(run_poseidon_tests main.cpp ${TESTS})
 
-add_executable(advection_test WIN32 advection.cpp)
-add_executable(gather_test WIN32 gather.cpp)
-add_executable(scatter_test WIN32 scatter.cpp)
-add_executable(pressure_test WIN32 pressure.cpp solver.h solver.cpp)
-add_executable(flip_test WIN32 flip_test.cpp solver.h solver.cpp)
-
-set(WINDOWS_BINARIES
-advection_test
-gather_test
-scatter_test
-flip_test
-pressure_test)
-
-if (MSVC)
-    # Tell MSVC to use main instead of WinMain for Windows subsystem executables
-    set_target_properties(${WINDOWS_BINARIES} PROPERTIES
-                          LINK_FLAGS "/ENTRY:mainCRTStartup")
-endif()
+target_link_libraries(run_poseidon_tests cppunit gcov -ltbb
+	/home/filipecn/gitclones/OpenVDB/lib/libopenvdb.so
+	/home/filipecn/gitclones/OpenVDB/lib/libopenvdb_points.so -lHalf)

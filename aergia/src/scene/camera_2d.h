@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_SCENE_CAMERA_2D_H
+#define AERGIA_SCENE_CAMERA_2D_H
 
 #include <ponos.h>
 using ponos::Transform;
@@ -27,3 +28,5 @@ namespace aergia {
 			Transform model;
 	};
 } // aergia namespace
+
+#endif // AERGIA_SCENE_CAMERA_2D_H

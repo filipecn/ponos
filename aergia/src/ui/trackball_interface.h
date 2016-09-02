@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AERGIA_UI_TRACKBALL_INTERFACE_H
+#define AERGIA_UI_TRACKBALL_INTERFACE_H
 
 #include "scene/camera.h"
 #include "ui/trackball.h"
@@ -52,3 +53,4 @@ namespace aergia {
 
 } // aergia namespace
 
+#endif // AERGIA_UI_TRACKBALL_INTERFACE_H

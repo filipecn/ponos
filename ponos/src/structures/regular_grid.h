@@ -4,78 +4,103 @@
 #include "log/debug.h"
 #include "structures/c_grid_interface.h"
 
+#include <memory>
 #include <vector>
 
 namespace ponos {
 
-  template<class T>
-  class RegularGrid : public CGrid2DInterface<T> {
-  public:
-    RegularGrid();
-    RegularGrid(uint32_t w, uint32_t h);
+	/* Regular grid
+	 *
+	 * Simple matrix structure.
+	 */
+	template<class T = float>
+		class RegularGrid : public CGridInterface<T> {
+			public:
+				/* Constructor
+				 * @d **[in]** dimensions
+				 * @b **[in]** background (default value)
+				 */
+				RegularGrid(const ivec3& d, const T& b);
+				~RegularGrid();
 
-    virtual ~RegularGrid();
+				T operator()(const ivec3& i) const override {}
+				T& operator()(const ivec3& i) override {}
+				T operator()(const uint& i, const uint&j, const uint& k) const override {}
+				T& operator()(const uint& i, const uint&j, const uint& k) override {}
 
-    T& operator() (int i, int j) override;
-    T operator() (int i, int j) const override;
-    T safeData(int i, int j) const override;
+			private:
+				T*** data;
+		};
 
-    void set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize);
-    void setAll(T v);
+	template<class T>
+		class RegularGrid2D : public CGrid2DInterface<T> {
+			public:
+				RegularGrid2D();
+				RegularGrid2D(uint32_t w, uint32_t h);
 
-  private:
-    std::vector<std::vector<T> >data;
-  };
+				virtual ~RegularGrid2D();
 
-  template<typename T>
-  RegularGrid<T>::RegularGrid(){
-    this->width = this->height = 0;
-    this->useBorder = false;
-  }
+				T& operator() (int i, int j) override;
+				T operator() (int i, int j) const override;
+				T safeData(int i, int j) const override;
 
-  template<typename T>
-  RegularGrid<T>::RegularGrid(uint32_t w, uint32_t h) {
-    this->width = w;
-    this->height = h;
-  }
+				void set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize);
+				void setAll(T v);
 
-  template<typename T>
-  RegularGrid<T>::~RegularGrid() {}
+			private:
+				std::vector<std::vector<T> >data;
+		};
 
-  template<typename T>
-  void RegularGrid<T>::set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize) {
-    set(w, h);
-    set(offset, cellSize);
-    data.resize(w, std::vector<T>());
-    for (int i = 0; i < w; i++)
-     data[i].resize(h);
-  }
+	template<typename T>
+		RegularGrid2D<T>::RegularGrid2D(){
+			this->width = this->height = 0;
+			this->useBorder = false;
+		}
 
-  template<typename T>
-  T& RegularGrid<T>::operator() (int i, int j) {
-    CHECK_IN_BETWEEN(i, 0, this->width);
-    CHECK_IN_BETWEEN(j, 0, this->height);
-    return data[i][j];
-  }
+	template<typename T>
+		RegularGrid2D<T>::RegularGrid2D(uint32_t w, uint32_t h) {
+			this->width = w;
+			this->height = h;
+		}
 
-  template<typename T>
-  T RegularGrid<T>::operator() (int i, int j) const {
-    CHECK_IN_BETWEEN(i, 0, this->width);
-    CHECK_IN_BETWEEN(j, 0, this->height);
-    return data[i][j];
-  }
+	template<typename T>
+		RegularGrid2D<T>::~RegularGrid2D() {}
 
-  template<typename T>
-  void RegularGrid<T>::setAll(T v){
-    for (int i = 0; i < this->width; i++)
-    for (int j = 0; j < this->height; j++)
-    data[i][j] = v;
-  }
+	template<typename T>
+		void RegularGrid2D<T>::set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize) {
+			set(w, h);
+			set(offset, cellSize);
+			data.resize(w, std::vector<T>());
+			for (int i = 0; i < w; i++)
+				data[i].resize(h);
+		}
 
-  template<typename T>
-  T RegularGrid<T>::safeData(int i, int j) const{
-    return data[max(0, min(this->width-1,i))][max(0, min(this->height-1,j))];
-  }
+	template<typename T>
+		T& RegularGrid2D<T>::operator() (int i, int j) {
+			CHECK_IN_BETWEEN(i, 0, this->width);
+			CHECK_IN_BETWEEN(j, 0, this->height);
+			return data[i][j];
+		}
+
+	template<typename T>
+		T RegularGrid2D<T>::operator() (int i, int j) const {
+			CHECK_IN_BETWEEN(i, 0, this->width);
+			CHECK_IN_BETWEEN(j, 0, this->height);
+			return data[i][j];
+		}
+
+	template<typename T>
+		void RegularGrid2D<T>::setAll(T v){
+			for (int i = 0; i < this->width; i++)
+				for (int j = 0; j < this->height; j++)
+					data[i][j] = v;
+		}
+
+	template<typename T>
+		T RegularGrid2D<T>::safeData(int i, int j) const{
+			return data[max(0, min(this->width-1,i))][max(0, min(this->height-1,j))];
+		}
+
 }  // ponos namespace
 
 #endif

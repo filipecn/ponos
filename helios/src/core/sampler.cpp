@@ -58,4 +58,38 @@ namespace helios {
 			mem += n2D[i];
 		}
 	}
+
+	void generateStratifiedSample1D(float *samp, int nSamples, ponos::RNG& rng, bool jitter) {
+		float invTot = 1.f / nSamples;
+		for(int i = 0; i < nSamples; i++) {
+			float delta = jitter ? rng.randomFloat() : 0.5f;
+			*samp++ = (i + delta) * invTot;
+		}
+	}
+
+	void generateStratifiedSample2D(float *samp, int nx, int ny, ponos::RNG& rng, bool jitter) {
+		float dx = 1.f / nx, dy = 1.f / ny;
+		for(int y = 0; y < ny; y++)
+			for(int x = 0; x < nx; x++) {
+				float jx = jitter ? rng.randomFloat() : 0.5f;
+				float jy = jitter ? rng.randomFloat() : 0.5f;
+				*samp++ = (x + jx) * dx;
+				*samp++ = (y + jy) * dy;
+			}
+	}
+
+	void generateLatinHypercube(float *samples, uint32 nSamples, uint32 nDim, ponos::RNG& rng) {
+		// Generate LHS samples along diagonal
+		float delta = 1.f / nSamples;
+		for(uint32 i = 0; i < nSamples; i++)
+			for(uint32 j = 0; j < nDim; j++)
+				samples[nDim * i + j] = (i + (rng.randomFloat())) * delta;
+		// Permute LHS samples in each dimension
+		for(uint32 i = 0; i < nDim; i++)
+			for(uint32 j = 0; j < nSamples; j++) {
+				uint32 other = j + (rng.randomUInt() % (nSamples - j));
+				ponos::swap(samples[nDim * j + i], samples[nDim * other + i]);
+			}
+	}
+
 } // helios namespace

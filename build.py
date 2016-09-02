@@ -17,22 +17,30 @@ if len(sys.argv) < 2 :
     sys.exit(1)
 
 if sys.argv[1] == 'docs':
-    cldoc_command = "cldoc generate -std=c++11 -Iponos/src -Ihelios/src -Ihercules/src -fPIC -- --report --merge docs --type html --static --output "
+    cldoc_command = "cldoc generate -std=c++11 -I/home/filipecn/gitclones/OpenVDB/include -Iaergia/src -Iponos/src -Ihelios/src -Ihercules/src -Iposeidon/src -fPIC -- --report --merge docs --type html --static --output "
     outputdir = 'html'
     if len(sys.argv) > 2:
         outputdir = sys.argv[2]
     cldoc_command += outputdir
-    for filename in glob.iglob('ponos/**/*.c*', recursive=True):
+    for filename in glob.iglob('aergia/src/**/*.c*', recursive=True):
         cldoc_command += " " + filename
-    for filename in glob.iglob('ponos/**/*.h*', recursive=True):
+    for filename in glob.iglob('aergia/src/**/*.h*', recursive=True):
         cldoc_command += " " + filename
-    for filename in glob.iglob('helios/**/*.c*', recursive=True):
+    for filename in glob.iglob('ponos/src/**/*.c*', recursive=True):
         cldoc_command += " " + filename
-    for filename in glob.iglob('helios/**/*.h*', recursive=True):
+    for filename in glob.iglob('ponos/src/**/*.h*', recursive=True):
         cldoc_command += " " + filename
-    for filename in glob.iglob('hercules/**/*.c*', recursive=True):
+    for filename in glob.iglob('helios/src/**/*.c*', recursive=True):
         cldoc_command += " " + filename
-    for filename in glob.iglob('hercules/**/*.h*', recursive=True):
+    for filename in glob.iglob('helios/src/**/*.h*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('hercules/src/**/*.c*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('hercules/src/**/*.h*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('poseidon/src/**/*.c*', recursive=True):
+        cldoc_command += " " + filename
+    for filename in glob.iglob('poseidon/src/**/*.h*', recursive=True):
         cldoc_command += " " + filename
     print(cldoc_command)
     call([cldoc_command], shell=True)
@@ -61,10 +69,10 @@ if sys.argv[1] != 'test':
     sys.exit(0)
 
 # run tests
-tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/ponos/tests")))
-os.chdir(build_path + "/ponos/tests")
-result = call(["./run_tests"] +[x[:-4] for x in tests])
-# get code coverage
-
+test_libs = ['ponos', 'poseidon']
+for l in test_libs:
+    tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/" + l + "/tests")))
+    os.chdir(build_path + "/" + l + "/tests")
+    result = call(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
 
 sys.exit(result)

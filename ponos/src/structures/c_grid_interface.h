@@ -3,13 +3,72 @@
 
 #include "geometry/point.h"
 #include "geometry/transform.h"
-using ponos::Transform2D;
 #include "geometry/vector.h"
-using ponos::Vector2;
 
 #include <algorithm>
 
 namespace ponos {
+
+	enum class CGridAccessMode {CLAMP_TO_DEDGE, BACKGROUND, REPEAT};
+
+	/* Continuous 3D grid interface
+	 *
+	 * Continuous grids allow interpolation between coordinates providing access to floating point indices.
+	 */
+	template<typename T>
+		class CGridInterface {
+			public:
+				virtual ~CGridInterface() {}
+				/* set
+				 * @i **[in]** coordinate (grid space)
+				 * @v **[in]** value
+				 */
+				virtual void set(const ivec3& i, const T& v) = 0;
+				/* get
+				 * @i **[in]** coordinate (grid space)
+				 * @return value at coordinate **i**
+				 */
+				virtual T operator()(const ivec3& i) const = 0;
+				// virtual T& operator()(const ivec3& i) = 0;
+				/* get
+				 * @i **[in]** X coordinate (grid space)
+				 * @j **[in]** Y coordinate (grid space)
+				 * @k **[in]** Z coordinate (grid space)
+				 * @return value at coordinate **(i, j, k)**
+				 */
+				virtual T operator()(const uint& i, const uint&j, const uint& k) const = 0;
+				// virtual T& operator()(const uint& i, const uint&j, const uint& k) = 0;
+				/* get
+				 * @i **[in]** coordinate (grid space)
+				 * @return value at coordinate **i**
+				 */
+				virtual T operator()(const vec3& i) const = 0;
+				/* get
+				 * @i **[in]** X coordinate (grid space)
+				 * @j **[in]** Y coordinate (grid space)
+				 * @k **[in]** Z coordinate (grid space)
+				 * @return value at coordinate **(i, j, k)**
+				 */
+				virtual T operator()(const float& i, const float&j, const float& k) const = 0;
+				/* test
+				 * @i coordinate
+				 *
+				 * @return **true** if the grid contains the coordinate **i**
+				 */
+				bool belongs(const ivec3& i) const {
+					return ivec3() <= i && i < dimensions;
+				}
+				// access mode
+				CGridAccessMode mode;
+				// default value
+				T background;
+				// grid dimensions
+				ivec3 dimensions;
+				// grid to world transform
+				Transform toWorld;
+				// world to grid transform
+				Transform toGrid;
+		};
 
 	template<class T>
 		class CGrid2DInterface {

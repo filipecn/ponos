@@ -9,6 +9,7 @@
 #include <vector>
 
 namespace helios {
+
 	//////////////////TEMP//////////////////////////
 	class Spectrum;
 	class VolumeIntegrator {};
@@ -22,6 +23,7 @@ namespace helios {
 	 * The samples are generated from PixelStart to PixelEnd - 1, inclusive, and the time values will be in range of shutterOpen and shutterClose.
 	 */
 	class Sampler {
+		public:
 		/* Constructor.
 		 * @xstart first pixel coordinate on X axis
 		 * @xend (last + 1) pixel coordinate on X axis
@@ -33,12 +35,12 @@ namespace helios {
 		 */
 		Sampler(int xstart, int xend, int ystart, int yend, int spp, float sopen, float sclose);
 		/* generate more samples.
-		 * @sample this function will fill sample with the new samples
-		 * @rng the pseudo-random number generator
+		 * @samples **[out]** this function will fill samples with the new samples
+		 * @rng **[in]** the pseudo-random number generator
 		 *
 		 * @return the number of generated samples.
 		 */
-		virtual int getMoreSamples(Sample *sample, ponos::RNG &rng) = 0;
+		virtual int getMoreSamples(Sample *samples, ponos::RNG &rng) = 0;
 		/* max number of samples it can generates in one call.
 		 * help the caller of <getMoreSamples> to allocate memory for the sample.
 		 */
@@ -143,6 +145,34 @@ namespace helios {
 		float **oneD, **twoD;
 	};
 
+	/* generate
+	 * @samp **[out]** samples data
+	 * @nSamples **[in]** number of samples
+	 * @rng **[out]** the pseudo-random number generator
+	 * @jitter **[in]** if true, the samples are jittered
+	 *
+	 * Generates a stratified 1D samples pattern
+	 */
+	void generateStratifiedSample1D(float *samp, int nSamples, ponos::RNG& rng, bool jitter);
+	/* generate
+	 * @samp **[out]** samples data
+	 * @nx **[in]** number of samples in X axis
+	 * @ny **[in]** number of samples in Y axis
+	 * @rng **[out]** the pseudo-random number generator
+	 * @jitter **[in]** if true, the samples are jittered
+	 *
+	 * Generates a stratified 2D samples pattern
+	 */
+	void generateStratifiedSample2D(float *samp, int nx, int ny, ponos::RNG& rng, bool jitter);
+	/* generate
+	 * @samples **[out]** samples data
+	 * @nSamples **[in]** number of samples
+	 * @nDim **[in]** number of dimensions
+	 * @rng **[out]** the pseudo-random number generator
+	 *
+	 * Generates **samples** in an arbitrary dimension **nDim** using LHS (Latin Hypercube Sampling). LHS divides each dimension's axis into _n_ regions and generates a jittered sample in each region along the diagonal, then shuffles the samples in each dimension.
+	 */
+	void generateLatinHypercube(float *samples, uint32 nSamples, uint32 nDim, ponos::RNG& rng);
 } // helios namespace
 
 #endif // HELIOS_CORE_SAMPLER_H

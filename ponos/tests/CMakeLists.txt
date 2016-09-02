@@ -12,5 +12,5 @@ set(TESTS
 	TestTransform.cpp
 	)
 
-add_executable(run_tests main.cpp ${TESTS})
-target_link_libraries(run_tests cppunit gcov)
+add_executable(run_ponos_tests main.cpp ${TESTS})
+target_link_libraries(run_ponos_tests cppunit gcov)

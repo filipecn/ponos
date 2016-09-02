@@ -14,14 +14,14 @@ namespace poseidon {
     ponos::Vector2 v;
   };
 
-  class Particle {
-  public:
-    Particle(ponos::Point3 _p, ponos::Vector3 _v) {
-      p = _p;
-      v = _v;
-    }
-    ponos::Point3 p;
-    ponos::Vector3 v;
-  };
+	/* element
+	 * Represents a little blob of fluid carring quantities such as velocity and mass.
+	 */
+	struct Particle {
+		ponos::Point3 position;
+		ponos::Vector3 velocity;
+		float density;
+		float mass;
+	};
 
 } // poseidon namespace
