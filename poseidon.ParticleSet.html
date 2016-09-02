@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ParticleSet</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>ParticleSet&lt;T&gt;</span></span>
+                </div><a href="poseidon.html"><span class="arrow">↵</span> <span>poseidon</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Template Parameters</div>
+            <ul>
+                <li><a href="#poseidon.ParticleSet.T">T<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#poseidon.ParticleSet.particles">particles<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#poseidon.ParticleSet.getParticles">getParticles<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleSet.getParticleReference">getParticleReference<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleSet.getParticle">getParticle<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleSet.setPos">setPos<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#poseidon.ParticleSet.addParticle">addParticle<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#poseidon.ParticleSet.size">size<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="poseidon::ParticleSet"><span><span class="keyword">Class</span><span>ParticleSet&lt;T&gt;</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="template parameters">Template Parameters</h2>
+        <table class="template_parameters">
+            <tbody>
+                <tr id="poseidon::ParticleSet::T">
+                    <td>T</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="poseidon::ParticleSet::particles">
+                    <td class="field_name identifier">particles</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;_Tp, _Alloc&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleSet::getParticles">
+                    <div class="return_type"><span class="type"><span class="name ">std::vector&lt;_Tp, _Alloc&gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                        </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getParticles</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleSet::getParticleReference">
+                    <div class="return_type"><span class="type"><span class="name ">T</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getParticleReference</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleSet::getParticleReference::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleSet::getParticle">
+                    <div class="return_type"><span class="type"><span class="name ">T</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getParticle</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleSet::getParticle::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleSet::setPos">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setPos</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleSet::setPos::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleSet::setPos::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleSet::addParticle">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addParticle</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleSet::addParticle::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleSet::size">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">size</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

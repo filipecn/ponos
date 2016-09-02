@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RotateMode</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>aergia::RotateMode</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#aergia.TrackMode%2Baergia.TrackMode">TrackMode<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.RotateMode.RotateMode">RotateMode<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#aergia.RotateMode.~RotateMode">~RotateMode<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.RotateMode.draw">draw<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#aergia.RotateMode.update">update<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::RotateMode"><span><span class="keyword">Class</span><span>aergia::RotateMode</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="aergia::TrackMode+aergia::TrackMode">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="aergia.TrackMode.html#aergia.TrackMode">TrackMode</a></span></span>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::RotateMode::RotateMode">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RotateMode</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="aergia::RotateMode::~RotateMode">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~RotateMode</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::RotateMode::draw">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">draw</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">tb</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::RotateMode::draw::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="aergia.TrackMode.html#aergia.TrackMode.draw">TrackMode::draw</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::RotateMode::update">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">update</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">tb,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::RotateMode::update::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::RotateMode::update::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::RotateMode::update::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="aergia.TrackMode.html#aergia.TrackMode.update">TrackMode::update</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

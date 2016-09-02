@@ -85,6 +85,11 @@
                         <p>////////////////TEMP//////////////////////////</p>
                     </div>
                 </li>
+                <li><a href="helios.StratifiedSampler.html#helios.StratifiedSampler">StratifiedSampler<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>sampler</p>
+                    </div>
+                </li>
                 <li><a href="helios.SurfaceIntegrator.html#helios.SurfaceIntegrator">SurfaceIntegrator<span class="counter"></span></a></li>
                 <li><a href="helios.Texture.html#helios.Texture">Texture&lt;T&gt;<span class="counter"></span></a></li>
                 <li><a href="helios.TransformedPrimitive.html#helios.TransformedPrimitive">TransformedPrimitive<span class="counter"></span></a></li>
@@ -114,6 +119,24 @@
                 </li>
                 <li><a href="helios.DifferentialGeometry.html#helios.DifferentialGeometry">DifferentialGeometry<span class="counter"></span></a></li>
                 <li><a href="helios.Intersection.html#helios.Intersection">Intersection<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Functions</div>
+            <ul>
+                <li><a href="#helios.generateLatinHypercube">generateLatinHypercube<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>generate</p>
+                    </div>
+                </li>
+                <li><a href="#helios.generateStratifiedSample1D">generateStratifiedSample1D<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>generate</p>
+                    </div>
+                </li>
+                <li><a href="#helios.generateStratifiedSample2D">generateStratifiedSample2D<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>generate</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -251,6 +274,14 @@
                     </td>
                 </tr>
                 <tr class="short">
+                    <td><a href="helios.StratifiedSampler.html#helios.StratifiedSampler">StratifiedSampler</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>sampler</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="short">
                     <td><a href="helios.SurfaceIntegrator.html#helios.SurfaceIntegrator">SurfaceIntegrator</a></td>
                     <td></td>
                 </tr>
@@ -313,6 +344,249 @@
                 </tr>
             </tbody>
         </table>
+        <h2 data-cldoc-dynamic="1" id="functions">Functions</h2>
+        <div class="functions">
+            <div class="function">
+                <div class="declaration" id="helios::generateLatinHypercube">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">generateLatinHypercube</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">samples,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">nSamples,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="index.html#uint32">uint32</a></span></span>
+                                </td>
+                                <td class="argument_name">nDim,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.RNG.html#ponos.RNG">ponos::RNG</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">rng</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Generates <strong>samples</strong> in an arbitrary dimension <strong>nDim</strong> using LHS (Latin Hypercube Sampling). LHS divides each dimension's axis into <em>n</em> regions and generates a jittered sample in each region along
+                        the diagonal, then shuffles the samples in each dimension.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::generateLatinHypercube::samples">
+                            <td>samples</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> samples data</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateLatinHypercube::nSamples">
+                            <td>nSamples</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of samples</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateLatinHypercube::nDim">
+                            <td>nDim</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of dimensions</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateLatinHypercube::rng">
+                            <td>rng</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> the pseudo-random number generator</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::generateStratifiedSample1D">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">generateStratifiedSample1D</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">samp,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">nSamples,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.RNG.html#ponos.RNG">ponos::RNG</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">rng,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">jitter</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Generates a stratified 1D samples pattern</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::generateStratifiedSample1D::samp">
+                            <td>samp</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> samples data</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample1D::nSamples">
+                            <td>nSamples</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of samples</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample1D::rng">
+                            <td>rng</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> the pseudo-random number generator</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample1D::jitter">
+                            <td>jitter</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> if true, the samples are jittered</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::generateStratifiedSample2D">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">generateStratifiedSample2D</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">samp,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">nx,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">ny,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.RNG.html#ponos.RNG">ponos::RNG</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">rng,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">jitter</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Generates a stratified 2D samples pattern</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::generateStratifiedSample2D::samp">
+                            <td>samp</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> samples data</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample2D::nx">
+                            <td>nx</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of samples in X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample2D::ny">
+                            <td>ny</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of samples in Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample2D::rng">
+                            <td>rng</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> the pseudo-random number generator</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::generateStratifiedSample2D::jitter">
+                            <td>jitter</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> if true, the samples are jittered</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </body>

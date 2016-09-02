@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FLIP</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>poseidon::FLIP</span></span>
+                </div><a href="poseidon.html"><span class="arrow">↵</span> <span>poseidon</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="poseidon.FLIP.VelocityCell.html#poseidon.FLIP.VelocityCell">VelocityCell<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>MAC Grid</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#poseidon.FLIP.width">width<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>parameters</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.FLIP.height">height<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>parameters</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.FLIP.dx">dx<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.dt">dt<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.gravity">gravity<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.rho">rho<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.particleGrid">particleGrid<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>structures</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.FLIP.u">u<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.v">v<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.usolid">usolid<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.vsolid">vsolid<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.isSolid">isSolid<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.cell">cell<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.vCopy">vCopy<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.ps">ps<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>pressure solve</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#poseidon.FLIP.addForces">addForces<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.advect">advect<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.classifyCells">classifyCells<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.enforceBoundary">enforceBoundary<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.fillCell">fillCell<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.gather">gather<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>private:</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.FLIP.newPosition">newPosition<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.scatter">scatter<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.set">set<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.solvePressure">solvePressure<span class="counter"></span></a></li>
+                <li><a href="#poseidon.FLIP.step">step<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="poseidon::FLIP"><span><span class="keyword">Class</span><span>poseidon::FLIP</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="poseidon.FLIP.VelocityCell.html#poseidon.FLIP.VelocityCell">VelocityCell</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>MAC Grid</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="poseidon::FLIP::width">
+                    <td class="field_name identifier">width</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>parameters</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::FLIP::height">
+                    <td class="field_name identifier">height</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>parameters</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::FLIP::dx">
+                    <td class="field_name identifier">dx</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::dt">
+                    <td class="field_name identifier">dt</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::gravity">
+                    <td class="field_name identifier">gravity</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::rho">
+                    <td class="field_name identifier">rho</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::particleGrid">
+                    <td class="field_name identifier">particleGrid</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="poseidon.ParticleGrid.html#poseidon.ParticleGrid">ParticleGrid</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>structures</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::FLIP::u">
+                    <td class="field_name identifier">u</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;poseidon::FLIP::VelocityCell&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::v">
+                    <td class="field_name identifier">v</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;poseidon::FLIP::VelocityCell&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::usolid">
+                    <td class="field_name identifier">usolid</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;float&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::vsolid">
+                    <td class="field_name identifier">vsolid</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;float&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::isSolid">
+                    <td class="field_name identifier">isSolid</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;char&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::cell">
+                    <td class="field_name identifier">cell</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;char&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::vCopy">
+                    <td class="field_name identifier">vCopy</td>
+                    <td class="field_type"><span class="type"><span class="sub-type"><span class="name ">ponos::ZGrid&lt;float&gt;</span></span><span class="array_size">[2]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::FLIP::ps">
+                    <td class="field_name identifier">ps</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="poseidon.ConjugateGradient.html#poseidon.ConjugateGradient">ConjugateGradient</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>pressure solve</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::addForces">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addForces</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">ponos::ZGrid&lt;poseidon::FLIP::VelocityCell&gt;</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">grid,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">component</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::FLIP::addForces::grid">
+                            <td>grid</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::addForces::component">
+                            <td>component</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::advect">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">advect</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::classifyCells">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">classifyCells</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::enforceBoundary">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">enforceBoundary</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::fillCell">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fillCell</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::FLIP::fillCell::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::fillCell::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::gather">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">gather</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">ponos::ZGrid&lt;poseidon::FLIP::VelocityCell&gt;</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">grid,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">component</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>private:</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::FLIP::gather::grid">
+                            <td>grid</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::gather::component">
+                            <td>component</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::newPosition">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">newPosition</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="poseidon.Particle2D.html#poseidon.Particle2D">Particle2D</a></span></span>
+                                </td>
+                                <td class="argument_name">pa</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::FLIP::newPosition::pa">
+                            <td>pa</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::scatter">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">scatter</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">ponos::ZGrid&lt;poseidon::FLIP::VelocityCell&gt;</span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">grid,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">component</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::FLIP::scatter::grid">
+                            <td>grid</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::scatter::component">
+                            <td>component</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">h,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                                </td>
+                                <td class="argument_name">offset,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">scale</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::FLIP::set::w">
+                            <td>w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::set::h">
+                            <td>h</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::set::offset">
+                            <td>offset</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::FLIP::set::scale">
+                            <td>scale</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::solvePressure">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">solvePressure</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::FLIP::step">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">step</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

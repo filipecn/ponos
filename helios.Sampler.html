@@ -15,6 +15,65 @@
                 <div class="name"><span><span class="keyword">Class</span><span>helios::Sampler</span></span>
                 </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
             <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Subclasses</div>
+            <ul>
+                <li><a href="helios.StratifiedSampler.html#helios.StratifiedSampler">StratifiedSampler<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>sampler</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#helios.Sampler.xPixelStart">xPixelStart<span class="counter"></span></a></li>
+                <li><a href="#helios.Sampler.xPixelEnd">xPixelEnd<span class="counter"></span></a></li>
+                <li><a href="#helios.Sampler.yPixelStart">yPixelStart<span class="counter"></span></a></li>
+                <li><a href="#helios.Sampler.yPixelEnd">yPixelEnd<span class="counter"></span></a></li>
+                <li><a href="#helios.Sampler.samplesPerPixel">samplesPerPixel<span class="counter"></span></a></li>
+                <li><a href="#helios.Sampler.shutterOpen">shutterOpen<span class="counter"></span></a></li>
+                <li><a href="#helios.Sampler.shutterClose">shutterClose<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.Sampler.Sampler">Sampler<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.Sampler.computeSubWindow">computeSubWindow<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Generate samples for a tile.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Sampler.getMoreSamples">getMoreSamples<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> generate more samples.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Sampler.getSubSampler">getSubSampler<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> creates a new Sampler.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Sampler.maximumSampleCount">maximumSampleCount<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> max number of samples it can generates in one call.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Sampler.reportResults">reportResults<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> @samples collection of samples (originally from getModeSamples())</p>
+                    </div>
+                </li>
+                <li><a href="#helios.Sampler.roundSize">roundSize<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> Computes the number of samples after rounding to size. // TODO</p>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
     <div id="cldoc_content">
@@ -22,6 +81,584 @@
         <div class="description">
             <div class="doc">
                 <p>Generates a set of multidimensional sample positions per pixel. The samples are generated from PixelStart to PixelEnd - 1, inclusive, and the time values will be in range of shutterOpen and shutterClose.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
+        <table class="subclasses">
+            <tbody>
+                <tr id="helios::StratifiedSampler+helios::StratifiedSampler">
+                    <td class="keyword"></td>
+                    <td><a href="helios.StratifiedSampler.html#helios.StratifiedSampler">StratifiedSampler</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>sampler</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="helios::Sampler::xPixelStart">
+                    <td class="field_name identifier">xPixelStart</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Sampler::xPixelEnd">
+                    <td class="field_name identifier">xPixelEnd</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Sampler::yPixelStart">
+                    <td class="field_name identifier">yPixelStart</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Sampler::yPixelEnd">
+                    <td class="field_name identifier">yPixelEnd</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Sampler::samplesPerPixel">
+                    <td class="field_name identifier">samplesPerPixel</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Sampler::shutterOpen">
+                    <td class="field_name identifier">shutterOpen</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Sampler::shutterClose">
+                    <td class="field_name identifier">shutterClose</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::Sampler">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Sampler</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">xstart,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">xend,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">ystart,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">yend,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">spp,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sopen,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sclose</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Sampler::Sampler::xstart">
+                            <td>xstart</td>
+                            <td>
+                                <div class="doc">
+                                    <p>first pixel coordinate on X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::Sampler::xend">
+                            <td>xend</td>
+                            <td>
+                                <div class="doc">
+                                    <p>(last + 1) pixel coordinate on X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::Sampler::ystart">
+                            <td>ystart</td>
+                            <td>
+                                <div class="doc">
+                                    <p>first pixel coordinate on Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::Sampler::yend">
+                            <td>yend</td>
+                            <td>
+                                <div class="doc">
+                                    <p>(last + 1) pixel coordinate on Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::Sampler::spp">
+                            <td>spp</td>
+                            <td>
+                                <div class="doc">
+                                    <p>number of samples per pixel</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::Sampler::sopen">
+                            <td>sopen</td>
+                            <td>
+                                <div class="doc">
+                                    <p>camera's shutter open time</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::Sampler::sclose">
+                            <td>sclose</td>
+                            <td>
+                                <div class="doc">
+                                    <p>camera's shutter close time</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::computeSubWindow">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">computeSubWindow</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">num,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">count,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">newXStart,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">newXEnd,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">newYStart,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">newYEnd</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>A lot of implementations decompose the image into rectangular tiles and have each subsampler generate samples for each tile. computeSubWindow() computes a pixel sampling range for a specific tile.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Sampler::computeSubWindow::num">
+                            <td>num</td>
+                            <td>
+                                <div class="doc">
+                                    <p>tile number</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::computeSubWindow::count">
+                            <td>count</td>
+                            <td>
+                                <div class="doc">
+                                    <p>total number of tiles</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::computeSubWindow::newXStart">
+                            <td>newXStart</td>
+                            <td>
+                                <div class="doc">
+                                    <p>first pixel coordinate on X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::computeSubWindow::newXEnd">
+                            <td>newXEnd</td>
+                            <td>
+                                <div class="doc">
+                                    <p>(last + 1) pixel coordinate on X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::computeSubWindow::newYStart">
+                            <td>newYStart</td>
+                            <td>
+                                <div class="doc">
+                                    <p>first pixel coordinate on Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::computeSubWindow::newYEnd">
+                            <td>newYEnd</td>
+                            <td>
+                                <div class="doc">
+                                    <p>(last + 1) pixel coordinate on Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::getMoreSamples">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getMoreSamples</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Sample.html#helios.Sample">Sample</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">samples,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.RNG.html#ponos.RNG">ponos::RNG</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">rng</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> generate more samples.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Sampler::getMoreSamples::samples">
+                            <td>samples</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> this function will fill samples with the new samples</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::getMoreSamples::rng">
+                            <td>rng</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> the pseudo-random number generator</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the number of generated samples.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::getSubSampler">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.Sampler">Sampler</a></span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getSubSampler</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">num,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">count</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Creates a new Sampler responsible for a subset of the image.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Sampler::getSubSampler::num">
+                            <td>num</td>
+                            <td>
+                                <div class="doc">
+                                    <p>ranges from 0 to count-1</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::getSubSampler::count">
+                            <td>count</td>
+                            <td>
+                                <div class="doc">
+                                    <p>total number of subsamplers being used</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::maximumSampleCount">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">maximumSampleCount</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>help the caller of <a href="#helios.Sampler.getMoreSamples">helios::Sampler::getMoreSamples</a> to allocate memory for the sample.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::reportResults">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">reportResults</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Sample.html#helios.Sample">Sample</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">samples,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.RayDifferential.html#helios.RayDifferential">RayDifferential</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">rays,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Spectrum.html#helios.Spectrum">Spectrum</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">Ls,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Intersection.html#helios.Intersection">Intersection</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">isects,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">count</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>This method is usefull for adaptive sampling algorithms.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Sampler::reportResults::samples">
+                            <td>samples</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::Sampler::reportResults::rays">
+                            <td>rays</td>
+                            <td>
+                                <div class="doc">
+                                    <p>[out] which rays were generated</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::reportResults::Ls">
+                            <td>Ls</td>
+                            <td>
+                                <div class="doc">
+                                    <p>[out] which radiance values were computed</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::reportResults::isects">
+                            <td>isects</td>
+                            <td>
+                                <div class="doc">
+                                    <p>[out] which intersections were found</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Sampler::reportResults::count">
+                            <td>count</td>
+                            <td>
+                                <div class="doc">
+                                    <p>number of samples</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>true if the sample values should be added to the image being generated</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::Sampler::roundSize">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">roundSize</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">size</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Computes the number of samples after rounding to size. // TODO</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Sampler::roundSize::size">
+                            <td>size</td>
+                            <td>
+                                <div class="doc">
+                                    <p>size to be rounded to</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the number of samples that should be requested for this size</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

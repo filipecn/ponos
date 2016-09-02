@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TrackballInterface</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>aergia::TrackballInterface</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.TrackballInterface.tb">tb<span class="counter"></span></a></li>
+                <li><a href="#aergia.TrackballInterface.curMode">curMode<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.TrackballInterface.modes">modes<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.TrackballInterface.TrackballInterface">TrackballInterface<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#aergia.TrackballInterface.~TrackballInterface">~TrackballInterface<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.TrackballInterface.buttonPress">buttonPress<span class="counter"></span></a></li>
+                <li><a href="#aergia.TrackballInterface.buttonRelease">buttonRelease<span class="counter"></span></a></li>
+                <li><a href="#aergia.TrackballInterface.draw">draw<span class="counter"></span></a></li>
+                <li><a href="#aergia.TrackballInterface.mouseMove">mouseMove<span class="counter"></span></a></li>
+                <li><a href="#aergia.TrackballInterface.mouseScroll">mouseScroll<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::TrackballInterface"><span><span class="keyword">Class</span><span>aergia::TrackballInterface</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::TrackballInterface::tb">
+                    <td class="field_name identifier">tb</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::TrackballInterface::curMode">
+                    <td class="field_name identifier">curMode</td>
+                    <td class="field_type"><span class="type"><span class="name ">size_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::TrackballInterface::modes">
+                    <td class="field_name identifier">modes</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;aergia::TrackMode *, std::allocator&lt;aergia::TrackMode *&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::TrackballInterface">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">TrackballInterface</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::~TrackballInterface">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~TrackballInterface</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::buttonPress">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">buttonPress</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">button,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackballInterface::buttonPress::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackballInterface::buttonPress::button">
+                            <td>button</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackballInterface::buttonPress::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::buttonRelease">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">buttonRelease</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">button,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackballInterface::buttonRelease::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackballInterface::buttonRelease::button">
+                            <td>button</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackballInterface::buttonRelease::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::draw">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">draw</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::mouseMove">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">mouseMove</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackballInterface::mouseMove::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackballInterface::mouseMove::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackballInterface::mouseScroll">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">mouseScroll</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                                </td>
+                                <td class="argument_name">d</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackballInterface::mouseScroll::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackballInterface::mouseScroll::d">
+                            <td>d</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MacGrid</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>MacGrid&lt;GridType&gt;</span></span>
+                </div><a href="poseidon.html"><span class="arrow">↵</span> <span>poseidon</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Template Parameters</div>
+            <ul>
+                <li><a href="#poseidon.MacGrid.GridType">GridType<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#poseidon.MacGrid.dimensions">dimensions<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>dimensions</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.MacGrid.v_x">v_x<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>velocity's x component</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.MacGrid.v_y">v_y<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>velocity's y component</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.MacGrid.v_z">v_z<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>velocity's z component</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.MacGrid.p">p<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>pressure</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.MacGrid.d">d<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>divergence</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.MacGrid.cellType">cellType<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>cell type</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#poseidon.MacGrid.~MacGrid%3CGridType%3E">~MacGrid&lt;GridType&gt;<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#poseidon.MacGrid.set">set<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> setter</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="poseidon::MacGrid"><span><span class="keyword">Class</span><span>MacGrid&lt;GridType&gt;</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Stores a staggered grid with velocity components on faces and the rest of quantities at centers.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="template parameters">Template Parameters</h2>
+        <table class="template_parameters">
+            <tbody>
+                <tr id="poseidon::MacGrid::GridType">
+                    <td>GridType</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="poseidon::MacGrid::dimensions">
+                    <td class="field_name identifier">dimensions</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>dimensions</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::MacGrid::v_x">
+                    <td class="field_name identifier">v_x</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;_Tp&gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>velocity's x component</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::MacGrid::v_y">
+                    <td class="field_name identifier">v_y</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;_Tp&gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>velocity's y component</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::MacGrid::v_z">
+                    <td class="field_name identifier">v_z</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;_Tp&gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>velocity's z component</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::MacGrid::p">
+                    <td class="field_name identifier">p</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;_Tp&gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>pressure</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::MacGrid::d">
+                    <td class="field_name identifier">d</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;_Tp&gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>divergence</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="poseidon::MacGrid::cellType">
+                    <td class="field_name identifier">cellType</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;ponos::RegularGrid&lt;poseidon::CellType&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>cell type</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="poseidon::MacGrid::~MacGrid<GridType>">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~MacGrid&lt;GridType&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="poseidon::MacGrid::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">d,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                                </td>
+                                <td class="argument_name">o</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Set macgrid dimensions and transform.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::MacGrid::set::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> dimensions</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::MacGrid::set::s">
+                            <td>s</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> scale</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::MacGrid::set::o">
+                            <td>o</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> offset</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

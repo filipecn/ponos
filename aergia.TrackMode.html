@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TrackMode</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>aergia::TrackMode</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Subclasses</div>
+            <ul>
+                <li><a href="aergia.PanMode.html#aergia.PanMode">PanMode<span class="counter"></span></a></li>
+                <li><a href="aergia.RotateMode.html#aergia.RotateMode">RotateMode<span class="counter"></span></a></li>
+                <li><a href="aergia.ZMode.html#aergia.ZMode">ZMode<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.TrackMode.dragging_">dragging_<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.TrackMode.start_">start_<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.TrackMode.TrackMode">TrackMode<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#aergia.TrackMode.~TrackMode">~TrackMode<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.TrackMode.draw">draw<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#aergia.TrackMode.start">start<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p>CONTROL</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.TrackMode.stop">stop<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#aergia.TrackMode.update">update<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#aergia.TrackMode.hitViewPlane">hitViewPlane<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::TrackMode"><span><span class="keyword">Class</span><span>aergia::TrackMode</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
+        <table class="subclasses">
+            <tbody>
+                <tr id="aergia::PanMode+aergia::PanMode">
+                    <td class="keyword"></td>
+                    <td><a href="aergia.PanMode.html#aergia.PanMode">PanMode</a></td>
+                    <td></td>
+                </tr>
+                <tr id="aergia::RotateMode+aergia::RotateMode">
+                    <td class="keyword"></td>
+                    <td><a href="aergia.RotateMode.html#aergia.RotateMode">RotateMode</a></td>
+                    <td></td>
+                </tr>
+                <tr id="aergia::ZMode+aergia::ZMode">
+                    <td class="keyword"></td>
+                    <td><a href="aergia.ZMode.html#aergia.ZMode">ZMode</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::TrackMode::dragging_">
+                    <td class="field_name identifier">dragging_</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::TrackMode::start_">
+                    <td class="field_name identifier">start_</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::TrackMode">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">TrackMode</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::~TrackMode">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~TrackMode</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::draw">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">draw</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">tb</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackMode::draw::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::start">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">start</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">tb,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>CONTROL</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackMode::start::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::start::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::start::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::stop">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">stop</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">tb,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackMode::stop::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::stop::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::stop::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::update">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">update</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">tb,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackMode::update::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::update::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::update::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::TrackMode::hitViewPlane">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">hitViewPlane</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Trackball.html#aergia.Trackball">Trackball</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">tb,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.Camera.html#aergia.Camera">Camera</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">camera,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::TrackMode::hitViewPlane::tb">
+                            <td>tb</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::hitViewPlane::camera">
+                            <td>camera</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::TrackMode::hitViewPlane::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

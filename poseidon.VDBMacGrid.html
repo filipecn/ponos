@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VDBMacGrid</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>poseidon::VDBMacGrid</span></span>
+                </div><a href="poseidon.html"><span class="arrow">↵</span> <span>poseidon</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#poseidon.VDBMacGrid.dimensions">dimensions<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>dimensions</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#poseidon.VDBMacGrid.VDBMacGrid">VDBMacGrid<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#poseidon.VDBMacGrid.~VDBMacGrid">~VDBMacGrid<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="poseidon::VDBMacGrid"><span><span class="keyword">Class</span><span>poseidon::VDBMacGrid</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Uses OpenVDB library to manipulate a staggered grid.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="poseidon::VDBMacGrid::dimensions">
+                    <td class="field_name identifier">dimensions</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>dimensions</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBMacGrid::VDBMacGrid">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">VDBMacGrid</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">d,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">b,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">o</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBMacGrid::VDBMacGrid::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> dimensions</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBMacGrid::VDBMacGrid::b">
+                            <td>b</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> background (default value)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBMacGrid::VDBMacGrid::s">
+                            <td>s</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> scale</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBMacGrid::VDBMacGrid::o">
+                            <td>o</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> offset</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBMacGrid::~VDBMacGrid">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~VDBMacGrid</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

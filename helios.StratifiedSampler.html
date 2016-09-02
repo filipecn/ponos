@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>StratifiedSampler</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::StratifiedSampler</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#helios.Sampler%2Bhelios.Sampler">Sampler<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Sampler interface.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.StratifiedSampler.StratifiedSampler">StratifiedSampler<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#helios.StratifiedSampler.~StratifiedSampler">~StratifiedSampler<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.StratifiedSampler.getMoreSamples">getMoreSamples<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> generate more samples.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.StratifiedSampler.getSubSampler">getSubSampler<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> @inherit</p>
+                    </div>
+                </li>
+                <li><a href="#helios.StratifiedSampler.maximumSampleCount">maximumSampleCount<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> max number of samples it can generates in one call.</p>
+                    </div>
+                </li>
+                <li><a href="#helios.StratifiedSampler.roundSize">roundSize<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> Computes the number of samples after rounding to size. // TODO</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::StratifiedSampler"><span><span class="keyword">Class</span><span>helios::StratifiedSampler</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Divides the image into rectangular regions and generates a single sample inside each region (<em>stratum</em>).</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="helios::Sampler+helios::Sampler">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="helios.Sampler.html#helios.Sampler">Sampler</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>Sampler interface.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::StratifiedSampler::StratifiedSampler">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">StratifiedSampler</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">xstart,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">xend,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">ystart,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">yend,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">xs,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">ys,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">jitter,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sopen,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">sclose</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::xstart">
+                            <td>xstart</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> first pixel coordinate on X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::xend">
+                            <td>xend</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> (last + 1) pixel coordinate on X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::ystart">
+                            <td>ystart</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> first pixel coordinate on Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::yend">
+                            <td>yend</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong>(last + 1) pixel coordinate on Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::xs">
+                            <td>xs</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of <em>strata</em> in X axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::ys">
+                            <td>ys</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of <em>strata</em> in Y axis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::jitter">
+                            <td>jitter</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> if true, the samples are jittered</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::sopen">
+                            <td>sopen</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> camera's shutter open time</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::StratifiedSampler::sclose">
+                            <td>sclose</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> camera's shutter close time</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="helios::StratifiedSampler::~StratifiedSampler">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~StratifiedSampler</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::StratifiedSampler::getMoreSamples">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getMoreSamples</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.Sample.html#helios.Sample">Sample</a></span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">samples,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.RNG.html#ponos.RNG">ponos::RNG</a></span><span class="qualifier">  &amp;</span></span>
+                                </td>
+                                <td class="argument_name">rng</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> generate more samples.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::StratifiedSampler::getMoreSamples::samples">
+                            <td>samples</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> this function will fill samples with the new samples</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::getMoreSamples::rng">
+                            <td>rng</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> the pseudo-random number generator</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the number of generated samples.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Sampler.html#helios.Sampler.getMoreSamples">Sampler::getMoreSamples</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::StratifiedSampler::getSubSampler">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name "><a href="helios.Sampler.html#helios.Sampler">Sampler</a></span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getSubSampler</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">num,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">count</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> @inherit</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::StratifiedSampler::getSubSampler::num">
+                            <td>num</td>
+                            <td></td>
+                        </tr>
+                        <tr id="helios::StratifiedSampler::getSubSampler::count">
+                            <td>count</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Sampler.html#helios.Sampler.getSubSampler">Sampler::getSubSampler</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::StratifiedSampler::maximumSampleCount">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">maximumSampleCount</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>help the caller of <a href="#helios.StratifiedSampler.getMoreSamples">helios::StratifiedSampler::getMoreSamples</a> and <a href="helios.Sampler.html#helios.Sampler.getMoreSamples">helios::Sampler::getMoreSamples</a> to allocate memory
+                        for the sample.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Sampler.html#helios.Sampler.maximumSampleCount">Sampler::maximumSampleCount</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::StratifiedSampler::roundSize">
+                    <ul class="specifiers">
+                        <li class="override">override</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">roundSize</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">size</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Computes the number of samples after rounding to size. // TODO</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::StratifiedSampler::roundSize::size">
+                            <td>size</td>
+                            <td>
+                                <div class="doc">
+                                    <p>size to be rounded to</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the number of samples that should be requested for this size</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="helios.Sampler.html#helios.Sampler.roundSize">Sampler::roundSize</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

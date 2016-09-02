@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Camera</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>aergia::Camera</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.Camera.ratio">ratio<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>private:</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.Camera.zoom">zoom<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.near">near<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.far">far<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.fov">fov<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.pos">pos<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.target">target<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.up">up<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.display">display<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.clipSize">clipSize<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.projection">projection<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.view">view<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.model">model<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.frustum">frustum<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.Camera.Camera">Camera<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.Camera.getPos">getPos<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.getTarget">getTarget<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.getTransform">getTransform<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.look">look<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.resize">resize<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.setFar">setFar<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.setFov">setFov<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.setNear">setNear<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.setPos">setPos<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.setTarget">setTarget<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.setZoom">setZoom<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.update">update<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.viewLineFromWindow">viewLineFromWindow<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>p must be in norm dev coord (windowCoordToNormDevCoord)</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.Camera.viewPlane">viewPlane<span class="counter"></span></a></li>
+                <li><a href="#aergia.Camera.viewPointOnWorldCoord">viewPointOnWorldCoord<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::Camera"><span><span class="keyword">Class</span><span>aergia::Camera</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::Camera::ratio">
+                    <td class="field_name identifier">ratio</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>private:</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::Camera::zoom">
+                    <td class="field_name identifier">zoom</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::near">
+                    <td class="field_name identifier">near</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::far">
+                    <td class="field_name identifier">far</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::fov">
+                    <td class="field_name identifier">fov</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::pos">
+                    <td class="field_name identifier">pos</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::target">
+                    <td class="field_name identifier">target</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::up">
+                    <td class="field_name identifier">up</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::display">
+                    <td class="field_name identifier">display</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::clipSize">
+                    <td class="field_name identifier">clipSize</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::projection">
+                    <td class="field_name identifier">projection</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::view">
+                    <td class="field_name identifier">view</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::model">
+                    <td class="field_name identifier">model</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Camera::frustum">
+                    <td class="field_name identifier">frustum</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.Frustum.html#ponos.Frustum">ponos::Frustum</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::Camera">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Camera</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::getPos">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getPos</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::getTarget">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getTarget</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::getTransform">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getTransform</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::look">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">look</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::resize">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">resize</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">h</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::resize::w">
+                            <td>w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::Camera::resize::h">
+                            <td>h</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::setFar">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setFar</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::setFar::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::setFov">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setFov</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::setFov::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::setNear">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setNear</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">n</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::setNear::n">
+                            <td>n</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::setPos">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setPos</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::setPos::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::setTarget">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setTarget</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::setTarget::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::setZoom">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setZoom</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">z</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::setZoom::z">
+                            <td>z</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::update">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">update</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::viewLineFromWindow">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Line.html#ponos.Line">ponos::Line</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">viewLineFromWindow</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>p must be in norm dev coord (windowCoordToNormDevCoord)</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::viewLineFromWindow::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::viewPlane">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Plane.html#ponos.Plane">ponos::Plane</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">viewPlane</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Camera::viewPlane::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Camera::viewPointOnWorldCoord">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">viewPointOnWorldCoord</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

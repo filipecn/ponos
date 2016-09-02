@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ParticleGrid</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>poseidon::ParticleGrid</span></span>
+                </div><a href="poseidon.html"><span class="arrow">↵</span> <span>poseidon</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#">ParticleSet&lt;poseidon::Particle2D&gt;<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="poseidon.ParticleGrid.ParticleCell.html#poseidon.ParticleGrid.ParticleCell">ParticleCell<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#poseidon.ParticleGrid.grid">grid<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#poseidon.ParticleGrid.ParticleGrid">ParticleGrid<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#poseidon.ParticleGrid.addParticle">addParticle<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleGrid.fillCell">fillCell<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleGrid.iterateParticles">iterateParticles<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleGrid.set">set<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ParticleGrid.setPos">setPos<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="poseidon::ParticleGrid"><span><span class="keyword">Class</span><span>poseidon::ParticleGrid</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name ">ParticleSet&lt;poseidon::Particle2D&gt;</span></span>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="poseidon.ParticleGrid.ParticleCell.html#poseidon.ParticleGrid.ParticleCell">ParticleCell</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="poseidon::ParticleGrid::grid">
+                    <td class="field_name identifier">grid</td>
+                    <td class="field_type"><span class="type"><span class="name ">ponos::ZGrid&lt;poseidon::ParticleGrid::ParticleCell&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleGrid::ParticleGrid">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ParticleGrid</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleGrid::addParticle">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addParticle</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="poseidon.Particle2D.html#poseidon.Particle2D">Particle2D</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleGrid::addParticle::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::addParticle::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::addParticle::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleGrid::fillCell">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fillCell</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleGrid::fillCell::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::fillCell::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleGrid::iterateParticles">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">iterateParticles</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.BBox2D.html#ponos.BBox2D">ponos::BBox2D</a></span></span>
+                                </td>
+                                <td class="argument_name">bbox,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::function&lt;void (const poseidon::Particle2D &amp;)&gt;</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleGrid::iterateParticles::bbox">
+                            <td>bbox</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::iterateParticles::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleGrid::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">h,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                                </td>
+                                <td class="argument_name">offset,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec2">ponos::vec2</a></span></span>
+                                </td>
+                                <td class="argument_name">cellSize</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleGrid::set::w">
+                            <td>w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::set::h">
+                            <td>h</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::set::offset">
+                            <td>offset</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::set::cellSize">
+                            <td>cellSize</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ParticleGrid::setPos">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setPos</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ParticleGrid::setPos::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ParticleGrid::setPos::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

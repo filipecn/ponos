@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ConjugateGradient</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>poseidon::ConjugateGradient</span></span>
+                </div><a href="poseidon.html"><span class="arrow">↵</span> <span>poseidon</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="poseidon.ConjugateGradient.ACell.html#poseidon.ConjugateGradient.ACell">ACell<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#poseidon.ConjugateGradient.width">width<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.height">height<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.max_iterations">max_iterations<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.tol">tol<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.p">p<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.b">b<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.r">r<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.z">z<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.q">q<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.s">s<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.A">A<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#poseidon.ConjugateGradient.ConjugateGradient">ConjugateGradient<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#poseidon.ConjugateGradient.Adiag">Adiag<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.Aplusi">Aplusi<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.Aplusj">Aplusj<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.applyA">applyA<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.applyPreconditioner">applyPreconditioner<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.ij">ij<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.P">P<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.precon">precon<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.printA">printA<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.Q">Q<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.R">R<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.reset">reset<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.rhs">rhs<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.set">set<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.setup">setup<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.solve">solve<span class="counter"></span></a></li>
+                <li><a href="#poseidon.ConjugateGradient.Z">Z<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="poseidon::ConjugateGradient"><span><span class="keyword">Class</span><span>poseidon::ConjugateGradient</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="poseidon.ConjugateGradient.ACell.html#poseidon.ConjugateGradient.ACell">ACell</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="poseidon::ConjugateGradient::width">
+                    <td class="field_name identifier">width</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::height">
+                    <td class="field_name identifier">height</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint32_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::max_iterations">
+                    <td class="field_name identifier">max_iterations</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">int</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::tol">
+                    <td class="field_name identifier">tol</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::p">
+                    <td class="field_name identifier">p</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;float, std::allocator&lt;float&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::b">
+                    <td class="field_name identifier">b</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;float, std::allocator&lt;float&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::r">
+                    <td class="field_name identifier">r</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;float, std::allocator&lt;float&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::z">
+                    <td class="field_name identifier">z</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;float, std::allocator&lt;float&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::q">
+                    <td class="field_name identifier">q</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;float, std::allocator&lt;float&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::s">
+                    <td class="field_name identifier">s</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;float, std::allocator&lt;float&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="poseidon::ConjugateGradient::A">
+                    <td class="field_name identifier">A</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;std::vector&lt;poseidon::ConjugateGradient::ACell, std::allocator&lt;poseidon::ConjugateGradient::ACell&gt; &gt;, std::allocator&lt;std::vector&lt;poseidon::ConjugateGradient::ACell, std::allocator&lt;poseidon::ConjugateGradient::ACell&gt; &gt; &gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::ConjugateGradient">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ConjugateGradient</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::Adiag">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Adiag</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::Adiag::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::Adiag::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::Aplusi">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Aplusi</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::Aplusi::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::Aplusi::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::Aplusj">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Aplusj</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::Aplusj::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::Aplusj::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::applyA">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">applyA</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::applyPreconditioner">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">applyPreconditioner</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::ij">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ij</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::ij::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::ij::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::P">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">P</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::P::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::P::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::precon">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">precon</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::precon::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::precon::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::printA">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">printA</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::Q">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Q</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::Q::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::Q::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::R">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">R</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::R::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::R::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::reset">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">reset</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::rhs">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">rhs</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::rhs::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::rhs::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">h</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::set::w">
+                            <td>w</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::set::h">
+                            <td>h</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::setup">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setup</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::solve">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">solve</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::ConjugateGradient::Z">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Z</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">i,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint32_t</span></span>
+                                </td>
+                                <td class="argument_name">j</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::ConjugateGradient::Z::i">
+                            <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr id="poseidon::ConjugateGradient::Z::j">
+                            <td>j</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->
