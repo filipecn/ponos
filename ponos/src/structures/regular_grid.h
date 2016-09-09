@@ -1,8 +1,8 @@
 #ifndef PONOS_STRUCTURES_REGULAR_GRID_H
 #define PONOS_STRUCTURES_REGULAR_GRID_H
 
+#include "geometry/vector.h"
 #include "log/debug.h"
-#include "structures/c_grid_interface.h"
 
 #include <memory>
 #include <vector>
@@ -13,93 +13,25 @@ namespace ponos {
 	 *
 	 * Simple matrix structure.
 	 */
-	template<class T = float>
-		class RegularGrid : public CGridInterface<T> {
+	template<class T = int>
+		class RegularGrid {
 			public:
+				RegularGrid() {}
 				/* Constructor
 				 * @d **[in]** dimensions
 				 * @b **[in]** background (default value)
 				 */
 				RegularGrid(const ivec3& d, const T& b);
 				~RegularGrid();
-
-				T operator()(const ivec3& i) const override {}
-				T& operator()(const ivec3& i) override {}
-				T operator()(const uint& i, const uint&j, const uint& k) const override {}
-				T& operator()(const uint& i, const uint&j, const uint& k) override {}
+				void set(const ivec3& i, const T& v) {}
+				T operator()(const ivec3& i) const {}
+				T& operator()(const ivec3& i) {}
+				T operator()(const uint& i, const uint&j, const uint& k) const {}
+				T& operator()(const uint& i, const uint&j, const uint& k) {}
 
 			private:
 				T*** data;
 		};
-
-	template<class T>
-		class RegularGrid2D : public CGrid2DInterface<T> {
-			public:
-				RegularGrid2D();
-				RegularGrid2D(uint32_t w, uint32_t h);
-
-				virtual ~RegularGrid2D();
-
-				T& operator() (int i, int j) override;
-				T operator() (int i, int j) const override;
-				T safeData(int i, int j) const override;
-
-				void set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize);
-				void setAll(T v);
-
-			private:
-				std::vector<std::vector<T> >data;
-		};
-
-	template<typename T>
-		RegularGrid2D<T>::RegularGrid2D(){
-			this->width = this->height = 0;
-			this->useBorder = false;
-		}
-
-	template<typename T>
-		RegularGrid2D<T>::RegularGrid2D(uint32_t w, uint32_t h) {
-			this->width = w;
-			this->height = h;
-		}
-
-	template<typename T>
-		RegularGrid2D<T>::~RegularGrid2D() {}
-
-	template<typename T>
-		void RegularGrid2D<T>::set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize) {
-			set(w, h);
-			set(offset, cellSize);
-			data.resize(w, std::vector<T>());
-			for (int i = 0; i < w; i++)
-				data[i].resize(h);
-		}
-
-	template<typename T>
-		T& RegularGrid2D<T>::operator() (int i, int j) {
-			CHECK_IN_BETWEEN(i, 0, this->width);
-			CHECK_IN_BETWEEN(j, 0, this->height);
-			return data[i][j];
-		}
-
-	template<typename T>
-		T RegularGrid2D<T>::operator() (int i, int j) const {
-			CHECK_IN_BETWEEN(i, 0, this->width);
-			CHECK_IN_BETWEEN(j, 0, this->height);
-			return data[i][j];
-		}
-
-	template<typename T>
-		void RegularGrid2D<T>::setAll(T v){
-			for (int i = 0; i < this->width; i++)
-				for (int j = 0; j < this->height; j++)
-					data[i][j] = v;
-		}
-
-	template<typename T>
-		T RegularGrid2D<T>::safeData(int i, int j) const{
-			return data[max(0, min(this->width-1,i))][max(0, min(this->height-1,j))];
-		}
 
 }  // ponos namespace
 

@@ -116,6 +116,7 @@ namespace ponos {
 			Point3();
 			explicit Point3(float _x, float _y, float _z);
 			explicit Point3(const Vector3& v);
+			explicit Point3(const float* v);
 			explicit operator Vector3() const { return Vector3(x, y, z); }
 			// access
 			float operator[](int i) const {
@@ -148,6 +149,9 @@ namespace ponos {
 				z -= v.z;
 				return *this;
 			}
+			Point3 operator*(float d) {
+				return Point3(x * d, y * d, z * d);
+			}
 			Point3 operator/(float d) {
 				return Point3(x / d, y / d, z / d);
 			}
@@ -157,6 +161,11 @@ namespace ponos {
 				z /= d;
 				return *this;
 			}
+			// boolean
+			bool operator==(const Point3& p) {
+				return IS_EQUAL(x, p.x) && IS_EQUAL(y, p.y) && IS_EQUAL(z, p.z);
+			}
+
 			Point2 xy() {
 				return Point2(x, y);
 			}

@@ -13,6 +13,7 @@ set(HEADERS
 	src/core/material.h
 	src/core/sampler.h
 	src/core/shape.h
+	src/core/spectrum.h
 	src/core/primitive.h
 	src/core/texture.h
 	src/geometry/h_ray.h

@@ -10,6 +10,7 @@ set(HEADERS
 	src/io/viewport_display.h
 	src/scene/camera.h
 	src/scene/camera_2d.h
+	src/scene/scene.h
 	src/scene/scene_object.h
 	src/ui/app.h
 	src/ui/trackball.h
@@ -21,6 +22,7 @@ set(HEADERS
 	)
 
 set(SOURCES
+	src/helpers/cartesian_grid.cpp
 	src/io/graphics_display.cpp
 	src/io/viewport_display.cpp
 	src/scene/camera.cpp
@@ -32,7 +34,7 @@ set(SOURCES
 if(WIN32)
 	find_library(GLFW_LIB NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/external/GLFW)
 	include_directories("${PROJECT_SOURCE_DIR}/external")
-  find_library(VULKAN_LIB NAMES vulkan-1 vulkan)
+	find_library(VULKAN_LIB NAMES vulkan-1 vulkan)
 	find_package(Vulkan REQUIRED)
 	link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
 else(WIN32)

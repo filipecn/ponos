@@ -7,7 +7,7 @@
 using ponos::Point2;
 using ponos::vec2;
 using ponos::ZGrid;
-using ponos::RegularGrid2D;
+using ponos::CRegularGrid2D;
 
 namespace poseidon {
 

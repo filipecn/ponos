@@ -1,52 +1,22 @@
-#include <openvdb/openvdb.h>
-#include <openvdb_points/openvdb.h>
-#include <openvdb_points/tools/PointDataGrid.h>
-#include <openvdb_points/tools/PointConversion.h>
-#include <openvdb_points/tools/PointCount.h>
-
+#include <aergia.h>
+#include <ponos.h>
 #include <iostream>
+#include <vector>
+#include <memory>
 
-using namespace openvdb::tools;
+int WIDTH = 800, HEIGHT = 800;
 
-int main()
-{
-    // Initialize the OpenVDB and OpenVDB Points library.  This must be called at least
-    // once per program and may safely be called multiple times.
-    openvdb::initialize();
-    openvdb::points::initialize();
+aergia::App app(WIDTH, HEIGHT, "FLIP example");
+std::shared_ptr<aergia::CartesianGrid> grid;
+aergia::Scene<> scene;
 
-    // Create some point positions
-    std::vector<openvdb::Vec3f> positions;
-
-    positions.push_back(openvdb::Vec3f(1.2, 4.1, 0.5));
-    positions.push_back(openvdb::Vec3f(0.9, 8.1, 3.2));
-    positions.push_back(openvdb::Vec3f(-3.6, 1.3, 1.5));
-    positions.push_back(openvdb::Vec3f(-3.8, 1.4, 1.51));
-    positions.push_back(openvdb::Vec3f(-6.8, -9.1, -3.7));
-    positions.push_back(openvdb::Vec3f(1.4, 40302.5, 9.5));
-
-    // Create a linear transform with voxel size of 10.0
-    const float voxelSize = 10.0f;
-    openvdb::math::Transform::Ptr transform = openvdb::math::Transform::createLinearTransform(voxelSize);
-
-    // Create the PointDataGrid, position attribute is mandatory
-    PointDataGrid::Ptr pointDataGrid = createPointDataGrid<PointDataGrid>(
-                    positions, TypedAttributeArray<openvdb::Vec3f>::attributeType(), *transform);
-
-    // Output leaf nodes
-    std::cout << "Leaf Nodes: " << pointDataGrid->tree().leafCount() << std::endl;
-
-    // Output point count
-    std::cout << "Point Count: " << pointCount(pointDataGrid->tree()) << std::endl;
-
-    // Create a VDB file object.
-    openvdb::io::File file("mygrids.vdb");
-
-    // Add the grid pointer to a container.
-    openvdb::GridPtrVec grids;
-    grids.push_back(pointDataGrid);
-
-    // Write out the contents of the container.
-    file.write(grids);
-    file.close();
+int main() {
+	app.viewports[0].camera.reset(new aergia::Camera());
+	app.viewports[0].camera->setPos(ponos::Point3(40.f, 10.f, 10.f));
+	// set grid
+	scene.add(new aergia::CartesianGrid(5, 5, 5));
+	// callbacks
+	app.viewports[0].renderCallback = []() { scene.render(); };
+	app.run();
+	return 0;
 }

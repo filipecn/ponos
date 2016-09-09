@@ -49,7 +49,6 @@ std::ostream& operator<<(std::ostream& os, const Vector3& v) {
 	return os;
 }
 
-
 Vector4::Vector4() { x = y = z = w = 0.0f; }
 
 Vector4::Vector4(float _x, float _y, float _z, float _w)

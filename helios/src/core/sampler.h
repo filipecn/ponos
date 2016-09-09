@@ -2,6 +2,7 @@
 #define HELIOS_CORE_SAMPLER_H
 
 #include "core/intersection.h"
+#include "core/spectrum.h"
 #include "geometry/h_ray.h"
 
 #include <ponos.h>
@@ -11,7 +12,6 @@
 namespace helios {
 
 	//////////////////TEMP//////////////////////////
-	class Spectrum;
 	class VolumeIntegrator {};
 	class SurfaceIntegrator {};
 	class Scene {};

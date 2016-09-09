@@ -33,6 +33,11 @@ namespace ponos {
     ASSERT(!HasNaNs());
   }
 
+	Point3::Point3(const float* v)
+  : x(v[0]), y(v[1]), z(v[2]) {
+    ASSERT(!HasNaNs());
+  }
+
   bool Point3::HasNaNs() const {
     return std::isnan(x) || std::isnan(y) || std::isnan(z);
   }

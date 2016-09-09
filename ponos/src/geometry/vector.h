@@ -285,6 +285,15 @@ namespace ponos {
 					memset(v, 0, D * sizeof(T));
 				}
 
+				Vector(const T& x, const T& y, const T& z)
+					: Vector() {
+						if(size > 2) {
+							v[0] = x;
+							v[1] = y;
+							v[2] = z;
+						}
+					}
+
 				T operator[](int i) const {
 					ASSERT(i >= 0 && i <= static_cast<int>(size));
 					return v[i];
@@ -292,6 +301,12 @@ namespace ponos {
 				T& operator[](int i) {
 					ASSERT(i >= 0 && i <= static_cast<int>(size));
 					return v[i];
+				}
+				bool operator==(const Vector<D, T>& _v) const {
+					for(size_t i = 0; i < size; i++)
+						if(!IS_EQUAL(v[i], _v[i]))
+							return false;
+					return true;
 				}
 				bool operator<=(const Vector<D, T>& _v) const {
 					for(size_t i = 0; i < size; i++)
@@ -318,10 +333,17 @@ namespace ponos {
 					return true;
 				}
 
+				Vector<D, T> operator-(const Vector<D, T>& _v) const {
+					Vector<D, T> v_;
+					for(size_t i = 0; i < D; i++)
+						v_[i] = v[i] - _v[i];
+					return v_;
+				}
+
 				Vector<D, T> operator+(const Vector<D, T>& _v) const {
 					Vector<D, T> v_;
 					for(size_t i = 0; i < D; i++)
-						v_[i] = _v[i];
+						v_[i] = v[i] + _v[i];
 					return v_;
 				}
 
@@ -329,9 +351,22 @@ namespace ponos {
 					return Vector<2, T>(static_cast<float>(v[x]), static_cast<float>(v[y]));
 				}
 
+				Vector<3, T> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2) {
+					return Vector<3, T>(static_cast<float>(v[x]),
+														  static_cast<float>(v[y]),
+														  static_cast<float>(v[z]));
+				}
+
+				T max() const {
+					T m = v[0];
+					for(size_t i = 1; i < D; i++)
+						m = std::max(m, v[i]);
+					return m;
+				}
+
 				friend std::ostream& operator<<(std::ostream& os, const Vector& v) {
 					os << "Vector[<" << D << ">]";
-					for(int i = 0; i < v.size; i++)
+					for(size_t i = 0; i < v.size; i++)
 						os << v[i] << " ";
 					os << std::endl;
 					return os;

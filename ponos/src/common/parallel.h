@@ -2,7 +2,8 @@
 #define PONOS_SRC_COMMON_PARALLEL_H
 
 namespace ponos {
-	/*RWMutex provides reader-writer mutexes, which allow
+	/* mutex
+	 * RWMutex provides reader-writer mutexes, which allow
 	 * multiple threads make read operations but only one
 	 * at a time to write.
 	 */

@@ -22,8 +22,13 @@ set(HEADERS
 	src/geometry/utils.h
 	src/geometry/vector.h
 	src/log/debug.h
+	src/parallel/parallel.h
+	src/spatial/spatial_structure_interface.h
+	src/spatial/array.h
 	src/structures/brep.hpp
 	src/structures/c_grid_interface.h
+	src/structures/c_regular_grid.h
+	src/structures/regular_grid.h
 	src/structures/c_object_pool.hpp
 	src/structures/object_pool.hpp
 	src/structures/z_grid.h
@@ -40,6 +45,7 @@ set(SOURCES
 	src/geometry/quaternion.cpp
 	src/geometry/transform.cpp
 	src/geometry/vector.cpp
+	src/parallel/parallel.cpp
 	)
 
 include_directories("${PONOS_SOURCE_DIR}/src")

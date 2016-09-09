@@ -5,6 +5,7 @@
 #include "io/viewport_display.h"
 #include "scene/camera.h"
 #include "scene/camera_2d.h"
+#include "scene/scene.h"
 #include "scene/scene_object.h"
 #include "ui/app.h"
 #include "ui/trackball.h"

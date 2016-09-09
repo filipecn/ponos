@@ -29,7 +29,7 @@ namespace ponos {
 				 * @return value at coordinate **i**
 				 */
 				virtual T operator()(const ivec3& i) const = 0;
-				// virtual T& operator()(const ivec3& i) = 0;
+				//virtual T& operator()(const ivec3& i) = 0;
 				/* get
 				 * @i **[in]** X coordinate (grid space)
 				 * @j **[in]** Y coordinate (grid space)

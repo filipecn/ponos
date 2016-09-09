@@ -16,6 +16,6 @@ set(TESTS
 
 add_executable(run_poseidon_tests main.cpp ${TESTS})
 
-target_link_libraries(run_poseidon_tests cppunit gcov -ltbb
+target_link_libraries(run_poseidon_tests cppunit gcov -ltbb -pthread
 	/home/filipecn/gitclones/OpenVDB/lib/libopenvdb.so
 	/home/filipecn/gitclones/OpenVDB/lib/libopenvdb_points.so -lHalf)
