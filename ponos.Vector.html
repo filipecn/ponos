@@ -28,17 +28,22 @@
             <div class="subtitle">Constructors</div>
             <ul>
                 <li><a href="#ponos.Vector.Vector%3CD%2C%20T%3E">Vector&lt;D, T&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.Vector.Vector%3CD%2C%20T%3E">Vector&lt;D, T&gt;<span class="counter"></span></a></li>
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
                 <li><a href="#ponos.Vector.operator%5B%5D">operator[]<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.operator%5B%5D">operator[]<span class="counter"></span></a></li>
+                <li><a href="#ponos.Vector.operator%3D%3D">operator==<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.operator%3C%3D">operator&lt;=<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.operator%3C">operator&lt;<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.operator%3E%3D">operator&gt;=<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.operator%3E">operator&gt;<span class="counter"></span></a></li>
+                <li><a href="#ponos.Vector.operator-">operator-<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.operator%2B">operator+<span class="counter"></span></a></li>
                 <li><a href="#ponos.Vector.floatXY">floatXY<span class="counter"></span></a></li>
+                <li><a href="#ponos.Vector.floatXYZ">floatXYZ<span class="counter"></span></a></li>
+                <li><a href="#ponos.Vector.max">max<span class="counter"></span></a></li>
             </ul>
         </div>
     </div>
@@ -91,6 +96,53 @@
                     </table>
                 </div>
                 <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Vector::Vector<D, T>">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Vector&lt;D, T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">y,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">z</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Vector::Vector<D, T>::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Vector::Vector<D, T>::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Vector::Vector<D, T>::z">
+                            <td>z</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
@@ -146,6 +198,37 @@
                     <tbody>
                         <tr id="ponos::Vector::operator[]::i">
                             <td>i</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Vector::operator==">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator==</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Vector">Vector&lt;D, T&gt;</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">_v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Vector::operator==::_v">
+                            <td>_v</td>
                             <td></td>
                         </tr>
                         <tr class="return">
@@ -280,6 +363,37 @@
                 </table>
             </div>
             <div class="function">
+                <div class="declaration" id="ponos::Vector::operator-">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Vector">Vector&lt;D, T&gt;</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator-</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Vector">Vector&lt;D, T&gt;</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">_v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Vector::operator-::_v">
+                            <td>_v</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="ponos::Vector::operator+">
                     <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Vector">Vector&lt;D, T&gt;</a></span></span>
                     </div>
@@ -343,6 +457,80 @@
                             <td>y</td>
                             <td></td>
                         </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Vector::floatXYZ">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#ponos.Vector">Vector&lt;D, T&gt;</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">floatXYZ</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">y,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">z</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::Vector::floatXYZ::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Vector::floatXYZ::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::Vector::floatXYZ::z">
+                            <td>z</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::Vector::max">
+                    <div class="return_type"><span class="type"><span class="name ">T</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">max</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
                         <tr class="return">
                             <td class="keyword">return</td>
                             <td></td>

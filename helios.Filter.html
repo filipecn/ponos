@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Filter</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>helios::Filter</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Subclasses</div>
+            <ul>
+                <li><a href="helios.BoxFilter.html#helios.BoxFilter">BoxFilter<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>filter implementation</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#helios.Filter.xWidth">xWidth<span class="counter"></span></a></li>
+                <li><a href="#helios.Filter.yWidth">yWidth<span class="counter"></span></a></li>
+                <li><a href="#helios.Filter.invXWidth">invXWidth<span class="counter"></span></a></li>
+                <li><a href="#helios.Filter.invYWidth">invYWidth<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.Filter.Filter">Filter<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#helios.Filter.~Filter">~Filter<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.Filter.evaluate">evaluate<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> compute</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::Filter"><span><span class="keyword">Class</span><span>helios::Filter</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Interface for implementation of various types of filter functions.</p>
+                <p><strong>xWidth</strong> and <strong>yWidth</strong> define points in the axis where the function is zero beyond. These points go to each direction, the overall extent (its <em>support</em>) in each direction is <strong>twice</strong> those
+                    values.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
+        <table class="subclasses">
+            <tbody>
+                <tr id="helios::BoxFilter+helios::BoxFilter">
+                    <td class="keyword"></td>
+                    <td><a href="helios.BoxFilter.html#helios.BoxFilter">BoxFilter</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>filter implementation</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="helios::Filter::xWidth">
+                    <td class="field_name identifier">xWidth</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Filter::yWidth">
+                    <td class="field_name identifier">yWidth</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Filter::invXWidth">
+                    <td class="field_name identifier">invXWidth</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::Filter::invYWidth">
+                    <td class="field_name identifier">invYWidth</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::Filter::Filter">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Filter</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">xw,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">yw</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Filter::Filter::xw">
+                            <td>xw</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> X width</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Filter::Filter::yw">
+                            <td>yw</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> Y width</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="helios::Filter::~Filter">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~Filter</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::Filter::evaluate">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">evaluate</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">y</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> compute</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::Filter::evaluate::x">
+                            <td>x</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> sample position relative to the center of the filter in X direction</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::Filter::evaluate::y">
+                            <td>y</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> sample position relative to the center of the filter in Y direction</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the value of the weight of the sample</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

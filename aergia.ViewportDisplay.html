@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="#aergia.ViewportDisplay.renderCallback">renderCallback<span class="counter"></span></a>
                     <div class="brief">
-                        <p>USER CALLBACKS</p>
+                        <p>render callback</p>
                     </div>
                 </li>
                 <li><a href="#aergia.ViewportDisplay.x">x<span class="counter"></span></a>
@@ -46,7 +46,11 @@
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
-                <li><a href="#aergia.ViewportDisplay.ViewportDisplay">ViewportDisplay<span class="counter"></span></a></li>
+                <li><a href="#aergia.ViewportDisplay.ViewportDisplay">ViewportDisplay<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Destructors</div>
             <ul>
@@ -56,17 +60,30 @@
             <ul>
                 <li><a href="#aergia.ViewportDisplay.getMouseNPos">getMouseNPos<span class="counter"></span></a>
                     <div class="brief">
-                        <p>display</p>
+                        <p> get</p>
                     </div>
                 </li>
                 <li><a href="#aergia.ViewportDisplay.render">render<span class="counter"></span></a></li>
-                <li><a href="#aergia.ViewportDisplay.unProject">unProject<span class="counter"></span></a></li>
-                <li><a href="#aergia.ViewportDisplay.viewCoordToNormDevCoord">viewCoordToNormDevCoord<span class="counter"></span></a></li>
+                <li><a href="#aergia.ViewportDisplay.unProject">unProject<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> convert</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.ViewportDisplay.viewCoordToNormDevCoord">viewCoordToNormDevCoord<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> convert</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
         <h1 id="aergia::ViewportDisplay"><span><span class="keyword">Class</span><span>aergia::ViewportDisplay</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Defines a region in the screen.</p>
+            </div>
+        </div>
         <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
         <table class="fields">
             <tbody>
@@ -76,7 +93,7 @@
                     </td>
                     <td class="doc">
                         <div class="brief">
-                            <p>USER CALLBACKS</p>
+                            <p>render callback</p>
                         </div>
                     </td>
                 </tr>
@@ -163,23 +180,42 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> Constructor</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::ViewportDisplay::ViewportDisplay::_x">
                             <td>_x</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> start pixel in X</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::ViewportDisplay::ViewportDisplay::_y">
                             <td>_y</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> start pixel in Y</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::ViewportDisplay::ViewportDisplay::_width">
                             <td>_width</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> width (in pixels)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::ViewportDisplay::ViewportDisplay::_height">
                             <td>_height</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> height (in pixels)</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -223,14 +259,18 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="brief">
-                    <p>display</p>
+                <div class="doc">
+                    <p>The point <strong>(x, y)</strong> is mapped to <strong>(0, 0)</strong> and <strong>(x + width, y + height)</strong> to <strong>(1, 1)</strong></p>
                 </div>
                 <table class="arguments">
                     <tbody>
                         <tr class="return">
                             <td class="keyword">return</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p>normalized mouse coordinates relative to the viewport</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -276,15 +316,26 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> convert</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::ViewportDisplay::unProject::c">
                             <td>c</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> camera</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::ViewportDisplay::unProject::p">
                             <td>p</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> point (in screen space)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>
@@ -310,11 +361,18 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> convert</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::ViewportDisplay::viewCoordToNormDevCoord::p">
                             <td>p</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> point (in view space)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>

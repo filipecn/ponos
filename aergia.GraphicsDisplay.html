@@ -26,13 +26,33 @@
                         <p>graphics</p>
                     </div>
                 </li>
-                <li><a href="#aergia.GraphicsDisplay.clearScreen">clearScreen<span class="counter"></span></a></li>
+                <li><a href="#aergia.GraphicsDisplay.clearScreen">clearScreen<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> clear screen</p>
+                    </div>
+                </li>
                 <li><a href="#aergia.GraphicsDisplay.endFrame">endFrame<span class="counter"></span></a></li>
-                <li><a href="#aergia.GraphicsDisplay.getMouseNPos">getMouseNPos<span class="counter"></span></a></li>
-                <li><a href="#aergia.GraphicsDisplay.getMousePos">getMousePos<span class="counter"></span></a></li>
-                <li><a href="#aergia.GraphicsDisplay.getWindowSize">getWindowSize<span class="counter"></span></a></li>
+                <li><a href="#aergia.GraphicsDisplay.getMouseNPos">getMouseNPos<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> get</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.GraphicsDisplay.getMousePos">getMousePos<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> get</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.GraphicsDisplay.getWindowSize">getWindowSize<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> get</p>
+                    </div>
+                </li>
                 <li><a href="#aergia.GraphicsDisplay.instance">instance<span class="counter"></span></a><span class="static">s</span></li>
-                <li><a href="#aergia.GraphicsDisplay.isRunning">isRunning<span class="counter"></span></a></li>
+                <li><a href="#aergia.GraphicsDisplay.isRunning">isRunning<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> query</p>
+                    </div>
+                </li>
                 <li><a href="#aergia.GraphicsDisplay.keyState">keyState<span class="counter"></span></a>
                     <div class="brief">
                         <p>user input</p>
@@ -56,22 +76,40 @@
                 <li><a href="#aergia.GraphicsDisplay.registerScrollFunc">registerScrollFunc<span class="counter"></span></a></li>
                 <li><a href="#aergia.GraphicsDisplay.set">set<span class="counter"></span></a>
                     <div class="brief">
-                        <p>display</p>
+                        <p> set</p>
                     </div>
                 </li>
                 <li><a href="#aergia.GraphicsDisplay.start">start<span class="counter"></span></a>
                     <div class="brief">
-                        <p>run</p>
+                        <p> main loop</p>
                     </div>
                 </li>
-                <li><a href="#aergia.GraphicsDisplay.stop">stop<span class="counter"></span></a></li>
-                <li><a href="#aergia.GraphicsDisplay.unProject">unProject<span class="counter"></span></a></li>
-                <li><a href="#aergia.GraphicsDisplay.viewCoordToNormDevCoord">viewCoordToNormDevCoord<span class="counter"></span></a></li>
+                <li><a href="#aergia.GraphicsDisplay.stop">stop<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> exit</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.GraphicsDisplay.unProject">unProject<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> convert</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.GraphicsDisplay.viewCoordToNormDevCoord">viewCoordToNormDevCoord<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> convert</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
         <h1 id="aergia::GraphicsDisplay"><span><span class="keyword">Class</span><span>aergia::GraphicsDisplay</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Main class for screen operations. Responsable for getting user input and rendering.</p>
+                <p>The screen origin <strong>(0, 0)</strong> is the lower-left corner of the window.</p>
+            </div>
+        </div>
         <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
         <div class="destructors">
             <div class="function">
@@ -147,23 +185,42 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> clear screen</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::GraphicsDisplay::clearScreen::r">
                             <td>r</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> red</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::clearScreen::g">
                             <td>g</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> green</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::clearScreen::b">
                             <td>b</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> blue</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::clearScreen::a">
                             <td>a</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> alpha Assign the given color <strong>(r, g, b, a)</strong> to all pixels of the screen</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -200,6 +257,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> get</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr class="return">
@@ -223,6 +283,9 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="brief">
+                    <p> get</p>
                 </div>
                 <table class="arguments">
                     <tbody>
@@ -256,15 +319,26 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> get</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::GraphicsDisplay::getWindowSize::w">
                             <td>w</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> receives width value</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::getWindowSize::h">
                             <td>h</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> receives height value</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -310,6 +384,9 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="brief">
+                    <p> query</p>
                 </div>
                 <table class="arguments">
                     <tbody>
@@ -617,21 +694,33 @@
                     </table>
                 </div>
                 <div class="brief">
-                    <p>display</p>
+                    <p> set</p>
                 </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::GraphicsDisplay::set::w">
                             <td>w</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> width (in pixels)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::set::h">
                             <td>h</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> height (in pixels)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::set::windowTitle">
                             <td>windowTitle</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> Set window properties.</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -651,8 +740,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="brief">
-                    <p>run</p>
+                <div class="doc">
+                    <p>Starts the application, opens the window and enters in the main loop.</p>
                 </div>
                 <table class="arguments"></table>
             </div>
@@ -670,6 +759,9 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="doc">
+                    <p>Closes the window.</p>
                 </div>
                 <table class="arguments"></table>
             </div>
@@ -697,15 +789,26 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> convert</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::GraphicsDisplay::unProject::c">
                             <td>c</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> camera</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::GraphicsDisplay::unProject::p">
                             <td>p</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> point (in screen space)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>
@@ -731,11 +834,18 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> convert</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::GraphicsDisplay::viewCoordToNormDevCoord::p">
                             <td>p</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> point (in view space)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>

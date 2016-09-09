@@ -17,11 +17,19 @@
             <div id="cldoc_sidebar_pagenav"></div>
             <div class="subtitle">Subclasses</div>
             <ul>
-                <li><a href="aergia.CartesianGrid.html#aergia.CartesianGrid">CartesianGrid<span class="counter"></span></a></li>
+                <li><a href="aergia.CartesianGrid.html#aergia.CartesianGrid">CartesianGrid<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>cartesian grid</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Fields</div>
             <ul>
-                <li><a href="#aergia.SceneObject.t">t<span class="counter"></span></a></li>
+                <li><a href="#aergia.SceneObject.t">t<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> query</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
@@ -33,19 +41,32 @@
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
-                <li><a href="#aergia.SceneObject.draw">draw<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#aergia.SceneObject.draw">draw<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> draw</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
         <h1 id="aergia::SceneObject"><span><span class="keyword">Class</span><span>aergia::SceneObject</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>The Scene Object Interface represents an drawable object that can be intersected by a ray.</p>
+            </div>
+        </div>
         <h2 data-cldoc-dynamic="1" id="subclasses">Subclasses</h2>
         <table class="subclasses">
             <tbody>
                 <tr id="aergia::CartesianGrid+aergia::CartesianGrid">
                     <td class="keyword"></td>
                     <td><a href="aergia.CartesianGrid.html#aergia.CartesianGrid">CartesianGrid</a></td>
-                    <td></td>
+                    <td>
+                        <div class="brief">
+                            <p>cartesian grid</p>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -56,7 +77,11 @@
                     <td class="field_name identifier">t</td>
                     <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
                     </td>
-                    <td class="doc"></td>
+                    <td class="doc">
+                        <div class="doc">
+                            <p>virtual bool intersect(const ponos::Ray3 &amp;r, float &amp;t) = 0;</p>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -119,6 +144,9 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="doc">
+                    <p>render method</p>
                 </div>
                 <table class="arguments"></table>
             </div>

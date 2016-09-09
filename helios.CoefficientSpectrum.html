@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CoefficientSpectrum</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>CoefficientSpectrum&lt;int nSamples&gt;</span></span>
+                </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Template Parameters</div>
+            <ul>
+                <li><a href="#helios.CoefficientSpectrum.nSamples">nSamples<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#helios.CoefficientSpectrum.c">c<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#helios.CoefficientSpectrum.CoefficientSpectrum%3CnSamples%3E">CoefficientSpectrum&lt;nSamples&gt;<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#helios.CoefficientSpectrum.~CoefficientSpectrum%3CnSamples%3E">~CoefficientSpectrum&lt;nSamples&gt;<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#helios.CoefficientSpectrum.operator%2B%3D">operator+=<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator%2B">operator+<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator%2B%3D">operator+=<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator%2B">operator+<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator*%3D">operator*=<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator*%3D">operator*=<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator*">operator*<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator">operator/=<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator">operator/<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator">operator/=<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.operator">operator/<span class="counter"></span></a></li>
+                <li><a href="#helios.CoefficientSpectrum.isBlack">isBlack<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> query</p>
+                    </div>
+                </li>
+                <li><a href="#helios.CoefficientSpectrum.clamp">clamp<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> clamp</p>
+                    </div>
+                </li>
+                <li><a href="#helios.CoefficientSpectrum.hasNaNs">hasNaNs<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="helios::CoefficientSpectrum"><span><span class="keyword">Class</span><span>CoefficientSpectrum&lt;int nSamples&gt;</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Represents a spectrum by a particular number of samples (given by <strong>nSamples</strong> parameter) of the SPD(<em>spectral power distribution</em>).</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="template parameters">Template Parameters</h2>
+        <table class="template_parameters">
+            <tbody>
+                <tr id="helios::CoefficientSpectrum::nSamples">
+                    <td><span class="type"><span class="name builtin">int</span> nSamples</span>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="helios::CoefficientSpectrum::c">
+                    <td class="field_name identifier">c</td>
+                    <td class="field_type"><span class="type"><span class="name ">float [nSamples]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::CoefficientSpectrum<nSamples>">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">CoefficientSpectrum&lt;nSamples&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::CoefficientSpectrum<nSamples>::v">
+                            <td>v</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> constant value across all wavelenghts</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::~CoefficientSpectrum<nSamples>">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~CoefficientSpectrum&lt;nSamples&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator+=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator+=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator+=::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator+">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator+</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator+::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator+=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator+=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator+=::s2">
+                            <td>s2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator+">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator+</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator+::s2">
+                            <td>s2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator*=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator*=::s2">
+                            <td>s2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator*::s2">
+                            <td>s2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator*=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator*=::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator*">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator*</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator*::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator/=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator/=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator/=::s2">
+                            <td>s2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator/">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator/</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator/::s2">
+                            <td>s2</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator/=">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span><span class="qualifier">  &amp;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator/=</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator/=::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::operator/">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">operator/</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::operator/::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::isBlack">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">isBlack</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Useful to ray tracing algorithms to avoid the computation of reflected rays of zero reflectance surfaces.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::clamp">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.CoefficientSpectrum">CoefficientSpectrum</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">clamp</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">l,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">h</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> clamp</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::CoefficientSpectrum::clamp::l">
+                            <td>l</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> low (default = 0)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::CoefficientSpectrum::clamp::h">
+                            <td>h</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> high (default = INFINITY)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::CoefficientSpectrum::hasNaNs">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">hasNaNs</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

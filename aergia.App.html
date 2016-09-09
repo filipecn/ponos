@@ -15,9 +15,21 @@
                 <div class="name"><span><span class="keyword">Class</span><span>aergia::App</span></span>
                 </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
             <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.App.viewports">viewports<span class="counter"></span></a></li>
+                <li><a href="#aergia.App.initialized">initialized<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.App.windowWidth">windowWidth<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.App.windowHeight">windowHeight<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.App.title">title<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
             <div class="subtitle">Constructors</div>
             <ul>
-                <li><a href="#aergia.App.App">App<span class="counter"></span></a></li>
+                <li><a href="#aergia.App.App">App<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Destructors</div>
             <ul>
@@ -25,13 +37,60 @@
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
-                <li><a href="#aergia.App.processInput">processInput<span class="counter"></span></a></li>
-                <li><a href="#aergia.App.render">render<span class="counter"></span></a></li>
+                <li><a href="#aergia.App.addViewport">addViewport<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> add</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.App.init">init<span class="counter"></span></a></li>
+                <li><a href="#aergia.App.run">run<span class="counter"></span></a></li>
+                <li><a href="#aergia.App.processInput">processInput<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.App.render">render<span class="counter"></span></a><span class="protected">p</span></li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
         <h1 id="aergia::App"><span><span class="keyword">Class</span><span>aergia::App</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>An App makes the creation of viewports easy.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::App::viewports">
+                    <td class="field_name identifier">viewports</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;aergia::ViewportDisplay, std::allocator&lt;aergia::ViewportDisplay&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::App::initialized">
+                    <td class="field_name identifier">initialized</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::App::windowWidth">
+                    <td class="field_name identifier">windowWidth</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::App::windowHeight">
+                    <td class="field_name identifier">windowHeight</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::App::title">
+                    <td class="field_name identifier">title</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::__cxx11::string</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
         <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
         <div class="constructors">
             <div class="function">
@@ -41,29 +100,69 @@
                             <tr>
                                 <td class="identifier">App</td>
                                 <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
                                 </td>
                                 <td class="argument_name">w,</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
                                 </td>
-                                <td class="argument_name">h</td>
+                                <td class="argument_name">h,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">char</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">defaultViewport</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::App::App::w">
                             <td>w</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> window width (in pixels)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::App::App::h">
                             <td>h</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> window height (in pixels)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::App::App::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> window title</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::App::App::defaultViewport">
+                            <td>defaultViewport</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> if true, creates a viewport with the same size of the window</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -93,7 +192,127 @@
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
         <div class="member_functions">
             <div class="function">
+                <div class="declaration" id="aergia::App::addViewport">
+                    <div class="return_type"><span class="type"><span class="name ">size_t</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">addViewport</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">y,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">h</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p><strong>Note:</strong> the origin of the screen space <strong>(0, 0)</strong> is on the upper-left corner of the window.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::App::addViewport::x">
+                            <td>x</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> first pixel in X</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::App::addViewport::y">
+                            <td>y</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> first pixel in Y</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::App::addViewport::w">
+                            <td>w</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> viewport width (in pixels)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::App::addViewport::h">
+                            <td>h</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> viewport height (in pixels) Creates a new viewport <strong>[x, y, w, h]</strong>.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the id of the new viewport</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::App::init">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">init</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::App::run">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">run</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="aergia::App::processInput">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                    </ul>
                     <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
                     </div>
                     <table class="declaration">
@@ -111,6 +330,9 @@
             </div>
             <div class="function">
                 <div class="declaration" id="aergia::App::render">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                    </ul>
                     <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
                     </div>
                     <table class="declaration">

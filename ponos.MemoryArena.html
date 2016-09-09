@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="#ponos.MemoryArena.MemoryArena">MemoryArena<span class="counter"></span></a>
                     <div class="brief">
-                        <p>@bs amount of bytes the region to be allocated (<a href="#ponos.MemoryArena.blockSize">ponos::MemoryArena::blockSize</a>).</p>
+                        <p> Constructor.</p>
                     </div>
                 </li>
             </ul>
@@ -31,15 +31,19 @@
             <ul>
                 <li><a href="#ponos.MemoryArena.alloc">alloc&lt;T&gt;<span class="counter"></span></a>
                     <div class="brief">
-                        <p> alloc allocates space for <a href="#ponos.MemoryArena.alloc.count">count</a> objects.</p>
+                        <p> allocation</p>
                     </div>
                 </li>
                 <li><a href="#ponos.MemoryArena.alloc">alloc<span class="counter"></span></a>
                     <div class="brief">
-                        <p>alloc allocates <a href="#ponos.MemoryArena.alloc.sz">sz</a> bytes.</p>
+                        <p> allocation</p>
                     </div>
                 </li>
-                <li><a href="#ponos.MemoryArena.freeAll">freeAll<span class="counter"></span></a></li>
+                <li><a href="#ponos.MemoryArena.freeAll">freeAll<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> free</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -47,7 +51,7 @@
         <h1 id="ponos::MemoryArena"><span><span class="keyword">Class</span><span>ponos::MemoryArena</span></span></h1>
         <div class="description">
             <div class="doc">
-                <p>objects of different size in this region. Does not support freeing of individual blocks.</p>
+                <p>MemoryArena allocates a large contiguous region of memory and manages objects of different size in this region. Does not support freeing of individual blocks.</p>
             </div>
         </div>
         <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
@@ -68,13 +72,17 @@
                     </table>
                 </div>
                 <div class="brief">
-                    <p>@bs amount of bytes the region to be allocated (<a href="#ponos.MemoryArena.blockSize">ponos::MemoryArena::blockSize</a>).</p>
+                    <p> Constructor.</p>
                 </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="ponos::MemoryArena::MemoryArena::bs">
                             <td>bs</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> amount of bytes per region to be allocated (<a href="#ponos.MemoryArena.blockSize">ponos::MemoryArena::blockSize</a>).</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -121,7 +129,7 @@
                     </table>
                 </div>
                 <div class="brief">
-                    <p> alloc allocates space for <a href="#ponos.MemoryArena.alloc.count">count</a> objects.</p>
+                    <p> allocation</p>
                 </div>
                 <table class="function-template-parameters">
                     <tbody>
@@ -135,7 +143,11 @@
                     <tbody>
                         <tr id="ponos::MemoryArena::alloc::count">
                             <td>count</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of objects alloc allocates space for <strong>count</strong> objects.</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>
@@ -162,7 +174,7 @@
                     </table>
                 </div>
                 <div class="brief">
-                    <p>alloc allocates <a href="#ponos.MemoryArena.alloc.sz">sz</a> bytes.</p>
+                    <p> allocation</p>
                 </div>
                 <table class="arguments">
                     <tbody>
@@ -170,7 +182,7 @@
                             <td>sz</td>
                             <td>
                                 <div class="doc">
-                                    <p>block size to be allocated.</p>
+                                    <p><strong>[in]</strong> block size to be allocated.</p>
                                 </div>
                             </td>
                         </tr>
@@ -191,6 +203,9 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="doc">
+                    <p>frees all allocated memory</p>
                 </div>
                 <table class="arguments"></table>
             </div>

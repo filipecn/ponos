@@ -17,7 +17,11 @@
             <div id="cldoc_sidebar_pagenav"></div>
             <div class="subtitle">Bases</div>
             <ul>
-                <li><a href="#aergia.SceneObject%2Baergia.SceneObject">SceneObject<span class="counter"></span></a></li>
+                <li><a href="#aergia.SceneObject%2Baergia.SceneObject">SceneObject<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>interface</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Fields</div>
             <ul>
@@ -26,16 +30,39 @@
             <div class="subtitle">Constructors</div>
             <ul>
                 <li><a href="#aergia.CartesianGrid.CartesianGrid">CartesianGrid<span class="counter"></span></a></li>
+                <li><a href="#aergia.CartesianGrid.CartesianGrid">CartesianGrid<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.CartesianGrid.CartesianGrid">CartesianGrid<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
-                <li><a href="#aergia.CartesianGrid.draw">draw<span class="counter"></span></a><span class="virtual">v</span></li>
-                <li><a href="#aergia.CartesianGrid.setDimension">setDimension<span class="counter"></span></a></li>
+                <li><a href="#aergia.CartesianGrid.draw">draw<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> draw</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.CartesianGrid.setDimension">setDimension<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> set</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
         <h1 id="aergia::CartesianGrid"><span><span class="keyword">Class</span><span>aergia::CartesianGrid</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Represents a cartesian grid.</p>
+            </div>
+        </div>
         <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
         <table class="bases">
             <tbody>
@@ -43,7 +70,11 @@
                     <td class="keyword"></td>
                     <td><span class="type"><span class="name "><a href="aergia.SceneObject.html#aergia.SceneObject">SceneObject</a></span></span>
                     </td>
-                    <td></td>
+                    <td>
+                        <div class="brief">
+                            <p>interface</p>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -75,6 +106,96 @@
                 </div>
                 <table class="arguments"></table>
             </div>
+            <div class="function">
+                <div class="declaration" id="aergia::CartesianGrid::CartesianGrid">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">CartesianGrid</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">d</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::CartesianGrid::CartesianGrid::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> delta in all axis Creates a grid <strong>[-d, d] x [-d, d] x [-d, d]</strong></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::CartesianGrid::CartesianGrid">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">CartesianGrid</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">dx,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">dy,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">dz</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::CartesianGrid::CartesianGrid::dx">
+                            <td>dx</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> delta X</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::CartesianGrid::CartesianGrid::dy">
+                            <td>dy</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> delta Y</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::CartesianGrid::CartesianGrid::dz">
+                            <td>dz</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> delta Z Creates a grid <strong>[-dx, dx] x [-dy, dy] x [-dz, dz]</strong></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
         <div class="member_functions">
@@ -82,6 +203,7 @@
                 <div class="declaration" id="aergia::CartesianGrid::draw">
                     <ul class="specifiers">
                         <li class="override">override</li>
+                        <li class="abstract">abstract</li>
                     </ul>
                     <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
                     </div>
@@ -95,6 +217,9 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="doc">
+                    <p>render method</p>
                 </div>
                 <table class="arguments"></table>
                 <div class="overrides"><span class="title">Overrides: </span><a href="aergia.SceneObject.html#aergia.SceneObject.draw">SceneObject::draw</a></div>
@@ -128,19 +253,34 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="doc">
+                    <p><strong>Example:</strong> If we want a grid with <strong>y</strong> coordinates in <strong>[-5,5]</strong>, we call <strong>set(1, -5, 5)</strong></p>
+                </div>
                 <table class="arguments">
                     <tbody>
                         <tr id="aergia::CartesianGrid::setDimension::d">
                             <td>d</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> dimension index (x = 0, ...)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::CartesianGrid::setDimension::a">
                             <td>a</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> lowest coordinate</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr id="aergia::CartesianGrid::setDimension::b">
                             <td>b</td>
-                            <td></td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> highest coordinate Set the limits of the grid for an axis.</p>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
