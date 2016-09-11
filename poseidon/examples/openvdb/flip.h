@@ -26,7 +26,7 @@ namespace poseidon {
 			 * Initialize structures and allocates memory.
 			 * **note:** assumes all public fields have been previously set.
 			 *
-			 * @return true if success
+			 * @return **true** if success
 			 */
 			bool init();
 			virtual ~FLIP() {}

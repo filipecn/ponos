@@ -4,6 +4,7 @@
 #include <ponos.h>
 
 namespace aergia {
+
 	class Camera {
 		public:
 			Camera();
@@ -25,6 +26,7 @@ namespace aergia {
 			ponos::Point3 viewPointOnWorldCoord() const;
 			// p must be in norm dev coord (windowCoordToNormDevCoord)
 			ponos::Line viewLineFromWindow(ponos::Point2 p) const;
+			ponos::Ray3 pickRay(ponos::Point2 p) const;
 			ponos::Plane viewPlane(ponos::Point3 p) const;
 		//private:
 			float ratio;
@@ -40,6 +42,7 @@ namespace aergia {
 			ponos::Transform model;
 			ponos::Frustum frustum;
 	};
+
 } // aergia namespace
 
 #endif // AERGIA_SCENE_CAMERA_H

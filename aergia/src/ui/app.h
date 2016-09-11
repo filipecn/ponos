@@ -3,6 +3,7 @@
 
 #include "io/graphics_display.h"
 #include "io/viewport_display.h"
+#include "ui/trackball_interface.h"
 
 #include <string>
 #include <vector>
@@ -37,14 +38,16 @@ namespace aergia {
 			void run();
 
 			std::vector<ViewportDisplay> viewports;
+			TrackballInterface trackball;
 
 		protected:
 			bool initialized;
 			uint windowWidth, windowHeight;
 			std::string title;
 
-			void processInput();
 			void render();
+			void button(int b, int a);
+			void mouse(double x, double y);
 	};
 
 } // aergia namespace

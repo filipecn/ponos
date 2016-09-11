@@ -26,12 +26,22 @@ namespace aergia {
 		glDisable(GL_SCISSOR_TEST);
 	}
 
-  ponos::Point2 ViewportDisplay::getMouseNPos() {
-    int viewport[] = {0, 0, width, height};
-    ponos::Point2 mp = GraphicsDisplay::instance().getMousePos() - ponos::vec2(x, y);;
-    return ponos::Point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
-                         (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
-  }
+	void ViewportDisplay::mouse(double x, double y) {
+		if(mouseCallback)
+			mouseCallback(x, y);
+	}
+
+	void ViewportDisplay::button(int b, int a) {
+		if(buttonCallback)
+			buttonCallback(b, a);
+	}
+
+	ponos::Point2 ViewportDisplay::getMouseNPos() {
+		int viewport[] = {0, 0, width, height};
+		ponos::Point2 mp = GraphicsDisplay::instance().getMousePos() - ponos::vec2(x, y);;
+		return ponos::Point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
+				(mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
+	}
 
 	ponos::Point3 ViewportDisplay::viewCoordToNormDevCoord(ponos::Point3 p) {
 		float v[] = {0, 0, static_cast<float>(width), static_cast<float>(height)};

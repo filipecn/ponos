@@ -32,6 +32,30 @@ namespace ponos {
 			return true;
 	}
 
+	bool sphere_ray_intersection(const Sphere &s, const Ray3 &r, float *t1, float *t2) {
+			float a = dot(r.d, r.d);
+			float b = 2.f * dot(r.d, r.o - s.c);
+			float c = dot(r.o - s.c, r.o - s.c) - s.r * s.r;
+
+			float delta = b * b - 4 * a * c;
+			if(delta < 0)
+				return false;
+
+			float d = sqrt(delta);
+
+			float ta = (-b + d) / (2.0 * a);
+			float tb = (-b - d) / (2.0 * a);
+			if(ta < 0.f && tb < 0.f)
+				return false;
+			else if(ta >= 0.f && tb >= 0.f) {
+				if(t1) *t1 = ta;
+				if(t2) *t2 = tb;
+			} else if(ta >= 0.f) {
+				if(t1) *t1 = ta;
+			} else if(t1) *t1 = tb;
+			return true;
+	}
+
 	bool bbox_ray_intersection(const BBox& box, const Ray3& ray, float& hit0, float& hit1) {
 		float t0 = 0.f, t1 = INFINITY;
 		for(int i = 0; i < 3; i++) {
@@ -138,4 +162,5 @@ namespace ponos {
 		}
 		return sdist;
 	}
+
 } // ponos namespace

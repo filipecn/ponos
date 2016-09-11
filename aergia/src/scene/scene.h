@@ -21,15 +21,19 @@ namespace aergia {
 				virtual ~Scene() {}
 
 				void add(SceneObject* o) {
-					s.add(std::shared_ptr<SceneObject>(o));
+					s.add(o);
 				}
 
 				void render() {
-					s.iterate([](const std::shared_ptr<SceneObject>& o) { o->draw(); });
+					s.iterate([](const SceneObject *o) { o->draw(); });
+				}
+
+				SceneObject* intersect(const ponos::Ray3& ray, float *t = nullptr) {
+					return s.intersect(ray, t);
 				}
 
 			private:
-				StructureType<std::shared_ptr<SceneObject> > s;
+				StructureType<SceneObject> s;
 		};
 
 } // aergia namespace

@@ -105,10 +105,15 @@ namespace aergia {
 		float tb = near * tanf((fov / ratio) / 2.f);
 		ponos::Point3 P = pos + dir * near - left * p.x * ta + new_up * p.y * tb;*/
 		ponos::Point3 P = ponos::inverse(model * view)(ponos::inverse(projection) * ponos::Point3(p.x, p.y, -1.f));
-		std::cout << "view line from plane\n";
-		std::cout << P;
-		std::cout << pos;
+		//std::cout << "view line from plane\n";
+		//std::cout << P;
+		//std::cout << pos;
 		return Line(pos, P - pos);
+	}
+
+	ponos::Ray3 Camera::pickRay(ponos::Point2 p) const {
+		ponos::Point3 P = ponos::inverse(model * view)(ponos::inverse(projection) * ponos::Point3(p.x, p.y, -1.f));
+		return ponos::Ray3(pos, P - pos);
 	}
 
 	ponos::Plane Camera::viewPlane(ponos::Point3 p) const {

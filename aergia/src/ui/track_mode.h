@@ -92,18 +92,18 @@ namespace aergia {
 			void update(Trackball &tb, Camera& camera, ponos::Point2 p) override {
 				if(!dragging_ || p == start_)
 					return;
-				std::cout << start_;
-				std::cout << p;
+				//std::cout << start_;
+				//std::cout << p;
 				ponos::Point3 a = hitSpherePlane(tb, camera, start_);
 				ponos::Point3 b = hitSpherePlane(tb, camera, p);
 
 				ponos::vec3 axis = ponos::normalize(ponos::cross((a - tb.center), (b - tb.center)));
-				std::cout << "a " << a;
-				std::cout << "b " << b;
-				std::cout << "axis " << axis;
+				//std::cout << "a " << a;
+				//std::cout << "b " << b;
+				//std::cout << "axis " << axis;
 
 				float phi = ponos::distance(a, b) / tb.radius;
-				std::cout << phi << std::endl;
+				//std::cout << phi << std::endl;
 		/*		vec3 newAxis = glm::normalize(glm::inverse(
 							glm::mat3(
 								glm::toMat4(tb.transform.r)

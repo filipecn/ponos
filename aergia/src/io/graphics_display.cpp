@@ -100,7 +100,6 @@ namespace aergia {
 	void GraphicsDisplay::beginFrame() {
 		glfwGetFramebufferSize(window, &this->width, &this->height);
 		glViewport(0, 0, this->width, this->height);
-
 	}
 
 	void GraphicsDisplay::endFrame() {
@@ -155,6 +154,10 @@ namespace aergia {
 		this->buttonCallback = f;
 	}
 
+	void GraphicsDisplay::registerButtonFunc(std::function<void(int,int)> f){
+		this->buttonCallback = f;
+	}
+
 	void GraphicsDisplay::button_callback(GLFWwindow* window, int button, int action, int mods){
 		if(instance_.buttonCallback)
 			instance_.buttonCallback(button,action);
@@ -166,6 +169,10 @@ namespace aergia {
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////// MOUSE MOTION FUNCTIONS ////////////////////////////////////////////
 	void GraphicsDisplay::registerMouseFunc(void (*f)(double,double)){
+		this->mouseCallback = f;
+	}
+
+	void GraphicsDisplay::registerMouseFunc(std::function<void(double,double)> f){
 		this->mouseCallback = f;
 	}
 

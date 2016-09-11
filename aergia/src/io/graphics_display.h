@@ -69,8 +69,10 @@ namespace aergia {
 			void registerRenderFunc(void (*f)());
 			void registerRenderFunc(std::function<void()> f);
 			void registerButtonFunc(void (*f)(int,int));
+			void registerButtonFunc(std::function<void(int,int)> f);
 			void registerKeyFunc(void (*f)(int,int));
 			void registerMouseFunc(void (*f)(double,double));
+			void registerMouseFunc(std::function<void(double,double)> f);
 			void registerScrollFunc(void (*f)(double,double));
 			void registerResizeFunc(void (*f)(int,int));
 			// graphics

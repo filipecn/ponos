@@ -1,6 +1,7 @@
 #include "core/camera.h"
 
 namespace helios {
+
 	Camera::Camera(const AnimatedTransform &cam2world, float sopen,
 			float sclose, Film *film)
 		: cameraToWorld(cam2world),
@@ -49,4 +50,5 @@ namespace helios {
 			rasterToScreen = ponos::inverse(screenToRaster);
 			rasterToCamera = ponos::inverse(cameraToScreen) * rasterToScreen;
 		}
+
 } // helios namespace

@@ -23,11 +23,13 @@ set(HEADERS
 
 set(SOURCES
 	src/helpers/cartesian_grid.cpp
+	src/helpers/geometry_drawers.cpp
 	src/io/graphics_display.cpp
 	src/io/viewport_display.cpp
 	src/scene/camera.cpp
 	src/scene/camera_2d.cpp
 	src/ui/app.cpp
+	src/ui/trackball_interface.cpp
 	src/utils/open_gl.cpp
 	)
 

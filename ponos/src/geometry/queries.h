@@ -37,6 +37,15 @@ namespace ponos {
 	 */
 	bool sphere_line_intersection(const Sphere s, const Line l, Point3& p1, Point3& p2);
 	/* intersection test
+	 * @s **[in]** sphere
+	 * @r **[in]** ray
+	 * @t1 **[out | optional]** closest intersection (parametric coordinate)
+	 * @t2 **[out | optional]** second intersection (parametric coordinate)
+	 *
+	 * @return **true** if intersection exists
+	 */
+	bool sphere_ray_intersection(const Sphere &s, const Ray3 &r, float *t1 = nullptr, float *t2 = nullptr);
+	/* intersection test
 	 * @box **[in]**
 	 * @ray **[in]**
 	 * @hit1 **[out]** first intersection

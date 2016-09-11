@@ -176,7 +176,6 @@ namespace ponos {
 	};
 
 	inline float distance(const Point3& a, const Point3& b) {
-		std::cout << "dist " << (a - b);
 		return (a - b).length();
 	}
 

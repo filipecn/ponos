@@ -23,7 +23,7 @@ namespace aergia {
 		planes[d].high = b;
 	}
 
-	void CartesianGrid::draw() {
+	void CartesianGrid::draw() const {
 		glColor4f(0,0,0,0.5);
 		glBegin(GL_LINES);
 		// XY

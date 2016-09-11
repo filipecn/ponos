@@ -17,13 +17,13 @@ namespace aergia {
 			/* draw
 			 * render method
 			 */
-			virtual void draw() = 0;
+			virtual void draw() const = 0;
 			/* query
 			 * @r **[in]** ray
 			 * @t **[out]** receives the parametric value of the intersection
 			 * @return **true** if intersection is found
 			 */
-			//virtual bool intersect(const ponos::Ray3 &r, float &t) = 0;
+			virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) const { return false; }
 
 			ponos::Transform t;
 	};

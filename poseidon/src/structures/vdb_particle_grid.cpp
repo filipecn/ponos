@@ -190,4 +190,5 @@ namespace poseidon {
 		size_t _md = ponos::parallel_max(0, densities.size(), &densities[0]);
 		return densities[_md];
 	}
+
 } // poseidon namespace

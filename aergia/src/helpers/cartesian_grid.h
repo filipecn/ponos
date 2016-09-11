@@ -36,7 +36,7 @@ namespace aergia {
 			 */
 			void setDimension(size_t d, int a, int b);
 			/* @inherit */
-			void draw() override;
+			void draw() const override;
 
 			ponos::Interval<int>  planes[3];
 	};

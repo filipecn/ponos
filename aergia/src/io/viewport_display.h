@@ -41,9 +41,13 @@ namespace aergia {
 			ponos::Point3 unProject(const Camera& c, ponos::Point3 p);
 
 			void render();
+			void mouse(double x, double y);
+			void button(int b, int a);
 
 			// render callback
 			std::function<void()> renderCallback;
+			std::function<void(int, int)> buttonCallback;
+			std::function<void(double, double)> mouseCallback;
 
 			// viewport
 			int x, y, width, height;

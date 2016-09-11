@@ -9,12 +9,28 @@ int WIDTH = 800, HEIGHT = 800;
 aergia::App app(WIDTH, HEIGHT, "FLIP example");
 aergia::Scene<> scene;
 
+class GridObject : public aergia::SceneObject {
+	public:
+		GridObject(ponos::CGridInterface<float>* g)
+			: grid(g) {}
+		virtual ~GridObject() {}
+
+		void draw() const override {}
+
+		bool intersect(const ponos::Ray3 &r, float *t = nullptr) const override {
+			return false;
+		}
+
+	private:
+		ponos::CGridInterface<float>* grid;
+};
+
 class ParticleObject : public aergia::SceneObject {
 	public:
 		ParticleObject(ponos::Point3 p, float r)
 			: s(ponos::Sphere(p, r)), selected(false) {}
 		void draw() const override {
-				glColor4f(0,0,1,0.4);
+			glColor4f(0,0,1,0.4);
 			if(selected)
 				glColor4f(1,0,0,0.4);
 			aergia::draw_sphere(s);
