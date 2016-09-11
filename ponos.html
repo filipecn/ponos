@@ -310,6 +310,11 @@
                         <p>intersection test</p>
                     </div>
                 </li>
+                <li><a href="#ponos.sphere_ray_intersection">sphere_ray_intersection<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>intersection test</p>
+                    </div>
+                </li>
                 <li><a href="#ponos.star">star<span class="counter"></span></a></li>
                 <li><a href="#ponos.translate">translate<span class="counter"></span></a></li>
                 <li><a href="#ponos.transpose">transpose<span class="counter"></span></a></li>
@@ -4480,6 +4485,91 @@
                             <td>
                                 <div class="doc">
                                     <p><strong>[out]</strong> second intersection</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>true</strong> if intersection exists</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::sphere_ray_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">sphere_ray_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Sphere.html#ponos.Sphere">Sphere</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">t1,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">t2</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>intersection test</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::sphere_ray_intersection::s">
+                            <td>s</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> sphere</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::sphere_ray_intersection::r">
+                            <td>r</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> ray</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::sphere_ray_intersection::t1">
+                            <td>t1</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out | optional]</strong> closest intersection (parametric coordinate)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::sphere_ray_intersection::t2">
+                            <td>t2</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out | optional]</strong> second intersection (parametric coordinate)</p>
                                 </div>
                             </td>
                         </tr>

@@ -39,6 +39,16 @@
                         <p> iterate</p>
                     </div>
                 </li>
+                <li><a href="#ponos.SpatialStructureInterface.init">init<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> init</p>
+                    </div>
+                </li>
+                <li><a href="#ponos.SpatialStructureInterface.intersect">intersect<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> query</p>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -112,8 +122,7 @@
                             <tr>
                                 <td class="identifier">add</td>
                                 <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="name ">const ObjectType</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
-                                    </span>
+                                <td class="argument_type"><span class="type"><span class="name ">ObjectType</span><span class="qualifier"> *</span></span>
                                 </td>
                                 <td class="argument_name">o</td>
                                 <td class="close_paren">)</td>
@@ -168,6 +177,88 @@
                             <td>
                                 <div class="doc">
                                     <p><strong>[in]</strong> function called for each object Iterates thourgh all objects in the structure</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::SpatialStructureInterface::init">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">init</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>some structures need to be initialized after all objects have been added</p>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::SpatialStructureInterface::intersect">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name ">ObjectType</span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersect</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Intersect Scene with a ray.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::SpatialStructureInterface::intersect::r">
+                            <td>r</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> ray</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::SpatialStructureInterface::intersect::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out | optional]</strong> parametric coordinate of intersection</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>nullptr</strong> if no intersection found</p>
                                 </div>
                             </td>
                         </tr>

@@ -64,7 +64,9 @@
                     </div>
                 </li>
                 <li><a href="#aergia.GraphicsDisplay.registerButtonFunc">registerButtonFunc<span class="counter"></span></a></li>
+                <li><a href="#aergia.GraphicsDisplay.registerButtonFunc">registerButtonFunc<span class="counter"></span></a></li>
                 <li><a href="#aergia.GraphicsDisplay.registerKeyFunc">registerKeyFunc<span class="counter"></span></a></li>
+                <li><a href="#aergia.GraphicsDisplay.registerMouseFunc">registerMouseFunc<span class="counter"></span></a></li>
                 <li><a href="#aergia.GraphicsDisplay.registerMouseFunc">registerMouseFunc<span class="counter"></span></a></li>
                 <li><a href="#aergia.GraphicsDisplay.registerRenderFunc">registerRenderFunc<span class="counter"></span></a>
                     <div class="brief">
@@ -482,6 +484,32 @@
                 </table>
             </div>
             <div class="function">
+                <div class="declaration" id="aergia::GraphicsDisplay::registerButtonFunc">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">registerButtonFunc</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::function&lt;void (int, int)&gt;</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::GraphicsDisplay::registerButtonFunc::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="aergia::GraphicsDisplay::registerKeyFunc">
                     <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
                     </div>
@@ -527,6 +555,32 @@
                                         class="plain">, </span><span class="sub-type"><span class="name builtin">double</span></span><span class="plain">)</span></span>
                                         </span>
                                         </span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::GraphicsDisplay::registerMouseFunc::f">
+                            <td>f</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::GraphicsDisplay::registerMouseFunc">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">registerMouseFunc</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::function&lt;void (double, double)&gt;</span></span>
                                 </td>
                                 <td class="argument_name">f</td>
                                 <td class="close_paren">)</td>

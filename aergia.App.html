@@ -18,6 +18,7 @@
             <div class="subtitle">Fields</div>
             <ul>
                 <li><a href="#aergia.App.viewports">viewports<span class="counter"></span></a></li>
+                <li><a href="#aergia.App.trackball">trackball<span class="counter"></span></a></li>
                 <li><a href="#aergia.App.initialized">initialized<span class="counter"></span></a><span class="protected">p</span></li>
                 <li><a href="#aergia.App.windowWidth">windowWidth<span class="counter"></span></a><span class="protected">p</span></li>
                 <li><a href="#aergia.App.windowHeight">windowHeight<span class="counter"></span></a><span class="protected">p</span></li>
@@ -44,7 +45,8 @@
                 </li>
                 <li><a href="#aergia.App.init">init<span class="counter"></span></a></li>
                 <li><a href="#aergia.App.run">run<span class="counter"></span></a></li>
-                <li><a href="#aergia.App.processInput">processInput<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.App.button">button<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.App.mouse">mouse<span class="counter"></span></a><span class="protected">p</span></li>
                 <li><a href="#aergia.App.render">render<span class="counter"></span></a><span class="protected">p</span></li>
             </ul>
         </div>
@@ -62,6 +64,12 @@
                 <tr id="aergia::App::viewports">
                     <td class="field_name identifier">viewports</td>
                     <td class="field_type"><span class="type"><span class="name ">std::vector&lt;aergia::ViewportDisplay, std::allocator&lt;aergia::ViewportDisplay&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::App::trackball">
+                    <td class="field_name identifier">trackball</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="aergia.TrackballInterface.html#aergia.TrackballInterface">TrackballInterface</a></span></span>
                     </td>
                     <td class="doc"></td>
                 </tr>
@@ -309,7 +317,7 @@
                 <table class="arguments"></table>
             </div>
             <div class="function">
-                <div class="declaration" id="aergia::App::processInput">
+                <div class="declaration" id="aergia::App::button">
                     <ul class="specifiers">
                         <li class="protected">protected</li>
                     </ul>
@@ -318,15 +326,73 @@
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">processInput</td>
+                                <td class="identifier">button</td>
                                 <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">b,</td>
+                            </tr>
+                            <tr>
                                 <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">a</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <table class="arguments"></table>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::App::button::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::App::button::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::App::mouse">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">mouse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">y</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::App::mouse::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::App::mouse::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="function">
                 <div class="declaration" id="aergia::App::render">

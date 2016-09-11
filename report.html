@@ -18,7 +18,7 @@
             <div class="subtitle">Coverage</div>
             <ul>
                 <li><span class="bullet incomplete">✗</span><a href="#function">function</a>
-                    <div class="brief">28 out of 84 (33%)</div>
+                    <div class="brief">29 out of 85 (34%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#typedef">typedef</a>
                     <div class="brief">1 out of 25 (4%)</div>
@@ -48,10 +48,10 @@
                     <div class="brief">0 out of 9 (0%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#field">field</a>
-                    <div class="brief">54 out of 270 (20%)</div>
+                    <div class="brief">53 out of 273 (19%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#method">method</a>
-                    <div class="brief">136 out of 449 (30%)</div>
+                    <div class="brief">140 out of 460 (30%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#functiontemplate">functiontemplate</a>
                     <div class="brief">5 out of 11 (45%)</div>
@@ -78,6 +78,7 @@
             <div class="subtitle">Arguments</div>
             <ul>
                 <li><a href="#aergia.Camera.viewLineFromWindow">viewLineFromWindow</a></li>
+                <li><a href="#aergia.SceneObject.intersect">intersect</a></li>
                 <li><a href="#aergia.TrackMode.start">start</a></li>
                 <li><a href="#aergia.GraphicsDisplay.getMousePos">getMousePos</a></li>
                 <li><a href="#aergia.GraphicsDisplay.getMouseNPos">getMouseNPos</a></li>
@@ -91,6 +92,8 @@
                 <li><a href="#aergia.ViewportDisplay.unProject">unProject</a></li>
                 <li><a href="#ponos.Array.add">add</a></li>
                 <li><a href="#ponos.Array.iterate">iterate</a></li>
+                <li><a href="#ponos.Array.intersect">intersect</a></li>
+                <li><a href="#ponos.SpatialStructureInterface.intersect">intersect</a></li>
                 <li><a href="#ponos.allocAligned">allocAligned</a></li>
                 <li><a href="#ponos.MemoryArena.alloc">alloc</a></li>
                 <li><a href="#ponos.MemoryArena.alloc">alloc</a></li>
@@ -209,12 +212,12 @@
         </div>
         <h2 data-cldoc-dynamic="1" id="coverage">Coverage</h2>
         <div class="coverage">
-            <h3 id="function">function (33%)</h3>
+            <h3 id="function">function (34%)</h3>
             <table class="coverage">
                 <tbody>
                     <tr>
                         <td>Documented:</td>
-                        <td>28</td>
+                        <td>29</td>
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
@@ -235,7 +238,7 @@
                     <tr>
                         <td>aergia::draw_sphere</td>
                         <td>aergia/src/helpers/geometry_drawers.h</td>
-                        <td>23:2</td>
+                        <td>12:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -299,7 +302,7 @@
                     <tr>
                         <td>ponos::distance2</td>
                         <td>ponos/src/geometry/point.h</td>
-                        <td>183:2</td>
+                        <td>182:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -772,7 +775,7 @@
                     <tr>
                         <td>ponos::point</td>
                         <td>ponos/src/geometry/point.h</td>
-                        <td>187:2</td>
+                        <td>186:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -988,7 +991,7 @@
                     <tr>
                         <td>ponos::Array::ObjectType</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>10:11</td>
+                        <td>13:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1108,7 +1111,7 @@
                     <tr>
                         <td>ponos::SpatialStructureInterface::ObjectType</td>
                         <td>ponos/src/spatial/spatial_structure_interface.h</td>
-                        <td>12:11</td>
+                        <td>14:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1164,7 +1167,7 @@
                     <tr>
                         <td>ponos::closest_point_segment::T</td>
                         <td>ponos/src/geometry/queries.h</td>
-                        <td>98:11</td>
+                        <td>107:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1180,7 +1183,7 @@
                     <tr>
                         <td>ponos::distance2_point_segment::T</td>
                         <td>ponos/src/geometry/queries.h</td>
-                        <td>145:11</td>
+                        <td>154:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1319,7 +1322,7 @@
                     <tr>
                         <td></td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>10:1</td>
+                        <td>11:1</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1523,12 +1526,12 @@
                     <tr>
                         <td>ponos</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>8:1</td>
+                        <td>11:1</td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>ponos/src/spatial/spatial_structure_interface.h</td>
-                        <td>6:1</td>
+                        <td>8:1</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1766,7 +1769,7 @@
                     <tr>
                         <td>aergia::App::~App</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>24:4</td>
+                        <td>25:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2006,7 +2009,7 @@
                     <tr>
                         <td>ponos::Array::~Array&lt;ObjectType&gt;</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>14:5</td>
+                        <td>17:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2099,7 +2102,7 @@
                     <tr>
                         <td>ponos::SpatialStructureInterface::~SpatialStructureInterface&lt;ObjectType&gt;</td>
                         <td>ponos/src/spatial/spatial_structure_interface.h</td>
-                        <td>16:5</td>
+                        <td>18:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2235,16 +2238,16 @@
                     </tr>
                 </tbody>
             </table>
-            <h3 id="field">field (20%)</h3>
+            <h3 id="field">field (19%)</h3>
             <table class="coverage">
                 <tbody>
                     <tr>
                         <td>Documented:</td>
-                        <td>54</td>
+                        <td>53</td>
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>216</td>
+                        <td>220</td>
                     </tr>
                 </tbody>
             </table>
@@ -2253,7 +2256,7 @@
                     <tr>
                         <td>aergia::App::initialized</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>42:4</td>
+                        <td>44:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2261,7 +2264,15 @@
                     <tr>
                         <td>aergia::App::title</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>44:4</td>
+                        <td>46:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::App::trackball</td>
+                        <td>aergia/src/ui/app.h</td>
+                        <td>41:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2269,7 +2280,7 @@
                     <tr>
                         <td>aergia::App::viewports</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>39:4</td>
+                        <td>40:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2277,7 +2288,7 @@
                     <tr>
                         <td>aergia::App::windowHeight</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>43:4</td>
+                        <td>45:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2285,7 +2296,7 @@
                     <tr>
                         <td>aergia::App::windowWidth</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>43:4</td>
+                        <td>45:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2293,7 +2304,7 @@
                     <tr>
                         <td>aergia::Camera::clipSize</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>37:4</td>
+                        <td>39:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2301,7 +2312,7 @@
                     <tr>
                         <td>aergia::Camera::display</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>36:4</td>
+                        <td>38:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2309,7 +2320,7 @@
                     <tr>
                         <td>aergia::Camera::far</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>32:4</td>
+                        <td>34:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2317,7 +2328,7 @@
                     <tr>
                         <td>aergia::Camera::fov</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>33:4</td>
+                        <td>35:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2325,7 +2336,7 @@
                     <tr>
                         <td>aergia::Camera::frustum</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>41:4</td>
+                        <td>43:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2333,7 +2344,7 @@
                     <tr>
                         <td>aergia::Camera::model</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>40:4</td>
+                        <td>42:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2341,7 +2352,7 @@
                     <tr>
                         <td>aergia::Camera::near</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>32:4</td>
+                        <td>34:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2349,7 +2360,7 @@
                     <tr>
                         <td>aergia::Camera::pos</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>34:4</td>
+                        <td>36:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2357,7 +2368,7 @@
                     <tr>
                         <td>aergia::Camera::projection</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>38:4</td>
+                        <td>40:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2365,7 +2376,7 @@
                     <tr>
                         <td>aergia::Camera::target</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>34:4</td>
+                        <td>36:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2373,7 +2384,7 @@
                     <tr>
                         <td>aergia::Camera::up</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>35:4</td>
+                        <td>37:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2381,7 +2392,7 @@
                     <tr>
                         <td>aergia::Camera::view</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>39:4</td>
+                        <td>41:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2389,7 +2400,7 @@
                     <tr>
                         <td>aergia::Camera::zoom</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>31:4</td>
+                        <td>33:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2398,6 +2409,14 @@
                         <td>aergia::CartesianGrid::planes</td>
                         <td>aergia/src/helpers/cartesian_grid.h</td>
                         <td>41:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::SceneObject::t</td>
+                        <td>aergia/src/scene/scene_object.h</td>
+                        <td>28:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2475,9 +2494,25 @@
                         <td></td>
                     </tr>
                     <tr>
+                        <td>aergia::ViewportDisplay::buttonCallback</td>
+                        <td>aergia/src/io/viewport_display.h</td>
+                        <td>49:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>aergia::ViewportDisplay::camera</td>
                         <td>aergia/src/io/viewport_display.h</td>
-                        <td>51:4</td>
+                        <td>55:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::ViewportDisplay::mouseCallback</td>
+                        <td>aergia/src/io/viewport_display.h</td>
+                        <td>50:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3985,28 +4020,36 @@
                 <tbody>
                     <tr>
                         <td>Documented:</td>
-                        <td>136</td>
+                        <td>140</td>
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>313</td>
+                        <td>320</td>
                     </tr>
                 </tbody>
             </table>
             <table class="undocumented">
                 <tbody>
                     <tr>
-                        <td>aergia::App::init</td>
+                        <td>aergia::App::button</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>36:4</td>
+                        <td>49:4</td>
                     </tr>
                     <tr>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>aergia::App::processInput</td>
+                        <td>aergia::App::init</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>46:4</td>
+                        <td>37:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::App::mouse</td>
+                        <td>aergia/src/ui/app.h</td>
+                        <td>50:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4014,7 +4057,7 @@
                     <tr>
                         <td>aergia::App::render</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>47:4</td>
+                        <td>48:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4022,7 +4065,7 @@
                     <tr>
                         <td>aergia::App::run</td>
                         <td>aergia/src/ui/app.h</td>
-                        <td>37:4</td>
+                        <td>38:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4078,7 +4121,7 @@
                     <tr>
                         <td>aergia::Camera::getPos</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>16:4</td>
+                        <td>17:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4086,7 +4129,7 @@
                     <tr>
                         <td>aergia::Camera::getTarget</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>18:4</td>
+                        <td>19:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4094,7 +4137,7 @@
                     <tr>
                         <td>aergia::Camera::getTransform</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>24:4</td>
+                        <td>25:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4102,7 +4145,15 @@
                     <tr>
                         <td>aergia::Camera::look</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>13:4</td>
+                        <td>14:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::Camera::pickRay</td>
+                        <td>aergia/src/scene/camera.h</td>
+                        <td>29:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4110,7 +4161,7 @@
                     <tr>
                         <td>aergia::Camera::resize</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>14:4</td>
+                        <td>15:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4118,7 +4169,7 @@
                     <tr>
                         <td>aergia::Camera::setFar</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>21:4</td>
+                        <td>22:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4126,7 +4177,7 @@
                     <tr>
                         <td>aergia::Camera::setFov</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>20:4</td>
+                        <td>21:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4134,7 +4185,7 @@
                     <tr>
                         <td>aergia::Camera::setNear</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>22:4</td>
+                        <td>23:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4142,7 +4193,7 @@
                     <tr>
                         <td>aergia::Camera::setPos</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>17:4</td>
+                        <td>18:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4150,7 +4201,7 @@
                     <tr>
                         <td>aergia::Camera::setTarget</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>19:4</td>
+                        <td>20:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4158,7 +4209,7 @@
                     <tr>
                         <td>aergia::Camera::setZoom</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>15:4</td>
+                        <td>16:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4166,7 +4217,7 @@
                     <tr>
                         <td>aergia::Camera::update</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>23:4</td>
+                        <td>24:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4174,7 +4225,7 @@
                     <tr>
                         <td>aergia::Camera::viewPlane</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>28:4</td>
+                        <td>30:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4182,7 +4233,7 @@
                     <tr>
                         <td>aergia::Camera::viewPointOnWorldCoord</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>25:4</td>
+                        <td>26:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4198,7 +4249,7 @@
                     <tr>
                         <td>aergia::GraphicsDisplay::endFrame</td>
                         <td>aergia/src/io/graphics_display.h</td>
-                        <td>78:4</td>
+                        <td>80:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4220,7 +4271,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td>aergia::GraphicsDisplay::registerKeyFunc</td>
+                        <td>aergia::GraphicsDisplay::registerButtonFunc</td>
                         <td>aergia/src/io/graphics_display.h</td>
                         <td>72:4</td>
                     </tr>
@@ -4228,9 +4279,25 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td>aergia::GraphicsDisplay::registerMouseFunc</td>
+                        <td>aergia::GraphicsDisplay::registerKeyFunc</td>
                         <td>aergia/src/io/graphics_display.h</td>
                         <td>73:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::GraphicsDisplay::registerMouseFunc</td>
+                        <td>aergia/src/io/graphics_display.h</td>
+                        <td>74:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::GraphicsDisplay::registerMouseFunc</td>
+                        <td>aergia/src/io/graphics_display.h</td>
+                        <td>75:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4246,7 +4313,7 @@
                     <tr>
                         <td>aergia::GraphicsDisplay::registerResizeFunc</td>
                         <td>aergia/src/io/graphics_display.h</td>
-                        <td>75:4</td>
+                        <td>77:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4254,7 +4321,7 @@
                     <tr>
                         <td>aergia::GraphicsDisplay::registerScrollFunc</td>
                         <td>aergia/src/io/graphics_display.h</td>
-                        <td>74:4</td>
+                        <td>76:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4295,6 +4362,14 @@
                         <td>aergia::Scene::add</td>
                         <td>aergia/src/scene/scene.h</td>
                         <td>23:5</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::Scene::intersect</td>
+                        <td>aergia/src/scene/scene.h</td>
+                        <td>31:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4346,21 +4421,11 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td>aergia/src/ui/trackball_interface.h</td>
-                        <td>46:2</td>
-                    </tr>
-                    <tr>
-                        <td></td>
                     </tr>
                     <tr>
                         <td>aergia::TrackballInterface::buttonRelease</td>
                         <td>aergia/src/ui/trackball_interface.h</td>
                         <td>26:4</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>aergia/src/ui/trackball_interface.h</td>
-                        <td>42:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4372,11 +4437,6 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td>aergia/src/ui/trackball_interface.h</td>
-                        <td>38:2</td>
-                    </tr>
-                    <tr>
-                        <td></td>
                     </tr>
                     <tr>
                         <td>aergia::TrackballInterface::mouseMove</td>
@@ -4385,16 +4445,27 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td>aergia/src/ui/trackball_interface.h</td>
-                        <td>50:2</td>
-                    </tr>
-                    <tr>
-                        <td></td>
                     </tr>
                     <tr>
                         <td>aergia::TrackballInterface::mouseScroll</td>
                         <td>aergia/src/ui/trackball_interface.h</td>
                         <td>29:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::ViewportDisplay::button</td>
+                        <td>aergia/src/io/viewport_display.h</td>
+                        <td>45:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::ViewportDisplay::mouse</td>
+                        <td>aergia/src/io/viewport_display.h</td>
+                        <td>44:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6722,7 +6793,7 @@
                     <tr>
                         <td>aergia::Camera::Camera</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>9:4</td>
+                        <td>10:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6970,7 +7041,7 @@
                     <tr>
                         <td>ponos::Array::Array&lt;ObjectType&gt;</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>13:5</td>
+                        <td>16:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7379,7 +7450,7 @@
                     <tr>
                         <td>ponos::SpatialStructureInterface::SpatialStructureInterface&lt;ObjectType&gt;</td>
                         <td>ponos/src/spatial/spatial_structure_interface.h</td>
-                        <td>15:5</td>
+                        <td>17:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7760,7 +7831,7 @@
                     <tr>
                         <td>ponos::Array</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>10:2</td>
+                        <td>13:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7849,7 +7920,7 @@
                     <tr>
                         <td>aergia::Camera</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>7:2</td>
+                        <td>8:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8354,7 +8425,7 @@
                     <tr class="title" id="aergia::Camera::viewLineFromWindow">
                         <td class="identifier">viewLineFromWindow</td>
                         <td>aergia/src/scene/camera.h</td>
-                        <td>27:4</td>
+                        <td>28:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8362,6 +8433,21 @@
                     <tr class="undocumented">
                         <td>Undocumented arguments:</td>
                         <td colspan="2">p</td>
+                    </tr>
+                    <tr class="undocumented">
+                        <td colspan="3">Undocumented return value</td>
+                    </tr>
+                    <tr class="title" id="aergia::SceneObject::intersect">
+                        <td class="identifier">intersect</td>
+                        <td>aergia/src/scene/scene_object.h</td>
+                        <td>26:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr class="misspelled">
+                        <td>Misspelled arguments:</td>
+                        <td colspan="2"></td>
                     </tr>
                     <tr class="undocumented">
                         <td colspan="3">Undocumented return value</td>
@@ -8474,7 +8560,7 @@
                     <tr class="title" id="aergia::GraphicsDisplay::keyState">
                         <td class="identifier">keyState</td>
                         <td>aergia/src/io/graphics_display.h</td>
-                        <td>90:4</td>
+                        <td>92:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8489,7 +8575,7 @@
                     <tr class="title" id="aergia::createGraphicsDisplay">
                         <td class="identifier">createGraphicsDisplay</td>
                         <td>aergia/src/io/graphics_display.h</td>
-                        <td>134:2</td>
+                        <td>136:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8534,7 +8620,7 @@
                     <tr class="title" id="ponos::Array::add">
                         <td class="identifier">add</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>16:5</td>
+                        <td>19:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8549,7 +8635,7 @@
                     <tr class="title" id="ponos::Array::iterate">
                         <td class="identifier">iterate</td>
                         <td>ponos/src/spatial/array.h</td>
-                        <td>20:6</td>
+                        <td>23:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8557,6 +8643,36 @@
                     <tr class="undocumented">
                         <td>Undocumented arguments:</td>
                         <td colspan="2">f</td>
+                    </tr>
+                    <tr class="undocumented">
+                        <td colspan="3">Undocumented return value</td>
+                    </tr>
+                    <tr class="title" id="ponos::Array::intersect">
+                        <td class="identifier">intersect</td>
+                        <td>ponos/src/spatial/array.h</td>
+                        <td>29:5</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr class="undocumented">
+                        <td>Undocumented arguments:</td>
+                        <td colspan="2">r, t</td>
+                    </tr>
+                    <tr class="undocumented">
+                        <td colspan="3">Undocumented return value</td>
+                    </tr>
+                    <tr class="title" id="ponos::SpatialStructureInterface::intersect">
+                        <td class="identifier">intersect</td>
+                        <td>ponos/src/spatial/spatial_structure_interface.h</td>
+                        <td>42:5</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr class="misspelled">
+                        <td>Misspelled arguments:</td>
+                        <td colspan="2"></td>
                     </tr>
                     <tr class="undocumented">
                         <td colspan="3">Undocumented return value</td>

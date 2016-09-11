@@ -22,6 +22,8 @@
                         <p>render callback</p>
                     </div>
                 </li>
+                <li><a href="#aergia.ViewportDisplay.buttonCallback">buttonCallback<span class="counter"></span></a></li>
+                <li><a href="#aergia.ViewportDisplay.mouseCallback">mouseCallback<span class="counter"></span></a></li>
                 <li><a href="#aergia.ViewportDisplay.x">x<span class="counter"></span></a>
                     <div class="brief">
                         <p>viewport</p>
@@ -58,11 +60,13 @@
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
+                <li><a href="#aergia.ViewportDisplay.button">button<span class="counter"></span></a></li>
                 <li><a href="#aergia.ViewportDisplay.getMouseNPos">getMouseNPos<span class="counter"></span></a>
                     <div class="brief">
                         <p> get</p>
                     </div>
                 </li>
+                <li><a href="#aergia.ViewportDisplay.mouse">mouse<span class="counter"></span></a></li>
                 <li><a href="#aergia.ViewportDisplay.render">render<span class="counter"></span></a></li>
                 <li><a href="#aergia.ViewportDisplay.unProject">unProject<span class="counter"></span></a>
                     <div class="brief">
@@ -96,6 +100,18 @@
                             <p>render callback</p>
                         </div>
                     </td>
+                </tr>
+                <tr id="aergia::ViewportDisplay::buttonCallback">
+                    <td class="field_name identifier">buttonCallback</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::function&lt;void (int, int)&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::ViewportDisplay::mouseCallback">
+                    <td class="field_name identifier">mouseCallback</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::function&lt;void (double, double)&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
                 </tr>
                 <tr id="aergia::ViewportDisplay::x">
                     <td class="field_name identifier">x</td>
@@ -245,6 +261,42 @@
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
         <div class="member_functions">
             <div class="function">
+                <div class="declaration" id="aergia::ViewportDisplay::button">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">button</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">b,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">a</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::ViewportDisplay::button::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::ViewportDisplay::button::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="aergia::ViewportDisplay::getMouseNPos">
                     <div class="return_type"><span class="type"><span class="name "><a href="ponos.Point2.html#ponos.Point2">ponos::Point2</a></span></span>
                     </div>
@@ -271,6 +323,42 @@
                                     <p>normalized mouse coordinates relative to the viewport</p>
                                 </div>
                             </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::ViewportDisplay::mouse">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">mouse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">y</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::ViewportDisplay::mouse::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::ViewportDisplay::mouse::y">
+                            <td>y</td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>

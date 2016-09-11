@@ -25,11 +25,7 @@
             </ul>
             <div class="subtitle">Fields</div>
             <ul>
-                <li><a href="#aergia.SceneObject.t">t<span class="counter"></span></a>
-                    <div class="brief">
-                        <p> query</p>
-                    </div>
-                </li>
+                <li><a href="#aergia.SceneObject.t">t<span class="counter"></span></a></li>
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
@@ -44,6 +40,11 @@
                 <li><a href="#aergia.SceneObject.draw">draw<span class="counter"></span></a><span class="virtual">v</span>
                     <div class="brief">
                         <p> draw</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.SceneObject.intersect">intersect<span class="counter"></span></a><span class="virtual">v</span>
+                    <div class="brief">
+                        <p> query</p>
                     </div>
                 </li>
             </ul>
@@ -77,11 +78,7 @@
                     <td class="field_name identifier">t</td>
                     <td class="field_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
                     </td>
-                    <td class="doc">
-                        <div class="doc">
-                            <p>virtual bool intersect(const ponos::Ray3 &amp;r, float &amp;t) = 0;</p>
-                        </div>
-                    </td>
+                    <td class="doc"></td>
                 </tr>
             </tbody>
         </table>
@@ -149,6 +146,61 @@
                     <p>render method</p>
                 </div>
                 <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::SceneObject::intersect">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersect</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">ponos::Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> query</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::SceneObject::intersect::r">
+                            <td>r</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> ray</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::SceneObject::intersect::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> receives the parametric value of the intersection</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
