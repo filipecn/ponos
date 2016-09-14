@@ -2,6 +2,7 @@
 #define PONOS_SPATIAL_ARRAY_H
 
 #include "geometry/numeric.h"
+#include "geometry/ray.h"
 #include "spatial/spatial_structure_interface.h"
 
 #include <memory>

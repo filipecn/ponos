@@ -250,6 +250,10 @@ namespace ponos {
       m[i][i] = 1.f;
   }
 
+	Matrix3x3::Matrix3x3(vec3 a, vec3 b, vec3 c)
+		: Matrix3x3(a.x, a.y, a.z,
+								b.x, b.y, b.z,
+								c.x, c.y, c.z) {}
 
 	Matrix3x3::Matrix3x3(float m00, float m01, float m02,
 			float m10, float m11, float m12,

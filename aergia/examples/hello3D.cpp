@@ -20,10 +20,10 @@ void button(int button, int action) {
 
 void mouse(double x, double y) {
 	trackball.mouseMove(*cameraview.camera.get(), cameraview.getMouseNPos());
-	cameraview.camera->setPos(trackball.tb.transform(cameraview.camera->getPos()));
-	cameraview.camera->setTarget(trackball.tb.transform(cameraview.camera->getTarget()));
-	trackball.tb.center = cameraview.camera->getTarget();
-	//grid.t = trackball.tb.transform * grid.t;
+//	cameraview.camera->setPos(trackball.tb.transform(cameraview.camera->getPos()));
+//	cameraview.camera->setTarget(trackball.tb.transform(cameraview.camera->getTarget()));
+//	trackball.tb.center = cameraview.camera->getTarget();
+	grid.t = trackball.tb.transform * grid.t;
 }
 
 void renderCameraView() {

@@ -25,12 +25,20 @@ namespace aergia {
 				}
 
 				void render() {
+					float pm[16];
+					transform.matrix().column_major(pm);
+					glMultMatrixf(pm);
 					s.iterate([](const SceneObject *o) { o->draw(); });
 				}
 
 				SceneObject* intersect(const ponos::Ray3& ray, float *t = nullptr) {
-					return s.intersect(ray, t);
+					ponos::Transform tr = ponos::inverse(transform);
+					ponos::Point3 ta = tr(ray.o);
+					ponos::Point3 tb = tr(ray(1.f));
+					return s.intersect(ponos::Ray3(ta, tb - ta), t);
 				}
+
+				ponos::Transform transform;
 
 			private:
 				StructureType<SceneObject> s;

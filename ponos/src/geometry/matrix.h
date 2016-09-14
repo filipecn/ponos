@@ -83,6 +83,7 @@ namespace ponos {
 	class Matrix3x3 {
 		public:
 			Matrix3x3();
+			Matrix3x3(vec3 a, vec3 b, vec3 c);
 			Matrix3x3(float m00, float m01, float m02,
 					float m10, float m11, float m12,
 					float m20, float m21, float m22);
@@ -116,6 +117,14 @@ namespace ponos {
 							m1.m[i][1] * m2.m[1][j] +
 							m1.m[i][2] * m2.m[2][j];
 				return r;
+			}
+			float determinant() {
+				return m[0][0] * m[1][1] * m[2][2] +
+					m[0][1] * m[1][2] * m[2][0] +
+					m[0][2] * m[1][0] * m[2][1] -
+					m[2][0] * m[1][1] * m[0][2] -
+					m[2][1] * m[1][2] * m[0][0] -
+					m[2][2] * m[1][0] * m[0][1];
 			}
 			friend std::ostream& operator<<(std::ostream& os, const Matrix3x3& m);
 			float m[3][3];

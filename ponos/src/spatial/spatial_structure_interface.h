@@ -1,6 +1,8 @@
 #ifndef PONOS_SPATIAL_STRUCTURE_INTERFACE_H
 #define PONOS_SPATIAL_STRUCTURE_INTERFACE_H
 
+#include "geometry/ray.h"
+
 #include <functional>
 
 namespace ponos {

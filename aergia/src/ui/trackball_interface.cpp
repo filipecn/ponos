@@ -11,11 +11,20 @@ namespace aergia {
 	}
 
 	void TrackballInterface::buttonPress(const Camera& camera, int button, ponos::Point2 p) {
+		switch(button) {
+			case GLFW_MOUSE_BUTTON_LEFT: curMode = 0; break;
+			case GLFW_MOUSE_BUTTON_MIDDLE: curMode = 1; break;
+			case GLFW_MOUSE_BUTTON_RIGHT: curMode = 2; break;
+		}
 		modes[curMode]->start(tb, camera, p);
 	}
 
 	void TrackballInterface::mouseMove(Camera& camera, ponos::Point2 p) {
 		modes[curMode]->update(tb, camera, p);
+	}
+
+	void TrackballInterface::mouseScroll(Camera& camera, ponos::vec2 d) {
+		//modes[curMode]->update(tb, camera, d);
 	}
 
 } // aergia namespace

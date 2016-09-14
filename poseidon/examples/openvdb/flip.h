@@ -9,6 +9,7 @@
 
 namespace poseidon {
 
+	enum class FLIPCellType {FLUID, AIR, SOLID};
 	struct FLIPParticle : public Particle {
 		ponos::Point3 position;
 		ponos::vec3 velocity;
@@ -22,16 +23,20 @@ namespace poseidon {
 	 */
 	class FLIP {
 		public:
+			/* allocation
+			 * Allocate memory for internal structures. Must be called after dimensions are set. (before adding particles if adding manually)
+			 */
+			void setup();
 			/* init
-			 * Initialize structures and allocates memory.
+			 * Initialize structures. Should be called before simulation, but after scene setup.
 			 * **note:** assumes all public fields have been previously set.
 			 *
 			 * @return **true** if success
 			 */
 			bool init();
-			virtual ~FLIP() {}
+			virtual ~FLIP();
 			// grid size
-			ponos::uivec3 dimensions;
+			ponos::ivec3 dimensions;
 			// density
 			float density;
 			// ratio between flip and pic
@@ -43,14 +48,18 @@ namespace poseidon {
 			// cell size
 			float dx;
 			// current step
-			int step;
+			int curStep;
+
+			// cell type
+			FLIPCellType ***cell;
+			// particle grid
+			VDBParticleGrid *particleGrid;
 
 		private:
-			void computeDensity();
+			void markCells();
 			float maxDensity;
 			std::vector<FLIPParticle> particles;
-			VDBParticleGrid particleGrid;
-			VDBMacGrid grid[2];
+			VDBMacGrid *grid[2];
 	};
 
 } // poseidon namespace

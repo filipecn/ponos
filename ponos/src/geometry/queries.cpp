@@ -1,10 +1,29 @@
 #include "geometry/queries.h"
 
+#include "geometry/matrix.h"
 #include "geometry/numeric.h"
 
 #include <utility>
 
 namespace ponos {
+
+	bool ray_segment_intersection(const Ray3& r, const Segment3& s, float *t) {
+		Ray3 r2(s.a, s.b - s.a);
+		float d = cross(r.d, r2.d).length2();
+		if(d == 0.f)
+			// TODO handle this case
+			return false;
+		float t1 = Matrix3x3(r2.o - r.o, r2.d, cross(r.d, r2.d)).determinant() / d;
+		float t2 = Matrix3x3(r2.o - r.o,  r.d, cross(r.d, r2.d)).determinant() / d;
+		// TODO add user threshold
+		float dist = (r(t1) - r2(t2)).length();
+		if(t1 >= 0.f && t2 >= 0.f && t2 <= s.length() && dist < 0.1f) {
+			if(t)
+				*t = t1;
+			return true;
+		}
+		return false;
+	}
 
 	bool plane_line_intersection(const Plane pl, const Line l, Point3& p) {
 		vec3 nvector = vec3(pl.normal.x, pl.normal.y, pl.normal.z);

@@ -13,6 +13,13 @@
 namespace ponos {
 
 	/* intersection test
+	 * @r **[in]** ray
+	 * @s **[in]** segment
+	 * @t **[out]** intersection point (ray coordinate)
+	 * @return **true** if intersection exists
+	 */
+	bool ray_segment_intersection(const Ray3& r, const Segment3& s, float *t = nullptr);
+	/* intersection test
 	 * @pl **[in]** plane
 	 * @l **[in]** line
 	 * @p **[out]** intersection point

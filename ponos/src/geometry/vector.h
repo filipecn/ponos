@@ -285,6 +285,14 @@ namespace ponos {
 					memset(v, 0, D * sizeof(T));
 				}
 
+				Vector(const T& x, const T& y)
+					: Vector() {
+						if(size > 1) {
+							v[0] = x;
+							v[1] = y;
+						}
+					}
+
 				Vector(const T& x, const T& y, const T& z)
 					: Vector() {
 						if(size > 2) {
@@ -347,7 +355,11 @@ namespace ponos {
 					return v_;
 				}
 
-				Vector<2, T> floatXY(size_t x = 0, size_t y = 1) {
+				Vector<2, T> xy(size_t x = 0, size_t y = 1) const {
+					return Vector<2, T>(v[x], v[y]);
+				}
+
+				Vector<2, T> floatXY(size_t x = 0, size_t y = 1) const {
 					return Vector<2, T>(static_cast<float>(v[x]), static_cast<float>(v[y]));
 				}
 
@@ -376,6 +388,8 @@ namespace ponos {
 				T v[D];
 		};
 
+	typedef Vector<2, int> ivec2;
+	typedef Vector<2, uint> uivec2;
 	typedef Vector<3, int> ivec3;
 	typedef Vector<3, uint> uivec3;
 

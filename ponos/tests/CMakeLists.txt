@@ -8,6 +8,7 @@ include_directories("${PONOS_SOURCE_DIR}/src")
 set(TESTS
 	TestBBox.cpp
 	TestQuaternion.cpp
+	TestQueries.cpp
 	TestMatrix.cpp
 	TestParallel.cpp
 	TestTransform.cpp

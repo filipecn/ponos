@@ -115,6 +115,16 @@ namespace poseidon {
 			 * @return point **gp** mapped to voxel coordinates.
 			 */
 			ponos::Point3 gridToVoxel(const ponos::Point3& gp);
+			/* transform
+			 * @i **[in]** point (index space)
+			 * @return point **i** mapped to world coordinates.
+			 */
+			ponos::Point3 indexToWorld(const ponos::ivec3& i);
+			/* get
+			 * @ijk **[in]** point (index space)
+			 * @v **[out]** 8 vertices (vertices are enumerated following the permutations of x first, y and z.
+			 */
+			void cellVertices(const ponos::ivec3& ijk, std::vector<ponos::Point3>& v);
 			/* update
 			 * @d **[in]** fluid density
 			 * @md **[in]** maximum density

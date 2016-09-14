@@ -72,7 +72,7 @@ namespace aergia {
 				ponos::Point3 a = hitViewPlane(tb, camera, start_);
 				ponos::Point3 b = hitViewPlane(tb, camera, p);
 				ponos::vec3 dir = ponos::normalize(camera.getTarget() - camera.getPos());
-				if(p.x - start_.x < 0.f || p.y - start_.y < 0.f)
+				if(p.y - start_.y < 0.f)
 					dir *= -1.f;
 				tb.transform = ponos::translate(dir * ponos::distance(a, b));
 				start_ = p;

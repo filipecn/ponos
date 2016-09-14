@@ -2,6 +2,7 @@ project(PONOS)
 
 set(HEADERS
 	src/common/defs.h
+	src/common/macros.h
 	src/common/memory.h
 	src/common/random.h
 	src/geometry/bbox.h

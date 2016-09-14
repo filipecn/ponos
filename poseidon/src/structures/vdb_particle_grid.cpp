@@ -169,6 +169,19 @@ namespace poseidon {
 		return ponos::Point3(gp - ponos::vec3(ip[0], ip[1], ip[2]));
 	}
 
+	ponos::Point3 VDBParticleGrid::indexToWorld(const ponos::ivec3& i) {
+		return ponos::Point3(i[0], i[1], i[2]) * scale;
+	}
+
+	void VDBParticleGrid::cellVertices(const ponos::ivec3& ijk, std::vector<ponos::Point3>& v) {
+		v.clear();
+		ponos::Point3 wp = indexToWorld(ijk);
+		for(float x = -1.f; x <= 1.f; x += 1.f)
+			for(float y = -1.f; y <= 1.f; y += 1.f)
+				for(float z = -1.f; z <= 1.f; z += 1.f)
+					v.push_back(wp + ponos::vec3(x, y, z) * scale * 0.5f);
+	}
+
 	float VDBParticleGrid::computeDensity(float d, float md) {
 		if(!updated)
 			init();

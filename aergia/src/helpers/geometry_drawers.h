@@ -7,6 +7,8 @@
 
 namespace aergia {
 
+	void draw_segment(ponos::Segment3 segment);
+
 	void draw_circle(ponos::Circle circle);
 
 	void draw_sphere(ponos::Sphere sphere);

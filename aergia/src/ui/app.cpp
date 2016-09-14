@@ -48,9 +48,9 @@ namespace aergia {
 
 	void App::mouse(double x, double y) {
 		trackball.mouseMove(*viewports[0].camera.get(), viewports[0].getMouseNPos());
-		viewports[0].camera->setPos(trackball.tb.transform(viewports[0].camera->getPos()));
-		viewports[0].camera->setTarget(trackball.tb.transform(viewports[0].camera->getTarget()));
-		trackball.tb.center = viewports[0].camera->getTarget();
+		//viewports[0].camera->setPos(trackball.tb.transform(viewports[0].camera->getPos()));
+		//viewports[0].camera->setTarget(trackball.tb.transform(viewports[0].camera->getTarget()));
+		//trackball.tb.center = viewports[0].camera->getTarget();
 		for(size_t i = 0; i < viewports.size(); i++)
 			viewports[i].mouse(x, y);
 	}

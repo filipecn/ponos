@@ -17,6 +17,9 @@ namespace ponos {
 
 	class Sphere {
 		public:
+			Sphere()
+			: r(0.f) {}
+
 			Sphere(Point3 center, float radius)
 			: c(center), r(radius) {}
 			virtual ~Sphere() {}

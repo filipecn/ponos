@@ -2,6 +2,13 @@
 
 namespace aergia {
 
+	void draw_segment(ponos::Segment3 segment) {
+		glBegin(GL_LINES);
+		glVertex(segment.a);
+		glVertex(segment.b);
+		glEnd();
+	}
+
 	void draw_circle(ponos::Circle circle) {
 		glBegin(GL_TRIANGLE_FAN);
 		glVertex(circle.c);

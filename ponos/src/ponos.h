@@ -1,4 +1,5 @@
 #include "common/defs.h"
+#include "common/macros.h"
 #include "common/memory.h"
 #include "common/random.h"
 #include "log/debug.h"
