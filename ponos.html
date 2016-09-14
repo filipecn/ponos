@@ -18,6 +18,7 @@
             <div class="subtitle">Typedefs</div>
             <ul>
                 <li><a href="#ponos.bbox">bbox<span class="counter"></span></a></li>
+                <li><a href="#ponos.ivec2">ivec2<span class="counter"></span></a></li>
                 <li><a href="#ponos.ivec3">ivec3<span class="counter"></span></a></li>
                 <li><a href="#ponos.mat2">mat2<span class="counter"></span></a></li>
                 <li><a href="#ponos.mat3">mat3<span class="counter"></span></a></li>
@@ -25,6 +26,8 @@
                 <li><a href="#ponos.point">point<span class="counter"></span></a></li>
                 <li><a href="#ponos.quat">quat<span class="counter"></span></a></li>
                 <li><a href="#ponos.ray3">ray3<span class="counter"></span></a></li>
+                <li><a href="#ponos.Segment3">Segment3<span class="counter"></span></a></li>
+                <li><a href="#ponos.uivec2">uivec2<span class="counter"></span></a></li>
                 <li><a href="#ponos.uivec3">uivec3<span class="counter"></span></a></li>
                 <li><a href="#ponos.vec2">vec2<span class="counter"></span></a></li>
                 <li><a href="#ponos.vec3">vec3<span class="counter"></span></a></li>
@@ -286,6 +289,11 @@
                     </div>
                 </li>
                 <li><a href="#ponos.quadraticBSpline">quadraticBSpline<span class="counter"></span></a></li>
+                <li><a href="#ponos.ray_segment_intersection">ray_segment_intersection<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>intersection test</p>
+                    </div>
+                </li>
                 <li><a href="#ponos.rotate">rotate<span class="counter"></span></a></li>
                 <li><a href="#ponos.rotate">rotate<span class="counter"></span></a></li>
                 <li><a href="#ponos.rotateX">rotateX<span class="counter"></span></a></li>
@@ -338,6 +346,15 @@
                     <td class="typedef_name identifier">bbox</td>
                     <td class="typedef_decl keyword">type</td>
                     <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">BBox</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::ivec2">
+                    <td class="typedef_name identifier">ivec2</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Vector&lt;2, int&gt;</span></span>
                     </td>
                 </tr>
                 <tr class="doc">
@@ -401,6 +418,24 @@
                     <td class="typedef_name identifier">ray3</td>
                     <td class="typedef_decl keyword">type</td>
                     <td class="typedef_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::Segment3">
+                    <td class="typedef_name identifier">Segment3</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Segment&lt;ponos::Point3&gt;</span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::uivec2">
+                    <td class="typedef_name identifier">uivec2</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Vector&lt;2, unsigned int&gt;</span></span>
                     </td>
                 </tr>
                 <tr class="doc">
@@ -3958,6 +3993,73 @@
                         <tr id="ponos::quadraticBSpline::r">
                             <td>r</td>
                             <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::ray_segment_intersection">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ray_segment_intersection</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Ray3.html#ponos.Ray3">Ray3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#ponos.Segment3">Segment3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>intersection test</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::ray_segment_intersection::r">
+                            <td>r</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> ray</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::ray_segment_intersection::s">
+                            <td>s</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> segment</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::ray_segment_intersection::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> intersection point (ray coordinate)</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>

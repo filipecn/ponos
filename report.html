@@ -18,10 +18,10 @@
             <div class="subtitle">Coverage</div>
             <ul>
                 <li><span class="bullet incomplete">✗</span><a href="#function">function</a>
-                    <div class="brief">29 out of 85 (34%)</div>
+                    <div class="brief">30 out of 87 (34%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#typedef">typedef</a>
-                    <div class="brief">1 out of 25 (4%)</div>
+                    <div class="brief">1 out of 28 (4%)</div>
                 </li>
                 <li><span class="bullet complete">✓</span><a href="#methodtemplate">methodtemplate</a>
                     <div class="brief">1 out of 1 (100%)</div>
@@ -48,16 +48,16 @@
                     <div class="brief">0 out of 9 (0%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#field">field</a>
-                    <div class="brief">53 out of 273 (19%)</div>
+                    <div class="brief">53 out of 274 (19%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#method">method</a>
-                    <div class="brief">140 out of 460 (30%)</div>
+                    <div class="brief">142 out of 465 (31%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#functiontemplate">functiontemplate</a>
                     <div class="brief">5 out of 11 (45%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#constructor">constructor</a>
-                    <div class="brief">32 out of 139 (23%)</div>
+                    <div class="brief">32 out of 143 (22%)</div>
                 </li>
                 <li><span class="bullet incomplete">✗</span><a href="#variable">variable</a>
                     <div class="brief">0 out of 10 (0%)</div>
@@ -126,6 +126,7 @@
                 <li><a href="#ponos.Point3.operator%5B%5D">operator[]</a></li>
                 <li><a href="#ponos.Point3.operator%2B">operator+</a></li>
                 <li><a href="#ponos.Point3.operator%3D%3D">operator==</a></li>
+                <li><a href="#ponos.ray_segment_intersection">ray_segment_intersection</a></li>
                 <li><a href="#ponos.sphere_line_intersection">sphere_line_intersection</a></li>
                 <li><a href="#ponos.Vector2.operator%5B%5D">operator[]</a></li>
                 <li><a href="#ponos.Vector2.operator%2B">operator+</a></li>
@@ -183,6 +184,7 @@
                 <li><a href="#poseidon.VDBParticleGrid.gridToIndex">gridToIndex</a></li>
                 <li><a href="#poseidon.VDBParticleGrid.worldToVoxel">worldToVoxel</a></li>
                 <li><a href="#poseidon.VDBParticleGrid.gridToVoxel">gridToVoxel</a></li>
+                <li><a href="#poseidon.VDBParticleGrid.indexToWorld">indexToWorld</a></li>
                 <li><a href="#poseidon.VDBParticleGrid.computeDensity">computeDensity</a></li>
             </ul>
             <div class="subtitle">References</div>
@@ -217,11 +219,11 @@
                 <tbody>
                     <tr>
                         <td>Documented:</td>
-                        <td>29</td>
+                        <td>30</td>
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>56</td>
+                        <td>57</td>
                     </tr>
                 </tbody>
             </table>
@@ -229,6 +231,14 @@
                 <tbody>
                     <tr>
                         <td>aergia::draw_circle</td>
+                        <td>aergia/src/helpers/geometry_drawers.h</td>
+                        <td>12:2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::draw_segment</td>
                         <td>aergia/src/helpers/geometry_drawers.h</td>
                         <td>10:2</td>
                     </tr>
@@ -238,7 +248,7 @@
                     <tr>
                         <td>aergia::draw_sphere</td>
                         <td>aergia/src/helpers/geometry_drawers.h</td>
-                        <td>12:2</td>
+                        <td>14:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -374,7 +384,7 @@
                     <tr>
                         <td>ponos::inverse</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>129:2</td>
+                        <td>138:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -382,7 +392,7 @@
                     <tr>
                         <td>ponos::inverse</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>179:2</td>
+                        <td>188:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -494,7 +504,7 @@
                     <tr>
                         <td>ponos::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>124:2</td>
+                        <td>133:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -502,7 +512,7 @@
                     <tr>
                         <td>ponos::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>174:2</td>
+                        <td>183:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -630,7 +640,7 @@
                     <tr>
                         <td>ponos::star</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>130:2</td>
+                        <td>139:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -654,7 +664,7 @@
                     <tr>
                         <td>ponos::transpose</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>128:2</td>
+                        <td>137:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -662,7 +672,7 @@
                     <tr>
                         <td>ponos::transpose</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>178:2</td>
+                        <td>187:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -686,7 +696,7 @@
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>24</td>
+                        <td>27</td>
                     </tr>
                 </tbody>
             </table>
@@ -733,6 +743,14 @@
                         <td></td>
                     </tr>
                     <tr>
+                        <td>ponos::Segment3</td>
+                        <td>ponos/src/geometry/segment.h</td>
+                        <td>29:2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>ponos::bbox</td>
                         <td>ponos/src/geometry/bbox.h</td>
                         <td>95:3</td>
@@ -741,9 +759,17 @@
                         <td></td>
                     </tr>
                     <tr>
+                        <td>ponos::ivec2</td>
+                        <td>ponos/src/geometry/vector.h</td>
+                        <td>391:2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>ponos::ivec3</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>379:2</td>
+                        <td>393:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -751,7 +777,7 @@
                     <tr>
                         <td>ponos::mat2</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>181:2</td>
+                        <td>190:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -759,7 +785,7 @@
                     <tr>
                         <td>ponos::mat3</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>132:2</td>
+                        <td>141:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -797,9 +823,17 @@
                         <td></td>
                     </tr>
                     <tr>
+                        <td>ponos::uivec2</td>
+                        <td>ponos/src/geometry/vector.h</td>
+                        <td>392:2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>ponos::uivec3</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>380:2</td>
+                        <td>394:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1103,7 +1137,7 @@
                     <tr>
                         <td>ponos::Segment::T</td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>8:11</td>
+                        <td>10:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1167,7 +1201,7 @@
                     <tr>
                         <td>ponos::closest_point_segment::T</td>
                         <td>ponos/src/geometry/queries.h</td>
-                        <td>107:11</td>
+                        <td>114:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1183,7 +1217,7 @@
                     <tr>
                         <td>ponos::distance2_point_segment::T</td>
                         <td>ponos/src/geometry/queries.h</td>
-                        <td>154:11</td>
+                        <td>161:11</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1317,7 +1351,7 @@
                     <tr>
                         <td></td>
                         <td>aergia/src/scene/scene.h</td>
-                        <td>10:1</td>
+                        <td>11:1</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1601,7 +1635,7 @@
                     <tr>
                         <td></td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>4:1</td>
+                        <td>6:1</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -1809,7 +1843,7 @@
                     <tr>
                         <td>aergia::Scene::~Scene&lt;StructureType&gt;</td>
                         <td>aergia/src/scene/scene.h</td>
-                        <td>21:5</td>
+                        <td>22:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2094,7 +2128,7 @@
                     <tr>
                         <td>ponos::Segment::~Segment&lt;T&gt;</td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>13:4</td>
+                        <td>16:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2110,7 +2144,7 @@
                     <tr>
                         <td>ponos::Sphere::~Sphere</td>
                         <td>ponos/src/geometry/sphere.h</td>
-                        <td>22:4</td>
+                        <td>25:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -2247,7 +2281,7 @@
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>220</td>
+                        <td>221</td>
                     </tr>
                 </tbody>
             </table>
@@ -2409,6 +2443,14 @@
                         <td>aergia::CartesianGrid::planes</td>
                         <td>aergia/src/helpers/cartesian_grid.h</td>
                         <td>41:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>aergia::Scene::transform</td>
+                        <td>aergia/src/scene/scene.h</td>
+                        <td>42:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3416,7 +3458,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::m</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>171:4</td>
+                        <td>180:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3424,7 +3466,7 @@
                     <tr>
                         <td>ponos::Matrix3x3::m</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>121:4</td>
+                        <td>130:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3592,7 +3634,7 @@
                     <tr>
                         <td>ponos::Segment::a</td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>19:4</td>
+                        <td>26:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3600,7 +3642,7 @@
                     <tr>
                         <td>ponos::Segment::b</td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>19:4</td>
+                        <td>26:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3608,7 +3650,7 @@
                     <tr>
                         <td>ponos::Sphere::c</td>
                         <td>ponos/src/geometry/sphere.h</td>
-                        <td>24:4</td>
+                        <td>27:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3616,7 +3658,7 @@
                     <tr>
                         <td>ponos::Sphere::r</td>
                         <td>ponos/src/geometry/sphere.h</td>
-                        <td>25:4</td>
+                        <td>28:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3696,7 +3738,7 @@
                     <tr>
                         <td>ponos::Vector::size</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>375:5</td>
+                        <td>387:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -3704,7 +3746,7 @@
                     <tr>
                         <td>ponos::Vector::v</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>376:5</td>
+                        <td>388:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4015,16 +4057,16 @@
                     </tr>
                 </tbody>
             </table>
-            <h3 id="method">method (30%)</h3>
+            <h3 id="method">method (31%)</h3>
             <table class="coverage">
                 <tbody>
                     <tr>
                         <td>Documented:</td>
-                        <td>140</td>
+                        <td>142</td>
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>320</td>
+                        <td>323</td>
                     </tr>
                 </tbody>
             </table>
@@ -4361,7 +4403,7 @@
                     <tr>
                         <td>aergia::Scene::add</td>
                         <td>aergia/src/scene/scene.h</td>
-                        <td>23:5</td>
+                        <td>24:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4369,7 +4411,7 @@
                     <tr>
                         <td>aergia::Scene::intersect</td>
                         <td>aergia/src/scene/scene.h</td>
-                        <td>31:5</td>
+                        <td>35:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -4377,7 +4419,7 @@
                     <tr>
                         <td>aergia::Scene::render</td>
                         <td>aergia/src/scene/scene.h</td>
-                        <td>27:5</td>
+                        <td>28:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5127,7 +5169,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::determinant</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>140:4</td>
+                        <td>149:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5135,7 +5177,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::mul</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>162:4</td>
+                        <td>171:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5143,7 +5185,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>143:4</td>
+                        <td>152:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5151,7 +5193,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>150:4</td>
+                        <td>159:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5159,7 +5201,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>158:4</td>
+                        <td>167:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5167,7 +5209,15 @@
                     <tr>
                         <td>ponos::Matrix2x2::setIdentity</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>139:4</td>
+                        <td>148:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ponos::Matrix3x3::determinant</td>
+                        <td>ponos/src/geometry/matrix.h</td>
+                        <td>121:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5175,7 +5225,7 @@
                     <tr>
                         <td>ponos::Matrix3x3::mul</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>111:4</td>
+                        <td>112:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5183,7 +5233,7 @@
                     <tr>
                         <td>ponos::Matrix3x3::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>90:4</td>
+                        <td>91:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5191,7 +5241,7 @@
                     <tr>
                         <td>ponos::Matrix3x3::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>97:4</td>
+                        <td>98:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5199,7 +5249,7 @@
                     <tr>
                         <td>ponos::Matrix3x3::operator*</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>106:4</td>
+                        <td>107:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5207,7 +5257,7 @@
                     <tr>
                         <td>ponos::Matrix3x3::setIdentity</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>89:4</td>
+                        <td>90:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -5671,9 +5721,17 @@
                         <td></td>
                     </tr>
                     <tr>
+                        <td>ponos::Segment::length</td>
+                        <td>ponos/src/geometry/segment.h</td>
+                        <td>18:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>ponos::Segment::length2</td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>15:4</td>
+                        <td>22:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6185,7 +6243,7 @@
                     <tr>
                         <td>ponos::Vector::floatXY</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>350:5</td>
+                        <td>362:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6193,7 +6251,7 @@
                     <tr>
                         <td>ponos::Vector::floatXYZ</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>354:5</td>
+                        <td>366:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6201,7 +6259,7 @@
                     <tr>
                         <td>ponos::Vector::max</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>360:5</td>
+                        <td>372:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6209,7 +6267,7 @@
                     <tr>
                         <td>ponos::Vector::operator+</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>343:5</td>
+                        <td>351:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6217,7 +6275,7 @@
                     <tr>
                         <td>ponos::Vector::operator-</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>336:5</td>
+                        <td>344:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6225,7 +6283,7 @@
                     <tr>
                         <td>ponos::Vector::operator&lt;</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>317:5</td>
+                        <td>325:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6233,7 +6291,7 @@
                     <tr>
                         <td>ponos::Vector::operator&lt;=</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>311:5</td>
+                        <td>319:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6241,7 +6299,7 @@
                     <tr>
                         <td>ponos::Vector::operator==</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>305:5</td>
+                        <td>313:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6249,7 +6307,7 @@
                     <tr>
                         <td>ponos::Vector::operator&gt;</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>329:5</td>
+                        <td>337:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6257,7 +6315,7 @@
                     <tr>
                         <td>ponos::Vector::operator&gt;=</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>323:5</td>
+                        <td>331:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6265,7 +6323,7 @@
                     <tr>
                         <td>ponos::Vector::operator[]</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>297:5</td>
+                        <td>305:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6273,7 +6331,15 @@
                     <tr>
                         <td>ponos::Vector::operator[]</td>
                         <td>ponos/src/geometry/vector.h</td>
-                        <td>301:5</td>
+                        <td>309:5</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ponos::Vector::xy</td>
+                        <td>ponos/src/geometry/vector.h</td>
+                        <td>358:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -6767,7 +6833,7 @@
                     </tr>
                 </tbody>
             </table>
-            <h3 id="constructor">constructor (23%)</h3>
+            <h3 id="constructor">constructor (22%)</h3>
             <table class="coverage">
                 <tbody>
                     <tr>
@@ -6776,7 +6842,7 @@
                     </tr>
                     <tr>
                         <td>Undocumented:</td>
-                        <td>107</td>
+                        <td>111</td>
                     </tr>
                 </tbody>
             </table>
@@ -6833,7 +6899,7 @@
                     <tr>
                         <td>aergia::Scene::Scene&lt;StructureType&gt;</td>
                         <td>aergia/src/scene/scene.h</td>
-                        <td>20:5</td>
+                        <td>21:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7203,7 +7269,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::Matrix2x2</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>136:4</td>
+                        <td>145:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7211,7 +7277,7 @@
                     <tr>
                         <td>ponos::Matrix2x2::Matrix2x2</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>137:4</td>
+                        <td>146:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7228,6 +7294,14 @@
                         <td>ponos::Matrix3x3::Matrix3x3</td>
                         <td>ponos/src/geometry/matrix.h</td>
                         <td>86:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ponos::Matrix3x3::Matrix3x3</td>
+                        <td>ponos/src/geometry/matrix.h</td>
+                        <td>87:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7442,7 +7516,15 @@
                     <tr>
                         <td>ponos::Segment::Segment&lt;T&gt;</td>
                         <td>ponos/src/geometry/segment.h</td>
-                        <td>11:5</td>
+                        <td>13:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ponos::Segment::Segment&lt;T&gt;</td>
+                        <td>ponos/src/geometry/segment.h</td>
+                        <td>14:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7459,6 +7541,14 @@
                         <td>ponos::Sphere::Sphere</td>
                         <td>ponos/src/geometry/sphere.h</td>
                         <td>20:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ponos::Sphere::Sphere</td>
+                        <td>ponos/src/geometry/sphere.h</td>
+                        <td>23:4</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -7595,6 +7685,14 @@
                         <td>ponos::Vector::Vector&lt;D, T&gt;</td>
                         <td>ponos/src/geometry/vector.h</td>
                         <td>288:5</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ponos::Vector::Vector&lt;D, T&gt;</td>
+                        <td>ponos/src/geometry/vector.h</td>
+                        <td>296:5</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -8160,7 +8258,7 @@
                     <tr>
                         <td>ponos::Matrix2x2</td>
                         <td>ponos/src/geometry/matrix.h</td>
-                        <td>134:2</td>
+                        <td>143:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -9153,10 +9251,25 @@
                     <tr class="undocumented">
                         <td colspan="3">Undocumented return value</td>
                     </tr>
+                    <tr class="title" id="ponos::ray_segment_intersection">
+                        <td class="identifier">ray_segment_intersection</td>
+                        <td>ponos/src/geometry/queries.h</td>
+                        <td>21:2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr class="misspelled">
+                        <td>Misspelled arguments:</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr class="undocumented">
+                        <td colspan="3">Undocumented return value</td>
+                    </tr>
                     <tr class="title" id="ponos::sphere_line_intersection">
                         <td class="identifier">sphere_line_intersection</td>
                         <td>ponos/src/geometry/queries.h</td>
-                        <td>38:2</td>
+                        <td>45:2</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -9968,10 +10081,25 @@
                     <tr class="undocumented">
                         <td colspan="3">Undocumented return value</td>
                     </tr>
+                    <tr class="title" id="poseidon::VDBParticleGrid::indexToWorld">
+                        <td class="identifier">indexToWorld</td>
+                        <td>poseidon/src/structures/vdb_particle_grid.h</td>
+                        <td>122:4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr class="misspelled">
+                        <td>Misspelled arguments:</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr class="undocumented">
+                        <td colspan="3">Undocumented return value</td>
+                    </tr>
                     <tr class="title" id="poseidon::VDBParticleGrid::computeDensity">
                         <td class="identifier">computeDensity</td>
                         <td>poseidon/src/structures/vdb_particle_grid.h</td>
-                        <td>124:4</td>
+                        <td>134:4</td>
                     </tr>
                     <tr>
                         <td></td>
