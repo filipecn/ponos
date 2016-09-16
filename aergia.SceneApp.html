@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SceneApp</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>SceneApp&lt;&gt;</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Bases</div>
+            <ul>
+                <li><a href="#aergia.App%2Baergia.App">App<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>base class</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.SceneApp.scene">scene<span class="counter"></span></a></li>
+                <li><a href="#aergia.SceneApp.selectedObject">selectedObject<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.SceneApp.SceneApp%3CStructureType%3E">SceneApp&lt;StructureType&gt;<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#aergia.SceneApp.~SceneApp%3CStructureType%3E">~SceneApp&lt;StructureType&gt;<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.SceneApp.render">render<span class="counter"></span></a><span class="protected virtual">p&nbsp;v</span></li>
+                <li><a href="#aergia.SceneApp.mouse">mouse<span class="counter"></span></a><span class="protected virtual">p&nbsp;v</span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::SceneApp"><span><span class="keyword">Class</span><span>SceneApp&lt;&gt;</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Simple scene with viewports support.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
+        <table class="bases">
+            <tbody>
+                <tr id="aergia::App+aergia::App">
+                    <td class="keyword"></td>
+                    <td><span class="type"><span class="name "><a href="aergia.App.html#aergia.App">App</a></span></span>
+                    </td>
+                    <td>
+                        <div class="brief">
+                            <p>base class</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::SceneApp::scene">
+                    <td class="field_name identifier">scene</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="aergia.Scene.html#aergia.Scene">Scene&lt;StructureType&gt;</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::SceneApp::selectedObject">
+                    <td class="field_name identifier">selectedObject</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="aergia.SceneObject.html#aergia.SceneObject">SceneObject</a></span><span class="qualifier"> *</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::SceneApp::SceneApp<StructureType>">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">SceneApp&lt;StructureType&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">w,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">uint</span></span>
+                                </td>
+                                <td class="argument_name">h,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">char</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">bool</span></span>
+                                </td>
+                                <td class="argument_name">defaultViewport</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::SceneApp::SceneApp<StructureType>::w">
+                            <td>w</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> window width (in pixels)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::SceneApp::SceneApp<StructureType>::h">
+                            <td>h</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> window height (in pixels)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::SceneApp::SceneApp<StructureType>::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> window title</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::SceneApp::SceneApp<StructureType>::defaultViewport">
+                            <td>defaultViewport</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> if true, creates a viewport with the same size of the window</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="aergia::SceneApp::~SceneApp<StructureType>">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~SceneApp&lt;StructureType&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::SceneApp::render">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                        <li class="override">override</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">render</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="aergia.App.html#aergia.App.render">App::render</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::SceneApp::mouse">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                        <li class="override">override</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">mouse</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">x,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">double</span></span>
+                                </td>
+                                <td class="argument_name">y</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::SceneApp::mouse::x">
+                            <td>x</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::SceneApp::mouse::y">
+                            <td>y</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="aergia.App.html#aergia.App.mouse">App::mouse</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

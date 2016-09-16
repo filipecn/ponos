@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>SampledSpectrum</title>
+    <title>RGBSpectrum</title>
     <meta charset="utf-8">
 
     <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
@@ -12,77 +12,50 @@
     <div id="cldoc_sidebar">
         <div id="cldoc_sidebar_items">
             <div class="back">
-                <div class="name"><span><span class="keyword">Class</span><span>helios::SampledSpectrum</span></span>
+                <div class="name"><span><span class="keyword">Class</span><span>helios::RGBSpectrum</span></span>
                 </div><a href="helios.html"><span class="arrow">↵</span> <span>helios</span></a></div>
             <div id="cldoc_sidebar_pagenav"></div>
             <div class="subtitle">Bases</div>
             <ul>
-                <li><a href="#">CoefficientSpectrum&lt;30&gt;<span class="counter"></span></a></li>
+                <li><a href="#">CoefficientSpectrum&lt;3&gt;<span class="counter"></span></a></li>
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
-                <li><a href="#helios.SampledSpectrum.SampledSpectrum">SampledSpectrum<span class="counter"></span></a>
-                    <div class="brief">
-                        <p> Constructor.</p>
-                    </div>
-                </li>
-                <li><a href="#helios.SampledSpectrum.SampledSpectrum">SampledSpectrum<span class="counter"></span></a></li>
-                <li><a href="#helios.SampledSpectrum.SampledSpectrum">SampledSpectrum<span class="counter"></span></a></li>
-            </ul>
-            <div class="subtitle">Destructors</div>
-            <ul>
-                <li><a href="#helios.SampledSpectrum.~SampledSpectrum">~SampledSpectrum<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#helios.RGBSpectrum.RGBSpectrum">RGBSpectrum<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBSpectrum.RGBSpectrum">RGBSpectrum<span class="counter"></span></a></li>
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
-                <li><a href="#helios.SampledSpectrum.fromRGB">fromRGB<span class="counter"></span></a><span class="static">s</span>
+                <li><a href="#helios.RGBSpectrum.fromRGB">fromRGB<span class="counter"></span></a><span class="static">s</span>
                     <div class="brief">
                         <p> conversion</p>
                     </div>
                 </li>
-                <li><a href="#helios.SampledSpectrum.fromSample">fromSample<span class="counter"></span></a><span class="static">s</span>
+                <li><a href="#helios.RGBSpectrum.fromSampled">fromSampled<span class="counter"></span></a><span class="static">s</span>
                     <div class="brief">
                         <p> construct</p>
                     </div>
                 </li>
-                <li><a href="#helios.SampledSpectrum.fromXYZ">fromXYZ<span class="counter"></span></a><span class="static">s</span>
+                <li><a href="#helios.RGBSpectrum.fromXYZ">fromXYZ<span class="counter"></span></a><span class="static">s</span></li>
+                <li><a href="#helios.RGBSpectrum.toRGB">toRGB<span class="counter"></span></a>
                     <div class="brief">
                         <p> conversion</p>
                     </div>
                 </li>
-                <li><a href="#helios.SampledSpectrum.init">init<span class="counter"></span></a><span class="static">s</span>
-                    <div class="brief">
-                        <p> initialization</p>
-                    </div>
-                </li>
-                <li><a href="#helios.SampledSpectrum.toRGB">toRGB<span class="counter"></span></a>
-                    <div class="brief">
-                        <p> conversion</p>
-                    </div>
-                </li>
-                <li><a href="#helios.SampledSpectrum.toRGBSpectrum">toRGBSpectrum<span class="counter"></span></a>
+                <li><a href="#helios.RGBSpectrum.toRGBSpectrum">toRGBSpectrum<span class="counter"></span></a>
                     <div class="brief">
                         <p> create</p>
                     </div>
                 </li>
-                <li><a href="#helios.SampledSpectrum.toXYZ">toXYZ<span class="counter"></span></a>
-                    <div class="brief">
-                        <p> conversion</p>
-                    </div>
-                </li>
-                <li><a href="#helios.SampledSpectrum.y">y<span class="counter"></span></a>
-                    <div class="brief">
-                        <p> get</p>
-                    </div>
-                </li>
+                <li><a href="#helios.RGBSpectrum.y">y<span class="counter"></span></a></li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
-        <h1 id="helios::SampledSpectrum"><span><span class="keyword">Class</span><span>helios::SampledSpectrum</span></span></h1>
+        <h1 id="helios::RGBSpectrum"><span><span class="keyword">Class</span><span>helios::RGBSpectrum</span></span></h1>
         <div class="description">
-            <div class="doc">
-                <p>Represent a SPD with uniformly spaced samples over an wavelenght range.</p>
+            <div class="brief">
+                <p>RGB spectrum implementation</p>
             </div>
         </div>
         <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
@@ -90,7 +63,7 @@
             <tbody>
                 <tr id="">
                     <td class="keyword"></td>
-                    <td><span class="type"><span class="name ">CoefficientSpectrum&lt;30&gt;</span></span>
+                    <td><span class="type"><span class="name ">CoefficientSpectrum&lt;3&gt;</span></span>
                     </td>
                     <td></td>
                 </tr>
@@ -99,11 +72,11 @@
         <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
         <div class="constructors">
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::SampledSpectrum">
+                <div class="declaration" id="helios::RGBSpectrum::RGBSpectrum">
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">SampledSpectrum</td>
+                                <td class="identifier">RGBSpectrum</td>
                                 <td class="open_paren">(</td>
                                 <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
                                 </td>
@@ -113,30 +86,23 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="brief">
-                    <p> Constructor.</p>
-                </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="helios::SampledSpectrum::SampledSpectrum::v">
+                        <tr id="helios::RGBSpectrum::RGBSpectrum::v">
                             <td>v</td>
-                            <td>
-                                <div class="doc">
-                                    <p><strong>[in | optional]</strong> constant value across all wavelenghts</p>
-                                </div>
-                            </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::SampledSpectrum">
+                <div class="declaration" id="helios::RGBSpectrum::RGBSpectrum">
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">SampledSpectrum</td>
+                                <td class="identifier">RGBSpectrum</td>
                                 <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="name ">CoefficientSpectrum&lt;30&gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                <td class="argument_type"><span class="type"><span class="name ">CoefficientSpectrum&lt;3&gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
                                 <td class="argument_name">v</td>
@@ -147,78 +113,22 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="helios::SampledSpectrum::SampledSpectrum::v">
+                        <tr id="helios::RGBSpectrum::RGBSpectrum::v">
                             <td>v</td>
                             <td></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::SampledSpectrum">
-                    <table class="declaration">
-                        <tbody>
-                            <tr>
-                                <td class="identifier">SampledSpectrum</td>
-                                <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.RGBSpectrum.html#helios.RGBSpectrum">RGBSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
-                                    </span>
-                                </td>
-                                <td class="argument_name">r,</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"></td>
-                                <td class="argument_type"><span class="type"><span class="name "><a href="helios.html#helios.SpectrumType">SpectrumType</a></span></span>
-                                </td>
-                                <td class="argument_name">t</td>
-                                <td class="close_paren">)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <table class="arguments">
-                    <tbody>
-                        <tr id="helios::SampledSpectrum::SampledSpectrum::r">
-                            <td>r</td>
-                            <td></td>
-                        </tr>
-                        <tr id="helios::SampledSpectrum::SampledSpectrum::t">
-                            <td>t</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
-        <div class="destructors">
-            <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::~SampledSpectrum">
-                    <ul class="specifiers">
-                        <li class="virtual">virtual</li>
-                    </ul>
-                    <table class="declaration">
-                        <tbody>
-                            <tr>
-                                <td class="identifier">~SampledSpectrum</td>
-                                <td class="open_paren">(</td>
-                                <td colspan="2"></td>
-                                <td class="close_paren">)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <table class="arguments"></table>
-            </div>
         </div>
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
         <div class="member_functions">
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::fromRGB">
+                <div class="declaration" id="helios::RGBSpectrum::fromRGB">
                     <ul class="specifiers">
                         <li class="static">static</li>
                     </ul>
-                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.SampledSpectrum">SampledSpectrum</a></span></span>
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.RGBSpectrum">RGBSpectrum</a></span></span>
                     </div>
                     <table class="declaration">
                         <tbody>
@@ -245,7 +155,7 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="helios::SampledSpectrum::fromRGB::rgb">
+                        <tr id="helios::RGBSpectrum::fromRGB::rgb">
                             <td>rgb</td>
                             <td>
                                 <div class="doc">
@@ -253,11 +163,11 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr id="helios::SampledSpectrum::fromRGB::type">
+                        <tr id="helios::RGBSpectrum::fromRGB::type">
                             <td>type</td>
                             <td>
                                 <div class="doc">
-                                    <p><strong>[in]</strong> denotes wether the RGB values represents a surface reflectance or an illuminant. Converts from a given <strong>rgb</strong> values to a full SPD.</p>
+                                    <p><strong>[in | optional]</strong> denotes wether the RGB values represents a surface reflectance or an illuminant. Converts from a given <strong>rgb</strong> values to a full SPD.</p>
                                 </div>
                             </td>
                         </tr>
@@ -269,16 +179,16 @@
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::fromSample">
+                <div class="declaration" id="helios::RGBSpectrum::fromSampled">
                     <ul class="specifiers">
                         <li class="static">static</li>
                     </ul>
-                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.SampledSpectrum">SampledSpectrum</a></span></span>
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.RGBSpectrum">RGBSpectrum</a></span></span>
                     </div>
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">fromSample</td>
+                                <td class="identifier">fromSampled</td>
                                 <td class="open_paren">(</td>
                                 <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> *</span>
                                     </span>
@@ -307,7 +217,7 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="helios::SampledSpectrum::fromSample::lambda">
+                        <tr id="helios::RGBSpectrum::fromSampled::lambda">
                             <td>lambda</td>
                             <td>
                                 <div class="doc">
@@ -315,7 +225,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr id="helios::SampledSpectrum::fromSample::v">
+                        <tr id="helios::RGBSpectrum::fromSampled::v">
                             <td>v</td>
                             <td>
                                 <div class="doc">
@@ -323,7 +233,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr id="helios::SampledSpectrum::fromSample::n">
+                        <tr id="helios::RGBSpectrum::fromSampled::n">
                             <td>n</td>
                             <td>
                                 <div class="doc">
@@ -335,7 +245,7 @@
                             <td class="keyword">return</td>
                             <td>
                                 <div class="doc">
-                                    <p>a SampledSpectrum object</p>
+                                    <p>a RGBSpectrum object</p>
                                 </div>
                             </td>
                         </tr>
@@ -343,11 +253,11 @@
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::fromXYZ">
+                <div class="declaration" id="helios::RGBSpectrum::fromXYZ">
                     <ul class="specifiers">
                         <li class="static">static</li>
                     </ul>
-                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.SampledSpectrum">SampledSpectrum</a></span></span>
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.RGBSpectrum">RGBSpectrum</a></span></span>
                     </div>
                     <table class="declaration">
                         <tbody>
@@ -369,26 +279,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="brief">
-                    <p> conversion</p>
-                </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="helios::SampledSpectrum::fromXYZ::xyz">
+                        <tr id="helios::RGBSpectrum::fromXYZ::xyz">
                             <td>xyz</td>
-                            <td>
-                                <div class="doc">
-                                    <p><strong>[in]</strong></p>
-                                </div>
-                            </td>
+                            <td></td>
                         </tr>
-                        <tr id="helios::SampledSpectrum::fromXYZ::type">
+                        <tr id="helios::RGBSpectrum::fromXYZ::type">
                             <td>type</td>
-                            <td>
-                                <div class="doc">
-                                    <p><strong>[in | optional]</strong> denotes wether the RGB values represents a surface reflectance or an illuminant. Converts from a given <strong>xyz</strong> values to a full SPD.</p>
-                                </div>
-                            </td>
+                            <td></td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>
@@ -398,30 +297,7 @@
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::init">
-                    <ul class="specifiers">
-                        <li class="static">static</li>
-                    </ul>
-                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
-                    </div>
-                    <table class="declaration">
-                        <tbody>
-                            <tr>
-                                <td class="identifier">init</td>
-                                <td class="open_paren">(</td>
-                                <td colspan="2"></td>
-                                <td class="close_paren">)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="doc">
-                    <p>computes XYZ matching curves</p>
-                </div>
-                <table class="arguments"></table>
-            </div>
-            <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::toRGB">
+                <div class="declaration" id="helios::RGBSpectrum::toRGB">
                     <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
                     </div>
                     <table class="declaration">
@@ -429,7 +305,7 @@
                             <tr>
                                 <td class="identifier">toRGB</td>
                                 <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span></span><span class="array_size">[3]</span></span>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier"> *</span></span>
                                 </td>
                                 <td class="argument_name">rgb</td>
                                 <td class="close_paren">)</td>
@@ -442,7 +318,7 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="helios::SampledSpectrum::toRGB::rgb">
+                        <tr id="helios::RGBSpectrum::toRGB::rgb">
                             <td>rgb</td>
                             <td>
                                 <div class="doc">
@@ -454,8 +330,9 @@
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::toRGBSpectrum">
-                    <div class="return_type"><span class="type"><span class="name "><a href="helios.RGBSpectrum.html#helios.RGBSpectrum">RGBSpectrum</a></span></span>
+                <div class="declaration" id="helios::RGBSpectrum::toRGBSpectrum">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#helios.RGBSpectrum">RGBSpectrum</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                        </span>
                     </div>
                     <table class="declaration">
                         <tbody>
@@ -481,40 +358,7 @@
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::toXYZ">
-                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
-                    </div>
-                    <table class="declaration">
-                        <tbody>
-                            <tr>
-                                <td class="identifier">toXYZ</td>
-                                <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span></span><span class="array_size">[3]</span></span>
-                                </td>
-                                <td class="argument_name">xyz</td>
-                                <td class="close_paren">)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="brief">
-                    <p> conversion</p>
-                </div>
-                <table class="arguments">
-                    <tbody>
-                        <tr id="helios::SampledSpectrum::toXYZ::xyz">
-                            <td>xyz</td>
-                            <td>
-                                <div class="doc">
-                                    <p><strong>[out]</strong></p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="function">
-                <div class="declaration" id="helios::SampledSpectrum::y">
+                <div class="declaration" id="helios::RGBSpectrum::y">
                     <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
                     </div>
                     <table class="declaration">
@@ -527,9 +371,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="doc">
-                    <p>The y coordinate of XYZ color is closely related to <em>luminance</em></p>
                 </div>
                 <table class="arguments">
                     <tbody>

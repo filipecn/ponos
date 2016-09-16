@@ -294,6 +294,11 @@
                         <p>intersection test</p>
                     </div>
                 </li>
+                <li><a href="#ponos.readFile">readFile<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>read file</p>
+                    </div>
+                </li>
                 <li><a href="#ponos.rotate">rotate<span class="counter"></span></a></li>
                 <li><a href="#ponos.rotate">rotate<span class="counter"></span></a></li>
                 <li><a href="#ponos.rotateX">rotateX<span class="counter"></span></a></li>
@@ -4058,6 +4063,58 @@
                             <td>
                                 <div class="doc">
                                     <p><strong>[out]</strong> intersection point (ray coordinate)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::readFile">
+                    <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">readFile</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">char</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">filename,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">char</span><span class="qualifier"> **</span></span>
+                                </td>
+                                <td class="argument_name">text</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>read file</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::readFile::filename">
+                            <td>filename</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong></p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="ponos::readFile::text">
+                            <td>text</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> receives file content</p>
                                 </div>
                             </td>
                         </tr>

@@ -96,6 +96,11 @@
                         <p>Subclass of &lt;helios::Hray&gt;.</p>
                     </div>
                 </li>
+                <li><a href="helios.RGBSpectrum.html#helios.RGBSpectrum">RGBSpectrum<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>RGB spectrum implementation</p>
+                    </div>
+                </li>
                 <li><a href="helios.Sample.html#helios.Sample">Sample<span class="counter"></span></a>
                     <div class="brief">
                         <p>////////////////TEMP//////////////////////////</p>
@@ -156,6 +161,10 @@
                 <li><a href="helios.DifferentialGeometry.html#helios.DifferentialGeometry">DifferentialGeometry<span class="counter"></span></a></li>
                 <li><a href="helios.Intersection.html#helios.Intersection">Intersection<span class="counter"></span></a></li>
             </ul>
+            <div class="subtitle">Enumerations</div>
+            <ul>
+                <li><a href="#helios.SpectrumType">SpectrumType<span class="counter"></span></a></li>
+            </ul>
             <div class="subtitle">Variables</div>
             <ul>
                 <li><a href="#helios.CIE_lambda">CIE_lambda<span class="counter"></span></a></li>
@@ -163,7 +172,23 @@
                 <li><a href="#helios.CIE_Y">CIE_Y<span class="counter"></span></a></li>
                 <li><a href="#helios.CIE_Z">CIE_Z<span class="counter"></span></a></li>
                 <li><a href="#helios.nCIESamples">nCIESamples<span class="counter"></span></a></li>
+                <li><a href="#helios.nRGB2SpectSamples">nRGB2SpectSamples<span class="counter"></span></a></li>
                 <li><a href="#helios.nSpectralSamples">nSpectralSamples<span class="counter"></span></a></li>
+                <li><a href="#helios.RGB2SpectLambda">RGB2SpectLambda<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectBlue">RGBIllum2SpectBlue<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectCyan">RGBIllum2SpectCyan<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectGreen">RGBIllum2SpectGreen<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectMagenta">RGBIllum2SpectMagenta<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectRed">RGBIllum2SpectRed<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectWhite">RGBIllum2SpectWhite<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBIllum2SpectYellow">RGBIllum2SpectYellow<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectBlue">RGBRefl2SpectBlue<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectCyan">RGBRefl2SpectCyan<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectGreen">RGBRefl2SpectGreen<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectMagenta">RGBRefl2SpectMagenta<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectRed">RGBRefl2SpectRed<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectWhite">RGBRefl2SpectWhite<span class="counter"></span></a></li>
+                <li><a href="#helios.RGBRefl2SpectYellow">RGBRefl2SpectYellow<span class="counter"></span></a></li>
                 <li><a href="#helios.sampledLambdaEnd">sampledLambdaEnd<span class="counter"></span></a></li>
                 <li><a href="#helios.sampledLambdaStart">sampledLambdaStart<span class="counter"></span></a></li>
             </ul>
@@ -187,6 +212,21 @@
                 <li><a href="#helios.generateStratifiedSample2D">generateStratifiedSample2D<span class="counter"></span></a>
                     <div class="brief">
                         <p>generate</p>
+                    </div>
+                </li>
+                <li><a href="#helios.interpolateSpectrumSamples">interpolateSpectrumSamples<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>interpolation</p>
+                    </div>
+                </li>
+                <li><a href="#helios.RGBToXYZ">RGBToXYZ<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>convert</p>
+                    </div>
+                </li>
+                <li><a href="#helios.XYZToRGB">XYZToRGB<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>convert</p>
                     </div>
                 </li>
             </ul>
@@ -344,6 +384,14 @@
                     </td>
                 </tr>
                 <tr class="short">
+                    <td><a href="helios.RGBSpectrum.html#helios.RGBSpectrum">RGBSpectrum</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>RGB spectrum implementation</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="short">
                     <td><a href="helios.Sample.html#helios.Sample">Sample</a></td>
                     <td>
                         <div class="brief">
@@ -454,6 +502,24 @@
                 </tr>
             </tbody>
         </table>
+        <h2 data-cldoc-dynamic="1" id="enumerations">Enumerations</h2>
+        <div class="enumerations">
+            <div id="helios::SpectrumType"><span class="keyword">enum class</span> <span class="identifier">SpectrumType</span></div>
+            <table>
+                <tbody>
+                    <tr id="helios::SpectrumType::REFLECTANCE">
+                        <td class="name identifier">REFLECTANCE</td>
+                        <td class="value">0</td>
+                        <td class="doc"></td>
+                    </tr>
+                    <tr id="helios::SpectrumType::ILLUMINANT">
+                        <td class="name identifier">ILLUMINANT</td>
+                        <td class="value">1</td>
+                        <td class="doc"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <h2 data-cldoc-dynamic="1" id="variables">Variables</h2>
         <table class="variables">
             <tbody>
@@ -492,10 +558,122 @@
                     </td>
                     <td class="doc"></td>
                 </tr>
+                <tr id="helios::nRGB2SpectSamples">
+                    <td class="variable_name identifier">nRGB2SpectSamples</td>
+                    <td class="variable_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
                 <tr id="helios::nSpectralSamples">
                     <td class="variable_name identifier">nSpectralSamples</td>
                     <td class="variable_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span></span>
                         </span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGB2SpectLambda">
+                    <td class="variable_name identifier">RGB2SpectLambda</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectBlue">
+                    <td class="variable_name identifier">RGBIllum2SpectBlue</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectCyan">
+                    <td class="variable_name identifier">RGBIllum2SpectCyan</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectGreen">
+                    <td class="variable_name identifier">RGBIllum2SpectGreen</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectMagenta">
+                    <td class="variable_name identifier">RGBIllum2SpectMagenta</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectRed">
+                    <td class="variable_name identifier">RGBIllum2SpectRed</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectWhite">
+                    <td class="variable_name identifier">RGBIllum2SpectWhite</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBIllum2SpectYellow">
+                    <td class="variable_name identifier">RGBIllum2SpectYellow</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectBlue">
+                    <td class="variable_name identifier">RGBRefl2SpectBlue</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectCyan">
+                    <td class="variable_name identifier">RGBRefl2SpectCyan</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectGreen">
+                    <td class="variable_name identifier">RGBRefl2SpectGreen</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectMagenta">
+                    <td class="variable_name identifier">RGBRefl2SpectMagenta</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectRed">
+                    <td class="variable_name identifier">RGBRefl2SpectRed</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectWhite">
+                    <td class="variable_name identifier">RGBRefl2SpectWhite</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="helios::RGBRefl2SpectYellow">
+                    <td class="variable_name identifier">RGBRefl2SpectYellow</td>
+                    <td class="variable_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                        </span><span class="array_size">[32]</span></span>
                     </td>
                     <td class="doc"></td>
                 </tr>
@@ -846,6 +1024,179 @@
                             <td>
                                 <div class="doc">
                                     <p><strong>[in]</strong> if true, the samples are jittered</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::interpolateSpectrumSamples">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">interpolateSpectrumSamples</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">lambda,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">vals,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span></span>
+                                </td>
+                                <td class="argument_name">n,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">l</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>interpolation</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::interpolateSpectrumSamples::lambda">
+                            <td>lambda</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> coordinates</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::interpolateSpectrumSamples::vals">
+                            <td>vals</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> values on coordinates</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::interpolateSpectrumSamples::n">
+                            <td>n</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of samples</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::interpolateSpectrumSamples::l">
+                            <td>l</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::RGBToXYZ">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">RGBToXYZ</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span><span class="array_size">[3]</span></span>
+                                </td>
+                                <td class="argument_name">rgb,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span></span><span class="array_size">[3]</span></span>
+                                </td>
+                                <td class="argument_name">xyz</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>convert</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::RGBToXYZ::rgb">
+                            <td>rgb</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> rgb values</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::RGBToXYZ::xyz">
+                            <td>xyz</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> returned xyz values</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="helios::XYZToRGB">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">XYZToRGB</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span></span>
+                                    </span><span class="array_size">[3]</span></span>
+                                </td>
+                                <td class="argument_name">xyz,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="sub-type"><span class="name builtin">float</span></span><span class="array_size">[3]</span></span>
+                                </td>
+                                <td class="argument_name">rgb</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>convert</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="helios::XYZToRGB::xyz">
+                            <td>xyz</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> xyz values</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="helios::XYZToRGB::rgb">
+                            <td>rgb</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong> returned rgb values</p>
                                 </div>
                             </td>
                         </tr>
