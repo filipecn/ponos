@@ -29,6 +29,7 @@ set(SOURCES
 	src/core/camera.cpp
 	src/core/differential_geometry.cpp
 	src/core/shape.cpp
+	src/core/spectrum.cpp
 	src/core/primitive.cpp
 	src/geometry/h_ray.cpp
 	src/shapes/h_sphere.cpp

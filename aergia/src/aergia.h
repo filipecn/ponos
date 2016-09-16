@@ -1,3 +1,5 @@
+#include "graphics/shader.h"
+#include "graphics/shader_manager.h"
 #include "helpers/camera_model.h"
 #include "helpers/cartesian_grid.h"
 #include "helpers/geometry_drawers.h"
@@ -8,6 +10,7 @@
 #include "scene/scene.h"
 #include "scene/scene_object.h"
 #include "ui/app.h"
+#include "ui/scene_app.h"
 #include "ui/trackball.h"
 #include "ui/trackball_interface.h"
 #include "ui/track_mode.h"

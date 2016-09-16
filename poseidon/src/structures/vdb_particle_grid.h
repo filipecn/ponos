@@ -41,6 +41,10 @@ namespace poseidon {
 			 */
 			void init();
 			/* add particle
+			 * @p **[in]** particle
+			 */
+			void addParticle(Particle *p);
+			/* add particle
 			 * @p **[in]** position
 			 * @v **[in]** velocity
 			 */
@@ -146,6 +150,7 @@ namespace poseidon {
 		private:
 			bool updated;
 
+			std::vector<Particle*> particles;
 			std::vector<float> densities;
 			std::vector<openvdb::Vec3f> positions;
 			std::vector<openvdb::Vec3f> velocities;

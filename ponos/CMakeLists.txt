@@ -2,6 +2,7 @@ project(PONOS)
 
 set(HEADERS
 	src/common/defs.h
+	src/common/file.h
 	src/common/macros.h
 	src/common/memory.h
 	src/common/random.h
@@ -37,6 +38,7 @@ set(HEADERS
 	)
 
 set(SOURCES
+	src/common/file.cpp
 	src/geometry/bbox.cpp
 	src/geometry/queries.cpp
 	src/geometry/matrix.cpp

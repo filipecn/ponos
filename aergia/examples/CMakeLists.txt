@@ -5,6 +5,7 @@ link_libraries(glfw ${aergia_LIBRARIES} ${OPENGL_LIBRARIES})
 include_directories("${AERGIA_SOURCE_DIR}/src")
 
 add_executable(hello_aergia_test WIN32 hello_aergia.cpp)
+add_executable(scene_app WIN32 scene_app.cpp)
 
 add_executable(hello_3d WIN32 hello3D.cpp)
 set(WINDOWS_BINARIES hello_aergia_test)

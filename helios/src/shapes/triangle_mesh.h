@@ -15,14 +15,16 @@ namespace helios {
 
 	/* Triangle from <TriangleMesh>.
 	 *
-	 * Stores a pointer to the parent <TriangleMesh> that it came from and a pointer to its 3 vertex indices in the mesh.
+	 * Stores a pointer to the parent <TriangleMesh> that it came from and a
+	 * pointer to its 3 vertex indices in the mesh.
 	 */
 	class Triangle : public Shape {
 		public:
 			/* Constructor.
 			 * @o2w object to world transformation
 			 * @w2o world to object transformation
-			 * @ro reverse ortientation: indicates if the surface normal directions should be reversed from default (default = normals pointing outside)
+			 * @ro reverse ortientation: indicates if the surface normal directions
+			 * should be reversed from default (default = normals pointing outside)
 			 * @m parent <TriangleMesh> pointer
 			 * @n first vertex index
 			 */
@@ -51,14 +53,17 @@ namespace helios {
 
 	/* Stores a number of triangles together.
 	 *
-	 * Different from other shapes, the positions are stored in world space, avoiding transforming rays many times during rendering. However normals and tangents are stored in object space.
+	 * Different from other shapes, the positions are stored in world space,
+	 * avoiding transforming rays many times during rendering.
+	 * However normals and tangents are stored in object space.
 	 */
 	class TriangleMesh : public Shape {
 		public:
 			/* Constructor.
 			 * @o2w object to world transformation
 			 * @w2o world to object transformation
-			 * @ro reverse ortientation: indicates if the surface normal directions should be reversed from default (default = normals pointing outside)
+			 * @ro reverse ortientation: indicates if the surface normal directions
+			 * should be reversed from default (default = normals pointing outside)
 			 * @v array of vertices
 			 * @i array of indices, 3 per triangle. (if n triangles, array size is 3n)
 			 * @n [optional] array of normals, one per vertex
@@ -66,7 +71,15 @@ namespace helios {
 			 * @uv [optional] array of uv coordinates, one uv per vertex
 			 * @atex [optional] alpha mask texture
 			 */
-			TriangleMesh(const ponos::Transform *o2w, const ponos::Transform *w2o, bool ro, const std::vector<ponos::Point3>& v, const std::vector<uint32>& i, const std::vector<ponos::Normal>& n, const std::vector<ponos::vec3>& s, const std::vector<ponos::Point2>& uv, const std::shared_ptr<Texture<float> >& atex);
+			TriangleMesh(const ponos::Transform *o2w,
+					const ponos::Transform *w2o,
+					bool ro,
+					const std::vector<ponos::Point3>& v,
+					const std::vector<uint32>& i,
+					const std::vector<ponos::Normal>& n,
+					const std::vector<ponos::vec3>& s,
+					const std::vector<ponos::Point2>& uv,
+					const std::shared_ptr<Texture<float> >& atex);
 
 			/* @inherit */
 			ponos::BBox objectBound() const override;

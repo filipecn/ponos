@@ -64,6 +64,17 @@ namespace poseidon {
 		updated = true;
 	}
 
+	void VDBParticleGrid::addParticle(Particle *p) {
+		ponos::ivec3 i = worldToIndex(p->position);
+		if(!(i >= ponos::ivec3()) || !(i < dimensions))
+			return;
+		ids.emplace_back(positions.size());
+		//positions.emplace_back(Vec3f(p.x, p.y, p.z));
+		//velocities.emplace_back(Vec3f(v.x, v.y, v.z));
+		//densities.emplace_back(0.f);
+		//particles.emplace_back(p);
+	}
+
 	void VDBParticleGrid::addParticle(const ponos::Point3& p, const ponos::vec3& v) {
 		ponos::ivec3 i = worldToIndex(p);
 		if(!(i >= ponos::ivec3()) || !(i < dimensions))

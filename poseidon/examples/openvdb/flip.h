@@ -10,6 +10,7 @@
 namespace poseidon {
 
 	enum class FLIPCellType {FLUID, AIR, SOLID};
+
 	struct FLIPParticle : public Particle {
 		ponos::Point3 position;
 		ponos::vec3 velocity;

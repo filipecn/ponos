@@ -1,6 +1,8 @@
 #ifndef PONOS_GEOMETRY_SEGMENT_H
 #define PONOS_GEOMETRY_SEGMENT_H
 
+#include "geometry/point.h"
+
 namespace ponos {
 
 	/* Line segment **ab**

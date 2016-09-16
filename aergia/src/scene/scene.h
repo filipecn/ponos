@@ -2,6 +2,7 @@
 #define AERGIA_SCENE_SCENE_H
 
 #include "scene/scene_object.h"
+#include "utils/open_gl.h"
 
 #include <ponos.h>
 

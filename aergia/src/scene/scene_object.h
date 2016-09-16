@@ -26,6 +26,7 @@ namespace aergia {
 			virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) const { return false; }
 
 			ponos::Transform t;
+			bool selected;
 	};
 
 } // aergia namespace

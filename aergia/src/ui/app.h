@@ -45,9 +45,9 @@ namespace aergia {
 			uint windowWidth, windowHeight;
 			std::string title;
 
-			void render();
-			void button(int b, int a);
-			void mouse(double x, double y);
+			virtual void render();
+			virtual void button(int b, int a);
+			virtual void mouse(double x, double y);
 	};
 
 } // aergia namespace
