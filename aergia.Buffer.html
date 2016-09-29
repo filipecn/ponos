@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Buffer</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>Buffer&lt;T&gt;</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Template Parameters</div>
+            <ul>
+                <li><a href="#aergia.Buffer.T">T<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.Buffer.bufferDescriptor">bufferDescriptor<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>buffer description</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.Buffer.bufferId">bufferId<span class="counter"></span></a><span class="protected">p</span></li>
+                <li><a href="#aergia.Buffer.data">data<span class="counter"></span></a><span class="protected">p</span></li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.Buffer.Buffer%3CT%3E">Buffer&lt;T&gt;<span class="counter"></span></a></li>
+                <li><a href="#aergia.Buffer.Buffer%3CT%3E">Buffer&lt;T&gt;<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#aergia.Buffer.~Buffer%3CT%3E">~Buffer&lt;T&gt;<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.Buffer.set">set<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> set</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.Buffer.bind">bind<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> bind</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.Buffer.registerAttribute">registerAttribute<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> register</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::Buffer"><span><span class="keyword">Class</span><span>Buffer&lt;T&gt;</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="template parameters">Template Parameters</h2>
+        <table class="template_parameters">
+            <tbody>
+                <tr id="aergia::Buffer::T">
+                    <td>T</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::Buffer::bufferDescriptor">
+                    <td class="field_name identifier">bufferDescriptor</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="aergia.BufferDescriptor.html#aergia.BufferDescriptor">BufferDescriptor</a></span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>buffer description</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::Buffer::bufferId">
+                    <td class="field_name identifier">bufferId</td>
+                    <td class="field_type"><span class="type"><span class="name ">GLuint</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::Buffer::data">
+                    <td class="field_name identifier">data</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::shared_ptr&lt;_Tp&gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::Buffer::Buffer<T>">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Buffer&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Buffer::Buffer<T>">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Buffer&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">d,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.BufferDescriptor.html#aergia.BufferDescriptor">BufferDescriptor</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">bd</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Buffer::Buffer<T>::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> data pointer</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::Buffer::Buffer<T>::bd">
+                            <td>bd</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> buffer description</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="aergia::Buffer::~Buffer<T>">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~Buffer&lt;T&gt;</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::Buffer::set">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">set</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">const T</span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">d,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.BufferDescriptor.html#aergia.BufferDescriptor">BufferDescriptor</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">bd</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> set</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Buffer::set::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> data pointer</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::Buffer::set::bd">
+                            <td>bd</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> buffer description</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Buffer::bind">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">bind</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Activate buffer</p>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Buffer::registerAttribute">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">registerAttribute</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::__cxx11::string</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">name,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLint</span></span>
+                                </td>
+                                <td class="argument_name">location</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> register</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Buffer::registerAttribute::name">
+                            <td>name</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> attribute name</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::Buffer::registerAttribute::location">
+                            <td>location</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> attribute location on shader program</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

@@ -15,6 +15,11 @@
                 <div class="name"><span><span class="keyword">Namespace</span><span>aergia</span></span>
                 </div><a href="index.html"><span class="arrow">↵</span> <span>Index</span></a></div>
             <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Typedefs</div>
+            <ul>
+                <li><a href="#aergia.IndexBuffer">IndexBuffer<span class="counter"></span></a></li>
+                <li><a href="#aergia.VertexBuffer">VertexBuffer<span class="counter"></span></a></li>
+            </ul>
             <div class="subtitle">Classes</div>
             <ul>
                 <li><a href="aergia.App.html#aergia.App">App<span class="counter"></span></a>
@@ -22,6 +27,7 @@
                         <p>base class</p>
                     </div>
                 </li>
+                <li><a href="aergia.Buffer.html#aergia.Buffer">Buffer&lt;T&gt;<span class="counter"></span></a></li>
                 <li><a href="aergia.Camera.html#aergia.Camera">Camera<span class="counter"></span></a></li>
                 <li><a href="aergia.Camera2D.html#aergia.Camera2D">Camera2D<span class="counter"></span></a></li>
                 <li><a href="aergia.CameraModel.html#aergia.CameraModel">CameraModel<span class="counter"></span></a></li>
@@ -33,6 +39,11 @@
                 <li><a href="aergia.GraphicsDisplay.html#aergia.GraphicsDisplay">GraphicsDisplay<span class="counter"></span></a>
                     <div class="brief">
                         <p>singleton</p>
+                    </div>
+                </li>
+                <li><a href="aergia.Mesh.html#aergia.Mesh">Mesh<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>mesh</p>
                     </div>
                 </li>
                 <li><a href="aergia.PanMode.html#aergia.PanMode">PanMode<span class="counter"></span></a></li>
@@ -52,12 +63,17 @@
                         <p>derived class</p>
                     </div>
                 </li>
+                <li><a href="aergia.SceneMesh.html#aergia.SceneMesh">SceneMesh<span class="counter"></span></a></li>
                 <li><a href="aergia.SceneObject.html#aergia.SceneObject">SceneObject<span class="counter"></span></a>
                     <div class="brief">
                         <p>interface</p>
                     </div>
                 </li>
-                <li><a href="aergia.Shader.html#aergia.Shader">Shader<span class="counter"></span></a></li>
+                <li><a href="aergia.Shader.html#aergia.Shader">Shader<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>shader class</p>
+                    </div>
+                </li>
                 <li><a href="aergia.ShaderManager.html#aergia.ShaderManager">ShaderManager<span class="counter"></span></a>
                     <div class="brief">
                         <p>singleton</p>
@@ -73,13 +89,32 @@
                         <p>display region</p>
                     </div>
                 </li>
+                <li><a href="aergia.WireframeMesh.html#aergia.WireframeMesh">WireframeMesh<span class="counter"></span></a></li>
                 <li><a href="aergia.ZMode.html#aergia.ZMode">ZMode<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="aergia.BufferDescriptor.html#aergia.BufferDescriptor">BufferDescriptor<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>descriptor</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Functions</div>
             <ul>
                 <li><a href="#aergia.checkFramebuffer">checkFramebuffer<span class="counter"></span></a>
                     <div class="brief">
                         <p>error check</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.create_grid_mesh">create_grid_mesh<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>create</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.create_wireframe_mesh">create_wireframe_mesh<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>create</p>
                     </div>
                 </li>
                 <li><a href="#aergia.createGraphicsDisplay">createGraphicsDisplay<span class="counter"></span></a>
@@ -110,6 +145,8 @@
                         <p>glVertex</p>
                     </div>
                 </li>
+                <li><a href="#aergia.initGLEW">initGLEW<span class="counter"></span></a></li>
+                <li><a href="#aergia.initialize">initialize<span class="counter"></span></a></li>
                 <li><a href="#aergia.loadOBJ">loadOBJ<span class="counter"></span></a>
                     <div class="brief">
                         <p>load OBJ</p>
@@ -135,6 +172,29 @@
     </div>
     <div id="cldoc_content">
         <h1 id="aergia"><span><span class="keyword">Namespace</span><span>aergia</span></span></h1>
+        <h2 data-cldoc-dynamic="1" id="typedefs">Typedefs</h2>
+        <table class="typedefs">
+            <tbody>
+                <tr class="typedef" id="aergia::IndexBuffer">
+                    <td class="typedef_name identifier">IndexBuffer</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Buffer&lt;unsigned int&gt;</span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="aergia::VertexBuffer">
+                    <td class="typedef_name identifier">VertexBuffer</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Buffer&lt;float&gt;</span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+            </tbody>
+        </table>
         <h2 data-cldoc-dynamic="1" id="classes">Classes</h2>
         <table class="classes">
             <tbody>
@@ -145,6 +205,10 @@
                             <p>base class</p>
                         </div>
                     </td>
+                </tr>
+                <tr class="short">
+                    <td><a href="aergia.Buffer.html#aergia.Buffer">Buffer&lt;T&gt;</a></td>
+                    <td></td>
                 </tr>
                 <tr class="short">
                     <td><a href="aergia.Camera.html#aergia.Camera">Camera</a></td>
@@ -171,6 +235,14 @@
                     <td>
                         <div class="brief">
                             <p>singleton</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="short">
+                    <td><a href="aergia.Mesh.html#aergia.Mesh">Mesh</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>mesh</p>
                         </div>
                     </td>
                 </tr>
@@ -207,6 +279,10 @@
                     </td>
                 </tr>
                 <tr class="short">
+                    <td><a href="aergia.SceneMesh.html#aergia.SceneMesh">SceneMesh</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
                     <td><a href="aergia.SceneObject.html#aergia.SceneObject">SceneObject</a></td>
                     <td>
                         <div class="brief">
@@ -216,7 +292,11 @@
                 </tr>
                 <tr class="short">
                     <td><a href="aergia.Shader.html#aergia.Shader">Shader</a></td>
-                    <td></td>
+                    <td>
+                        <div class="brief">
+                            <p>shader class</p>
+                        </div>
+                    </td>
                 </tr>
                 <tr class="short">
                     <td><a href="aergia.ShaderManager.html#aergia.ShaderManager">ShaderManager</a></td>
@@ -255,8 +335,25 @@
                     </td>
                 </tr>
                 <tr class="short">
+                    <td><a href="aergia.WireframeMesh.html#aergia.WireframeMesh">WireframeMesh</a></td>
+                    <td></td>
+                </tr>
+                <tr class="short">
                     <td><a href="aergia.ZMode.html#aergia.ZMode">ZMode</a></td>
                     <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="aergia.BufferDescriptor.html#aergia.BufferDescriptor">BufferDescriptor</a></td>
+                    <td>
+                        <div class="brief">
+                            <p>descriptor</p>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -289,6 +386,111 @@
                                     <p><strong>false</strong> if NO errors occured</p>
                                 </div>
                             </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::create_grid_mesh">
+                    <div class="return_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">RawMesh</a></span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">create_grid_mesh</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">d,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">s,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">o</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>create</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::create_grid_mesh::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> dimensions</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::create_grid_mesh::s">
+                            <td>s</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> scale</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::create_grid_mesh::o">
+                            <td>o</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> offset</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::create_wireframe_mesh">
+                    <div class="return_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">RawMesh</a></span><span class="qualifier"> *</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">create_wireframe_mesh</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">RawMesh</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>create</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::create_wireframe_mesh::m">
+                            <td>m</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> base mesh return RawMesh representing the edges of <strong>m</strong>.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -566,6 +768,54 @@
                     <tbody>
                         <tr id="aergia::glVertex::v">
                             <td>v</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::initGLEW">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">initGLEW</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::initialize">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">initialize</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
                             <td></td>
                         </tr>
                     </tbody>

@@ -25,6 +25,12 @@
                 <li><a href="#aergia.RawMesh.normals">normals<span class="counter"></span></a></li>
                 <li><a href="#aergia.RawMesh.texcoords">texcoords<span class="counter"></span></a></li>
                 <li><a href="#aergia.RawMesh.indices">indices<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.vertexCount">vertexCount<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.verticesIndices">verticesIndices<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.normalsIndices">normalsIndices<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.texcoordsIndices">texcoordsIndices<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.elementSize">elementSize<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.bbox">bbox<span class="counter"></span></a></li>
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
@@ -33,6 +39,12 @@
             <div class="subtitle">Destructors</div>
             <ul>
                 <li><a href="#aergia.RawMesh.~RawMesh">~RawMesh<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.RawMesh.apply">apply<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.computeBBox">computeBBox<span class="counter"></span></a></li>
+                <li><a href="#aergia.RawMesh.splitIndexData">splitIndexData<span class="counter"></span></a></li>
             </ul>
         </div>
     </div>
@@ -79,6 +91,42 @@
                     </td>
                     <td class="doc"></td>
                 </tr>
+                <tr id="aergia::RawMesh::vertexCount">
+                    <td class="field_name identifier">vertexCount</td>
+                    <td class="field_type"><span class="type"><span class="name ">size_t</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::RawMesh::verticesIndices">
+                    <td class="field_name identifier">verticesIndices</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;unsigned int, std::allocator&lt;unsigned int&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::RawMesh::normalsIndices">
+                    <td class="field_name identifier">normalsIndices</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;unsigned int, std::allocator&lt;unsigned int&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::RawMesh::texcoordsIndices">
+                    <td class="field_name identifier">texcoordsIndices</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::vector&lt;unsigned int, std::allocator&lt;unsigned int&gt; &gt;</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::RawMesh::elementSize">
+                    <td class="field_name identifier">elementSize</td>
+                    <td class="field_type"><span class="type"><span class="name ">uint</span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
+                <tr id="aergia::RawMesh::bbox">
+                    <td class="field_name identifier">bbox</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">ponos::BBox</a></span></span>
+                    </td>
+                    <td class="doc"></td>
+                </tr>
             </tbody>
         </table>
         <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
@@ -110,6 +158,70 @@
                         <tbody>
                             <tr>
                                 <td class="identifier">~RawMesh</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::RawMesh::apply">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">apply</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::RawMesh::apply::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::RawMesh::computeBBox">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">computeBBox</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::RawMesh::splitIndexData">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">splitIndexData</td>
                                 <td class="open_paren">(</td>
                                 <td colspan="2"></td>
                                 <td class="close_paren">)</td>

@@ -27,9 +27,9 @@
                         <p>particle mass</p>
                     </div>
                 </li>
-                <li><a href="#poseidon.VDBParticleGrid.scale">scale<span class="counter"></span></a>
+                <li><a href="#poseidon.VDBParticleGrid.voxelSize">voxelSize<span class="counter"></span></a>
                     <div class="brief">
-                        <p>scale</p>
+                        <p>voxel size</p>
                     </div>
                 </li>
                 <li><a href="#poseidon.VDBParticleGrid.toWorld">toWorld<span class="counter"></span></a>
@@ -72,6 +72,11 @@
                         <p> add particle</p>
                     </div>
                 </li>
+                <li><a href="#poseidon.VDBParticleGrid.cellSDF">cellSDF<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> compute</p>
+                    </div>
+                </li>
                 <li><a href="#poseidon.VDBParticleGrid.cellVertices">cellVertices<span class="counter"></span></a>
                     <div class="brief">
                         <p> get</p>
@@ -80,6 +85,16 @@
                 <li><a href="#poseidon.VDBParticleGrid.computeDensity">computeDensity<span class="counter"></span></a>
                     <div class="brief">
                         <p> update</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.VDBParticleGrid.gather">gather<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> gather</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.VDBParticleGrid.getParticles">getParticles<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> get</p>
                     </div>
                 </li>
                 <li><a href="#poseidon.VDBParticleGrid.gridToIndex">gridToIndex<span class="counter"></span></a>
@@ -108,6 +123,11 @@
                     </div>
                 </li>
                 <li><a href="#poseidon.VDBParticleGrid.iterateCellNeighbours">iterateCellNeighbours<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> iterate</p>
+                    </div>
+                </li>
+                <li><a href="#poseidon.VDBParticleGrid.iterateNeighbours">iterateNeighbours<span class="counter"></span></a>
                     <div class="brief">
                         <p> iterate</p>
                     </div>
@@ -180,13 +200,13 @@
                         </div>
                     </td>
                 </tr>
-                <tr id="poseidon::VDBParticleGrid::scale">
-                    <td class="field_name identifier">scale</td>
+                <tr id="poseidon::VDBParticleGrid::voxelSize">
+                    <td class="field_name identifier">voxelSize</td>
                     <td class="field_type"><span class="type"><span class="name builtin">float</span></span>
                     </td>
                     <td class="doc">
                         <div class="brief">
-                            <p>scale</p>
+                            <p>voxel size</p>
                         </div>
                     </td>
                 </tr>
@@ -261,7 +281,7 @@
                             <td>s</td>
                             <td>
                                 <div class="doc">
-                                    <p><strong>[in]</strong> scale</p>
+                                    <p><strong>[in]</strong> voxel size</p>
                                 </div>
                             </td>
                         </tr>
@@ -447,6 +467,72 @@
                 </table>
             </div>
             <div class="function">
+                <div class="declaration" id="poseidon::VDBParticleGrid::cellSDF">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">cellSDF</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ijk,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">d,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="poseidon.html#poseidon.ParticleType">ParticleType</a></span></span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> compute</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBParticleGrid::cellSDF::ijk">
+                            <td>ijk</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> coordinate (index space)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBParticleGrid::cellSDF::d">
+                            <td>d</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> material density</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBParticleGrid::cellSDF::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> particle type</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="poseidon::VDBParticleGrid::cellVertices">
                     <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
                     </div>
@@ -538,6 +624,101 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBParticleGrid::gather">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">gather</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="poseidon.html#poseidon.ParticleAttribute">ParticleAttribute</a></span></span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">r</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> gather</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBParticleGrid::gather::a">
+                            <td>a</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> attribute</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBParticleGrid::gather::p">
+                            <td>p</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> center (world coordinates)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBParticleGrid::gather::r">
+                            <td>r</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> radius (default value is <strong>1.5 * voxelSize</strong> Computes weighted average value of particles atttribute values within
+                                        <strong>r</strong> distance from <strong>p</strong>.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBParticleGrid::getParticles">
+                    <div class="return_type"><span class="type"><span class="name ">std::vector&lt;poseidon::Particle *, std::allocator&lt;poseidon::Particle *&gt; &gt;</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                        </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getParticles</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> get</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
                         <tr class="return">
                             <td class="keyword">return</td>
                             <td></td>
@@ -825,6 +1006,67 @@
                             <td>
                                 <div class="doc">
                                     <p><strong>[in]</strong> search region (world space)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBParticleGrid::iterateNeighbours::f">
+                            <td>f</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> function called to every particle</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBParticleGrid::iterateNeighbours">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">iterateNeighbours</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span></span>
+                                </td>
+                                <td class="argument_name">center,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span></span>
+                                </td>
+                                <td class="argument_name">radius,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">std::function&lt;void (const poseidon::Particle &amp;)&gt;</span></span>
+                                </td>
+                                <td class="argument_name">f</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doc">
+                    <p>Iterates through all particles <strong>p</strong> that are inside the sphere of <strong>center</strong> point and <strong>radius</strong> and call <strong>f</strong> for each one.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBParticleGrid::iterateNeighbours::center">
+                            <td>center</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> search region center (world space)</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBParticleGrid::iterateNeighbours::radius">
+                            <td>radius</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> search region radius</p>
                                 </div>
                             </td>
                         </tr>

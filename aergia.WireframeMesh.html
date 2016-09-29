@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>TriangleMesh</title>
+    <title>WireframeMesh</title>
     <meta charset="utf-8">
 
     <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
@@ -12,7 +12,7 @@
     <div id="cldoc_sidebar">
         <div id="cldoc_sidebar_items">
             <div class="back">
-                <div class="name"><span><span class="keyword">Class</span><span>aergia::TriangleMesh</span></span>
+                <div class="name"><span><span class="keyword">Class</span><span>aergia::WireframeMesh</span></span>
                 </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
             <div id="cldoc_sidebar_pagenav"></div>
             <div class="subtitle">Bases</div>
@@ -21,25 +21,26 @@
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
-                <li><a href="#aergia.TriangleMesh.TriangleMesh">TriangleMesh<span class="counter"></span></a></li>
-                <li><a href="#aergia.TriangleMesh.TriangleMesh">TriangleMesh<span class="counter"></span></a></li>
+                <li><a href="#aergia.WireframeMesh.WireframeMesh">WireframeMesh<span class="counter"></span></a></li>
+                <li><a href="#aergia.WireframeMesh.WireframeMesh">WireframeMesh<span class="counter"></span></a></li>
             </ul>
             <div class="subtitle">Destructors</div>
             <ul>
-                <li><a href="#aergia.TriangleMesh.~TriangleMesh">~TriangleMesh<span class="counter"></span></a><span class="virtual">v</span></li>
+                <li><a href="#aergia.WireframeMesh.~WireframeMesh">~WireframeMesh<span class="counter"></span></a><span class="virtual">v</span></li>
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
-                <li><a href="#aergia.TriangleMesh.draw">draw<span class="counter"></span></a><span class="virtual">v</span>
+                <li><a href="#aergia.WireframeMesh.draw">draw<span class="counter"></span></a><span class="virtual">v</span>
                     <div class="brief">
                         <p>@inherit</p>
                     </div>
                 </li>
+                <li><a href="#aergia.WireframeMesh.setupIndexBuffer">setupIndexBuffer<span class="counter"></span></a><span class="protected virtual">p&nbsp;v</span></li>
             </ul>
         </div>
     </div>
     <div id="cldoc_content">
-        <h1 id="aergia::TriangleMesh"><span><span class="keyword">Class</span><span>aergia::TriangleMesh</span></span></h1>
+        <h1 id="aergia::WireframeMesh"><span><span class="keyword">Class</span><span>aergia::WireframeMesh</span></span></h1>
         <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
         <table class="bases">
             <tbody>
@@ -54,11 +55,11 @@
         <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
         <div class="constructors">
             <div class="function">
-                <div class="declaration" id="aergia::TriangleMesh::TriangleMesh">
+                <div class="declaration" id="aergia::WireframeMesh::WireframeMesh">
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">TriangleMesh</td>
+                                <td class="identifier">WireframeMesh</td>
                                 <td class="open_paren">(</td>
                                 <td class="argument_type"><span class="type"><span class="name ">std::__cxx11::string</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
@@ -71,7 +72,7 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="aergia::TriangleMesh::TriangleMesh::filename">
+                        <tr id="aergia::WireframeMesh::WireframeMesh::filename">
                             <td>filename</td>
                             <td></td>
                         </tr>
@@ -79,16 +80,23 @@
                 </table>
             </div>
             <div class="function">
-                <div class="declaration" id="aergia::TriangleMesh::TriangleMesh">
+                <div class="declaration" id="aergia::WireframeMesh::WireframeMesh">
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">TriangleMesh</td>
+                                <td class="identifier">WireframeMesh</td>
                                 <td class="open_paren">(</td>
                                 <td class="argument_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">RawMesh</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">m</td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
@@ -96,8 +104,12 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="aergia::TriangleMesh::TriangleMesh::m">
+                        <tr id="aergia::WireframeMesh::WireframeMesh::m">
                             <td>m</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::WireframeMesh::WireframeMesh::t">
+                            <td>t</td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -107,14 +119,14 @@
         <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
         <div class="destructors">
             <div class="function">
-                <div class="declaration" id="aergia::TriangleMesh::~TriangleMesh">
+                <div class="declaration" id="aergia::WireframeMesh::~WireframeMesh">
                     <ul class="specifiers">
                         <li class="virtual">virtual</li>
                     </ul>
                     <table class="declaration">
                         <tbody>
                             <tr>
-                                <td class="identifier">~TriangleMesh</td>
+                                <td class="identifier">~WireframeMesh</td>
                                 <td class="open_paren">(</td>
                                 <td colspan="2"></td>
                                 <td class="close_paren">)</td>
@@ -128,7 +140,7 @@
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
         <div class="member_functions">
             <div class="function">
-                <div class="declaration" id="aergia::TriangleMesh::draw">
+                <div class="declaration" id="aergia::WireframeMesh::draw">
                     <ul class="specifiers">
                         <li class="override">override</li>
                         <li class="abstract">abstract</li>
@@ -151,6 +163,29 @@
                 </div>
                 <table class="arguments"></table>
                 <div class="overrides"><span class="title">Overrides: </span><a href="aergia.SceneMesh.html#aergia.SceneMesh.draw">SceneMesh::draw</a></div>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::WireframeMesh::setupIndexBuffer">
+                    <ul class="specifiers">
+                        <li class="protected">protected</li>
+                        <li class="override">override</li>
+                        <li class="abstract">abstract</li>
+                    </ul>
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">setupIndexBuffer</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+                <div class="overrides"><span class="title">Overrides: </span><a href="aergia.SceneMesh.html#aergia.SceneMesh.setupIndexBuffer">SceneMesh::setupIndexBuffer</a></div>
             </div>
         </div>
     </div>

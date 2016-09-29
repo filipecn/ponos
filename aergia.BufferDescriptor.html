@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BufferDescriptor</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Struct</span><span>aergia::BufferDescriptor</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Structures</div>
+            <ul>
+                <li><a href="aergia.BufferDescriptor.Attribute.html#aergia.BufferDescriptor.Attribute">Attribute<span class="counter"></span></a></li>
+            </ul>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#aergia.BufferDescriptor.attributes">attributes<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>name - attribute map</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.BufferDescriptor.elementSize">elementSize<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>how many components are assigned to each element</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.BufferDescriptor.elementCount">elementCount<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>number of elements</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.BufferDescriptor.elementType">elementType<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>type of elements</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.BufferDescriptor.type">type<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>buffer type</p>
+                    </div>
+                </li>
+                <li><a href="#aergia.BufferDescriptor.use">use<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>use</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.BufferDescriptor.BufferDescriptor">BufferDescriptor<span class="counter"></span></a></li>
+                <li><a href="#aergia.BufferDescriptor.BufferDescriptor">BufferDescriptor<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Functions</div>
+            <ul>
+                <li><a href="#aergia.create_index_buffer_descriptor">create_index_buffer_descriptor<span class="counter"></span></a></li>
+                <li><a href="#aergia.create_vertex_buffer_descriptor">create_vertex_buffer_descriptor<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::BufferDescriptor"><span><span class="keyword">Struct</span><span>aergia::BufferDescriptor</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>Describes the data contained in a buffer.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="structures">Structures</h2>
+        <table class="structures">
+            <tbody>
+                <tr class="short">
+                    <td><a href="aergia.BufferDescriptor.Attribute.html#aergia.BufferDescriptor.Attribute">Attribute</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="aergia::BufferDescriptor::attributes">
+                    <td class="field_name identifier">attributes</td>
+                    <td class="field_type"><span class="type"><span class="name ">std::map&lt;std::__cxx11::basic_string&lt;char&gt;, aergia::BufferDescriptor::Attribute, std::less&lt;std::__cxx11::basic_string&lt;char&gt; &gt;, std::allocator&lt;std::pair&lt;const std::__cxx11::basic_string&lt;char&gt;, aergia::BufferDescriptor::Attribute&gt; &gt; &gt;</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>name - attribute map</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::BufferDescriptor::elementSize">
+                    <td class="field_name identifier">elementSize</td>
+                    <td class="field_type"><span class="type"><span class="name ">GLuint</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>how many components are assigned to each element</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::BufferDescriptor::elementCount">
+                    <td class="field_name identifier">elementCount</td>
+                    <td class="field_type"><span class="type"><span class="name ">size_t</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>number of elements</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::BufferDescriptor::elementType">
+                    <td class="field_name identifier">elementType</td>
+                    <td class="field_type"><span class="type"><span class="name ">GLuint</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>type of elements</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::BufferDescriptor::type">
+                    <td class="field_name identifier">type</td>
+                    <td class="field_type"><span class="type"><span class="name ">GLuint</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>buffer type</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="aergia::BufferDescriptor::use">
+                    <td class="field_name identifier">use</td>
+                    <td class="field_type"><span class="type"><span class="name ">GLuint</span></span>
+                    </td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>use</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::BufferDescriptor::BufferDescriptor">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">BufferDescriptor</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::BufferDescriptor::BufferDescriptor">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">BufferDescriptor</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLuint</span></span>
+                                </td>
+                                <td class="argument_name">_elementSize,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">_elementCount,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLuint</span></span>
+                                </td>
+                                <td class="argument_name">_elementType,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLuint</span></span>
+                                </td>
+                                <td class="argument_name">_type,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLuint</span></span>
+                                </td>
+                                <td class="argument_name">_use</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::BufferDescriptor::BufferDescriptor::_elementSize">
+                            <td>_elementSize</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of data components compose an element</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::BufferDescriptor::BufferDescriptor::_elementCount">
+                            <td>_elementCount</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> number of elements</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::BufferDescriptor::BufferDescriptor::_elementType">
+                            <td>_elementType</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> element type</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::BufferDescriptor::BufferDescriptor::_type">
+                            <td>_type</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> buffer type</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::BufferDescriptor::BufferDescriptor::_use">
+                            <td>_use</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in | optional]</strong> buffer use</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="functions">Functions</h2>
+        <div class="functions">
+            <div class="function">
+                <div class="declaration" id="aergia::create_index_buffer_descriptor">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#aergia.BufferDescriptor">BufferDescriptor</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">create_index_buffer_descriptor</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">elementSize,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">elementCount,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLuint</span></span>
+                                </td>
+                                <td class="argument_name">elementType</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::create_index_buffer_descriptor::elementSize">
+                            <td>elementSize</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::create_index_buffer_descriptor::elementCount">
+                            <td>elementCount</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::create_index_buffer_descriptor::elementType">
+                            <td>elementType</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::create_vertex_buffer_descriptor">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#aergia.BufferDescriptor">BufferDescriptor</a></span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">create_vertex_buffer_descriptor</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">elementSize,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">size_t</span></span>
+                                </td>
+                                <td class="argument_name">elementCount,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">GLuint</span></span>
+                                </td>
+                                <td class="argument_name">elementType</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::create_vertex_buffer_descriptor::elementSize">
+                            <td>elementSize</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::create_vertex_buffer_descriptor::elementCount">
+                            <td>elementCount</td>
+                            <td></td>
+                        </tr>
+                        <tr id="aergia::create_vertex_buffer_descriptor::elementType">
+                            <td>elementType</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

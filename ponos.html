@@ -20,6 +20,7 @@
                 <li><a href="#ponos.bbox">bbox<span class="counter"></span></a></li>
                 <li><a href="#ponos.ivec2">ivec2<span class="counter"></span></a></li>
                 <li><a href="#ponos.ivec3">ivec3<span class="counter"></span></a></li>
+                <li><a href="#ponos.ivec4">ivec4<span class="counter"></span></a></li>
                 <li><a href="#ponos.mat2">mat2<span class="counter"></span></a></li>
                 <li><a href="#ponos.mat3">mat3<span class="counter"></span></a></li>
                 <li><a href="#ponos.mat4">mat4<span class="counter"></span></a></li>
@@ -29,6 +30,7 @@
                 <li><a href="#ponos.Segment3">Segment3<span class="counter"></span></a></li>
                 <li><a href="#ponos.uivec2">uivec2<span class="counter"></span></a></li>
                 <li><a href="#ponos.uivec3">uivec3<span class="counter"></span></a></li>
+                <li><a href="#ponos.uivec4">uivec4<span class="counter"></span></a></li>
                 <li><a href="#ponos.vec2">vec2<span class="counter"></span></a></li>
                 <li><a href="#ponos.vec3">vec3<span class="counter"></span></a></li>
                 <li><a href="#ponos.vec4">vec4<span class="counter"></span></a></li>
@@ -173,6 +175,11 @@
                         <p>intersection test</p>
                     </div>
                 </li>
+                <li><a href="#ponos.ceil">ceil<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> round</p>
+                    </div>
+                </li>
                 <li><a href="#ponos.ceil2Int">ceil2Int<span class="counter"></span></a>
                     <div class="brief">
                         <p> round</p>
@@ -216,6 +223,11 @@
                 <li><a href="#ponos.dot">dot<span class="counter"></span></a></li>
                 <li><a href="#ponos.dot">dot<span class="counter"></span></a></li>
                 <li><a href="#ponos.dot">dot<span class="counter"></span></a></li>
+                <li><a href="#ponos.floor">floor<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> round</p>
+                    </div>
+                </li>
                 <li><a href="#ponos.floor2Int">floor2Int<span class="counter"></span></a>
                     <div class="brief">
                         <p> round</p>
@@ -258,6 +270,8 @@
                         <p>local coordinate system</p>
                     </div>
                 </li>
+                <li><a href="#ponos.max">max<span class="counter"></span></a></li>
+                <li><a href="#ponos.min">min<span class="counter"></span></a></li>
                 <li><a href="#ponos.mod">mod<span class="counter"></span></a>
                     <div class="brief">
                         <p> modulus</p>
@@ -315,6 +329,7 @@
                     </div>
                 </li>
                 <li><a href="#ponos.scale">scale<span class="counter"></span></a></li>
+                <li><a href="#ponos.sharpen">sharpen<span class="counter"></span></a></li>
                 <li><a href="#ponos.slerp">slerp<span class="counter"></span></a></li>
                 <li><a href="#ponos.smooth">smooth<span class="counter"></span></a></li>
                 <li><a href="#ponos.solve_quadratic">solve_quadratic<span class="counter"></span></a></li>
@@ -369,6 +384,15 @@
                     <td class="typedef_name identifier">ivec3</td>
                     <td class="typedef_decl keyword">type</td>
                     <td class="typedef_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::ivec4">
+                    <td class="typedef_name identifier">ivec4</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Vector&lt;4, int&gt;</span></span>
                     </td>
                 </tr>
                 <tr class="doc">
@@ -450,6 +474,15 @@
                     <td class="typedef_name identifier">uivec3</td>
                     <td class="typedef_decl keyword">type</td>
                     <td class="typedef_type"><span class="type"><span class="name ">Vector&lt;3, unsigned int&gt;</span></span>
+                    </td>
+                </tr>
+                <tr class="doc">
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="typedef" id="ponos::uivec4">
+                    <td class="typedef_name identifier">uivec4</td>
+                    <td class="typedef_decl keyword">type</td>
+                    <td class="typedef_type"><span class="type"><span class="name ">Vector&lt;4, unsigned int&gt;</span></span>
                     </td>
                 </tr>
                 <tr class="doc">
@@ -1640,6 +1673,44 @@
                 </table>
             </div>
             <div class="function">
+                <div class="declaration" id="ponos::ceil">
+                    <div class="return_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">ceil</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> round</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::ceil::v">
+                            <td>v</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> vector</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="ponos::ceil2Int">
                     <div class="return_type"><span class="type"><span class="name builtin">int</span></span>
                     </div>
@@ -2351,6 +2422,44 @@
                         <tr id="ponos::dot::b">
                             <td>b</td>
                             <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::floor">
+                    <div class="return_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">floor</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Vector3.html#ponos.Vector3">Vector3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">v</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> round</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::floor::v">
+                            <td>v</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> vector</p>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="return">
                             <td class="keyword">return</td>
@@ -3124,6 +3233,86 @@
                                     <p>receives the third axis</p>
                                 </div>
                             </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::max">
+                    <div class="return_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">max</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::max::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::max::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::min">
+                    <div class="return_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">min</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                                </td>
+                                <td class="argument_name">a,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name ">Vector&lt;3, int&gt;</span></span>
+                                </td>
+                                <td class="argument_name">b</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::min::a">
+                            <td>a</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::min::b">
+                            <td>b</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -4401,6 +4590,48 @@
                         </tr>
                         <tr id="ponos::scale::z">
                             <td>z</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="ponos::sharpen">
+                    <div class="return_type"><span class="type"><span class="name builtin">float</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">sharpen</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">r2,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">h</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="ponos::sharpen::r2">
+                            <td>r2</td>
+                            <td></td>
+                        </tr>
+                        <tr id="ponos::sharpen::h">
+                            <td>h</td>
                             <td></td>
                         </tr>
                         <tr class="return">

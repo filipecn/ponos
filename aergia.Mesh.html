@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mesh</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Class</span><span>aergia::Mesh</span></span>
+                </div><a href="aergia.html"><span class="arrow">↵</span> <span>aergia</span></a></div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Constructors</div>
+            <ul>
+                <li><a href="#aergia.Mesh.Mesh">Mesh<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Destructors</div>
+            <ul>
+                <li><a href="#aergia.Mesh.~Mesh">~Mesh<span class="counter"></span></a><span class="virtual">v</span></li>
+            </ul>
+            <div class="subtitle">Member Functions</div>
+            <ul>
+                <li><a href="#aergia.Mesh.getBBox">getBBox<span class="counter"></span></a></li>
+                <li><a href="#aergia.Mesh.getMesh">getMesh<span class="counter"></span></a></li>
+                <li><a href="#aergia.Mesh.getTransform">getTransform<span class="counter"></span></a></li>
+                <li><a href="#aergia.Mesh.intersect">intersect<span class="counter"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="aergia::Mesh"><span><span class="keyword">Class</span><span>aergia::Mesh</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p>The pair of a Mesh and a transform.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="constructors">Constructors</h2>
+        <div class="constructors">
+            <div class="function">
+                <div class="declaration" id="aergia::Mesh::Mesh">
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">Mesh</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">RawMesh</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">t</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> Constructor.</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Mesh::Mesh::m">
+                            <td>m</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong></p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="aergia::Mesh::Mesh::t">
+                            <td>t</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
+        <div class="destructors">
+            <div class="function">
+                <div class="declaration" id="aergia::Mesh::~Mesh">
+                    <ul class="specifiers">
+                        <li class="virtual">virtual</li>
+                    </ul>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">~Mesh</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments"></table>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
+        <div class="member_functions">
+            <div class="function">
+                <div class="declaration" id="aergia::Mesh::getBBox">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.BBox.html#ponos.BBox">ponos::BBox</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                        </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getBBox</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Mesh::getMesh">
+                    <div class="return_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">RawMesh</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                        </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getMesh</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Mesh::getTransform">
+                    <div class="return_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                        </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getTransform</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="aergia::Mesh::intersect">
+                    <div class="return_type"><span class="type"><span class="name builtin">bool</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">intersect</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Point3.html#ponos.Point3">ponos::Point3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">p</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="aergia::Mesh::intersect::p">
+                            <td>p</td>
+                            <td></td>
+                        </tr>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- vi:ts=2:et -->

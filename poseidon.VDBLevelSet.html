@@ -21,7 +21,11 @@
             </ul>
             <div class="subtitle">Constructors</div>
             <ul>
-                <li><a href="#poseidon.VDBLevelSet.VDBLevelSet">VDBLevelSet<span class="counter"></span></a></li>
+                <li><a href="#poseidon.VDBLevelSet.VDBLevelSet">VDBLevelSet<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> Constructor</p>
+                    </div>
+                </li>
             </ul>
             <div class="subtitle">Destructors</div>
             <ul>
@@ -29,6 +33,13 @@
             </ul>
             <div class="subtitle">Member Functions</div>
             <ul>
+                <li><a href="#poseidon.VDBLevelSet.copy">copy<span class="counter"></span></a></li>
+                <li><a href="#poseidon.VDBLevelSet.getVDBGrid">getVDBGrid<span class="counter"></span></a></li>
+                <li><a href="#poseidon.VDBLevelSet.merge">merge<span class="counter"></span></a>
+                    <div class="brief">
+                        <p> merge</p>
+                    </div>
+                </li>
                 <li><a href="#poseidon.VDBLevelSet.operator()">operator()<span class="counter"></span></a><span class="virtual">v</span>
                     <div class="brief">
                         <p>@inherit</p>
@@ -59,6 +70,61 @@
     </div>
     <div id="cldoc_content">
         <h1 id="poseidon::VDBLevelSet"><span><span class="keyword">Class</span><span>poseidon::VDBLevelSet</span></span></h1>
+        <div class="description">
+            <div class="doc"><pre><code><span class="hljs-keyword">class</span> ParticleList {
+    <span class="hljs-keyword">public</span>:
+        ParticleList(){ }
+
+        ParticleList(<span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&amp;lt;Particle\*&amp;gt; &amp;plist)
+        : particles(plist) {}
+
+        ~ParticleList(){ }
+
+        <span class="hljs-keyword">int</span> size() <span class="hljs-keyword">const</span> {
+            <span class="hljs-keyword">return</span> particles.size();
+        }
+
+        <span class="hljs-keyword">void</span> getPos(size_t n, openvdb::Vec3R&amp; pos) <span class="hljs-keyword">const</span> {
+            pos = openvdb::Vec3f(
+                    particles[n]-&gt;position.x,
+                    particles[n]-&gt;position.y,
+                    particles[n]-&gt;position.z);
+        }
+
+        <span class="hljs-keyword">void</span> getPosRad(size_t n, openvdb::Vec3R&amp; pos, openvdb::Real&amp; rad) <span class="hljs-keyword">const</span> {
+            pos = openvdb::Vec3f(
+                    particles[n]-&gt;position.x,
+                    particles[n]-&gt;position.y,
+                    particles[n]-&gt;position.z);
+            rad = particles[n]-&gt;density;
+            rad = <span class="hljs-number">.5</span>f;
+            <span class="hljs-keyword">if</span>(particles[n]-&gt;invalid){
+                rad = <span class="hljs-number">0.0f</span>;
+            }
+        }
+
+        <span class="hljs-keyword">void</span> getPosRadVel(size_t n, openvdb::Vec3R&amp; pos, openvdb::Real&amp; rad,
+                openvdb::Vec3R&amp; vel) <span class="hljs-keyword">const</span> {
+            pos = openvdb::Vec3f(
+                    particles[n]-&gt;position.x,
+                    particles[n]-&gt;position.y,
+                    particles[n]-&gt;position.z);
+            vel = openvdb::Vec3f(
+                    particles[n]-&gt;velocity.x,
+                    particles[n]-&gt;velocity.y,
+                    particles[n]-&gt;velocity.z);
+            rad = particles[n]-&gt;density;
+            rad = <span class="hljs-number">.5</span>f;
+            <span class="hljs-keyword">if</span>(particles[n]-&gt;invalid) {
+                rad = <span class="hljs-number">0.0f</span>;
+            }
+            <span class="hljs-keyword">void</span> getAtt(size_t n, openvdb::Index32&amp; att) <span class="hljs-keyword">const</span> { att = n; }
+
+            <span class="hljs-keyword">private</span>:
+            <span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&amp;lt;Particle\*&amp;gt; &amp;particles;
+        };</code></pre>
+            </div>
+        </div>
         <h2 data-cldoc-dynamic="1" id="bases">Bases</h2>
         <table class="bases">
             <tbody>
@@ -79,13 +145,40 @@
                             <tr>
                                 <td class="identifier">VDBLevelSet</td>
                                 <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="aergia.RawMesh.html#aergia.RawMesh">aergia::RawMesh</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">m,</td>
+                            </tr>
+                            <tr>
                                 <td colspan="2"></td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="ponos.Transform.html#ponos.Transform">ponos::Transform</a></span></span>
+                                </td>
+                                <td class="argument_name">t</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <table class="arguments"></table>
+                <div class="brief">
+                    <p> Constructor</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBLevelSet::VDBLevelSet::m">
+                            <td>m</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[in]</strong> mesh create a level set from a mesh</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="poseidon::VDBLevelSet::VDBLevelSet::t">
+                            <td>t</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <h2 data-cldoc-dynamic="1" id="destructors">Destructors</h2>
@@ -112,6 +205,94 @@
         <h2 data-cldoc-dynamic="1" id="member functions">Member Functions</h2>
         <div class="member_functions">
             <div class="function">
+                <div class="declaration" id="poseidon::VDBLevelSet::copy">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">copy</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#poseidon.VDBLevelSet">VDBLevelSet</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ls</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBLevelSet::copy::ls">
+                            <td>ls</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBLevelSet::getVDBGrid">
+                    <div class="return_type"><span class="type"><span class="name ">openvdb::v3_2_0::Grid&lt;openvdb::v3_2_0::tree::Tree&lt;openvdb::v3_2_0::tree::RootNode&lt;openvdb::v3_2_0::tree::InternalNode&lt;openvdb::v3_2_0::tree::InternalNode&lt;openvdb::v3_2_0::tree::LeafNode&lt;float, 3&gt;, 4&gt;, 5&gt; &gt; &gt; &gt;::Ptr</span>
+                        <span
+                            class="qualifier"> <span class="keyword">const</span> &amp;</span>
+                            </span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">getVDBGrid</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="poseidon::VDBLevelSet::merge">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span>
+                    </div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">merge</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#poseidon.VDBLevelSet">VDBLevelSet</a></span><span class="qualifier">  <span class="keyword">const</span> *</span>
+                                    </span>
+                                </td>
+                                <td class="argument_name">ls</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p> merge</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="poseidon::VDBLevelSet::merge::ls">
+                            <td>ls</td>
+                            <td>
+                                <div class="doc">
+                                    <p><strong>[out]</strong></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
                 <div class="declaration" id="poseidon::VDBLevelSet::operator()">
                     <ul class="specifiers">
                         <li class="virtual">virtual</li>
@@ -127,7 +308,7 @@
                                 <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">i</td>
+                                <td class="argument_name">ijk</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
@@ -138,8 +319,8 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="poseidon::VDBLevelSet::operator()::i">
-                            <td>i</td>
+                        <tr id="poseidon::VDBLevelSet::operator()::ijk">
+                            <td>ijk</td>
                             <td></td>
                         </tr>
                         <tr class="return">
@@ -162,21 +343,21 @@
                             <tr>
                                 <td class="identifier">operator()</td>
                                 <td class="open_paren">(</td>
-                                <td class="argument_type"><span class="type"><span class="name ">uint</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
                                 <td class="argument_name">i,</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td class="argument_type"><span class="type"><span class="name ">uint</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
                                 <td class="argument_name">j,</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td class="argument_type"><span class="type"><span class="name ">uint</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
+                                <td class="argument_type"><span class="type"><span class="name builtin">int</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
                                 <td class="argument_name">k</td>
@@ -225,7 +406,7 @@
                                 <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.vec3">ponos::vec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">i</td>
+                                <td class="argument_name">xyz</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
@@ -236,8 +417,8 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="poseidon::VDBLevelSet::operator()::i">
-                            <td>i</td>
+                        <tr id="poseidon::VDBLevelSet::operator()::xyz">
+                            <td>xyz</td>
                             <td></td>
                         </tr>
                         <tr class="return">
@@ -263,21 +444,21 @@
                                 <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">i,</td>
+                                <td class="argument_name">x,</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
                                 <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">j,</td>
+                                <td class="argument_name">y,</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
                                 <td class="argument_type"><span class="type"><span class="name builtin">float</span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">k</td>
+                                <td class="argument_name">z</td>
                                 <td class="close_paren">)</td>
                             </tr>
                         </tbody>
@@ -288,16 +469,16 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="poseidon::VDBLevelSet::operator()::i">
-                            <td>i</td>
+                        <tr id="poseidon::VDBLevelSet::operator()::x">
+                            <td>x</td>
                             <td></td>
                         </tr>
-                        <tr id="poseidon::VDBLevelSet::operator()::j">
-                            <td>j</td>
+                        <tr id="poseidon::VDBLevelSet::operator()::y">
+                            <td>y</td>
                             <td></td>
                         </tr>
-                        <tr id="poseidon::VDBLevelSet::operator()::k">
-                            <td>k</td>
+                        <tr id="poseidon::VDBLevelSet::operator()::z">
+                            <td>z</td>
                             <td></td>
                         </tr>
                         <tr class="return">
@@ -323,7 +504,7 @@
                                 <td class="argument_type"><span class="type"><span class="name "><a href="ponos.html#ponos.ivec3">ponos::ivec3</a></span><span class="qualifier">  <span class="keyword">const</span> &amp;</span>
                                     </span>
                                 </td>
-                                <td class="argument_name">i,</td>
+                                <td class="argument_name">ijk,</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
@@ -341,8 +522,8 @@
                 </div>
                 <table class="arguments">
                     <tbody>
-                        <tr id="poseidon::VDBLevelSet::set::i">
-                            <td>i</td>
+                        <tr id="poseidon::VDBLevelSet::set::ijk">
+                            <td>ijk</td>
                             <td></td>
                         </tr>
                         <tr id="poseidon::VDBLevelSet::set::v">
