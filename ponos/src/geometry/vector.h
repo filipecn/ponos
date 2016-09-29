@@ -106,6 +106,18 @@ namespace ponos {
 			bool operator==(const Vector3& v) {
 				return IS_EQUAL(x, v.x) && IS_EQUAL(y, v.y) && IS_EQUAL(z, v.z);
 			}
+			bool operator<(const Vector3& v) {
+				if(x < v.x) return true;
+				if(y < v.y) return true;
+				if(z < v.z) return true;
+				return false;
+			}
+			bool operator>(const Vector3& v) {
+				if(x > v.x) return true;
+				if(y > v.y) return true;
+				if(z > v.z) return true;
+				return false;
+			}
 			// access
 			float operator[](int i) const {
 				ASSERT(i >= 0 && i <= 2);
@@ -285,6 +297,18 @@ namespace ponos {
 					memset(v, 0, D * sizeof(T));
 				}
 
+				Vector(size_t n, const T *t)
+					: Vector() {
+						for(size_t i = 0; i < D && i < n; i++)
+							v[i] = t[i];
+					}
+
+				Vector(const T& t)
+					: Vector() {
+						for(size_t i = 0; i < D; i++)
+							v[i] = t;
+					}
+
 				Vector(const T& x, const T& y)
 					: Vector() {
 						if(size > 1) {
@@ -392,6 +416,22 @@ namespace ponos {
 	typedef Vector<2, uint> uivec2;
 	typedef Vector<3, int> ivec3;
 	typedef Vector<3, uint> uivec3;
+	typedef Vector<4, int> ivec4;
+	typedef Vector<4, uint> uivec4;
+
+		/* round
+		 * @v **[in]** vector
+		 * @return a vector with ceil applied to all components
+		 */
+		Vector<3, int> ceil(const Vector3 &v);
+		/* round
+		 * @v **[in]** vector
+		 * @return a vector with floor applied to all components
+		 */
+		Vector<3, int> floor(const Vector3 &v);
+
+		Vector<3, int> min(Vector<3, int> a, Vector<3, int> b);
+		Vector<3, int> max(Vector<3, int> a, Vector<3, int> b);
 
 } // ponos namespace
 

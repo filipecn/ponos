@@ -8,6 +8,10 @@
 	for(ij[0] = 0; ij[0] < (D[0]); ++ij[0]) \
 	for(ij[1] = 0; ij[1] < (D[1]); ++ij[1])
 
+#define FOR_INDICES0_E2D(D, ij) \
+	for(ij[0] = 0; ij[0] <= (D[0]); ++ij[0]) \
+	for(ij[1] = 0; ij[1] <= (D[1]); ++ij[1])
+
 #define FOR_INDICES(x0, x1, y0, y1, z0, z1, ijk) \
 	for(ijk[0] = (x0); ijk[0] < (x1); ++ijk[0]) \
 	for(ijk[1] = (y0); ijk[1] < (y1); ++ijk[1]) \

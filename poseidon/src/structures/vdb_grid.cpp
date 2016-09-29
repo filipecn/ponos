@@ -27,7 +27,7 @@ namespace poseidon {
 		return accessor.getValue(ijk);
 	}
 
-	float VDBGrid::operator()(const uint& i, const uint&j, const uint& k) const {
+	float VDBGrid::operator()(const int& i, const int&j, const int& k) const {
 		typename openvdb::FloatGrid::Accessor accessor = grid->getAccessor();
 		openvdb::Coord ijk(i, j, k);
 		return accessor.getValue(ijk);

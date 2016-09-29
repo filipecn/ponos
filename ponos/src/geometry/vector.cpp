@@ -65,4 +65,32 @@ std::ostream& operator<<(std::ostream& os, const Vector4& v) {
 	return os;
 }
 
+Vector<3, int> ceil(const Vector3 &v) {
+	return Vector<3, int>(
+			static_cast<int>(v[0] + 0.5f),
+			static_cast<int>(v[1] + 0.5f),
+			static_cast<int>(v[2] + 0.5f));
+}
+
+Vector<3, int> floor(const Vector3 &v) {
+	return Vector<3, int>(
+			static_cast<int>(v[0]),
+			static_cast<int>(v[1]),
+			static_cast<int>(v[2]));
+}
+
+Vector<3, int> min(Vector<3, int> a, Vector<3, int> b) {
+	return Vector<3, int>(
+			std::min(a[0], b[0]),
+			std::min(a[1], b[1]),
+			std::min(a[2], b[2]));
+}
+
+Vector<3, int> max(Vector<3, int> a, Vector<3, int> b) {
+	return Vector<3, int>(
+			std::max(a[0], b[0]),
+			std::max(a[1], b[1]),
+			std::max(a[2], b[2]));
+}
+
 } // ponos namespace

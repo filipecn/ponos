@@ -122,8 +122,20 @@ namespace aergia {
 		return 0;
 	}
 
+	bool initGLEW(){
+		glewExperimental = GL_TRUE;
+		GLenum err = glewInit();
+		if (GLEW_OK != err) {
+			fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+			return false;
+		}
+		fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+		return true;
+	}
+
 	void getGlVersion(int *major, int *minor){
 		const char* str = (const char*)glGetString( GL_VERSION );
+		std::cout << ">>>>>>>>>>> " << str << std::endl;
 		if( (str == NULL) || (sscanf(str, "%d.%d", major, minor ) != 2) )
 		{
 			*major = *minor = 0;

@@ -9,7 +9,7 @@
 namespace aergia {
 
 	/* cartesian grid
-	 * Represents a cartesian grid.
+	 * Represents the main planes of a cartesian grid.
 	 */
 	class CartesianGrid : public SceneObject  {
 		public:

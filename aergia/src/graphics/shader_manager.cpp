@@ -4,19 +4,7 @@ namespace aergia {
 
 	ShaderManager ShaderManager::instance_;
 
-	ShaderManager::ShaderManager() {
-		int gl_major, gl_minor;
-		// Initialize the "OpenGL Extension Wrangler" library
-		glewInit();
-		// Make sure that OpenGL 2.0 is supported by the driver
-		getGlVersion(&gl_major, &gl_minor);
-		printf("GL_VERSION major=%d minor=%d\n", gl_major, gl_minor);
-		if (gl_major < 2) {
-			printf("GL_VERSION major=%d minor=%d\n", gl_major, gl_minor);
-			printf("Support for OpenGL 2.0 is required for this demo...exiting\n");
-			exit(1);
-		}
-	}
+	ShaderManager::ShaderManager() {}
 
 	int ShaderManager::loadFromFiles(const char *fl...) {
 		va_list args;
@@ -49,8 +37,9 @@ namespace aergia {
 		return static_cast<int>(program);
 	}
 
-	void ShaderManager::useShader(GLuint program){
+	bool ShaderManager::useShader(GLuint program){
 		glUseProgram(program);
+		return true;
 	}
 
 	GLuint ShaderManager::createProgram(const GLchar *vertexShaderSource, const GLchar *fragmentShaderSource){

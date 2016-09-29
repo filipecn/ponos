@@ -20,10 +20,10 @@ namespace ponos {
 		size_t first = 0;
 		for(size_t i = 0; i < num_threads - 1; i++) {
 			size_t last = std::min(first + block_size, static_cast<size_t>(length - 1));
-			threads[i] = std::thread(f, first, last);
+			threads[i] = std::thread(f, start + first, start + last);
 			first = last + 1;
 		}
-		f(first, end - 1);
+		f(start + first, end - 1);
 		std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 	}
 

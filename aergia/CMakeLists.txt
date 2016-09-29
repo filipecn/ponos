@@ -8,15 +8,19 @@ set(HEADERS
 	src/helpers/camera_model.h
 	src/helpers/cartesian_grid.h
 	src/helpers/geometry_drawers.h
+	src/io/buffer.h
 	src/io/graphics_display.h
 	src/io/utils.h
 	src/io/viewport_display.h
 	src/scene/camera.h
 	src/scene/camera_2d.h
+	src/scene/mesh.h
+	src/scene/mesh_utils.h
 	src/scene/raw_mesh.h
 	src/scene/scene.h
 	src/scene/scene_object.h
 	src/scene/triangle_mesh.h
+	src/scene/wireframe_mesh.h
 	src/ui/app.h
 	src/ui/scene_app.h
 	src/ui/trackball.h
@@ -37,10 +41,15 @@ set(SOURCES
 	src/io/viewport_display.cpp
 	src/scene/camera.cpp
 	src/scene/camera_2d.cpp
+	src/scene/mesh.cpp
+	src/scene/mesh_utils.cpp
+	src/scene/raw_mesh.cpp
 	src/scene/triangle_mesh.cpp
+	src/scene/wireframe_mesh.cpp
 	src/ui/app.cpp
 	src/ui/trackball_interface.cpp
 	src/utils/open_gl.cpp
+	src/aergia.cpp
 	)
 
 if(WIN32)

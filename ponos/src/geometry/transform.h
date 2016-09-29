@@ -148,6 +148,20 @@ namespace ponos {
 		bool isIdentity() {
 			return m.isIdentity();
 		}
+    void applyToPoint(const float *p, float *r) const {
+      float x = p[0], y = p[1], z = p[2];
+      r[0] = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2] * z + m.m[0][3];
+      r[1] = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z + m.m[1][3];
+      r[2] = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z + m.m[2][3];
+      float wp = m.m[3][0] * x + m.m[3][1] * y + m.m[3][2] * z + m.m[3][3];
+      if (wp != 1.f) {
+				float invwp = 1.f / wp;
+				r[0] *= invwp;
+				r[1] *= invwp;
+				r[2] *= invwp;
+			}
+    }
+
   private:
     Matrix4x4 m, m_inv;
   };

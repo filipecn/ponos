@@ -1,5 +1,7 @@
 #include "io/graphics_display.h"
 
+#include "aergia.h"
+
 namespace aergia {
 
 	GraphicsDisplay GraphicsDisplay::instance_;
@@ -44,6 +46,7 @@ namespace aergia {
 		glfwSetCursorPosCallback (window, pos_callback);
 		glfwSetScrollCallback(window, scroll_callback);
 		glfwSetWindowSizeCallback(window, resize_callback);
+		initialize();
 		return true;
 	}
 

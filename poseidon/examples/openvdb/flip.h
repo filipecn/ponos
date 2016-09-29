@@ -2,9 +2,11 @@
 #define POSEIDON_ALGORITHMS_FLIP_H
 
 #include "elements/particle.h"
+#include "structures/vdb_level_set.h"
 #include "structures/vdb_mac_grid.h"
 #include "structures/vdb_particle_grid.h"
 
+#include <aergia.h>
 #include <ponos.h>
 
 namespace poseidon {
@@ -12,11 +14,55 @@ namespace poseidon {
 	enum class FLIPCellType {FLUID, AIR, SOLID};
 
 	struct FLIPParticle : public Particle {
-		ponos::Point3 position;
-		ponos::vec3 velocity;
 		ponos::Normal normal;
-		float density;
-		float mass;
+		int meshId;
+
+		ponos::Point3 p_copy;
+		ponos::vec3 v_copy;
+	};
+
+
+	/* simulation scene
+	 * Describes the scene with particles and solids.
+	 */
+	class FLIPScene {
+		public:
+			FLIPScene() {}
+			FLIPScene(const char *filename);
+			~FLIPScene();
+
+			void load(const char *filename);
+			void addForce(const ponos::vec3 &f);
+			void generateParticles(int frame, VDBParticleGrid *pg);
+
+			const std::vector<aergia::Mesh*>& getLiquidsGeometry() const;
+			const std::vector<aergia::Mesh*>& getSolidsGeometry() const;
+			const std::vector<aergia::Mesh*>& getStaticSolidsGeometry() const;
+
+			const std::vector<FLIPParticle*>& getLiquidParticles() const;
+
+			const std::vector<ponos::vec3>& getForces(int f) const;
+
+			void buildStaticSolidLevelSet();
+			void buildSolidLevelSet();
+
+			bool isPointInsideSolid(const ponos::Point3 &p, int f, size_t *id) const;
+
+		private:
+			// Level sets
+			std::shared_ptr<VDBLevelSet> liquidLevelSet;
+			std::shared_ptr<VDBLevelSet> solidLevelSet;
+			std::shared_ptr<VDBLevelSet> staticSolidLevelSet;
+			// external forces
+			std::vector<ponos::vec3> forces;
+			// meshes
+			std::vector<aergia::Mesh*> liquidsGeometry;
+			std::vector<aergia::Mesh*> staticSolidsGeometry;
+			std::vector<aergia::Mesh*> solidsGeometry;
+			// particles
+			std::vector<FLIPParticle*> liquidParticles;
+			std::vector<FLIPParticle*> solidParticles;
+			std::vector<FLIPParticle*> staticSolidParticles;
 	};
 
 	/* simulator
@@ -24,6 +70,7 @@ namespace poseidon {
 	 */
 	class FLIP {
 		public:
+			virtual ~FLIP();
 			/* allocation
 			 * Allocate memory for internal structures. Must be called after dimensions are set. (before adding particles if adding manually)
 			 */
@@ -35,7 +82,8 @@ namespace poseidon {
 			 * @return **true** if success
 			 */
 			bool init();
-			virtual ~FLIP();
+			void step();
+
 			// grid size
 			ponos::ivec3 dimensions;
 			// density
@@ -55,11 +103,18 @@ namespace poseidon {
 			FLIPCellType ***cell;
 			// particle grid
 			VDBParticleGrid *particleGrid;
+			// scene
+			FLIPScene scene;
+
+			void markCells();
+			void storeParticleVelocities();
+			void applyForces();
+			void updateMACGrid();
+			void enforceBoundaries();
+			void project();
+			float maxDensity;
 
 		private:
-			void markCells();
-			float maxDensity;
-			std::vector<FLIPParticle> particles;
 			VDBMacGrid *grid[2];
 	};
 

@@ -23,6 +23,7 @@ namespace aergia {
 #define CHECK_FRAMEBUFFER
 #endif
 
+	bool initGLEW();
 	/* info
 	 * @shader **[in]** shader id
 	 * Print out the information log for a shader object

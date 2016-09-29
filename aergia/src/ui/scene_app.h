@@ -19,7 +19,9 @@ namespace aergia {
 				 * @defaultViewport **[in | optional]** if true, creates a viewport with the same size of the window
 				 */
 				explicit SceneApp(uint w, uint h, const char* t, bool defaultViewport = true)
-					: App(w, h, t, defaultViewport) {}
+					: App(w, h, t, defaultViewport) {
+						selectedObject = nullptr;
+					}
 				virtual ~SceneApp() {}
 
 				Scene<StructureType> scene;

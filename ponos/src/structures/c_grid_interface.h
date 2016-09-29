@@ -36,7 +36,7 @@ namespace ponos {
 				 * @k **[in]** Z coordinate (grid space)
 				 * @return value at coordinate **(i, j, k)**
 				 */
-				virtual T operator()(const uint& i, const uint&j, const uint& k) const = 0;
+				virtual T operator()(const int& i, const int&j, const int& k) const = 0;
 				// virtual T& operator()(const uint& i, const uint&j, const uint& k) = 0;
 				/* get
 				 * @i **[in]** coordinate (grid space)

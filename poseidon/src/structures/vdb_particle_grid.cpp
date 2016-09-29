@@ -10,7 +10,7 @@ using namespace openvdb::tools;
 namespace poseidon {
 
 	VDBParticleGrid::VDBParticleGrid(const ponos::ivec3& d, const float& s, const ponos::vec3& o)
-		: dimensions(d), scale(s), updated(false) {
+		: dimensions(d), updated(false) {
 			// initialize libraries
 			openvdb::initialize();
 			openvdb::points::initialize();
@@ -25,11 +25,12 @@ namespace poseidon {
 			attributes.push_back(AttributeSet::Descriptor::NameAndType("I", IdAttribute::attributeType()));
 			// Create an AttributeSet Descriptor for this list
 			descriptor = AttributeSet::Descriptor::create(attributes);
-			leaf = nullptr;
 
-			transform = openvdb::math::Transform::createLinearTransform(scale);
-			toWorld = ponos::scale(scale, scale, scale);
+			transform = openvdb::math::Transform::createLinearTransform(s);
+			toWorld = ponos::scale(s, s, s);
 			toGrid = ponos::inverse(toWorld);
+			voxelSize = s;
+			pl = nullptr;
 		}
 
 	void VDBParticleGrid::init() {
@@ -39,7 +40,8 @@ namespace poseidon {
 		const PointAttributeVector<openvdb::Vec3f> pointList(positions);
 		pointIndexGrid = createPointIndexGrid<PointIndexGrid>(pointList, *transform);
 		// Create the PointDataGrid, position attribute is mandatory
-		pointDataGrid = createPointDataGrid<PointDataGrid>(*pointIndexGrid, pointList, TypedAttributeArray<openvdb::Vec3f>::attributeType(), *transform);
+		pointDataGrid = createPointDataGrid<PointDataGrid>(*pointIndexGrid, pointList,
+				TypedAttributeArray<openvdb::Vec3f>::attributeType(), *transform);
 
 		// Add a new velocity attribute
 		AttributeSet::Util::NameAndType velocityAttribute("V", TypedAttributeArray<openvdb::Vec3f>::attributeType());
@@ -59,8 +61,9 @@ namespace poseidon {
 		const PointAttributeVector<float> densityList(densities);
 		populateAttribute(pointDataGrid->tree(), pointIndexGrid->tree(), "D", densityList);
 
-		leaf = pointDataGrid->tree().touchLeaf(openvdb::Coord(0, 0, 0));
-
+		pl = new PointList(particles);
+		pointGridPtr = openvdb::tools::createPointIndexGrid<PointIndexGrid>(*pl, *transform);
+		filter = new openvdb::tools::PointIndexFilter<PointList>(*pl, pointGridPtr->tree(), pointGridPtr->transform());
 		updated = true;
 	}
 
@@ -69,10 +72,11 @@ namespace poseidon {
 		if(!(i >= ponos::ivec3()) || !(i < dimensions))
 			return;
 		ids.emplace_back(positions.size());
-		//positions.emplace_back(Vec3f(p.x, p.y, p.z));
-		//velocities.emplace_back(Vec3f(v.x, v.y, v.z));
-		//densities.emplace_back(0.f);
-		//particles.emplace_back(p);
+		positions.emplace_back(Vec3f(p->position.x, p->position.y, p->position.z));
+		velocities.emplace_back(Vec3f(p->velocity.x, p->velocity.y, p->velocity.z));
+		densities.emplace_back(p->density);
+		particles.emplace_back(p);
+		updated = false;
 	}
 
 	void VDBParticleGrid::addParticle(const ponos::Point3& p, const ponos::vec3& v) {
@@ -87,8 +91,8 @@ namespace poseidon {
 	}
 
 	void VDBParticleGrid::addParticle(const ponos::ivec3& c, const ponos::Point3& p, const ponos::vec3& v) {
-		ponos::Point3 tp = (p + ponos::vec3(c[0], c[1], c[2])) * scale;
-		addParticle(tp, v);
+		ponos::Point3 tp = p + ponos::vec3(c[0], c[1], c[2]);
+		addParticle(toWorld(tp), v);
 	}
 
 	void VDBParticleGrid::setParticle(int id, const ponos::Point3& p, const ponos::vec3& v) {
@@ -104,21 +108,17 @@ namespace poseidon {
 	}
 
 	int VDBParticleGrid::particleCount(const ponos::ivec3& ijk) {
-		if(!updated)
-			init();
 		const openvdb::Coord _ijk(ijk[0], ijk[1], ijk[2]);
+		openvdb::tools::PointDataTree::LeafNodeType* leaf = pointDataGrid->tree().touchLeaf(_ijk);
 		IndexIter indexIter = leaf->beginIndex(_ijk);
 		return iterCount(indexIter);
 	}
 
-	void VDBParticleGrid::iterateNeighbours(ponos::BBox bbox, std::function<void(const Particle& p)> f) {
-		if(!updated)
-			init();
-	}
+	void VDBParticleGrid::iterateNeighbours(ponos::BBox bbox, std::function<void(const Particle& p)> f) {}
+
+	void VDBParticleGrid::iterateNeighbours(ponos::Point3 center, float radius, std::function<void(const Particle& p)> f) {}
 
 	void VDBParticleGrid::iterateCellNeighbours(const ponos::ivec3& c, const ponos::ivec3& d, std::function<void(const size_t& id)> f) {
-		if(!updated)
-			init();
 		ponos::ivec3 pMin(0, 0, 0);
 		ponos::ivec3 coord;
 		int& x = coord[0], &y = coord[1], &z = coord[2];
@@ -133,14 +133,13 @@ namespace poseidon {
 	}
 
 	void VDBParticleGrid::iterateCell(const ponos::ivec3& c, const std::function<void(const size_t& id)>& f) {
-		if(!updated)
-			init();
+		// Create a co-ordinate to perform the look-up and voxel position in index space
+		const openvdb::Coord ijk(c[0], c[1], c[2]);
+		openvdb::tools::PointDataTree::LeafNodeType* leaf = pointDataGrid->tree().touchLeaf(ijk);
+
 		// Retrieve a read-only attribute handle for position
 		AttributeHandle<openvdb::Int32>::Ptr attributeHandle =
 			AttributeHandle<openvdb::Int32>::create(leaf->attributeArray("id"));
-
-		// Create a co-ordinate to perform the look-up and voxel position in index space
-		const openvdb::Coord ijk(c[0], c[1], c[2]);
 
 		// Create an IndexIter for accessing the co-ordinate
 		IndexIter indexIter = leaf->beginIndex(ijk);
@@ -152,8 +151,6 @@ namespace poseidon {
 	}
 
 	int VDBParticleGrid::particleCount() {
-		if(!updated)
-			init();
 		if(pointDataGrid == nullptr)
 			return 0;
 		return pointCount(pointDataGrid->tree());
@@ -181,7 +178,7 @@ namespace poseidon {
 	}
 
 	ponos::Point3 VDBParticleGrid::indexToWorld(const ponos::ivec3& i) {
-		return ponos::Point3(i[0], i[1], i[2]) * scale;
+		return toWorld(ponos::Point3(i[0], i[1], i[2]));
 	}
 
 	void VDBParticleGrid::cellVertices(const ponos::ivec3& ijk, std::vector<ponos::Point3>& v) {
@@ -190,12 +187,23 @@ namespace poseidon {
 		for(float x = -1.f; x <= 1.f; x += 1.f)
 			for(float y = -1.f; y <= 1.f; y += 1.f)
 				for(float z = -1.f; z <= 1.f; z += 1.f)
-					v.push_back(wp + ponos::vec3(x, y, z) * scale * 0.5f);
+					v.push_back(wp + toWorld(ponos::vec3(x, y, z) * 0.5f));
 	}
 
 	float VDBParticleGrid::computeDensity(float d, float md) {
-		if(!updated)
-			init();
+		const double radius = 1.5 * voxelSize;
+
+		WeightedAverageAccumulator<double> accumulator(particles, radius, ParticleAttribute::DENSITY);
+
+		double sum = 0.f;
+
+		for(size_t n = 0, N = particles.size(); n < N; n++) {
+			accumulator.reset();
+			openvdb::Vec3d p(particles[n]->position.x, particles[n]->position.y, particles[n]->position.z);
+			filter->searchAndApply(p, radius, accumulator);
+			sum += accumulator.result();
+		}
+
 		float maxd = dimensions.max();
 		ponos::parallel_for(0, positions.size(), [this, maxd, d, md](size_t f, size_t l) {
 				for(size_t id = f; id <= l; id++) {
@@ -203,8 +211,8 @@ namespace poseidon {
 				float sum = 0.f;
 				iterateCellNeighbours(cell, ponos::ivec3(1, 1, 1), [this, &sum, d, id, maxd](const size_t& i) {
 						float distance = ponos::distance2(
-									ponos::Point3(positions[id].asPointer()),
-									ponos::Point3(positions[i].asPointer()));
+								ponos::Point3(positions[id].asPointer()),
+								ponos::Point3(positions[i].asPointer()));
 						float weight = particleMass * ponos::smooth(distance, 4.f * d / maxd);
 						sum += weight;
 						});
@@ -213,6 +221,32 @@ namespace poseidon {
 				});
 		size_t _md = ponos::parallel_max(0, densities.size(), &densities[0]);
 		return densities[_md];
+	}
+
+	const std::vector<Particle*>& VDBParticleGrid::getParticles() const {
+		return particles;
+	}
+
+	float VDBParticleGrid::gather(ParticleAttribute a, const ponos::Point3& p, float r) const {
+		float radius = r < 0.f ? 1.5f * voxelSize : r;
+		WeightedAverageAccumulator<double> accumulator(particles, radius, a);
+		openvdb::Vec3d vdbp(p.x, p.y, p.z);
+		filter->searchAndApply(vdbp, radius, accumulator);
+		return accumulator.result();
+	}
+
+	float VDBParticleGrid::cellSDF(const ponos::ivec3& ijk, float d, ParticleType t) {
+		float acc = 0.0f;
+		bool solid = false;
+		iterateCell(ijk, [this, &acc, &solid, t] (const size_t& id) {
+				if(particles[id]->type == t)
+					acc += particles[id]->density;
+					else solid = true;
+				});
+		if(solid)
+			return 1.f;
+		float n0 = 1.0f / (d * d * d);
+		return 0.2f * n0 - acc;
 	}
 
 } // poseidon namespace

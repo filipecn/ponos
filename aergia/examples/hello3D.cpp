@@ -23,7 +23,7 @@ void mouse(double x, double y) {
 //	cameraview.camera->setPos(trackball.tb.transform(cameraview.camera->getPos()));
 //	cameraview.camera->setTarget(trackball.tb.transform(cameraview.camera->getTarget()));
 //	trackball.tb.center = cameraview.camera->getTarget();
-	grid.t = trackball.tb.transform * grid.t;
+	grid.transform = trackball.tb.transform * grid.transform;
 }
 
 void renderCameraView() {

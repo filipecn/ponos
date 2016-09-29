@@ -32,6 +32,7 @@ namespace ponos {
 		
 #define IS_EQUAL(A, B) \
 		(fabs((A) - (B)) < 1e-6)
+
 		/* round
 		 * @f **[in]**
 		 * @return ceil of **f**
@@ -183,6 +184,11 @@ namespace ponos {
 			inline float smooth(float a, float b) {
 				return std::max(0.f, 1.f - a / SQR(b));
 			}
+
+			inline float sharpen(const float& r2, const float& h) {
+				return std::max(h * h / std::max(r2, static_cast<float>(1.0e-5)) - 1.0f, 0.0f);
+			}
+
 } // ponos namespace
 
 #endif

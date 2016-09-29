@@ -22,14 +22,15 @@ namespace aergia {
 			/* load
 			 * Creates a shader program from shader files. It expects only
 			 * one file of each type with extensions .fs, .vs and .gs.
-			 * @return program id. **-1** if error occurred.
+			 * @return program id. **-1** if error.
 			 */
 			int loadFromFiles(const char *fl...);
 			/* use program
 			 * @program **[in]** program's id
 			 * Activate program
+			 * @return **true** if success
 			 */
-			void useShader(GLuint program);
+			bool useShader(GLuint program);
 
 		private:
 			ShaderManager();
