@@ -13,6 +13,9 @@ Vector2::Vector2(float _x, float _y)
   ASSERT(!HasNaNs());
 }
 
+Vector2::Vector2(const Point2& p)
+  : x(p.x), y(p.y) {}
+
 bool Vector2::HasNaNs() const {
   return std::isnan(x) || std::isnan(y);
 }

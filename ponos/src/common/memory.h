@@ -9,6 +9,30 @@
 
 namespace ponos {
 
+	template<typename T>
+		class IndexPointerInterface {
+			public:
+				virtual T* get(size_t i) = 0;
+		};
+
+	template<typename T>
+		class IndexPointer {
+			public:
+				IndexPointer()
+					: array(nullptr), i(0) {}
+				IndexPointer(size_t _i, IndexPointerInterface<T>* a)
+					: array(a), i(_i) {}
+				T* operator->() {
+					return array->get(i);
+				}
+				size_t getIndex() {
+					return i;
+				}
+			private:
+				IndexPointerInterface<T>* array;
+				size_t i;
+		};
+
 #ifndef CACHE_L1_LINE_SIZE
 #define CACHE_L1_LINE_SIZE 64
 #endif
@@ -163,6 +187,7 @@ namespace ponos {
 				T *data;
 				uint32 uRes, vRes, uBlocks;
 		};
+
 } // ponos namespace
 
 #endif

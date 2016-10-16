@@ -42,10 +42,10 @@ class GridObject : public aergia::SceneObject {
 				case GridObjectType::W: glColor4f(0,0,1,0.4); break;
 				case GridObjectType::P: glColor4f(1,0,0,0.4); break;
 				case GridObjectType::T: glColor4f(0,0,0,0.1);
-								if(flip.cell[data.coord[0]][data.coord[1]][data.coord[2]] ==
+								if(flip.cell(data.coord[0], data.coord[1], data.coord[2]) ==
 										poseidon::FLIPCellType::FLUID)
 																glColor4f(0,0,1,0.9);
-								else if(flip.cell[data.coord[0]][data.coord[1]][data.coord[2]] ==
+								else if(flip.cell(data.coord[0], data.coord[1], data.coord[2]) ==
 										poseidon::FLIPCellType::SOLID)
 																glColor4f(1,0,0,0.9);
 								break;

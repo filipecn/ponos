@@ -1,6 +1,7 @@
 #ifndef PONOS_STRUCTURES_REGULAR_GRID_H
 #define PONOS_STRUCTURES_REGULAR_GRID_H
 
+#include "common/macros.h"
 #include "geometry/vector.h"
 #include "log/debug.h"
 
@@ -21,16 +22,66 @@ namespace ponos {
 				 * @d **[in]** dimensions
 				 * @b **[in]** background (default value)
 				 */
-				RegularGrid(const ivec3& d, const T& b);
-				~RegularGrid();
-				void set(const ivec3& i, const T& v) {}
-				T operator()(const ivec3& i) const {}
-				T& operator()(const ivec3& i) {}
-				T operator()(const uint& i, const uint&j, const uint& k) const {}
-				T& operator()(const uint& i, const uint&j, const uint& k) {}
+				RegularGrid(const ivec3& d, const T& b) {
+					set(d, b);
+				}
+				~RegularGrid() {
+					clear();
+				}
+				void set(const ivec3& d, const T& b) {
+					clear();
+					dimensions = d;
+					background = b;
+					bdummy = b;
+					data = new T**[d[0]];
+					int i;
+					FOR_LOOP(i, 0, d[0])
+						data[i] = new T*[d[1]];
+					ponos::ivec2 dd = d.xy();
+					ponos::ivec2 ij;
+					FOR_INDICES0_2D(dd, ij)
+						data[ij[0]][ij[1]] = new T[d[2]];
+				}
+				T operator()(const ivec3& i) const {
+					if(i >= ivec3() && i < dimensions)
+						return data[i[0]][i[1]][i[2]];
+					return background;
+				}
+				T& operator()(const ivec3& i) {
+					if(i >= ivec3() && i < dimensions)
+						return data[i[0]][i[1]][i[2]];
+					return bdummy;
+				}
+				T operator()(const int& i, const int&j, const int& k) const {
+					if(	i >= 0 && i < dimensions[0] &&
+							j >= 0 && i < dimensions[1] &&
+							k >= 0 && i < dimensions[2])
+						return data[i][j][k];
+					return background;
+				}
+				T& operator()(const int& i, const int&j, const int& k) {
+					if(	i >= 0 && i < dimensions[0] &&
+							j >= 0 && i < dimensions[1] &&
+							k >= 0 && i < dimensions[2])
+						return data[i][j][k];
+					return bdummy;
+				}
 
 			private:
+				void clear() {
+					ponos::ivec2 d = dimensions.xy();
+					ponos::ivec2 ij;
+					FOR_INDICES0_2D(d, ij)
+						delete[] data[ij[0]][ij[1]];
+					int i;
+					FOR_LOOP(i, 0, dimensions[0])
+						delete[] data[i];
+					delete data;
+				}
+
+				ponos::ivec3 dimensions;
 				T*** data;
+				T background, bdummy;
 		};
 
 }  // ponos namespace

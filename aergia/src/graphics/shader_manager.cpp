@@ -21,8 +21,8 @@ namespace aergia {
 			GLuint shaderType = 0;
 			switch(filename[filename.size() - 2]) {
 				case 'v': shaderType = 0; break;
-				case 'f': shaderType = 1; break;
-				case 's': shaderType = 2; break;
+				case 'g': shaderType = 1; break;
+				case 'f': shaderType = 2; break;
 				default: continue;
 			}
 			objects[shaderType] = compile(source, types[shaderType]);
@@ -37,8 +37,23 @@ namespace aergia {
 		return static_cast<int>(program);
 	}
 
+	int ShaderManager::loadFromTexts(const char *vs, const char *gs, const char *fs) {
+		GLuint objects[] = {0, 0, 0};
+		if(vs != nullptr)
+			objects[0] = compile(vs, GL_VERTEX_SHADER);
+		if(gs != nullptr)
+			objects[1] = compile(gs, GL_GEOMETRY_SHADER);
+		if(fs != nullptr)
+			objects[2] = compile(fs, GL_FRAGMENT_SHADER);
+		GLuint program = createProgram(objects, 3);
+		if(!program)
+			return -1;
+		return static_cast<int>(program);
+	}
+
 	bool ShaderManager::useShader(GLuint program){
 		glUseProgram(program);
+		CHECK_GL_ERRORS;
 		return true;
 	}
 

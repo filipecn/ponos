@@ -7,6 +7,13 @@
 
 namespace ponos {
 
+	bool bbox_bbox_intersection(const BBox2D& a, const BBox2D& b) {
+		for(int i = 0; i < 2; i++)
+			if(!((a.pMin[i] <= b.pMin[i] && a.pMax[i] >= b.pMin[i])||(b.pMin[i] <= a.pMin[i] && b.pMax[i] >= a.pMin[i])))
+				return false;
+		return true;
+	}
+
 	bool ray_segment_intersection(const Ray3& r, const Segment3& s, float *t) {
 		Ray3 r2(s.a, s.b - s.a);
 		float d = cross(r.d, r2.d).length2();

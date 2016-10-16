@@ -23,8 +23,8 @@ void TestQuaternion::testConstructors() {
 	Transform tt = q.toTransform();
 	quat qq(tt);
 
-	std::cout << q << qq;
-	std::cout << t.matrix() << tt.matrix();
+	//std::cout << q << qq;
+	//std::cout << t.matrix() << tt.matrix();
 
 	CPPUNIT_ASSERT(t == tt);
 	CPPUNIT_ASSERT(q == qq);

@@ -1,10 +1,10 @@
-#pragma once
+#ifndef ODYSSEUS_GAME_H
+#define ODYSSEUS_GAME_H
 
 #include <aergia.h>
 #include <memory>
 
 #include "clock.hpp"
-#include <chrono>
 #include <thread>
 
 namespace odysseus {
@@ -19,7 +19,7 @@ namespace odysseus {
 			virtual int run() {
 				aergia::GraphicsDisplay& gd = aergia::GraphicsDisplay::instance();
 				init();
-				Clock clock;
+				Timer clock;
 				double lag = 0.0;
 				while(gd.isRunning()) {
 					lag += clock.tackTick();
@@ -55,3 +55,5 @@ namespace odysseus {
 	};
 
 } // odysseus namespace
+
+#endif // ODYSSEUS_GAME_H

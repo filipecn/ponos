@@ -2,6 +2,10 @@
 
 namespace aergia {
 
+	Shader::Shader(GLuint id)
+		: programId(id) {
+		}
+
 	bool Shader::loadFromFiles(const char *fl...) {
 		running = false;
 		int program = ShaderManager::instance().loadFromFiles(fl);

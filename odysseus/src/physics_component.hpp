@@ -1,4 +1,7 @@
-#pragma once
+#ifndef ODYSSEUS_PHYSICS_COMPONENT_H
+#define ODYSSEUS_PHYSICS_COMPONENT_H
+
+#include "component_interface.h"
 
 #include <hercules.h>
 
@@ -6,13 +9,17 @@
 
 namespace odysseus {
 
-	class PhysicsComponent {
+	class PhysicsComponent : public ComponentInterface {
 		public:
+			PhysicsComponent(hercules::_2d::RigidBodyPtr b)
+				: body(b) {}
 			virtual ~PhysicsComponent() {}
-			virtual void update(std::shared_ptr<GameObject> obj, hercules::World &world) = 0;
+			virtual void update(GameObject &obj, hercules::_2d::World &world) = 0;
 
 		protected:
-			std::shared_ptr<hercules::Body> body;
+			hercules::_2d::RigidBodyPtr body;
 	};
 
 } // odysseus namespace
+
+#endif // ODYSSEUS_PHYSICS_COMPONENT_H

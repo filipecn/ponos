@@ -1,12 +1,13 @@
 project(HERCULES)
 
 set(HEADERS
-	src/shapes/box.h
-	src/body.hpp
-	src/fixture.hpp
-	src/rigid_body.h
-	src/shape.hpp
-	src/world.hpp
+	src/2d/fixture.h
+	src/2d/rigid_body.h
+	src/2d/world.h
+	src/cds/aabb_object_interface.h
+	src/cds/aabb_grid.h
+	src/cds/cds.h
+	src/world_interface.h
 	src/hercules.h
 	)
 
@@ -24,3 +25,6 @@ set_target_properties(hercules PROPERTIES
 	FOLDER "HERCULES")
 
 target_link_libraries(hercules ${hercules_LIBRARIES})
+
+# tests
+add_subdirectory(tests)

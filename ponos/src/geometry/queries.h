@@ -2,6 +2,7 @@
 #define PONOS_GEOMETRY_INTERSECTIONS_H
 
 #include "geometry/bbox.h"
+#include "geometry/interval.h"
 #include "geometry/line.h"
 #include "geometry/plane.h"
 #include "geometry/ray.h"
@@ -12,6 +13,21 @@
 
 namespace ponos {
 
+	/* intersection test
+	 * @a **[in]**
+	 * @b **[in]**
+	 * @return
+	 */
+	bool bbox_bbox_intersection(const BBox2D& a, const BBox2D& b);
+		/* intersection test
+	 * @a **[in]**
+	 * @b **[in]**
+	 * @return
+	 */
+	template<typename T>
+		bool interval_interval_intersection(const Interval<T>& a, const Interval<T>& b) {
+			return (a.low <= b.low && a.high >= b.low) || (b.low <= a.low && b.high >= a.low);
+		}
 	/* intersection test
 	 * @r **[in]** ray
 	 * @s **[in]** segment

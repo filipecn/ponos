@@ -25,6 +25,14 @@ namespace aergia {
 			 * @return program id. **-1** if error.
 			 */
 			int loadFromFiles(const char *fl...);
+			/* load
+			 * @vs vertex shader
+			 * @gs geometry shader
+			 * @fs fragment shader
+			 * Creates a shader program from strings.
+			 * @return program id. **-1** if error.
+			 */
+			int loadFromTexts(const char *vs, const char *gs, const char *fs);
 			/* use program
 			 * @program **[in]** program's id
 			 * Activate program

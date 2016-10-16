@@ -2,10 +2,11 @@
 #define PONOS_GEOMETRY_SPHERE_H
 
 #include "geometry/point.h"
+#include "geometry/shape.h"
 
 namespace ponos {
 
-	class Circle {
+	class Circle : public Shape {
 		public:
 			Circle(Point2 center, float radius)
 				: c(center), r(radius) {}

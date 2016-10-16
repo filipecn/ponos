@@ -10,11 +10,11 @@
 namespace aergia {
 
 	/* shader class
-	 * Holds a program id and serves as an interface fo its uniforms.
+	 * Holds a program id and serves as an interface for setting its uniforms.
 	 */
 	class Shader {
 		public:
-			Shader();
+			Shader(GLuint id = 0);
 			/* load
 			 * Creates a shader program from shader files. It expects only
 			 * one file of each type with extensions .fs, .vs and .gs.

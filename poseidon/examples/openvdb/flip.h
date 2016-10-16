@@ -100,7 +100,7 @@ namespace poseidon {
 			int curStep;
 
 			// cell type
-			FLIPCellType ***cell;
+			ponos::RegularGrid<FLIPCellType> cell;
 			// particle grid
 			VDBParticleGrid *particleGrid;
 			// scene
@@ -112,10 +112,13 @@ namespace poseidon {
 			void updateMACGrid();
 			void enforceBoundaries();
 			void project();
+			void extrapolateVelocities();
+
 			float maxDensity;
 
 		private:
 			VDBMacGrid *grid[2];
+			ponos::RegularGrid<float> L;
 	};
 
 } // poseidon namespace

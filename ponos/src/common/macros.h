@@ -22,6 +22,11 @@
 	for(ijk[1] = 0; ijk[1] < (D[1]); ++ijk[1]) \
 	for(ijk[2] = 0; ijk[2] < (D[2]); ++ijk[2])
 
+#define FOR_INDICES0_3D_ijk(D, i, j, k) \
+	for(int i = 0; i < (D[0]); ++i) \
+	for(int j = 0; j < (D[1]); ++j) \
+	for(int k = 0; k < (D[2]); ++k)
+
 #define FOR_INDICES3D(D0, D1, ijk) \
 	for(ijk[0] = D0[0]; ijk[0] < (D1[0]); ++ijk[0]) \
 	for(ijk[1] = D0[1]; ijk[1] < (D1[1]); ++ijk[1]) \

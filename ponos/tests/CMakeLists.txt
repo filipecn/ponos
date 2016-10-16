@@ -10,7 +10,9 @@ set(TESTS
 	TestQuaternion.cpp
 	TestQueries.cpp
 	TestMatrix.cpp
+	TestObjectPool.cpp
 	TestParallel.cpp
+	TestSort.cpp
 	TestTransform.cpp
 	)
 

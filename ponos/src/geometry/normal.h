@@ -5,6 +5,30 @@
 
 namespace ponos {
 
+	class Vector2;
+
+	class Normal2D {
+		public:
+			explicit Normal2D(float _x, float _y);
+			explicit Normal2D(const Vector2& v);
+			explicit operator Vector2() const;
+			Normal2D() { x = y = 0.; }
+
+			Normal2D operator-() const {
+				return Normal2D(-x, -y);
+			}
+			Normal2D& operator*=(float f) {
+				x *= f;
+				y *= f;
+				return *this;
+			}
+			friend std::ostream& operator<<(std::ostream& os, const Normal2D& n) {
+				os << "[Normal] " << n.x << " " << n.y  << std::endl;
+				return os;
+			}
+			float x, y;
+	};
+
 	class Vector3;
 
 	class Normal {

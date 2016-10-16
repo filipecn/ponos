@@ -6,6 +6,24 @@
 
 namespace ponos {
 
+	class Ray2 {
+		public:
+			Ray2();
+			Ray2(const Point2& origin, const Vector2& direction);
+			virtual ~Ray2() {}
+			Point2 operator()(float t) const {
+				return o + d * t;
+			}
+			friend std::ostream& operator<<(std::ostream& os, const Ray2& r) {
+				os << "[Ray]\n";
+				os << r.o << r.d;
+				return os;
+			}
+
+			Point2 o;
+			Vector2 d;
+	};
+
 	class Ray3 {
 		public:
 			Ray3();

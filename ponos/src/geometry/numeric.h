@@ -120,13 +120,6 @@ namespace ponos {
 			return v + 1;
 		}
 
-		template <typename T>
-			void swap(T &a, T &b) {
-				T tmp = b;
-				b = a;
-				a = tmp;
-			}
-		
 			inline bool solve_quadratic(float A, float B, float C, float &t0, float &t1) {
 				float delta = B * B - 4.f * A * C;
 					if(IS_ZERO(A) || delta <= 0.)
@@ -139,7 +132,7 @@ namespace ponos {
 								t0 = q / A;
 				t1 = C / q;
 				if(t0 > t1)
-					swap(t0, t1);
+					std::swap(t0, t1);
 						return true;
 			}
 		

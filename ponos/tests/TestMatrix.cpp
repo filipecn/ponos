@@ -59,8 +59,8 @@ void TestMatrix::testInverse() {
 	m.m[1][3] = 0;
 	m.m[2][3] = 0;
 	m.m[3][3] = 1;
-	print(m);
-	print(inverse(m));
+	//print(m);
+	//print(inverse(m));
 	mm = m * inverse(m);
 	CPPUNIT_ASSERT(isIdentity(mm));
 }

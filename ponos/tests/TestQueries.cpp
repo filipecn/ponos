@@ -23,9 +23,9 @@ void TestQueries::testRaySegment() {
 	CPPUNIT_ASSERT(!ray_segment_intersection(r2, s));
 
 	Ray3 r3(Point3(19.266, 1.79213, 5.06042), vec3(-0.896717, -0.296824, -0.32832));
-	std::cout << r3(11.1965);
+	//std::cout << r3(11.1965);
 	Ray3 sr(s.a, s.b - s.a);
-	std::cout << sr(0.969035);
+	//std::cout << sr(0.969035);
 	CPPUNIT_ASSERT(!ray_segment_intersection(r3, s));
 
 

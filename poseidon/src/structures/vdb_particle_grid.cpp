@@ -198,6 +198,7 @@ namespace poseidon {
 		double sum = 0.f;
 
 		for(size_t n = 0, N = particles.size(); n < N; n++) {
+			continue;
 			accumulator.reset();
 			openvdb::Vec3d p(particles[n]->position.x, particles[n]->position.y, particles[n]->position.z);
 			filter->searchAndApply(p, radius, accumulator);

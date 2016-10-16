@@ -18,6 +18,9 @@ namespace poseidon {
 			 */
 			VDBMacGrid(const ponos::ivec3& d, const float& b, const float& s, const ponos::vec3& o);
 			virtual ~VDBMacGrid() {}
+			float u(int i, int j, int k);
+			float v(int i, int j, int k);
+			float w(int i, int j, int k);
 			/* get
 			 * @i **[in]** x component (index space)
 			 * @j **[in]** x component (index space)
@@ -28,11 +31,13 @@ namespace poseidon {
 			ponos::Point3 getWorldPositionY(int i, int j, int k) const;
 			ponos::Point3 getWorldPositionZ(int i, int j, int k) const;
 			void set(int i, int j, int k, ponos::vec3 v);
-			void setX(int i, int j, int k, float v);
-			void setY(int i, int j, int k, float v);
-			void setZ(int i, int j, int k, float v);
+			void setU(int i, int j, int k, float v);
+			void setV(int i, int j, int k, float v);
+			void setW(int i, int j, int k, float v);
 
 			void computeDivergence();
+
+			float getDivergence(int i, int j, int k);
 
 			// dimensions
 			ponos::ivec3 dimensions;

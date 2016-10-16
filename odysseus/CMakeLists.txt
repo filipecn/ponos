@@ -3,14 +3,18 @@ project(ODYSSEUS)
 set(HEADERS
 	src/game.hpp
 	src/game_object.hpp
+	src/component_interface.h
 	src/graphics_component.hpp
+	src/graphics_manager.h
 	src/input_component.hpp
 	src/physics_component.hpp
+	src/physics_manager.h
 	src/clock.hpp
 	src/odysseus.h
 	)
 
 set(SOURCES
+	src/graphics_manager.cpp
 	)
 
 link_libraries(ponos)

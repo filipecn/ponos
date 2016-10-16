@@ -1,6 +1,7 @@
 project(PONOS)
 
 set(HEADERS
+	src/algorithm/sort.h
 	src/common/defs.h
 	src/common/file.h
 	src/common/macros.h
@@ -18,6 +19,7 @@ set(HEADERS
 	src/geometry/plane.h
 	src/geometry/ray.h
 	src/geometry/segment.h
+	src/geometry/shape.h
 	src/geometry/sphere.h
 	src/geometry/quaternion.h
 	src/geometry/transform.h
@@ -25,14 +27,13 @@ set(HEADERS
 	src/geometry/vector.h
 	src/log/debug.h
 	src/parallel/parallel.h
-	src/spatial/spatial_structure_interface.h
 	src/spatial/array.h
+	src/spatial/spatial_structure_interface.h
 	src/structures/brep.hpp
 	src/structures/c_grid_interface.h
 	src/structures/c_regular_grid.h
 	src/structures/regular_grid.h
-	src/structures/c_object_pool.hpp
-	src/structures/object_pool.hpp
+	src/structures/object_pool.h
 	src/structures/z_grid.h
 	src/ponos.h
 	)

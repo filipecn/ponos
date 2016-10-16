@@ -88,7 +88,7 @@ namespace helios {
 		for(uint32 i = 0; i < nDim; i++)
 			for(uint32 j = 0; j < nSamples; j++) {
 				uint32 other = j + (rng.randomUInt() % (nSamples - j));
-				ponos::swap(samples[nDim * j + i], samples[nDim * other + i]);
+				std::swap(samples[nDim * j + i], samples[nDim * other + i]);
 			}
 	}
 
