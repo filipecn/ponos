@@ -13,6 +13,8 @@ namespace aergia {
 
 	void draw_sphere(ponos::Sphere sphere);
 
+	void draw_polygon(const ponos::Polygon &polygon);
+
 } // aergia namespace
 
 #endif // AERGIA_HELPERS_GEOMETRY_DRAWERS_H

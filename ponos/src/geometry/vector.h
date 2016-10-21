@@ -71,6 +71,12 @@ class Vector2 {
 		float length() const {
 			return sqrtf(length2());
 		}
+		Vector2 right() const {
+			return Vector2(y, -x);
+		}
+		Vector2 left() const {
+			return Vector2(-y, x);
+		}
 		bool HasNaNs() const;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2& v);

@@ -7,6 +7,7 @@ set(HEADERS
 	src/common/macros.h
 	src/common/memory.h
 	src/common/random.h
+	src/common/timer.h
 	src/geometry/bbox.h
 	src/geometry/frustum.h
 	src/geometry/queries.h

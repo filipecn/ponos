@@ -36,6 +36,11 @@ namespace ponos {
 			Point2 operator*(float f) const {
 				return Point2(x * f, y * f);
 			}
+			Point2& operator+=(const Vector2& v) {
+				x += v.x;
+				y += v.y;
+				return *this;
+			}
 			Point2& operator-=(const Vector2& v) {
 				x -= v.x;
 				y -= v.y;

@@ -28,3 +28,4 @@ target_link_libraries(hercules ${hercules_LIBRARIES})
 
 # tests
 add_subdirectory(tests)
+add_subdirectory(testbed)

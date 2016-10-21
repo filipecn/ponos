@@ -8,24 +8,27 @@ namespace hercules {
 	namespace cds {
 
 		class GJK {
-			bool intersect(const ponos::Polygon& a, const ponos::Polygon& b) {
+			public:
+			static bool intersect(const ponos::Polygon& a, const ponos::Polygon& b) {
 				ponos::vec2 D(1, 0);
-				std::vector<ponos::vec2> s;
+				ponos::vec2 s[3];
+				int k = 0;
+				int z = 0;
 				for(;;) {
-					ponos::vec2 p = ponos::vec2(support(a, b, D));
-					if(ponos::dot(p, D) < 0)
+					ponos::vec2 p = support(a, D) - support(b, -D);
+					if(ponos::dot(ponos::vec2(p), D) < 0)
 						return false;
-					s.emplace_back(p);
-					if(buildSimplex(s, D))
+					if(buildSimplex(s, k, p, D))
 						return true;
+					z++;
+					if(z > 100)
+						break;
 				}
 				return false;
 			}
 			private:
-			ponos::Point2 support(const ponos::Polygon& a, const ponos::Polygon& b, const ponos::vec2& D) {
-				return support(a, D) - ponos::vec2(support(b, -D));
-			}
-			ponos::Point2 support(const ponos::Polygon& a, const ponos::vec2& D) {
+			GJK() {}
+			static ponos::vec2 support(const ponos::Polygon& a, const ponos::vec2& D) {
 				size_t size = a.vertices.size();
 				float M = ponos::dot(ponos::vec2(a.vertices[0]), D);
 				size_t Mi = 0;
@@ -36,42 +39,41 @@ namespace hercules {
 						Mi = i;
 					}
 				}
-				return a.vertices[Mi];
+				return ponos::vec2(a.vertices[Mi]);
 			}
-			bool buildSimplex(std::vector<ponos::vec2>& s, ponos::vec2& D) {
-				if(s.size() == 1) {
-					D = -ponos::vec2(s[0]);
+			static bool buildSimplex(ponos::vec2 s[], int &k, ponos::vec2 p, ponos::vec2& D) {
+				k = std::min(k + 1, 3);
+				s[k - 1] = p;
+				if(k == 1) {
+					D = -s[0];
 					return false;
 				}
-				if(s.size() == 2) {
-					ponos::vec2 a = s[1];
-					ponos::vec2 b = s[0];
-					D = cross_aba(b - a, -a);
+				if(k == 2) {
+					ponos::vec2 a = s[1] - s[0];
+					if(cross(a,-s[0]) < 0) {
+						s[2] = s[1];
+						s[1] = s[0];
+						s[0] = s[2];
+						D = a.right();
+					}
+					else D = a.left();
 					return false;
 				}
-				if(s.size() == 3) {
-					ponos::vec2 a = s[2];
-					ponos::vec2 b = s[1];
-					ponos::vec2 c = s[0];
-					ponos::vec2 ao = -a;
-					ponos::vec2 ab = b - a;
-					ponos::vec2 ac = c - a;
-					ponos::vec2 abc = ponos::cross(ab, ac);
-					ponos::vec2 abp = ponos::cross(ab, abc);
-					if(ponos::dot(abp, ao) > 0) {
-						D = cross_aba(ab, ao);
-						return false;
-					}
-					ponos::vec2 acp = ponos::cross(abc, ac);
-					if(ponos::dot(acp, ao) > 0) {
-						D = cross_aba(ac, ao);
-						return false;
-					}
-					return true;
+				ponos::vec2 a = s[2] - s[0];
+				if(cross(a, -s[0]) > 0) {
+					D = a.left();
+					s[1] = s[2];
+					k--;
+					return false;
 				}
-			}
-			ponos::vec2 cross_aba(const ponos::vec2 &a, const ponos::vec2 &b) {
-				return ponos::cross(ponos::cross(a, b), a);
+				ponos::vec2 b = s[2] - s[1];
+				if(cross(b, -s[1]) < 0) {
+					D = b.right();
+					s[0] = s[2];
+					k--;
+					return false;
+				}
+				return true;
 			}
 		};
 

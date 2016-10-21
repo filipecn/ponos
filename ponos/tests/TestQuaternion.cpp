@@ -22,7 +22,6 @@ void TestQuaternion::testConstructors() {
 	quat q = quat(t);
 	Transform tt = q.toTransform();
 	quat qq(tt);
-
 	//std::cout << q << qq;
 	//std::cout << t.matrix() << tt.matrix();
 

@@ -58,4 +58,10 @@ namespace aergia {
 		glEnd();
 	}
 
+	void draw_polygon(const ponos::Polygon &polygon) {
+		glBegin(GL_LINE_LOOP);
+		for(const auto& p : polygon.vertices)
+			glVertex(p);
+		glEnd();
+	}
 } // aergia namespace

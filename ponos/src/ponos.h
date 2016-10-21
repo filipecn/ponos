@@ -4,6 +4,7 @@
 #include "common/macros.h"
 #include "common/memory.h"
 #include "common/random.h"
+#include "common/timer.h"
 #include "log/debug.h"
 #include "geometry/bbox.h"
 #include "geometry/frustum.h"
