@@ -32,6 +32,16 @@ namespace ponos {
     return Transform2D(m, transpose(m));
   }
 
+  Transform2D translate(const Vector2& v) {
+    Matrix3x3 m(1.f, 0.f, v.x,
+    0.f, 1.f, v.y,
+    0.f, 0.f, 1.f);
+    Matrix3x3 m_inv(1.f, 0.f, -v.x,
+    0.f, 1.f, -v.y,
+    0.f, 0.f, 1.f);
+    return Transform2D(m, m_inv);
+  }
+
   Transform2D inverse(const Transform2D& t) {
     return Transform2D(t.m_inv, t.m);
   }

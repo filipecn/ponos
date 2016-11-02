@@ -24,15 +24,15 @@ namespace aergia {
 				ponos::Point3 fbl, fbr, ftl, ftr;
 				float talpha = tanf(camera.fov / 2.f);
 				float tbeta = tanf((camera.fov / camera.ratio) / 2.f);
-				nbl = camera.pos + dir * camera.near - camera.near * talpha * left - camera.near * tbeta * up;
-				nbr = camera.pos + dir * camera.near + camera.near * talpha * left - camera.near * tbeta * up;
-				ntl = camera.pos + dir * camera.near - camera.near * talpha * left + camera.near * tbeta * up;
-				ntr = camera.pos + dir * camera.near + camera.near * talpha * left + camera.near * tbeta * up;
+				nbl = camera.pos + dir * camera.getNear() - camera.getNear() * talpha * left - camera.getNear() * tbeta * up;
+				nbr = camera.pos + dir * camera.getNear() + camera.getNear() * talpha * left - camera.getNear() * tbeta * up;
+				ntl = camera.pos + dir * camera.getNear() - camera.getNear() * talpha * left + camera.getNear() * tbeta * up;
+				ntr = camera.pos + dir * camera.getNear() + camera.getNear() * talpha * left + camera.getNear() * tbeta * up;
 
-				fbl = camera.pos + dir * camera.far - camera.far * talpha * left - camera.far * tbeta * up;
-				fbr = camera.pos + dir * camera.far + camera.far * talpha * left - camera.far * tbeta * up;
-				ftl = camera.pos + dir * camera.far - camera.far * talpha * left + camera.far * tbeta * up;
-				ftr = camera.pos + dir * camera.far + camera.far * talpha * left + camera.far * tbeta * up;
+				fbl = camera.pos + dir * camera.getFar() - camera.getFar() * talpha * left - camera.getFar() * tbeta * up;
+				fbr = camera.pos + dir * camera.getFar() + camera.getFar() * talpha * left - camera.getFar() * tbeta * up;
+				ftl = camera.pos + dir * camera.getFar() - camera.getFar() * talpha * left + camera.getFar() * tbeta * up;
+				ftr = camera.pos + dir * camera.getFar() + camera.getFar() * talpha * left + camera.getFar() * tbeta * up;
 				static int i = 0;
 				if(!i++) {
 					std::cout << camera.pos;

@@ -11,8 +11,11 @@ namespace hercules {
 		 */
 		class Collidable {
 			public:
-				Collidable() {}
+				Collidable() :
+          colliding(false) {}
 				virtual ~Collidable() {}
+
+        bool colliding;
 		};
 
 	} // cds namespace
@@ -20,4 +23,3 @@ namespace hercules {
 } // hercules namespace
 
 #endif // HERCULES_CDS_COLLIDABLE_INTERFACE_H
-

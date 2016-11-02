@@ -21,6 +21,8 @@ namespace aergia {
 			void setFov(float f);
 			void setFar(float f);
 			void setNear(float n);
+      float getNear() const { return near_; }
+      float getFar() const { return far_; }
 			void update();
 			ponos::Transform getTransform() const;
 			ponos::Point3 viewPointOnWorldCoord() const;
@@ -28,10 +30,10 @@ namespace aergia {
 			ponos::Line viewLineFromWindow(ponos::Point2 p) const;
 			ponos::Ray3 pickRay(ponos::Point2 p) const;
 			ponos::Plane viewPlane(ponos::Point3 p) const;
-		//private:
+		private:
 			float ratio;
 			float zoom;
-			float near, far;
+			float near_, far_;
 			float fov;
 			ponos::Point3 pos, target;
 			ponos::vec3 up;

@@ -5,6 +5,7 @@ from subprocess import call
 import sys
 import glob
 import subprocess
+import platform
 
 cur_path = os.getcwd()
 build_path = os.getcwd() + "/build"
@@ -58,9 +59,15 @@ if not os.path.exists(build_path):
 os.chdir(build_path)
 
 if first :
-    call(["cmake"] + sys.argv[2:] + [cur_path])
+    if platform.system() == 'Windows':
+        call(["cmake"] + ['-G'] + ['Visual Studio 14 2015 Win64'] + sys.argv[2:] + [cur_path])
+    else:
+        call(["cmake"] + sys.argv[2:] + [cur_path])
 
-make_result = call(["make"])
+if platform.system() == 'Windows':
+    make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] + ["PONOS.sln"], shell=True)
+else:
+    make_result = call(["make"], shell=True)
 
 if make_result != 0 :
     sys.exit(1)
@@ -73,6 +80,10 @@ test_libs = ['ponos', 'hercules']#, 'poseidon']
 for l in test_libs:
     tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/" + l + "/tests")))
     os.chdir(build_path + "/" + l + "/tests")
-    result = call(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
+    print(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
+    if platform.system() == 'Windows':
+        result = call(["./Debug/run_" + l + "_tests.exe"] +[x[:-4] for x in tests])
+    else:
+        result = call(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
 
 sys.exit(result)

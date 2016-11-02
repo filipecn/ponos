@@ -57,7 +57,7 @@ namespace ponos {
 					for(int j = 0; j < 4; j++)
 						if(i != j && !IS_EQUAL(m[i][j], 0.f))
 							return false;
-						else if(i == j && ~IS_EQUAL(m[i][j], 1.f))
+						else if(i == j && !IS_EQUAL(m[i][j], 1.f))
 							return false;
 				return true;
 			}

@@ -23,11 +23,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestAABBGrid);
 
 class ActiveClass : AABBObjectInterface<ponos::BBox2D> {
 	public:
-		ActiveClass() {}
+    ActiveClass() { std::cout << "damn\n"; }
 		ActiveClass(BBox2D b)
 			: bb(b) {}
 		bool isActive() { return true; }
 		BBox2D getWBBox() { return bb; }
+    void destroy() {}
 	private:
 		BBox2D bb;
 };

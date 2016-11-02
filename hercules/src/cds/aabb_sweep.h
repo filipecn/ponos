@@ -2,8 +2,10 @@
 #define HERCULES_CDS_AABB_SWEEP_H
 
 #include <ponos.h>
+#include <functional>
 
 #include "cds/contact.h"
+#include "cds/utils.h"
 
 namespace hercules {
 
@@ -16,7 +18,7 @@ namespace hercules {
 			class AABBSweep : public ponos::CObjectPool<AABBObjectType> {
 				public:
 					AABBSweep()
-					: sortAxis(0) {}
+					: ponos::CObjectPool<AABBObjectType>(), sortAxis(0) {}
 					virtual ~AABBSweep() {}
 
 					std::vector<Contact2D> collide() {
@@ -41,20 +43,23 @@ namespace hercules {
 								});
 						float s[3] = { 0.f, 0.f, 0.f }, s2[3] = { 0.f, 0.f, 0.f }, v[3];
 						for(size_t i = 0; i < this->end; i++) {
-							ponos::BBox2D curBBox = this->pool[i].getWBBox();
+							ponos::BBox2D curBBox = this->pool[list[i]].getWBBox();
 							ponos::Point2 p = 0.5f * (curBBox.pMin + ponos::vec2(curBBox.pMax));
 							for(int c = 0; c < 2; c++) {
 								s[c] += p[c];
 								s2[c] += p[c] * p[c];
 							}
 							for(size_t j = i + 1; j < this->end; j++) {
-								ponos::BBox2D cBBox = this->pool[j].getWBBox();
+								ponos::BBox2D cBBox = this->pool[list[j]].getWBBox();
 								if(cBBox.pMin[sortAxis] > curBBox.pMax[sortAxis])
 									break;
-								if(ponos::bbox_bbox_intersection(curBBox, cBBox)) {
-									Contact2D contact = testCollision(i, j);
-									if(contact.valid)
-										contacts.emplace_back(contact);
+                if (ponos::bbox_bbox_intersection(curBBox, cBBox)) {
+                  Contact2D contact = _testCollision(list[i], list[j]);
+                  if (contact.valid) {
+                    contact.a = &this->pool[list[i]];
+                    contact.b = &this->pool[list[j]];
+                    contacts.emplace_back(contact);
+                  }
 								}
 							}
 						}
@@ -65,10 +70,9 @@ namespace hercules {
 							sortAxis = 1;
 					}
 
-					Contact2D testCollision(size_t a, size_t j) {
-						Contact2D c;
-						c.valid = false;
-						return c;
+					Contact2D _testCollision(size_t a, size_t b) {
+						return compute_collision(this->pool[a].getShape(),
+                                     this->pool[b].getShape());
 					}
 
 					size_t sortAxis;
@@ -80,4 +84,3 @@ namespace hercules {
 } // hercules namespace
 
 #endif // HERCULES_CDS_AABB_SWEEP_H
-

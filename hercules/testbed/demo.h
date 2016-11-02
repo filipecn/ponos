@@ -1,3 +1,5 @@
+#pragma once
+
 #include <aergia.h>
 #include <hercules.h>
 

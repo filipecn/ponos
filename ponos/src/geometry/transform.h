@@ -32,6 +32,15 @@ namespace ponos {
 				if (wp == 1.f) return Point2(xp, yp);
 					return Point2(xp / wp, yp / wp);
 		}
+    BBox2D operator()(const BBox2D &b) const {
+      const Transform2D &M = *this;
+      BBox2D ret;
+      ret = make_union(ret, M(Point2(b.pMin.x, b.pMin.y)));
+      ret = make_union(ret, M(Point2(b.pMax.x, b.pMin.y)));
+      ret = make_union(ret, M(Point2(b.pMax.x, b.pMax.y)));
+      ret = make_union(ret, M(Point2(b.pMin.x, b.pMax.y)));
+      return ret;
+    }
 		Transform2D operator*(const Transform2D& t) const {
 			Matrix3x3 m1 = Matrix3x3::mul(m, t.m);
 			Matrix3x3 m1_inv = Matrix3x3::mul(t.m_inv, m_inv);
@@ -52,6 +61,7 @@ namespace ponos {
   };
 
   Transform2D rotate(float angle);
+  Transform2D translate(const Vector2& v);
   Transform2D inverse(const Transform2D& t);
 
   class Transform {

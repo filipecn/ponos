@@ -219,7 +219,7 @@ namespace ponos {
 				CObjectPool(size_t size = 0, bool fixed = false) {
 					if(size > 0)
 						pool.resize(size);
-					fixedSize = fixed;
+          fixedSize = fixed;
 					end = size;
 				}
 				class iterator {
@@ -235,9 +235,9 @@ namespace ponos {
 							return &grid.pool[cur];
 						}
 						ObjectType* operator*() {
-							if(cur >= grid.end)
+              if(cur >= grid.end)
 								return nullptr;
-							return &grid.pool[cur];
+              return &grid.pool[cur];
 						}
 						void operator++() {
 							cur++;
@@ -251,25 +251,29 @@ namespace ponos {
 				virtual ~CObjectPool() {}
 				template<typename... Args>
 					ponos::IndexPointer<ObjectType> create(Args&&... args) {
-						if(static_cast<size_t>(end) == pool.size())
-							pool.emplace_back(std::forward<Args>(args)...);
+            if (end == pool.size()) {
+            	ObjectType o(std::forward<Args>(args)...);
+							pool.push_back(o);
+							//pool.emplace_back(std::forward<Args>(args)...);
+						}
 						else
 							new (&pool[end]) ObjectType(std::forward<Args>(args)...);
-						indexTable.push_back(end);
 						if(!freeIndices.empty()) {
 							size_t t = freeIndices.top();
 							freeIndices.pop();
 							indexTable[t] = end++;
-							return ponos::IndexPointer<ObjectType>(t, this);
+							return IndexPointer<ObjectType>(t, this);
 						}
-						return ponos::IndexPointer<ObjectType>(end++, this);
+						indexTable.push_back(end);
+						return IndexPointer<ObjectType>(end++, this);
 					}
-				virtual void destroy(ponos::IndexPointer<ObjectType> i) {
+				virtual void destroy(IndexPointer<ObjectType> i) {
 					if(i.getIndex() >= indexTable.size())
 						return;
 					size_t ind = indexTable[i.getIndex()];
 					if(ind >= end || end <= 0)
 						return;
+          pool[ind].destroy();
 					pool[ind] = pool[end - 1];
 					indexTable[end - 1] = ind;
 					end--;
@@ -293,4 +297,3 @@ namespace ponos {
 } // odysseus namespace
 
 #endif // PONOS_STRUCTURES_OBJECT_POOL_H
-

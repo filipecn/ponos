@@ -69,7 +69,7 @@ namespace ponos {
 		};
 
 	template<class T, int D>
-		int Brep<T, D>::addVertex(Brep<T, D>::Vertex v) {
+		int Brep<T, D>::addVertex(Vertex v) {
 			vertices.emplace_back(v);
 			return static_cast<int>(vertices.size()) - 1;
 		}

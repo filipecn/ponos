@@ -23,25 +23,43 @@ class TestAABBSweep : public CppUnit::TestCase {
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestAABBSweep);
 
-class ActiveClass : AABBObjectInterface<ponos::BBox2D> {
+class ActiveClassSweep {// : AABBObjectInterface<ponos::BBox2D> {
 	public:
-		ActiveClass() {}
-		ActiveClass(BBox2D b)
-			: bb(b) {}
+    ActiveClassSweep() {
+      shape = nullptr;
+    }
+		ActiveClassSweep(BBox2D b)
+			: bb(b) {
+        shape.reset(new ponos::Polygon());
+        shape->vertices.emplace_back(ponos::Point2(b.pMin.x, b.pMin.y));
+        shape->vertices.emplace_back(ponos::Point2(b.pMin.x, b.pMax.y));
+        shape->vertices.emplace_back(ponos::Point2(b.pMax.x, b.pMax.y));
+        shape->vertices.emplace_back(ponos::Point2(b.pMax.x, b.pMin.y));
+        //std::cout << shape->vertices.size() << std::endl;
+      }
+    ~ActiveClassSweep() { destroy(); }
 		bool isActive() { return true; }
 		BBox2D getWBBox() { return bb; }
-	private:
+    ponos::Shape* getShape() { return shape.get(); }
+    void destroy() {
+    }
+    friend std::ostream& operator<<(std::ostream& o, const ActiveClassSweep& a) {
+      o << a.bb.pMin << a.bb.pMax << std::endl;
+      return o;
+    }
+  private:
 		BBox2D bb;
+		std::shared_ptr<ponos::Polygon> shape;
 };
 
 void TestAABBSweep::testCreate() {
-	AABBSweep<ActiveClass> Sweep;
-	for(int i = 0; i < 10; i++)
-		Sweep.create(BBox2D(ponos::Point2(i, i), ponos::Point2(i + 2, i + 2)));
-	CPPUNIT_ASSERT(Sweep.size() == 10);
+  AABBSweep<ActiveClassSweep> Sweep;
+  for (int i = 0; i < 10; i++)
+    Sweep.create(BBox2D(ponos::Point2(i, i), ponos::Point2(i + 2, i + 2)));
+  CPPUNIT_ASSERT(Sweep.size() == 10);
 	int k = 0;
-	for(AABBSweep<ActiveClass>::iterator it(Sweep); it.next(); ++it) {
-		BBox2D b = (*it)->getWBBox();
+  for(AABBSweep<ActiveClassSweep>::iterator it(Sweep); it.next(); ++it) {
+    BBox2D b = (*it)->getWBBox();
 		CPPUNIT_ASSERT(b.pMin == Point2(k, k));
 		CPPUNIT_ASSERT(b.pMax == Point2(k + 2, k + 2));
 		k++;
@@ -50,13 +68,13 @@ void TestAABBSweep::testCreate() {
 }
 
 void TestAABBSweep::testDestroy() {
-	AABBSweep<ActiveClass> Sweep;
-	std::vector<IndexPointer<ActiveClass> > ptrs;
+	AABBSweep<ActiveClassSweep> Sweep;
+	std::vector<IndexPointer<ActiveClassSweep> > ptrs;
 	for(int i = 0; i < 10; i++)
 		ptrs.push_back(Sweep.create(BBox2D(ponos::Point2(i, i), ponos::Point2(i + 2, i + 2))));
 	CPPUNIT_ASSERT(Sweep.size() == 10);
 	int k = 0;
-	for(AABBSweep<ActiveClass>::iterator it(Sweep); it.next(); ++it) {
+	for(AABBSweep<ActiveClassSweep>::iterator it(Sweep); it.next(); ++it) {
 		BBox2D b = (*it)->getWBBox();
 		CPPUNIT_ASSERT(b.pMin == Point2(k, k));
 		CPPUNIT_ASSERT(b.pMax == Point2(k + 2, k + 2));
@@ -68,7 +86,7 @@ void TestAABBSweep::testDestroy() {
 			Sweep.destroy(ptrs[i]);
 	CPPUNIT_ASSERT(Sweep.size() == 5);
 	k = 0;
-	for(AABBSweep<ActiveClass>::iterator it(Sweep); it.next(); ++it) {
+	for(AABBSweep<ActiveClassSweep>::iterator it(Sweep); it.next(); ++it) {
 		BBox2D b = (*it)->getWBBox();
 		CPPUNIT_ASSERT(static_cast<int>(b.pMin[0]) % 2 == 0);
 		CPPUNIT_ASSERT(static_cast<int>(b.pMax[0]) % 2 == 0);
@@ -80,8 +98,8 @@ void TestAABBSweep::testDestroy() {
 }
 
 void TestAABBSweep::testIndexPtr() {
-	AABBSweep<ActiveClass> Sweep;
-	std::vector<IndexPointer<ActiveClass> > ptrs;
+	AABBSweep<ActiveClassSweep> Sweep;
+	std::vector<IndexPointer<ActiveClassSweep> > ptrs;
 	for(int i = 0; i < 10; i++)
 		ptrs.push_back(Sweep.create(BBox2D(ponos::Point2(i, i), ponos::Point2(i + 2, i + 2))));
 	CPPUNIT_ASSERT(Sweep.size() == 10);
@@ -97,12 +115,15 @@ void TestAABBSweep::testIndexPtr() {
 }
 
 void TestAABBSweep::testSortAndSweep() {
-	AABBSweep<ActiveClass> Sweep;
-	std::vector<IndexPointer<ActiveClass> > ptrs;
+	AABBSweep<ActiveClassSweep> Sweep;
+	std::vector<IndexPointer<ActiveClassSweep> > ptrs;
 	for(int i = 0; i < 10; i++)
 		Sweep.create(BBox2D(ponos::Point2(i, i), ponos::Point2(i + 2, i + 2)));
 	CPPUNIT_ASSERT(Sweep.size() == 10);
 	std::vector<Contact2D> contacts = Sweep.collide();
-	CPPUNIT_ASSERT(contacts.size() == 10);
+  //for (auto i : contacts) {
+    //std::cout << *static_cast<ActiveClassSweep*>(i.a);
+    //std::cout << *static_cast<ActiveClassSweep*>(i.b);
+  //}
+	CPPUNIT_ASSERT(contacts.size() == 17);
 }
-

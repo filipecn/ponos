@@ -92,20 +92,20 @@ namespace ponos {
 					setDimensions(w, h);
 				}
 
-				ponos::Point<int, 2> cell(ponos::Point2 wp) {
-					ponos::vec2 delta(0.5f, 0.5f);
-					return ponos::Point<int, 2>(toGrid(wp) + delta);
+				Point<int, 2> cell(Point2 wp) {
+					vec2 delta(0.5f, 0.5f);
+					return Point<int, 2>(toGrid(wp) + delta);
 				}
 
-				ponos::Point<int, 2> safeCell(ponos::Point2 wp) {
-					ponos::vec2 delta(0.5f, 0.5f);
-					ponos::Point<int, 2> gp(toGrid(wp) + delta);
+				Point<int, 2> safeCell(Point2 wp) {
+					vec2 delta(0.5f, 0.5f);
+					Point<int, 2> gp(toGrid(wp) + delta);
 					gp[0] = std::min(static_cast<int>(width) - 1, static_cast<int>(std::max(0, gp[0])));
 					gp[1] = std::min(static_cast<int>(height) - 1, static_cast<int>(std::max(0, gp[1])));
 					return gp;
 				}
 
-				bool belongs(ponos::Point<int, 2> c) {
+				bool belongs(Point<int, 2> c) {
 					return 0 <= c[0] && c[0]< static_cast<int>(width) && 0 <= c[1] && c[1] < static_cast<int>(height);
 				}
 

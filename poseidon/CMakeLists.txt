@@ -40,4 +40,7 @@ target_link_libraries(poseidon ${poseidon_LIBRARIES} -ltbb
 	/home/filipecn/gitclones/OpenVDB/lib/libopenvdb.so
 	/home/filipecn/gitclones/OpenVDB/lib/libopenvdb_points.so)
 add_subdirectory(examples)
-add_subdirectory(tests)
+
+if(TESTPOSEIDON)
+  add_subdirectory(tests)
+endif(TESTPOSEIDON)

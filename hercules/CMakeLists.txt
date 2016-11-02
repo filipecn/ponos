@@ -27,5 +27,10 @@ set_target_properties(hercules PROPERTIES
 target_link_libraries(hercules ${hercules_LIBRARIES})
 
 # tests
-add_subdirectory(tests)
+
+if(TESTHERCULES)
+  add_subdirectory(tests)
+endif(TESTHERCULES)
+if(NOT ONLYTESTS)
 add_subdirectory(testbed)
+endif(NOT ONLYTESTS)

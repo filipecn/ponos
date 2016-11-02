@@ -36,19 +36,19 @@ namespace ponos {
 				top.normal.z = t.matrix().m[3][2] - t.matrix().m[1][2];
 				top.offset   = t.matrix().m[3][3] - t.matrix().m[1][3];
 
-				near.normal.x = t.matrix().m[3][0] + t.matrix().m[2][0];
-				near.normal.y = t.matrix().m[3][1] + t.matrix().m[2][1];
-				near.normal.z = t.matrix().m[3][2] + t.matrix().m[2][2];
-				near.offset   = t.matrix().m[3][3] + t.matrix().m[2][3];
+				near_.normal.x = t.matrix().m[3][0] + t.matrix().m[2][0];
+				near_.normal.y = t.matrix().m[3][1] + t.matrix().m[2][1];
+				near_.normal.z = t.matrix().m[3][2] + t.matrix().m[2][2];
+				near_.offset   = t.matrix().m[3][3] + t.matrix().m[2][3];
 
-				far.normal.x = t.matrix().m[3][0] - t.matrix().m[2][0];
-				far.normal.y = t.matrix().m[3][1] - t.matrix().m[2][1];
-				far.normal.z = t.matrix().m[3][2] - t.matrix().m[2][2];
-				far.offset   = t.matrix().m[3][3] - t.matrix().m[2][3];
+				far_.normal.x = t.matrix().m[3][0] - t.matrix().m[2][0];
+				far_.normal.y = t.matrix().m[3][1] - t.matrix().m[2][1];
+				far_.normal.z = t.matrix().m[3][2] - t.matrix().m[2][2];
+				far_.offset   = t.matrix().m[3][3] - t.matrix().m[2][3];
 			}
 
-			Plane near;
-			Plane far;
+			Plane near_;
+			Plane far_;
 			Plane left;
 			Plane right;
 			Plane bottom;

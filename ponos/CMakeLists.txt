@@ -62,5 +62,6 @@ set_target_properties(ponos PROPERTIES
 
 target_link_libraries(ponos ${ponos_LIBRARIES})
 
-# tests
-add_subdirectory(tests)
+if(TESTPONOS)
+  add_subdirectory(tests)
+endif(TESTPONOS)

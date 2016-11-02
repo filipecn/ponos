@@ -3,6 +3,7 @@
 
 #include "common/defs.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <malloc.h>
 #include <vector>
@@ -42,9 +43,13 @@ namespace ponos {
 	/*allocAligned allocate cache-aligned memory blocks of <size> bytes.
 	 *@size bytes
 	 */
-	inline void* allocAligned(uint32 size) {
-		return memalign(CACHE_L1_LINE_SIZE, size);
-	}
+   inline void* allocAligned(uint32 size) {
+     #ifdef _WIN32
+     return _aligned_malloc(CACHE_L1_LINE_SIZE, size);
+     #else
+     return memalign(CACHE_L1_LINE_SIZE, size);
+     #endif
+   }
 
 	/*allocAligned allocate cache-aligned <count> objects.
 	 *@count number of objects.
@@ -191,4 +196,3 @@ namespace ponos {
 } // ponos namespace
 
 #endif
-

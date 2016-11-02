@@ -1,5 +1,7 @@
 #include "parallel/parallel.h"
 
+#include "common/defs.h"
+
 #include <algorithm>
 #include <iostream>
 #include <thread>

@@ -12,6 +12,9 @@ set(HEADERS
 	src/io/graphics_display.h
 	src/io/utils.h
 	src/io/viewport_display.h
+  src/io/vulkan_application.h
+  src/io/vulkan_resource.h
+  src/io/vulkan_utils.h
 	src/scene/camera.h
 	src/scene/camera_2d.h
 	src/scene/mesh.h
@@ -39,6 +42,7 @@ set(SOURCES
 	src/io/graphics_display.cpp
 	src/io/utils.cpp
 	src/io/viewport_display.cpp
+  src/io/vulkan_application.cpp
 	src/scene/camera.cpp
 	src/scene/camera_2d.cpp
 	src/scene/mesh.cpp
@@ -51,12 +55,19 @@ set(SOURCES
 	src/utils/open_gl.cpp
 	src/aergia.cpp
 	)
-
+message(STATUS ${WIN64})
 if(WIN32)
 	find_library(GLFW_LIB NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/external/GLFW)
+	include_directories("C:/VulkanSDK/1.0.3.1/Include")
 	include_directories("${PROJECT_SOURCE_DIR}/external")
+	include_directories("${PROJECT_SOURCE_DIR}/external/freeglut")
+	include_directories("${PROJECT_SOURCE_DIR}/external/GLEW")
+  set(GLEW_LIB "${PROJECT_SOURCE_DIR}/external/GLEW/x64/glew32.lib")
+  set(OPENGL_LIBRARIES "${PROJECT_SOURCE_DIR}/external/freeglut/x64/freeglut.lib")
 	find_library(VULKAN_LIB NAMES vulkan-1 vulkan)
 	find_package(Vulkan REQUIRED)
+	find_package(OpenGL REQUIRED)
+	include_directories(${OPENGL_INCLUDE_DIRS})
 	link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
 else(WIN32)
 	find_package(glfw3 REQUIRED)
@@ -77,6 +88,6 @@ set_target_properties(aergia PROPERTIES
 	OUTPUT_NAME "aergia"
 	FOLDER "AERGIA")
 
-target_link_libraries(aergia ${aergia_LIBRARIES} GLEW)
+target_link_libraries(aergia ${aergia_LIBRARIES} ${GLEW_LIB})
 
 add_subdirectory(examples)

@@ -8,6 +8,9 @@ namespace hercules {
 	namespace cds {
 
 		struct Contact2D {
+      Contact2D() {
+        a = b = nullptr;
+      }
 			void* a;
 			void* b;
 			ponos::Point2 p;
@@ -22,4 +25,3 @@ namespace hercules {
 } // hercules namespace
 
 #endif // HERCULES_CDS_CONTACT_H
-

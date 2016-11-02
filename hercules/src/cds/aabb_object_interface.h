@@ -28,4 +28,3 @@ namespace hercules {
 } // hercules namespace
 
 #endif // HERCULES_CDS_AABB_OBJECT_INTERFACE_H
-

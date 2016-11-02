@@ -21,7 +21,7 @@ namespace ponos {
 			 * @n **[in]** normal
 			 * @o **[in]** offset
 			 */
-			Plane(ponos::Normal n, float o){
+			Plane(Normal n, float o){
 				normal = n;
 				offset = o;
 			}
@@ -31,7 +31,7 @@ namespace ponos {
 				return os;
 			}
 
-			ponos::Normal normal;
+			Normal normal;
 			float offset;
 	};
 

@@ -13,8 +13,8 @@ namespace aergia {
 		target = Point3(0.f, 0.f, 0.f);
 		up = vec3(0.f, 1.f, 0.f);
 		zoom = 1.f;
-		near = 0.1f;
-		far = 1000.f;
+		near_ = 0.1f;
+		far_ = 1000.f;
 		fov = 45.f;
 	}
 
@@ -47,7 +47,7 @@ namespace aergia {
 		if(w < h)
 			clipSize.y = clipSize.x / ratio;
 		else clipSize.x = clipSize.y * ratio;
-		projection = ponos::perspective(fov, ratio, near, far);
+		projection = ponos::perspective(fov, ratio, near_, far_);
 		update();
 	}
 
@@ -68,19 +68,19 @@ namespace aergia {
 
 	void Camera::setFov(float f) {
 		fov = f;
-		projection = ponos::perspective(fov, ratio, near, far);
+		projection = ponos::perspective(fov, ratio, near_, far_);
 		update();
 	}
 
 	void Camera::setFar(float f) {
-		far = f;
-		projection = ponos::perspective(fov, ratio, near, far);
+		far_ = f;
+		projection = ponos::perspective(fov, ratio, near_, far_);
 		update();
 	}
 
 	void Camera::setNear(float n) {
-		near = n;
-		projection = ponos::perspective(fov, ratio, near, far);
+		near_ = n;
+		projection = ponos::perspective(fov, ratio, near_, far_);
 		update();
 	}
 
