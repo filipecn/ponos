@@ -14,13 +14,32 @@ namespace ponos {
   void Transform2D::translate(const Vector2 &d) {
     m.m[0][2] += d.x;
     m.m[1][2] += d.y;
+    //TODO update inverse and make a better implementarion
+    m_inv.m[0][2] -= d.x;
+    m_inv.m[1][2] -= d.y;
   }
 
   void Transform2D::scale(float x, float y) {
     m.m[0][0] *= x;
     m.m[1][1] *= y;
-    // TODO
+    //TODO update inverse and make a better implementarion
     s = Vector2(x, y);
+    m_inv = inverse(m);
+  }
+
+  void Transform2D::rotate(float angle) {
+    float sin_a = sinf(TO_RADIANS(angle));
+    float cos_a = cosf(TO_RADIANS(angle));
+    Matrix3x3 M(cos_a, -sin_a, 0.f,
+                sin_a, cos_a,  0.f,
+                0.f,   0.f,    1.f);
+    Vector2 t = getTranslate();
+    m.m[0][2] = m.m[1][2] = 0;
+    m = m * M;
+    m.m[0][2] = t.x;
+    m.m[1][2] = t.y;
+    //TODO update inverse and make a better implementarion
+    m_inv = inverse(m);
   }
 
   Transform2D rotate(float angle) {

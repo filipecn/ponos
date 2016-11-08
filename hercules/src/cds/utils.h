@@ -10,15 +10,15 @@ namespace hercules {
 
 	namespace cds {
 
-    inline Contact2D compute_collision(const ponos::Shape* s1, const ponos::Shape* s2) {
+    inline Contact2D compute_collision(const ponos::Shape* s1, const ponos::Shape* s2, const ponos::Transform2D* t1 = nullptr, const ponos::Transform2D* t2 = nullptr) {
       Contact2D c;
       if(!s1 || !s2) {
         c.valid = false;
         return c;
       }
-      
+
       c.valid = GJK::intersect(*static_cast<const ponos::Polygon*>(s1),
-                               *static_cast<const ponos::Polygon*>(s2));
+                               *static_cast<const ponos::Polygon*>(s2), t1, t2);
       return c;
     }
 

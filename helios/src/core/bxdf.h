@@ -29,7 +29,7 @@ namespace helios {
   Spectrum computeFresnelDielectric(float cosi, float cost, const Spectrum& etai, const Spectrum& etat) {
     Spectrum rParl = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
     Spectrum rPerp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
-    return (SQR(rParl) + SQR(Rperp)) / 2.f;
+    return (SQR(rParl) + SQR(rPerp)) / 2.f;
   }
 
   /* compute
@@ -93,7 +93,7 @@ namespace helios {
       if(!entering)
       std::swap(ei, et);
       // Compute sint using Snell 's law
-      float sint = ei / et * sqrtf(std::max(0.f, 1.f, 1.f - SQR(cosi)));
+      float sint = ei / et * sqrtf(std::max(0.f, 1.f - SQR(cosi)));
       if(sint >= 1.f)
       // internal reflection
       return 1.f;
@@ -155,7 +155,7 @@ namespace helios {
       Spectrum f(const ponos::vec3& wo, const ponos::vec3& wi) const override {
         return brdf->f(wo, ponos::otherHemisphere(wi));
       }
-    private::
+    private:
       BxDF* brdf;
     };
 

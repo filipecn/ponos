@@ -1,6 +1,8 @@
 #ifndef HELIOS_CORE_PRIMITIVE_H
 #define HELIOS_CORE_PRIMITIVE_H
 
+#include "core/bsdf.h"
+#include "core/differential_geometry.h"
 #include "core/intersection.h"
 #include "core/light.h"
 #include "core/material.h"
@@ -42,7 +44,7 @@ namespace helios {
 			void fullyRefine(std::vector<std::shared_ptr<Primitive> > &refined) const;
 			// material
 			virtual const AreaLight *getAreaLight() const = 0;
-			// virtual BSDF *getBSDF(const DifferentialGeometry &gd, const ponos::Transform &o2w, MemoryArena &arena) const = 0;
+      //virtual BSDF *getBSDF(const DifferentialGeometry &gd, const ponos::Transform &o2w, ponos::MemoryArena &arena) const = 0;
 			// virtual BSSRDF *getBSSRDF(const DifferentialGeometry &gd, const Transform &o2w, MemoryArena &arena) const = 0;
 			const uint32_t primitiveId;
 			static uint32_t nextPrimitiveId;
@@ -59,8 +61,6 @@ namespace helios {
 			bool intersect(const HRay &r, Intersection *isect) const override;
 			// bool intersectP(const HRay &r) const override;
 			// void refine(std::vector<std::shared_ptr<Primitive> >& refined) const override;
-			// BSDF *getBSDF(const DifferentialGeometry &gd, const ponos::Transform &o2w, MemoryArena &arena) const override;
-			// BSSRDF *getBSSRDF(const DifferentialGeometry &gd, const Transform &o2w, MemoryArena &arena) const override;
 
 			// TODO page 189
 		private:

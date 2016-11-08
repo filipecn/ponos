@@ -90,6 +90,12 @@ namespace helios {
 						r.c[i] += s2.c[i];
 					return r;
 				}
+				CoefficientSpectrum operator-(const CoefficientSpectrum &s2) const {
+					CoefficientSpectrum r = *this;
+					for(int i = 0; i < nSamples; i++)
+						r.c[i] -= s2.c[i];
+					return r;
+				}
 				CoefficientSpectrum& operator*=(const CoefficientSpectrum &s2) {
 					for(int i = 0; i < nSamples; i++)
 						c[i] *= s2.c[i];
@@ -463,4 +469,3 @@ namespace helios {
 } // helios namespace
 
 #endif // HELIOS_CORE_SPECTRUM_H
-

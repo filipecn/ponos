@@ -18,6 +18,7 @@ namespace ponos {
     void reset();
     void translate(const Vector2 &d);
     void scale(float x, float y);
+    void rotate(float angle);
     friend Transform2D inverse(const Transform2D& t);
     Vector2 operator()(const Vector2& v) const {
       float x = v.x, y = v.y;

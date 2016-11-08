@@ -4,6 +4,7 @@
 #include "geometry/bbox.h"
 #include "geometry/point.h"
 #include "geometry/shape.h"
+#include "geometry/transform.h"
 
 #include <vector>
 
@@ -14,15 +15,30 @@ namespace ponos {
 	 		Polygon() {}
 			Polygon(std::vector<Point2> v)
 				: vertices(v) {}
-			virtual ~Polygon() { vertices.clear(); }
+      /*
+      Polygon(const Polygon& p) {
+        vertices = p.vertices;
+      }
+      Polygon(Polygon&& p) noexcept {
+        vertices = p.vertices;
+      }
+      Polygon& operator=(const Polygon& other) {
+        Polygon tmp(other);
+        *this = std::move(tmp);
+        return *this;
+      }*/
 
 			std::vector<Point2> vertices;
 	};
 
-  inline BBox2D compute_bbox(const Polygon& po) {
+  inline BBox2D compute_bbox(const Polygon& po, const Transform2D* t = nullptr) {
     BBox2D b;
-    for (auto p : po.vertices)
-      b = make_union(b, p);
+    for (auto p : po.vertices) {
+      if(t != nullptr)
+        b = make_union(b, (*t)(p));
+      else
+        b = make_union(b, p);
+    }
     return b;
   }
 

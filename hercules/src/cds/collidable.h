@@ -12,10 +12,10 @@ namespace hercules {
 		class Collidable {
 			public:
 				Collidable() :
-          colliding(false) {}
+          toDelete(false) {}
 				virtual ~Collidable() {}
 
-        bool colliding;
+        bool toDelete;
 		};
 
 	} // cds namespace

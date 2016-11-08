@@ -47,6 +47,7 @@ class ActiveClassSweep {// : AABBObjectInterface<ponos::BBox2D> {
       o << a.bb.pMin << a.bb.pMax << std::endl;
       return o;
     }
+    ponos::Transform2D transform;
   private:
 		BBox2D bb;
 		std::shared_ptr<ponos::Polygon> shape;
@@ -82,8 +83,11 @@ void TestAABBSweep::testDestroy() {
 	}
 	CPPUNIT_ASSERT(k == 10);
 	for(int i = 0; i < 10; i++)
-		if(i % 2)
+		if(i % 2) {
 			Sweep.destroy(ptrs[i]);
+			//std::cout << "deleting " << i << std::endl << std::endl;
+			Sweep.size();
+		}
 	CPPUNIT_ASSERT(Sweep.size() == 5);
 	k = 0;
 	for(AABBSweep<ActiveClassSweep>::iterator it(Sweep); it.next(); ++it) {
@@ -95,6 +99,10 @@ void TestAABBSweep::testDestroy() {
 		k++;
 	}
 	CPPUNIT_ASSERT(k == 5);
+	for(int i = 0; i < 10; i++)
+		if(i % 2 == 0)
+			Sweep.destroy(ptrs[i]);
+	CPPUNIT_ASSERT(Sweep.size() == 0);
 }
 
 void TestAABBSweep::testIndexPtr() {

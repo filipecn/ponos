@@ -45,7 +45,8 @@ namespace helios {
 		 * help the caller of <getMoreSamples> to allocate memory for the sample.
 		 */
 		virtual int maximumSampleCount() = 0;
-		/* @samples collection of samples (originally from getModeSamples())
+		/* report
+     * @samples collection of samples (originally from getModeSamples())
 		 * @rays [out] which rays were generated
 		 * @Ls [out] which radiance values were computed
 		 * @isects [out] which intersections were found
@@ -176,4 +177,3 @@ namespace helios {
 } // helios namespace
 
 #endif // HELIOS_CORE_SAMPLER_H
-

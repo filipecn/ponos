@@ -40,8 +40,8 @@ namespace ponos {
 
 #define ALLOCA(TYPE, COUNT) (TYPE *)alloca((COUNT) * sizeof(TYPE))
 
-	/*allocAligned allocate cache-aligned memory blocks of <size> bytes.
-	 *@size bytes
+	/* allocAligned allocate cache-aligned memory blocks of <size> bytes.
+	 * @size bytes
 	 */
    inline void* allocAligned(uint32 size) {
      #ifdef _WIN32
@@ -51,8 +51,8 @@ namespace ponos {
      #endif
    }
 
-	/*allocAligned allocate cache-aligned <count> objects.
-	 *@count number of objects.
+	/* allocAligned allocate cache-aligned <count> objects.
+	 * @count number of objects.
 	 */
 	template<typename T> T* allocAligned(uint32 count) {
 		return static_cast<T*>(allocAligned(count * sizeof(T)));

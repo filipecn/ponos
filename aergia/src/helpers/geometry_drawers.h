@@ -13,7 +13,7 @@ namespace aergia {
 
 	void draw_sphere(ponos::Sphere sphere);
 
-	void draw_polygon(const ponos::Polygon &polygon);
+	void draw_polygon(const ponos::Polygon &polygon, const ponos::Transform2D* transform = nullptr);
 
 } // aergia namespace
 

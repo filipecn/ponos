@@ -6,10 +6,12 @@ namespace ponos {
 	class Shape {
   	public:
 	 		Shape() {}
+      virtual Shape& operator=(const Shape& other) {
+        return *this;
+      };
 			virtual ~Shape() {}
 	};
 
 } // ponos namespace
 
 #endif // PONOS_GEOMETRY_SHAPE_H
-

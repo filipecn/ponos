@@ -77,6 +77,7 @@ else(WIN32)
 	link_libraries(glfw ${OPENGL_LIBRARIES})
 	include_directories("/usr/local/include")
 	link_libraries(tinyobjloader "/usr/local/lib/libtinyobjloader.a")
+  set(GLEW_LIB "GLEW")
 endif(WIN32)
 
 link_libraries(ponos)

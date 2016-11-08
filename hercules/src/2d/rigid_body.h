@@ -15,12 +15,28 @@ namespace hercules {
 		class RigidBody : public cds::Collidable, public cds::AABBObjectInterface<ponos::BBox2D> {
 			public:
 				RigidBody() {}
-				RigidBody(Fixture *f, ponos::Shape *s) {
+				RigidBody(Fixture *f, std::shared_ptr<ponos::Shape> s) {
 					fixture.reset(f);
-					shape.reset(s);
+					shape = s;
           wBBoxUpdated = false;
+          this->toDelete = false;
+          userData = nullptr;
 				}
-				virtual ~RigidBody() {}
+        /*RigidBody(const RigidBody& other) {
+          wBBoxUpdated = other.wBBoxUpdated;
+          wBBox = other.wBBox;
+          fixture = other.fixture;
+          shape = other.shape;
+        }
+        RigidBody& operator=(const RigidBody& other) {
+          wBBoxUpdated = other.wBBoxUpdated;
+          wBBox = other.wBBox;
+          fixture = other.fixture;
+          shape = other.shape;
+					this->toDelete = other.toDelete;
+          return *this;
+        }*/
+        virtual ~RigidBody() {}
 
 				void setFixture(Fixture *f) {
 					fixture.reset(f);
@@ -30,7 +46,7 @@ namespace hercules {
 				}
 				ponos::BBox2D getWBBox() override {
           if(!wBBoxUpdated) {
-            wBBox = ponos::compute_bbox(*static_cast<ponos::Polygon*>(shape.get()));
+            wBBox = ponos::compute_bbox(*static_cast<ponos::Polygon*>(shape.get()), &transform);
             wBBoxUpdated = true;
           }
 					return wBBox;
@@ -42,9 +58,11 @@ namespace hercules {
           transform = t;
           wBBoxUpdated = false;
         }
-        void destroy() {}
+        void destroy() {
+        }
         ponos::Transform2D transform;
         ponos::vec2 velocity;
+        void* userData;
 
 			private:
         bool wBBoxUpdated;

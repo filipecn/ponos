@@ -7,7 +7,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   set(DEBUG_FLAGS     "${DEBUG_FLAGS} -std=c++11 -g -O3 -Wall -pedantic -Wextra -Werror -Wno-unused-parameter -Wno-unused-local-typedefs -fprofile-arcs -ftest-coverage --coverage")
   set(RELEASE_FLAGS "${RELEASE_FLAGS} -std=c++11 -g -O3 -Wall -pedantic -Wextra -Werror -Wno-unused-parameter -Wno-unused-local-typedefs -fprofile-arcs -ftest-coverage --coverage")
 else(CMAKE_COMPILER_IS_GNUCXX)
-  set(DEBUG_FLAGS   "/Zi /EHsc")
+  set(DEBUG_FLAGS   "/Zi /EHsc /MD /MDd")
   set(RELEASE_FLAGS "   ")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 

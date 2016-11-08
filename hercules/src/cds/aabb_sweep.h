@@ -18,29 +18,51 @@ namespace hercules {
 			class AABBSweep : public ponos::CObjectPool<AABBObjectType> {
 				public:
 					AABBSweep()
-					: ponos::CObjectPool<AABBObjectType>(), sortAxis(0) {}
+						: ponos::CObjectPool<AABBObjectType>(), sortAxis(0) {}
 					virtual ~AABBSweep() {}
 
 					std::vector<Contact2D> collide() {
-						if(list.size() < this->end)
+						if(list.size() < this->end) {
+							size_t lastSize = list.size();
 							list.resize(this->end);
-						for(size_t i = 0; i < this->end; i++)
-							list[i] = i;
+							for(size_t i = lastSize; i < this->end; i++)
+								list[i] = i;
+						}
 						std::vector<Contact2D> contacts;
+						if (list.size() <= 1)
+							return contacts;
 						sortAndSweep(contacts);
 						return contacts;
 					}
 
+					/* clean
+					 * deletes all objects with toDelete = true
+					 */
+					void cleanDeleted() {
+						for(size_t i = 0; i < this->end; i++) {
+							if(this->pool[i].toDelete) {
+								// std::cout << "delete " << this->poolToIndex[i] << std::endl;
+								if(this->poolToIndex[i] >= 0)
+									this->destroy(this->poolToIndex[i]);
+							}
+						}
+					}
+
 				private:
 					void sortAndSweep(std::vector<Contact2D>& contacts) {
-						ponos::insertion_sort<size_t>(&list[0], this->end,
+						ponos::insertion_sort<size_t>(&list[0], list.size(),
 								[this](const size_t& a, const size_t& b) {
-									ponos::BBox2D ba = this->pool[a].getWBBox();
-									ponos::BBox2D bb = this->pool[b].getWBBox();
-									if(IS_EQUAL(ba.pMin[sortAxis], bb.pMin[sortAxis]))
-										return ba.pMax[sortAxis] < bb.pMax[sortAxis];
-									return ba.pMin[sortAxis] < bb.pMin[sortAxis];
+								if (a >= this->end || this->poolToIndex[a] < 0) return false;
+								if (b >= this->end || this->poolToIndex[b] < 0) return true;
+								ponos::BBox2D ba = this->pool[a].getWBBox();
+								ponos::BBox2D bb = this->pool[b].getWBBox();
+								if(IS_EQUAL(ba.pMin[sortAxis], bb.pMin[sortAxis]))
+								return ba.pMax[sortAxis] < bb.pMax[sortAxis];
+								return ba.pMin[sortAxis] < bb.pMin[sortAxis];
 								});
+						//for(auto i : list)
+						//	std::cout << i << "," << this->poolToIndex[i] << " | ";
+						//std::cout << std::endl;
 						float s[3] = { 0.f, 0.f, 0.f }, s2[3] = { 0.f, 0.f, 0.f }, v[3];
 						for(size_t i = 0; i < this->end; i++) {
 							ponos::BBox2D curBBox = this->pool[list[i]].getWBBox();
@@ -53,13 +75,13 @@ namespace hercules {
 								ponos::BBox2D cBBox = this->pool[list[j]].getWBBox();
 								if(cBBox.pMin[sortAxis] > curBBox.pMax[sortAxis])
 									break;
-                if (ponos::bbox_bbox_intersection(curBBox, cBBox)) {
-                  Contact2D contact = _testCollision(list[i], list[j]);
-                  if (contact.valid) {
-                    contact.a = &this->pool[list[i]];
-                    contact.b = &this->pool[list[j]];
-                    contacts.emplace_back(contact);
-                  }
+								if (ponos::bbox_bbox_intersection(curBBox, cBBox)) {
+									Contact2D contact = _testCollision(list[i], list[j]);
+									if (contact.valid) {
+										contact.a = &this->pool[list[i]];
+										contact.b = &this->pool[list[j]];
+										contacts.emplace_back(contact);
+									}
 								}
 							}
 						}
@@ -72,7 +94,7 @@ namespace hercules {
 
 					Contact2D _testCollision(size_t a, size_t b) {
 						return compute_collision(this->pool[a].getShape(),
-                                     this->pool[b].getShape());
+								this->pool[b].getShape(), &this->pool[a].transform, &this->pool[b].transform);
 					}
 
 					size_t sortAxis;

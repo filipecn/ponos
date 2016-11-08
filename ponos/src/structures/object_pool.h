@@ -252,45 +252,74 @@ namespace ponos {
 				template<typename... Args>
 					ponos::IndexPointer<ObjectType> create(Args&&... args) {
             if (end == pool.size()) {
-            	ObjectType o(std::forward<Args>(args)...);
-							pool.push_back(o);
-							//pool.emplace_back(std::forward<Args>(args)...);
+							pool.emplace_back(std::forward<Args>(args)...);
 						}
 						else
 							new (&pool[end]) ObjectType(std::forward<Args>(args)...);
 						if(!freeIndices.empty()) {
 							size_t t = freeIndices.top();
 							freeIndices.pop();
-							indexTable[t] = end++;
+							indexToPool[t] = end;
+							poolToIndex[end] = t;
+							end++;
 							return IndexPointer<ObjectType>(t, this);
 						}
-						indexTable.push_back(end);
+						indexToPool.push_back(end);
+						poolToIndex.push_back(end);
 						return IndexPointer<ObjectType>(end++, this);
 					}
 				virtual void destroy(IndexPointer<ObjectType> i) {
-					if(i.getIndex() >= indexTable.size())
-						return;
-					size_t ind = indexTable[i.getIndex()];
-					if(ind >= end || end <= 0)
-						return;
-          pool[ind].destroy();
-					pool[ind] = pool[end - 1];
-					indexTable[end - 1] = ind;
-					end--;
-					freeIndices.push(i.getIndex());
+          destroy(i.getIndex());
 				}
-				size_t size() const { return end; }
+        virtual void destroy(size_t elementIndex) {
+					if(elementIndex >= indexToPool.size())
+						return;
+
+					int poolIndex = indexToPool[elementIndex];
+					int lastPoolIndex = end - 1;
+
+					if(poolIndex >= static_cast<int>(end) || poolIndex < 0 || lastPoolIndex < 0)
+						return;
+					//std::cout << "destroying " << elementIndex << std::endl;
+					pool[poolIndex].destroy();
+					pool[poolIndex] = pool[lastPoolIndex];
+
+					int lastElementIndex = poolToIndex[lastPoolIndex];
+
+					indexToPool[elementIndex] = -1;
+					indexToPool[lastElementIndex] =
+            (static_cast<int>(elementIndex) == lastElementIndex) ?
+              -1 : poolIndex;
+
+					poolToIndex[poolIndex] =
+            (static_cast<int>(elementIndex) == lastElementIndex) ?
+            -1 : lastElementIndex;
+					poolToIndex[lastPoolIndex] = -1;
+
+					end--;
+					freeIndices.push(elementIndex);
+				}
+				size_t size() const {
+          std::cout << "size " << end << std::endl;
+					std::cout << "index to pool" << std::endl;
+					for(size_t i = 0; i < indexToPool.size(); i++)
+						std::cout << i << " | " << indexToPool[i] << std::endl;
+					std::cout << "pool to index" << std::endl;
+					for(size_t i = 0; i < poolToIndex.size(); i++)
+						std::cout << i << " | " << poolToIndex[i] << std::endl;
+					std::cout << std::endl;
+					return end; }
 				ObjectType* get(size_t i) override {
-					if(i >= end || i >= indexTable.size())
+					if(i >= end || i >= indexToPool.size() || indexToPool[i] < 0)
 						return nullptr;
-					return &pool[indexTable[i]];
+					return &pool[indexToPool[i]];
 				}
 
 			protected:
 				size_t end;
 				bool fixedSize;
 				std::vector<ObjectType> pool;
-				std::vector<size_t> indexTable;
+				std::vector<int> indexToPool, poolToIndex;
 				std::stack<size_t> freeIndices;
 		};
 

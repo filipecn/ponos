@@ -5,7 +5,8 @@ set(HEADERS
 	src/accelerators/grid.h
 	src/cameras/orthographic.h
 	src/cameras/perspective.h
-	src/core/camera.h
+  src/core/bsdf.h
+  src/core/camera.h
 	src/core/differential_geometry.h
 	src/core/film.h
 	src/core/intersection.h
@@ -26,8 +27,10 @@ set(SOURCES
 	src/accelerators/grid.cpp
 	src/cameras/orthographic.cpp
 	src/cameras/perspective.cpp
+  src/core/bsdf.cpp
 	src/core/camera.cpp
 	src/core/differential_geometry.cpp
+	src/core/intersection.cpp
 	src/core/shape.cpp
 	src/core/spectrum.cpp
 	src/core/primitive.cpp

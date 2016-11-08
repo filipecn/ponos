@@ -79,11 +79,12 @@ if sys.argv[1] != 'test':
 test_libs = ['ponos', 'hercules']#, 'poseidon']
 for l in test_libs:
     tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/" + l + "/tests")))
-    os.chdir(build_path + "/" + l + "/tests")
-    print(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
-    if platform.system() == 'Windows':
-        result = call(["./Debug/run_" + l + "_tests.exe"] +[x[:-4] for x in tests])
-    else:
-        result = call(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
+    if os.path.isdir(build_path + "/" + l + "/tests") == True:
+        os.chdir(build_path + "/" + l + "/tests")
+        print(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
+        if platform.system() == 'Windows':
+            result = call(["./Debug/run_" + l + "_tests.exe"] +[x[:-4] for x in tests])
+        else:
+            result = call(["./run_" + l + "_tests"] +[x[:-4] for x in tests])
 
 sys.exit(result)
