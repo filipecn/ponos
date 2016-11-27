@@ -85,7 +85,9 @@ namespace ponos {
 	 * @return fliped z coordinate
 	 */
 	inline vec3 otherHemisphere(const vec3& w) {
-		return vec3(w.x, w.y, -w.z);}
+		return vec3(w.x, w.y, -w.z);
+  }
+
 } // ponos namespace
 
 #endif // PONOS_GEOMETRY_UTILS_H

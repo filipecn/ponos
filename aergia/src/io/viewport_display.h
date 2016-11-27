@@ -39,6 +39,7 @@ namespace aergia {
 			 * @return the unprojected point by the inverse of the camera transform to world space
 			 */
 			ponos::Point3 unProject(const Camera& c, ponos::Point3 p);
+			ponos::Point3 unProject();
 
 			void render();
 			void mouse(double x, double y);
@@ -52,7 +53,7 @@ namespace aergia {
 			// viewport
 			int x, y, width, height;
 
-			std::shared_ptr<Camera> camera;
+			std::shared_ptr<CameraInterface> camera;
 	};
 
 } // aergia namespace

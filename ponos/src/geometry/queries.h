@@ -10,6 +10,8 @@
 #include "geometry/sphere.h"
 #include "geometry/utils.h"
 #include "geometry/vector.h"
+#include "geometry/transform.h"
+#include "geometry/polygon.h"
 
 namespace ponos {
 
@@ -110,7 +112,7 @@ namespace ponos {
 	 *
 	 * @return **true** if intersection exists
 	 */
-	bool triangle_ray_intersection(const Point3& p1, const Point3& p2, const Point3& p3, const Ray3& ray, float *tHit, float *b1 = nullptr, float *b2 = nullptr);
+	bool triangle_ray_intersection(const Point3& p1, const Point3& p2, const Point3& p3, const Ray3& ray, float *tHit = nullptr, float *b1 = nullptr, float *b2 = nullptr);
 	/* closest point
 	 * @p **[in]** point
 	 * @pl **[in]** plane
@@ -184,6 +186,14 @@ namespace ponos {
 	 */
 	float distance2_point_bbox(const Point3& p, const BBox& b);
 
+  inline BBox2D compute_bbox(const Shape& po, const Transform2D* t = nullptr) {
+    BBox2D b;
+    if(po.type == ShapeType::POLYGON)
+      b = compute_bbox(static_cast<const Polygon&>(po), t);
+    else if(po.type == ShapeType::SPHERE)
+      b = compute_bbox(static_cast<const Circle&>(po), t);
+    return b;
+  }
 } // ponos namespace
 
 #endif

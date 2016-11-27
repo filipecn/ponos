@@ -43,12 +43,12 @@ namespace aergia {
 				loadOBJ(filename, m);
 				m->computeBBox();
 				m->splitIndexData();
-				mesh.reset(m);
+				rawMesh.reset(m);
 				setupVertexBuffer();
 				setupIndexBuffer();
 			}
 			SceneMesh(const RawMesh *m) {
-				mesh.reset(m);
+				rawMesh.reset(m);
 				setupVertexBuffer();
 				setupIndexBuffer();
 			}
@@ -61,17 +61,17 @@ namespace aergia {
 				ib->bind();
 			}
 
-			std::shared_ptr<const RawMesh> mesh;
+			std::shared_ptr<const RawMesh> rawMesh;
 
 		protected:
 			virtual void setupVertexBuffer() {
-				BufferDescriptor vertexDescriptor(3, mesh->vertexCount);
-				vb.reset(new VertexBuffer(&mesh->vertices[0], vertexDescriptor));
+				BufferDescriptor vertexDescriptor(3, rawMesh->vertexCount);
+				vb.reset(new VertexBuffer(&rawMesh->vertices[0], vertexDescriptor));
 			}
 
 			virtual void setupIndexBuffer() {
-				BufferDescriptor indexDescriptor = create_index_buffer_descriptor(1, mesh->verticesIndices.size());
-				ib.reset(new IndexBuffer(&mesh->verticesIndices[0], indexDescriptor));
+				BufferDescriptor indexDescriptor = create_index_buffer_descriptor(1, rawMesh->verticesIndices.size());
+				ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
 			}
 
 			std::shared_ptr<const VertexBuffer> vb;

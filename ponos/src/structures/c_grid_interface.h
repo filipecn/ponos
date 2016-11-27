@@ -29,15 +29,15 @@ namespace ponos {
 				 * @return value at coordinate **i**
 				 */
 				virtual T operator()(const ivec3& i) const = 0;
-				//virtual T& operator()(const ivec3& i) = 0;
+				virtual T& operator()(const ivec3& i) = 0;
 				/* get
 				 * @i **[in]** X coordinate (grid space)
 				 * @j **[in]** Y coordinate (grid space)
 				 * @k **[in]** Z coordinate (grid space)
 				 * @return value at coordinate **(i, j, k)**
 				 */
-				virtual T operator()(const int& i, const int&j, const int& k) const = 0;
-				// virtual T& operator()(const uint& i, const uint&j, const uint& k) = 0;
+				virtual T operator()(const uint& i, const uint&j, const uint& k) const = 0;
+				virtual T& operator()(const uint& i, const uint&j, const uint& k) = 0;
 				/* get
 				 * @i **[in]** coordinate (grid space)
 				 * @return value at coordinate **i**
@@ -68,6 +68,8 @@ namespace ponos {
 				Transform toWorld;
 				// world to grid transform
 				Transform toGrid;
+				T border;
+				bool useBorder;
 		};
 
 	template<class T>

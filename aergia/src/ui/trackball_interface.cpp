@@ -6,11 +6,11 @@ namespace aergia {
 		modes[curMode]->draw(tb);
 	}
 
-	void TrackballInterface::buttonRelease(Camera& camera, int button, ponos::Point2 p) {
-		modes[curMode]->stop(tb, camera, p);
+	void TrackballInterface::buttonRelease(CameraInterface& camera, int button, ponos::Point2 p) {
+		modes[curMode]->stop(tb, static_cast<Camera&>(camera), p);
 	}
 
-	void TrackballInterface::buttonPress(const Camera& camera, int button, ponos::Point2 p) {
+	void TrackballInterface::buttonPress(const CameraInterface& camera, int button, ponos::Point2 p) {
 		switch(button) {
 			case GLFW_MOUSE_BUTTON_LEFT: curMode = 0; break;
 			case GLFW_MOUSE_BUTTON_MIDDLE: curMode = 1; break;
@@ -19,11 +19,11 @@ namespace aergia {
 		modes[curMode]->start(tb, camera, p);
 	}
 
-	void TrackballInterface::mouseMove(Camera& camera, ponos::Point2 p) {
-		modes[curMode]->update(tb, camera, p);
+	void TrackballInterface::mouseMove(CameraInterface& camera, ponos::Point2 p) {
+		modes[curMode]->update(tb, static_cast<Camera&>(camera), p);
 	}
 
-	void TrackballInterface::mouseScroll(Camera& camera, ponos::vec2 d) {
+	void TrackballInterface::mouseScroll(CameraInterface& camera, ponos::vec2 d) {
 		//modes[curMode]->update(tb, camera, d);
 	}
 

@@ -78,6 +78,29 @@ namespace ponos {
                   mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
     m_inv = inverse(m);
   }
+ 
+  void Transform::reset() {
+    m.setIdentity();
+  }
+
+  void Transform::translate(const Vector3 &d) {
+    m.m[0][3] += d.x;
+    m.m[1][3] += d.y;
+    m.m[2][3] += d.y;
+    //TODO update inverse and make a better implementarion
+    m_inv.m[0][3] -= d.x;
+    m_inv.m[1][3] -= d.y;
+    m_inv.m[2][3] -= d.y;
+  }
+
+  void Transform::scale(float x, float y, float z) {
+    m.m[0][0] *= x;
+    m.m[1][1] *= y;
+    m.m[2][2] *= z;
+    //TODO update inverse and make a better implementarion
+    m_inv = inverse(m);
+  }
+
 
   bool Transform::swapsHandedness() const {
     float det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
@@ -85,6 +108,16 @@ namespace ponos {
                 (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
     return det < 0.f;
   }
+
+  Transform2D scale(float x, float y) {
+		Matrix3x3 m(x, 0, 0,
+				        0, y, 0,
+								0, 0, 1);
+		Matrix3x3 inv(1.f / x, 0,       0,
+				        	0,       1.f / y, 0,
+									0,       0,       1);
+		return Transform2D(m, inv);
+	}
 
   Transform inverse(const Transform& t) {
     return Transform(t.m_inv, t.m);

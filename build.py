@@ -76,7 +76,7 @@ if sys.argv[1] != 'test':
     sys.exit(0)
 
 # run tests
-test_libs = ['ponos', 'hercules']#, 'poseidon']
+test_libs = ['ponos', 'hercules', 'poseidon']
 for l in test_libs:
     tests = list(filter(lambda x: x.find('Test', 0) == 0, os.listdir(cur_path + "/" + l + "/tests")))
     if os.path.isdir(build_path + "/" + l + "/tests") == True:

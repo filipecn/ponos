@@ -46,4 +46,18 @@ namespace poseidon {
 		ParticleType type;
 	};
 
+	struct FLIPParticle2D {
+		FLIPParticle2D() = default;
+		FLIPParticle2D(const ponos::Point2& p)
+			: position(p) {}
+		ponos::Point2 position;
+		ponos::vec2 velocity;
+		ponos::vec2 normal;
+		float density;
+		float mass;
+		bool invalid;
+		ParticleType type;
+	};
+
+
 } // poseidon namespace

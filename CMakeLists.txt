@@ -27,5 +27,5 @@ add_subdirectory(hercules)
 add_subdirectory(helios)
 
 if(NOT TRAVIS)
-	#add_subdirectory(poseidon)
+	add_subdirectory(poseidon)
 endif(NOT TRAVIS)

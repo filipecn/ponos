@@ -7,7 +7,7 @@ namespace aergia {
 
 
 	WireframeMesh::WireframeMesh(const RawMesh *m, const ponos::Transform &t) {
-		mesh.reset(m);
+		rawMesh.reset(m);
 		setupVertexBuffer();
 		setupIndexBuffer();
 		transform = t;
@@ -28,8 +28,8 @@ namespace aergia {
 	}
 
 	void WireframeMesh::setupIndexBuffer() {
-		BufferDescriptor indexDescriptor = create_index_buffer_descriptor(1, mesh->verticesIndices.size(), GL_LINES);
-		ib.reset(new IndexBuffer(&mesh->verticesIndices[0], indexDescriptor));
+		BufferDescriptor indexDescriptor = create_index_buffer_descriptor(1, rawMesh->verticesIndices.size(), GL_LINES);
+		ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
 	}
 
 } // aergia namespace

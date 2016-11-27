@@ -2,6 +2,35 @@
 
 namespace aergia {
 
+	void draw_bbox(const ponos::BBox& bbox) {
+		glBegin(GL_LINE_LOOP);
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMin.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMin.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMax.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMax.y, bbox.pMin.z));
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMin.y, bbox.pMax.z));
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMin.y, bbox.pMax.z));
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMax.y, bbox.pMax.z));
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMax.y, bbox.pMax.z));
+		glEnd();
+		glBegin(GL_LINES);
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMin.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMin.y, bbox.pMax.z));
+
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMin.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMin.y, bbox.pMax.z));
+
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMax.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMax.x, bbox.pMax.y, bbox.pMax.z));
+
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMax.y, bbox.pMin.z));
+		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMax.y, bbox.pMax.z));
+
+		glEnd();
+	}
+
 	void draw_segment(ponos::Segment3 segment) {
 		glBegin(GL_LINES);
 		glVertex(segment.a);
@@ -9,14 +38,19 @@ namespace aergia {
 		glEnd();
 	}
 
-	void draw_circle(ponos::Circle circle) {
+	void draw_circle(const ponos::Circle& circle, const ponos::Transform2D* transform) {
 		glBegin(GL_TRIANGLE_FAN);
-		glVertex(circle.c);
+		if(transform != nullptr)
+			glVertex((*transform)(circle.c));
+		else glVertex(circle.c);
 		float angle = 0.0;
-		float step = PI_2 / 10.f;
+		float step = PI_2 / 100.f;
 		while(angle < PI_2 + step) {
 			ponos::vec2 pp(circle.r * cosf(angle), circle.r * sinf(angle));
-			glVertex(circle.c + pp);
+			if(transform != nullptr)
+				glVertex((*transform)(circle.c + pp));
+			else
+				glVertex(circle.c + pp);
 			angle += step;
 		}
 		glEnd();
@@ -59,12 +93,12 @@ namespace aergia {
 	}
 
 	void draw_polygon(const ponos::Polygon &polygon, const ponos::Transform2D* transform) {
-    glBegin(GL_LINE_LOOP);
+		glBegin(GL_LINE_LOOP);
 		for(const auto& p : polygon.vertices) {
-      if(transform != nullptr)
-        glVertex((*transform)(p));
-      else glVertex(p);
-    }
+			if(transform != nullptr)
+				glVertex((*transform)(p));
+			else glVertex(p);
+		}
 		glEnd();
 	}
 } // aergia namespace

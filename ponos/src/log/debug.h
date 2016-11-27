@@ -1,5 +1,9 @@
+#ifndef PONOS_LOG_DEBUG_H
+#define PONOS_LOG_DEBUG_H
+
 #include <cmath>
 #include <iostream>
+#include "common/defs.h"
 
 #define LOG_LOCATION \
   "[" << __FILE__ << ", line " << __LINE__ << "]"
@@ -44,3 +48,14 @@
         std::cout << M[i][j] << " "; \
       } std::cout << std::endl; \
   }
+
+namespace ponos {
+	inline void printBits(uint32 n) {
+		for(int i = 31; i >= 0; i--)
+			if((1 << i) & n)
+				std::cout << '1';
+			else std::cout << '0';
+	}
+}
+
+#endif

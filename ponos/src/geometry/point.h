@@ -11,6 +11,7 @@ namespace ponos {
 		public:
 			Point2();
 			explicit Point2(float _x, float _y);
+
 			// access
 			float operator[](int i) const {
 				ASSERT(i >= 0 && i <= 1);
@@ -154,10 +155,10 @@ namespace ponos {
 				z -= v.z;
 				return *this;
 			}
-			Point3 operator*(float d) {
+			Point3 operator*(float d) const {
 				return Point3(x * d, y * d, z * d);
 			}
-			Point3 operator/(float d) {
+			Point3 operator/(float d) const {
 				return Point3(x / d, y / d, z / d);
 			}
 			Point3& operator/=(float d) {

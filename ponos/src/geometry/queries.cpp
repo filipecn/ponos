@@ -127,7 +127,8 @@ namespace ponos {
 		float t = dot(e2, s2) * invDivisor;
 		if(t < 0.)
 			return false;
-		*tHit = t;
+		if(tHit != nullptr)
+			*tHit = t;
 		if(b1)
 			*b1 = b1_;
 		if(b2)

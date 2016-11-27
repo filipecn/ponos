@@ -12,7 +12,9 @@ namespace ponos {
 
 	class Polygon : public Shape {
   	public:
-	 		Polygon() {}
+	 		Polygon() {
+        this->type = ShapeType::POLYGON;
+      }
 			Polygon(std::vector<Point2> v)
 				: vertices(v) {}
       /*

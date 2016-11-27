@@ -1,6 +1,7 @@
 project(PONOS)
 
 set(HEADERS
+	src/algorithm/search.h
 	src/algorithm/sort.h
 	src/common/defs.h
 	src/common/file.h

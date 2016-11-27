@@ -5,9 +5,11 @@ set(CMAKE_MODULE_PATH "${AERGIA_SOURCE_DIR}/CMake/modules")
 set(HEADERS
 	src/graphics/shader.h
 	src/graphics/shader_manager.h
+	src/helpers/bvh_model.h
 	src/helpers/camera_model.h
 	src/helpers/cartesian_grid.h
 	src/helpers/geometry_drawers.h
+	src/helpers/vector_grid.h
 	src/io/buffer.h
 	src/io/graphics_display.h
 	src/io/utils.h
@@ -15,6 +17,7 @@ set(HEADERS
   src/io/vulkan_application.h
   src/io/vulkan_resource.h
   src/io/vulkan_utils.h
+  src/scene/bvh.h
 	src/scene/camera.h
 	src/scene/camera_2d.h
 	src/scene/mesh.h
@@ -43,6 +46,7 @@ set(SOURCES
 	src/io/utils.cpp
 	src/io/viewport_display.cpp
   src/io/vulkan_application.cpp
+  src/scene/bvh.cpp
 	src/scene/camera.cpp
 	src/scene/camera_2d.cpp
 	src/scene/mesh.cpp

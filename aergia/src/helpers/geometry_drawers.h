@@ -7,9 +7,11 @@
 
 namespace aergia {
 
+	void draw_bbox(const ponos::BBox& bbox);
+
 	void draw_segment(ponos::Segment3 segment);
 
-	void draw_circle(ponos::Circle circle);
+	void draw_circle(const ponos::Circle& circle, const ponos::Transform2D* transform = nullptr);
 
 	void draw_sphere(ponos::Sphere sphere);
 

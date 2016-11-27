@@ -23,10 +23,10 @@ namespace aergia {
 
 			void draw();
 
-			void buttonRelease(Camera& camera, int button, ponos::Point2 p);
-			void buttonPress(const Camera& camera, int button, ponos::Point2 p);
-			void mouseMove(Camera& camera, ponos::Point2 p);
-			void mouseScroll(Camera& camera, ponos::vec2 d);
+			void buttonRelease(CameraInterface& camera, int button, ponos::Point2 p);
+			void buttonPress(const CameraInterface& camera, int button, ponos::Point2 p);
+			void mouseMove(CameraInterface& camera, ponos::Point2 p);
+			void mouseScroll(CameraInterface& camera, ponos::vec2 d);
 
 			Trackball tb;
 

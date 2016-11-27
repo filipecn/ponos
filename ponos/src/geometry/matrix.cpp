@@ -28,6 +28,12 @@ namespace ponos {
     m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
   }
 
+  void Matrix4x4::setIdentity() {
+    memset(m, 0, sizeof(m));
+    for (int i = 0; i < 4; i++)
+      m[i][i] = 1.f;
+  }
+
 	std::ostream& operator<<(std::ostream& os, const Matrix4x4& m) {
 		for(int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++)

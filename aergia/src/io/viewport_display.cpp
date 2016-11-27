@@ -55,4 +55,8 @@ namespace aergia {
 		return ponos::inverse(c.getTransform()) * p;
 	}
 
+  ponos::Point3 ViewportDisplay::unProject() {
+		return ponos::inverse(camera->getTransform()) * ponos::Point3(getMouseNPos().x, getMouseNPos().y, 0.f);
+	}
+
 } // aergia namespace

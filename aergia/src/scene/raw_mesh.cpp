@@ -29,4 +29,21 @@ namespace aergia {
 						vertices[i * 3 + 2]));
 	}
 
+	ponos::Point3 RawMesh::vertexElement(size_t e, size_t v) const {
+		return ponos::Point3(
+				vertices[indices[e + v].vertexIndex * elementSize + 0],
+				vertices[indices[e + v].vertexIndex * elementSize + 1],
+				vertices[indices[e + v].vertexIndex * elementSize + 2]);
+	}
+
+	ponos::BBox RawMesh::elementBBox(size_t i) const {
+		ponos::BBox b;
+		for(int v = 0; v < elementSize; v++)
+			b = ponos::make_union(b, ponos::Point3(
+						vertices[indices[i + v].vertexIndex * elementSize + 0],
+						vertices[indices[i + v].vertexIndex * elementSize + 1],
+						vertices[indices[i + v].vertexIndex * elementSize + 2]));
+		return b;
+	}
+
 } // aergia namespace

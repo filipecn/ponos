@@ -46,7 +46,7 @@ namespace hercules {
 				}
 				ponos::BBox2D getWBBox() override {
           if(!wBBoxUpdated) {
-            wBBox = ponos::compute_bbox(*static_cast<ponos::Polygon*>(shape.get()), &transform);
+            wBBox = ponos::compute_bbox(*shape.get(), &transform);
             wBBoxUpdated = true;
           }
 					return wBBox;

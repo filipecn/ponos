@@ -19,7 +19,7 @@ namespace aergia {
 			virtual void draw(const Trackball& tb) {}
 
 			// CONTROL
-			virtual void start(Trackball &tb, const Camera& camera, ponos::Point2 p) {
+			virtual void start(Trackball &tb, const CameraInterface& camera, ponos::Point2 p) {
 				start_ = p;
 				dragging_ = true;
 			}

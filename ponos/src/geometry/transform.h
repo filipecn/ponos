@@ -61,6 +61,7 @@ namespace ponos {
     Vector2 s;
   };
 
+  Transform2D scale(float x, float y);
   Transform2D rotate(float angle);
   Transform2D translate(const Vector2& v);
   Transform2D inverse(const Transform2D& t);
@@ -71,6 +72,9 @@ namespace ponos {
     Transform(const Matrix4x4& mat);
     Transform(const Matrix4x4& mat, const Matrix4x4 inv_mat);
     Transform(const float mat[4][4]);
+    void reset();
+    void translate(const Vector3 &d);
+    void scale(float x, float y, float z);
     friend Transform inverse(const Transform& t);
     BBox operator()(const BBox &b) const {
       const Transform &M = *this;
@@ -190,7 +194,8 @@ namespace ponos {
   Transform lookAt(const Point3& pos, const Point3& target, const Vector3& up);
   Transform lookAtRH(const Point3& pos, const Point3& target, const Vector3& up);
   Transform ortho(float left, float right, float bottom, float top, float near = -1.f, float far = 1.f);
-Transform orthographic(float znear, float zfar);
+
+Transform orthographic(float znear, float zfar);
 } // ponos namespace
 
 #endif

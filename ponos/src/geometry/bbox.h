@@ -15,8 +15,6 @@ namespace ponos {
     BBox2D(const Point2& p1, const Point2& p2);
 
 		Point2 center() {
-			std::cout << pMin.x << " " << pMin.y << std::endl;
-			std::cout << pMax.x << " " << pMax.y << std::endl;
 			return pMin + (pMax - pMin) * .5f;
 		}
 
@@ -70,8 +68,15 @@ namespace ponos {
         return 1;
       return 2;
     }
-    const Point3& operator[](int i) const;
-    Point3& operator[](int i);
+		Point3 centroid() const {
+			return pMin * .5f + vec3(pMax * .5f);
+		}
+    const Point3& operator[](int i) const {
+			return (i == 0) ? pMin : pMax;
+		}
+    Point3& operator[](int i) {
+			return (i == 0) ? pMin : pMax;
+		}
 
     Point3 pMin, pMax;
   };

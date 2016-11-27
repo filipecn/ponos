@@ -34,6 +34,7 @@ namespace aergia {
 			 * @return the id of the new viewport
 			 */
 			size_t addViewport(uint x, uint y, uint w, uint h);
+			size_t addViewport2D(uint x, uint y, uint w, uint h);
 			void init();
 			void run();
 

@@ -1,3 +1,4 @@
+#include "algorithm/search.h"
 #include "algorithm/sort.h"
 #include "common/defs.h"
 #include "common/file.h"

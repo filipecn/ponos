@@ -13,6 +13,7 @@ namespace ponos {
 					float m10, float m11, float m12, float m13,
 					float m20, float m21, float m22, float m23,
 					float m30, float m31, float m32, float m33);
+			void setIdentity();
 			void row_major(float *a) const {
 				int k = 0;
 				for(int i = 0; i < 4; i++)

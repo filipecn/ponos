@@ -9,8 +9,8 @@ using namespace poseidon;
 class TestFLIP : public CppUnit::TestCase {
 	public:
 		CPPUNIT_TEST_SUITE(TestFLIP);
-		CPPUNIT_TEST(testApplyForces);
-		CPPUNIT_TEST(testStoreParticleVelocities);
+		//CPPUNIT_TEST(testApplyForces);
+		//CPPUNIT_TEST(testStoreParticleVelocities);
 		CPPUNIT_TEST_SUITE_END();
 
 		void testApplyForces();

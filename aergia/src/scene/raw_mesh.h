@@ -24,19 +24,24 @@ namespace aergia {
 
 			void computeBBox();
 
-			std::vector<float> vertices;
-			std::vector<float> normals;
-			std::vector<float> texcoords;
+			ponos::BBox elementBBox(size_t i) const;
+			ponos::Point3 RawMesh::vertexElement(size_t e, size_t v) const;
+
+
 			struct IndexData {
 				int vertexIndex;
 				int normalIndex;
 				int texcoordIndex;
 			};
+			std::vector<float> vertices;
+			std::vector<float> normals;
+			std::vector<float> texcoords;
 			std::vector<IndexData> indices;
-			size_t vertexCount;
 			std::vector<uint> verticesIndices;
 			std::vector<uint> normalsIndices;
 			std::vector<uint> texcoordsIndices;
+			size_t elementCount;
+			size_t vertexCount;
 			uint elementSize;
 			ponos::BBox bbox;
 	};

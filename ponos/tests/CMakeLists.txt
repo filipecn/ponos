@@ -9,6 +9,7 @@ set(TESTS
 	TestMatrix.cpp
 	TestObjectPool.cpp
 	TestParallel.cpp
+	TestSearch.cpp
 	TestSort.cpp
 	TestTransform.cpp
 	)

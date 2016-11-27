@@ -27,6 +27,7 @@ namespace aergia {
 				shapes[0].mesh.indices.size() * sizeof(tinyobj::index_t));
 		mesh->vertexCount = mesh->vertices.size() / 3;
 		mesh->elementSize = 3;
+		mesh->elementCount = mesh->indices.size() / mesh->elementSize;
 		mesh->computeBBox();
 		mesh->splitIndexData();
 		/* tiny obj use

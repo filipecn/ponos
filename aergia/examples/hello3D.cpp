@@ -33,7 +33,7 @@ void renderCameraView() {
 
 void renderWorldView() {
 	grid.draw();
-	aergia::CameraModel::drawCamera(*cameraview.camera.get());
+	aergia::CameraModel::drawCamera(*static_cast<aergia::Camera*>(cameraview.camera.get()));
 	trackball.draw();
 }
 
@@ -46,13 +46,13 @@ int main() {
 	// set camera view
 	cameraview.camera.reset(new aergia::Camera());
 	cameraview.camera->resize(WIDTH / 2, HEIGHT);
-	cameraview.camera->setFar(40.f);
-	cameraview.camera->setNear(2.f);
+	static_cast<aergia::Camera*>(cameraview.camera.get())->setFar(40.f);
+  static_cast<aergia::Camera*>(cameraview.camera.get())->setNear(2.f);
 	cameraview.renderCallback = renderCameraView;
 	// set world view
 	worldview.camera.reset(new aergia::Camera());
 	worldview.camera->resize(WIDTH / 2, HEIGHT);
-	worldview.camera->setPos(ponos::Point3(40.f, 10.f, 10.f));
+  static_cast<aergia::Camera*>(worldview.camera.get())->setPos(ponos::Point3(40.f, 10.f, 10.f));
 	worldview.renderCallback = renderWorldView;
 	// set grid
 	grid.setDimension(0, -5, 5);

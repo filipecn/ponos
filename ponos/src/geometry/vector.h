@@ -143,6 +143,10 @@ class Vector3 {
 			return Vector2(x, y);
 		}
 		// arithmetic
+    Vector3& operator=(const float& v) {
+      x = y = z = v;
+      return *this;
+    }
 		Vector3 operator+(const Vector3& v) const {
 			return Vector3(x + v.x, y + v.y, z + v.z);
 		}

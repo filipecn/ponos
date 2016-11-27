@@ -2,6 +2,8 @@
 
 #include "io/graphics_display.h"
 
+#include "scene/camera_2d.h"
+
 namespace aergia {
 
 	App::App(uint w, uint h, const char* t, bool defaultViewport)
@@ -14,6 +16,12 @@ namespace aergia {
 
 	size_t App::addViewport(uint x, uint y, uint w, uint h) {
 		viewports.emplace_back(x, y, w, h);
+		return viewports.size() - 1;
+	}
+
+	size_t App::addViewport2D(uint x, uint y, uint w, uint h) {
+		viewports.emplace_back(x, y, w, h);
+		viewports[0].camera.reset(new aergia::Camera2D());
 		return viewports.size() - 1;
 	}
 

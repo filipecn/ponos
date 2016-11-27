@@ -3,13 +3,15 @@
 
 namespace ponos {
 
+  enum class ShapeType {SHAPE, POLYGON, SPHERE, CAPSULE, MESH};
+
 	class Shape {
   	public:
-	 		Shape() {}
-      virtual Shape& operator=(const Shape& other) {
-        return *this;
-      };
+	 		Shape() {
+        type = ShapeType::SHAPE;
+      }
 			virtual ~Shape() {}
+      ShapeType type;
 	};
 
 } // ponos namespace
