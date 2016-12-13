@@ -30,6 +30,15 @@ namespace ponos {
 		bool interval_interval_intersection(const Interval<T>& a, const Interval<T>& b) {
 			return (a.low <= b.low && a.high >= b.low) || (b.low <= a.low && b.high >= a.low);
 		}
+
+	/* intersection test
+	 * @r **[in]** ray
+	 * @s **[in]** segment
+	 * @t **[out]** intersection point (ray coordinate)
+	 * @return **true** if intersection exists
+	 */
+	bool ray_segment_intersection(const Ray2& R, const Segment2& s, float *t = nullptr);
+
 	/* intersection test
 	 * @r **[in]** ray
 	 * @s **[in]** segment
@@ -70,6 +79,22 @@ namespace ponos {
 	 * @return **true** if intersection exists
 	 */
 	bool sphere_ray_intersection(const Sphere &s, const Ray3 &r, float *t1 = nullptr, float *t2 = nullptr);
+	/* intersection test
+	 * @box **[in]**
+	 * @ray **[in]**
+	 * @hit1 **[out]** first intersection
+	 * @hit2 **[out]** second intersection
+	 *
+	 * <BBox2D> / <Ray> intersection test.
+	 *
+	 * **hit1** and **hit2** are in the ray's parametric coordinate.
+	 *
+	 * **hit1** = **hit2** if a single point is found.
+	 *
+	 * @return **true** if intersectiton exists
+	 */
+	bool bbox_ray_intersection(const BBox2D& box, const Ray2& ray, float& hit1, float& hit2);
+
 	/* intersection test
 	 * @box **[in]**
 	 * @ray **[in]**

@@ -8,7 +8,7 @@ int WIDTH = 800, HEIGHT = 800;
 aergia::SceneApp<> app(WIDTH, HEIGHT, "Scene App");
 
 int main() {
-	aergia::RawMesh m;
+	ponos::RawMesh m;
 	aergia::loadOBJ("/home/filipecn/Desktop/dragon.obj", &m);
 	m.computeBBox();
 	m.splitIndexData();

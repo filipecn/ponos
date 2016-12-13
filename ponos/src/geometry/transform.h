@@ -15,11 +15,24 @@ namespace ponos {
   public:
     Transform2D() {}
     Transform2D(const Matrix3x3& mat, const Matrix3x3 inv_mat);
+		Transform2D(const BBox2D& bbox);
     void reset();
     void translate(const Vector2 &d);
     void scale(float x, float y);
     void rotate(float angle);
     friend Transform2D inverse(const Transform2D& t);
+    void operator()(const Point2& p, Point2* r) const {
+      float x = p.x, y = p.y;
+      r->x = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2];
+      r->y = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2];
+      float wp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2];
+      if (wp != 1.f) *r /= wp;
+    }
+    void operator()(const Vector2& v, Vector2* r) const {
+      float x  = v.x, y = v.y;
+      r->x = m.m[0][0] * x + m.m[0][1] * y;
+      r->y = m.m[1][0] * x + m.m[1][1] * y;
+    }
     Vector2 operator()(const Vector2& v) const {
       float x = v.x, y = v.y;
       return Vector2(m.m[0][0] * x + m.m[0][1] * y,
@@ -47,6 +60,12 @@ namespace ponos {
 			Matrix3x3 m1_inv = Matrix3x3::mul(t.m_inv, m_inv);
 				return Transform2D(m1, m1_inv);
 		}
+    Ray2 operator()(const Ray2& r) {
+      Ray2 ret = r;
+      (*this)(ret.o, &ret.o);
+      (*this)(ret.d, &ret.d);
+      return ret;
+    }
 		Vector2 getTranslate() const {
       return Vector2(m.m[0][2], m.m[1][2]);
     }
@@ -56,6 +75,9 @@ namespace ponos {
     void computeInverse() {
       m_inv = inverse(m);
     }
+		Matrix3x3 getMatrix() const {
+			return m;
+		}
   private:
     Matrix3x3 m, m_inv;
     Vector2 s;
@@ -133,6 +155,20 @@ namespace ponos {
       (*this)(r.o, &ret->o);
       (*this)(r.d, &ret->d);
     }
+		Transform& operator=(const Transform2D& t) {
+			m.setIdentity();
+			Matrix3x3 m3 = t.getMatrix();
+			m.m[0][0] = m3.m[0][0];
+			m.m[0][1] = m3.m[0][1];
+			m.m[0][3] = m3.m[0][2];
+
+			m.m[1][0] = m3.m[1][0];
+			m.m[1][1] = m3.m[1][1];
+			m.m[1][3] = m3.m[1][2];
+
+			m_inv = inverse(m);
+			return *this;
+		}
     Transform operator*(const Transform& t) const {
       Matrix4x4 m1 = Matrix4x4::mul(m, t.m);
       Matrix4x4 m1_inv = Matrix4x4::mul(t.m_inv, m_inv);

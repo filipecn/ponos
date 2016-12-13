@@ -2,8 +2,8 @@
 
 namespace aergia {
 
-	RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s, const ponos::vec3 &o) {
-		RawMesh *m = new RawMesh();
+	ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s, const ponos::vec3 &o) {
+		ponos::RawMesh *m = new ponos::RawMesh();
 		ponos::ivec2 ij;
 		// XY
 		FOR_INDICES0_2D(d.xy(0, 1), ij) {
@@ -62,8 +62,8 @@ namespace aergia {
 		return m;
 	}
 
-	RawMesh *create_wireframe_mesh(const RawMesh *m) {
-		RawMesh *mesh = new RawMesh();
+	ponos::RawMesh *create_wireframe_mesh(const ponos::RawMesh *m) {
+		ponos::RawMesh *mesh = new ponos::RawMesh();
 		mesh->vertexCount = m->vertexCount;
 		mesh->vertices = std::vector<float>(m->vertices);
 		size_t nelements = m->indices.size() / m->elementSize;

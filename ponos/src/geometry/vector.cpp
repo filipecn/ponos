@@ -16,6 +16,8 @@ Vector2::Vector2(float _x, float _y)
 Vector2::Vector2(const Point2& p)
   : x(p.x), y(p.y) {}
 
+Vector2::Vector2(float f) { x = y = f; }
+
 bool Vector2::HasNaNs() const {
   return std::isnan(x) || std::isnan(y);
 }
@@ -95,5 +97,31 @@ Vector<3, int> max(Vector<3, int> a, Vector<3, int> b) {
 			std::max(a[1], b[1]),
 			std::max(a[2], b[2]));
 }
+
+
+Vector<2, int> ceil(const Vector2 &v) {
+	return Vector<2, int>(
+			static_cast<int>(v[0] + 0.5f),
+			static_cast<int>(v[1] + 0.5f));
+}
+
+Vector<2, int> floor(const Vector2 &v) {
+	return Vector<2, int>(
+			static_cast<int>(v[0]),
+			static_cast<int>(v[1]));
+}
+
+Vector<2, int> min(Vector<2, int> a, Vector<2, int> b) {
+	return Vector<2, int>(
+			std::min(a[0], b[0]),
+			std::min(a[1], b[1]));
+}
+
+Vector<2, int> max(Vector<2, int> a, Vector<2, int> b) {
+	return Vector<2, int>(
+			std::max(a[0], b[0]),
+			std::max(a[1], b[1]));
+}
+
 
 } // ponos namespace

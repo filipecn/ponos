@@ -21,7 +21,8 @@ namespace aergia {
 
 			std::shared_ptr<SceneMesh> sceneMesh;
 
-			bool intersect(const ponos::Ray3 &r, float *t = nullptr) const;
+			int intersect(const ponos::Ray3 &ray, float *t = nullptr);
+			bool isInside(const ponos::Point3 &p);
 
 		private:
 			struct BVHElement {
@@ -29,8 +30,8 @@ namespace aergia {
 					: ind(i), bounds(b) {
 						centroid = b.centroid();
 					}
-				ponos::BBox bounds;
 				size_t ind;
+				ponos::BBox bounds;
 				ponos::Point3 centroid;
 			};
 			struct BVHNode {
@@ -72,6 +73,7 @@ namespace aergia {
 			};
 			std::vector<uint> orderedElements;
 			std::vector<LinearBVHNode> nodes;
+			BVHNode* root;
 			BVHNode* recursiveBuild(std::vector<BVHElement>& buildData, uint32_t start, uint32_t end, uint32_t* totalNodes, std::vector<uint32_t>& orderedElements);
 			uint32_t flattenBVHTree(BVHNode* node, uint32_t *offset);
 			bool intersect(const ponos::BBox& bounds, const ponos::Ray3& ray, const ponos::vec3& invDir, const uint32_t dirIsNeg[3]) const;

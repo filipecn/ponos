@@ -52,11 +52,14 @@ namespace poseidon {
 			: position(p) {}
 		ponos::Point2 position;
 		ponos::vec2 velocity;
-		ponos::vec2 normal;
 		float density;
 		float mass;
 		bool invalid;
 		ParticleType type;
+		ponos::Normal normal;
+		int meshId;
+		ponos::Point2 p_copy;
+		ponos::vec2 v_copy;
 	};
 
 

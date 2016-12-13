@@ -31,11 +31,15 @@ set(HEADERS
 	src/parallel/parallel.h
 	src/spatial/array.h
 	src/spatial/spatial_structure_interface.h
+	src/structures/bah.h
 	src/structures/brep.hpp
 	src/structures/c_grid_interface.h
 	src/structures/c_regular_grid.h
+	src/structures/level_set.h
+	src/structures/mesh.h
 	src/structures/regular_grid.h
 	src/structures/object_pool.h
+	src/structures/raw_mesh.h
 	src/structures/z_grid.h
 	src/ponos.h
 	)
@@ -52,6 +56,10 @@ set(SOURCES
 	src/geometry/transform.cpp
 	src/geometry/vector.cpp
 	src/parallel/parallel.cpp
+	src/structures/bah.cpp
+	src/structures/level_set.cpp
+	src/structures/mesh.cpp
+	src/structures/raw_mesh.cpp
 	)
 
 include_directories("${PONOS_SOURCE_DIR}/src")

@@ -9,10 +9,10 @@ namespace aergia {
 		sceneMesh.reset(m);
 		std::vector<BVHElement> buildData;
 		for(size_t i = 0; i < sceneMesh->rawMesh->elementCount; i++)
-			buildData.emplace_back(BVHElement(i, sceneMesh->transform(sceneMesh->rawMesh->elementBBox(i))));
+			buildData.emplace_back(BVHElement(i, sceneMesh->rawMesh->elementBBox(i)));
 		uint totalNodes = 0;
 		orderedElements.reserve(sceneMesh->rawMesh->elementCount);
-		BVHNode *root = recursiveBuild(buildData, 0, sceneMesh->rawMesh->elementCount, &totalNodes, orderedElements);
+		root = recursiveBuild(buildData, 0, sceneMesh->rawMesh->elementCount, &totalNodes, orderedElements);
 		nodes.resize(totalNodes);
 		for(uint32_t i = 0; i < totalNodes; i++)
 			new (&nodes[i]) LinearBVHNode;
@@ -20,7 +20,8 @@ namespace aergia {
 		flattenBVHTree(root, &offset);
 	}
 
-	BVH::BVHNode* BVH::recursiveBuild(std::vector<BVHElement>& buildData, uint32_t start, uint32_t end, uint32_t* totalNodes, std::vector<uint32_t>& orderedElements) {
+	BVH::BVHNode* BVH::recursiveBuild(std::vector<BVHElement>& buildData, uint32_t start, uint32_t end,
+			uint32_t* totalNodes, std::vector<uint32_t>& orderedElements) {
 		(*totalNodes)++;
 		BVHNode* node = new BVHNode();
 		ponos::BBox bbox;
@@ -45,13 +46,9 @@ namespace aergia {
 			// partition primitives
 			uint32_t mid = (start + end) / 2;
 			if(centroidBounds.pMax[dim] == centroidBounds.pMin[dim]) {
-				// create leaf
-				uint32_t firstElementOffset = orderedElements.size();
-				for(uint32_t i = start; i < end; i++) {
-					uint32_t elementNum = buildData[i].ind;
-					orderedElements.emplace_back(elementNum);
-				}
-				node->initLeaf(firstElementOffset, nElements, bbox);
+				node->initInterior(dim,
+						recursiveBuild(buildData, start, mid, totalNodes, orderedElements),
+						recursiveBuild(buildData, mid,   end, totalNodes, orderedElements));
 				return node;
 			}
 			// partition into equally sized subsets
@@ -80,16 +77,17 @@ namespace aergia {
 		return myOffset;
 	}
 
-	bool BVH::intersect(const ponos::Ray3 &r, float *t) const {
+	int BVH::intersect(const ponos::Ray3 &ray, float *t) {
 		if(!nodes.size()) return false;
-		bool hit = false;
-		ponos::Point3 origin = r.o;
+		ponos::Transform inv = ponos::inverse(sceneMesh->transform);
+		ponos::Ray3 r = inv(ray);
+		int hit = 0;
 		ponos::vec3 invDir(1.f / r.d.x, 1.f / r.d.y, 1.f / r.d.z);
 		uint32_t dirIsNeg[3] = { invDir.x < 0, invDir.y < 0, invDir.z < 0 };
 		uint32_t todoOffset = 0, nodeNum = 0;
 		uint32_t todo[64];
 		while(true) {
-			const LinearBVHNode* node = &nodes[nodeNum];
+			LinearBVHNode* node = &nodes[nodeNum];
 			if(intersect(node->bounds, r, invDir, dirIsNeg)) {
 				if(node->nElements > 0) {
 					// intersect ray with primitives
@@ -98,7 +96,7 @@ namespace aergia {
 						ponos::Point3 v1 = sceneMesh->rawMesh->vertexElement(orderedElements[node->elementsOffset + i], 1);
 						ponos::Point3 v2 = sceneMesh->rawMesh->vertexElement(orderedElements[node->elementsOffset + i], 2);
 						if(ponos::triangle_ray_intersection(v0, v1, v2, r))
-							hit = true;
+							hit++;
 					}
 					if(todoOffset == 0)
 						break;
@@ -120,7 +118,10 @@ namespace aergia {
 		return hit;
 	}
 
-	bool BVH::intersect(const ponos::BBox& bounds, const ponos::Ray3& ray, const ponos::vec3& invDir, const uint32_t dirIsNeg[3]) const {
+	bool BVH::intersect(const ponos::BBox& bounds, const ponos::Ray3& ray,
+			const ponos::vec3& invDir, const uint32_t dirIsNeg[3]) const {
+		float hit1, hit2;
+		return ponos::bbox_ray_intersection(bounds, ray, hit1, hit2);
 		float tmin = (bounds[    dirIsNeg[0]].x - ray.o.x) * invDir.x;
 		float tmax = (bounds[1 - dirIsNeg[0]].x - ray.o.x) * invDir.x;
 		float tymin = (bounds[    dirIsNeg[1]].y - ray.o.y) * invDir.y;
@@ -136,6 +137,25 @@ namespace aergia {
 		if(tzmin > tmin) tmin = tzmin;
 		if(tzmax < tmax) tmax = tzmax;
 		return tmax > 0;
+	}
+
+	bool BVH::isInside(const ponos::Point3 &p) {
+		ponos::Ray3 r(p, ponos::vec3(1.2, 1.1, 0.1));
+		ponos::Ray3 r2(p, ponos::vec3(0.2, -1.1, 0.1));
+
+		return intersect(r, nullptr) % 2 && intersect(r2, nullptr) % 2;
+
+		int hit = 0, hit2 = 0;
+		for(size_t i = 0; i < sceneMesh->rawMesh->elementCount; i++) {
+			ponos::Point3 v0 = sceneMesh->rawMesh->vertexElement(i, 0);
+			ponos::Point3 v1 = sceneMesh->rawMesh->vertexElement(i, 1);
+			ponos::Point3 v2 = sceneMesh->rawMesh->vertexElement(i, 2);
+			if(ponos::triangle_ray_intersection(v0, v1, v2, r))
+				hit++;
+			if(ponos::triangle_ray_intersection(v0, v1, v2, r2))
+				hit2++;
+		}
+		return hit % 2 && hit2 % 2;
 	}
 
 } // aergia namespace"

@@ -7,6 +7,14 @@ namespace ponos {
   Transform2D::Transform2D(const Matrix3x3& mat, const Matrix3x3 inv_mat)
   : m(mat), m_inv(inv_mat) {}
 
+	Transform2D::Transform2D(const BBox2D& bbox) {
+		m.m[0][0] = bbox.pMax[0] - bbox.pMin[0];
+		m.m[1][1] = bbox.pMax[1] - bbox.pMin[1];
+		m.m[0][2] = bbox.pMin[0];
+		m.m[1][2] = bbox.pMin[1];
+		m_inv = inverse(m);
+	}
+
   void Transform2D::reset() {
     m.setIdentity();
   }
@@ -78,7 +86,7 @@ namespace ponos {
                   mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
     m_inv = inverse(m);
   }
- 
+
   void Transform::reset() {
     m.setIdentity();
   }

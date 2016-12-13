@@ -3,13 +3,11 @@
 #define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
 #include <tiny_obj_loader.h>
 
-#include "scene/raw_mesh.h"
-
 #include <cstring>
 
 namespace aergia {
 
-	void loadOBJ(const std::string& filename, RawMesh *mesh) {
+	void loadOBJ(const std::string& filename, ponos::RawMesh *mesh) {
 		if(!mesh)
 			return;
 		tinyobj::attrib_t attrib;

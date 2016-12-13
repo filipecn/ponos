@@ -58,6 +58,9 @@ namespace ponos {
 				bool belongs(const ivec3& i) const {
 					return ivec3() <= i && i < dimensions;
 				}
+				Point3 worldPosition(const ivec3& ijk) const {
+					return toWorld(Point3(ijk[0], ijk[1], ijk[2]));
+				}
 				// access mode
 				CGridAccessMode mode;
 				// default value
@@ -75,6 +78,11 @@ namespace ponos {
 	template<class T>
 		class CGrid2DInterface {
 			public:
+				void setTransform(const Transform2D& t) {
+					toWorld = t;
+					toGrid = inverse(t);
+				}
+
 				void setTransform(Vector2 _offset, Vector2 _cellSize) {
 					offset = _offset;
 					toWorld.reset();

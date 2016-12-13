@@ -205,7 +205,7 @@ namespace ponos {
     w[2] = -1.5 * CUBE(dz) + 2 * SQR(dz) + 0.5 * dz;
     w[3] = 0.5 * CUBE(dz) - 0.5 * SQR(dz);
 
-    ivec3 ijk(x - 1, y - 1, z - 1);
+		int ijk[3] = {x - 1, y - 1, z - 1};
     for (k = 0; k < 4; k++) {
       q[k] = 0;
       for (j = 0; j < 4; j++) {
@@ -233,6 +233,27 @@ namespace ponos {
   inline float sharpen(const float& r2, const float& h) {
     return std::max(h * h / std::max(r2, static_cast<float>(1.0e-5)) - 1.0f, 0.0f);
   }
+
+  /* split
+   * @n **[in]** number
+   * @return the number with the bits of **n** splitted and separated by 1 bit. Ex: n = 1101, return 101001
+   */
+	inline uint32 separateBy1(uint32 n) {
+		n = (n ^ (n << 8)) & 0x00ff00ff;
+		n = (n ^ (n << 4)) & 0x0f0f0f0f;
+		n = (n ^ (n << 2)) & 0x33333333;
+		n = (n ^ (n << 1)) & 0x55555555;
+		return n;
+	}
+
+  /* morton code
+   * @x **[in]** number
+   * @y **[in]** number
+   * @return the morton code of **x** and **y**. The morton code is the combination of the two binary numbers with the bits interleaved.
+   */
+	inline uint32 mortonCode(uint32 x, uint32 y) {
+		return (separateBy1(y) << 1) + separateBy1(x);
+	}
 
 } // ponos namespace
 

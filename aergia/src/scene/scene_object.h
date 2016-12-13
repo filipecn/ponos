@@ -5,7 +5,6 @@
 
 #include "io/buffer.h"
 #include "io/utils.h"
-#include "scene/raw_mesh.h"
 
 namespace aergia {
 
@@ -28,7 +27,7 @@ namespace aergia {
 			 * @t **[out]** receives the parametric value of the intersection
 			 * @return **true** if intersection is found
 			 */
-			virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) const { return false; }
+			virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) { return false; }
 
 			ponos::Transform transform;
 			bool selected;
@@ -39,7 +38,7 @@ namespace aergia {
 		public:
 			SceneMesh() {}
 			SceneMesh(const std::string &filename) {
-				RawMesh *m = new RawMesh();
+				ponos::RawMesh *m = new ponos::RawMesh();
 				loadOBJ(filename, m);
 				m->computeBBox();
 				m->splitIndexData();
@@ -47,7 +46,7 @@ namespace aergia {
 				setupVertexBuffer();
 				setupIndexBuffer();
 			}
-			SceneMesh(const RawMesh *m) {
+			SceneMesh(const ponos::RawMesh *m) {
 				rawMesh.reset(m);
 				setupVertexBuffer();
 				setupIndexBuffer();
@@ -61,7 +60,11 @@ namespace aergia {
 				ib->bind();
 			}
 
-			std::shared_ptr<const RawMesh> rawMesh;
+			ponos::BBox getBBox() {
+				return this->transform(rawMesh->bbox);
+			}
+
+			std::shared_ptr<const ponos::RawMesh> rawMesh;
 
 		protected:
 			virtual void setupVertexBuffer() {

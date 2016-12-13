@@ -1,11 +1,12 @@
-#ifndef AERGIA_SCENE_RAW_MESH_H
-#define AERGIA_SCENE_RAW_MESH_H
+#ifndef PONOS_STRUCTURES_RAW_MESH_H
+#define PONOS_STRUCTURES_RAW_MESH_H
 
-#include <ponos.h>
+#include "geometry/bbox.h"
+#include "geometry/transform.h"
 
 #include <vector>
 
-namespace aergia {
+namespace ponos {
 
 	/* mesh structure
 	 * Stores the elements of the mesh in simple arrays. This class
@@ -18,15 +19,14 @@ namespace aergia {
 	 		RawMesh() {}
 			virtual ~RawMesh() {}
 
-			void apply(const ponos::Transform &t);
+			void apply(const Transform &t);
 
 			void splitIndexData();
 
 			void computeBBox();
 
 			ponos::BBox elementBBox(size_t i) const;
-			ponos::Point3 RawMesh::vertexElement(size_t e, size_t v) const;
-
+			ponos::Point3 vertexElement(size_t e, size_t v) const;
 
 			struct IndexData {
 				int vertexIndex;
@@ -43,10 +43,10 @@ namespace aergia {
 			size_t elementCount;
 			size_t vertexCount;
 			uint elementSize;
-			ponos::BBox bbox;
+			BBox bbox;
 	};
 
-} // aergia namespace
+} // ponos namespace
 
-#endif // AERGIA_SCENE_RAW_MESH_H
+#endif // PONOS_STRUCTURES_RAW_MESH_H
 

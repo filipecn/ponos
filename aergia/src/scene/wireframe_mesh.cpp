@@ -6,7 +6,7 @@ namespace aergia {
 	: SceneMesh(filename) {}
 
 
-	WireframeMesh::WireframeMesh(const RawMesh *m, const ponos::Transform &t) {
+	WireframeMesh::WireframeMesh(const ponos::RawMesh *m, const ponos::Transform &t) {
 		rawMesh.reset(m);
 		setupVertexBuffer();
 		setupIndexBuffer();

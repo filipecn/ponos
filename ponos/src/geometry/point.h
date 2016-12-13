@@ -47,7 +47,11 @@ namespace ponos {
 				y -= v.y;
 				return *this;
 			}
-
+			Point2& operator/=(float d) {
+				x /= d;
+				y /= d;
+				return *this;
+			}
 			bool HasNaNs() const;
 			friend std::ostream& operator<<(std::ostream& os, const Point2& p);
 			float x, y;
@@ -172,7 +176,7 @@ namespace ponos {
 				return IS_EQUAL(x, p.x) && IS_EQUAL(y, p.y) && IS_EQUAL(z, p.z);
 			}
 
-			Point2 xy() {
+			Point2 xy() const {
 				return Point2(x, y);
 			}
 			bool HasNaNs() const;

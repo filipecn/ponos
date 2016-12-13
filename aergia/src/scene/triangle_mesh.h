@@ -3,6 +3,8 @@
 
 #include "scene/scene_object.h"
 
+#include <ponos.h>
+
 #include <memory>
 
 namespace aergia {
@@ -10,7 +12,7 @@ namespace aergia {
 	class TriangleMesh : public SceneMesh {
   	public:
 			TriangleMesh(const std::string &filename);
-	 		TriangleMesh(const RawMesh *m);
+	 		TriangleMesh(const ponos::RawMesh *m);
 			virtual ~TriangleMesh() {}
 			/* @inherit */
 			void draw() const override;

@@ -32,5 +32,8 @@
 #include "structures/regular_grid.h"
 #include "structures/c_regular_grid.h"
 #include "structures/c_grid_interface.h"
+#include "structures/level_set.h"
 #include "structures/object_pool.h"
+#include "structures/mesh.h"
+#include "structures/raw_mesh.h"
 #include "structures/z_grid.h"

@@ -24,6 +24,7 @@ namespace poseidon {
 				 * Set macgrid dimensions and transform.
 				 */
 				void set(const ponos::ivec3& d, float s, ponos::vec3 o);
+
 				// dimensions
 				ponos::ivec3 dimensions;
 				// velocity's x component
@@ -38,6 +39,55 @@ namespace poseidon {
 				std::shared_ptr<GridType> d;
 				// cell type
 				std::shared_ptr<ponos::RegularGrid<CellType> > cellType;
+		};
+
+	template<template<typename T> class GridType>
+		class MacGrid2D {
+			public:
+				MacGrid2D(size_t w, size_t h, const ponos::BBox2D& bbox) {
+					set(ponos::ivec2(w, h), bbox);
+				}
+
+				virtual ~MacGrid2D() {}
+				/* setter
+				 * @d **[in]** dimensions
+				 * @s **[in]** scale
+				 * @o **[in]** offset
+				 *
+				 * Set macgrid dimensions and transform.
+				 */
+				void set(const ponos::ivec2& d, float s, ponos::vec2 o);
+				void set(const ponos::ivec2& d, const ponos::BBox2D& bbox) {
+					ponos::vec2 offset = 0.5f * ponos::vec2(
+								(bbox.pMax[0] - bbox.pMin[0]) / static_cast<float>(d[0]),
+								(bbox.pMax[1] - bbox.pMin[1]) / static_cast<float>(d[1]));
+					ponos::Transform2D t = ponos::translate(ponos::vec2(bbox.pMin + offset)) *
+						ponos::scale(
+								(bbox.pMax[0] - bbox.pMin[0]) / static_cast<float>(d[0]),
+								(bbox.pMax[1] - bbox.pMin[1]) / static_cast<float>(d[1]));
+					dimensions = d;
+					toWorld = t;
+					toGrid = ponos::inverse(t);
+					v_u.reset(new GridType<float>(dimensions[0] + 1, dimensions[1]));
+					v_u->setTransform(toWorld * ponos::translate(ponos::vec2(-0.5f, 0.0f)));
+					v_v.reset(new GridType<float>(dimensions[0], dimensions[1] + 1));
+					v_v->setTransform(toWorld * ponos::translate(ponos::vec2(0.0f, -0.5f)));
+					p.reset(new GridType<float>(dimensions[0], dimensions[1]));
+				}
+
+				ponos::Transform2D toWorld, toGrid;
+				// dimensions
+				ponos::ivec2 dimensions;
+				// velocity's x component
+				std::shared_ptr<GridType<float> > v_u;
+				// velocity's y component
+				std::shared_ptr<GridType<float> > v_v;
+				// pressure
+				std::shared_ptr<GridType<float> > p;
+				// divergence
+				std::shared_ptr<GridType<float> > d;
+				// cell type
+				std::shared_ptr<GridType<CellType> > cellType;
 		};
 
 } // poseidon namespace

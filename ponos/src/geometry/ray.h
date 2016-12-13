@@ -32,6 +32,7 @@ namespace ponos {
 			Point3 operator()(float t) const {
 				return o + d * t;
 			}
+
 			friend std::ostream& operator<<(std::ostream& os, const Ray3& r) {
 				os << "[Ray]\n";
 				os << r.o << r.d;

@@ -15,6 +15,7 @@ class Vector2 {
 		Vector2();
 		explicit Vector2(float _x, float _y);
 		explicit Vector2(const Point2& p);
+		Vector2(float f);
 		// access
 		float operator[](int i) const {
 			ASSERT(i >= 0 && i <= 1);
@@ -448,6 +449,21 @@ typedef Vector<4, uint> uivec4;
 
 	Vector<3, int> min(Vector<3, int> a, Vector<3, int> b);
 	Vector<3, int> max(Vector<3, int> a, Vector<3, int> b);
+
+	/* round
+	 * @v **[in]** vector
+	 * @return a vector with ceil applied to all components
+	 */
+	Vector<2, int> ceil(const Vector2 &v);
+	/* round
+	 * @v **[in]** vector
+	 * @return a vector with floor applied to all components
+	 */
+	Vector<2, int> floor(const Vector2 &v);
+
+	Vector<2, int> min(Vector<2, int> a, Vector<2, int> b);
+	Vector<2, int> max(Vector<2, int> a, Vector<2, int> b);
+
 
 } // ponos namespace
 

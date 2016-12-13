@@ -7,6 +7,8 @@
 
 namespace aergia {
 
+	void draw_bbox(const ponos::BBox2D& bbox, float* fillColor = nullptr);
+
 	void draw_bbox(const ponos::BBox& bbox);
 
 	void draw_segment(ponos::Segment3 segment);

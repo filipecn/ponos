@@ -1,6 +1,7 @@
 #ifndef PONOS_STRUCTURES_C_REGULAR_GRID_H
 #define PONOS_STRUCTURES_C_REGULAR_GRID_H
 
+#include "common/macros.h"
 #include "log/debug.h"
 #include "structures/c_grid_interface.h"
 
@@ -17,6 +18,7 @@ namespace ponos {
 	template<class T = float>
 		class CRegularGrid : public CGridInterface<T> {
 			public:
+				CRegularGrid() {}
 				/* Constructor
 				 * @d **[in]** dimensions
 				 * @b **[in]** background (default value)
@@ -28,30 +30,30 @@ namespace ponos {
         void setAll(T v);
 				/* @inherit */
         T operator()(const ivec3& i) const override {
-          CHECK_IN_BETWEEN(i[0], 0, dimensions[0]);
-          CHECK_IN_BETWEEN(i[1], 0, dimensions[1]);
-          CHECK_IN_BETWEEN(i[2], 0, dimensions[2]);
+          CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
+          CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
+          CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
           return data[i[0]][i[1]][i[2]];
         }
 				/* @inherit */
         T& operator()(const ivec3& i) override {
-          CHECK_IN_BETWEEN(i[0], 0, dimensions[0]);
-          CHECK_IN_BETWEEN(i[1], 0, dimensions[1]);
-          CHECK_IN_BETWEEN(i[2], 0, dimensions[2]);
+          CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
+          CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
+          CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
           return data[i[0]][i[1]][i[2]];
         }
 				/* @inherit */
         T operator()(const uint& i, const uint&j, const uint& k) const override {
-          CHECK_IN_BETWEEN(i, 0, dimensions[0]);
-          CHECK_IN_BETWEEN(j, 0, dimensions[1]);
-          CHECK_IN_BETWEEN(k, 0, dimensions[2]);
+          CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
+          CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
+          CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
           return data[i][j][k];
         }
         /* @inherit */
         T& operator()(const uint& i, const uint&j, const uint& k) override {
-          CHECK_IN_BETWEEN(i, 0, dimensions[0]);
-          CHECK_IN_BETWEEN(j, 0, dimensions[1]);
-          CHECK_IN_BETWEEN(k, 0, dimensions[2]);
+          CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
+          CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
+          CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
           return data[i][j][k];
         }
         T safeData(int i, int j, int k) const;
@@ -68,7 +70,7 @@ namespace ponos {
 		};
 
 	template<typename T>
-		CRegularGrid<T>::CRegularGrid(const ivec3& d, const T& b, const vec3 cellSize = vec3(1.f), const vec3& offset = vec3()) {
+		CRegularGrid<T>::CRegularGrid(const ivec3& d, const T& b, const vec3 cellSize, const vec3& offset) {
 			this->dimensions = d;
 			this->background = b;
       data = new T**[d[0]];
@@ -81,7 +83,7 @@ namespace ponos {
 			this->toWorld.scale(cellSize.x, cellSize.y, cellSize.z);
 			this->toWorld.translate(offset);
 		  this->toWorld.computeInverse();
-			this->toGrid = inverse(toWorld);
+			this->toGrid = inverse(this->toWorld);
 		}
 
 	template<typename T>
@@ -93,7 +95,7 @@ namespace ponos {
         delete[] data[i];
       delete[] data;
     }
-	
+
     template<typename T>
 		void CRegularGrid<T>::setAll(T v){
       ivec3 ijk;
@@ -122,9 +124,9 @@ namespace ponos {
 
 				virtual ~CRegularGrid2D();
 
-				T& operator() (int i, int j) override;
-				T operator() (int i, int j) const override;
-				T safeData(int i, int j) const override;
+				T& operator() (int i, int j);
+				T operator() (int i, int j) const;
+				T safeData(int i, int j) const;
 
 				void set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize);
 				void setAll(T v);

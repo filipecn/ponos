@@ -20,9 +20,7 @@ set(HEADERS
   src/scene/bvh.h
 	src/scene/camera.h
 	src/scene/camera_2d.h
-	src/scene/mesh.h
 	src/scene/mesh_utils.h
-	src/scene/raw_mesh.h
 	src/scene/scene.h
 	src/scene/scene_object.h
 	src/scene/triangle_mesh.h
@@ -49,9 +47,7 @@ set(SOURCES
   src/scene/bvh.cpp
 	src/scene/camera.cpp
 	src/scene/camera_2d.cpp
-	src/scene/mesh.cpp
 	src/scene/mesh_utils.cpp
-	src/scene/raw_mesh.cpp
 	src/scene/triangle_mesh.cpp
 	src/scene/wireframe_mesh.cpp
 	src/ui/app.cpp

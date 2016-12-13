@@ -14,6 +14,26 @@ namespace ponos {
 		return true;
 	}
 
+bool ray_segment_intersection(const Ray2& R, const Segment2& s, float *t) {
+	vec2 dd = s.b - s.a;
+	Ray3 r(Point3(R.o.x, R.o.y, 0.f), vec3(R.d.x, R.d.y, 0.f));
+		Ray3 r2(Point3(s.a.x, s.a.y, 0.f), vec3(dd.x, dd.y, 0.f));
+		float d = cross(r.d, r2.d).length2();
+		if(d == 0.f)
+			// TODO handle this case
+			return false;
+		float t1 = Matrix3x3(r2.o - r.o, r2.d, cross(r.d, r2.d)).determinant() / d;
+		float t2 = Matrix3x3(r2.o - r.o,  r.d, cross(r.d, r2.d)).determinant() / d;
+		// TODO add user threshold
+		float dist = (r(t1) - r2(t2)).length();
+		if(t1 >= 0.f && t2 >= 0.f && t2 <= s.length() && dist < 0.1f) {
+			if(t)
+				*t = t1;
+			return true;
+		}
+		return false;
+	}
+
 	bool ray_segment_intersection(const Ray3& r, const Segment3& s, float *t) {
 		Ray3 r2(s.a, s.b - s.a);
 		float d = cross(r.d, r2.d).length2();
@@ -82,6 +102,25 @@ namespace ponos {
 			return true;
 	}
 
+	bool bbox_ray_intersection(const BBox2D& box, const Ray2& ray, float& hit0, float& hit1) {
+		float t0 = 0.f, t1 = INFINITY;
+		for(int i = 0; i < 2; i++) {
+			float invRayDir = 1.f / ray.d[i];
+			float tNear = (box.pMin[i] - ray.o[i]) * invRayDir;
+			float tFar  = (box.pMax[i] - ray.o[i]) * invRayDir;
+			if(tNear > tFar)
+				std::swap(tNear, tFar);
+			t0 = tNear > t0 ? tNear : t0;
+			t1 = tFar  < t1 ? tFar  : t1;
+			if(t0 > t1)
+				return false;
+		}
+		hit0 = t0;
+		hit1 = t1;
+		return true;
+	}
+
+
 	bool bbox_ray_intersection(const BBox& box, const Ray3& ray, float& hit0, float& hit1) {
 		float t0 = 0.f, t1 = INFINITY;
 		for(int i = 0; i < 3; i++) {
@@ -91,7 +130,7 @@ namespace ponos {
 			if(tNear > tFar)
 				std::swap(tNear, tFar);
 			t0 = tNear > t0 ? tNear : t0;
-			t1 = tFar  > t1 ? tFar  : t1;
+			t1 = tFar  < t1 ? tFar  : t1;
 			if(t0 > t1)
 				return false;
 		}

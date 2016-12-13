@@ -14,9 +14,25 @@ namespace ponos {
     BBox2D();
     BBox2D(const Point2& p1, const Point2& p2);
 
+    bool inside(const Point2& p) const {
+      return (p.x >= pMin.x && p.x <= pMax.x &&
+              p.y >= pMin.y && p.y <= pMax.y);
+    }
+
 		Point2 center() {
 			return pMin + (pMax - pMin) * .5f;
 		}
+
+		Point2 centroid() const {
+			return pMin * .5f + vec2(pMax * .5f);
+		}
+
+    int maxExtent() const {
+      Vector2 diag = pMax - pMin;
+      if (diag.x > diag.y)
+        return 0;
+      return 1;
+    }
 
     Point2 pMin, pMax;
   };
@@ -30,6 +46,10 @@ namespace ponos {
     return ret;
   }
 
+	inline BBox2D make_union(const BBox2D& a, const BBox2D& b) {
+    BBox2D ret = make_union(a, b.pMin);
+    return make_union(ret, b.pMax);
+  }
 
   class BBox {
   public:

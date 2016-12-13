@@ -26,7 +26,9 @@ namespace ponos {
 			T a, b;
 	};
 
+	typedef Segment<Point2> Segment2;
 	typedef Segment<Point3> Segment3;
+
 
 } // ponos namespace
 

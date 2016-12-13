@@ -30,6 +30,7 @@ namespace ponos {
         return *this;
       }*/
 
+			Transform2D transform;
 			std::vector<Point2> vertices;
 	};
 

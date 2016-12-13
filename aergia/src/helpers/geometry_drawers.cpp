@@ -2,6 +2,24 @@
 
 namespace aergia {
 
+	void draw_bbox(const ponos::BBox2D& bbox, float* fillColor) {
+		glBegin(GL_LINE_LOOP);
+		glVertex(ponos::Point2(bbox.pMin.x, bbox.pMin.y));
+		glVertex(ponos::Point2(bbox.pMax.x, bbox.pMin.y));
+		glVertex(ponos::Point2(bbox.pMax.x, bbox.pMax.y));
+		glVertex(ponos::Point2(bbox.pMin.x, bbox.pMax.y));
+		glEnd();
+		if(fillColor) {
+			glColor4fv(fillColor);
+			glBegin(GL_QUADS);
+			glVertex(ponos::Point2(bbox.pMin.x, bbox.pMin.y));
+			glVertex(ponos::Point2(bbox.pMax.x, bbox.pMin.y));
+			glVertex(ponos::Point2(bbox.pMax.x, bbox.pMax.y));
+			glVertex(ponos::Point2(bbox.pMin.x, bbox.pMax.y));
+			glEnd();
+		}
+	}
+
 	void draw_bbox(const ponos::BBox& bbox) {
 		glBegin(GL_LINE_LOOP);
 		glVertex(ponos::Point3(bbox.pMin.x, bbox.pMin.y, bbox.pMin.z));
@@ -64,17 +82,18 @@ namespace aergia {
 		ponos::Point3 pole(0.f, -sphere.r, 0.f);
 		for(float angle = 0.f; angle < PI_2; angle += hStep) {
 			float r = sphere.r * sinf(vStep);
-			glVertex(pole);
-			glVertex(pole + r * ponos::vec3(cosf(angle), sinf(vStep), sinf(angle)));
-			glVertex(pole + r * ponos::vec3(cosf(angle + hStep), sinf(vStep), sinf(angle + hStep)));
+			glVertex(sphere.c + ponos::vec3(pole));
+			glVertex(sphere.c + ponos::vec3(pole) + r * ponos::vec3(cosf(angle), -sinf(vStep), sinf(angle)));
+			glVertex(sphere.c + ponos::vec3(pole) + r * ponos::vec3(cosf(angle + hStep), -sinf(vStep), sinf(angle + hStep)));
+
 		}
 		// north pole
 		pole = ponos::Point3(0.f, sphere.r, 0.f);
 		for(float angle = 0.f; angle < PI_2; angle += hStep) {
 			float r = sphere.r * sinf(vStep);
-			glVertex(pole);
-			glVertex(pole + r * ponos::vec3(cosf(angle), -sinf(vStep), sinf(angle)));
-			glVertex(pole + r * ponos::vec3(cosf(angle + hStep), -sinf(vStep), sinf(angle + hStep)));
+			glVertex(sphere.c + ponos::vec3(pole));
+			glVertex(sphere.c + ponos::vec3(pole) + r * ponos::vec3(cosf(angle), -sinf(vStep), sinf(angle)));
+			glVertex(sphere.c + ponos::vec3(pole) + r * ponos::vec3(cosf(angle + hStep), -sinf(vStep), sinf(angle + hStep)));
 		}
 
 		glEnd();
@@ -101,4 +120,5 @@ namespace aergia {
 		}
 		glEnd();
 	}
+
 } // aergia namespace
