@@ -389,7 +389,6 @@ namespace poseidon {
 	}
 
 	void FLIP::extrapolateVelocities() {
-
 	}
 
 } // poseidon namespace

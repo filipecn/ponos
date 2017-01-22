@@ -226,6 +226,61 @@ namespace ponos {
     return (vox < T(0) ? T(0.0) : vox);
   }
 
+
+  template<typename T>
+  inline T tricubicInterpolate(float* p, T*** data, T b, const int dimensions[3]) {
+    int             x, y, z;
+    register int    i, j, k;
+    float           dx, dy, dz;
+    float           u[4], v[4], w[4];
+    T               r[4], q[4];
+    T               vox = T(0);
+
+    x = (int)p[0], y = (int)p[1], z = (int)p[2];
+    dx = p[0] - (float)x, dy = p[1] - (float)y, dz = p[2] - (float)z;
+
+    u[0] = -0.5 * CUBE(dx) + SQR(dx) - 0.5 * dx;
+    u[1] = 1.5 * CUBE(dx) - 2.5 * SQR(dx) + 1;
+    u[2] = -1.5 * CUBE(dx) + 2 * SQR(dx) + 0.5 * dx;
+    u[3] = 0.5 * CUBE(dx) - 0.5 * SQR(dx);
+
+    v[0] = -0.5 * CUBE(dy) + SQR(dy) - 0.5 * dy;
+    v[1] = 1.5 * CUBE(dy) - 2.5 * SQR(dy) + 1;
+    v[2] = -1.5 * CUBE(dy) + 2 * SQR(dy) + 0.5 * dy;
+    v[3] = 0.5 * CUBE(dy) - 0.5 * SQR(dy);
+
+    w[0] = -0.5 * CUBE(dz) + SQR(dz) - 0.5 * dz;
+    w[1] = 1.5 * CUBE(dz) - 2.5 * SQR(dz) + 1;
+    w[2] = -1.5 * CUBE(dz) + 2 * SQR(dz) + 0.5 * dz;
+    w[3] = 0.5 * CUBE(dz) - 0.5 * SQR(dz);
+
+		int ijk[3] = {x - 1, y - 1, z - 1};
+    for (k = 0; k < 4; k++) {
+      q[k] = 0;
+      for (j = 0; j < 4; j++) {
+        r[j] = 0;
+        for (i = 0; i < 4; i++) {
+					if(ijk[0] < 0 || ijk[0] >= dimensions[0] ||
+						 ijk[1] < 0 || ijk[1] >= dimensions[1] ||
+						 ijk[2] < 0 || ijk[2] >= dimensions[2])
+          	r[j] += u[i] * b;
+					else
+          	r[j] += u[i] * data[ijk[0]][ijk[1]][ijk[2]];
+          ijk[0]++;
+        }
+        q[k] += v[j] * r[j];
+        ijk[0] = x - 1;
+        ijk[1]++;
+      }
+      vox += w[k] * q[k];
+      ijk[0] = x - 1;
+      ijk[1] = y - 1;
+      ijk[2]++;
+    }
+    return (vox < T(0) ? T(0.0) : vox);
+  }
+
+
   inline float smooth(float a, float b) {
     return std::max(0.f, 1.f - a / SQR(b));
   }

@@ -27,6 +27,14 @@ namespace aergia {
           glVertex(p + grid(ijk));
         }
         glEnd();
+        glColor4f(0, 0, 0, 1);
+				glPointSize(1);
+				glBegin(GL_POINTS);
+        FOR_INDICES0_3D(grid.dimensions, ijk) {
+          ponos::Point3 p = grid.toWorld(ponos::Point3(ijk[0], ijk[1], ijk[2]));
+          glVertex(p);
+				}
+				glEnd();
         glColor4f(0, 0, 0, 0.1);
         glLineWidth(1.0);
         glBegin(GL_LINES);
@@ -45,7 +53,7 @@ namespace aergia {
         }
         glEnd();
       }
-      
+
       ponos::CGridInterface<ponos::vec3>& grid;
 	};
 

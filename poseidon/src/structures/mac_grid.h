@@ -44,6 +44,10 @@ namespace poseidon {
 	template<template<typename T> class GridType>
 		class MacGrid2D {
 			public:
+				MacGrid2D(size_t w, size_t h, float s, ponos::vec2 = ponos::vec2()) {
+					set(ponos::ivec2(w, h), ponos::BBox2D(ponos::Point2(0, 0),
+								ponos::Point2(w * s, h * s)));
+				}
 				MacGrid2D(size_t w, size_t h, const ponos::BBox2D& bbox) {
 					set(ponos::ivec2(w, h), bbox);
 				}

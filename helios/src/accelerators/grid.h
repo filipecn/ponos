@@ -49,7 +49,7 @@ namespace helios {
 			std::vector<std::shared_ptr<Primitive> > primitives;
 			// grid resolution
 			int nVoxels[3];
-			ponos::bbox bounds;
+			ponos::BBox bounds;
 			ponos::vec3 width, invWidth;
 			std::vector<Voxel*> voxels;
 			ponos::MemoryArena voxelArena;

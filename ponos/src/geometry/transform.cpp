@@ -20,19 +20,11 @@ namespace ponos {
   }
 
   void Transform2D::translate(const Vector2 &d) {
-    m.m[0][2] += d.x;
-    m.m[1][2] += d.y;
     //TODO update inverse and make a better implementarion
-    m_inv.m[0][2] -= d.x;
-    m_inv.m[1][2] -= d.y;
   }
 
   void Transform2D::scale(float x, float y) {
-    m.m[0][0] *= x;
-    m.m[1][1] *= y;
     //TODO update inverse and make a better implementarion
-    s = Vector2(x, y);
-    m_inv = inverse(m);
   }
 
   void Transform2D::rotate(float angle) {
@@ -87,26 +79,27 @@ namespace ponos {
     m_inv = inverse(m);
   }
 
+	Transform::Transform(const BBox& bbox) {
+		m.m[0][0] = bbox.pMax[0] - bbox.pMin[0];
+		m.m[1][1] = bbox.pMax[1] - bbox.pMin[1];
+		m.m[2][2] = bbox.pMax[2] - bbox.pMin[2];
+		m.m[0][3] = bbox.pMin[0];
+		m.m[1][3] = bbox.pMin[1];
+		m.m[2][3] = bbox.pMin[2];
+		m_inv = inverse(m);
+	}
+
+
   void Transform::reset() {
     m.setIdentity();
   }
 
   void Transform::translate(const Vector3 &d) {
-    m.m[0][3] += d.x;
-    m.m[1][3] += d.y;
-    m.m[2][3] += d.y;
     //TODO update inverse and make a better implementarion
-    m_inv.m[0][3] -= d.x;
-    m_inv.m[1][3] -= d.y;
-    m_inv.m[2][3] -= d.y;
   }
 
   void Transform::scale(float x, float y, float z) {
-    m.m[0][0] *= x;
-    m.m[1][1] *= y;
-    m.m[2][2] *= z;
     //TODO update inverse and make a better implementarion
-    m_inv = inverse(m);
   }
 
 

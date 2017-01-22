@@ -121,4 +121,8 @@ namespace aergia {
 		glEnd();
 	}
 
+	void draw_mesh(const ponos::Mesh2D *m) {
+
+	}
+
 } // aergia namespace

@@ -31,7 +31,7 @@ namespace helios {
 		// add primitives to grid voxels
 		for(size_t i = 0; i < primitives.size(); i++) {
 			// find voxel extent to primitive
-			ponos::bbox pb = primitives[i]->worldBound();
+			ponos::BBox pb = primitives[i]->worldBound();
 			int vmin[3], vmax[3];
 			for(int axis = 0; axis < 3; axis++) {
 				vmin[axis] = posToVoxel(pb.pMin, axis);

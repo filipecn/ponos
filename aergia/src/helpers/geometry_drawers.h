@@ -19,6 +19,7 @@ namespace aergia {
 
 	void draw_polygon(const ponos::Polygon &polygon, const ponos::Transform2D* transform = nullptr);
 
+	void draw_mesh(const ponos::Mesh2D *m);
 } // aergia namespace
 
 #endif // AERGIA_HELPERS_GEOMETRY_DRAWERS_H

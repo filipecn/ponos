@@ -1,23 +1,55 @@
-#include "flip_2d.h"
 
-FLIP2DScene::FLIP2DScene(const char *filename) {
+template<typename ParticleType>
+FLIP2DScene<ParticleType>::FLIP2DScene(const char *filename) {
 	load(filename);
 }
 
-FLIP2DScene::~FLIP2DScene() {}
+template<typename ParticleType>
+FLIP2DScene<ParticleType>::~FLIP2DScene() {}
 
-void FLIP2DScene::load(const char *filename) {
+template<typename ParticleType>
+void FLIP2DScene<ParticleType>::load(const char *filename) {
 	FILE *fp = fopen(filename, "r");
 	if(!fp)
 		return;
+	char line[1000];
+	while(fgets(line, 1000, fp) != nullptr) {
+		char command = line[0];
+		fgets(line, 1000, fp);
+		int lx, ly, tx, ty;
+		switch(command) {
+			case 'l': {
+				sscanf(line, "%d %d %d %d", &lx, &ly, &tx, &ty);
+				ponos::RawMesh *m = new ponos::RawMesh();
+				m->vertices.emplace_back(lx); m->vertices.emplace_back(ly);
+				m->vertices.emplace_back(tx); m->vertices.emplace_back(ly);
+				m->vertices.emplace_back(tx); m->vertices.emplace_back(ty);
+				m->vertices.emplace_back(lx); m->vertices.emplace_back(ty);
+				m->elementSize = 2;
+				m->elementCount = 4;
+				m->indices.resize(8);
+				for(int i = 0; i < 4; i++) {
+					m->indices[(i * 2) % 4].vertexIndex = i;
+					m->indices[(i * 2 + 1) % 4].vertexIndex = (i + 1) % 4;
+				}
+				m->computeBBox();
+				liquidsGeometry.emplace_back(new ponos::Mesh2D(m, ponos::Transform2D()));
+								} break;
+			case 's':
+				sscanf(line, "%d %d %d %d", &lx, &ly, &tx, &ty);
+				break;
+		}
+	}
 	fclose(fp);
 }
 
-void FLIP2DScene::addForce(const ponos::vec2 &f) {
+template<typename ParticleType>
+void FLIP2DScene<ParticleType>::addForce(const ponos::vec2 &f) {
 	forces.emplace_back(f);
 }
 
-void FLIP2DScene::generateParticles(int frame, ZParticleGrid2D<FLIPParticle2D> *pg) {
+template<typename ParticleType>
+void FLIP2DScene<ParticleType>::generateParticles(int frame, ZParticleGrid2D<ParticleType> *pg) {
 	/*/ generate liquid particles
 	for(size_t l = 0; l < liquidsGeometry.size(); l++) {
 		ponos::BBox2D bbox = liquidsGeometry[l]->getBBox();
@@ -114,23 +146,28 @@ void FLIP2DScene::generateParticles(int frame, ZParticleGrid2D<FLIPParticle2D> *
 	pg->update();
 */}
 
-const std::vector<ponos::Mesh2D*>& FLIP2DScene::getLiquidsGeometry() const {
+template<typename ParticleType>
+const std::vector<ponos::Mesh2D*>& FLIP2DScene<ParticleType>::getLiquidsGeometry() const {
 	return liquidsGeometry;
 }
 
-const std::vector<ponos::Mesh2D*>& FLIP2DScene::getStaticSolidsGeometry() const {
+template<typename ParticleType>
+const std::vector<ponos::Mesh2D*>& FLIP2DScene<ParticleType>::getStaticSolidsGeometry() const {
 	return staticSolidsGeometry;
 }
 
-const std::vector<ponos::Mesh2D*>& FLIP2DScene::getSolidsGeometry() const {
+template<typename ParticleType>
+const std::vector<ponos::Mesh2D*>& FLIP2DScene<ParticleType>::getSolidsGeometry() const {
 	return solidsGeometry;
 }
 
-const std::vector<FLIPParticle2D*>& FLIP2DScene::getLiquidParticles() const {
+template<typename ParticleType>
+const std::vector<ParticleType*>& FLIP2DScene<ParticleType>::getLiquidParticles() const {
 	return liquidParticles;
 }
 
-void FLIP2DScene::buildStaticSolidLevelSet() {
+template<typename ParticleType>
+void FLIP2DScene<ParticleType>::buildStaticSolidLevelSet() {
 	for(size_t i = 0; i < staticSolidsGeometry.size(); i++) {
 		if(i == 0)
 			staticSolidLevelSet.reset(new ponos::LevelSet2D(staticSolidsGeometry[i]->getMesh(), staticSolidsGeometry[i]->getTransform()));
@@ -138,7 +175,8 @@ void FLIP2DScene::buildStaticSolidLevelSet() {
 	}
 }
 
-void FLIP2DScene::buildSolidLevelSet() {
+template<typename ParticleType>
+void FLIP2DScene<ParticleType>::buildSolidLevelSet() {
 	for(size_t i = 0; i < solidsGeometry.size(); i++) {
 		if(i == 0)
 			staticSolidLevelSet.reset(new ponos::LevelSet2D(solidsGeometry[i]->getMesh(), solidsGeometry[i]->getTransform()));
@@ -150,7 +188,8 @@ void FLIP2DScene::buildSolidLevelSet() {
 		solidLevelSet->merge(staticSolidLevelSet.get());
 }
 
-bool FLIP2DScene::isPointInsideSolid(const ponos::Point2 &p, int f, size_t *id) const {
+template<typename ParticleType>
+bool FLIP2DScene<ParticleType>::isPointInsideSolid(const ponos::Point2 &p, int f, size_t *id) const {
 	for(size_t i = 0; i < solidsGeometry.size(); i++) {
 		if(solidsGeometry[i]->intersect(p)) {
 			*id = i;
@@ -160,8 +199,33 @@ bool FLIP2DScene::isPointInsideSolid(const ponos::Point2 &p, int f, size_t *id) 
 	return false;
 }
 
-void FLIP2D::setup() {}
+template<typename ParticleType>
+FLIP2D<ParticleType>::FLIP2D(FLIP2DScene<ParticleType> *s) {
 
-bool FLIP2D::init() { return true; }
+}
 
-void FLIP2D::step() {}
+template<typename ParticleType>
+void FLIP2D<ParticleType>::setup() {
+	particleGrid.reset(new ZParticleGrid2D<ParticleType>(dimensions[0], dimensions[1], ponos::BBox2D(ponos::Point2(), ponos::Point2(dimensions[0] * dx, dimensions[1] * dx))));
+	for(int i = 0; i < 2; i++)
+		grid[i] = new MacGrid2D<ponos::ZGrid>(dimensions[0], dimensions[1], dx);
+}
+
+template<typename ParticleType>
+bool FLIP2D<ParticleType>::init() {
+	ZParticleGrid2D<ParticleType> pg(10, 10, ponos::BBox2D(ponos::Point2(), ponos::Point2(10 * dx, 10 * dx)));
+	ponos::ivec2 ij;
+	FOR_INDICES0_2D(ponos::ivec2(10, 10), ij) {
+		ponos::Point2 cp((ij[0] + 0.5f) * dx, (ij[1] + 0.5f) * dx);
+		pg.addParticle(cp + ponos::vec2(-0.25f, -0.25f) * dx);
+		pg.addParticle(cp + ponos::vec2( 0.25f, -0.25f) * dx);
+		pg.addParticle(cp + ponos::vec2( 0.25f,  0.25f) * dx);
+		pg.addParticle(cp + ponos::vec2( 0.25f,  0.25f) * dx);
+	}
+	maxDensity = 1.f;
+	scene.generateParticles(0, particleGrid);
+	return true;
+}
+
+template<typename ParticleType>
+void FLIP2D<ParticleType>::step() {}

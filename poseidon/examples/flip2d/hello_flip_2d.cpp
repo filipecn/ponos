@@ -6,15 +6,16 @@
 #include <memory>
 
 #include "flip_2d.h"
+#include "flip_2d_model.h"
 
 int WIDTH = 800, HEIGHT = 800;
-int WGRID = 4, HGRID = 4;
+int WGRID = 16, HGRID = 16;
 
-FLIP2D flip;
 aergia::SceneApp<> app(WIDTH, HEIGHT, "Z Grid example", false);
 
 struct MySquare : public aergia::SceneObject {
 	public:
+		MySquare() {}
 		MySquare(float r) {
 			p.vertices.push_back(ponos::Point2(-1, -1));
 			p.vertices.push_back(ponos::Point2(-1,  1));
@@ -45,7 +46,7 @@ struct MySquare : public aergia::SceneObject {
 		float s;
 };
 
-MySquare sq(1.5);
+MySquare sq;
 ponos::HaltonSequence rng(3);
 
 struct MyParticle : public aergia::SceneObject, public poseidon::FLIPParticle2D {
@@ -53,10 +54,8 @@ struct MyParticle : public aergia::SceneObject, public poseidon::FLIPParticle2D 
 		MyParticle() {}
 		MyParticle(const ponos::Point2 p) {
 			this->position = p;
-			s.c = ponos::Point3(p.x, p.y, 0.f);
-			s.r = 0.1f;
 			c.c = p;
-			c.r = 0.1f;
+			c.r = 0.01f;
 			color[0] = 0;
 			color[1] = 0;
 			color[2] = 1;
@@ -73,7 +72,6 @@ struct MyParticle : public aergia::SceneObject, public poseidon::FLIPParticle2D 
 			return false;
 			//return ponos::sphere_ray_intersection(s, r, t);
 		}
-		ponos::Sphere s;
 		ponos::Circle c;
 		ponos::Segment3 ss;
 		union Data {
@@ -83,10 +81,9 @@ struct MyParticle : public aergia::SceneObject, public poseidon::FLIPParticle2D 
 		float color[4];
 };
 
-ponos::BBox2D region(ponos::Point2(0, 0), ponos::Point2(15, 15));
-poseidon::ZParticleGrid2D<MyParticle> grid(WGRID, HGRID, region);
+ponos::BBox2D region;
+FLIP2D<MyParticle>* flip;
 poseidon::ZParticleGrid2D<MyParticle>::tree* tree;
-poseidon::MacGrid2D<ponos::ZGrid> mgrid(WGRID, HGRID, region);
 
 struct Tree : public aergia::SceneObject {
 	public:
@@ -98,8 +95,8 @@ struct Tree : public aergia::SceneObject {
 			if(!n)
 				return;
 			float fcolor[4] = {0.1, 0.2, 0.5, 0.1};
-			if(ponos::bbox_bbox_intersection(sq.getBBox2D(), grid.toWorld(n->bbox)))
-				aergia::draw_bbox(grid.toWorld(n->bbox), &fcolor[0]);
+			if(ponos::bbox_bbox_intersection(sq.getBBox2D(), flip->particleGrid->toWorld(n->bbox)))
+				aergia::draw_bbox(flip->particleGrid->toWorld(n->bbox), &fcolor[0]);
 			for(int i = 0; i < 4; i++)
 				rec(n->child[i]);
 		}
@@ -107,15 +104,17 @@ struct Tree : public aergia::SceneObject {
 
 struct MacGridModel : public aergia::SceneObject {
 	public:
+		MacGridModel(MacGrid2D<ponos::ZGrid>* mg)
+			: mgrid(mg) {}
 		void draw() const override {
 			aergia::CartesianGrid cgrid;
-			cgrid.setDimension(0, 0, mgrid.dimensions[0]);
-			cgrid.setDimension(1, 0, mgrid.dimensions[1]);
+			cgrid.setDimension(0, 0, mgrid->dimensions[0]);
+			cgrid.setDimension(1, 0, mgrid->dimensions[1]);
 			cgrid.setDimension(2, 0, 0);
-			cgrid.transform = mgrid.toWorld * ponos::translate(ponos::vec2(-.5f, -.5f));;
+			cgrid.transform = mgrid->toWorld * ponos::translate(ponos::vec2(-0.5f, -0.5f));
 			cgrid.draw();
-			drawGridVelocities(mgrid.v_u.get(), 0);
-			drawGridVelocities(mgrid.v_v.get(), 1);
+			drawGridVelocities(mgrid->v_u.get(), 0);
+			drawGridVelocities(mgrid->v_v.get(), 1);
 		}
 
   void drawGridVelocities(ponos::ZGrid<float>* g, int component) const {
@@ -131,10 +130,11 @@ struct MacGridModel : public aergia::SceneObject {
     }
     glEnd();
   }
+	MacGrid2D<ponos::ZGrid>* mgrid;
 };
 
 void search() {
-	poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(grid);
+	poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(*flip->particleGrid.get());
 	while (it.next()) {
 		(*it)->color[0] = 0;
 		(*it)->color[3] = 0.3;
@@ -148,21 +148,21 @@ void search() {
 }
 
 void render() {
-	poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(grid);
+	poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(*flip->particleGrid.get());
 	while (it.next()) {
 		ponos::Point2 np = (*it)->position + 0.001f * (*it)->velocity;
 		if(np.x < region.pMin.x) (*it)->velocity.x *= -1.f;
 		if(np.y < region.pMin.y) (*it)->velocity.y *= -1.f;
 		if(np.x > region.pMax.x) (*it)->velocity.x *= -1.f;
 		if(np.y > region.pMax.y) (*it)->velocity.y *= -1.f;
-		it.particleElement()->setPosition(grid, np);
+		it.particleElement()->setPosition(*flip->particleGrid.get(), np);
 		(*it)->c.c = (*it)->position;
 		++it;
 	}
-	grid.update();
+	flip->particleGrid->update();
 	if(tree)
 		delete tree;
-	tree = new poseidon::ZParticleGrid2D<MyParticle>::tree(grid,
+	tree = new poseidon::ZParticleGrid2D<MyParticle>::tree(*flip->particleGrid.get(),
 			[](uint32 id, uint32 depth) { return true; }
 			);
 	search();
@@ -175,30 +175,45 @@ void mouse(double x, double y) {
 }
 
 void init() {
-	for (int i = 0; i < 15; i++)
-		for (int j = 0; j < 15; j++)
-			grid.add(ponos::Point2(i, j));
-	mgrid.v_v->setAll(0.5f);
-	mgrid.v_u->setAll(0.5f);
-	poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(grid);
+	flip->dimensions = ponos::ivec2(WGRID, HGRID);
+	flip->density = 1.f;
+	flip->pic_flip_ratio = 0.98f;
+	flip->subcell = 1;
+	flip->dt = 0.001f;
+	flip->dx = 0.1f;
+	flip->curStep = 1;
+	flip->setup();
+
+	for (int i = 0; i < WGRID; i++)
+		for (int j = 0; j < HGRID; j++)
+			flip->particleGrid->add(ponos::Point2(i * flip->dx, j * flip->dx));
+	flip->curGrid()->v_v->setAll(0.02f);
+	flip->curGrid()->v_u->setAll(0.02f);
+	poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(*flip->particleGrid.get());
 	while (it.next()) {
 		app.scene.add(*it);
 		++it;
 	}
-	sq.pos = ponos::Point2(2, 2);
+
+	region = ponos::BBox2D(ponos::Point2(0, 0), ponos::Point2(WGRID, HGRID) * flip->dx);
+
+	sq = MySquare(flip->dx * 1.5f);
+	sq.pos = ponos::Point2(flip->dx, flip->dx) * 2.f;
 	app.scene.add(&sq);
 	app.scene.add(new Tree());
-	app.scene.add(new MacGridModel());
+	app.scene.add(new MacGridModel(flip->curGrid()));
+	app.scene.add(new FLIP2DSceneModel<MyParticle>(flip->scene.get()));
 }
 
-int main() {
+int main(int argc, char** argv) {
+	flip = new FLIP2D<MyParticle>(new FLIP2DScene<MyParticle>(argv[1]));
 	app.addViewport2D(0, 0, WIDTH, HEIGHT);
 	app.init();
-	static_cast<aergia::Camera2D*>(app.viewports[0].camera.get())->setPos(ponos::vec2(7.5, 7.5));
-	static_cast<aergia::Camera2D*>(app.viewports[0].camera.get())->setZoom(9);
+	init();
+	static_cast<aergia::Camera2D*>(app.viewports[0].camera.get())->setPos(ponos::vec2(WGRID, HGRID) * 0.5f * flip->dx);
+	static_cast<aergia::Camera2D*>(app.viewports[0].camera.get())->setZoom(region.pMax.x * 0.55f);
 	app.viewports[0].mouseCallback = mouse;
 	app.viewports[0].renderCallback = render;
-	init();
 	app.run();
 	return 0;
 }

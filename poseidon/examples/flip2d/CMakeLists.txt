@@ -8,5 +8,5 @@ include_directories("${PONOS_SOURCE_DIR}/src")
 link_libraries(aergia)
 include_directories("${AERGIA_SOURCE_DIR}/src")
 
-add_executable(flip2d hello_flip_2d.cpp flip_2d.h flip_2d.cpp)
+add_executable(flip2d hello_flip_2d.cpp flip_2d.h flip_2d.inl flip_2d_model.h)
 target_link_libraries(flip2d ${aergia_LIBRARIES})

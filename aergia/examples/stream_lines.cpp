@@ -46,7 +46,6 @@ class Box : public aergia::SceneObject {
 				glLineWidth(4.f);
 			aergia::draw_bbox(bbox);
 			glLineWidth(1.f);
-
 		}
 
 		bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
@@ -77,6 +76,7 @@ class Line : public aergia::SceneObject {
 
 class BBoxSampler : public aergia::SceneObject {
 	public:
+		BBoxSampler() {}
 		BBoxSampler(const ponos::BBox& b, uint size, aergia::BVH* _bvh)
 			: bbox(b) {
 				rng[0] = new ponos::HaltonSequence(2);
@@ -112,6 +112,16 @@ class BBoxSampler : public aergia::SceneObject {
 		ponos::BBox bbox;
 };
 
+class FieldSampler : public BBoxSampler {
+	public:
+		FieldSampler() {
+			ponos::ivec3 ijk;
+			FOR_INDICES0_3D(grid->dimensions, ijk)
+				if(bvh->isInside(grid->worldPosition(ijk)))
+					points.emplace_back(grid->worldPosition(ijk));
+		}
+};
+
 class StreamLine : public aergia::SceneObject {
 	public:
 		StreamLine(aergia::BVH* b, ponos::CRegularGrid<ponos::vec3>* g, const ponos::Point3& o) {
@@ -120,11 +130,21 @@ class StreamLine : public aergia::SceneObject {
 			int i = 0;
 			while(i++ < 100) {
 				ponos::vec3 v = (*grid)(ponos::vec3(cur));
-				cur = cur + 0.1f * v;
+				cur = cur + 0.01f * v;
 				if(!bvh->isInside(cur))
 						break;
 				points.emplace_back(cur);
 			}
+			i = 0;
+			cur = o;
+			while(i++ < 100) {
+				ponos::vec3 v = (*grid)(ponos::vec3(cur));
+				cur = cur - 0.01f * v;
+				if(!bvh->isInside(cur))
+						break;
+				points.emplace(points.begin(), cur);
+			}
+
 		}
 		void draw() const override {
 			glLineWidth(5);
@@ -142,39 +162,60 @@ class StreamLine : public aergia::SceneObject {
 		std::vector<ponos::Point3> points;
 };
 
-int main() {
+int main(int argc, char** argv) {
 	WIN32CONSOLE();
+	if(argc < 3) {
+		std::cout << "usage:\n <path to obj file> <n> <vector field - optional>\n";
+		return 0;
+	}
+	int n = 15;
+	sscanf(argv[2], "%d", &n);
 	app.init();
-	bvh = new aergia::BVH(new aergia::SceneMesh("C:/Users/fuiri/Desktop/bunny.obj"));
-	bvh->sceneMesh->transform = ponos::translate(
-			ponos::vec3(7, 3, 5)) * ponos::scale(50.f, 50.f, 50.f);
+	bvh = new aergia::BVH(new aergia::SceneMesh(argv[1]));
+	grid = new ponos::CRegularGrid<ponos::vec3>(ponos::ivec3(n), ponos::vec3(), bvh->sceneMesh->getBBox());
 	app.scene.add(new aergia::WireframeMesh(
 				aergia::create_wireframe_mesh(bvh->sceneMesh->rawMesh.get()),
 				bvh->sceneMesh->transform));
-	app.scene.add(new aergia::BVHModel(bvh));
-	grid = new ponos::CRegularGrid<ponos::vec3>(ponos::ivec3(15, 15, 15), ponos::vec3());
+	app.scene.add(new Box(bvh->sceneMesh->getBBox()));
 	ponos::ivec3 ijk;
-	FOR_INDICES0_3D(grid->dimensions, ijk) {
-	//	if(bvh->isInside(grid->worldPosition(ijk)))
-		grid->set(ijk, 0.3f * ponos::vec3(
-					std::min(1.f, 2.f * ijk[1] + 2.f * ijk[2]),
-					std::min(1.f, 2.f * ijk[0] + 2.f * ijk[2]),
-					std::min(1.f, 2.f * ijk[0] + 2.f * ijk[1])));
+	if(argc < 4) {
+		FILE *fp = fopen("points", "w+");
+		if(!fp)
+			return 0;
+		FOR_INDICES0_3D(grid->dimensions, ijk)
+			if(bvh->isInside(grid->worldPosition(ijk))) {
+				ponos::Point3 p = grid->worldPosition(ijk);
+				fprintf(fp, "%f %f %f\n", p.x, p.y, p.z);
+			}
+		fclose(fp);
 	}
+	// read field
+	FILE *fp = fopen(argv[3], "r");
+	if(!fp)
+		return 0;
+	FOR_INDICES0_3D(grid->dimensions, ijk)
+		if(bvh->isInside(grid->worldPosition(ijk))) {
+			ponos::vec3 v;
+			fscanf(fp, "%*f %*f %*f %f %f %f", &v[0], &v[1], &v[2]);
+			grid->set(ijk, v);
+	}
+	fclose(fp);
 	//Line l(ponos::Ray3(ponos::Point3(5,5,5), ponos::vec3(1.2, 1, 2.0)));
 	//ponos::Transform inv = ponos::inverse(bvh->sceneMesh->transform);
 	//std::cout << bvh->intersect(inv(l.ray), nullptr) << std::endl;
 	//app.scene.add(&l);
-	app.scene.add(new Box(ponos::BBox(ponos::Point3(0, 0, 0), ponos::Point3(2, 2, 2))));
-	app.scene.add(new Sphere(ponos::Sphere(ponos::Point3(-3, 0, 0), 1.5f)));
+	//	app.scene.add(new Box(ponos::BBox(ponos::Point3(0, 0, 0), ponos::Point3(2, 2, 2))));
+	//app.scene.add(new Sphere(ponos::Sphere(ponos::Point3(-3, 0, 0), 1.5f)));
 	//app.scene.add(new aergia::VectorGrid(*grid));
+	//app.scene.add(new FieldSampler());
+	//app.scene.add(new aergia::BVHModel(bvh));
 	BBoxSampler samples(bvh->sceneMesh->getBBox(), 100, bvh);
 	app.scene.add(&samples);
 	std::vector<StreamLine> streams;
 	for(uint i = 0; i < samples.points.size(); i++)
 		streams.emplace_back(bvh, grid, samples.points[i]);
-	//for(uint i = 0; i < streams.size(); i++)
-	//	app.scene.add(&streams[i]);
+	for(uint i = 0; i < streams.size(); i++)
+		app.scene.add(&streams[i]);
 	app.run();
 	return 0;
 }

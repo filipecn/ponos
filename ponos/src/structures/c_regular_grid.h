@@ -24,6 +24,8 @@ namespace ponos {
 				 * @b **[in]** background (default value)
 				 */
 				CRegularGrid(const ivec3& d, const T& b, const vec3 cellSize = vec3(1.f), const vec3& offset = vec3());
+				CRegularGrid(const ivec3& d, const T& b, const BBox& bb);
+
 				~CRegularGrid();
 				/* @inherit */
         void set(const ivec3& i, const T& v) override;
@@ -58,8 +60,9 @@ namespace ponos {
         }
         T safeData(int i, int j, int k) const;
         T operator()(const float& x, const float&y, const float& z) const override {
-          float p[3] = { x, y, z };
-          return tricubicInterpolate<T>(p, data);
+					Point3 gp = toGrid(ponos::Point3(x, y, z));
+          float p[3] = { gp.x, gp.y, gp.z };
+          return tricubicInterpolate<T>(p, data, background, dimensions.v);
         }
         T operator()(const vec3& i) const override {
           return (*this)(i[0], i[1], i[2]);
@@ -84,6 +87,29 @@ namespace ponos {
 			this->toWorld.translate(offset);
 		  this->toWorld.computeInverse();
 			this->toGrid = inverse(this->toWorld);
+		}
+
+	template<typename T>
+		CRegularGrid<T>::CRegularGrid(const ivec3& d, const T& b, const BBox& bb) {
+			this->dimensions = d;
+			this->background = b;
+      data = new T**[d[0]];
+      for (int i = 0; i < d[0]; i++)
+        data[i] = new T*[d[1]];
+      for (int i = 0; i < d[0]; i++)
+        for (int j = 0; j < d[1]; j++)
+          data[i][j] = new T[d[2]];
+			this->toWorld.reset();
+			vec3 s = vec3(bb.size(0) / (d[0]), bb.size(1) / (d[1]), bb.size(2) / (d[2]));
+			this->toWorld =
+				translate(vec3(bb.pMin) + s * 0.5f) *
+				scale(s[0], s[1], s[2]);
+
+			//this->toWorld.scale(s[0], s[1], s[2]);
+			//this->toWorld.translate(vec3(bb.pMin) + s * 0.5f + vec3(0, 0, 1));
+		  this->toWorld.computeInverse();
+			this->toGrid = inverse(this->toWorld);
+
 		}
 
 	template<typename T>

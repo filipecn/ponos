@@ -29,6 +29,7 @@ namespace ponos {
 			ponos::Point3 vertexElement(size_t e, size_t v) const;
 
 			struct IndexData {
+				// index space
 				int vertexIndex;
 				int normalIndex;
 				int texcoordIndex;

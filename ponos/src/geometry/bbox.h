@@ -72,6 +72,9 @@ namespace ponos {
       pMin -= Vector3(delta, delta, delta);
       pMax -= Vector3(delta, delta, delta);
     }
+		float size(size_t d) const {
+			return pMax[d] - pMin[d];
+		}
     float surfaceArea() const {
       Vector3 d = pMax - pMin;
       return 2.f * (d.x *d.y + d.x*d.z + d.y*d.z);
@@ -117,7 +120,7 @@ namespace ponos {
     return make_union(ret, b.pMax);
   }
 
-  typedef BBox bbox;
+  //typedef BBox bbox;
 
 } // ponos namespace
 
