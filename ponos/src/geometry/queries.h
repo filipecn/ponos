@@ -37,7 +37,7 @@ namespace ponos {
 	 * @t **[out]** intersection point (ray coordinate)
 	 * @return **true** if intersection exists
 	 */
-	bool ray_segment_intersection(const Ray2& R, const Segment2& s, float *t = nullptr);
+	bool ray_segment_intersection(const Ray2& r, const Segment2& s, float *t = nullptr);
 
 	/* intersection test
 	 * @r **[in]** ray

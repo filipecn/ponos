@@ -36,8 +36,14 @@ namespace ponos {
 	 */
 	class HaltonSequence : public RNG {
 		public:
+			HaltonSequence()
+			: base(2), ind(1) {}
 			HaltonSequence(uint b)
 				: base(b), ind(1) {}
+			void setBase(uint b) {
+				base = b;
+				ind = 1;
+			}
 			/* @inherit */
 			float randomFloat() override {
 				float result = 0.f;

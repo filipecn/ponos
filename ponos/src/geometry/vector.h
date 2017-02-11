@@ -188,6 +188,12 @@ class Vector3 {
 			z *= inv;
 			return *this;
 		}
+		Vector3& operator/=(const Vector3& v) {
+			x /= v.x;
+			y /= v.y;
+			z /= v.z;
+			return *this;
+		}
 		Vector3 operator -() const {
 			return Vector3(-x, -y, -z);
 		}
@@ -219,7 +225,13 @@ inline Vector3 cross(const Vector3& a, const Vector3& b) {
 }
 
 inline Vector3 normalize(const Vector3& v) {
+	if(v.length2() == 0.f)
+		return v;
 	return v / v.length();
+}
+
+inline Vector3 max(const Vector3& a, const Vector3& b) {
+	return Vector3(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z));
 }
 
 class Vector4 {

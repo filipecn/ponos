@@ -1,6 +1,8 @@
 project(POSEIDON)
 
 set(HEADERS
+	src/algorithms/fast_sweep.h
+	src/algorithms/solver.h
   src/elements/particle.h
   src/math/conjugate_gradient.h
   src/structures/mac_grid.h
@@ -11,6 +13,7 @@ set(HEADERS
 )
 
 set(SOURCES
+	src/algorithms/fast_sweep.cpp
   src/elements/particle.cpp
   src/math/conjugate_gradient.cpp
   src/structures/particle_grid.cpp
@@ -37,6 +40,7 @@ link_libraries(aergia)
 include_directories("${AERGIA_SOURCE_DIR}/src")
 include_directories("${POSEIDON_SOURCE_DIR}/src")
 include_directories("${POSEIDON_SOURCE_DIR}/external")
+include_directories("C:/Users/fuiri/Downloads")
 if(NOT WIN32)
   include_directories("/home/filipecn/gitclones/OpenVDB/include")
 endif(NOT WIN32)

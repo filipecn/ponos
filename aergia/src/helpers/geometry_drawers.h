@@ -7,6 +7,8 @@
 
 namespace aergia {
 
+	void fill_box(const ponos::Point2& a, const ponos::Point2& b);
+
 	void draw_bbox(const ponos::BBox2D& bbox, float* fillColor = nullptr);
 
 	void draw_bbox(const ponos::BBox& bbox);
@@ -19,7 +21,7 @@ namespace aergia {
 
 	void draw_polygon(const ponos::Polygon &polygon, const ponos::Transform2D* transform = nullptr);
 
-	void draw_mesh(const ponos::Mesh2D *m);
+	void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2D* transform = nullptr);
 } // aergia namespace
 
 #endif // AERGIA_HELPERS_GEOMETRY_DRAWERS_H

@@ -4,7 +4,7 @@
 
 namespace poseidon {
 
-	enum class ParticleType {
+	enum class ParticleTypes {
 		FLUID,
 		AIR,
 		SOLID,
@@ -43,7 +43,7 @@ namespace poseidon {
 		float density;
 		float mass;
 		bool invalid;
-		ParticleType type;
+		ParticleTypes type;
 	};
 
 	struct FLIPParticle2D {
@@ -55,7 +55,7 @@ namespace poseidon {
 		float density;
 		float mass;
 		bool invalid;
-		ParticleType type;
+		ParticleTypes type;
 		ponos::Normal normal;
 		int meshId;
 		ponos::Point2 p_copy;

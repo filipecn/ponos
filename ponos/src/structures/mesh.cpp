@@ -1,5 +1,8 @@
 #include "structures/mesh.h"
 
+#include "geometry/segment.h"
+#include "geometry/queries.h"
+
 namespace ponos {
 
 	Mesh::Mesh(const ponos::RawMesh *m, const ponos::Transform &t) {
@@ -42,11 +45,15 @@ namespace ponos {
 		ponos::Transform2D inv = ponos::inverse(transform);
 		ponos::Point2 pp = inv(p);
 		ponos::Vector<2, float> P(pp.x, pp.y);
-		//ponos::Ray3 r(inv(p), ponos::vec3(0, 1, 0));
 		int hitCount = 0;
-		if(P >= ponos::Vector<2, float>(-0.5f) &&
-			 P <= ponos::Vector<2, float>(0.5f))
-			hitCount = 1;
+		for(size_t i = 0; i < mesh->elementCount; i++) {
+				ponos::Point2 a(mesh->vertices[mesh->indices[i * mesh->elementSize + 0].vertexIndex * 2 + 0],
+												mesh->vertices[mesh->indices[i * mesh->elementSize + 0].vertexIndex * 2 + 1]);
+				ponos::Point2 b(mesh->vertices[mesh->indices[i * mesh->elementSize + 1].vertexIndex * 2 + 0],
+												mesh->vertices[mesh->indices[i * mesh->elementSize + 1].vertexIndex * 2 + 1]);
+				if(ray_segment_intersection(Ray2(pp, vec2(1, 0)), Segment2(a, b)))
+					hitCount++;
+		}
 		return hitCount % 2;
 	}
 

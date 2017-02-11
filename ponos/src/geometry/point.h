@@ -65,6 +65,11 @@ namespace ponos {
 		return (a - b).length();
 	}
 
+	inline float distance2(const Point2& a, const Point2& b) {
+		return (a - b).length2();
+	}
+
+
 	template<class T, int D>
 		class Point {
 			public:

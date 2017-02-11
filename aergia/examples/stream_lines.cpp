@@ -144,28 +144,37 @@ class StreamLine : public aergia::SceneObject {
 						break;
 				points.emplace(points.begin(), cur);
 			}
-
+			origin = o;
 		}
 		void draw() const override {
-			glLineWidth(5);
-			glColor4f(1, 0, 0.2, 1);
+			glLineWidth(2);
+			glColor4f(1, 0, 0.2, 0.3);
 			glBegin(GL_LINES);
 				for(uint i = 1; i < points.size(); i++) {
 					aergia::glVertex(points[i - 1]);
 					aergia::glVertex(points[i]);
 				}
+
+//			glColor4f(1, 0, 0.8, 1);
+
+//				aergia::glVertex(origin);
+//				aergia::glVertex(origin + (*grid)(ponos::vec3(origin)));
+
+
 			glEnd();
 			glLineWidth(1);
 		}
 
-	private:
 		std::vector<ponos::Point3> points;
+
+	private:
+		ponos::Point3 origin;
 };
 
 int main(int argc, char** argv) {
 	WIN32CONSOLE();
 	if(argc < 3) {
-		std::cout << "usage:\n <path to obj file> <n> <vector field - optional>\n";
+		std::cout << "usage:\n <path to obj file> <n> <vector field file - n stream lines : to generate VF>\n";
 		return 0;
 	}
 	int n = 15;
@@ -196,20 +205,16 @@ int main(int argc, char** argv) {
 	FOR_INDICES0_3D(grid->dimensions, ijk)
 		if(bvh->isInside(grid->worldPosition(ijk))) {
 			ponos::vec3 v;
-			fscanf(fp, "%*f %*f %*f %f %f %f", &v[0], &v[1], &v[2]);
+			fscanf(fp, "%f %f %f", &v[0], &v[1], &v[2]);
 			grid->set(ijk, v);
 	}
 	fclose(fp);
-	//Line l(ponos::Ray3(ponos::Point3(5,5,5), ponos::vec3(1.2, 1, 2.0)));
-	//ponos::Transform inv = ponos::inverse(bvh->sceneMesh->transform);
-	//std::cout << bvh->intersect(inv(l.ray), nullptr) << std::endl;
-	//app.scene.add(&l);
-	//	app.scene.add(new Box(ponos::BBox(ponos::Point3(0, 0, 0), ponos::Point3(2, 2, 2))));
-	//app.scene.add(new Sphere(ponos::Sphere(ponos::Point3(-3, 0, 0), 1.5f)));
-	//app.scene.add(new aergia::VectorGrid(*grid));
-	//app.scene.add(new FieldSampler());
-	//app.scene.add(new aergia::BVHModel(bvh));
-	BBoxSampler samples(bvh->sceneMesh->getBBox(), 100, bvh);
+	grid->normalize();
+	int nstreams = 1000;
+	if(argc > 4)
+		sscanf(argv[4], "%d", &nstreams);
+
+	BBoxSampler samples(bvh->sceneMesh->getBBox(), nstreams, bvh);
 	app.scene.add(&samples);
 	std::vector<StreamLine> streams;
 	for(uint i = 0; i < samples.points.size(); i++)
@@ -217,5 +222,18 @@ int main(int argc, char** argv) {
 	for(uint i = 0; i < streams.size(); i++)
 		app.scene.add(&streams[i]);
 	app.run();
+	char filename[100];
+	sprintf(filename, "streams%d", nstreams);
+	fp = fopen(filename, "w+");
+	if(!fp)
+		return 0;
+	fprintf(fp, "%d\n", streams.size());
+	for(uint i = 0; i < streams.size(); i++) {
+		fprintf(fp, "%d ", streams[i].points.size());
+		for(uint j = 0; j < streams[i].points.size(); j++)
+			fprintf(fp, "%f %f %f ", streams[i].points[j].x, streams[i].points[j].y, streams[i].points[j].z);
+		fprintf(fp, "\n");
+	}
+	fclose(fp);
 	return 0;
 }

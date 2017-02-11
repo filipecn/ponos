@@ -2,6 +2,16 @@
 
 namespace aergia {
 
+	void fill_box(const ponos::Point2& a, const ponos::Point2& b) {
+		glBegin(GL_QUADS);
+		glVertex(ponos::Point2(a.x, a.y));
+		glVertex(ponos::Point2(b.x, a.y));
+		glVertex(ponos::Point2(b.x, b.y));
+		glVertex(ponos::Point2(a.x, b.y));
+		glEnd();
+
+	}
+
 	void draw_bbox(const ponos::BBox2D& bbox, float* fillColor) {
 		glBegin(GL_LINE_LOOP);
 		glVertex(ponos::Point2(bbox.pMin.x, bbox.pMin.y));
@@ -121,8 +131,22 @@ namespace aergia {
 		glEnd();
 	}
 
-	void draw_mesh(const ponos::Mesh2D *m) {
-
+	void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2D* t) {
+		glLineWidth(3.f);
+		const ponos::RawMesh* rm = m->getMesh();
+		glBegin(GL_LINES);
+			for(size_t i = 0; i < rm->elementCount; i++) {
+				ponos::Point2 a(rm->vertices[rm->indices[i * rm->elementSize + 0].vertexIndex * 2 + 0],
+												rm->vertices[rm->indices[i * rm->elementSize + 0].vertexIndex * 2 + 1]);
+				ponos::Point2 b(rm->vertices[rm->indices[i * rm->elementSize + 1].vertexIndex * 2 + 0],
+												rm->vertices[rm->indices[i * rm->elementSize + 1].vertexIndex * 2 + 1]);
+				if(t) glVertex((*t)(a));
+				else glVertex(a);
+				if(t) glVertex((*t)(b));
+				else glVertex(b);
+			}
+		glEnd();
+		glLineWidth(1.f);
 	}
 
 } // aergia namespace

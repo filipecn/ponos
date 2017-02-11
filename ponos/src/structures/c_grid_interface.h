@@ -50,6 +50,8 @@ namespace ponos {
 				 * @return value at coordinate **(i, j, k)**
 				 */
 				virtual T operator()(const float& i, const float&j, const float& k) const = 0;
+				virtual void normalize() = 0;
+				virtual void normalizeElements() = 0;
 				/* test
 				 * @i coordinate
 				 *
@@ -85,14 +87,12 @@ namespace ponos {
 
 				void setTransform(Vector2 _offset, Vector2 _cellSize) {
 					offset = _offset;
-					toWorld.reset();
-					toWorld.scale(_cellSize.x, _cellSize.y);
-					toWorld.translate(offset);
+					toWorld = scale(_cellSize.x, _cellSize.y) * translate(offset);
 					toWorld.computeInverse();
 					toGrid = inverse(toWorld);
 				}
 
-				void setDimensions(uint32_t w, uint32_t h) {
+				virtual void setDimensions(uint32_t w, uint32_t h) {
 					width = w;
 					height = h;
 				}
@@ -117,6 +117,14 @@ namespace ponos {
 
 				bool belongs(Point<int, 2> c) {
 					return 0 <= c[0] && c[0]< static_cast<int>(width) && 0 <= c[1] && c[1] < static_cast<int>(height);
+				}
+
+				ponos::Point2 worldPosition(const ponos::ivec2& ij) {
+					return toWorld(ponos::Point2(ij[0], ij[1]));
+				}
+
+				ponos::ivec2 getDimensions() {
+					return ponos::ivec2(width, height);
 				}
 
 				T border;

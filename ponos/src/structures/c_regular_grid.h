@@ -62,11 +62,14 @@ namespace ponos {
         T operator()(const float& x, const float&y, const float& z) const override {
 					Point3 gp = toGrid(ponos::Point3(x, y, z));
           float p[3] = { gp.x, gp.y, gp.z };
-          return tricubicInterpolate<T>(p, data, background, dimensions.v);
+          return trilinearInterpolate<T>(p, data, background, dimensions.v);
         }
         T operator()(const vec3& i) const override {
           return (*this)(i[0], i[1], i[2]);
         }
+				void normalize() override;
+				void normalizeElements() override;
+
 
 			private:
 				T*** data;
@@ -141,6 +144,24 @@ namespace ponos {
     void CRegularGrid<T>::set(const ivec3& i, const T& v) {
       this->data[std::max(0, std::min(this->dimensions[0]-1,i[0]))][std::max(0, std::min(this->dimensions[1]-1,i[1]))][std::max(0, std::min(this->dimensions[2] - 1, i[2]))] = v;
   }
+
+	template<typename T>
+		void CRegularGrid<T>::normalize() {
+			ivec3 ijk;
+			T M = data[0][0][0];
+			FOR_INDICES0_3D(this->dimensions, ijk)
+				M = ponos::max(M, data[ijk[0]][ijk[1]][ijk[2]]);
+			FOR_INDICES0_3D(this->dimensions, ijk)
+				data[ijk[0]][ijk[1]][ijk[2]] /= M;
+		}
+
+	template<typename T>
+		void CRegularGrid<T>::normalizeElements() {
+			ivec3 ijk;
+			FOR_INDICES0_3D(this->dimensions, ijk)
+				data[ijk[0]][ijk[1]][ijk[2]] = ponos::normalize(data[ijk[0]][ijk[1]][ijk[2]]);
+
+		}
 
     template<class T>
 		class CRegularGrid2D : public CGrid2DInterface<T> {

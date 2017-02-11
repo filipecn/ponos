@@ -16,7 +16,7 @@ namespace ponos {
 	 */
 	class RawMesh {
   	public:
-	 		RawMesh() {}
+	 		RawMesh() { dimensions = 3; }
 			virtual ~RawMesh() {}
 
 			void apply(const Transform &t);
@@ -41,6 +41,7 @@ namespace ponos {
 			std::vector<uint> verticesIndices;
 			std::vector<uint> normalsIndices;
 			std::vector<uint> texcoordsIndices;
+			size_t dimensions;
 			size_t elementCount;
 			size_t vertexCount;
 			uint elementSize;

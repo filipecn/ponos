@@ -4,6 +4,7 @@
 #include "log/debug.h"
 #include "structures/c_grid_interface.h"
 
+#include <algorithm>
 #include <functional>
 #include <vector>
 
@@ -15,12 +16,21 @@ namespace ponos {
 				ZGrid();
 				ZGrid(uint32_t w, uint32_t h);
 
+				void setDimensions(uint32_t w, uint32_t h) override {
+					width = w;
+					height = h;
+					init();
+				}
+
+
 				void init();
 
-				T& operator()(uint32_t i, uint32_t j);
-				T operator() (uint32_t i, uint32_t j) const;
+				T& operator()(const ponos::ivec2& ij);
+				T operator() (const ponos::ivec2& ij) const;
+				T& operator()(int i, int j);
+				T operator() (int i, int j) const;
 				T safeData(uint32_t i, uint32_t j) const;
-				float sample(float x, float y, std::function<float(T& t)> f) const;
+				float sample(float x, float y) const;
 				T dSample(float x, float y, T r);
 
 				void reset(std::function<void(T& t)> f) {
@@ -31,6 +41,10 @@ namespace ponos {
 				void setAll(const T t) {
 					for(uint32_t i = 0; i < data.size(); i++)
 						data[i] = t;
+				}
+
+				void copyData(const ZGrid<T>* g){
+					std::copy(g->data.begin(), g->data.end(), data.begin());
 				}
 
 			private:
@@ -64,31 +78,65 @@ namespace ponos {
 		}
 
 	template<class T>
-		T& ZGrid<T>::operator()(uint32_t i, uint32_t j) {
-			uint32_t ind = morton_code(i, j);
-			if(ind < 0 || ind >= data.size()) {
+		T& ZGrid<T>::operator()(const ponos::ivec2& ij) {
+			uint32_t ind = morton_code(ij[0], ij[1]);
+			if(ij[0] < 0 || ij[1] < 0 || ij[0] >= width || ij[1] >= height || ind >= data.size()) {
+				if(!this->useBorder) {
+					std::cout << "useBorder = false!\n";
+					exit(1);
+				}
 				return this->border;
 			}
 			return data[ind];
 		}
 
 	template<class T>
-		T ZGrid<T>::operator()(uint32_t i, uint32_t j) const {
+		T ZGrid<T>::operator()(const ponos::ivec2& ij) const {
+			uint32_t ind = morton_code(ij[0], ij[1]);
+			if(ij[0] < 0 || ij[1] < 0 || ij[0] >= width || ij[1] >= height || ind >= data.size()) {
+				if(!this->useBorder) {
+					std::cout << "useBorder = false!\n";
+					exit(1);
+				}
+				return this->border;
+			}
+			return data[ind];
+		}
+
+
+	template<class T>
+		T& ZGrid<T>::operator()(int i, int j) {
 			uint32_t ind = morton_code(i, j);
-			if(ind < 0 || ind >= data.size()) {
+			if(i < 0 || j < 0 || i >= width || j >= height || ind >= data.size()) {
+				if(!this->useBorder) {
+					std::cout << "useBorder = false!\n";
+					exit(1);
+				}
 				return this->border;
 			}
 			return data[ind];
 		}
 
 	template<class T>
-		float ZGrid<T>::sample(float x, float y, std::function<float(T& t)> f) const {
+		T ZGrid<T>::operator()(int i, int j) const {
+			uint32_t ind = morton_code(i, j);
+			if(i < 0 || j < 0 || i >= width || j >= height || ind >= data.size()) {
+				if(!this->useBorder) {
+					std::cout << "useBorder = false!\n";
+					exit(1);
+				}
+				return this->border;
+			}
+			return data[ind];
+		}
+
+	template<class T>
+		float ZGrid<T>::sample(float x, float y) const {
 			Point2 gp = this->toGrid(Point2(x, y));
 			int x0 = static_cast<int>(gp.x);
 			int y0 = static_cast<int>(gp.y);
 			int x1 = x0 + 1;
 			int y1 = y0 + 1;
-
 			x0 = std::max(0, std::min(static_cast<int>(this->width) - 1, x0));
 			y0 = std::max(0, std::min(static_cast<int>(this->height) - 1, y0));
 			x1 = std::max(0, std::min(static_cast<int>(this->width) - 1, x1));
@@ -98,11 +146,13 @@ namespace ponos {
 			Vector2 scale = this->toWorld.getScale();
 
 			float p[4][4];
-			//int delta[] = {-1, 0, 1, 2};
-			//for(int i = 0; i < 4; i++)
-			//for(int j = 0; j < 4; j++)
-			// p[i][j] = f(safeData(x0 + delta[i], y0 + delta[j]));
-			return ponos::bicubicInterpolate<float>(p, (x - wp.x) / scale.x, (y - wp.y) / scale.y);
+			int delta[] = {-1, 0, 1, 2};
+			for(int i = 0; i < 4; i++)
+				for(int j = 0; j < 4; j++)
+					p[i][j] = safeData(x0 + delta[i], y0 + delta[j]);
+			//return ponos::bicubicInterpolate<float>(p, (x - wp.x) / scale.x, (y - wp.y) / scale.y);
+			return ponos::bicubicInterpolate<float>(p, gp.x - x0, gp.y - y0);
+
 		}
 
 	template<typename T>

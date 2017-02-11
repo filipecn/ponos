@@ -1,11 +1,11 @@
+#include "algorithms/fast_sweep.h"
+#include "algorithms/solver.h"
 #include "structures/mac_grid.h"
 #include "structures/z_particle_grid.h"
 
 #include <ponos.h>
 
 using namespace poseidon;
-
-enum class FLIPCellType { FLUID, AIR, SOLID };
 
 /* simulation scene
  * Describes the scene with particles and solids.
@@ -14,19 +14,18 @@ template<typename ParticleType = ParticleType>
 class FLIP2DScene {
 	public:
 		FLIP2DScene() {}
-		FLIP2DScene(const char *filename);
+		FLIP2DScene(const char *filename, ZParticleGrid2D<ParticleType> *_pg);
+
 		~FLIP2DScene();
 
 		void load(const char *filename);
 		void addForce(const ponos::vec2 &f);
-		void generateParticles(int frame, ZParticleGrid2D<ParticleType> *pg);
-
+		void generateParticles(int frame);
+		void fillCell(int frame, ponos::Mesh2D* liquidGeometry, const ponos::ivec2& ij);
 		const std::vector<ponos::Mesh2D*>& getLiquidsGeometry() const;
 		const std::vector<ponos::Mesh2D*>& getSolidsGeometry() const;
 		const std::vector<ponos::Mesh2D*>& getStaticSolidsGeometry() const;
-
 		const std::vector<ParticleType*>& getLiquidParticles() const;
-
 		const std::vector<ponos::vec2>& getForces(int f) const;
 
 		void buildStaticSolidLevelSet();
@@ -35,6 +34,8 @@ class FLIP2DScene {
 		bool isPointInsideSolid(const ponos::Point2 &p, int f, size_t *id) const;
 
 	private:
+		// particle grid
+		std::shared_ptr<ZParticleGrid2D<ParticleType> > pg;
 		// Level sets
 		std::shared_ptr<ponos::LevelSet2D> liquidLevelSet;
 		std::shared_ptr<ponos::LevelSet2D> solidLevelSet;
@@ -49,6 +50,9 @@ class FLIP2DScene {
 		std::vector<ParticleType*> liquidParticles;
 		std::vector<ParticleType*> solidParticles;
 		std::vector<ParticleType*> staticSolidParticles;
+		// random generator
+		ponos::HaltonSequence rng;
+
 };
 
 
@@ -56,8 +60,11 @@ template<typename ParticleType = ParticleType>
 class FLIP2D {
 	public:
 		virtual ~FLIP2D() {};
+		FLIP2D(const char *filename = nullptr);
 		FLIP2D(FLIP2DScene<ParticleType>* s);
 
+		MacGrid2D<ponos::ZGrid> *getGrid() { return grid[CUR_GRID]; }
+		void loadScene(const char *filename);
 		void setup();
 		bool init();
 		void step();
@@ -77,14 +84,28 @@ class FLIP2D {
 		// current step
 		int curStep;
 
-		MacGrid2D<ponos::ZGrid>* curGrid() { return grid[0]; }
-
 		std::shared_ptr<ZParticleGrid2D<ParticleType> > particleGrid;
 		std::shared_ptr<FLIP2DScene<ParticleType> > scene;
 
 	private:
+		void markCells();
+		void computeDensity();
+		void applyExternalForces();
+		void sendVelocitiesToGrid();
+		void enforceBoundaries();
+		int matrixIndex(int i, int j);
+		void project();
+		void extrapolateVelocity();
+		void subtractGrid();
+		void solvePICFLIP();
+		void advectParticles();
+
+
 		float maxDensity;
+		size_t COPY_GRID, CUR_GRID;
 		MacGrid2D<ponos::ZGrid> *grid[2];
+		ponos::ZGrid<float> xDistances, yDistances, usolid, vsolid;
+		Solver solver;
 };
 
 #include "flip_2d.inl"

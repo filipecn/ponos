@@ -77,6 +77,12 @@ namespace poseidon {
 					v_v.reset(new GridType<float>(dimensions[0], dimensions[1] + 1));
 					v_v->setTransform(toWorld * ponos::translate(ponos::vec2(0.0f, -0.5f)));
 					p.reset(new GridType<float>(dimensions[0], dimensions[1]));
+					cellType.reset(new GridType<CellType>(dimensions[0], dimensions[1]));
+					cellType->border = CellType::SOLID;
+				}
+
+				ponos::vec2 sampleVelocity(const ponos::Point2& wp) {
+					return ponos::vec2(v_u->sample(wp.x, wp.y), v_v->sample(wp.x, wp.y));
 				}
 
 				ponos::Transform2D toWorld, toGrid;

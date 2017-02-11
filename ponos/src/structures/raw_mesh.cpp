@@ -21,12 +21,12 @@ namespace ponos {
 
 	void RawMesh::computeBBox() {
 		bbox = BBox();
-		size_t n = vertices.size() / 3;
-		for(size_t i = 0; i < n; i++)
-			bbox = make_union(bbox, Point3(
-						vertices[i * 3 + 0],
-						vertices[i * 3 + 1],
-						vertices[i * 3 + 2]));
+		for(size_t i = 0; i < vertexCount; i++) {
+			ponos::Point3 p;
+			for(size_t d = 0; d < dimensions; d++)
+				p[d] = vertices[i * dimensions + d];
+			bbox = make_union(bbox, p);
+		}
 	}
 
 	Point3 RawMesh::vertexElement(size_t e, size_t v) const {

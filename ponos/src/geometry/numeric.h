@@ -36,7 +36,9 @@ namespace ponos {
 
 #define IS_EQUAL(A, B) \
 		(fabs((A) - (B)) < 1e-6)
+	inline float normalize(float n) {return n;}
 
+	inline float max(float a, float b) {return std::max(a, b);}
   /* round
    * @f **[in]**
    * @return ceil of **f**
@@ -177,6 +179,32 @@ namespace ponos {
     arr[3] = cubicInterpolate(p[3], y);
     return cubicInterpolate(arr, x);
   }
+
+	template<typename T>
+		inline T trilinearInterpolate(float* p, T*** data, T b, const int dimensions[3]) {
+			int i0 = p[0], j0 = p[1], k0 = p[2];
+			int i1 = p[0] + 1, j1 = p[1] + 1, k1 = p[2] + 1;
+			float x = p[0] - i0;
+			float y = p[1] - j0;
+			float z = p[2] - k0;
+			T v000 = (i0 < 0 || j0 < 0 || k0 < 0 || i0 >= dimensions[0] || j0 >= dimensions[1] || k0 >= dimensions[2]) ? b : data[i0][j0][k0];
+			T v001 = (i0 < 0 || j0 < 0 || k1 < 0 || i0 >= dimensions[0] || j0 >= dimensions[1] || k1 >= dimensions[2]) ? b : data[i0][j0][k1];
+			T v010 = (i0 < 0 || j1 < 0 || k0 < 0 || i0 >= dimensions[0] || j1 >= dimensions[1] || k0 >= dimensions[2]) ? b : data[i0][j1][k0];
+			T v011 = (i0 < 0 || j1 < 0 || k1 < 0 || i0 >= dimensions[0] || j1 >= dimensions[1] || k1 >= dimensions[2]) ? b : data[i0][j1][k1];
+			T v100 = (i1 < 0 || j0 < 0 || k0 < 0 || i1 >= dimensions[0] || j0 >= dimensions[1] || k0 >= dimensions[2]) ? b : data[i1][j0][k0];
+			T v101 = (i1 < 0 || j0 < 0 || k1 < 0 || i1 >= dimensions[0] || j0 >= dimensions[1] || k1 >= dimensions[2]) ? b : data[i1][j0][k1];
+			T v110 = (i1 < 0 || j1 < 0 || k0 < 0 || i1 >= dimensions[0] || j1 >= dimensions[1] || k0 >= dimensions[2]) ? b : data[i1][j1][k0];
+			T v111 = (i1 < 0 || j1 < 0 || k1 < 0 || i1 >= dimensions[0] || j1 >= dimensions[1] || k1 >= dimensions[2]) ? b : data[i1][j1][k1];
+			return
+						 v000 * (1.f - x) * (1.f - y) * (1.f - z) +
+						 v100         * x * (1.f - y) * (1.f - z) +
+						 v010 * (1.f - x) * 			  y * (1.f - z) +
+						 v110 * 			  x * 			  y * (1.f - z) +
+						 v001 * (1.f - x) * (1.f - y) *  				z +
+						 v101         * x * (1.f - y) * 				z +
+						 v011 * (1.f - x) * 			  y * 				z +
+						 v111 * 			  x * 			  y * 				z;
+		}
 
   template<typename T>
   inline T tricubicInterpolate(float* p, T*** data) {
