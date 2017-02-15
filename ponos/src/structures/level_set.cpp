@@ -23,6 +23,4 @@ namespace ponos {
 	void LevelSet2D::merge(const LevelSet2D *ls) {}
 	void LevelSet2D::copy(const LevelSet2D *ls) {}
 
-
-
 } // ponos namespace

@@ -46,16 +46,16 @@ namespace ponos {
 				}
 				/* @inherit */
 				T operator()(const uint& i, const uint&j, const uint& k) const override {
-					CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
-					CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
-					CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
+					CHECK_IN_BETWEEN(static_cast<int>(i), 0, this->dimensions[0]);
+					CHECK_IN_BETWEEN(static_cast<int>(j), 0, this->dimensions[1]);
+					CHECK_IN_BETWEEN(static_cast<int>(k), 0, this->dimensions[2]);
 					return data[i][j][k];
 				}
 				/* @inherit */
 				T& operator()(const uint& i, const uint&j, const uint& k) override {
-					CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
-					CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
-					CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
+					CHECK_IN_BETWEEN(static_cast<int>(i), 0, this->dimensions[0]);
+					CHECK_IN_BETWEEN(static_cast<int>(j), 0, this->dimensions[1]);
+					CHECK_IN_BETWEEN(static_cast<int>(k), 0, this->dimensions[2]);
 					return data[i][j][k];
 				}
 				T safeData(int i, int j, int k) const;
