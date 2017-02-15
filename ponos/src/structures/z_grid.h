@@ -17,8 +17,8 @@ namespace ponos {
 				ZGrid(uint32_t w, uint32_t h);
 
 				void setDimensions(uint32_t w, uint32_t h) override {
-					width = w;
-					height = h;
+					this->width = w;
+					this->height = h;
 					init();
 				}
 
@@ -80,7 +80,7 @@ namespace ponos {
 	template<class T>
 		T& ZGrid<T>::operator()(const ponos::ivec2& ij) {
 			uint32_t ind = morton_code(ij[0], ij[1]);
-			if(ij[0] < 0 || ij[1] < 0 || ij[0] >= width || ij[1] >= height || ind >= data.size()) {
+			if(ij[0] < 0 || ij[1] < 0 || ij[0] >= this->width || ij[1] >= this->height || ind >= data.size()) {
 				if(!this->useBorder) {
 					std::cout << "useBorder = false!\n";
 					exit(1);
@@ -93,7 +93,7 @@ namespace ponos {
 	template<class T>
 		T ZGrid<T>::operator()(const ponos::ivec2& ij) const {
 			uint32_t ind = morton_code(ij[0], ij[1]);
-			if(ij[0] < 0 || ij[1] < 0 || ij[0] >= width || ij[1] >= height || ind >= data.size()) {
+			if(ij[0] < 0 || ij[1] < 0 || ij[0] >= this->width || ij[1] >= this->height || ind >= data.size()) {
 				if(!this->useBorder) {
 					std::cout << "useBorder = false!\n";
 					exit(1);
@@ -107,7 +107,7 @@ namespace ponos {
 	template<class T>
 		T& ZGrid<T>::operator()(int i, int j) {
 			uint32_t ind = morton_code(i, j);
-			if(i < 0 || j < 0 || i >= width || j >= height || ind >= data.size()) {
+			if(i < 0 || j < 0 || i >= this->width || j >= this->height || ind >= data.size()) {
 				if(!this->useBorder) {
 					std::cout << "useBorder = false!\n";
 					exit(1);
@@ -120,7 +120,7 @@ namespace ponos {
 	template<class T>
 		T ZGrid<T>::operator()(int i, int j) const {
 			uint32_t ind = morton_code(i, j);
-			if(i < 0 || j < 0 || i >= width || j >= height || ind >= data.size()) {
+			if(i < 0 || j < 0 || i >= this->width || j >= this->height || ind >= data.size()) {
 				if(!this->useBorder) {
 					std::cout << "useBorder = false!\n";
 					exit(1);

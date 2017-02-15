@@ -19,7 +19,7 @@ set(SOURCES
   src/structures/particle_grid.cpp
 )
 
-if(NOT WIN32)
+if(NOT WIN32 AND NOT NOOPENVDB)
   set(HEADERS ${HEADERS}
     src/structures/vdb_grid.h
     src/structures/vdb_level_set.h
@@ -49,7 +49,7 @@ set_target_properties(poseidon PROPERTIES
   OUTPUT_NAME "poseidon"
 FOLDER "POSEIDON")
 
-if(WIN32)
+if(WIN32 OR NOOPENVDB)
 target_link_libraries(poseidon ${poseidon_LIBRARIES})
 else(WIN32)
 target_link_libraries(poseidon ${poseidon_LIBRARIES} -ltbb

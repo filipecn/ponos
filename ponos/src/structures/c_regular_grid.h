@@ -28,45 +28,45 @@ namespace ponos {
 
 				~CRegularGrid();
 				/* @inherit */
-        void set(const ivec3& i, const T& v) override;
-        void setAll(T v);
+				void set(const ivec3& i, const T& v) override;
+				void setAll(T v);
 				/* @inherit */
-        T operator()(const ivec3& i) const override {
-          CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
-          CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
-          CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
-          return data[i[0]][i[1]][i[2]];
-        }
+				T operator()(const ivec3& i) const override {
+					CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
+					CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
+					CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
+					return data[i[0]][i[1]][i[2]];
+				}
 				/* @inherit */
-        T& operator()(const ivec3& i) override {
-          CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
-          CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
-          CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
-          return data[i[0]][i[1]][i[2]];
-        }
+				T& operator()(const ivec3& i) override {
+					CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
+					CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
+					CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
+					return data[i[0]][i[1]][i[2]];
+				}
 				/* @inherit */
-        T operator()(const uint& i, const uint&j, const uint& k) const override {
-          CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
-          CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
-          CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
-          return data[i][j][k];
-        }
-        /* @inherit */
-        T& operator()(const uint& i, const uint&j, const uint& k) override {
-          CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
-          CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
-          CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
-          return data[i][j][k];
-        }
-        T safeData(int i, int j, int k) const;
-        T operator()(const float& x, const float&y, const float& z) const override {
-					Point3 gp = toGrid(ponos::Point3(x, y, z));
-          float p[3] = { gp.x, gp.y, gp.z };
-          return trilinearInterpolate<T>(p, data, background, dimensions.v);
-        }
-        T operator()(const vec3& i) const override {
-          return (*this)(i[0], i[1], i[2]);
-        }
+				T operator()(const uint& i, const uint&j, const uint& k) const override {
+					CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
+					CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
+					CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
+					return data[i][j][k];
+				}
+				/* @inherit */
+				T& operator()(const uint& i, const uint&j, const uint& k) override {
+					CHECK_IN_BETWEEN(i, 0, this->dimensions[0]);
+					CHECK_IN_BETWEEN(j, 0, this->dimensions[1]);
+					CHECK_IN_BETWEEN(k, 0, this->dimensions[2]);
+					return data[i][j][k];
+				}
+				T safeData(int i, int j, int k) const;
+				T operator()(const float& x, const float&y, const float& z) const override {
+					Point3 gp = this->toGrid(ponos::Point3(x, y, z));
+					float p[3] = { gp.x, gp.y, gp.z };
+					return trilinearInterpolate<T>(p, data, this->background, this->dimensions.v);
+				}
+				T operator()(const vec3& i) const override {
+					return (*this)(i[0], i[1], i[2]);
+				}
 				void normalize() override;
 				void normalizeElements() override;
 
@@ -79,16 +79,16 @@ namespace ponos {
 		CRegularGrid<T>::CRegularGrid(const ivec3& d, const T& b, const vec3 cellSize, const vec3& offset) {
 			this->dimensions = d;
 			this->background = b;
-      data = new T**[d[0]];
-      for (int i = 0; i < d[0]; i++)
-        data[i] = new T*[d[1]];
-      for (int i = 0; i < d[0]; i++)
-        for (int j = 0; j < d[1]; j++)
-          data[i][j] = new T[d[2]];
+			data = new T**[d[0]];
+			for (int i = 0; i < d[0]; i++)
+				data[i] = new T*[d[1]];
+			for (int i = 0; i < d[0]; i++)
+				for (int j = 0; j < d[1]; j++)
+					data[i][j] = new T[d[2]];
 			this->toWorld.reset();
 			this->toWorld.scale(cellSize.x, cellSize.y, cellSize.z);
 			this->toWorld.translate(offset);
-		  this->toWorld.computeInverse();
+			this->toWorld.computeInverse();
 			this->toGrid = inverse(this->toWorld);
 		}
 
@@ -96,12 +96,12 @@ namespace ponos {
 		CRegularGrid<T>::CRegularGrid(const ivec3& d, const T& b, const BBox& bb) {
 			this->dimensions = d;
 			this->background = b;
-      data = new T**[d[0]];
-      for (int i = 0; i < d[0]; i++)
-        data[i] = new T*[d[1]];
-      for (int i = 0; i < d[0]; i++)
-        for (int j = 0; j < d[1]; j++)
-          data[i][j] = new T[d[2]];
+			data = new T**[d[0]];
+			for (int i = 0; i < d[0]; i++)
+				data[i] = new T*[d[1]];
+			for (int i = 0; i < d[0]; i++)
+				for (int j = 0; j < d[1]; j++)
+					data[i][j] = new T[d[2]];
 			this->toWorld.reset();
 			vec3 s = vec3(bb.size(0) / (d[0]), bb.size(1) / (d[1]), bb.size(2) / (d[2]));
 			this->toWorld =
@@ -110,40 +110,40 @@ namespace ponos {
 
 			//this->toWorld.scale(s[0], s[1], s[2]);
 			//this->toWorld.translate(vec3(bb.pMin) + s * 0.5f + vec3(0, 0, 1));
-		  this->toWorld.computeInverse();
+			this->toWorld.computeInverse();
 			this->toGrid = inverse(this->toWorld);
 
 		}
 
 	template<typename T>
 		CRegularGrid<T>::~CRegularGrid() {
-      for (int i = 0; i < this->dimensions[0]; i++)
-        for (int j = 0; j < this->dimensions[1]; j++)
-          delete[] data[i][j];
-      for (int i = 0; i < this->dimensions[0]; i++)
-        delete[] data[i];
-      delete[] data;
-    }
+			for (int i = 0; i < this->dimensions[0]; i++)
+				for (int j = 0; j < this->dimensions[1]; j++)
+					delete[] data[i][j];
+			for (int i = 0; i < this->dimensions[0]; i++)
+				delete[] data[i];
+			delete[] data;
+		}
 
-    template<typename T>
+	template<typename T>
 		void CRegularGrid<T>::setAll(T v){
-      ivec3 ijk;
-      FOR_INDICES0_3D(this->dimensions, ijk)
-					data[ijk[0]][ijk[1]][ijk[2]] = v;
+			ivec3 ijk;
+			FOR_INDICES0_3D(this->dimensions, ijk)
+				data[ijk[0]][ijk[1]][ijk[2]] = v;
 		}
 
 	template<typename T>
 		T CRegularGrid<T>::safeData(int i, int j, int k) const{
 			return data
-        [max(0, min(this->dimensions[0]-1,i))]
-        [max(0, min(this->dimensions[1]-1,j))]
-        [max(0, min(this->dimensions[2]-1,k))];
+				[max(0, min(this->dimensions[0]-1,i))]
+				[max(0, min(this->dimensions[1]-1,j))]
+					[max(0, min(this->dimensions[2]-1,k))];
 		}
 
 	template<typename T>
-    void CRegularGrid<T>::set(const ivec3& i, const T& v) {
-      this->data[std::max(0, std::min(this->dimensions[0]-1,i[0]))][std::max(0, std::min(this->dimensions[1]-1,i[1]))][std::max(0, std::min(this->dimensions[2] - 1, i[2]))] = v;
-  }
+		void CRegularGrid<T>::set(const ivec3& i, const T& v) {
+			this->data[std::max(0, std::min(this->dimensions[0]-1,i[0]))][std::max(0, std::min(this->dimensions[1]-1,i[1]))][std::max(0, std::min(this->dimensions[2] - 1, i[2]))] = v;
+		}
 
 	template<typename T>
 		void CRegularGrid<T>::normalize() {
@@ -163,7 +163,7 @@ namespace ponos {
 
 		}
 
-    template<class T>
+	template<class T>
 		class CRegularGrid2D : public CGrid2DInterface<T> {
 			public:
 				CRegularGrid2D();

@@ -30,6 +30,7 @@ include_directories("${AERGIA_SOURCE_DIR}/src")
 
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
+if(NOT NOGRAPHICS)
 add_executable(zgrid WIN32 zgrid.cpp)
 
 set(WINDOWS_BINARIES zgrid)
@@ -45,3 +46,5 @@ add_subdirectory(flip2d)
 if(NOT WIN32)
 add_subdirectory(openvdb)
 endif(NOT WIN32)
+
+endif(NOT NOGRAPHICS)

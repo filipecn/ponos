@@ -38,7 +38,7 @@ namespace ponos {
 
 	BBox RawMesh::elementBBox(size_t i) const {
 		BBox b;
-		for(int v = 0; v < elementSize; v++)
+		for(size_t v = 0; v < elementSize; v++)
 			b = make_union(b, Point3(
 						vertices[indices[i * elementSize + v].vertexIndex * elementSize + 0],
 						vertices[indices[i * elementSize + v].vertexIndex * elementSize + 1],
