@@ -14,18 +14,20 @@ set(HEADERS
 	src/io/graphics_display.h
 	src/io/utils.h
 	src/io/viewport_display.h
-  src/io/vulkan_application.h
-  src/io/vulkan_resource.h
-  src/io/vulkan_utils.h
+	#  src/io/vulkan_application.h
+	# src/io/vulkan_resource.h
+	#  src/io/vulkan_utils.h
   src/scene/bvh.h
 	src/scene/camera.h
 	src/scene/camera_2d.h
+	src/scene/camera_projection.h
 	src/scene/mesh_utils.h
 	src/scene/scene.h
 	src/scene/scene_object.h
 	src/scene/triangle_mesh.h
 	src/scene/wireframe_mesh.h
 	src/ui/app.h
+	src/ui/interactive_object_interface.h
 	src/ui/scene_app.h
 	src/ui/trackball.h
 	src/ui/trackball_interface.h
@@ -43,7 +45,7 @@ set(SOURCES
 	src/io/graphics_display.cpp
 	src/io/utils.cpp
 	src/io/viewport_display.cpp
-  src/io/vulkan_application.cpp
+	#  src/io/vulkan_application.cpp
   src/scene/bvh.cpp
 	src/scene/camera.cpp
 	src/scene/camera_2d.cpp
@@ -55,7 +57,9 @@ set(SOURCES
 	src/utils/open_gl.cpp
 	src/aergia.cpp
 	)
+
 message(STATUS ${WIN64})
+
 if(WIN32)
 	find_library(GLFW_LIB NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/external/GLFW)
 	include_directories("C:/VulkanSDK/1.0.3.1/Include")
@@ -76,7 +80,8 @@ else(WIN32)
 	include_directories(${OPENGL_INCLUDE_DIRS})
 	link_libraries(glfw ${OPENGL_LIBRARIES})
 	include_directories("/usr/local/include")
-	link_libraries(tinyobjloader "/usr/local/lib/libtinyobjloader.a")
+	#link_libraries(tinyobjloader "/usr/local/lib/libtinyobjloader.a")
+	link_libraries(tinyobjloader "/usr/local/lib/x86_64-linux-gnu/libtinyobjloader.a")
   set(GLEW_LIB "GLEW")
 endif(WIN32)
 

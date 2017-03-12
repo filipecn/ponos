@@ -7,7 +7,7 @@
 
 namespace poseidon {
 
-	VDBLevelSet::VDBLevelSet(const aergia::RawMesh *m, ponos::Transform t) {
+	VDBLevelSet::VDBLevelSet(const ponos::RawMesh *m, ponos::Transform t) {
 		openvdb::math::Transform::Ptr transform =
 			openvdb::math::Transform::createLinearTransform(.25f);
 		// copy vertices

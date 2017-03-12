@@ -1,8 +1,8 @@
 #include "structures/vdb_particle_grid.h"
 
-#include <openvdb_points/tools/PointAttribute.h>
-#include <openvdb_points/tools/PointConversion.h>
-#include <openvdb_points/tools/PointCount.h>
+//#include <openvdb_points/tools/PointAttribute.h>
+//#include <openvdb_points/tools/PointConversion.h>
+//#include <openvdb_points/tools/PointCount.h>
 
 using namespace openvdb;
 using namespace openvdb::tools;

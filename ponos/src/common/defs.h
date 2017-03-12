@@ -1,3 +1,4 @@
+/** @ingroup Common */
 #ifndef PONOS_GEOMETRY_DEFS_H
 #define PONOS_GEOMETRY_DEFS_H
 
@@ -20,3 +21,4 @@ typedef unsigned short ushort;
 typedef uint8_t byte;
 
 #endif
+/**@}*/

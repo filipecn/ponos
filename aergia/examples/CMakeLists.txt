@@ -12,12 +12,14 @@ add_executable(vector_grid WIN32 vector_grid_example.cpp)
 add_executable(z_grid zgrid_example.cpp)
 
 if(WIN32)
-	add_executable(hello_vulkan WIN32 hello_vulkan.cpp)
+	# add_executable(hello_vulkan WIN32 hello_vulkan.cpp)
 endif(WIN32)
-set(WINDOWS_BINARIES z_grid vector_grid hello_aergia_test scene_app hello_3d hello_vulkan stream_lines)
+set(WINDOWS_BINARIES z_grid vector_grid hello_aergia_test scene_app hello_3d stream_lines)
 
 if (MSVC)
 	# Tell MSVC to use main instead of WinMain for Windows subsystem executables
 	set_target_properties(${WINDOWS_BINARIES} PROPERTIES
 		LINK_FLAGS "/ENTRY:mainCRTStartup")
 endif()
+
+add_subdirectory(spheres)

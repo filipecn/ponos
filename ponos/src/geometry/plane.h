@@ -8,16 +8,18 @@
 
 namespace ponos {
 
-	/* Implements plane equation.
-	 * Implements the equation <normal> X = <offset>.
+	/** Implements plane equation.
+	 *
+	 * 	Implements the equation <normal> X = <offset>.
 	 */
 	class Plane {
 		public:
+			/// Default constructor
 			Plane() {
 				offset = 0.f;
 			}
 
-			/* Constructor
+			/** Constructor
 			 * @n **[in]** normal
 			 * @o **[in]** offset
 			 */

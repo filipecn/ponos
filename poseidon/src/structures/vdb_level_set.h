@@ -74,7 +74,7 @@ namespace poseidon {
 			 * @m **[in]** mesh
 			 * create a level set from a mesh
 			 */
-			VDBLevelSet(const aergia::RawMesh *m, ponos::Transform t);
+			VDBLevelSet(const ponos::RawMesh *m, ponos::Transform t);
 			virtual ~VDBLevelSet() {}
 			/* @inherit */
 			void set(const ponos::ivec3& ijk, const float& v) override;

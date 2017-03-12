@@ -3,14 +3,14 @@ import os
 import shutil
 from subprocess import call
 import sys
-import glob
-import subprocess
 import platform
 
 cur_path = os.getcwd()
 build_path = os.getcwd() + "/build"
+if platform.system() == 'Windows':
+    build_path = os.getcwd() + "/win_build"
 
-if len(sys.argv) < 2 :
+if len(sys.argv) < 2:
     print('all - remove cache, make, test and generate docs')
     print('make - just make')
     print('test - make and test')
@@ -18,33 +18,10 @@ if len(sys.argv) < 2 :
     sys.exit(1)
 
 if sys.argv[1] == 'docs':
-    cldoc_command = "cldoc generate -std=c++11 -I/home/filipecn/gitclones/OpenVDB/include -Iaergia/src -Iponos/src -Ihelios/src -Ihercules/src -Iposeidon/src -fPIC -- --report --merge docs --type html --static --output "
-    outputdir = 'html'
-    if len(sys.argv) > 2:
-        outputdir = sys.argv[2]
-    cldoc_command += outputdir
-    for filename in glob.iglob('aergia/src/**/*.c*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('aergia/src/**/*.h*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('ponos/src/**/*.c*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('ponos/src/**/*.h*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('helios/src/**/*.c*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('helios/src/**/*.h*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('hercules/src/**/*.c*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('hercules/src/**/*.h*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('poseidon/src/**/*.c*', recursive=True):
-        cldoc_command += " " + filename
-    for filename in glob.iglob('poseidon/src/**/*.h*', recursive=True):
-        cldoc_command += " " + filename
-    print(cldoc_command)
-    call([cldoc_command], shell=True)
+    call(["doxygen Doxyfile"], shell=True)
+    call(["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
+         shell=True)
+    call(["python doxml2md.py doc/xml/all.xml"], shell=True)
     if sys.argv[1] == 'docs':
         sys.exit(1)
 
@@ -58,18 +35,20 @@ if not os.path.exists(build_path):
 
 os.chdir(build_path)
 
-if first :
+if first:
     if platform.system() == 'Windows':
-        call(["cmake"] + ['-G'] + ['Visual Studio 14 2015 Win64'] + sys.argv[2:] + [cur_path])
+        call(["cmake"] + ['-G'] + ['Visual Studio 14 2015 Win64'] +
+             sys.argv[2:] + [cur_path])
     else:
         call(["cmake"] + sys.argv[2:] + [cur_path])
 
 if platform.system() == 'Windows':
-    make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] + ["PONOS.sln"], shell=True)
+    make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
+                       ["PONOS.sln"], shell=True)
 else:
     make_result = call(["make"], shell=True)
 
-if make_result != 0 :
+if make_result != 0:
     sys.exit(1)
 
 if sys.argv[1] != 'test':

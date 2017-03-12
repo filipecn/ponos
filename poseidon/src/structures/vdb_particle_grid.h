@@ -6,8 +6,6 @@
 #include <ponos.h>
 
 #include <openvdb/openvdb.h>
-#include <openvdb_points/openvdb.h>
-#include <openvdb_points/tools/PointDataGrid.h>
 
 #include <functional>
 #include <vector>

@@ -6,61 +6,63 @@
 
 namespace aergia {
 
-	App::App(uint w, uint h, const char* t, bool defaultViewport)
-		: initialized(false), windowWidth(w), windowHeight(h), title(t) {
-			if(defaultViewport) {
-				addViewport(0, 0, windowWidth, windowHeight);
-				viewports[0].camera.reset(new aergia::Camera());
-			}
-		}
+App::App(uint w, uint h, const char *t, bool defaultViewport)
+    : initialized(false), windowWidth(w), windowHeight(h), title(t) {
+  if (defaultViewport) {
+    addViewport(0, 0, windowWidth, windowHeight);
+    viewports[0].camera.reset(new aergia::Camera());
+  }
+  renderCallback = nullptr;
+}
 
-	size_t App::addViewport(uint x, uint y, uint w, uint h) {
-		viewports.emplace_back(x, y, w, h);
-		return viewports.size() - 1;
-	}
+size_t App::addViewport(uint x, uint y, uint w, uint h) {
+  viewports.emplace_back(x, y, w, h);
+  viewports[viewports.size() - 1].camera.reset(new Camera());
+  static_cast<aergia::Camera *>(viewports[viewports.size() - 1].camera.get())
+      ->resize(w, h);
+  return viewports.size() - 1;
+}
 
-	size_t App::addViewport2D(uint x, uint y, uint w, uint h) {
-		viewports.emplace_back(x, y, w, h);
-		viewports[0].camera.reset(new aergia::Camera2D());
-		return viewports.size() - 1;
-	}
+size_t App::addViewport2D(uint x, uint y, uint w, uint h) {
+  viewports.emplace_back(x, y, w, h);
+  viewports[viewports.size() - 1].camera.reset(new aergia::Camera2D());
+  static_cast<aergia::Camera2D *>(viewports[viewports.size() - 1].camera.get())
+      ->resize(w, h);
+  return viewports.size() - 1;
+}
 
-	void App::init() {
-		if(initialized)
-			return;
-		GraphicsDisplay &gd = createGraphicsDisplay(windowWidth, windowHeight, title.c_str());
-		gd.registerRenderFunc([this](){ render(); });
-		gd.registerButtonFunc([this](int b, int a){ button(b, a); });
-		gd.registerMouseFunc([this](double x, double y){ mouse(x, y); });
-		viewports[0].camera->resize(windowWidth, windowHeight);
-		initialized = true;
-	}
+void App::init() {
+  if (initialized)
+    return;
+  GraphicsDisplay &gd =
+      createGraphicsDisplay(windowWidth, windowHeight, title.c_str());
+  gd.registerRenderFunc([this]() { render(); });
+  gd.registerButtonFunc([this](int b, int a) { button(b, a); });
+  gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
+  initialized = true;
+}
 
-	void App::run() {
-		if(!initialized)
-			init();
-		GraphicsDisplay::instance().start();
-	}
+void App::run() {
+  if (!initialized)
+    init();
+  GraphicsDisplay::instance().start();
+}
 
-	void App::render() {
-		for(size_t i = 0; i < viewports.size(); i++)
-			viewports[i].render();
-	}
+void App::render() {
+  for (size_t i = 0; i < viewports.size(); i++)
+    viewports[i].render();
+  if (renderCallback)
+    renderCallback();
+}
 
-	void App::button(int button, int action) {
-		if(action == GLFW_RELEASE)
-			trackball.buttonRelease(*viewports[0].camera.get(), button, viewports[0].getMouseNPos());
-		else
-			trackball.buttonPress(*viewports[0].camera.get(), button, viewports[0].getMouseNPos());
-	}
+void App::button(int button, int action) {
+  for (size_t i = 0; i < viewports.size(); i++)
+    viewports[i].button(button, action);
+}
 
-	void App::mouse(double x, double y) {
-		trackball.mouseMove(*viewports[0].camera.get(), viewports[0].getMouseNPos());
-		//viewports[0].camera->setPos(trackball.tb.transform(viewports[0].camera->getPos()));
-		//viewports[0].camera->setTarget(trackball.tb.transform(viewports[0].camera->getTarget()));
-		//trackball.tb.center = viewports[0].camera->getTarget();
-		for(size_t i = 0; i < viewports.size(); i++)
-			viewports[i].mouse(x, y);
-	}
+void App::mouse(double x, double y) {
+  for (size_t i = 0; i < viewports.size(); i++)
+    viewports[i].mouse(x, y);
+}
 
 } // aergia namespace

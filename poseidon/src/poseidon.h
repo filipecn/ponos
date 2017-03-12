@@ -8,5 +8,5 @@
 #include "structures/vdb_grid.h"
 #include "structures/vdb_level_set.h"
 #include "structures/vdb_mac_grid.h"
-#include "structures/vdb_particle_grid.h"
+//#include "structures/vdb_particle_grid.h"
 #endif

@@ -1,5 +1,7 @@
 #include "algorithm/search.h"
 #include "algorithm/sort.h"
+/** \defgroup Common module
+ */
 #include "common/defs.h"
 #include "common/file.h"
 #include "common/macros.h"

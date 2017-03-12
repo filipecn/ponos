@@ -25,7 +25,7 @@ namespace poseidon {
 			/* @inherit */
 			float operator()(const ponos::ivec3& i) const override;
 			/* @inherit */
-			float operator()(const int& i, const int&j, const int& k) const override;
+			float operator()(const int& i, const int&j, const int& k) const;
 			/* @inherit */
 			float operator()(const ponos::vec3& i) const override;
 			/* @inherit */

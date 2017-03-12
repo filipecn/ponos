@@ -18,7 +18,7 @@ endif(WIN32)
 find_library(LAPACK_LIB NAMES liblapack PATHS ${POSEIDON_SOURCE_DIR}/external)
 
 link_libraries(${GLFW_LIB} ${GLEW_LIB} ${aergia_LIBRARIES} ${OPENGL_LIBRARIES})
-link_libraries(${GLFW_LIB} ${aergia_LIBRARIES} ${VULKAN_LIBRARY} ${POSEIDON_SOURCE_DIR}/external/libcblas.dll.a)
+link_libraries( -pthread ${GLFW_LIB} ${aergia_LIBRARIES} ${VULKAN_LIBRARY} ${POSEIDON_SOURCE_DIR}/external/libcblas.dll.a)
 
 link_libraries(poseidon)
 include_directories("${POSEIDON_SOURCE_DIR}/src")
@@ -30,7 +30,7 @@ include_directories("${AERGIA_SOURCE_DIR}/src")
 
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
-if(NOT NOGRAPHICS)
+if(NOT NOGRAPHICS AND NOT NOOPENVDB)
 add_executable(zgrid WIN32 zgrid.cpp)
 
 set(WINDOWS_BINARIES zgrid)
@@ -44,7 +44,7 @@ endif()
 add_subdirectory(flip2d)
 
 if(NOT WIN32)
-add_subdirectory(openvdb)
+	# add_subdirectory(openvdb)
 endif(NOT WIN32)
 
 endif(NOT NOGRAPHICS)

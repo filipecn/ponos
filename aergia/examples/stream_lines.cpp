@@ -172,7 +172,9 @@ class StreamLine : public aergia::SceneObject {
 };
 
 int main(int argc, char** argv) {
+#if defined(WIN32) || defined(_WIN32)
 	WIN32CONSOLE();
+#endif
 	if(argc < 3) {
 		std::cout << "usage:\n <path to obj file> <n> <vector field file - n stream lines : to generate VF>\n";
 		return 0;
@@ -205,7 +207,7 @@ int main(int argc, char** argv) {
 	FOR_INDICES0_3D(grid->dimensions, ijk)
 		if(bvh->isInside(grid->worldPosition(ijk))) {
 			ponos::vec3 v;
-			fscanf(fp, "%f %f %f", &v[0], &v[1], &v[2]);
+			if(fscanf(fp, "%f %f %f", &v[0], &v[1], &v[2]))
 			grid->set(ijk, v);
 	}
 	fclose(fp);
@@ -227,9 +229,9 @@ int main(int argc, char** argv) {
 	fp = fopen(filename, "w+");
 	if(!fp)
 		return 0;
-	fprintf(fp, "%d\n", streams.size());
+	fprintf(fp, "%lu\n", streams.size());
 	for(uint i = 0; i < streams.size(); i++) {
-		fprintf(fp, "%d ", streams[i].points.size());
+		fprintf(fp, "%lu ", streams[i].points.size());
 		for(uint j = 0; j < streams[i].points.size(); j++)
 			fprintf(fp, "%f %f %f ", streams[i].points[j].x, streams[i].points[j].y, streams[i].points[j].z);
 		fprintf(fp, "\n");

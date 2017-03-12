@@ -5,18 +5,16 @@
 
 namespace aergia {
 
-	class Trackball {
-		public:
-			Trackball() {
-				radius = 5.f;
-			}
+class Trackball {
+public:
+  Trackball() { radius = 5.f; }
 
-			ponos::Point3 center;
-			ponos::Transform transform;
+  ponos::Point3 center;
+  ponos::Transform transform;
 
-			float radius;
-			float angle_;
-	};
+  float radius;
+  float angle_;
+};
 
 } // aergia namespace
 

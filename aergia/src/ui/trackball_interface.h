@@ -10,30 +10,30 @@
 
 namespace aergia {
 
-	class TrackballInterface {
-		public:
-			TrackballInterface() {
-				modes.emplace_back(new RotateMode());
-				modes.emplace_back(new ZMode());
-				modes.emplace_back(new PanMode());
-				curMode = 0;
-			}
+class TrackballInterface {
+public:
+  TrackballInterface() {
+    modes.emplace_back(new RotateMode());
+    modes.emplace_back(new ZMode());
+    modes.emplace_back(new PanMode());
+    curMode = 0;
+  }
 
-			virtual ~TrackballInterface() {}
+  virtual ~TrackballInterface() {}
 
-			void draw();
+  void draw();
 
-			void buttonRelease(CameraInterface& camera, int button, ponos::Point2 p);
-			void buttonPress(const CameraInterface& camera, int button, ponos::Point2 p);
-			void mouseMove(CameraInterface& camera, ponos::Point2 p);
-			void mouseScroll(CameraInterface& camera, ponos::vec2 d);
+  void buttonRelease(CameraInterface &camera, int button, ponos::Point2 p);
+  void buttonPress(const CameraInterface &camera, int button, ponos::Point2 p);
+  void mouseMove(CameraInterface &camera, ponos::Point2 p);
+  void mouseScroll(CameraInterface &camera, ponos::vec2 d);
 
-			Trackball tb;
+  Trackball tb;
 
-		protected:
-			size_t curMode;
-			std::vector<TrackMode*> modes;
-	};
+protected:
+  size_t curMode;
+  std::vector<TrackMode *> modes;
+};
 
 } // aergia namespace
 
