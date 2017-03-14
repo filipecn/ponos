@@ -341,10 +341,12 @@ public:
   }
 
   void iterateAll(std::function<void(ParticleObject *p)> f) {
-    ponos::parallel_for(0, end, [this, f](size_t s, size_t e) {
-      for (size_t i = s; i <= e; i++)
-        f(&this->particles[i].data);
-    });
+    // ponos::parallel_for(0, end, [this, f](size_t s, size_t e) {
+    //  for (size_t i = s; i <= e; i++)
+    //    f(&this->particles[i].data);
+    //});
+    for (size_t i = 0; i < end; i++)
+      f(&this->particles[i].data);
   }
 
   /* \brief gather

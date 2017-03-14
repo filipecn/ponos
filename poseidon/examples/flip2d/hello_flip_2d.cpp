@@ -50,7 +50,7 @@ struct MyParticle : public aergia::SceneObject,
                     public poseidon::FLIPParticle2D {
 public:
   MyParticle() {
-    c.r = 0.01f;
+    c.r = 0.001f;
     color[0] = 0;
     color[1] = 0;
     color[2] = 1;
@@ -184,6 +184,20 @@ void mouse(double x, double y) {
   search();
 }
 
+void button(int b, int a) {
+  if (a == GLFW_RELEASE) {
+    poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(
+        *flip->particleGrid.get());
+    while (it.next()) {
+      if ((*it)->type == poseidon::ParticleTypes::FLUID) {
+        std::cout << (*it)->velocity << std::endl;
+        break;
+      }
+      ++it;
+    }
+  }
+}
+
 void init() {
   flip->init();
   flip->scene->addForce(ponos::vec2(0.f, -9.8f));
@@ -216,6 +230,7 @@ int main(int argc, char **argv) {
       ->setZoom(region.pMax.x * 0.55f);
   app.viewports[0].mouseCallback = mouse;
   app.viewports[0].renderCallback = render;
+  app.viewports[0].buttonCallback = button;
   app.run();
   return 0;
 }

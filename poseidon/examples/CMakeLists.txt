@@ -31,7 +31,7 @@ include_directories("${AERGIA_SOURCE_DIR}/src")
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
 if(NOT NOGRAPHICS AND NOT NOOPENVDB)
-add_executable(zgrid WIN32 zgrid.cpp)
+	add_executable(zgrid WIN32 zgrid.cpp)
 
 set(WINDOWS_BINARIES zgrid)
 

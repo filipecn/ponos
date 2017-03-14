@@ -46,8 +46,9 @@ void Camera2D::setPos(vec2 p) {
 }
 
 void Camera2D::update() {
-  projection = ponos::ortho(pos.x - clipSize.x, pos.x + clipSize.x,
-                            pos.y - clipSize.y, pos.y + clipSize.y, -1.f, 1.f);
+  projection = ponos::ortho(
+      pos.x - clipSize.x * zoom, pos.x + clipSize.x * zoom,
+      pos.y - clipSize.y * zoom, pos.y + clipSize.y * zoom, -1.f, 1.f);
   model.computeInverse();
   view.computeInverse();
   projection.computeInverse();

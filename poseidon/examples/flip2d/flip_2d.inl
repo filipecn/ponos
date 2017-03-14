@@ -312,6 +312,7 @@ template <typename ParticleType> void FLIP2D<ParticleType>::step() {
   subtractGrid();
   solvePICFLIP();
   advectParticles();
+  markCells();
 
   curStep++;
 }
@@ -355,8 +356,9 @@ void FLIP2D<ParticleType>::applyExternalForces() {
   particleGrid->iterateAll([this, &forces](ParticleType *p) {
     if (p->type != ParticleTypes::FLUID)
       return;
-    for (auto f : forces)
+    for (auto f : forces) {
       p->velocity += f * this->dt;
+    }
   });
 }
 
@@ -477,14 +479,21 @@ template <typename ParticleType> void FLIP2D<ParticleType>::project() {
 
   // pressure update
   s = dt / (density * dx);
-  FOR_INDICES0_2D(dimensions, ij) {
+  ponos::ivec2 IJ = u.getDimensions() - ponos::ivec2(1, 0);
+  FOR_INDICES2D(ponos::ivec2(1, 0), IJ, ij) {
     int i = ij[0], j = ij[1];
-    if (cell(ij) == CellType::FLUID) {
-      u(i, j) -= s * solver.getX(matrixIndex(i, j));
-      u(i + 1, j) -= s * solver.getX(matrixIndex(i, j));
-      v(i, j) -= s * solver.getX(matrixIndex(i, j));
-      v(i, j + 1) -= s * solver.getX(matrixIndex(i, j));
-    }
+    // if (cell(ij) == CellType::FLUID) {
+    u(i, j) -= s * (solver.getX(matrixIndex(i, j)) -
+                    solver.getX(matrixIndex(i - 1, j)));
+    //}
+  }
+  IJ = v.getDimensions() - ponos::ivec2(0, 1);
+  FOR_INDICES2D(ponos::ivec2(0, 1), IJ, ij) {
+    int i = ij[0], j = ij[1];
+    // if (cell(ij) == CellType::FLUID) {
+    v(i, j) -= s * (solver.getX(matrixIndex(i, j)) -
+                    solver.getX(matrixIndex(i, j - 1)));
+    //}
   }
   FOR_INDICES0_2D(dimensions, ij) {
     int i = ij[0], j = ij[1];
@@ -514,21 +523,22 @@ void FLIP2D<ParticleType>::extrapolateVelocity() {
 
 template <typename ParticleType> void FLIP2D<ParticleType>::subtractGrid() {
   ponos::ivec2 ij;
-  ponos::ZGrid<float> &v = *grid[CUR_GRID]->v_v;
-  ponos::ZGrid<float> &u = *grid[CUR_GRID]->v_u;
+  ponos::ZGrid<float> &v = *grid[COPY_GRID]->v_v;
+  ponos::ZGrid<float> &u = *grid[COPY_GRID]->v_u;
   FOR_INDICES0_2D(v.getDimensions(), ij)
-  v(ij) = v(ij) - (*grid[COPY_GRID]->v_v)(ij);
+  v(ij) = (*grid[CUR_GRID]->v_v)(ij)-v(ij);
   FOR_INDICES0_2D(u.getDimensions(), ij)
-  u(ij) = u(ij) - (*grid[COPY_GRID]->v_u)(ij);
+  u(ij) = (*grid[CUR_GRID]->v_u)(ij)-u(ij);
 }
 
 template <typename ParticleType> void FLIP2D<ParticleType>::solvePICFLIP() {
+
   particleGrid->iterateAll([](ParticleType *p) { p->v_copy = p->velocity; });
+
   particleGrid->iterateAll([this](ParticleType *p) {
     if (p->type == ParticleTypes::FLUID) {
-      p->velocity = grid[COPY_GRID]->sampleVelocity(p->position);
       // set FLIP velocity
-      p->v_copy += p->velocity;
+      p->v_copy += grid[COPY_GRID]->sampleVelocity(p->position);
     }
   });
   particleGrid->iterateAll([this](ParticleType *p) {
