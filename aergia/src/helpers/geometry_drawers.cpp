@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #include "helpers/geometry_drawers.h"
 
 namespace aergia {
@@ -156,13 +180,25 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2D *t) {
   glLineWidth(3.f);
   const ponos::RawMesh *rm = m->getMesh();
   glBegin(GL_LINES);
-  for (size_t i = 0; i < rm->elementCount; i++) {
+  for (size_t i = 0; i < rm->meshDescriptor.count; i++) {
     ponos::Point2 a(
-        rm->vertices[rm->indices[i * rm->elementSize + 0].vertexIndex * 2 + 0],
-        rm->vertices[rm->indices[i * rm->elementSize + 0].vertexIndex * 2 + 1]);
+        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 0]
+                             .vertexIndex *
+                         2 +
+                     0],
+        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 0]
+                             .vertexIndex *
+                         2 +
+                     1]);
     ponos::Point2 b(
-        rm->vertices[rm->indices[i * rm->elementSize + 1].vertexIndex * 2 + 0],
-        rm->vertices[rm->indices[i * rm->elementSize + 1].vertexIndex * 2 + 1]);
+        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 1]
+                             .vertexIndex *
+                         2 +
+                     0],
+        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 1]
+                             .vertexIndex *
+                         2 +
+                     1]);
     if (t)
       glVertex((*t)(a));
     else

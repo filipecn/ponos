@@ -75,6 +75,7 @@ inline float distance2(const Point2 &a, const Point2 &b) {
 template <class T, int D> class Point {
 public:
   Point();
+  Point(T v);
   explicit Point(Point2 p);
 
   T operator[](int i) const {
@@ -85,6 +86,32 @@ public:
     ASSERT(i >= 0 && i <= static_cast<int>(size));
     return v[i];
   }
+  bool operator>=(const Point<T, D> &p) const {
+    for (int i = 0; i < D; i++)
+      if (v[i] < p[i])
+        return false;
+    return true;
+  }
+  bool operator<=(const Point<T, D> &p) const {
+    for (int i = 0; i < D; i++)
+      if (v[i] > p[i])
+        return false;
+    return true;
+  }
+
+  Vector<D, T> operator-(const Point<T, D> &p) const {
+    Vector<D, T> V;
+    for (int i = 0; i < D; i++)
+      V[i] = v[i] - p[i];
+    return V;
+  }
+
+  Point<T, D> operator+(const Vector<D, T> &V) const {
+    Point<T, D> P;
+    for (int i = 0; i < D; i++)
+      P[i] = v[i] + V[i];
+    return P;
+  }
 
   Point2 floatXY(size_t x = 0, size_t y = 1) {
     return Point2(static_cast<float>(v[x]), static_cast<float>(v[y]));
@@ -92,7 +119,7 @@ public:
 
   friend std::ostream &operator<<(std::ostream &os, const Point &p) {
     os << "[Point<" << D << ">]";
-    for (int i = 0; i < p.size; i++)
+    for (size_t i = 0; i < p.size; i++)
       os << p[i] << " ";
     os << std::endl;
     return os;
@@ -106,6 +133,12 @@ template <class T, int D> Point<T, D>::Point() {
   size = D;
   for (int i = 0; i < D; i++)
     v[i] = static_cast<T>(0);
+}
+
+template <class T, int D> Point<T, D>::Point(T v) {
+  size = D;
+  for (int i = 0; i < D; i++)
+    v[i] = static_cast<T>(v);
 }
 
 template <class T, int D> Point<T, D>::Point(Point2 p) {

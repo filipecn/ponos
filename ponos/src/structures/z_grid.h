@@ -29,7 +29,7 @@ public:
   T operator()(int i, int j) const;
   T safeData(uint32_t i, uint32_t j) const;
   float sample(float x, float y) const;
-  T dSample(float x, float y, T r);
+  T dSample(float x, float y, T r) const;
 
   void reset(std::function<void(T &t)> f) {
     for (uint32_t i = 0; i < data.size(); ++i)
@@ -143,7 +143,7 @@ template <class T> float ZGrid<T>::sample(float x, float y) const {
   return ponos::bicubicInterpolate<float>(p, gp.x - x0, gp.y - y0);
 }
 
-template <typename T> T ZGrid<T>::dSample(float x, float y, T r) {
+template <typename T> T ZGrid<T>::dSample(float x, float y, T r) const {
   ponos::Point<int, 2> gp = this->cell(Point2(x, y));
   if (!this->belongs(gp))
     return r;

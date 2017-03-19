@@ -28,15 +28,15 @@ void FLIP2DScene<ParticleType>::load(const char *filename) {
       m->vertices.emplace_back(p.x);
       m->vertices.emplace_back(p.y);
     }
-    m->vertexCount = n;
-    m->elementSize = 2;
-    m->elementCount = n;
+    m->vertexDescriptor.count = n;
+    m->meshDescriptor.elementSize = 2;
+    m->meshDescriptor.count = n;
     m->indices.resize(n * 2);
     for (int i = 0; i < n; i++) {
       m->indices[i * 2].vertexIndex = i;
       m->indices[i * 2 + 1].vertexIndex = (i + 1) % n;
     }
-    m->dimensions = 2;
+    m->vertexDescriptor.elementSize = 2;
     m->computeBBox();
     switch (command) {
     case 'l':
@@ -311,6 +311,7 @@ template <typename ParticleType> void FLIP2D<ParticleType>::step() {
   // extrapolateVelocity();
   subtractGrid();
   solvePICFLIP();
+  markCells();
   advectParticles();
   markCells();
 
@@ -498,10 +499,18 @@ template <typename ParticleType> void FLIP2D<ParticleType>::project() {
   FOR_INDICES0_2D(dimensions, ij) {
     int i = ij[0], j = ij[1];
     if (cell(ij) == CellType::SOLID) {
-      u(i, j) = usolid(i, j);
-      u(i + 1, j) = usolid(i + 1, j);
-      v(i, j) = vsolid(i, j);
-      v(i, j + 1) = vsolid(i, j + 1);
+      if (cell(i + 1, j) == CellType::FLUID)
+        u(i + 1, j) = 0;
+      if (cell(i - 1, j) == CellType::FLUID)
+        u(i, j) = 0;
+      if (cell(i, j + 1) == CellType::FLUID)
+        v(i, j + 1) = 0;
+      if (cell(i, j - 1) == CellType::FLUID)
+        v(i, j) = 0;
+      //  u(i, j) = usolid(i, j);
+      //  u(i + 1, j) = usolid(i + 1, j);
+      //  v(i, j) = vsolid(i, j);
+      //  v(i, j + 1) = vsolid(i, j + 1);
     }
   }
 }
@@ -532,7 +541,6 @@ template <typename ParticleType> void FLIP2D<ParticleType>::subtractGrid() {
 }
 
 template <typename ParticleType> void FLIP2D<ParticleType>::solvePICFLIP() {
-
   particleGrid->iterateAll([](ParticleType *p) { p->v_copy = p->velocity; });
 
   particleGrid->iterateAll([this](ParticleType *p) {
@@ -552,10 +560,42 @@ template <typename ParticleType> void FLIP2D<ParticleType>::solvePICFLIP() {
 }
 
 template <typename ParticleType> void FLIP2D<ParticleType>::advectParticles() {
+  ponos::ZGrid<CellType> &cell = *grid[CUR_GRID]->cellType;
   // update position
-  particleGrid->iterateAll([this](ParticleType *p) {
+  particleGrid->iterateAll([this, cell](ParticleType *p) {
     if (p->type == ParticleTypes::FLUID) {
-      p->position += dt * p->velocity;
+      ASSERT_FATAL(cell.dSample(p->position.x, p->position.y,
+                                CellType::SOLID) == CellType::FLUID);
+      ponos::Point2 pos = p->position + dt * p->velocity;
+      // ponos::Point2 extPos = p->position + dt * p->velocity +
+      //                       p->radius * ponos::normalize(p->velocity);
+      if (cell.dSample(pos.x, pos.y, CellType::FLUID) == CellType::SOLID) {
+        ponos::ivec2 d = cell.cell(p->position) - cell.cell(pos);
+        ASSERT_FATAL(d >= ponos::ivec2(-1) && d <= ponos::ivec2(1) &&
+                     d != ponos::ivec2(0));
+        ponos::Ray2 r(p->position, p->velocity);
+        float t = 0.f, t2 = 0.f;
+        std::cout << r;
+        std::cout << cell.cellWBox(cell.cell(pos)).pMin << " "
+                  << cell.cellWBox(cell.cell(pos)).pMax << std::endl;
+        std::cout << cell.cell(pos);
+        std::cout << pos;
+        ASSERT_FATAL(ponos::bbox_ray_intersection(cell.cellWBox(cell.cell(pos)),
+                                                  r, t, t2));
+        ponos::Point2 ip = r(t);
+        ponos::vec2 v = pos - ip;
+        if (ponos::cross(ip - p->position, v.right()) > 0) {
+          p->velocity = p->velocity.right();
+          p->position = ip + v.right();
+        } else if (ponos::cross(ip - p->position, v.left()) > 0) {
+          p->velocity = p->velocity.left();
+          p->position = ip + v.left();
+        } else {
+          p->velocity = -p->velocity;
+          p->position = ip - v;
+        }
+      } else
+        p->position += dt * p->velocity;
     }
   });
   particleGrid->update();

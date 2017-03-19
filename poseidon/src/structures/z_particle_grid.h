@@ -11,8 +11,7 @@
 
 namespace poseidon {
 
-/* structure
- * Keep particles sorted in Z order for fast neighbour search operations.
+/** Keep particles sorted in Z order for fast neighbour search operations.
  */
 template <typename ParticleObject = FLIPParticle2D> class ZParticleGrid2D {
 public:
@@ -20,19 +19,19 @@ public:
     end = 0;
     tree_ = nullptr;
   }
-  /* Constructor
-   * @w **[in]** width (**power of 2**)
-   * @h **[in]** height (**power of 2**)
-   * @t **[in]** scale and offset
+  /** \brief Constructor
+   * \param w **[in]** width (**power of 2**)
+   * \param h **[in]** height (**power of 2**)
+   * \param t **[in]** scale and offset
    */
   ZParticleGrid2D(size_t w, size_t h, const ponos::Transform2D &t)
       : ZParticleGrid2D() {
     set(w, h, t);
   }
-  /* Constructor
-   * @w **[in]** width (**power of 2**)
-   * @h **[in]** height (**power of 2**)
-   * @bbox **[in]** region in space
+  /** \brief Constructor
+   * \param w **[in]** width (**power of 2**)
+   * \param h **[in]** height (**power of 2**)
+   * \param bbox **[in]** region in space
    */
   ZParticleGrid2D(size_t w, size_t h, const ponos::BBox2D &bbox)
       : ZParticleGrid2D() {
@@ -45,10 +44,11 @@ public:
   virtual ~ZParticleGrid2D() {}
 
   struct ParticleElement {
-    template <typename... Args> ParticleElement(Args &&... args) {
-      new (&data) ParticleObject(std::forward<Args>(args)...);
-      active = true;
-    }
+    // template <typename... Args> ParticleElement(Args &&... args) {
+    //  new (&data) ParticleObject(std::forward<Args>(args)...);
+    //  active = true;
+    //}
+    ParticleElement() { active = true; }
     void setPosition(ZParticleGrid2D grid, const ponos::Point2 &p) {
       data.position = p;
       ponos::Point2 gp = grid.toGrid(p);
@@ -265,10 +265,10 @@ public:
     ParticleAttribute attribute;
   };
 
-  /* set
-   * @w **[in]** width (**power of 2**)
-   * @h **[in]** height (**power of 2**)
-   * @t **[in]** scale and offset
+  /** \brief set
+   * \param w **[in]** width (**power of 2**)
+   * \param h **[in]** height (**power of 2**)
+   * \param t **[in]** scale and offset
    */
   void set(size_t w, size_t h, const ponos::Transform2D &t) {
     width = w;
@@ -282,14 +282,16 @@ public:
     }
     maxDepth = nbits;
   }
-  /* add
+  /** add
+   *
    * Particle positions are given in world coordinates
    */
   template <typename... Args> void add(Args &&... args) {
     if (end == particles.size())
-      particles.emplace_back(std::forward<Args>(args)...);
-    else
-      new (&particles[end].data) ParticleObject(std::forward<Args>(args)...);
+      // particles.emplace_back(std::forward<Args>(args)...);
+      particles.emplace_back();
+    // else
+    new (&particles[end].data) ParticleObject(std::forward<Args>(args)...);
     particles[end].zcode = computeIndex(toGrid(particles[end].data.position));
     end++;
   }

@@ -22,40 +22,34 @@
  *
 */
 
-#include "scene/wireframe_mesh.h"
+#ifndef AERGIA_IO_FRAMEBUFFER_H
+#define AERGIA_IO_FRAMEBUFFER_H
+
+#include "io/texture_parameters.h"
+#include "utils/open_gl.h"
+
+#include <ponos.h>
 
 namespace aergia {
 
-WireframeMesh::WireframeMesh(const std::string &filename)
-    : SceneMesh(filename) {}
+class Framebuffer {
+public:
+  Framebuffer();
+  Framebuffer(size_t w, size_t h, size_t d = 0);
+  virtual ~Framebuffer();
 
-WireframeMesh::WireframeMesh(const ponos::RawMesh *m,
-                             const ponos::Transform &t) {
-  rawMesh = m;
-  setupVertexBuffer();
-  setupIndexBuffer();
-  transform = t;
-}
+  void set(size_t w, size_t h, size_t d = 0);
+  void enable();
+  void disable();
+  void attachColorBuffer(GLuint textureId, GLenum target,
+                         GLenum attachmentPoint = GL_COLOR_ATTACHMENT0);
 
-void WireframeMesh::draw() const {
-  glPushMatrix();
-  vb->bind();
-  ib->bind();
-  float pm[16];
-  transform.matrix().column_major(pm);
-  glMultMatrixf(pm);
-  glColor4f(0, 0, 0, 0.1);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-  glDrawElements(GL_LINES, ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT,
-                 0);
-  glPopMatrix();
-}
-
-void WireframeMesh::setupIndexBuffer() {
-  BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
-      1, rawMesh->verticesIndices.size(), GL_LINES);
-  ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
-}
+private:
+  size_t width, height, depth;
+  uint framebufferObject;
+  uint renderBufferObject;
+};
 
 } // aergia namespace
+
+#endif // AERGIA_IO_FRAMEBUFFER_H

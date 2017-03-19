@@ -78,8 +78,11 @@ public:
     v_v.reset(new GridType<float>(dimensions[0], dimensions[1] + 1));
     v_v->setTransform(toWorld * ponos::translate(ponos::vec2(0.0f, -0.5f)));
     p.reset(new GridType<float>(dimensions[0], dimensions[1]));
+    p->setTransform(toWorld);
     D.reset(new GridType<float>(dimensions[0], dimensions[1]));
+    D->setTransform(toWorld);
     cellType.reset(new GridType<CellType>(dimensions[0], dimensions[1]));
+    cellType->setTransform(toWorld);
     cellType->border = CellType::SOLID;
   }
 

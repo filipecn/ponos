@@ -22,40 +22,39 @@
  *
 */
 
-#include "scene/wireframe_mesh.h"
+#ifndef AERGIA_IO_PROCEDURAL_TEXTURE_H
+#define AERGIA_IO_PROCEDURAL_TEXTURE_H
+
+#include "io/framebuffer.h"
+#include "io/texture_parameters.h"
+
+#include <ponos.h>
+#include <functional>
+#include <memory>
 
 namespace aergia {
 
-WireframeMesh::WireframeMesh(const std::string &filename)
-    : SceneMesh(filename) {}
+/** \brief Renders the image into a texture directly from the framebuffer.
+ */
+class ProceduralTexture {
+public:
+  /** \brief Constructor.
+   * \param a texture attributes
+   * \param p texture parameters
+   */
+  ProceduralTexture(const TextureAttributes &a, const TextureParameters &p);
+  virtual ~ProceduralTexture();
+  void bind(GLenum t);
+  void render(std::function<void()> f);
+  friend std::ostream &operator<<(std::ostream &out, ProceduralTexture &pt);
 
-WireframeMesh::WireframeMesh(const ponos::RawMesh *m,
-                             const ponos::Transform &t) {
-  rawMesh = m;
-  setupVertexBuffer();
-  setupIndexBuffer();
-  transform = t;
-}
-
-void WireframeMesh::draw() const {
-  glPushMatrix();
-  vb->bind();
-  ib->bind();
-  float pm[16];
-  transform.matrix().column_major(pm);
-  glMultMatrixf(pm);
-  glColor4f(0, 0, 0, 0.1);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-  glDrawElements(GL_LINES, ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT,
-                 0);
-  glPopMatrix();
-}
-
-void WireframeMesh::setupIndexBuffer() {
-  BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
-      1, rawMesh->verticesIndices.size(), GL_LINES);
-  ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
-}
+protected:
+  TextureAttributes attributes;
+  TextureParameters parameters;
+  std::shared_ptr<Framebuffer> framebuffer;
+  GLuint textureObject;
+};
 
 } // aergia namespace
+
+#endif // AERGIA_IO_PROCEDURAL_TEXTURE_H

@@ -50,6 +50,7 @@ struct MyParticle : public aergia::SceneObject,
                     public poseidon::FLIPParticle2D {
 public:
   MyParticle() {
+    this->radius = 0.001f;
     c.r = 0.001f;
     color[0] = 0;
     color[1] = 0;
@@ -123,6 +124,7 @@ public:
   }
 
   void drawGridVelocities(ponos::ZGrid<float> *g, int component) const {
+    glColor4f(1.f, 0.f, 1.f, 0.3f);
     glBegin(GL_LINES);
     for (uint32_t i = 0; i < g->width; ++i) {
       for (uint32_t j = 0; j < g->height; ++j) {
@@ -173,6 +175,11 @@ void render() {
   while (it.next()) {
     (*it)->c.c = (*it)->position;
     (*it)->draw();
+    glColor4f(1.f, 0.f, 1.f, 0.5f);
+    glBegin(GL_LINES);
+    aergia::glVertex((*it)->c.c);
+    aergia::glVertex((*it)->c.c + (*it)->velocity);
+    glEnd();
     ++it;
   }
   search();
@@ -227,7 +234,7 @@ int main(int argc, char **argv) {
       ->setPos(ponos::vec2(flip->dimensions[0], flip->dimensions[1]) * 0.5f *
                flip->dx);
   static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
-      ->setZoom(region.pMax.x * 0.55f);
+      ->setZoom(region.size(0) * 2.f);
   app.viewports[0].mouseCallback = mouse;
   app.viewports[0].renderCallback = render;
   app.viewports[0].buttonCallback = button;

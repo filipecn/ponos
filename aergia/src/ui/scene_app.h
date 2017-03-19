@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef AERGIA_UI_SCENE_APP_H
 #define AERGIA_UI_SCENE_APP_H
 
@@ -6,19 +30,17 @@
 
 namespace aergia {
 
-/* derived class
- * Simple scene with viewports support.
+/** \brief Simple scene with viewports support.
  */
 template <template <typename> class StructureType = ponos::Array>
 class SceneApp : public App {
 public:
-  /* Constructor.
+  /** \brief Constructor.
    * \param w **[in]** window width (in pixels)
    * \param h **[in]** window height (in pixels)
    * \param t **[in]** window title
    * \param defaultViewport **[in | optional]** if true, creates a viewport with
-   * the
-   * same size of the window
+   * the same size of the window
    */
   explicit SceneApp(uint w, uint h, const char *t, bool defaultViewport = true)
       : App(w, h, t, defaultViewport) {
@@ -27,7 +49,7 @@ public:
   }
   virtual ~SceneApp() {}
 
-  Scene<StructureType> scene;
+  Scene<StructureType> scene; //!< object container
 
 protected:
   void render() override {

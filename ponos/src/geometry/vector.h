@@ -337,6 +337,15 @@ public:
         return false;
     return true;
   }
+  bool operator!=(const Vector<D, T> &_v) const {
+    bool dif = false;
+    for (size_t i = 0; i < size; i++)
+      if (!IS_EQUAL(v[i], _v[i])) {
+        dif = true;
+        break;
+      }
+    return dif;
+  }
   bool operator<=(const Vector<D, T> &_v) const {
     for (size_t i = 0; i < size; i++)
       if (v[i] > _v[i])

@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef PONOS_STRUCTURES_RAW_MESH_H
 #define PONOS_STRUCTURES_RAW_MESH_H
 
@@ -8,47 +32,75 @@
 
 namespace ponos {
 
-	/* mesh structure
-	 * Stores the elements of the mesh in simple arrays. This class
-	 * is the one that actually stores the geometry, then other
-	 * objects in the system can just use its reference avoiding
-	 * duplicating data.
-	 */
-	class RawMesh {
-  	public:
-	 		RawMesh() { dimensions = 3; }
-			virtual ~RawMesh() {}
+/** \brief mesh structure
+ *
+ * Stores the elements of the mesh in simple arrays. This class
+ * is the one that actually stores the geometry, then other
+ * objects in the system can just use its reference avoiding
+ * duplicating data.
+ */
+class RawMesh {
+public:
+  RawMesh() { vertexDescriptor.count = 3; }
+  virtual ~RawMesh() {}
+  /** \brief set
+   * \param t transform
+   * Applies transform **t** to all vertices.
+   */
+  void apply(const Transform &t);
+  void splitIndexData();
+  void computeBBox();
+  /** \brief get
+   * \param i element index
+   * \returns bbox of element (object space).
+   */
+  ponos::BBox elementBBox(size_t i) const;
+  /** \brief get
+   * \param e element index
+   * \param v vertex index (inside element) [0..**elementSize**]
+   * \return vertex **v** from element **e**.
+   */
+  ponos::Point3 vertexElement(size_t e, size_t v) const;
+  /** \brief set
+   *
+   * Builds a single array with interleaved information for vertex buffer
+   *(vertex | normal | texcoords | ... )
+   */
+  void buildInterleavedData();
 
-			void apply(const Transform &t);
+  struct ArrayDescriptor {
+    /** \brief
+     * \param s element size
+     * \param c element count
+     */
+    ArrayDescriptor(size_t s = 0, size_t c = 0) : elementSize(s), count(c) {}
+    size_t elementSize; //!< number of components per element.
+    size_t count;       //!< number of elements.
+  };
+  ArrayDescriptor interleavedDescriptor; //!< interleaved data descriptor
+  std::vector<float> interleavedData; //!< flat array on the form [Vi Ni Ti ...]
 
-			void splitIndexData();
+  ArrayDescriptor meshDescriptor;     //!< mesh description
+  ArrayDescriptor vertexDescriptor;   //!< vertex description
+  ArrayDescriptor texcoordDescriptor; //!< texture coordinates description
+  ArrayDescriptor normalDescriptor;   //!<< normal description
 
-			void computeBBox();
+  struct IndexData {
+    int vertexIndex;
+    int normalIndex;
+    int texcoordIndex;
+  };
+  std::vector<IndexData> indices;
 
-			ponos::BBox elementBBox(size_t i) const;
-			ponos::Point3 vertexElement(size_t e, size_t v) const;
-
-			struct IndexData {
-				// index space
-				int vertexIndex;
-				int normalIndex;
-				int texcoordIndex;
-			};
-			std::vector<float> vertices;
-			std::vector<float> normals;
-			std::vector<float> texcoords;
-			std::vector<IndexData> indices;
-			std::vector<uint> verticesIndices;
-			std::vector<uint> normalsIndices;
-			std::vector<uint> texcoordsIndices;
-			size_t dimensions;
-			size_t elementCount;
-			size_t vertexCount;
-			uint elementSize;
-			BBox bbox;
-	};
+  std::vector<float> vertices;
+  std::vector<float> normals;
+  std::vector<float> texcoords;
+  std::vector<uint> verticesIndices;
+  std::vector<uint> normalsIndices;
+  std::vector<uint> texcoordsIndices;
+  BBox bbox; //!< bounding box in object space
+};
 
 } // ponos namespace
 
 #endif // PONOS_STRUCTURES_RAW_MESH_H
-

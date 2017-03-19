@@ -11,7 +11,10 @@ set(HEADERS
 	src/helpers/geometry_drawers.h
 	src/helpers/vector_grid.h
 	src/io/buffer.h
+	src/io/framebuffer.h
 	src/io/graphics_display.h
+  src/io/procedural_texture.h
+  src/io/texture_parameters.h
 	src/io/utils.h
 	src/io/viewport_display.h
 	#  src/io/vulkan_application.h
@@ -42,7 +45,9 @@ set(SOURCES
 	src/graphics/shader_manager.cpp
 	src/helpers/cartesian_grid.cpp
 	src/helpers/geometry_drawers.cpp
+	src/io/framebuffer.cpp
 	src/io/graphics_display.cpp
+  src/io/procedural_texture.cpp
 	src/io/utils.cpp
 	src/io/viewport_display.cpp
 	#  src/io/vulkan_application.cpp

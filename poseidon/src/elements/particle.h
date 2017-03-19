@@ -49,6 +49,7 @@ struct FLIPParticle2D {
   ponos::vec2 velocity;
   float density;
   float mass;
+  float radius;
   bool invalid;
   ParticleTypes type;
   ponos::Normal normal;

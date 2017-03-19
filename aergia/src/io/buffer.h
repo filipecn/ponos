@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef AERGIA_IO_BUFFER_H
 #define AERGIA_IO_BUFFER_H
 
@@ -10,43 +34,50 @@
 
 namespace aergia {
 
-/* descriptor
+/** \brief descriptor
+ *
  * Describes the data contained in a buffer.
  */
 struct BufferDescriptor {
   struct Attribute {
-    // attribute data offset (in bytes)
-    uint offset;
-    // attribute data size (in bytes)
-    size_t size;
-    // attribute data type
-    GLenum type;
+    long offset; //!< attribute data offset (in bytes)
+    size_t size; //!< attribute number of components
+    GLenum type; //!< attribute data type
   };
-  // name - attribute map
-  std::map<std::string, Attribute> attributes;
-  // how many components are assigned to each element
-  GLuint elementSize;
-  // number of elements
-  size_t elementCount;
-  // type of elements
-  GLuint elementType;
-  // buffer type
-  GLuint type;
-  // use
-  GLuint use;
+  std::map<const std::string, Attribute> attributes; //!< name - attribute map
+  GLuint elementSize;  //!< how many components are assigned to each element
+  size_t elementCount; //!< number of elements
+  GLuint elementType;  //!< type of elements
+  GLuint type;         //!< buffer type
+  GLuint use;          //!< use
   BufferDescriptor() {}
-  /* Constructor.
-   * @_elementSize **[in]** number of data components compose an element
-   * @_elementCount **[in]** number of elements
-   * @_elementType **[in | optional]** element type
-   * @_type **[in | optional]** buffer type
-   * @_use **[in | optional]** buffer use
+  /** \brief Constructor.
+   * \param _elementSize **[in]** number of data components that compose an
+   * element
+   * \param _elementCount **[in]** number of elements
+   * \param _elementType **[in | optional]** element type
+   * \param _type **[in | optional]** buffer type
+   * \param _use **[in | optional]** buffer use
    */
   BufferDescriptor(GLuint _elementSize, size_t _elementCount,
                    GLuint _elementType = GL_TRIANGLES,
                    GLuint _type = GL_ARRAY_BUFFER, GLuint _use = GL_STATIC_DRAW)
       : elementSize(_elementSize), elementCount(_elementCount),
         elementType(_elementType), type(_type), use(_use) {}
+  /** \brief  add
+   * \param _name attribute name (used in shader programs)
+   * \param _size number of components
+   * \param _offset attribute data offset (in bytes)
+   * \param type attribute data type
+   */
+  void addAttribute(const std::string &_name, size_t _size, uint _offset,
+                    GLenum _type) {
+    Attribute att;
+    att.size = _size;
+    att.offset = _offset;
+    att.type = _type;
+    attributes[_name] = att;
+  }
 };
 
 inline BufferDescriptor
@@ -66,48 +97,49 @@ create_index_buffer_descriptor(size_t elementSize, size_t elementCount,
 template <typename T> class Buffer {
 public:
   Buffer() {}
-  /* Constructor
-   * @d **[in]** data pointer
-   * @bd **[in]** buffer description
+  /** \brief Constructor
+   * \param d **[in]** data pointer
+   * \param bd **[in]** buffer description
    */
   Buffer(const T *d, const BufferDescriptor &bd) : Buffer() { set(d, bd); }
   virtual ~Buffer() { glDeleteBuffers(1, &bufferId); }
-  /* set
-   * @d **[in]** data pointer
-   * @bd **[in]** buffer description
+  /** \brief set
+   * \param d **[in]** data pointer
+   * \param bd **[in]** buffer description
    */
   void set(const T *d, const BufferDescriptor &bd) {
-    data.reset(d);
+    data = d;
     bufferDescriptor = bd;
     glGenBuffers(1, &bufferId);
     glBindBuffer(bufferDescriptor.type, bufferId);
     glBufferData(bufferDescriptor.type,
                  bufferDescriptor.elementCount * bufferDescriptor.elementSize *
                      sizeof(T),
-                 data.get(), bufferDescriptor.use);
+                 data, bufferDescriptor.use);
   }
-  /* bind
-   * Activate buffer
+  /** \brief Activate buffer
    */
   void bind() const { glBindBuffer(bufferDescriptor.type, bufferId); }
-  /* register
-   * @name **[in]** attribute name
-   * @location **[in]** attribute location on shader program
+  /* \brief register attribute
+   * \param name **[in]** attribute name
+   * \param location **[in]** attribute location on shader program
    */
-  void registerAttribute(const std::string &name, GLint location) {
+  void registerAttribute(const std::string &name, GLint location) const {
     if (bufferDescriptor.attributes.find(name) ==
         bufferDescriptor.attributes.end())
       return;
-    const BufferDescriptor::Attribute &va = bufferDescriptor.attributes[name];
-    glVertexAttribPointer(location, bufferDescriptor.elementSize, va.type,
-                          GL_FALSE, va.size, (void *)(va.offset));
+    const BufferDescriptor::Attribute &va =
+        bufferDescriptor.attributes.find(name)->second;
+    glVertexAttribPointer(location, va.size, va.type, GL_FALSE,
+                          bufferDescriptor.elementSize * sizeof(float),
+                          (void *)(va.offset));
   }
-  // buffer description
-  BufferDescriptor bufferDescriptor;
+
+  BufferDescriptor bufferDescriptor; //!< buffer description
 
 protected:
   GLuint bufferId;
-  std::shared_ptr<const T> data;
+  const T *data;
 };
 
 typedef Buffer<float> VertexBuffer;
