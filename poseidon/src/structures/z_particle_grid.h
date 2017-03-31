@@ -124,7 +124,6 @@ public:
     void refine(std::function<bool(uint32 id, uint32 depth)> f) {
       refine_(f, root, 1);
     }
-
     void iterateParticles(const ponos::BBox2D &bbox,
                           std::function<void(ParticleObject *o)> f) {
       bbox_search(root, bbox, grid.toGrid(bbox), f);
@@ -228,15 +227,17 @@ public:
   template <typename T> struct WeightedAverageAccumulator {
     typedef T ValueType;
     WeightedAverageAccumulator(const T radius, ParticleAttribute a)
-        : invRadius(1.0 / radius), weightSum(0.0), valueSum(0.0), attribute(a) {
-    }
+        : ra(radius), invRadius(1.0 / radius), weightSum(0.0), valueSum(0.0),
+          attribute(a) {}
 
     void reset() { weightSum = valueSum = T(0.0); }
 
     void operator()(const T distSqr, ParticleObject *p) {
       if (p->type != ParticleTypes::FLUID)
         return;
-      float w = p->mass * ponos::sharpen(distSqr, 1.4f);
+      // std::cout << p->position << p->velocity << std::endl;
+      // std::cout << distSqr << " " << ra << std::endl;
+      float w = p->mass * ponos::sharpen(distSqr, ra);
       float value = 0.f;
       switch (attribute) {
       case ParticleAttribute::VELOCITY_X:
@@ -260,6 +261,7 @@ public:
     }
 
   private:
+    const T ra;
     const T invRadius;
     T weightSum, valueSum;
     ParticleAttribute attribute;
@@ -286,14 +288,16 @@ public:
    *
    * Particle positions are given in world coordinates
    */
-  template <typename... Args> void add(Args &&... args) {
+  template <typename... Args> ParticleObject *add(Args &&... args) {
     if (end == particles.size())
       // particles.emplace_back(std::forward<Args>(args)...);
       particles.emplace_back();
     // else
+    particles[end].active = true;
     new (&particles[end].data) ParticleObject(std::forward<Args>(args)...);
     particles[end].zcode = computeIndex(toGrid(particles[end].data.position));
     end++;
+    return &particles[end - 1].data;
   }
 
   void addParticle(ParticleObject *p) {
@@ -330,6 +334,11 @@ public:
                 }
                 return true;
               });
+    // compute new end in case some particles have been deleted
+    if (end > 0) {
+      while (!particles[end - 1].active)
+        end--;
+    }
     if (tree_)
       delete tree_;
     tree_ = new tree(*this, [](uint32 id, uint32 depth) { return true; });
@@ -364,6 +373,8 @@ public:
     tree_->searchAndApply(p, r, accumulator);
     return accumulator.result();
   }
+
+  size_t elementCount() { return particles.size(); }
 
   ponos::ivec2 dimensions;
   size_t width, height;

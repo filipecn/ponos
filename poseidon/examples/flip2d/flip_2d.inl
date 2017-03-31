@@ -128,7 +128,7 @@ void FLIP2DScene<ParticleType>::fillCell(int frame,
       if (!isPointInsideSolid(wp, frame, &solidGeomID)) {
         ParticleType *p = new ParticleType;
         p->position = wp;
-        p->velocity = ponos::vec2();
+        p->velocity = ponos::vec2(0, -2);
         p->density = 10.0f;
         p->type = ParticleTypes::FLUID;
         p->mass = 1.0f;
@@ -300,20 +300,21 @@ template <typename ParticleType> void FLIP2D<ParticleType>::step() {
     p->v_copy = p->velocity;
   });
   computeDensity();
-  applyExternalForces();
-  sendVelocitiesToGrid();
-  copyGridVelocities();
+  // applyExternalForces();
+  // sendVelocitiesToGrid();
+  // copyGridVelocities();
   markCells();
-  enforceBoundaries();
-  grid[CUR_GRID]->computeNegativeDivergence();
-  project();
+  // enforceBoundaries();
+  // grid[CUR_GRID]->computeNegativeDivergence();
+  // project();
   enforceBoundaries();
   // extrapolateVelocity();
-  subtractGrid();
-  solvePICFLIP();
+  // subtractGrid();
+  // solvePICFLIP();
   markCells();
   advectParticles();
   markCells();
+  resampleParticles();
 
   curStep++;
 }
@@ -561,44 +562,101 @@ template <typename ParticleType> void FLIP2D<ParticleType>::solvePICFLIP() {
 
 template <typename ParticleType> void FLIP2D<ParticleType>::advectParticles() {
   ponos::ZGrid<CellType> &cell = *grid[CUR_GRID]->cellType;
-  // update position
   particleGrid->iterateAll([this, cell](ParticleType *p) {
     if (p->type == ParticleTypes::FLUID) {
       ASSERT_FATAL(cell.dSample(p->position.x, p->position.y,
                                 CellType::SOLID) == CellType::FLUID);
-      ponos::Point2 pos = p->position + dt * p->velocity;
-      // ponos::Point2 extPos = p->position + dt * p->velocity +
-      //                       p->radius * ponos::normalize(p->velocity);
-      if (cell.dSample(pos.x, pos.y, CellType::FLUID) == CellType::SOLID) {
-        ponos::ivec2 d = cell.cell(p->position) - cell.cell(pos);
-        ASSERT_FATAL(d >= ponos::ivec2(-1) && d <= ponos::ivec2(1) &&
-                     d != ponos::ivec2(0));
-        ponos::Ray2 r(p->position, p->velocity);
-        float t = 0.f, t2 = 0.f;
-        std::cout << r;
-        std::cout << cell.cellWBox(cell.cell(pos)).pMin << " "
-                  << cell.cellWBox(cell.cell(pos)).pMax << std::endl;
-        std::cout << cell.cell(pos);
-        std::cout << pos;
-        ASSERT_FATAL(ponos::bbox_ray_intersection(cell.cellWBox(cell.cell(pos)),
-                                                  r, t, t2));
-        ponos::Point2 ip = r(t);
-        ponos::vec2 v = pos - ip;
-        if (ponos::cross(ip - p->position, v.right()) > 0) {
-          p->velocity = p->velocity.right();
-          p->position = ip + v.right();
-        } else if (ponos::cross(ip - p->position, v.left()) > 0) {
-          p->velocity = p->velocity.left();
-          p->position = ip + v.left();
-        } else {
-          p->velocity = -p->velocity;
-          p->position = ip - v;
+
+      ponos::Point2 newPosition = p->position + dt * p->velocity;
+      ponos::vec2 newVelocity = p->velocity;
+      ponos::Point2 pos = p->position;
+
+      if (cell.dSample(newPosition.x, newPosition.y, CellType::FLUID) ==
+          CellType::SOLID) {
+
+        while (cell.dSample(newPosition.x, newPosition.y, CellType::FLUID) ==
+               CellType::SOLID) {
+
+          ponos::ivec2 d = cell.cell(pos) - cell.cell(newPosition);
+          // ASSERT_FATAL(d >= ponos::ivec2(-1) && d <= ponos::ivec2(1) &&
+          //              d != ponos::ivec2(0));
+
+          ponos::Ray2 r(pos, newVelocity);
+          float t = 0.f, t2 = 0.f;
+          float normal[3];
+          ASSERT_FATAL(ponos::bbox_ray_intersection(
+              cell.cellWBox(cell.cell(newPosition)), r, t, t2, normal));
+
+          ponos::Point2 ip = r(t);
+          ponos::vec2 v = newPosition - ip;
+
+          if (ponos::dot(ponos::vec2(normal), v.right()) > 0) {
+            newPosition = ip + v.right();
+            newVelocity = newVelocity.right();
+          } else {
+            newPosition = ip + v.left();
+            newVelocity = newVelocity.left();
+          }
+
+          pos = ip;
         }
+        p->velocity = newVelocity;
+        p->position = newPosition;
+        ASSERT_FATAL(cell.dSample(p->position.x, p->position.y,
+                                  CellType::FLUID) != CellType::SOLID);
+
       } else
         p->position += dt * p->velocity;
     }
   });
   particleGrid->update();
+}
+
+template <typename ParticleType>
+void FLIP2D<ParticleType>::resampleParticles() {
+  static ponos::HaltonSequence rng(3);
+  ponos::ZGrid<CellType> &cell = *grid[CUR_GRID]->cellType;
+  ponos::ivec2 ij;
+  std::vector<ponos::Point2> newPositions;
+  std::vector<ponos::vec2> newVelocities;
+  particleGrid->update();
+  FOR_INDICES0_2D(cell.getDimensions(), ij) {
+    if (cell(ij) == CellType::FLUID) {
+      if (cell(ij + ponos::ivec2(-1, 0)) != CellType::AIR &&
+          cell(ij + ponos::ivec2(1, 0)) != CellType::AIR &&
+          cell(ij + ponos::ivec2(0, -1)) != CellType::AIR &&
+          cell(ij + ponos::ivec2(0, 1)) != CellType::AIR) {
+        float directions[4][2] = {
+            {.25, .25}, {.25, .75}, {.75, .25}, {.75, .75}};
+        for (int i = 0; i < 4; i++) {
+          newPositions.push_back(particleGrid->toWorld(
+              ponos::Point2(ij[0], ij[1]) +
+              ponos::vec2(directions[i][0], directions[i][1]) +
+              ponos::vec2(rng.randomFloat() - 0.5f, rng.randomFloat() - 0.5f) *
+                  .5f));
+          newVelocities.push_back(ponos::vec2(
+              particleGrid->gather(ParticleAttribute::VELOCITY_X,
+                                   newPositions[newPositions.size() - 1],
+                                   1.5f * dx),
+              particleGrid->gather(ParticleAttribute::VELOCITY_Y,
+                                   newPositions[newPositions.size() - 1],
+                                   1.5f * dx)));
+        }
+
+        for (typename ZParticleGrid2D<ParticleType>::particle_iterator it =
+                 particleGrid->getCell(ij);
+             it.next(); ++it) {
+          it.particleElement()->active = false;
+        }
+      }
+    }
+  }
+  particleGrid->update();
+  for (size_t i = 0; i < newPositions.size(); i++) {
+    FLIPParticle2D *p = particleGrid->add(newPositions[i]);
+    p->velocity = newVelocities[i];
+    p->type = ParticleTypes::FLUID;
+  }
 }
 
 template <typename ParticleType>

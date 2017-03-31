@@ -1,15 +1,19 @@
 #include <aergia.h>
 #include <ponos.h>
-#include <boost/numeric/interval.hpp>
+#include "interval_method.h"
 
 using namespace aergia;
-using namespace boost::numeric;
-using namespace boost::numeric::interval_lib;
 
-int WIDTH = 800, HEIGHT = 800;
+int WIDTH = 1200, HEIGHT = 800;
+
+int bot_left[4] = {0, 0, WIDTH / 3, HEIGHT / 2};
+int top_left[4] = {0, HEIGHT / 2, WIDTH / 3, HEIGHT / 2};
+int ia_view[4] = {WIDTH / 3, 0, WIDTH / 3, HEIGHT};
+int aa_view[4] = {2 * WIDTH / 3, 0, WIDTH / 3, HEIGHT};
 
 SceneApp<> app(WIDTH, HEIGHT, "Spheres IA", false);
-ViewportDisplay parametricView(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
+ViewportDisplay iaView(ia_view[0], ia_view[1], ia_view[2], ia_view[3]);
+ViewportDisplay aaView(aa_view[0], aa_view[1], aa_view[2], aa_view[3]);
 
 class SphereObject : public aergia::SceneObject {
 public:
@@ -42,10 +46,8 @@ public:
   float rgb[4];
 };
 
-class QuadTree {
+template <typename Interval> class CollisionTester {
 public:
-  typedef interval<double, policies<save_state<rounded_transc_std<double>>,
-                                    checking_base<double>>> Interval;
   struct Node {
     Node(Interval T, Interval P) {
       PHI = P;
@@ -70,8 +72,8 @@ public:
     Interval PHI, THETA;
   };
 
-  QuadTree(int l) : maxLevel(l) {
-    root = new Node(Interval(0, PI_2), Interval(0, PI));
+  CollisionTester(int l) : maxLevel(l) {
+    root = new Node(Interval(0.0, PI_2), Interval(0.0, PI));
     curFrame = 0;
   }
   void setSphere(ponos::Sphere c, ponos::Transform t) {
@@ -84,7 +86,6 @@ public:
     refine(root, 0);
   }
   void draw() { draw(root); }
-  void clean() { clean(root); }
 
   int curFrame, curId;
   ponos::Sphere s, sj;
@@ -173,57 +174,76 @@ private:
     for (int i = 0; i < 4; i++)
       draw(n->child[i]);
   }
-
-  void clean(Node *n) {
-    if (!n)
-      return;
-    for (int i = 0; i < 4; i++)
-      clean(n->child[i]);
-    n->color = 0;
-  }
-
   Node *root;
   int maxLevel;
 };
 
-QuadTree tree(6);
+CollisionTester<IAI> iaTester(6);
+CollisionTester<AAI> aaTester(6);
 
-void renderTree() {
-  tree.curFrame++;
-  tree.curId = 0;
+void renderIATree() {
+  iaTester.curFrame++;
+  iaTester.curId = 0;
   app.scene.iterateObjects([](const SceneObject *o) {
     if (o->id == 0)
-      tree.setSphere(static_cast<const SphereObject *>(o)->sphere,
-                     o->transform);
+      iaTester.setSphere(static_cast<const SphereObject *>(o)->sphere,
+                         o->transform);
   });
   app.scene.iterateObjects([](const SceneObject *o) {
     if (o->id > 0)
-      tree.addSphere(static_cast<const SphereObject *>(o)->sphere,
-                     o->transform);
+      iaTester.addSphere(static_cast<const SphereObject *>(o)->sphere,
+                         o->transform);
   });
-  tree.draw();
+  iaTester.draw();
 }
 
-void render() { parametricView.render(); }
+void renderAATree() {
+  return;
+  aaTester.curFrame++;
+  aaTester.curId = 0;
+  app.scene.iterateObjects([](const SceneObject *o) {
+    if (o->id == 0)
+      aaTester.setSphere(static_cast<const SphereObject *>(o)->sphere,
+                         o->transform);
+  });
+  app.scene.iterateObjects([](const SceneObject *o) {
+    if (o->id > 0)
+      aaTester.addSphere(static_cast<const SphereObject *>(o)->sphere,
+                         o->transform);
+  });
+  aaTester.draw();
+}
+
+void render() {
+  iaView.render();
+  aaView.render();
+}
 
 int main(int argc, char **argv) {
 #ifdef _WIN32
   WIN32CONSOLE();
 #endif
-  parametricView.camera.reset(new aergia::Camera2D());
-  static_cast<aergia::Camera2D *>(parametricView.camera.get())
-      ->resize(WIDTH / 2, HEIGHT);
-  static_cast<aergia::Camera2D *>(parametricView.camera.get())
+  iaView.camera.reset(new aergia::Camera2D());
+  static_cast<aergia::Camera2D *>(iaView.camera.get())
+      ->resize(ia_view[2], ia_view[3]);
+  static_cast<aergia::Camera2D *>(iaView.camera.get())
       ->setPos(ponos::vec2(PI / 2.0, PI_2 / 2.0));
-  static_cast<aergia::Camera2D *>(parametricView.camera.get())->setZoom(1.3);
-  parametricView.renderCallback = renderTree;
+  static_cast<aergia::Camera2D *>(iaView.camera.get())->setZoom(1.3);
+  iaView.renderCallback = renderIATree;
+  aaView.camera.reset(new aergia::Camera2D());
+  static_cast<aergia::Camera2D *>(aaView.camera.get())
+      ->resize(aa_view[2], aa_view[3]);
+  static_cast<aergia::Camera2D *>(aaView.camera.get())
+      ->setPos(ponos::vec2(PI / 2.0, PI_2 / 2.0));
+  static_cast<aergia::Camera2D *>(aaView.camera.get())->setZoom(1.3);
+  aaView.renderCallback = renderAATree;
   app.renderCallback = render;
   // bottom left window
-  app.addViewport(0, 0, WIDTH / 2, HEIGHT / 2);
+  app.addViewport(bot_left[0], bot_left[1], bot_left[2], bot_left[3]);
   static_cast<Camera *>(app.viewports[0].camera.get())
       ->setPos(ponos::Point3(10, 0, 0));
   // top left window
-  app.addViewport(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
+  app.addViewport(top_left[0], top_left[1], top_left[2], top_left[3]);
   static_cast<Camera *>(app.viewports[1].camera.get())
       ->setPos(ponos::Point3(0, 10, 0));
   static_cast<Camera *>(app.viewports[1].camera.get())

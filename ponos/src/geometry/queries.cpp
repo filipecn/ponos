@@ -110,9 +110,59 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r, float *t1,
 }
 
 bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit0,
-                           float &hit1) {
-  float t0 = 0.f, t1 = INFINITY;
-  for (int i = 0; i < 2; i++) {
+                           float &hit1, float *normal) {
+  std::cout << "testing ray box intersection\n";
+  std::cout << box.pMin << box.pMax << ray.o << ray.d << std::endl;
+  int sign[2];
+  vec2 invdir = 1.f / ray.d;
+  sign[0] = (invdir.x < 0);
+  sign[1] = (invdir.y < 0);
+  float tmin = (box[sign[0]].x - ray.o.x) * invdir.x;
+  float tmax = (box[1 - sign[0]].x - ray.o.x) * invdir.x;
+  float tymin = (box[sign[1]].y - ray.o.y) * invdir.y;
+  float tymax = (box[1 - sign[1]].y - ray.o.y) * invdir.y;
+
+  if ((tmin > tymax) || (tymin > tmax))
+    return false;
+  if (tymin > tmin)
+    tmin = tymin;
+  if (tymax < tmax)
+    tmax = tymax;
+  if (normal) {
+    if (ray.o.x < box[0].x && ray.o.y >= box[0].y && ray.o.y <= box[1].y) {
+      normal[0] = -1;
+      normal[1] = 0;
+    } else if (ray.o.x > box[1].x && ray.o.y >= box[0].y &&
+               ray.o.y <= box[1].y) {
+      normal[0] = 1;
+      normal[1] = 0;
+    } else if (ray.o.y < box[0].y && ray.o.x >= box[0].x &&
+               ray.o.x <= box[1].x) {
+      normal[0] = 0;
+      normal[1] = -1;
+    } else if (ray.o.y > box[0].y && ray.o.x >= box[0].x &&
+               ray.o.x <= box[1].x) {
+      normal[0] = 0;
+      normal[1] = 1;
+    } else if (ray.o.x < box[0].x && ray.o.y < box[0].y) {
+      normal[0] = -1;
+      normal[1] = -1;
+    } else if (ray.o.x < box[0].x && ray.o.y > box[1].y) {
+      normal[0] = -1;
+      normal[1] = 1;
+    } else if (ray.o.x > box[0].x && ray.o.y > box[1].y) {
+      normal[0] = 1;
+      normal[1] = 1;
+    } else {
+      normal[0] = 1;
+      normal[1] = -1;
+    }
+  }
+  hit0 = tmin;
+  hit1 = tmax;
+  std::cout << "TRUEEEEE!!!!\n";
+  return true;
+  /*for (int i = 0; i < 2; i++) {
     float invRayDir = 1.f / ray.d[i];
     float tNear = (box.pMin[i] - ray.o[i]) * invRayDir;
     float tFar = (box.pMax[i] - ray.o[i]) * invRayDir;
@@ -125,7 +175,7 @@ bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit0,
   }
   hit0 = t0;
   hit1 = t1;
-  return true;
+  return true;*/
 }
 
 bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit0,

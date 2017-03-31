@@ -10,6 +10,7 @@ namespace ponos {
 class Point2 {
 public:
   Point2();
+  Point2(float f);
   explicit Point2(float _x, float _y);
 
   // access

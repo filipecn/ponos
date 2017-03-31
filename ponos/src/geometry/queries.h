@@ -90,6 +90,7 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r,
  * \param ray **[in]**
  * \param hit1 **[out]** first intersection
  * \param hit2 **[out]** second intersection
+ * \param normal **[out | optional]** collision normal
  *
  * <BBox2D> / <Ray> intersection test.
  *
@@ -100,7 +101,7 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r,
  * /return **true** if intersectiton exists
  */
 bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit1,
-                           float &hit2);
+                           float &hit2, float *normal = nullptr);
 
 /** \brief  intersection test
  * \param box **[in]**

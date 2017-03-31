@@ -100,6 +100,7 @@ private:
   void subtractGrid();
   void solvePICFLIP();
   void advectParticles();
+  void resampleParticles();
 
   float maxDensity;
   size_t COPY_GRID, CUR_GRID;

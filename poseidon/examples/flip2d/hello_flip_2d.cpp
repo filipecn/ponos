@@ -60,7 +60,8 @@ public:
   MyParticle(const ponos::Point2 p) {
     this->position = p;
     c.c = p;
-    c.r = 0.005f;
+    this->radius = 0.001f;
+    c.r = 0.001f;
     color[0] = 0;
     color[1] = 0;
     color[2] = 1;
@@ -169,7 +170,7 @@ void search() {
 }
 
 void render() {
-  flip->step();
+  // flip->step();
   poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(
       *flip->particleGrid.get());
   while (it.next()) {
@@ -193,8 +194,13 @@ void mouse(double x, double y) {
 
 void button(int b, int a) {
   if (a == GLFW_RELEASE) {
+    flip->step();
     poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(
         *flip->particleGrid.get());
+    std::cout << it.count() << std::endl;
+    std::cout << flip->particleGrid->elementCount() << std::endl
+              << std::endl;
+    return;
     while (it.next()) {
       if ((*it)->type == poseidon::ParticleTypes::FLUID) {
         std::cout << (*it)->velocity << std::endl;

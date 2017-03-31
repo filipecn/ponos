@@ -44,7 +44,10 @@ struct Particle {
 
 struct FLIPParticle2D {
   FLIPParticle2D() = default;
-  FLIPParticle2D(const ponos::Point2 &p) : position(p) {}
+  FLIPParticle2D(const ponos::Point2 &p) : position(p) {
+    mass = 1.f;
+    type = ParticleTypes::FLUID;
+  }
   ponos::Point2 position;
   ponos::vec2 velocity;
   float density;

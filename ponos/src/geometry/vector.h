@@ -16,6 +16,7 @@ public:
   explicit Vector2(float _x, float _y);
   explicit Vector2(const Point2 &p);
   Vector2(float f);
+  Vector2(float *f);
   // access
   float operator[](int i) const {
     ASSERT(i >= 0 && i <= 1);
@@ -76,6 +77,9 @@ public:
 };
 
 inline Vector2 operator*(float f, const Vector2 &v) { return v * f; }
+inline Vector2 operator/(float f, const Vector2 &v) {
+  return Vector2(f / v.x, f / v.y);
+}
 
 inline float dot(const Vector2 &a, const Vector2 &b) {
   return a.x * b.x + a.y * b.y;

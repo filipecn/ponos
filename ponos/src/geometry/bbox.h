@@ -34,6 +34,9 @@ public:
     return 1;
   }
 
+  const Point2 &operator[](int i) const { return (i == 0) ? pMin : pMax; }
+  Point2 &operator[](int i) { return (i == 0) ? pMin : pMax; }
+
   Point2 pMin, pMax;
 };
 
