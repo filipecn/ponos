@@ -1,3 +1,4 @@
+#include "algorithms/fast_sweep.h"
 #include "elements/particle.h"
 #include "math/conjugate_gradient.h"
 #include "structures/mac_grid.h"

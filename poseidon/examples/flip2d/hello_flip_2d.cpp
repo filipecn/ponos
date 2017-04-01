@@ -170,7 +170,7 @@ void search() {
 }
 
 void render() {
-  // flip->step();
+  flip->step();
   poseidon::ZParticleGrid2D<MyParticle>::particle_iterator it(
       *flip->particleGrid.get());
   while (it.next()) {

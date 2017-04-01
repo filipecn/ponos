@@ -10,6 +10,7 @@ include_directories("${POSEIDON_SOURCE_DIR}/src")
 set(TESTS
 		TestFLIP2D.cpp
 		TestZParticleGrid.cpp
+		TestSweep.cpp
 )
 
 if(NOT NOOPENVDB)
@@ -20,6 +21,7 @@ include_directories("/usr/local/OpenVDB/4.0.0/include")
 	set(TESTS
 		TestFLIP2D.cpp
 		TestZParticleGrid.cpp
+		TestSweep.cpp
 		TestFLIP.cpp
 		TestVDBGrid.cpp
 		TestVDBMacGrid.cpp

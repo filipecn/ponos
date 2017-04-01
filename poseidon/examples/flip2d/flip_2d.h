@@ -96,6 +96,7 @@ private:
   void enforceBoundaries();
   int matrixIndex(int i, int j);
   void project();
+  void computeDistanceToFluid();
   void extrapolateVelocity();
   void subtractGrid();
   void solvePICFLIP();
@@ -105,7 +106,7 @@ private:
   float maxDensity;
   size_t COPY_GRID, CUR_GRID;
   MacGrid2D<ponos::ZGrid> *grid[2];
-  ponos::ZGrid<float> xDistances, yDistances, usolid, vsolid;
+  ponos::ZGrid<float> distances, usolid, vsolid;
   Solver solver;
 };
 
