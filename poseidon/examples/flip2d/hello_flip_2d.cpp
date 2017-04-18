@@ -177,10 +177,10 @@ void render() {
     (*it)->c.c = (*it)->position;
     (*it)->draw();
     glColor4f(1.f, 0.f, 1.f, 0.5f);
-    glBegin(GL_LINES);
-    aergia::glVertex((*it)->c.c);
-    aergia::glVertex((*it)->c.c + (*it)->velocity);
-    glEnd();
+    // glBegin(GL_LINES);
+    // aergia::glVertex((*it)->c.c);
+    // aergia::glVertex((*it)->c.c + (*it)->velocity);
+    // glEnd();
     ++it;
   }
   search();
@@ -231,6 +231,36 @@ void init() {
 }
 
 int main(int argc, char **argv) {
+  if (argc > 3) {
+    FLIP2D<poseidon::FLIPParticle2D> *fl =
+        new FLIP2D<poseidon::FLIPParticle2D>(argv[1]);
+    fl->loadScene(argv[2]);
+    fl->init();
+    fl->scene->addForce(ponos::vec2(0.f, -9.8f));
+    double frametime = 1. / 30.;
+    int nf;
+    sscanf(argv[3], "%d", &nf);
+    for (int i = 0; i < nf; i++) {
+      float t = 0.f;
+      bool finished = false;
+      while (!finished) {
+        fl->dt = 2 * fl->CFL();
+        if (t + fl->dt >= frametime) {
+          fl->dt = frametime - t;
+          finished = true;
+        } else if (t + 1.5 * fl->dt >= frametime)
+          fl->dt = 0.5 * (frametime - t);
+        std::cout << fl->dt << std::endl;
+        fl->step();
+        t += fl->dt;
+      }
+      std::cout << "frame " << i << " - " << t << std::endl;
+      char filename[100];
+      sprintf(filename, "frame%04d", i);
+      fl->particleGrid->dumpToFile(filename);
+    }
+    return 0;
+  }
   flip = new FLIP2D<MyParticle>(argv[1]);
   flip->loadScene(argv[2]);
   app.addViewport2D(0, 0, WIDTH, HEIGHT);

@@ -238,6 +238,7 @@ public:
       // std::cout << p->position << p->velocity << std::endl;
       // std::cout << distSqr << " " << ra << std::endl;
       float w = p->mass * ponos::sharpen(distSqr, ra);
+      w = exp(-distSqr / (2.0 * SQR(ra / 4.0)));
       float value = 0.f;
       switch (attribute) {
       case ParticleAttribute::VELOCITY_X:
@@ -360,6 +361,16 @@ public:
       f(&this->particles[i].data);
   }
 
+  void dumpToFile(const char *filename) {
+    FILE *fp = fopen(filename, "w+");
+    for (size_t i = 0; i < end; i++) {
+      if (particles[i].data.type != ParticleTypes::FLUID)
+        continue;
+      fprintf(fp, "%f %f\n", particles[i].data.position.x,
+              particles[i].data.position.y);
+    }
+    fclose(fp);
+  }
   /* \brief gather
    * \param a **[in]** attribute
    * \param p **[in]** center (world coordinates)

@@ -22,15 +22,14 @@
  *
 */
 
-#include "io/procedural_texture.h"
+#include "io/texture.h"
 #include "utils/open_gl.h"
 
 namespace aergia {
 
-ProceduralTexture::ProceduralTexture(const TextureAttributes &a,
-                                     const TextureParameters &p)
-    : Texture(a, p) /*attributes(a), parameters(p)*/ {
-  /*ASSERT(a.target == p.target);
+Texture::Texture(const TextureAttributes &a, const TextureParameters &p)
+    : attributes(a), parameters(p) {
+  ASSERT(a.target == p.target);
 
   glGenTextures(1, &textureObject);
   glBindTexture(p.target, textureObject);
@@ -38,43 +37,26 @@ ProceduralTexture::ProceduralTexture(const TextureAttributes &a,
   if (a.target == GL_TEXTURE_3D)
     glTexImage3D(GL_TEXTURE_3D, 0, attributes.internalFormat, attributes.width,
                  attributes.height, attributes.depth, 0, attributes.format,
-                 attributes.type, NULL);
+                 attributes.type, attributes.data);
   else
     glTexImage2D(GL_TEXTURE_2D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, 0, attributes.format, attributes.type, 0);
+                 attributes.height, 0, attributes.format, attributes.type,
+                 attributes.data);
   CHECK_GL_ERRORS;
   glBindTexture(attributes.target, 0);
-*/
-  framebuffer.reset(
-      new Framebuffer(attributes.width, attributes.height, attributes.depth));
-  framebuffer->attachColorBuffer(textureObject, attributes.target);
 }
 
-ProceduralTexture::~ProceduralTexture() {
+Texture::~Texture() {
   if (textureObject)
     glDeleteTextures(1, &textureObject);
 }
-/*
-void ProceduralTexture::bind(GLenum t) {
+
+void Texture::bind(GLenum t) const {
   glActiveTexture(t);
   glBindTexture(attributes.target, textureObject);
 }
-*/
-void ProceduralTexture::render(std::function<void()> f) {
-  glViewport(0, 0, static_cast<GLsizei>(attributes.width),
-             static_cast<GLsizei>(attributes.height));
-  framebuffer->enable();
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-  f();
-  // unsigned char *data =
-  //    new unsigned char[attributes.width * attributes.height * 4];
-  // glReadPixels(0, 0, attributes.width, attributes.height, attributes.format,
-  //             attributes.type, data);
-  framebuffer->disable();
-}
 
-std::ostream &operator<<(std::ostream &out, ProceduralTexture &pt) {
+std::ostream &operator<<(std::ostream &out, Texture &pt) {
   int width = pt.attributes.width;
   int height = pt.attributes.height;
 

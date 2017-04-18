@@ -23,7 +23,9 @@ public:
     return pMax[d] - pMin[d];
   }
 
-  Point2 center() { return pMin + (pMax - pMin) * .5f; }
+  Vector2 extends() const { return pMax - pMin; }
+
+  Point2 center() const { return pMin + (pMax - pMin) * .5f; }
 
   Point2 centroid() const { return pMin * .5f + vec2(pMax * .5f); }
 

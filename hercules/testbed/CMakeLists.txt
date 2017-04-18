@@ -1,6 +1,10 @@
 link_libraries(aergia)
 link_libraries(hercules)
 
+set(FREETYPE_LIBRARIES ${FREETYPE_LIB} z)
+set(FREETYPE_INCLUDE "/usr/local/include/freetype2")
+include_directories("${FREETYPE_INCLUDE}")
+link_libraries(${FREETYPE_LIBRARIES})
 include_directories("C:/VulkanSDK/1.0.3.1/Include")
 include_directories("${AERGIA_SOURCE_DIR}/external/GLEW")
 include_directories("${AERGIA_SOURCE_DIR}/external/freeglut")

@@ -41,6 +41,15 @@ public:
       data[i] = t;
   }
 
+  T infNorm() const {
+    T r = std::fabs((*this)(0, 0));
+    ivec2 ij;
+    ivec2 D(this->width, this->height);
+    FOR_INDICES0_2D(D, ij)
+    r = std::max(r, std::fabs((*this)(ij)));
+    return r;
+  }
+
   void copyData(const ZGrid<T> *g) {
     std::copy(g->data.begin(), g->data.end(), data.begin());
   }
@@ -61,9 +70,10 @@ private:
   std::vector<T> data;
 };
 
-template <class T> ZGrid<T>::ZGrid() {}
+template <class T> ZGrid<T>::ZGrid() { this->useBorder = true; }
 
 template <class T> ZGrid<T>::ZGrid(uint32_t w, uint32_t h) {
+  this->useBorder = true;
   this->setDimensions(w, h);
   init();
 }

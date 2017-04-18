@@ -22,36 +22,51 @@
  *
 */
 
-#ifndef AERGIA_IO_PROCEDURAL_TEXTURE_H
-#define AERGIA_IO_PROCEDURAL_TEXTURE_H
+#ifndef AERGIA_UI_TEXT_H
+#define AERGIA_UI_TEXT_H
 
-#include "io/texture.h"
-#include "io/framebuffer.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <map>
 
 #include <ponos.h>
-#include <functional>
-#include <memory>
+#include "io/texture.h"
+#include "scene/quad.h"
+#include "utils/open_gl.h"
 
 namespace aergia {
 
-/** \brief Renders the image into a texture directly from the framebuffer.
- */
-class ProceduralTexture : public Texture {
+/** Draws texts on the screen. */
+class Text {
 public:
-  /** \brief Constructor.
-   * \param a texture attributes
-   * \param p texture parameters
+  /**
+   * \brief Constructor
+   * \param font file name.
    */
-  ProceduralTexture(const TextureAttributes &a, const TextureParameters &p);
-  virtual ~ProceduralTexture();
-  // void bind(GLenum t);
-  void render(std::function<void()> f);
-  friend std::ostream &operator<<(std::ostream &out, ProceduralTexture &pt);
+  Text(const char *font);
+  /** \brief draws text on screen from a screen position
+   * \param s text
+   * \param x pixel position (screen coordinates)
+   * \param y pixel position (screen coordinates)
+   * \param scale
+   * \param c color
+   */
+  void render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
+              aergia::Color c);
 
 private:
-  std::shared_ptr<Framebuffer> framebuffer;
+  struct Character {
+    aergia::Texture *texture; //!< the glyph texture
+    ponos::ivec2 size;        //!< size of glyph
+    ponos::ivec2 bearing;     //!< offset from baseline to left/top of glyph
+    GLuint advance;           //!< offset to advance to next glyph
+  };
+  FT_Library ft;
+  FT_Face ftFace;
+  std::map<GLchar, Character> characters;
+  Quad quad;
 };
 
 } // aergia namespace
 
-#endif // AERGIA_IO_PROCEDURAL_TEXTURE_H
+#endif // AERGIA_UI_TEXT_H

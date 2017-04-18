@@ -26,6 +26,16 @@
 
 namespace ponos {
 
+void RawMesh::addVertex(std::initializer_list<float> l) {
+  for (auto it = l.begin(); it != l.end(); it++)
+    vertices.emplace_back(*it);
+}
+
+void RawMesh::addFace(std::initializer_list<IndexData> l) {
+  for (auto it = l.begin(); it != l.end(); it++)
+    indices.emplace_back(*it);
+}
+
 void RawMesh::apply(const Transform &t) {
   size_t nv = vertices.size() / vertexDescriptor.elementSize;
   for (size_t i = 0; i < nv; i++)
@@ -46,7 +56,7 @@ void RawMesh::splitIndexData() {
 
 void RawMesh::computeBBox() {
   bbox = BBox();
-  for (size_t i = 0; i < meshDescriptor.count; i++) {
+  for (size_t i = 0; i < vertexDescriptor.count; i++) {
     ponos::Point3 p;
     for (size_t d = 0; d < vertexDescriptor.elementSize; d++)
       p[d] = vertices[i * vertexDescriptor.elementSize + d];

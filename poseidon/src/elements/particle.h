@@ -48,6 +48,7 @@ struct FLIPParticle2D {
     mass = 1.f;
     type = ParticleTypes::FLUID;
   }
+  ~FLIPParticle2D() {}
   ponos::Point2 position;
   ponos::vec2 velocity;
   float density;

@@ -12,7 +12,7 @@ namespace ponos {
 
 enum class CGridAccessMode { CLAMP_TO_DEDGE, BACKGROUND, REPEAT };
 
-/* Continuous 3D grid interface
+/** Continuous 3D grid interface
  *
  * Continuous grids allow interpolation between coordinates providing access to
  *floating point indices.

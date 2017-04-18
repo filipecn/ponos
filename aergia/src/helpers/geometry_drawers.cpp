@@ -212,4 +212,16 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2D *t) {
   glLineWidth(1.f);
 }
 
+void draw_vector(const ponos::Point2 &p, const ponos::vec2 &v, float w,
+                 float h) {
+  glBegin(GL_LINES);
+  glVertex(p);
+  glVertex(p + v);
+  glVertex(p + v);
+  glVertex(p + v - h * v + w * v.left());
+  glVertex(p + v);
+  glVertex(p + v - h * v + w * v.right());
+  glEnd();
+}
+
 } // aergia namespace

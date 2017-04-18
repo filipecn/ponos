@@ -89,9 +89,12 @@ public:
   void computeNegativeDivergence() {
     ponos::ivec2 ij;
     float s = 1.f / dx;
-    FOR_INDICES0_2D(dimensions, ij)
-    (*D)(ij) = -s * ((*v_u)(ij[0] + 1, ij[1]) - (*v_u)(ij) +
-                     (*v_v)(ij[0], ij[1] + 1) - (*v_v)(ij));
+    D->setAll(0.f);
+    FOR_INDICES0_2D(dimensions, ij) {
+      if ((*cellType)(ij) == CellType::FLUID)
+        (*D)(ij) = -s * ((*v_u)(ij[0] + 1, ij[1]) - (*v_u)(ij) +
+                         (*v_v)(ij[0], ij[1] + 1) - (*v_v)(ij));
+    }
   }
 
   ponos::vec2 sampleVelocity(const ponos::Point2 &wp) {

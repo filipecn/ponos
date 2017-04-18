@@ -1,4 +1,3 @@
-#include "algorithms/fast_sweep.h"
 #include "algorithms/solver.h"
 #include "structures/mac_grid.h"
 #include "structures/z_particle_grid.h"
@@ -68,6 +67,7 @@ public:
   void setup();
   bool init();
   void step();
+  float CFL();
 
   // grid size
   ponos::ivec2 dimensions;

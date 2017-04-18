@@ -33,8 +33,15 @@
 namespace aergia {
 
 /** \brief specify a texture image
+ *
+ *  glTexImage3D(GL_TEXTURE_3D, 0, attributes.internalFormat, attributes.width,
+ *  attributes.height, attributes.depth, 0, attributes.format, attributes.type,
+ *  attributes.data);
+ *  glTexImage2D(GL_TEXTURE_2D, 0, attributes.internalFormat, attributes.width,
+ *  attributes.height, 0, attributes.format, attributes.type, attributes.data);
  */
 struct TextureAttributes {
+  TextureAttributes() : data(0) {}
   size_t width;  //!< width of the texture (in texels)
   size_t height; //!< height of the texture (in texels) or the number of layers
   size_t depth;  //!< height of the texture (in texels) or the number of layers
@@ -42,6 +49,7 @@ struct TextureAttributes {
   GLenum format; //!< format of pixel data (ex: GL_RGBA, GL_RED_INTEGER, ...)
   GLenum type;   //!< data type of pixel data (ex: GL_UNSIGNED_BYTE, GL_FLOAT)
   GLenum target; //!< target texture (ex: GL_TEXTURE_3D)
+  GLvoid *data;  //!< specifies a pointer to the image data in memory.
 };
 
 /** \brief set of texture parameters

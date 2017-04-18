@@ -96,7 +96,9 @@ public:
   const ponos::RawMesh *rawMesh;
 
 protected:
-  virtual void setupVertexBuffer() {
+  virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
+                                 GLuint _type = GL_ARRAY_BUFFER,
+                                 GLuint _use = GL_STATIC_DRAW) {
     BufferDescriptor dataDescriptor(rawMesh->interleavedDescriptor.elementSize,
                                     rawMesh->interleavedDescriptor.count);
     dataDescriptor.addAttribute(std::string("position"),
@@ -127,6 +129,73 @@ protected:
 
   std::shared_ptr<const VertexBuffer> vb;
   std::shared_ptr<const IndexBuffer> ib;
+};
+
+class DynamicSceneMesh : public SceneObject {
+public:
+  DynamicSceneMesh() {}
+  DynamicSceneMesh(const std::string &filename) {
+    ponos::RawMesh *m = new ponos::RawMesh();
+    loadOBJ(filename, m);
+    m->computeBBox();
+    m->splitIndexData();
+    m->buildInterleavedData();
+    rawMesh = m;
+    setupVertexBuffer();
+    setupIndexBuffer();
+  }
+  DynamicSceneMesh(ponos::RawMesh *m) {
+    rawMesh = m;
+    setupVertexBuffer();
+    setupIndexBuffer();
+  }
+  virtual ~DynamicSceneMesh() {}
+
+  void draw() const override {
+    if (!visible)
+      return;
+    vb->bind();
+    ib->bind();
+  }
+
+  ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
+
+  ponos::RawMesh *rawMesh;
+
+protected:
+  virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
+                                 GLuint _type = GL_ARRAY_BUFFER,
+                                 GLuint _use = GL_STATIC_DRAW) {
+    BufferDescriptor dataDescriptor(rawMesh->interleavedDescriptor.elementSize,
+                                    rawMesh->interleavedDescriptor.count);
+    dataDescriptor.addAttribute(std::string("position"),
+                                rawMesh->vertexDescriptor.elementSize, 0,
+                                GL_FLOAT);
+    size_t offset = rawMesh->vertexDescriptor.elementSize;
+    if (rawMesh->normalDescriptor.count) {
+      dataDescriptor.addAttribute(std::string("normal"),
+                                  rawMesh->normalDescriptor.elementSize,
+                                  offset * sizeof(float), GL_FLOAT);
+      offset += rawMesh->normalDescriptor.elementSize;
+    }
+    if (rawMesh->texcoordDescriptor.count) {
+      dataDescriptor.addAttribute(std::string("texcoord"),
+                                  rawMesh->texcoordDescriptor.elementSize,
+                                  offset * sizeof(float), GL_FLOAT);
+      offset += rawMesh->texcoordDescriptor.elementSize;
+    }
+    vb.reset(new VertexBuffer(&rawMesh->interleavedData[0], dataDescriptor));
+  }
+
+  virtual void setupIndexBuffer() {
+    BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
+        1, rawMesh->verticesIndices.size(),
+        (rawMesh->meshDescriptor.elementSize == 4) ? GL_QUADS : GL_TRIANGLES);
+    ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
+  }
+
+  std::shared_ptr<VertexBuffer> vb;
+  std::shared_ptr<IndexBuffer> ib;
 };
 
 } // aergia namespace

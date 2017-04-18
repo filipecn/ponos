@@ -9,15 +9,15 @@
 namespace ponos {
 /*
 l_s     r_p
-         \   /
-          \ /
-           x b
-                 |
-        l	 |  r
-                 |
-                 x a
-                / \
-         /   \
+   \   /
+    \ /
+    x b
+     |
+  l  |  r
+     |
+    x a
+    / \
+   /   \
 l_p     r_s
 */
 template <class T, int D> class Brep {

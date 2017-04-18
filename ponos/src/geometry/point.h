@@ -1,5 +1,31 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef PONOS_GEOMETRY_POINT_H
 #define PONOS_GEOMETRY_POINT_H
+
+#include <initializer_list>
 
 #include "geometry/utils.h"
 #include "geometry/vector.h"
@@ -31,6 +57,7 @@ public:
   Vector2 operator-(const Point2 &p) const {
     return Vector2(x - p.x, y - p.y);
   };
+  Point2 operator/(float d) const { return Point2(x / d, y / d); }
   Point2 operator*(float f) const { return Point2(x * f, y * f); }
   Point2 &operator+=(const Vector2 &v) {
     x += v.x;
@@ -78,6 +105,14 @@ public:
   Point();
   Point(T v);
   explicit Point(Point2 p);
+  Point(std::initializer_list<T> p) {
+    int k = 0;
+    for (auto it = p.begin(); it != p.end(); ++it) {
+      if (k >= D)
+        break;
+      v[k++] = *it;
+    }
+  }
 
   T operator[](int i) const {
     ASSERT(i >= 0 && i <= static_cast<int>(size));
@@ -114,7 +149,7 @@ public:
     return P;
   }
 
-  Point2 floatXY(size_t x = 0, size_t y = 1) {
+  Point2 floatXY(size_t x = 0, size_t y = 1) const {
     return Point2(static_cast<float>(v[x]), static_cast<float>(v[y]));
   }
 

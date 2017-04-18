@@ -163,6 +163,10 @@ void glVertex(ponos::Point2 v) { glVertex2f(v.x, v.y); }
 
 void glVertex(ponos::vec2 v) { glVertex2f(v.x, v.y); }
 
+void glVertex(ponos::Point<float, 2> v) { glVertex2f(v[0], v[1]); }
+
+void glColor(Color c) { glColor4f(c.r, c.g, c.b, c.a); }
+
 void glApplyTransform(const ponos::Transform &transform) {
   float m[16];
   transform.matrix().column_major(m);

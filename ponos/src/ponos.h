@@ -1,3 +1,4 @@
+#include "algorithm/fast_sweep.h"
 #include "algorithm/search.h"
 #include "algorithm/sort.h"
 /** \defgroup Common module
@@ -34,6 +35,7 @@
 #include "structures/regular_grid.h"
 #include "structures/c_regular_grid.h"
 #include "structures/c_grid_interface.h"
+#include "structures/half_edge.h"
 #include "structures/level_set.h"
 #include "structures/object_pool.h"
 #include "structures/mesh.h"

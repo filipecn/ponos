@@ -27,6 +27,8 @@ void draw_polygon(const ponos::Polygon &polygon,
 void draw_mesh(const ponos::Mesh2D *m,
                const ponos::Transform2D *transform = nullptr);
 
+void draw_vector(const ponos::Point2 &p, const ponos::vec2 &v, float w = 0.01f,
+                 float h = 0.01f);
 } // aergia namespace
 
 #endif // AERGIA_HELPERS_GEOMETRY_DRAWERS_H

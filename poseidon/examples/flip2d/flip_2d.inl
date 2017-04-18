@@ -68,14 +68,14 @@ void FLIP2DScene<ParticleType>::generateParticles(int frame) {
     ponos::ivec2 lmax = ponos::ceil(ponos::vec2(pg->toGrid(bbox.pMax)));
     lmin = ponos::max(lmin, ponos::ivec2());
     lmax = ponos::min(lmax, pg->dimensions + ponos::ivec2(1.0f));
-    ponos::parallel_for(lmin[0], lmax[0] + 1, [=](size_t start, size_t end) {
-      ponos::ivec2 m(start, lmin[1]);
-      ponos::ivec2 M(end, lmax[1] + 1);
-      ponos::ivec2 ijk;
-      FOR_INDICES2D(m, M, ijk) {
-        fillCell(frame, liquidsGeometry[l], ijk.xy());
-      }
-    });
+    // ponos::parallel_for(lmin[0], lmax[0] + 1, [=](size_t start, size_t end) {
+    size_t start = 0;
+    size_t end = lmax[0] + 1;
+    ponos::ivec2 m(start, lmin[1]);
+    ponos::ivec2 M(end, lmax[1] + 1);
+    ponos::ivec2 ijk;
+    FOR_INDICES2D(m, M, ijk) { fillCell(frame, liquidsGeometry[l], ijk.xy()); }
+    // });
   }
   // generate static solid particles
   for (size_t l = 0; l < staticSolidsGeometry.size(); l++) {
@@ -84,25 +84,27 @@ void FLIP2DScene<ParticleType>::generateParticles(int frame) {
     ponos::ivec2 lmax = ponos::ceil(ponos::vec2(pg->toGrid(bbox.pMax)));
     lmin = ponos::max(lmin, ponos::ivec2());
     lmax = ponos::min(lmax, pg->dimensions + ponos::ivec2(1.0f));
-    ponos::parallel_for(lmin[0], lmax[0] + 1, [=](size_t start, size_t end) {
-      ponos::ivec2 m(start, lmin[1]);
-      ponos::ivec2 M(end, lmax[1] + 1);
-      ponos::ivec2 ijk;
-      FOR_INDICES2D(m, M, ijk) {
-        ponos::Point2 wp =
-            pg->toWorld(ponos::Point2(ijk[0], ijk[1]) + ponos::vec2(0.5f));
-        if (staticSolidsGeometry[l]->intersect(wp)) {
-          ParticleType *p = new ParticleType;
-          p->position = wp;
-          p->velocity = ponos::vec2();
-          p->density = 10.0f;
-          p->type = ParticleTypes::SOLID;
-          p->mass = 1.0f;
-          p->invalid = false;
-          staticSolidParticles.emplace_back(p);
-        }
+    // ponos::parallel_for(lmin[0], lmax[0] + 1, [=](size_t start, size_t end) {
+    size_t start = 0;
+    size_t end = lmax[0] + 1;
+    ponos::ivec2 m(start, lmin[1]);
+    ponos::ivec2 M(end, lmax[1] + 1);
+    ponos::ivec2 ijk;
+    FOR_INDICES2D(m, M, ijk) {
+      ponos::Point2 wp =
+          pg->toWorld(ponos::Point2(ijk[0], ijk[1]) + ponos::vec2(0.5f));
+      if (staticSolidsGeometry[l]->intersect(wp)) {
+        ParticleType *p = new ParticleType;
+        p->position = wp;
+        p->velocity = ponos::vec2();
+        p->density = 10.0f;
+        p->type = ParticleTypes::SOLID;
+        p->mass = 1.0f;
+        p->invalid = false;
+        staticSolidParticles.emplace_back(p);
       }
-    });
+    }
+    //});
   }
   for (auto p : liquidParticles)
     pg->addParticle(p);
@@ -287,12 +289,10 @@ template <typename ParticleType> bool FLIP2D<ParticleType>::init() {
 }
 
 template <typename ParticleType> void FLIP2D<ParticleType>::step() {
-  // if(curStep > 1) return;
   // scene->generateParticles(curStep);
   // scene->buildSolidLevelSet(curStep);
   // adjustParticlesStuckInSolids();
 
-  applyExternalForces();
   advectParticles();
   // resampleParticles();
   markCells();
@@ -304,6 +304,7 @@ template <typename ParticleType> void FLIP2D<ParticleType>::step() {
   // computeDensity();
   sendVelocitiesToGrid();
   copyGridVelocities();
+  applyExternalForces();
   computeDistanceToFluid();
   extrapolateVelocity();
   enforceBoundaries();
@@ -315,6 +316,18 @@ template <typename ParticleType> void FLIP2D<ParticleType>::step() {
   solvePICFLIP();
 
   curStep++;
+}
+
+template <typename ParticleType> float FLIP2D<ParticleType>::CFL() {
+  float maxv2 = 0.f;
+  const std::vector<ponos::vec2> &forces = scene->getForces(curStep);
+  for (auto f : forces)
+    maxv2 = std::max(maxv2, dx * std::max(f[0], f[1]));
+  maxv2 = std::max(maxv2, SQR(grid[CUR_GRID]->v_u->infNorm()) +
+                              SQR(grid[CUR_GRID]->v_v->infNorm()));
+  if (maxv2 < 1e-16)
+    maxv2 = 1e-16;
+  return dx / sqrt(maxv2);
 }
 
 template <typename ParticleType> void FLIP2D<ParticleType>::markCells() {
@@ -353,13 +366,20 @@ template <typename ParticleType> void FLIP2D<ParticleType>::computeDensity() {
 template <typename ParticleType>
 void FLIP2D<ParticleType>::applyExternalForces() {
   const std::vector<ponos::vec2> &forces = scene->getForces(curStep);
-  particleGrid->iterateAll([this, &forces](ParticleType *p) {
-    if (p->type != ParticleTypes::FLUID)
-      return;
-    for (auto f : forces) {
-      p->velocity += f * this->dt;
-    }
-  });
+  ponos::ivec2 ij;
+  FOR_INDICES0_2D(grid[CUR_GRID]->v_v->getDimensions(), ij) {
+    for (auto f : forces)
+      (*grid[CUR_GRID]->v_v)(ij) += f[1] * dt;
+  }
+  /*
+const std::vector<ponos::vec2> &forces = scene->getForces(curStep);
+particleGrid->iterateAll([this, &forces](ParticleType *p) {
+if (p->type != ParticleTypes::FLUID)
+return;
+for (auto f : forces) {
+p->velocity += f * this->dt;
+}
+});*/
 }
 
 template <typename ParticleType>
@@ -516,8 +536,8 @@ template <typename ParticleType> void FLIP2D<ParticleType>::project() {
 
 template <typename ParticleType>
 void FLIP2D<ParticleType>::computeDistanceToFluid() {
-  float maxDist = dimensions[0] + 2 * dimensions[1];
-  distances.setAll(maxDist);
+  ponos::ZGrid<CellType> *cell = grid[CUR_GRID]->cellType.get();
+  distances.setAll(dimensions[0] + 2 * dimensions[1]);
   ponos::ivec2 ij;
   FOR_INDICES0_2D(grid[CUR_GRID]->cellType->getDimensions(), ij) {
     if ((*grid[CUR_GRID]->cellType)(ij) == CellType::FLUID) {
@@ -525,7 +545,8 @@ void FLIP2D<ParticleType>::computeDistanceToFluid() {
     }
   }
   for (int i = 0; i < 2; i++)
-    fastSweep2D<ponos::ZGrid<float>>(&distances, &distances, maxDist);
+    ponos::fastSweep2D<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+        &distances, &distances, cell, CellType::FLUID);
 }
 
 template <typename ParticleType>
@@ -536,13 +557,13 @@ void FLIP2D<ParticleType>::extrapolateVelocity() {
   for (int i = 0; i < 4; i++) {
     int nx = u->getDimensions()[0];
     int ny = u->getDimensions()[1];
-    sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, 1, nx - 1, 1, ny - 1);
-    sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, 1, nx - 1, ny - 2, 0);
-    sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, nx - 2, 0, 1, ny - 1);
-    sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, nx - 2, 0, ny - 2, 0);
     for (int k = 0; k < nx; k++) {
       (*u)(k, 0) = (*u)(k, 1);
@@ -554,13 +575,13 @@ void FLIP2D<ParticleType>::extrapolateVelocity() {
     }
     nx = v->getDimensions()[0];
     ny = v->getDimensions()[1];
-    sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, 1, nx - 1, 1, ny - 1);
-    sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, 1, nx - 1, ny - 2, 0);
-    sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, nx - 2, 0, 1, ny - 1);
-    sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, nx - 2, 0, ny - 2, 0);
     for (int k = 0; k < nx; k++) {
       (*v)(k, 0) = (*v)(k, 1);

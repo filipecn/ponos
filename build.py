@@ -22,8 +22,7 @@ if sys.argv[1] == 'docs':
     call(["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
          shell=True)
     call(["python doxml2md.py doc/xml/all.xml"], shell=True)
-    if sys.argv[1] == 'docs':
-        sys.exit(1)
+    sys.exit(1)
 
 if os.path.exists(build_path) and sys.argv[1] == 'all':
     shutil.rmtree(build_path)
@@ -46,7 +45,7 @@ if platform.system() == 'Windows':
     make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
                        ["PONOS.sln"], shell=True)
 else:
-    make_result = call(["make"], shell=True)
+    make_result = call(["make -j8"], shell=True)
 
 if make_result != 0:
     sys.exit(1)

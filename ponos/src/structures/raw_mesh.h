@@ -29,6 +29,7 @@
 #include "geometry/transform.h"
 
 #include <vector>
+#include <initializer_list>
 
 namespace ponos {
 
@@ -43,6 +44,11 @@ class RawMesh {
 public:
   RawMesh() { vertexDescriptor.count = 3; }
   virtual ~RawMesh() {}
+  struct IndexData {
+    int vertexIndex;
+    int normalIndex;
+    int texcoordIndex;
+  };
   /** \brief set
    * \param t transform
    * Applies transform **t** to all vertices.
@@ -50,6 +56,16 @@ public:
   void apply(const Transform &t);
   void splitIndexData();
   void computeBBox();
+  /** \brief add vertex
+   * \param coordinate values {v00, v01, .... }
+   * Append positions.
+   */
+  void addVertex(std::initializer_list<float> l);
+  /** \brief add face(s)
+   * \param indices values {v00, v01, .... }
+   * Append indices.
+   */
+  void addFace(std::initializer_list<IndexData> l);
   /** \brief get
    * \param i element index
    * \returns bbox of element (object space).
@@ -85,11 +101,6 @@ public:
   ArrayDescriptor texcoordDescriptor; //!< texture coordinates description
   ArrayDescriptor normalDescriptor;   //!<< normal description
 
-  struct IndexData {
-    int vertexIndex;
-    int normalIndex;
-    int texcoordIndex;
-  };
   std::vector<IndexData> indices;
 
   std::vector<float> vertices;

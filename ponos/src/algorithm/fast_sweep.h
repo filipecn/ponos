@@ -1,9 +1,12 @@
-#ifndef POSEIDON_FAST_SWEEP_H
-#define POSEIDON_FAST_SWEEP_H
+#ifndef PONOS_FAST_SWEEP_H
+#define PONOS_FAST_SWEEP_H
 
-#include <ponos.h>
+#include <queue>
 
-namespace poseidon {
+#include "geometry/vector.h"
+#include "structures/regular_grid.h"
+
+namespace ponos {
 
 inline void solveDistance(float p, float q, float &r) {
   float d = std::min(p, q) + 1;
@@ -13,30 +16,31 @@ inline void solveDistance(float p, float q, float &r) {
     r = d;
 }
 
-template <typename GridType>
-void fastSweep2D(GridType *grid, GridType *distances, float largeDist) {
+template <typename GridType, typename MaskType, typename T>
+void fastSweep2D(GridType *grid, GridType *distances, MaskType *mask,
+                 T MASK_VALUE) {
   // +1 +1
   for (int j = 1; j < grid->getDimensions()[1]; j++)
     for (int i = 1; i < grid->getDimensions()[0]; i++) {
-      if ((*distances)(i, j) >= largeDist)
+      if ((*mask)(i, j) != MASK_VALUE)
         solveDistance((*grid)(i - 1, j), (*grid)(i, j - 1), (*grid)(i, j));
     }
   // -1 -1
   for (int j = grid->getDimensions()[1] - 2; j >= 0; j--)
     for (int i = grid->getDimensions()[0] - 2; i >= 0; i--) {
-      if ((*distances)(i, j) >= largeDist)
+      if ((*mask)(i, j) != MASK_VALUE)
         solveDistance((*grid)(i + 1, j), (*grid)(i, j + 1), (*grid)(i, j));
     }
   // +1 -1
   for (int j = grid->getDimensions()[1] - 2; j >= 0; j--)
     for (int i = 1; i < grid->getDimensions()[0]; i++) {
-      if ((*distances)(i, j) >= largeDist)
+      if ((*mask)(i, j) != MASK_VALUE)
         solveDistance((*grid)(i - 1, j), (*grid)(i, j + 1), (*grid)(i, j));
     }
   // -1 +1
   for (int j = 1; j < grid->getDimensions()[1]; j++)
     for (int i = grid->getDimensions()[0] - 2; i >= 0; i--) {
-      if ((*distances)(i, j) >= largeDist)
+      if ((*mask)(i, j) != MASK_VALUE)
         solveDistance((*grid)(i + 1, j), (*grid)(i, j - 1), (*grid)(i, j));
     }
 }
@@ -89,6 +93,48 @@ void sweep_x(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
       }
 }
 
-} // poseidon namespace
+template <typename GridType, typename MaskType, typename T>
+void fastMarch2D(GridType *phi, MaskType *mask, T MASK_VALUE,
+                 std::vector<ivec2> points) {
+  RegularGrid2D<char> frozen((*phi).getDimensions(), 0);
+  frozen.setAll(0);
+  struct Point_ {
+    Point_(int I, int J, float D) : i(I), j(J), t(D) {}
+    int i, j;
+    float t;
+  };
+  auto cmp = [](Point_ a, Point_ b) { return a.t > b.t; };
+  std::priority_queue<Point_, std::vector<Point_>, decltype(cmp)> q(cmp);
+  (*phi).setAll(1 << 16);
+  for (auto p : points) {
+    (*phi)(p) = 0;
+    q.push(Point_(p[0], p[1], (*phi)(p)));
+  }
+  while (!q.empty()) {
+    Point_ p = q.top();
+    q.pop();
+    frozen(p.i, p.j) = 2;
+    (*phi)(p.i, p.j) = p.t;
+    ivec2 dir[4] = {ivec2(-1, 0), ivec2(1, 0), ivec2(0, -1), ivec2(0, 1)};
+    for (int i = 0; i < 4; i++) {
+      ivec2 ij = ivec2(p.i, p.j) + dir[i];
+      if (ij[0] < 0 || ij[0] >= frozen.getDimensions()[0] || ij[1] < 0 ||
+          ij[1] >= frozen.getDimensions()[1] || frozen(ij) || !(*mask)(ij))
+        continue;
+      float T1 = std::min((*phi)(ij + dir[0]), (*phi)(ij + dir[1]));
+      float T2 = std::min((*phi)(ij + dir[2]), (*phi)(ij + dir[3]));
+      float Tmin = std::min(T1, T2);
+      float d = fabs(T1 - T2);
+      if (d < 1.f)
+        (*phi)(ij) = (T1 + T2 + sqrtf(2.f * SQR(1.f) - SQR(d))) / 2.f;
+      else
+        (*phi)(ij) = Tmin + 1.f;
+      q.push(Point_(ij[0], ij[1], (*phi)(ij)));
+      frozen(ij) = 1;
+    }
+  }
+}
 
-#endif // POSEIDON_FAST_SWEEP_H
+} // ponos namespace
+
+#endif // PONOS_FAST_SWEEP_H

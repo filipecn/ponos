@@ -117,6 +117,17 @@ public:
                      sizeof(T),
                  data, bufferDescriptor.use);
   }
+  /** \brief set
+   * \param d **[in]** data pointer
+   */
+  void set(const T *d) {
+    data = d;
+    glBindBuffer(bufferDescriptor.type, bufferId);
+    glBufferSubData(bufferDescriptor.type, 0,
+                    bufferDescriptor.elementCount *
+                        bufferDescriptor.elementSize * sizeof(T),
+                    data);
+  }
   /** \brief Activate buffer
    */
   void bind() const { glBindBuffer(bufferDescriptor.type, bufferId); }

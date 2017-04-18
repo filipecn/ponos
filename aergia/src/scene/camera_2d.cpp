@@ -27,7 +27,7 @@ void Camera2D::look() {
 void Camera2D::resize(float w, float h) {
   display = vec2(w, h);
   ratio = w / h;
-  clipSize = vec2(zoom, zoom);
+  clipSize = vec2(1.f);
   if (w < h)
     clipSize.y = clipSize.x / ratio;
   else
@@ -61,6 +61,12 @@ ponos::Ray3 Camera2D::pickRay(ponos::Point2 p) const {
                                                  ponos::Point3(p.x, p.y, -1.f));
   ponos::Point3 position(pos.x, pos.y, 0.f);
   return ponos::Ray3(position, P - position);
+}
+
+void Camera2D::fit(const ponos::BBox2D &b, float delta) {
+  setPos(ponos::vec2(b.center()));
+  setZoom((b.size(b.maxExtent()) / 2.f) * delta);
+  update();
 }
 
 } // aergia namespace

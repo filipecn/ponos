@@ -22,36 +22,28 @@
  *
 */
 
-#ifndef AERGIA_IO_PROCEDURAL_TEXTURE_H
-#define AERGIA_IO_PROCEDURAL_TEXTURE_H
+#ifndef AERGIA_IO_TEXTURE_H
+#define AERGIA_IO_TEXTURE_H
 
-#include "io/texture.h"
-#include "io/framebuffer.h"
-
-#include <ponos.h>
-#include <functional>
-#include <memory>
+#include "io/texture_parameters.h"
 
 namespace aergia {
-
-/** \brief Renders the image into a texture directly from the framebuffer.
- */
-class ProceduralTexture : public Texture {
+class Texture {
 public:
   /** \brief Constructor.
    * \param a texture attributes
    * \param p texture parameters
    */
-  ProceduralTexture(const TextureAttributes &a, const TextureParameters &p);
-  virtual ~ProceduralTexture();
-  // void bind(GLenum t);
-  void render(std::function<void()> f);
-  friend std::ostream &operator<<(std::ostream &out, ProceduralTexture &pt);
+  Texture(const TextureAttributes &a, const TextureParameters &p);
+  virtual ~Texture();
+  virtual void bind(GLenum t) const;
+  friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 
-private:
-  std::shared_ptr<Framebuffer> framebuffer;
+protected:
+  TextureAttributes attributes;
+  TextureParameters parameters;
+  GLuint textureObject;
 };
-
 } // aergia namespace
 
-#endif // AERGIA_IO_PROCEDURAL_TEXTURE_H
+#endif // AERGIA_IO_TEXTURE_H

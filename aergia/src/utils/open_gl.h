@@ -11,6 +11,8 @@
 
 #include <ponos.h>
 
+#include "colors/color.h"
+
 #define GL_DEBUG
 
 namespace aergia {
@@ -63,6 +65,12 @@ void glVertex(ponos::Point2 v);
  * Same as glVertex2f
  */
 void glVertex(ponos::vec2 v);
+/* glVertex
+ * Same as glVertex2f
+ */
+void glVertex(ponos::Point<float, 2> v);
+
+void glColor(Color c);
 
 void glApplyTransform(const ponos::Transform &transform);
 

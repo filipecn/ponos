@@ -161,6 +161,9 @@ public:
     z -= v.z;
     return *this;
   }
+  Vector3 operator*(const Vector3 &v) const {
+    return Vector3(x * v.x, y * v.y, z * v.z);
+  }
   Vector3 operator*(float f) const { return Vector3(x * f, y * f, z * f); }
   Vector3 &operator*=(float f) {
     x *= f;
@@ -212,6 +215,10 @@ inline Vector3 normalize(const Vector3 &v) {
   if (v.length2() == 0.f)
     return v;
   return v / v.length();
+}
+
+inline Vector3 cos(const Vector3 &v) {
+  return Vector3(cosf(v.x), cosf(v.y), cosf(v.z));
 }
 
 inline Vector3 max(const Vector3 &a, const Vector3 &b) {
@@ -389,6 +396,10 @@ public:
     return v_;
   }
 
+  Vector<2, T> operator/(T f) const {
+    T inv = static_cast<T>(1) / f;
+    return Vector<2, T>(v[0] * inv, v[1] * inv);
+  }
   Vector<2, T> xy(size_t x = 0, size_t y = 1) const {
     return Vector<2, T>(v[x], v[y]);
   }

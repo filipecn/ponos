@@ -111,8 +111,6 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r, float *t1,
 
 bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit0,
                            float &hit1, float *normal) {
-  std::cout << "testing ray box intersection\n";
-  std::cout << box.pMin << box.pMax << ray.o << ray.d << std::endl;
   int sign[2];
   vec2 invdir = 1.f / ray.d;
   sign[0] = (invdir.x < 0);
@@ -160,7 +158,6 @@ bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit0,
   }
   hit0 = tmin;
   hit1 = tmax;
-  std::cout << "TRUEEEEE!!!!\n";
   return true;
   /*for (int i = 0; i < 2; i++) {
     float invRayDir = 1.f / ray.d[i];

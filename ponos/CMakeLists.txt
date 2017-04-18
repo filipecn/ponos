@@ -1,6 +1,7 @@
 project(PONOS)
 
 set(HEADERS
+	src/algorithm/fast_sweep.h
 	src/algorithm/search.h
 	src/algorithm/sort.h
 	src/common/defs.h
@@ -35,6 +36,7 @@ set(HEADERS
 	src/structures/brep.hpp
 	src/structures/c_grid_interface.h
 	src/structures/c_regular_grid.h
+	src/structures/half_edge.h
 	src/structures/level_set.h
 	src/structures/mesh.h
 	src/structures/regular_grid.h
