@@ -33,11 +33,12 @@
 
 namespace ponos {
 
-template <class T, int D> class HEMesh {
+template <class T, int D, typename V = float, typename F = float,
+          typename E = float>
+class HEMesh {
 public:
   HEMesh() {}
   HEMesh(const RawMesh *rm) {
-    ASSERT_FATAL(rm->vertexDescriptor.elementSize == 2);
     ASSERT_FATAL(rm->meshDescriptor.elementSize == 3);
     for (size_t i = 0; i < rm->vertexDescriptor.count; i++)
       addVertex(Point<float, 2>(
@@ -63,18 +64,14 @@ public:
         }
         faceEdges[e] = m[edge];
       }
-      std::cout << "adding face:\n";
-      std::cout << faceEdges[0] << " ";
-      std::cout << faceEdges[1] << " ";
-      std::cout << faceEdges[2] << "\n";
       addFace({faceEdges[0], faceEdges[1], faceEdges[2]});
     }
   }
-
   struct Vertex {
     Vertex(const Point<T, D> &p) : position(p), edge(-1) {}
-    Point<T, D> position;
-    int edge; //!< HE connected to this vertex
+    Point<T, D> position; //!< HE vertex position
+    int edge;             //!< HE connected to this vertex
+    V data;               //!< vertex user's data
   };
   struct Edge {
     Edge() { orig = dest = pair = face = next = prev = -1; }
@@ -84,13 +81,20 @@ public:
     int face; //!< face on the left
     int next; //!< successor HE
     int prev; //!< predecessor HE
+    E data;   //!< edge user's data
   };
   struct Face {
+    Face() : edge(-1) {}
     int edge; //!< one half edge
+    F data;   //!< face user's data
   };
+  void setVertexData(size_t v, const V &data) {
+    return vertices[v].data = data;
+  }
   const std::vector<Vertex> &getVertices() const { return vertices; }
   const std::vector<Edge> &getEdges() const { return edges; }
   const std::vector<Face> &getFaces() const { return faces; }
+  size_t oppositeEdge(size_t f, size_t v) {}
   size_t addVertex(const Point<T, D> &p) {
     vertices.emplace_back(p);
     return vertices.size() - 1;
@@ -101,93 +105,82 @@ public:
     int e2 = e1 + 1;
     edges.resize(edges.size() + 2);
 
-    std::cout << "for edge " << e1 << std::endl;
+    // std::cout << "for edge " << e1 << std::endl;
     edges[e1].pair = e2;
     edges[e1].face = -1;
     edges[e1].orig = a;
     edges[e1].dest = b;
-    edges[e1].next = findNextEdge(-v, b, false);
-    edges[e1].prev = findNextEdge(v, a, true);
-    std::cout << "next " << edges[e1].next << std::endl;
-    std::cout << "prev " << edges[e1].prev << std::endl;
+    edges[e1].next = findNextEdge(-v, b, true);
+    edges[e1].prev = findNextEdge(v, a, false);
+    // std::cout << "next " << edges[e1].next << std::endl;
+    // std::cout << "prev " << edges[e1].prev << std::endl;
     if (edges[e1].next < 0)
       edges[e1].next = e2;
     if (edges[e1].prev < 0)
       edges[e1].prev = e2;
-    std::cout << "next " << edges[e1].next << std::endl;
-    std::cout << "prev " << edges[e1].prev << std::endl;
+    // std::cout << "next " << edges[e1].next << std::endl;
+    // std::cout << "prev " << edges[e1].prev << std::endl;
 
-    std::cout << "for edge " << e2 << std::endl;
+    // std::cout << "for edge " << e2 << std::endl;
     edges[e2].pair = e1;
     edges[e2].face = -1;
     edges[e2].orig = b;
     edges[e2].dest = a;
-    edges[e2].next = findNextEdge(-v, a, false);
-    edges[e2].prev = findNextEdge(v, b, true);
-    std::cout << "next " << edges[e2].next << std::endl;
-    std::cout << "prev " << edges[e2].prev << std::endl;
+    edges[e2].next = findNextEdge(v, a, true);
+    edges[e2].prev = findNextEdge(-v, b, false);
+    // std::cout << "next " << edges[e2].next << std::endl;
+    // std::cout << "prev " << edges[e2].prev << std::endl;
     if (edges[e2].next < 0)
       edges[e2].next = e1;
     if (edges[e2].prev < 0)
       edges[e2].prev = e1;
-    std::cout << "next " << edges[e2].next << std::endl;
-    std::cout << "prev " << edges[e2].prev << std::endl;
+    // std::cout << "next " << edges[e2].next << std::endl;
+    // std::cout << "prev " << edges[e2].prev << std::endl;
 
     if (edges[e1].next >= 0)
       edges[edges[e1].next].prev = e1;
     if (edges[e1].prev >= 0)
       edges[edges[e1].prev].next = e1;
 
-    if (edges[e1].next >= 0)
-      std::cout << "conected next-previous " << edges[e1].next << " "
-                << edges[edges[e1].next].prev << std::endl;
-    if (edges[e1].prev >= 0)
-      std::cout << "conected previous-next " << edges[e1].prev << " "
-                << edges[edges[e1].prev].next << std::endl;
+    // if (edges[e1].next >= 0)
+    //  std::cout << "conected next-previous " << edges[e1].next << " "
+    //            << edges[edges[e1].next].prev << std::endl;
+    // if (edges[e1].prev >= 0)
+    //  std::cout << "conected previous-next " << edges[e1].prev << " "
+    //            << edges[edges[e1].prev].next << std::endl;
 
     if (edges[e2].next >= 0)
       edges[edges[e2].next].prev = e2;
     if (edges[e2].prev >= 0)
       edges[edges[e2].prev].next = e2;
 
-    if (edges[e2].next >= 0)
-      std::cout << "conected next-previous " << edges[e2].next << " "
-                << edges[edges[e2].next].prev << std::endl;
-    if (edges[e2].prev >= 0)
-      std::cout << "conected previous-next " << edges[e2].prev << " "
-                << edges[edges[e2].prev].next << std::endl;
+    // if (edges[e2].next >= 0)
+    //  std::cout << "conected next-previous " << edges[e2].next << " "
+    //            << edges[edges[e2].next].prev << std::endl;
+    // if (edges[e2].prev >= 0)
+    //  std::cout << "conected previous-next " << edges[e2].prev << " "
+    //            << edges[edges[e2].prev].next << std::endl;
 
     if (vertices[a].edge < 0)
       vertices[a].edge = e1;
     if (vertices[b].edge < 0)
       vertices[b].edge = e2;
 
-    std::cout << "Edge created\n";
-    std::cout << edges[e1].next << " ";
-    std::cout << edges[e1].prev << " ";
-    std::cout << edges[e1].pair << " ";
-    std::cout << edges[e1].face << "\n";
-    std::cout << std::endl;
-    std::cout << edges[e2].next << " ";
-    std::cout << edges[e2].prev << " ";
-    std::cout << edges[e2].pair << " ";
-    std::cout << edges[e2].face << "\n";
-    std::cout << std::endl;
+    // std::cout << "Edge created\n";
+    // std::cout << edges[e1].next << " ";
+    // std::cout << edges[e1].prev << " ";
+    // std::cout << edges[e1].pair << " ";
+    // std::cout << edges[e1].face << "\n";
+    // std::cout << std::endl;
+    // std::cout << edges[e2].next << " ";
+    // std::cout << edges[e2].prev << " ";
+    // std::cout << edges[e2].pair << " ";
+    // std::cout << edges[e2].face << "\n";
+    // std::cout << std::endl;
     return e1;
   }
   size_t addFace(std::initializer_list<int> e) {
     Face f;
-    // int lastEdge = -1;
-    // for (auto it = e.begin(); it != e.end(); ++it) {
-    //  edges[*it].face = faces.size();
-    //  if (lastEdge >= 0)
-    //    edges[lastEdge].next = *it;
-    //  edges[*it].prev = lastEdge;
-    //  lastEdge = *it;
-    //}
-    // edges[*e.begin()].prev = lastEdge;
-    // edges[lastEdge].next = *e.begin();
-    // f.edge = lastEdge;
     f.edge = *e.begin();
     faces.emplace_back(f);
     return faces.size() - 1;
@@ -228,42 +221,58 @@ public:
       } while (he != begin);
     }
   }
+  size_t vertexCount() const { return vertices.size(); }
 
 private:
   /** \brief
-   * \param v (always leaving v)
+   * \param v (always leaving vertex)
    * \param vertex
-   * \param incident (search for a incident edge?)
+   * \param incident the original v is incident to vertex?
    * \returns
    */
   int findNextEdge(vec2 v, int vertex, bool incident) {
     vec2 nv = normalize(v);
-    float maxAngle = -(1 << 20);
+    double xAngle = -(1 << 20);
+    double vAngle = ponos::atanPI_2(v.y, v.x);
+    int xAngleId = -1;
     int nextEdge = -1;
-    std::cout << "find next " << incident << std::endl;
-    if (incident)
-      traverseEdgesToVertex(vertex, [nv, &maxAngle, &nextEdge, this](int e) {
-        vec2 curVec = normalize(vertices[edges[e].dest].position.floatXY() -
-                                vertices[edges[e].orig].position.floatXY());
-        float angle = cross(nv, curVec);
-        std::cout << e << " ";
-        if (angle > maxAngle) {
-          maxAngle = angle;
-          nextEdge = e;
-        }
-      });
-    else
-      traverseEdgesFromVertex(vertex, [nv, &maxAngle, &nextEdge, this](int e) {
-        vec2 curVec = normalize(vertices[edges[e].dest].position.floatXY() -
-                                vertices[edges[e].orig].position.floatXY());
-        float angle = cross(-nv, curVec);
-        std::cout << e << " ";
-        if (angle > maxAngle) {
-          maxAngle = angle;
-          nextEdge = e;
-        }
-      });
-    std::cout << " found edge " << nextEdge << std::endl;
+    // std::cout << "find next " << incident << std::endl;
+    if (incident) {
+      xAngle = -(1 << 20);
+      double nextAngle = -(1 << 20);
+      traverseEdgesFromVertex(
+          vertex,
+          [nv, &xAngle, &xAngleId, &vAngle, &nextAngle, &nextEdge, this](
+              int e) {
+            vec2 curVec = normalize(vertices[edges[e].dest].position.floatXY() -
+                                    vertices[edges[e].orig].position.floatXY());
+            double angle = ponos::atanPI_2(curVec.y, curVec.x);
+            // std::cout << e << " " << TO_DEGREES(angle) << "\n";
+            if (angle > xAngle)
+              xAngle = angle, xAngleId = e;
+            if (angle < vAngle && angle > nextAngle)
+              nextAngle = angle, nextEdge = e;
+          });
+    } else {
+      xAngle = (1 << 20);
+      double nextAngle = (1 << 20);
+      traverseEdgesToVertex(
+          vertex,
+          [nv, &xAngle, &xAngleId, &vAngle, &nextAngle, &nextEdge, this](
+              int e) {
+            vec2 curVec = normalize(vertices[edges[e].orig].position.floatXY() -
+                                    vertices[edges[e].dest].position.floatXY());
+            double angle = ponos::atanPI_2(curVec.y, curVec.x);
+            // std::cout << e << " " << TO_DEGREES(angle) << "\n";
+            if (angle < xAngle)
+              xAngle = angle, xAngleId = e;
+            if (angle > vAngle && angle < nextAngle)
+              nextAngle = angle, nextEdge = e;
+          });
+    }
+    if (nextEdge < 0)
+      nextEdge = xAngleId;
+    // std::cout << " found edge " << nextEdge << std::endl;
     return nextEdge;
   }
   int vertexNext(int e) { return edges[edges[e].pair].next; }
@@ -273,6 +282,8 @@ private:
   std::vector<Edge> edges;
   std::vector<Face> faces;
 };
+
+typedef HEMesh<float, 2> HEMesh2DF;
 
 } // ponos namespace
 

@@ -38,6 +38,7 @@ public:
   void fit(const ponos::BBox2D &b, float delta = 1.f);
   void setZoom(float z);
   void setPos(ponos::vec2 p);
+  ponos::vec2 getPos() const { return pos; }
   void update();
   ponos::Transform getTransform() const override;
   ponos::Ray3 pickRay(ponos::Point2 p) const override;

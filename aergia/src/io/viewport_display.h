@@ -47,11 +47,13 @@ public:
   void render();
   void mouse(double x, double y);
   void button(int b, int a);
+  void scroll(double dx, double dy);
 
   // render callback
   std::function<void()> renderCallback;
   std::function<void(int, int)> buttonCallback;
   std::function<void(double, double)> mouseCallback;
+  std::function<void(double, double)> scrollCallback;
 
   // viewport
   int x, y, width, height;

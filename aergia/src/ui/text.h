@@ -29,7 +29,7 @@
 #include FT_FREETYPE_H
 #include <map>
 
-#include <ponos.h>
+#include "io/graphics_display.h"
 #include "io/texture.h"
 #include "scene/quad.h"
 #include "utils/open_gl.h"
@@ -52,6 +52,14 @@ public:
    * \param c color
    */
   void render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
+              aergia::Color c);
+  /** \brief draws text on screen from a screen position
+   * \param s text
+   * \param p pixel position (in norm dev coordinates)
+   * \param scale
+   * \param c color
+   */
+  void render(std::string s, const ponos::Point3 &p, GLfloat scale,
               aergia::Color c);
 
 private:

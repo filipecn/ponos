@@ -29,6 +29,10 @@ void ViewportDisplay::mouse(double x, double y) {
   trackball.mouseMove(*camera.get(), getMouseNPos());
 }
 
+void ViewportDisplay::scroll(double dx, double dy) {
+  trackball.mouseScroll(*camera.get(), ponos::vec2(dx, dy));
+}
+
 void ViewportDisplay::button(int b, int a) {
   if (buttonCallback)
     buttonCallback(b, a);
@@ -42,7 +46,6 @@ ponos::Point2 ViewportDisplay::getMouseNPos() {
   int viewport[] = {0, 0, width, height};
   ponos::Point2 mp =
       GraphicsDisplay::instance().getMousePos() - ponos::vec2(x, y);
-  ;
   return ponos::Point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
                        (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
 }

@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef AERGIA_IO_GRAPHICS_DISPLAY_H
 #define AERGIA_IO_GRAPHICS_DISPLAY_H
 
@@ -11,45 +35,50 @@
 
 namespace aergia {
 
-/* singleton
- * Main class for screen operations. Responsable for getting user input and
- *rendering.
+/** singleton
  *
- * The screen origin **(0, 0)** is the lower-left corner of the window.
+ * Main class for screen operations. Responsable for getting user input and
+ * rendering. The screen origin **(0, 0)** is the lower-left corner of the
+ * window.
  */
 class GraphicsDisplay {
 public:
   ~GraphicsDisplay();
   static GraphicsDisplay &instance() { return instance_; }
   /* set
-   * @w **[in]** width (in pixels)
-   * @h **[in]** height (in pixels)
-   * @windowTitle **[in]**
+   * \param w **[in]** width (in pixels)
+   * \param h **[in]** height (in pixels)
+   * \param windowTitle **[in]**
    * Set window properties.
    */
   void set(int w, int h, const char *windowTitle);
   /* get
-   * @w **[out]** receives width value
-   * @h **[out]** receives height value
+   * \param w **[out]** receives width value
+   * \param h **[out]** receives height value
    */
   void getWindowSize(int &w, int &h);
   /* get
-   * @return mouse position (screen space)
+   * \returns mouse position (screen space)
    */
   ponos::Point2 getMousePos();
   /* get
-   * @return mouse position (NDC **[-1, 1]**)
+   * \returns mouse position (NDC **[-1, 1]**)
    */
   ponos::Point2 getMouseNPos();
+  /** \brief convert
+   * \param p **[in]** point (in norm dev coordinates)
+   * \returns **p** mapped to view coordinates
+   */
+  ponos::Point3 normDevCoordToViewCoord(ponos::Point3 p);
   /* convert
-   * @p **[in]** point (in view space)
-   * @return **p** mapped to NDC (**[-1,1]**)
+   * \param p **[in]** point (in view space)
+   * \returns **p** mapped to NDC (**[-1,1]**)
    */
   ponos::Point3 viewCoordToNormDevCoord(ponos::Point3 p);
   /* convert
-   * @c **[in]** camera
-   * @p **[in]** point (in screen space)
-   * @return the unprojected point by the inverse of the camera transform to
+   * \param c **[in]** camera
+   * \param p **[in]** point (in screen space)
+   * \returns the unprojected point by the inverse of the camera transform to
    * world space
    */
   ponos::Point3 unProject(const Camera &c, ponos::Point3 p);
@@ -62,7 +91,7 @@ public:
    */
   void stop();
   /* query
-   * @return **true** if application is running
+   * \returns **true** if application is running
    */
   bool isRunning();
   // IO
@@ -74,15 +103,16 @@ public:
   void registerMouseFunc(void (*f)(double, double));
   void registerMouseFunc(std::function<void(double, double)> f);
   void registerScrollFunc(void (*f)(double, double));
+  void registerScrollFunc(std::function<void(double, double)> f);
   void registerResizeFunc(void (*f)(int, int));
   // graphics
   void beginFrame();
   void endFrame();
   /* clear screen
-   * @r **[in]** red
-   * @g **[in]** green
-   * @b **[in]** blue
-   * @a **[in]** alpha
+   * \param r **[in]** red
+   * \param g **[in]** green
+   * \param b **[in]** blue
+   * \param a **[in]** alpha
    * Assign the given color **(r, g, b, a)** to all pixels of the screen
    */
   void clearScreen(float r, float g, float b, float a);
@@ -131,10 +161,10 @@ private:
 };
 
 /* create
- * @w **[in]** window's width (in pixels)
- * @h **[in]** window's height (in pixels)
- * @windowTitle **[in]** window's title
- * @return reference to GraphicsDiplay with the window created
+ * \param w **[in]** window's width (in pixels)
+ * \param h **[in]** window's height (in pixels)
+ * \param windowTitle **[in]** window's title
+ * \returns reference to GraphicsDiplay with the window created
  */
 inline GraphicsDisplay &createGraphicsDisplay(int w, int h,
                                               const char *windowTitle) {

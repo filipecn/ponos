@@ -83,7 +83,11 @@ public:
    *(vertex | normal | texcoords | ... )
    */
   void buildInterleavedData();
-
+  /** \brief orient faces
+   * \param ccw make ccw ?
+   * Rearrange faces vertices order to fix face's normal.
+   */
+  void orientFaces(bool ccw = true);
   struct ArrayDescriptor {
     /** \brief
      * \param s element size

@@ -4,6 +4,7 @@
 #include <queue>
 
 #include "geometry/vector.h"
+#include "structures/half_edge.h"
 #include "structures/regular_grid.h"
 
 namespace ponos {
@@ -132,6 +133,49 @@ void fastMarch2D(GridType *phi, MaskType *mask, T MASK_VALUE,
       q.push(Point_(ij[0], ij[1], (*phi)(ij)));
       frozen(ij) = 1;
     }
+  }
+}
+
+template <class T, int D>
+void fastMarch2D(HEMesh2DF *phi, std::vector<size_t> points) {
+  size_t vc = phi->vertexCount();
+  std::vector<char> frozen(vc, 0);
+  struct Point_ {
+    Point_(size_t _v, size_t _cv, float D) : v(_v), cv(_cv), t(D) {}
+    size_t v, cv;
+    float t;
+  };
+  auto cmp = [](Point_ a, Point_ b) { return a.t > b.t; };
+  std::priority_queue<Point_, std::vector<Point_>, decltype(cmp)> q(cmp);
+  for (size_t i = 0; i < vc; i++)
+    phi->setVertexData(i, 1 << 16);
+  for (auto p : points) {
+    phi->setVertexData(p, 0.f);
+    q.push(Point_(p, p, 0.f));
+  }
+  while (!q.empty()) {
+    Point_ p = q.top();
+    q.pop();
+    frozen(p.v) = 2;
+    phi->setVertexData(p.v, p.t);
+    ivec2 dir[4] = {ivec2(-1, 0), ivec2(1, 0), ivec2(0, -1), ivec2(0, 1)};
+    // traverse oposite edges
+    /* for (int i = 0; i < 4; i++) {
+       ivec2 ij = ivec2(p.i, p.j) + dir[i];
+       if (ij[0] < 0 || ij[0] >= frozen.getDimensions()[0] || ij[1] < 0 ||
+           ij[1] >= frozen.getDimensions()[1] || frozen(ij) || !(*mask)(ij))
+         continue;
+       float T1 = std::min((*phi)(ij + dir[0]), (*phi)(ij + dir[1]));
+       float T2 = std::min((*phi)(ij + dir[2]), (*phi)(ij + dir[3]));
+       float Tmin = std::min(T1, T2);
+       float d = fabs(T1 - T2);
+       if (d < 1.f)
+         (*phi)(ij) = (T1 + T2 + sqrtf(2.f * SQR(1.f) - SQR(d))) / 2.f;
+       else
+         (*phi)(ij) = Tmin + 1.f;
+       q.push(Point_(ij[0], ij[1], (*phi)(ij)));
+       frozen(ij) = 1;
+     }*/
   }
 }
 

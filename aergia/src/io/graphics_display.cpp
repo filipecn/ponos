@@ -105,6 +105,15 @@ ponos::Point2 GraphicsDisplay::getMouseNPos() {
                        (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
 }
 
+ponos::Point3 GraphicsDisplay::normDevCoordToViewCoord(ponos::Point3 p) {
+  ponos::Point3 sp;
+  sp.x = ponos::lerp(ponos::linearStep(p.x, -1.f, 1.f), 0.f,
+                     static_cast<float>(width));
+  sp.y = ponos::lerp(ponos::linearStep(p.y, -1.f, 1.f), 0.f,
+                     static_cast<float>(height));
+  return sp;
+}
+
 ponos::Point3 GraphicsDisplay::viewCoordToNormDevCoord(ponos::Point3 p) {
   float v[] = {0, 0, static_cast<float>(width), static_cast<float>(height)};
   return ponos::Point3((p.x - v[0]) / (v[2] / 2.0) - 1.0,
@@ -208,6 +217,11 @@ void GraphicsDisplay::mouseFunc(double x, double y) {}
 /////////////////////////// MOUSE SCROLL FUNCTIONS
 ///////////////////////////////////////////////
 void GraphicsDisplay::registerScrollFunc(void (*f)(double, double)) {
+  this->scrollCallback = f;
+}
+
+void GraphicsDisplay::registerScrollFunc(
+    std::function<void(double, double)> f) {
   this->scrollCallback = f;
 }
 

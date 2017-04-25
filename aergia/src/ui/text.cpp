@@ -87,7 +87,7 @@ Text::Text(const char *font) {
 }
 void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
                   aergia::Color c) {
-  quad.shader->setUniform("texcolor", ponos::vec3(c.r, c.g, c.b));
+  quad.shader->setUniform("textColor", ponos::vec3(c.r, c.g, c.b));
   quad.shader->setUniform(
       "projection", ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
   quad.shader->setUniform("tex", 0);
@@ -108,6 +108,12 @@ void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   }
   glBindTexture(GL_TEXTURE_2D, 0);
   quad.shader->end();
+}
+
+void Text::render(std::string s, const ponos::Point3 &p, GLfloat scale,
+                  aergia::Color c) {
+  ponos::Point3 sp = GraphicsDisplay::instance().normDevCoordToViewCoord(p);
+  render(s, sp.x, sp.y, scale, c);
 }
 
 } // aergia namespace

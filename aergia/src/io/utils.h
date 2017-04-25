@@ -31,12 +31,18 @@
 
 namespace aergia {
 
-/* \brief load OBJ
+/** \brief load OBJ
  * \param filename **[in]** file path
  * \param mesh **[out]** output
  * Loads an OBJ file and stores its contents in **mesh**
  */
 void loadOBJ(const std::string &filename, ponos::RawMesh *mesh);
+/** \brief load OBJ
+ * \param filename **[in]** file path
+ * \param mesh **[out]** output
+ * Loads an PLY file and stores its contents in **mesh**
+ */
+void loadPLY(const std::string &filename, ponos::RawMesh *mesh);
 
 } // aergia namespace
 

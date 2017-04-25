@@ -39,6 +39,7 @@ void App::init() {
   gd.registerRenderFunc([this]() { render(); });
   gd.registerButtonFunc([this](int b, int a) { button(b, a); });
   gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
+  gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
   initialized = true;
 }
 
@@ -63,6 +64,13 @@ void App::button(int button, int action) {
 void App::mouse(double x, double y) {
   for (size_t i = 0; i < viewports.size(); i++)
     viewports[i].mouse(x, y);
+}
+
+void App::scroll(double dx, double dy) {
+  for (size_t i = 0; i < viewports.size(); i++)
+    viewports[i].scroll(dx, dy);
+  if (scrollCallback)
+    scrollCallback(dx, dy);
 }
 
 } // aergia namespace

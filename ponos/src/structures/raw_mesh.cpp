@@ -79,7 +79,7 @@ Point3 RawMesh::vertexElement(size_t e, size_t v) const {
 
 BBox RawMesh::elementBBox(size_t i) const {
   BBox b;
-  for (size_t v = 0; v < meshDescriptor.count; v++)
+  for (size_t v = 0; v < meshDescriptor.elementSize; v++)
     b = make_union(
         b,
         Point3(
@@ -116,6 +116,29 @@ void RawMesh::buildInterleavedData() {
          vertexDescriptor.count * vertexDescriptor.elementSize +
              normalDescriptor.count * normalDescriptor.elementSize +
              texcoordDescriptor.count * texcoordDescriptor.elementSize);
+}
+
+void RawMesh::orientFaces(bool ccw) {
+  for (size_t e = 0; e < meshDescriptor.count; e++) {
+    bool flip = false;
+    for (int i = 0; i < meshDescriptor.elementSize; i++) {
+      ponos::Point3 a3 = vertexElement(e, i);
+      ponos::Point3 b3 = vertexElement(e, i + 1 % meshDescriptor.elementSize);
+      ponos::Point3 c3 = vertexElement(e, i + 2 % meshDescriptor.elementSize);
+      ponos::Point2 a(a3.x, a3.y);
+      ponos::Point2 b(b3.x, b3.y);
+      ponos::Point2 c(c3.x, c3.y);
+      if (ccw && ponos::cross(b - a, c - a) < 0.f)
+        flip = true;
+    }
+    std::cout << "face " << e << " " << flip << std::endl;
+    if (flip) {
+      IndexData tmp = indices[e * meshDescriptor.elementSize + 0];
+      indices[e * meshDescriptor.elementSize + 0] =
+          indices[e * meshDescriptor.elementSize + 1];
+      indices[e * meshDescriptor.elementSize + 1] = tmp;
+    }
+  }
 }
 
 } // aergia namespace

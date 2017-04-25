@@ -33,6 +33,13 @@ namespace ponos {
 
 #define IS_EQUAL_ERROR(A, B, C) (fabs((A) - (B)) < C)
 
+template <typename T> T atanPI_2(T y, T x) {
+  T angle = std::atan2(y, x);
+  if (angle < 0.0)
+    return PI_2 + angle;
+  return angle;
+}
+
 /** \brief normalization
  * dummy function
  * \param param n
@@ -89,6 +96,26 @@ inline float lerp(float t, float a, float b) { return (1.f - t) * a + t * b; }
 template <typename T> T clamp(const T &n, const T &l, const T &u) {
   return std::max(l, std::min(n, u));
 }
+/** \brief smooth Hermit interpolation when **a** < **v** < **b**
+ * \param v **[in]** coordinate
+ * \param a **[in]** lower bound
+ * \param b **[in]** upper bound
+ * \return Hermit value between **0** and **1**
+ */
+inline float smoothStep(float v, float a, float b) {
+  float t = clamp((v - a) / (b - a), 0.f, 1.f);
+  return t * t * (3.f - 2.f * t);
+}
+/** \brief linear interpolation
+ * \param v **[in]** coordinate
+ * \param a **[in]** lower bound
+ * \param b **[in]** upper bound
+ * \return linear value between **0** and **1**
+ */
+inline float linearStep(float v, float a, float b) {
+  return clamp((v - a) / (b - a), 0.f, 1.f);
+}
+
 /** \brief log
  * \param x **[in]** value
  * \return base-2 logarithm of **x**

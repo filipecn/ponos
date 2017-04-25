@@ -1,6 +1,7 @@
 project(AERGIA)
 
 set(HEADERS
+	external/ply.h
 	src/colors/color.h
 	src/colors/color_palette.h
 	src/graphics/shader.h
@@ -44,6 +45,7 @@ set(HEADERS
 	)
 
 set(SOURCES
+	external/plyfile.c
 	src/graphics/shader.cpp
 	src/graphics/shader_manager.cpp
 	src/helpers/cartesian_grid.cpp
@@ -69,6 +71,7 @@ set(SOURCES
 	src/aergia.cpp
 	)
 
+include_directories("${AERGIA_SOURCE_DIR}/external")
 include_directories(${AERGIA_INCLUDES})
 
 if(WIN32)

@@ -42,6 +42,7 @@ public:
 
   std::vector<ViewportDisplay> viewports;
   std::function<void()> renderCallback;
+  std::function<void(double, double)> scrollCallback;
 
 protected:
   bool initialized;
@@ -51,6 +52,7 @@ protected:
   virtual void render();
   virtual void button(int b, int a);
   virtual void mouse(double x, double y);
+  virtual void scroll(double dx, double dy);
 };
 
 } // aergia namespace
