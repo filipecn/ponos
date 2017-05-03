@@ -77,17 +77,17 @@ Text::Text(const char *font) {
           "in vec2 TexCoords;"
           "out vec4 color;"
           "uniform sampler2D text;"
-          "uniform vec3 textColor;"
+          "uniform vec4 textColor;"
           "void main() {"
           "  vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);"
-          "  color = vec4(textColor, 1.0) * sampled;"
+          "  color = textColor * sampled;"
           "}")));
   quad.shader->addVertexAttribute("position");
   quad.shader->addVertexAttribute("texcoord");
 }
 void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
                   aergia::Color c) {
-  quad.shader->setUniform("textColor", ponos::vec3(c.r, c.g, c.b));
+  quad.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
   quad.shader->setUniform(
       "projection", ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
   quad.shader->setUniform("tex", 0);

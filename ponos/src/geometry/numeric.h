@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef PONOS_GEOMETRY_NUMERIC_H
 #define PONOS_GEOMETRY_NUMERIC_H
 
@@ -33,20 +57,22 @@ namespace ponos {
 
 #define IS_EQUAL_ERROR(A, B, C) (fabs((A) - (B)) < C)
 
+/** \brief computes the arc-tangent of y/x
+ * \param y
+ * \param x
+ * \returns angle (in radians) between **0** and **2PI**
+ */
 template <typename T> T atanPI_2(T y, T x) {
   T angle = std::atan2(y, x);
   if (angle < 0.0)
     return PI_2 + angle;
   return angle;
 }
-
-/** \brief normalization
- * dummy function
+/** \brief normalization (dummy function)
  * \param param n
  * \returns n
  */
 inline float normalize(float n) { return n; }
-
 /** \brief max function
  * \param param a
  * \param param b
@@ -82,11 +108,59 @@ inline float mod(int a, int b) {
 }
 /** \brief interpolation
  * \param t **[in]** parametric coordinate
- * \param a **[in]** lower bound
- * \param b **[in]** upper bound
+ * \param a **[in]** lower bound **0**
+ * \param b **[in]** upper bound **1**
  * \return linear interpolation between **a** and **b** at **t**.
  */
-inline float lerp(float t, float a, float b) { return (1.f - t) * a + t * b; }
+template <typename T = float, typename S = float>
+inline S lerp(T t, const S &a, const S &b) {
+  return (1.f - t) * a + t * b;
+}
+/** \brief bilinear interpolate
+ * \param x **[in]** parametric coordinate in x
+ * \param y **[in]** parametric coordinate in y
+ * \param f00 **[in]** function value at **(0, 0)**
+ * \param f10 **[in]** function value at **(1, 0)**
+ * \param f11 **[in]** function value at **(1, 1)**
+ * \param f01 **[in]** function value at **(0, 1)**
+ * \return interpolated value at **(x,y)**
+ */
+template <typename T = float, typename S = float>
+inline S bilerp(T x, T y, const S &f00, const S &f10, const S &f11,
+                const S &f01) {
+  return lerp(y, lerp(x, f00, f10), lerp(x, f01, f11));
+}
+template <typename T = float, typename S = float>
+inline S trilerp(T tx, T ty, T tz, const S &f000, const S &f100, const S &f010,
+                 const S &f110, const S &f001, const S &f101, const S &f011,
+                 const S &f111) {
+  return lerp(bilerp(f000, f100, f010, f110, tx, ty),
+              bilerp(f001, f101, f011, f111, tx, ty), tz);
+}
+template <typename S, typename T>
+inline S catmullRomSpline(const S &f0, const S &f1, const S &f2, const S &f3,
+                          T f) {
+  S d1 = (f2 - f0) / 2;
+  S d2 = (f3 - f1) / 2;
+  S D1 = f2 - f1;
+
+  S a3 = d1 + d2 - 2 * D1;
+  S a2 = 3 * D1 - 2 * d1 - d2;
+  S a1 = d1;
+  S a0 = f1;
+
+  return a3 * CUBE(f) + a2 * SQR(f) + a1 * f + a0;
+}
+/** \brief interpolates to the nearest value
+ * \param t **[in]** parametric coordinate
+ * \param a **[in]** lower bound
+ * \param b **[in]** upper bound
+ * \return interpolation between **a** and **b** at **t**.
+ */
+template <typename T = float, typename S = float>
+inline S nearest(T t, const S &a, const S &b) {
+  return (t < static_cast<T>(0.5)) ? a : b;
+}
 /** \brief clamp
  * \param n **[in]** value
  * \param l **[in]** low
@@ -115,7 +189,6 @@ inline float smoothStep(float v, float a, float b) {
 inline float linearStep(float v, float a, float b) {
   return clamp((v - a) / (b - a), 0.f, 1.f);
 }
-
 /** \brief log
  * \param x **[in]** value
  * \return base-2 logarithm of **x**
@@ -147,7 +220,6 @@ inline uint32 roundUpPow2(uint32 v) {
   v |= v >> 16;
   return v + 1;
 }
-
 inline bool solve_quadratic(float A, float B, float C, float &t0, float &t1) {
   float delta = B * B - 4.f * A * C;
   if (IS_ZERO(A) || delta <= 0.)
@@ -164,7 +236,6 @@ inline bool solve_quadratic(float A, float B, float C, float &t0, float &t1) {
     std::swap(t0, t1);
   return true;
 }
-
 inline float trilinear_hat_function(float r) {
   if (0.f <= r && r <= 1.f)
     return 1.f - r;
@@ -172,7 +243,6 @@ inline float trilinear_hat_function(float r) {
     return 1.f + r;
   return 0.f;
 }
-
 inline float quadraticBSpline(float r) {
   if (-1.5f <= r && r < -0.5f)
     return 0.5f * (r + 1.5f) * (r + 1.5f);
@@ -182,20 +252,17 @@ inline float quadraticBSpline(float r) {
     return 0.5f * (1.5f - r) * (1.5f - r);
   return 0.0f;
 }
-
 template <typename T>
 inline T bilinearInterpolation(T f00, T f10, T f11, T f01, T x, T y) {
   return f00 * (1.0 - x) * (1.0 - y) + f10 * x * (1.0 - y) +
          f01 * (1.0 - x) * y + f11 * x * y;
 }
-
 template <typename T> inline T cubicInterpolate(T p[4], T x) {
   return p[1] +
          0.5 * x * (p[2] - p[0] +
                     x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] +
                          x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
 }
-
 template <typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
   T arr[4];
   arr[0] = cubicInterpolate(p[0], y);
@@ -204,7 +271,6 @@ template <typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
   arr[3] = cubicInterpolate(p[3], y);
   return cubicInterpolate(arr, x);
 }
-
 template <typename T>
 inline T trilinearInterpolate(float *p, T ***data, T b,
                               const int dimensions[3]) {
@@ -250,7 +316,6 @@ inline T trilinearInterpolate(float *p, T ***data, T b,
          v110 * x * y * (1.f - z) + v001 * (1.f - x) * (1.f - y) * z +
          v101 * x * (1.f - y) * z + v011 * (1.f - x) * y * z + v111 * x * y * z;
 }
-
 template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
   int x, y, z;
   register int i, j, k;
@@ -297,7 +362,6 @@ template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
   }
   return (vox < T(0) ? T(0.0) : vox);
 }
-
 template <typename T>
 inline T tricubicInterpolate(float *p, T ***data, T b,
                              const int dimensions[3]) {
@@ -350,16 +414,13 @@ inline T tricubicInterpolate(float *p, T ***data, T b,
   }
   return (vox < T(0) ? T(0.0) : vox);
 }
-
 inline float smooth(float a, float b) {
   return std::max(0.f, 1.f - a / SQR(b));
 }
-
 inline float sharpen(const float &r2, const float &h) {
   return std::max(h * h / std::max(r2, static_cast<float>(1.0e-5)) - 1.0f,
                   0.0f);
 }
-
 /** \brief split
  * \param n **[in]** number
  * \return the number with the bits of **n** splitted and separated by 1 bit.
@@ -372,7 +433,6 @@ inline uint32 separateBy1(uint32 n) {
   n = (n ^ (n << 1)) & 0x55555555;
   return n;
 }
-
 /** \brief morton code
  * \param x **[in]** number
  * \param y **[in]** number

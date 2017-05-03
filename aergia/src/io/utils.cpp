@@ -88,32 +88,36 @@ void loadOBJ(const std::string &filename, ponos::RawMesh *mesh) {
 void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
   if (!mesh)
     return;
-
   typedef struct Vertex {
     float x, y, z; /* the usual 3-space position of a vertex */
   } Vertex;
-
   typedef struct Face {
     unsigned char intensity; /* this user attaches intensity to faces */
     unsigned char nverts;    /* number of vertex indices in list */
     int *verts;              /* vertex index list */
   } Face;
-  char *elem_names[] = {/* list of the kinds of elements in the user's object */
-                        "vertex", "face"};
-
+  // const char *elem_names[] = {
+  /* list of the kinds of elements in the user's object */
+  //    "vertex", "face"};
+  char plyPropertyX[] = {'x', '\0'};
+  char plyPropertyY[] = {'y', '\0'};
+  char plyPropertyZ[] = {'z', '\0'};
   PlyProperty vert_props[] = {
       /* list of property information for a vertex */
-      {"x", PLY_FLOAT, PLY_FLOAT, offsetof(Vertex, x), 0, 0, 0, 0},
-      {"y", PLY_FLOAT, PLY_FLOAT, offsetof(Vertex, y), 0, 0, 0, 0},
-      {"z", PLY_FLOAT, PLY_FLOAT, offsetof(Vertex, z), 0, 0, 0, 0},
+      {plyPropertyX, PLY_FLOAT, PLY_FLOAT, offsetof(Vertex, x), 0, 0, 0, 0},
+      {plyPropertyY, PLY_FLOAT, PLY_FLOAT, offsetof(Vertex, y), 0, 0, 0, 0},
+      {plyPropertyZ, PLY_FLOAT, PLY_FLOAT, offsetof(Vertex, z), 0, 0, 0, 0},
   };
-
+  char plyPropertyIntensity[50];
+  std::strcpy(plyPropertyIntensity, "intensity");
+  char plyPropertyVertexIndices[50];
+  std::strcpy(plyPropertyVertexIndices, "vertex_indices");
   PlyProperty face_props[] = {
       /* list of property information for a vertex */
-      {"intensity", PLY_UCHAR, PLY_UCHAR, offsetof(Face, intensity), 0, 0, 0,
-       0},
-      {"vertex_indices", PLY_INT, PLY_INT, offsetof(Face, verts), 1, PLY_UCHAR,
-       PLY_UCHAR, offsetof(Face, nverts)},
+      {plyPropertyIntensity, PLY_UCHAR, PLY_UCHAR, offsetof(Face, intensity), 0,
+       0, 0, 0},
+      {plyPropertyVertexIndices, PLY_INT, PLY_INT, offsetof(Face, verts), 1,
+       PLY_UCHAR, PLY_UCHAR, offsetof(Face, nverts)},
   };
 
   int i, j, k;
@@ -132,6 +136,10 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
   char **comments;
   int num_obj_info;
   char **obj_info;
+  char vertexString[7];
+  std::strcpy(vertexString, "vertex");
+  char faceString[5];
+  std::strcpy(faceString, "face");
   /* open a PLY file for reading */
   char _filename[100];
   std::strcpy(_filename, filename.c_str());
@@ -146,7 +154,7 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
     /* print the name of the element, for debugging */
     printf("element %s %d\n", elem_name, num_elems);
     /* if we're on vertex elements, read them in */
-    if (equal_strings("vertex", elem_name)) {
+    if (equal_strings(vertexString, elem_name)) {
       /* create a vertex list to hold all the vertices */
       vlist = (Vertex **)malloc(sizeof(Vertex *) * num_elems);
       /* set up for getting vertex elements */
@@ -168,7 +176,7 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
       }
     }
     /* if we're on face elements, read them in */
-    if (equal_strings("face", elem_name)) {
+    if (equal_strings(faceString, elem_name)) {
       /* create a list to hold all the face elements */
       flist = (Face **)malloc(sizeof(Face *) * num_elems);
       /* set up for getting face elements */

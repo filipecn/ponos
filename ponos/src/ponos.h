@@ -1,6 +1,15 @@
 #include "algorithm/fast_sweep.h"
 #include "algorithm/search.h"
 #include "algorithm/sort.h"
+#include "blas/blas.h"
+#include "blas/cg.h"
+#include "blas/fdm_gauss_seidel_solver.h"
+#include "blas/fdm_jacobi_solver.h"
+#include "blas/fdm_matrix.h"
+#include "blas/fdm_vector.h"
+#include "blas/linear_system.h"
+#include "blas/pcg.h"
+#include "blas/solver_interface.h"
 /** \defgroup Common module
  */
 #include "common/defs.h"

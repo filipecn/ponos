@@ -62,7 +62,7 @@ public:
   FLIP2D(const char *filename = nullptr);
   FLIP2D(FLIP2DScene<ParticleType> *s);
 
-  MacGrid2D<ponos::ZGrid> *getGrid() { return grid[CUR_GRID]; }
+  MacGrid2D<ponos::CRegularGrid2D> *getGrid() { return grid[CUR_GRID]; }
   void loadScene(const char *filename);
   void setup();
   bool init();
@@ -105,8 +105,8 @@ private:
 
   float maxDensity;
   size_t COPY_GRID, CUR_GRID;
-  MacGrid2D<ponos::ZGrid> *grid[2];
-  ponos::ZGrid<float> distances, usolid, vsolid;
+  MacGrid2D<ponos::CRegularGrid2D> *grid[2];
+  ponos::CRegularGrid2D<float> distances, usolid, vsolid;
   Solver solver;
 };
 

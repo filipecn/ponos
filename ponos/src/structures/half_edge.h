@@ -88,13 +88,10 @@ public:
     int edge; //!< one half edge
     F data;   //!< face user's data
   };
-  void setVertexData(size_t v, const V &data) {
-    return vertices[v].data = data;
-  }
+  void setVertexData(size_t v, const V &data) { vertices[v].data = data; }
   const std::vector<Vertex> &getVertices() const { return vertices; }
   const std::vector<Edge> &getEdges() const { return edges; }
   const std::vector<Face> &getFaces() const { return faces; }
-  size_t oppositeEdge(size_t f, size_t v) {}
   size_t addVertex(const Point<T, D> &p) {
     vertices.emplace_back(p);
     return vertices.size() - 1;
@@ -182,8 +179,16 @@ public:
   size_t addFace(std::initializer_list<int> e) {
     Face f;
     f.edge = *e.begin();
+    for (auto edge = e.begin(); edge != e.end(); edge++)
+      edges[*edge].face = faces.size();
     faces.emplace_back(f);
     return faces.size() - 1;
+  }
+  void traverseFacesFromVertex(int v, std::function<void(int f)> f) {
+    traverseEdgesFromVertex(v, [this, f](int e) {
+      if (edges[e].face >= 0)
+        f(edges[e].face);
+    });
   }
   void traverseEdgesFromVertex(int v, std::function<void(int e)> f) {
     if (vertices[v].edge >= 0) {

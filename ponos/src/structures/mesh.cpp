@@ -38,10 +38,10 @@ Mesh::Mesh(const ponos::RawMesh *m, const ponos::Transform &t) {
 bool Mesh::intersect(const ponos::Point3 &p) {
   ponos::Transform inv = ponos::inverse(transform);
   ponos::Point3 pp = inv(p);
-  ponos::Vector<3, float> P(pp.x, pp.y, pp.z);
+  ponos::Vector<float, 3> P(pp.x, pp.y, pp.z);
   // ponos::Ray3 r(inv(p), ponos::vec3(0, 1, 0));
   int hitCount = 0;
-  if (P >= ponos::Vector<3, float>(-0.5f) && P <= ponos::Vector<3, float>(0.5f))
+  if (P >= ponos::Vector<float, 3>(-0.5f) && P <= ponos::Vector<float, 3>(0.5f))
     hitCount = 1;
   return hitCount % 2;
 }
@@ -61,7 +61,7 @@ Mesh2D::Mesh2D(const ponos::RawMesh *m, const ponos::Transform2D &t) {
 bool Mesh2D::intersect(const ponos::Point2 &p) {
   ponos::Transform2D inv = ponos::inverse(transform);
   ponos::Point2 pp = inv(p);
-  ponos::Vector<2, float> P(pp.x, pp.y);
+  ponos::Vector<float, 2> P(pp.x, pp.y);
   int hitCount = 0;
   for (size_t i = 0; i < mesh->meshDescriptor.count; i++) {
     ponos::Point2 a(

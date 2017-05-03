@@ -22,50 +22,29 @@
  *
 */
 
-#ifndef PONOS_GEOMETRY_PLANE_H
-#define PONOS_GEOMETRY_PLANE_H
+#ifndef PONOS_BLAS_FDM_MATRIX_H
+#define PONOS_BLAS_FDM_MATRIX_H
 
-#include "geometry/point.h"
-#include "geometry/normal.h"
-
-#include <iostream>
+#include "blas/fdm_vector.h"
 
 namespace ponos {
 
-/** Implements the equation <normal> X = <offset>.
- */
-class Plane {
-public:
-  /// Default constructor
-  Plane() { offset = 0.f; }
-  /** Constructor
-   * \param n **[in]** normal
-   * \param o **[in]** offset
-   */
-  Plane(Normal n, float o) {
-    normal = n;
-    offset = o;
-  }
-  /** \brief  projects **v** on plane
-   * \param v
-   * \returns projected **v**
-   */
-  Vector3 project(const Vector3 &v) { return ponos::project(v, normal); }
-  /** \brief  reflects **v** fron plane
-   * \param v
-   * \returns reflected **v**
-   */
-  Vector3 reflect(const Vector3 &v) { return ponos::reflect(v, normal); }
-
-  friend std::ostream &operator<<(std::ostream &os, const Plane &p) {
-    os << "[Plane] offset " << p.offset << " " << p.normal;
-    return os;
-  }
-
-  Normal normal;
-  float offset;
+template <typename T> struct FDMMatrixRow2D {
+  T center;
+  T right;
+  T up;
 };
+
+template <typename T> struct FDMMatrixRow3D {
+  T center;
+  T right;
+  T up;
+  T front;
+};
+
+typedef FDMVector2D<FDMMatrixRow2D<float>> FDMMatrix2Df;
+typedef FDMVector3D<FDMMatrixRow3D<float>> FDMMatrix3Df;
 
 } // ponos namespace
 
-#endif
+#endif // PONOS_BLAS_FDM_MATRIX_H

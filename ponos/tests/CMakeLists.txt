@@ -2,7 +2,9 @@ link_libraries(ponos)
 
 set(TESTS
 	TestBBox.cpp
+	TestBlas.cpp
 	TestBRep.cpp
+	TestFDM.cpp
 	TestQuaternion.cpp
 	TestQueries.cpp
 	TestMatrix.cpp

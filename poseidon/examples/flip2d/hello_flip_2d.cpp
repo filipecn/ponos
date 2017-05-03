@@ -111,7 +111,7 @@ public:
 
 struct MacGridModel : public aergia::SceneObject {
 public:
-  MacGridModel(MacGrid2D<ponos::ZGrid> *mg) : mgrid(mg) {}
+  MacGridModel(MacGrid2D<ponos::CRegularGrid2D> *mg) : mgrid(mg) {}
   void draw() const override {
     aergia::CartesianGrid cgrid;
     cgrid.setDimension(0, 0, mgrid->dimensions[0]);
@@ -124,7 +124,8 @@ public:
     drawGridVelocities(mgrid->v_v.get(), 1);
   }
 
-  void drawGridVelocities(ponos::ZGrid<float> *g, int component) const {
+  void drawGridVelocities(ponos::CRegularGrid2D<float> *g,
+                          int component) const {
     glColor4f(1.f, 0.f, 1.f, 0.3f);
     glBegin(GL_LINES);
     for (uint32_t i = 0; i < g->width; ++i) {
@@ -150,7 +151,7 @@ public:
       }
     }
   }
-  MacGrid2D<ponos::ZGrid> *mgrid;
+  MacGrid2D<ponos::CRegularGrid2D> *mgrid;
 };
 
 void search() {

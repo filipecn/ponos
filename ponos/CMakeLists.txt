@@ -4,6 +4,15 @@ set(HEADERS
 	src/algorithm/fast_sweep.h
 	src/algorithm/search.h
 	src/algorithm/sort.h
+	src/blas/blas.h
+  src/blas/cg.h
+	src/blas/fdm_gauss_seidel_solver.h
+	src/blas/fdm_jacobi_solver.h
+	src/blas/fdm_matrix.h
+	src/blas/fdm_vector.h
+	src/blas/linear_system.h
+  src/blas/pcg.h
+	src/blas/solver_interface.h
 	src/common/defs.h
 	src/common/file.h
 	src/common/macros.h

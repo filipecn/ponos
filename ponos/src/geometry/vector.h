@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef PONOS_GEOMETRY_VECTOR_H
 #define PONOS_GEOMETRY_VECTOR_H
 
@@ -6,6 +30,7 @@
 #include "log/debug.h"
 
 #include <cstring>
+#include <initializer_list>
 
 namespace ponos {
 
@@ -216,6 +241,17 @@ inline Vector3 normalize(const Vector3 &v) {
     return v;
   return v / v.length();
 }
+/** \brief compute the two orthogonal-tangential vectors from a
+ * \param a **[in]** normal
+ * \param b **[out]** first tangent
+ * \param c **[out]** second tangent
+ */
+inline void tangential(const Vector3 &a, Vector3 &b, Vector3 &c) {
+  b = normalize(cross(a, ((std::fabs(a.y) > 0.f || std::fabs(a.z) > 0.f)
+                              ? Vector3(1, 0, 0)
+                              : Vector3(0, 1, 1))));
+  c = normalize(cross(a, b));
+}
 
 inline Vector3 cos(const Vector3 &v) {
   return Vector3(cosf(v.x), cosf(v.y), cosf(v.z));
@@ -302,13 +338,17 @@ typedef Vector2 vec2;
 typedef Vector3 vec3;
 typedef Vector4 vec4;
 
-template <size_t D = 3, typename T = float> class Vector {
+template <typename T = float, size_t D = 3> class Vector {
 public:
   Vector() {
     size = D;
     memset(v, 0, D * sizeof(T));
   }
-
+  Vector(std::initializer_list<T> values) : Vector() {
+    int k = 0;
+    for (auto value = values.begin(); value != values.end(); value++)
+      v[k++] = *value;
+  }
   Vector(size_t n, const T *t) : Vector() {
     for (size_t i = 0; i < D && i < n; i++)
       v[i] = t[i];
@@ -342,13 +382,13 @@ public:
     ASSERT(i >= 0 && i <= static_cast<int>(size));
     return v[i];
   }
-  bool operator==(const Vector<D, T> &_v) const {
+  bool operator==(const Vector<T, D> &_v) const {
     for (size_t i = 0; i < size; i++)
       if (!IS_EQUAL(v[i], _v[i]))
         return false;
     return true;
   }
-  bool operator!=(const Vector<D, T> &_v) const {
+  bool operator!=(const Vector<T, D> &_v) const {
     bool dif = false;
     for (size_t i = 0; i < size; i++)
       if (!IS_EQUAL(v[i], _v[i])) {
@@ -357,59 +397,78 @@ public:
       }
     return dif;
   }
-  bool operator<=(const Vector<D, T> &_v) const {
+  bool operator<=(const Vector<T, D> &_v) const {
     for (size_t i = 0; i < size; i++)
       if (v[i] > _v[i])
         return false;
     return true;
   }
-  bool operator<(const Vector<D, T> &_v) const {
+  bool operator<(const Vector<T, D> &_v) const {
     for (size_t i = 0; i < size; i++)
       if (v[i] >= _v[i])
         return false;
     return true;
   }
-  bool operator>=(const Vector<D, T> &_v) const {
+  bool operator>=(const Vector<T, D> &_v) const {
     for (size_t i = 0; i < size; i++)
       if (v[i] < _v[i])
         return false;
     return true;
   }
-  bool operator>(const Vector<D, T> &_v) const {
+  bool operator>(const Vector<T, D> &_v) const {
     for (size_t i = 0; i < size; i++)
       if (v[i] <= _v[i])
         return false;
     return true;
   }
 
-  Vector<D, T> operator-(const Vector<D, T> &_v) const {
-    Vector<D, T> v_;
+  Vector<T, D> operator-(const Vector<T, D> &_v) const {
+    Vector<T, D> v_;
     for (size_t i = 0; i < D; i++)
       v_[i] = v[i] - _v[i];
     return v_;
   }
 
-  Vector<D, T> operator+(const Vector<D, T> &_v) const {
-    Vector<D, T> v_;
+  Vector<T, D> operator+(const Vector<T, D> &_v) const {
+    Vector<T, D> v_;
     for (size_t i = 0; i < D; i++)
       v_[i] = v[i] + _v[i];
     return v_;
   }
 
-  Vector<2, T> operator/(T f) const {
+  Vector<T, D> operator*(const Vector<T, D> &_v) const {
+    Vector<T, D> v_;
+    for (size_t i = 0; i < D; i++)
+      v_[i] = v[i] * _v[i];
+    return v_;
+  }
+
+  Vector<T, D> operator/=(T f) {
+    for (size_t i = 0; i < D; i++)
+      v[i] /= f;
+    return *this;
+  }
+
+  Vector<T, D> operator-=(const Vector<T, D> &_v) {
+    for (size_t i = 0; i < D; i++)
+      v[i] -= _v[i];
+    return *this;
+  }
+
+  Vector<T, 2> operator/(T f) const {
     T inv = static_cast<T>(1) / f;
-    return Vector<2, T>(v[0] * inv, v[1] * inv);
+    return Vector<T, 2>(v[0] * inv, v[1] * inv);
   }
-  Vector<2, T> xy(size_t x = 0, size_t y = 1) const {
-    return Vector<2, T>(v[x], v[y]);
-  }
-
-  Vector<2, T> floatXY(size_t x = 0, size_t y = 1) const {
-    return Vector<2, T>(static_cast<float>(v[x]), static_cast<float>(v[y]));
+  Vector<T, 2> xy(size_t x = 0, size_t y = 1) const {
+    return Vector<T, 2>(v[x], v[y]);
   }
 
-  Vector<3, T> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2) {
-    return Vector<3, T>(static_cast<float>(v[x]), static_cast<float>(v[y]),
+  Vector<T, 2> floatXY(size_t x = 0, size_t y = 1) const {
+    return Vector<T, 2>(static_cast<float>(v[x]), static_cast<float>(v[y]));
+  }
+
+  Vector<T, 3> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2) {
+    return Vector<T, 3>(static_cast<float>(v[x]), static_cast<float>(v[y]),
                         static_cast<float>(v[z]));
   }
 
@@ -432,40 +491,40 @@ public:
   T v[D];
 };
 
-typedef Vector<2, int> ivec2;
-typedef Vector<2, uint> uivec2;
-typedef Vector<3, int> ivec3;
-typedef Vector<3, uint> uivec3;
-typedef Vector<4, int> ivec4;
-typedef Vector<4, uint> uivec4;
+typedef Vector<int, 2> ivec2;
+typedef Vector<uint, 2> uivec2;
+typedef Vector<int, 3> ivec3;
+typedef Vector<uint, 3> uivec3;
+typedef Vector<int, 4> ivec4;
+typedef Vector<uint, 4> uivec4;
 
 /* round
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
  */
-Vector<3, int> ceil(const Vector3 &v);
+Vector<int, 3> ceil(const Vector3 &v);
 /* round
  * @v **[in]** vector
  * @return a vector with floor applied to all components
  */
-Vector<3, int> floor(const Vector3 &v);
+Vector<int, 3> floor(const Vector3 &v);
 
-Vector<3, int> min(Vector<3, int> a, Vector<3, int> b);
-Vector<3, int> max(Vector<3, int> a, Vector<3, int> b);
+Vector<int, 3> min(Vector<int, 3> a, Vector<int, 3> b);
+Vector<int, 3> max(Vector<int, 3> a, Vector<int, 3> b);
 
 /* round
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
  */
-Vector<2, int> ceil(const Vector2 &v);
+Vector<int, 2> ceil(const Vector2 &v);
 /* round
  * @v **[in]** vector
  * @return a vector with floor applied to all components
  */
-Vector<2, int> floor(const Vector2 &v);
+Vector<int, 2> floor(const Vector2 &v);
 
-Vector<2, int> min(Vector<2, int> a, Vector<2, int> b);
-Vector<2, int> max(Vector<2, int> a, Vector<2, int> b);
+Vector<int, 2> min(Vector<int, 2> a, Vector<int, 2> b);
+Vector<int, 2> max(Vector<int, 2> a, Vector<int, 2> b);
 
 } // ponos namespace
 

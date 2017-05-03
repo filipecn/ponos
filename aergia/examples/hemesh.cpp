@@ -7,14 +7,15 @@ aergia::Text *text;
 class HEMeshObject : public aergia::SceneObject {
 public:
   HEMeshObject(const ponos::RawMesh *rm) {
-    mesh.reset(new ponos::HEMesh<float, 2>(rm));
+    mesh.reset(new ponos::HEMesh2DF(rm));
+    std::vector<size_t> p(1, 0);
+    ponos::fastMarch2D(mesh.get(), p);
   }
 
   void draw() const override {
-    const std::vector<ponos::HEMesh<float, 2>::Vertex> &vertices =
-        mesh->getVertices();
-    const std::vector<ponos::HEMesh<float, 2>::Edge> &edges = mesh->getEdges();
-    const std::vector<ponos::HEMesh<float, 2>::Face> &faces = mesh->getFaces();
+    const std::vector<ponos::HEMesh2DF::Vertex> &vertices = mesh->getVertices();
+    const std::vector<ponos::HEMesh2DF::Edge> &edges = mesh->getEdges();
+    const std::vector<ponos::HEMesh2DF::Face> &faces = mesh->getFaces();
     glPointSize(4.f);
     glColor4f(0, 0, 0, 0.5);
     glBegin(GL_POINTS);
@@ -23,10 +24,13 @@ public:
     glEnd();
     for (size_t k = 0; k < vertices.size(); k++) {
       char label[100];
-      sprintf(label, "%d", k);
+      sprintf(label, "%lu", k);
       ponos::Point3 labelPosition = app.viewports[0].camera->getTransform()(
           ponos::Point3(vertices[k].position[0], vertices[k].position[1], 0));
-      text->render(label, labelPosition, .5f, aergia::Color(0.8f, 0.2f, 0.7f));
+      text->render(label, labelPosition, .5f,
+                   aergia::Color(0.8f, 0.2f, 0.7f, 0.1f));
+      sprintf(label, " %f", vertices[k].data);
+      text->render(label, labelPosition, .3f, aergia::Color(1.0f, 0.2f, 0.4f));
     }
     int k = 0;
     for (auto e : edges) {
@@ -38,7 +42,7 @@ public:
       aergia::glVertex(a);
       aergia::glVertex(b);
       glEnd();
-      glColor4f(1, 0, 0, 0.9);
+      glColor4f(1, 0, 0, 0.3);
       ponos::Point2 A = a + 0.03f * v.left() + 0.15f * v;
       ponos::Point2 B = b + 0.03f * v.left() - 0.15f * v;
       ponos::Point2 C = A + (B - A) / 2.f;
@@ -47,9 +51,9 @@ public:
       char label[100];
       sprintf(label, "%d", k++);
       text->render(label, labelPositition, .3f,
-                   aergia::Color(0.4f, 0.2f, 0.7f));
+                   aergia::Color(0.4f, 0.2f, 0.7f, 0.3f));
       aergia::draw_vector(A, B - A, 0.04, 0.05);
-      glColor4f(1, 0, 0, 0.4);
+      glColor4f(1, 0, 0, 0.2);
       glBegin(GL_LINES);
       if (e.next >= 0) {
         aergia::glVertex(B);
@@ -71,7 +75,7 @@ public:
     }
     for (size_t i = 0; i < faces.size(); i++) {
       ponos::Point2 mp(0, 0);
-      glColor4f(0, 1, 0, 0.3);
+      glColor4f(0, 1, 0, 0.1);
       glBegin(GL_TRIANGLES);
       mesh->traversePolygonEdges(i, [&mp, &edges, &vertices](int e) {
         aergia::glVertex(vertices[edges[e].orig].position);
@@ -82,13 +86,14 @@ public:
       char label[100];
       ponos::Point3 labelPosition = app.viewports[0].camera->getTransform()(
           ponos::Point3(mp[0] / 3.f, mp[1] / 3.f, 0.f));
-      sprintf(label, "%d", i);
-      text->render(label, labelPosition, .5f, aergia::Color(0.8f, 0.5f, 0.2f));
+      sprintf(label, "%lu", i);
+      text->render(label, labelPosition, .5f,
+                   aergia::Color(0.8f, 0.5f, 0.2f, 0.2f));
     }
   }
 
 private:
-  std::shared_ptr<ponos::HEMesh<float, 2>> mesh;
+  std::shared_ptr<ponos::HEMesh2DF> mesh;
 };
 
 int main() {

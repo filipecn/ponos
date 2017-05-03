@@ -22,50 +22,29 @@
  *
 */
 
-#ifndef PONOS_GEOMETRY_PLANE_H
-#define PONOS_GEOMETRY_PLANE_H
-
-#include "geometry/point.h"
-#include "geometry/normal.h"
-
-#include <iostream>
+#ifndef PONOS_BLAS_FIELD_H
+#define PONOS_BLAS_FIELD_H
 
 namespace ponos {
 
-/** Implements the equation <normal> X = <offset>.
- */
-class Plane {
+class FieldInterface {
 public:
-  /// Default constructor
-  Plane() { offset = 0.f; }
-  /** Constructor
-   * \param n **[in]** normal
-   * \param o **[in]** offset
-   */
-  Plane(Normal n, float o) {
-    normal = n;
-    offset = o;
-  }
-  /** \brief  projects **v** on plane
-   * \param v
-   * \returns projected **v**
-   */
-  Vector3 project(const Vector3 &v) { return ponos::project(v, normal); }
-  /** \brief  reflects **v** fron plane
-   * \param v
-   * \returns reflected **v**
-   */
-  Vector3 reflect(const Vector3 &v) { return ponos::reflect(v, normal); }
+  FieldInterface() {}
+  virtual ~FieldInterface() {}
+};
 
-  friend std::ostream &operator<<(std::ostream &os, const Plane &p) {
-    os << "[Plane] offset " << p.offset << " " << p.normal;
-    return os;
-  }
+class ScalarField : public FieldInterface {
+  virtual double sample(const Point3 &p) const = 0;
+  virtual vec3 gradient(const Point3 &p) const = 0;
+  virtual double laplacian(const Point3 &p) const = 0;
+};
 
-  Normal normal;
-  float offset;
+class VectorField : public FieldInterface {
+  virtual vec3 sample(const Point3 &p) const = 0;
+  virtual double divergence(const Point3 &p) const = 0;
+  virtual vec3 curl(const Point3 &p) const = 0;
 };
 
 } // ponos namespace
 
-#endif
+#endif // PONOS_BLAS_FIELD_H

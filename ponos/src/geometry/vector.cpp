@@ -64,42 +64,42 @@ std::ostream &operator<<(std::ostream &os, const Vector4 &v) {
   return os;
 }
 
-Vector<3, int> ceil(const Vector3 &v) {
-  return Vector<3, int>(static_cast<int>(v[0] + 0.5f),
+Vector<int, 3> ceil(const Vector3 &v) {
+  return Vector<int, 3>(static_cast<int>(v[0] + 0.5f),
                         static_cast<int>(v[1] + 0.5f),
                         static_cast<int>(v[2] + 0.5f));
 }
 
-Vector<3, int> floor(const Vector3 &v) {
-  return Vector<3, int>(static_cast<int>(v[0]), static_cast<int>(v[1]),
+Vector<int, 3> floor(const Vector3 &v) {
+  return Vector<int, 3>(static_cast<int>(v[0]), static_cast<int>(v[1]),
                         static_cast<int>(v[2]));
 }
 
-Vector<3, int> min(Vector<3, int> a, Vector<3, int> b) {
-  return Vector<3, int>(std::min(a[0], b[0]), std::min(a[1], b[1]),
+Vector<int, 3> min(Vector<int, 3> a, Vector<int, 3> b) {
+  return Vector<int, 3>(std::min(a[0], b[0]), std::min(a[1], b[1]),
                         std::min(a[2], b[2]));
 }
 
-Vector<3, int> max(Vector<3, int> a, Vector<3, int> b) {
-  return Vector<3, int>(std::max(a[0], b[0]), std::max(a[1], b[1]),
+Vector<int, 3> max(Vector<int, 3> a, Vector<int, 3> b) {
+  return Vector<int, 3>(std::max(a[0], b[0]), std::max(a[1], b[1]),
                         std::max(a[2], b[2]));
 }
 
-Vector<2, int> ceil(const Vector2 &v) {
-  return Vector<2, int>(static_cast<int>(v[0] + 0.5f),
+Vector<int, 2> ceil(const Vector2 &v) {
+  return Vector<int, 2>(static_cast<int>(v[0] + 0.5f),
                         static_cast<int>(v[1] + 0.5f));
 }
 
-Vector<2, int> floor(const Vector2 &v) {
-  return Vector<2, int>(static_cast<int>(v[0]), static_cast<int>(v[1]));
+Vector<int, 2> floor(const Vector2 &v) {
+  return Vector<int, 2>(static_cast<int>(v[0]), static_cast<int>(v[1]));
 }
 
-Vector<2, int> min(Vector<2, int> a, Vector<2, int> b) {
-  return Vector<2, int>(std::min(a[0], b[0]), std::min(a[1], b[1]));
+Vector<int, 2> min(Vector<int, 2> a, Vector<int, 2> b) {
+  return Vector<int, 2>(std::min(a[0], b[0]), std::min(a[1], b[1]));
 }
 
-Vector<2, int> max(Vector<2, int> a, Vector<2, int> b) {
-  return Vector<2, int>(std::max(a[0], b[0]), std::max(a[1], b[1]));
+Vector<int, 2> max(Vector<int, 2> a, Vector<int, 2> b) {
+  return Vector<int, 2>(std::max(a[0], b[0]), std::max(a[1], b[1]));
 }
 
 } // ponos namespace

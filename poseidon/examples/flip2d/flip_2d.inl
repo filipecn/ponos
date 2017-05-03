@@ -259,7 +259,8 @@ template <typename ParticleType> void FLIP2D<ParticleType>::setup() {
       ponos::BBox2D(ponos::Point2(),
                     ponos::Point2(dimensions[0] * dx, dimensions[1] * dx))));
   for (int i = 0; i < 2; i++)
-    grid[i] = new MacGrid2D<ponos::ZGrid>(dimensions[0], dimensions[1], dx);
+    grid[i] =
+        new MacGrid2D<ponos::CRegularGrid2D>(dimensions[0], dimensions[1], dx);
   distances.setDimensions(dimensions[0], dimensions[1]);
   distances.useBorder = false;
   usolid.setDimensions(dimensions[0] + 1, dimensions[1]);
@@ -439,10 +440,10 @@ int FLIP2D<ParticleType>::matrixIndex(int i, int j) {
 template <typename ParticleType> void FLIP2D<ParticleType>::project() {
   solver.reset();
   ponos::ivec2 ij;
-  ponos::ZGrid<float> &v = *grid[CUR_GRID]->v_v;
-  ponos::ZGrid<float> &u = *grid[CUR_GRID]->v_u;
-  ponos::ZGrid<float> &d = *grid[CUR_GRID]->D;
-  ponos::ZGrid<CellType> &cell = *grid[CUR_GRID]->cellType;
+  ponos::CRegularGrid2D<float> &v = *grid[CUR_GRID]->v_v;
+  ponos::CRegularGrid2D<float> &u = *grid[CUR_GRID]->v_u;
+  ponos::CRegularGrid2D<float> &d = *grid[CUR_GRID]->D;
+  ponos::CRegularGrid2D<CellType> &cell = *grid[CUR_GRID]->cellType;
   // build rhs and account for solid velocities
   float s = 1.f / dx;
   FOR_INDICES0_2D(dimensions, ij) {
@@ -536,7 +537,7 @@ template <typename ParticleType> void FLIP2D<ParticleType>::project() {
 
 template <typename ParticleType>
 void FLIP2D<ParticleType>::computeDistanceToFluid() {
-  ponos::ZGrid<CellType> *cell = grid[CUR_GRID]->cellType.get();
+  ponos::CRegularGrid2D<CellType> *cell = grid[CUR_GRID]->cellType.get();
   distances.setAll(dimensions[0] + 2 * dimensions[1]);
   ponos::ivec2 ij;
   FOR_INDICES0_2D(grid[CUR_GRID]->cellType->getDimensions(), ij) {
@@ -545,25 +546,30 @@ void FLIP2D<ParticleType>::computeDistanceToFluid() {
     }
   }
   for (int i = 0; i < 2; i++)
-    ponos::fastSweep2D<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::fastSweep2D<ponos::CRegularGrid2D<float>,
+                       ponos::CRegularGrid2D<CellType>, CellType>(
         &distances, &distances, cell, CellType::FLUID);
 }
 
 template <typename ParticleType>
 void FLIP2D<ParticleType>::extrapolateVelocity() {
-  ponos::ZGrid<float> *u = grid[CUR_GRID]->v_u.get();
-  ponos::ZGrid<float> *v = grid[CUR_GRID]->v_v.get();
-  ponos::ZGrid<CellType> *cell = grid[CUR_GRID]->cellType.get();
+  ponos::CRegularGrid2D<float> *u = grid[CUR_GRID]->v_u.get();
+  ponos::CRegularGrid2D<float> *v = grid[CUR_GRID]->v_v.get();
+  ponos::CRegularGrid2D<CellType> *cell = grid[CUR_GRID]->cellType.get();
   for (int i = 0; i < 4; i++) {
     int nx = u->getDimensions()[0];
     int ny = u->getDimensions()[1];
-    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, 1, nx - 1, 1, ny - 1);
-    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, 1, nx - 1, ny - 2, 0);
-    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, nx - 2, 0, 1, ny - 1);
-    ponos::sweep_x<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_x<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         u, &distances, cell, CellType::AIR, nx - 2, 0, ny - 2, 0);
     for (int k = 0; k < nx; k++) {
       (*u)(k, 0) = (*u)(k, 1);
@@ -575,13 +581,17 @@ void FLIP2D<ParticleType>::extrapolateVelocity() {
     }
     nx = v->getDimensions()[0];
     ny = v->getDimensions()[1];
-    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, 1, nx - 1, 1, ny - 1);
-    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, 1, nx - 1, ny - 2, 0);
-    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, nx - 2, 0, 1, ny - 1);
-    ponos::sweep_y<ponos::ZGrid<float>, ponos::ZGrid<CellType>, CellType>(
+    ponos::sweep_y<ponos::CRegularGrid2D<float>,
+                   ponos::CRegularGrid2D<CellType>, CellType>(
         v, &distances, cell, CellType::AIR, nx - 2, 0, ny - 2, 0);
     for (int k = 0; k < nx; k++) {
       (*v)(k, 0) = (*v)(k, 1);
@@ -596,8 +606,8 @@ void FLIP2D<ParticleType>::extrapolateVelocity() {
 
 template <typename ParticleType> void FLIP2D<ParticleType>::subtractGrid() {
   ponos::ivec2 ij;
-  ponos::ZGrid<float> &v = *grid[COPY_GRID]->v_v;
-  ponos::ZGrid<float> &u = *grid[COPY_GRID]->v_u;
+  ponos::CRegularGrid2D<float> &v = *grid[COPY_GRID]->v_v;
+  ponos::CRegularGrid2D<float> &u = *grid[COPY_GRID]->v_u;
   FOR_INDICES0_2D(v.getDimensions(), ij)
   v(ij) = (*grid[CUR_GRID]->v_v)(ij)-v(ij);
   FOR_INDICES0_2D(u.getDimensions(), ij)
@@ -624,7 +634,7 @@ template <typename ParticleType> void FLIP2D<ParticleType>::solvePICFLIP() {
 }
 
 template <typename ParticleType> void FLIP2D<ParticleType>::advectParticles() {
-  ponos::ZGrid<CellType> &cell = *grid[CUR_GRID]->cellType;
+  ponos::CRegularGrid2D<CellType> &cell = *grid[CUR_GRID]->cellType;
   float timeStep = 0.2 * dt;
   for (int i = 0; i < 5; i++)
     particleGrid->iterateAll([this, cell, timeStep](ParticleType *p) {
@@ -678,7 +688,7 @@ template <typename ParticleType> void FLIP2D<ParticleType>::advectParticles() {
 template <typename ParticleType>
 void FLIP2D<ParticleType>::resampleParticles() {
   static ponos::HaltonSequence rng(3);
-  ponos::ZGrid<CellType> &cell = *grid[CUR_GRID]->cellType;
+  ponos::CRegularGrid2D<CellType> &cell = *grid[CUR_GRID]->cellType;
   ponos::ivec2 ij;
   std::vector<ponos::Point2> newPositions;
   std::vector<ponos::vec2> newVelocities;

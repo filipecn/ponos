@@ -120,6 +120,13 @@ public:
       return data[i][j];
     return bdummy;
   }
+  T dSample(float x, float y, T r) const {
+    ponos::Point<int, 2> gp = this->cell(Point2(x, y));
+    if (!this->belongs(gp))
+      return r;
+    return data[gp[0]][gp[1]];
+  }
+
   ivec2 getDimensions() const { return dimensions; }
   void setAll(T v) {
     for (int i = 0; i < dimensions[0]; i++)

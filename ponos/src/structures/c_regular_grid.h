@@ -15,7 +15,7 @@ namespace ponos {
  *
  * Simple matrix structure.
  */
-template <class T = float> class CRegularGrid : public CGridInterface<T> {
+template <typename T = float> class CRegularGrid : public CGridInterface<T> {
 public:
   CRegularGrid() {}
   /* Constructor
@@ -155,7 +155,8 @@ template <typename T> void CRegularGrid<T>::normalizeElements() {
   data[ijk[0]][ijk[1]][ijk[2]] = ponos::normalize(data[ijk[0]][ijk[1]][ijk[2]]);
 }
 
-template <class T> class CRegularGrid2D : public CGrid2DInterface<T> {
+template <typename T = float>
+class CRegularGrid2D : public CGrid2DInterface<T> {
 public:
   CRegularGrid2D();
   CRegularGrid2D(uint32_t w, uint32_t h);
@@ -202,17 +203,18 @@ private:
   std::vector<std::vector<T>> data;
 };
 
-template <class T> CRegularGrid2D<T>::CRegularGrid2D() {
+template <typename T> CRegularGrid2D<T>::CRegularGrid2D() {
   this->useBorder = false;
 }
 
-template <class T> CRegularGrid2D<T>::CRegularGrid2D(uint32_t w, uint32_t h) {
+template <typename T>
+CRegularGrid2D<T>::CRegularGrid2D(uint32_t w, uint32_t h) {
   this->useBorder = false;
   this->setDimensions(w, h);
   init();
 }
 
-template <class T> T &CRegularGrid2D<T>::operator()(const ponos::ivec2 &ij) {
+template <typename T> T &CRegularGrid2D<T>::operator()(const ponos::ivec2 &ij) {
   if (ij[0] < 0 || ij[1] < 0 || ij[0] >= static_cast<int>(this->width) ||
       ij[1] >= static_cast<int>(this->height)) {
     if (!this->useBorder) {
@@ -224,7 +226,7 @@ template <class T> T &CRegularGrid2D<T>::operator()(const ponos::ivec2 &ij) {
   return data[ij[0]][ij[1]];
 }
 
-template <class T>
+template <typename T>
 T CRegularGrid2D<T>::operator()(const ponos::ivec2 &ij) const {
   if (ij[0] < 0 || ij[1] < 0 || ij[0] >= static_cast<int>(this->width) ||
       ij[1] >= static_cast<int>(this->height)) {
@@ -237,7 +239,7 @@ T CRegularGrid2D<T>::operator()(const ponos::ivec2 &ij) const {
   return data[ij[0]][ij[1]];
 }
 
-template <class T> T &CRegularGrid2D<T>::operator()(int i, int j) {
+template <typename T> T &CRegularGrid2D<T>::operator()(int i, int j) {
   if (i < 0 || j < 0 || i >= static_cast<int>(this->width) ||
       j >= static_cast<int>(this->height)) {
     if (!this->useBorder) {
@@ -249,7 +251,7 @@ template <class T> T &CRegularGrid2D<T>::operator()(int i, int j) {
   return data[i][j];
 }
 
-template <class T> T CRegularGrid2D<T>::operator()(int i, int j) const {
+template <typename T> T CRegularGrid2D<T>::operator()(int i, int j) const {
   if (i < 0 || j < 0 || i >= static_cast<int>(this->width) ||
       j >= static_cast<int>(this->height)) {
     if (!this->useBorder) {
@@ -261,7 +263,7 @@ template <class T> T CRegularGrid2D<T>::operator()(int i, int j) const {
   return data[i][j];
 }
 
-template <class T> float CRegularGrid2D<T>::sample(float x, float y) const {
+template <typename T> float CRegularGrid2D<T>::sample(float x, float y) const {
   Point2 gp = this->toGrid(Point2(x, y));
   int x0 = static_cast<int>(gp.x);
   int y0 = static_cast<int>(gp.y);

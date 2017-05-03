@@ -135,14 +135,14 @@ public:
     return true;
   }
 
-  Vector<D, T> operator-(const Point<T, D> &p) const {
-    Vector<D, T> V;
+  Vector<T, D> operator-(const Point<T, D> &p) const {
+    Vector<T, D> V;
     for (int i = 0; i < D; i++)
       V[i] = v[i] - p[i];
     return V;
   }
 
-  Point<T, D> operator+(const Vector<D, T> &V) const {
+  Point<T, D> operator+(const Vector<T, D> &V) const {
     Point<T, D> P;
     for (int i = 0; i < D; i++)
       P[i] = v[i] + V[i];

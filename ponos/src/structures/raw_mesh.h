@@ -29,7 +29,6 @@
 #include "geometry/transform.h"
 
 #include <vector>
-#include <initializer_list>
 
 namespace ponos {
 

@@ -3,6 +3,7 @@
 
 #include <queue>
 
+#include "geometry/queries.h"
 #include "geometry/vector.h"
 #include "structures/half_edge.h"
 #include "structures/regular_grid.h"
@@ -136,13 +137,15 @@ void fastMarch2D(GridType *phi, MaskType *mask, T MASK_VALUE,
   }
 }
 
-template <class T, int D>
-void fastMarch2D(HEMesh2DF *phi, std::vector<size_t> points) {
+inline void fastMarch2D(HEMesh2DF *phi, std::vector<size_t> points) {
+  const std::vector<HEMesh2DF::Edge> &edges = phi->getEdges();
+  const std::vector<HEMesh2DF::Vertex> &vertices = phi->getVertices();
   size_t vc = phi->vertexCount();
   std::vector<char> frozen(vc, 0);
+  std::vector<int> closestPoint(vc, -1);
   struct Point_ {
-    Point_(size_t _v, size_t _cv, float D) : v(_v), cv(_cv), t(D) {}
-    size_t v, cv;
+    Point_(size_t _v, float D) : v(_v), t(D) {}
+    size_t v;
     float t;
   };
   auto cmp = [](Point_ a, Point_ b) { return a.t > b.t; };
@@ -151,31 +154,69 @@ void fastMarch2D(HEMesh2DF *phi, std::vector<size_t> points) {
     phi->setVertexData(i, 1 << 16);
   for (auto p : points) {
     phi->setVertexData(p, 0.f);
-    q.push(Point_(p, p, 0.f));
+    q.push(Point_(p, 0.f));
+    closestPoint[p] = p;
   }
   while (!q.empty()) {
     Point_ p = q.top();
     q.pop();
-    frozen(p.v) = 2;
+    frozen[p.v] = 2;
     phi->setVertexData(p.v, p.t);
-    ivec2 dir[4] = {ivec2(-1, 0), ivec2(1, 0), ivec2(0, -1), ivec2(0, 1)};
-    // traverse oposite edges
-    /* for (int i = 0; i < 4; i++) {
-       ivec2 ij = ivec2(p.i, p.j) + dir[i];
-       if (ij[0] < 0 || ij[0] >= frozen.getDimensions()[0] || ij[1] < 0 ||
-           ij[1] >= frozen.getDimensions()[1] || frozen(ij) || !(*mask)(ij))
-         continue;
-       float T1 = std::min((*phi)(ij + dir[0]), (*phi)(ij + dir[1]));
-       float T2 = std::min((*phi)(ij + dir[2]), (*phi)(ij + dir[3]));
-       float Tmin = std::min(T1, T2);
-       float d = fabs(T1 - T2);
-       if (d < 1.f)
-         (*phi)(ij) = (T1 + T2 + sqrtf(2.f * SQR(1.f) - SQR(d))) / 2.f;
-       else
-         (*phi)(ij) = Tmin + 1.f;
-       q.push(Point_(ij[0], ij[1], (*phi)(ij)));
-       frozen(ij) = 1;
-     }*/
+    // iterate all neighbours
+    phi->traverseEdgesFromVertex(p.v, [&q, &phi, &edges, &vertices, &frozen,
+                                       &closestPoint](int e) {
+      if (frozen[edges[e].dest])
+        return;
+      phi->setVertexData(edges[e].dest, 1 << 16);
+      // iterate neighbours from neighbours
+      phi->traverseEdgesFromVertex(
+          edges[e].dest,
+          [&phi, &edges, &vertices, &frozen, &closestPoint](int e2) {
+            int a = edges[e2].orig;
+            // test against vertex
+            int b = edges[e2].dest;
+            float bDist = distance(vertices[a].position.floatXY(),
+                                   vertices[b].position.floatXY());
+            if (vertices[b].data + bDist < vertices[a].data) {
+              phi->setVertexData(a, vertices[b].data + bDist);
+              closestPoint[a] = b;
+            }
+            // test against oposite edge
+            int c = edges[edges[e2].next].dest;
+            if (closestPoint[b] >= 0 && closestPoint[b] != b) {
+              Segment2 s(vertices[b].position.floatXY(),
+                         vertices[c].position.floatXY());
+              Ray2 r(vertices[a].position.floatXY(),
+                     vertices[closestPoint[b]].position.floatXY() -
+                         vertices[a].position.floatXY());
+              float dist =
+                  distance(vertices[a].position.floatXY(),
+                           vertices[closestPoint[b]].position.floatXY());
+              if (ray_segment_intersection(r, s) &&
+                  dist + vertices[closestPoint[b]].data < vertices[a].data) {
+                phi->setVertexData(a, vertices[closestPoint[b]].data + dist);
+                closestPoint[a] = closestPoint[b];
+              }
+            }
+            if (closestPoint[c] >= 0 && closestPoint[c] != c) {
+              Segment2 s(vertices[b].position.floatXY(),
+                         vertices[c].position.floatXY());
+              Ray2 r(vertices[a].position.floatXY(),
+                     vertices[closestPoint[c]].position.floatXY() -
+                         vertices[a].position.floatXY());
+              float dist =
+                  distance(vertices[a].position.floatXY(),
+                           vertices[closestPoint[c]].position.floatXY());
+              if (ray_segment_intersection(r, s) &&
+                  dist + vertices[closestPoint[c]].data < vertices[a].data) {
+                phi->setVertexData(a, vertices[closestPoint[c]].data + dist);
+                closestPoint[a] = closestPoint[c];
+              }
+            }
+          });
+      q.push(Point_(edges[e].dest, vertices[edges[e].dest].data));
+      frozen[edges[e].dest] = 1;
+    });
   }
 }
 

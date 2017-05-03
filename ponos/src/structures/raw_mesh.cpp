@@ -121,7 +121,7 @@ void RawMesh::buildInterleavedData() {
 void RawMesh::orientFaces(bool ccw) {
   for (size_t e = 0; e < meshDescriptor.count; e++) {
     bool flip = false;
-    for (int i = 0; i < meshDescriptor.elementSize; i++) {
+    for (size_t i = 0; i < meshDescriptor.elementSize; i++) {
       ponos::Point3 a3 = vertexElement(e, i);
       ponos::Point3 b3 = vertexElement(e, i + 1 % meshDescriptor.elementSize);
       ponos::Point3 c3 = vertexElement(e, i + 2 % meshDescriptor.elementSize);
