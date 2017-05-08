@@ -30,6 +30,12 @@
 namespace ponos {
 
 template <typename MatrixType, typename VectorType> struct LinearSystem {
+  LinearSystem() {}
+  void resize(size_t w, size_t h) {
+    A.resize(w, h);
+    x.resize(w, h);
+    b.resize(w, h);
+  }
   MatrixType A;
   VectorType x, b;
 };

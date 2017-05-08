@@ -89,7 +89,11 @@ Matrix<T, N, N> inverse(const Matrix<T, N, N> &m) {
         em[i] -= em[k] * em[i][k];
     }
   }
-  return Matrix<T, N, N>();
+  Matrix<T, N, N> r;
+  for (size_t i = 0; i < N; i++)
+    for (size_t j = 0; j < N; j++)
+      r.m[i][j] = em[i][j + N];
+  return r;
 }
 
 class Matrix4x4 {

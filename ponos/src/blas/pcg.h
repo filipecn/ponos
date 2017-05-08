@@ -40,18 +40,18 @@ template <typename BlasType> struct NullCGPreconditioner {
 template <typename BlasType> struct IncompleteCholeskyCGPreconditioner {
   typename BlasType::VectorType d;
   typename BlasType::VectorType y;
-  const typename BlasType::Matrix &A;
+  const typename BlasType::MatrixType *A;
+  IncompleteCholeskyCGPreconditioner() {}
   void build(const typename BlasType::MatrixType &m) {
-    A = m;
-    size_t size = A.width * A.height;
-    d.resize(A.width, A.height, 0.0);
-    y.resize(A.width, A.height, 0.0);
-    for (size_t i = 0; i < A.width; i++)
-      for (size_t j = 0; j < A.height; j++) {
+    A = &m;
+    d.resize(A->width, A->height, 0.0);
+    y.resize(A->width, A->height, 0.0);
+    for (size_t i = 0; i < A->width; i++)
+      for (size_t j = 0; j < A->height; j++) {
         double denominator =
-            A(i, j).center -
-            ((i > 0) ? SQR(A(i - 1, j).right) * d(i - 1, j) : 0.0) -
-            ((j > 0) ? SQR(A(i, j - 1).up) * d(i, j - 1) : 0.0);
+            (*A)(i, j).center -
+            ((i > 0) ? SQR((*A)(i - 1, j).right) * d(i - 1, j) : 0.0) -
+            ((j > 0) ? SQR((*A)(i, j - 1).up) * d(i, j - 1) : 0.0);
         if (std::fabs(denominator) > 0.0)
           d(i, j) = 1.f / denominator;
         else
@@ -63,14 +63,15 @@ template <typename BlasType> struct IncompleteCholeskyCGPreconditioner {
     size_t w = b.width, h = b.height;
     for (size_t i = 0; i < w; i++)
       for (size_t j = 0; j < h; j++)
-        y(i, j) = (b(i, j) - ((i > 0) ? A(i - 1, j).right * y(i - 1, j) : 0.0) -
-                   ((j > 0) ? A(i, j - 1).up * y(i, j - 1) : 0.0)) *
-                  d(i, j);
+        y(i, j) =
+            (b(i, j) - ((i > 0) ? (*A)(i - 1, j).right *y(i - 1, j) : 0.0) -
+             ((j > 0) ? (*A)(i, j - 1).up *y(i, j - 1) : 0.0)) *
+            d(i, j);
     for (size_t i = w - 1; i >= 0; i--)
       for (size_t j = h - 1; j >= 0; j--)
         (*x)(i, j) =
-            (y(i, j) - ((i + 1 < w) ? A(i, j).right * (*x)(i + 1, j) : 0.0) -
-             ((j + 1 < h) ? A(i, j).up * (*x)(i, j + 1) : 0.0)) *
+            (y(i, j) - ((i + 1 < w) ? (*A)(i, j).right *(*x)(i + 1, j) : 0.0) -
+             ((j + 1 < h) ? (*A)(i, j).up *(*x)(i, j + 1) : 0.0)) *
             d(i, j);
   }
 };

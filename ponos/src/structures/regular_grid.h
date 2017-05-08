@@ -1,9 +1,34 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef PONOS_STRUCTURES_REGULAR_GRID_H
 #define PONOS_STRUCTURES_REGULAR_GRID_H
 
 #include "common/macros.h"
 #include "geometry/vector.h"
 #include "log/debug.h"
+#include "structures/grid_interface.h"
 
 #include <memory>
 #include <vector>
@@ -77,77 +102,49 @@ private:
   T background, bdummy;
 };
 
-/* Regular 2D grid
- *
- * Simple matrix structure.
+/** Regular 2D grid
  */
-template <class T = int> class RegularGrid2D {
+template <class T> class RegularGrid2D : public Grid2DInterface<T> {
 public:
   RegularGrid2D() : data(nullptr) {}
   /* Constructor
    * @d **[in]** dimensions
-   * @b **[in]** background (default value)
+   * @b **[in]** border (default value)
    */
-  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) { set(d, b); }
+  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) { set(d); }
   ~RegularGrid2D() { clear(); }
-  void set(const ivec2 &d, const T &b) {
+
+  RegularGrid2D(uint32_t w, uint32_t h) : data(nullptr) {
+    this->useBorder = true;
+    this->setDimensions(w, h);
+    set(this->getDimensions());
+  }
+
+  T getData(int i, int j) const override { return data[i][j]; }
+  T &getData(int i, int j) override { return data[i][j]; }
+
+  void set(const ivec2 &d) {
+    this->useBorder = true;
     clear();
-    dimensions = d;
-    background = b;
-    bdummy = b;
+    this->width = d[0];
+    this->height = d[1];
     data = new T *[d[0]];
     int i;
     FOR_LOOP(i, 0, d[0])
     data[i] = new T[d[1]];
-  }
-  T operator()(const ivec2 &i) const {
-    if (i >= ivec2() && i < dimensions)
-      return data[i[0]][i[1]];
-    return background;
-  }
-  T &operator()(const ivec2 &i) {
-    if (i >= ivec2() && i < dimensions)
-      return data[i[0]][i[1]];
-    return bdummy;
-  }
-  T operator()(const int &i, const int &j) const {
-    if (i >= 0 && i < dimensions[0] && j >= 0 && i < dimensions[1])
-      return data[i][j];
-    return background;
-  }
-  T &operator()(const int &i, const int &j) {
-    if (i >= 0 && i < dimensions[0] && j >= 0 && i < dimensions[1])
-      return data[i][j];
-    return bdummy;
-  }
-  T dSample(float x, float y, T r) const {
-    ponos::Point<int, 2> gp = this->cell(Point2(x, y));
-    if (!this->belongs(gp))
-      return r;
-    return data[gp[0]][gp[1]];
-  }
-
-  ivec2 getDimensions() const { return dimensions; }
-  void setAll(T v) {
-    for (int i = 0; i < dimensions[0]; i++)
-      for (int j = 0; j < dimensions[1]; j++)
-        data[i][j] = v;
   }
 
 private:
   void clear() {
     if (!data)
       return;
-    ponos::ivec2 d = dimensions;
-    int i;
-    FOR_LOOP(i, 0, d[0])
+    uint32_t i;
+    FOR_LOOP(i, static_cast<uint32_t>(0), this->width)
     delete[] data[i];
     delete data;
   }
 
-  ponos::ivec2 dimensions;
   T **data;
-  T background, bdummy;
 };
 
 } // ponos namespace

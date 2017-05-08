@@ -81,7 +81,8 @@ public:
     p->setTransform(toWorld);
     D.reset(new GridType<float>(dimensions[0], dimensions[1]));
     D->setTransform(toWorld);
-    cellType.reset(new GridType<CellType>(dimensions[0], dimensions[1]));
+    cellType.reset(
+        new ponos::RegularGrid2D<CellType>(dimensions[0], dimensions[1]));
     cellType->setTransform(toWorld);
     cellType->border = CellType::SOLID;
   }
@@ -115,7 +116,7 @@ public:
   // divergence
   std::shared_ptr<GridType<float>> D;
   // cell type
-  std::shared_ptr<GridType<CellType>> cellType;
+  std::shared_ptr<ponos::RegularGrid2D<CellType>> cellType;
 };
 
 } // poseidon namespace

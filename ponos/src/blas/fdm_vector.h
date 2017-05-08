@@ -31,6 +31,7 @@ namespace ponos {
 /** Convenient vector structure to use in Finite Difference Methods */
 template <typename T> class FDMVector2D {
 public:
+  FDMVector2D() : width(0), height(0) {}
   FDMVector2D(size_t w, size_t h) : width(w), height(h) { data.resize(w * h); }
   ~FDMVector2D() {}
   T operator()(size_t i, size_t j) const { return data[j * width + i]; }

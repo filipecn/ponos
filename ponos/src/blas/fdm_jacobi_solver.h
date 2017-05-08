@@ -33,10 +33,15 @@ namespace ponos {
 
 class FDMJacobiSolver2f : public LinearSystemSolver<FDMLinearSystem2f> {
 public:
+  FDMJacobiSolver2f(uint _maxNumberOfIterations, double _tolerance,
+                    uint _residualCheckInterval)
+      : maxNumberOfIterations(_maxNumberOfIterations), tolerance(_tolerance),
+        residualCheckInterval(_residualCheckInterval) {}
   bool solve(FDMLinearSystem2f *s) override {
     xTmp.resize(s->x.width, s->x.height);
     residual.resize(s->x.width, s->x.height);
     for (uint it = 0; it < maxNumberOfIterations; it++) {
+      lastNumberOfIterations = it;
       relax(s, &xTmp);
       xTmp.swap(&s->x);
       if (it != 0 && it % residualCheckInterval == 0) {
@@ -51,12 +56,13 @@ public:
     return lastResidual < tolerance;
   }
 
+  uint lastNumberOfIterations;
+  double lastResidual;
+
 private:
   uint maxNumberOfIterations;
-  uint lastNumberOfIterations;
-  uint residualCheckInterval;
   double tolerance;
-  double lastResidual;
+  uint residualCheckInterval;
 
   FDMVector2Df xTmp;
   FDMVector2Df residual;

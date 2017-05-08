@@ -22,32 +22,26 @@
  *
 */
 
-#ifndef PONOS_BLAS_FIELD_H
-#define PONOS_BLAS_FIELD_H
+#ifndef POSEIDON_ALGORITHMS_GRID_SOLVER_H
+#define POSEIDON_ALGORITHMS_GRID_SOLVER_H
 
-#include "geometry/point.h"
+#include <ponos.h>
 
-namespace ponos {
+namespace poseidon {
 
-template <class T> class FieldInterface2D {
+/** Grid based fluid solver.
+ */
+class GridSolver {
 public:
-  FieldInterface2D() {}
-  virtual ~FieldInterface2D() {}
-  virtual T sample(float x, float y) const = 0;
+  GridSolver() {}
+  virtual ~GridSolver();
+
+protected:
+  void enforceBoundaries();
+
+  ponos::ScalarGrid2f
 };
 
-template <class T> class ScalarField2D : public FieldInterface2D<T> {
-public:
-  virtual Vector<T, 2> gradient(float x, float y) const = 0;
-  virtual T laplacian(float x, float y) const = 0;
-};
+} // poseidon namespace
 
-template <typename T>
-class VectorField2D : public FieldInterface2D<Vector<T, 2>> {
-  virtual T divergence(float x, float y) const = 0;
-  virtual Vector<T, 2> curl(float x, float y) const = 0;
-};
-
-} // ponos namespace
-
-#endif // PONOS_BLAS_FIELD_H
+#endif // POSEIDON_ALGORITHMS_GRID_SOLVER_H

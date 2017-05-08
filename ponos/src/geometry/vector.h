@@ -443,6 +443,13 @@ public:
     return v_;
   }
 
+  Vector<T, D> operator/(const Vector<T, D> &_v) const {
+    Vector<T, D> v_;
+    for (size_t i = 0; i < D; i++)
+      v_[i] = v[i] / _v[i];
+    return v_;
+  }
+
   Vector<T, D> operator/=(T f) {
     for (size_t i = 0; i < D; i++)
       v[i] /= f;
@@ -490,6 +497,11 @@ public:
   size_t size;
   T v[D];
 };
+
+template <typename T, size_t D>
+inline Vector<T, D> operator*(float f, const Vector<T, D> &v) {
+  return v * f;
+}
 
 typedef Vector<int, 2> ivec2;
 typedef Vector<uint, 2> uivec2;

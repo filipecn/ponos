@@ -22,32 +22,38 @@
  *
 */
 
-#ifndef PONOS_BLAS_FIELD_H
-#define PONOS_BLAS_FIELD_H
+#ifndef PONOS_BLAS_FIELD_GRID_H
+#define PONOS_BLAS_FIELD_GRID_H
 
-#include "geometry/point.h"
+#include "blas/field.h"
+#include "common/macros.h"
+#include "log/debug.h"
+#include "blas/c_regular_grid.h"
+
+#include <algorithm>
+#include <memory>
+#include <vector>
 
 namespace ponos {
 
-template <class T> class FieldInterface2D {
-public:
-  FieldInterface2D() {}
-  virtual ~FieldInterface2D() {}
-  virtual T sample(float x, float y) const = 0;
-};
-
-template <class T> class ScalarField2D : public FieldInterface2D<T> {
-public:
-  virtual Vector<T, 2> gradient(float x, float y) const = 0;
-  virtual T laplacian(float x, float y) const = 0;
-};
-
+/**
+ */
 template <typename T>
-class VectorField2D : public FieldInterface2D<Vector<T, 2>> {
-  virtual T divergence(float x, float y) const = 0;
-  virtual Vector<T, 2> curl(float x, float y) const = 0;
+class ScalarGrid2D : public CRegularGrid2D<T>, public ScalarField2D<T> {
+public:
+  ScalarGrid2D();
+  ScalarGrid2D(uint w, uint h);
+  virtual ~ScalarGrid2D() {}
+  Vector<T, 2> gradient(int x, int y) const;
+  Vector<T, 2> gradient(float x, float y) const override;
+  T laplacian(float x, float y) const override;
+  T sample(float x, float y) const override;
 };
+
+#include "field_grid.inl"
+
+typedef ScalarGrid2D<float> ScalarGrid2f;
 
 } // ponos namespace
 
-#endif // PONOS_BLAS_FIELD_H
+#endif // PONOS_BLAS_FIELD_GRID_H

@@ -67,7 +67,8 @@ int main() {
 #ifdef WIN32
   WIN32CONSOLE();
 #endif
-  mask.set(ponos::ivec2(10), 0);
+  mask.set(ponos::ivec2(10));
+  mask.border = 0;
   ponos::ivec2 ij;
   FOR_INDICES0_2D(mask.getDimensions(), ij)
   if (ij[0] <= 3 || ij[0] >= 7 || ij[1] <= 4)

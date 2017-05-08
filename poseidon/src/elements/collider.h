@@ -22,32 +22,38 @@
  *
 */
 
-#ifndef PONOS_BLAS_FIELD_H
-#define PONOS_BLAS_FIELD_H
+#ifndef POSEIDON_ELEMENTS_COLLIDER_H
+#define POSEIDON_ELEMENTS_COLLIDER_H
 
-#include "geometry/point.h"
+#include <ponos.h>
 
-namespace ponos {
+namespace poseidon {
 
-template <class T> class FieldInterface2D {
-public:
-  FieldInterface2D() {}
-  virtual ~FieldInterface2D() {}
-  virtual T sample(float x, float y) const = 0;
+struct Collision {
+  float distance;
+  ponos::Point3 point;
+  ponos::Normal normal;
+  ponos::vec3 velocity;
 };
 
-template <class T> class ScalarField2D : public FieldInterface2D<T> {
+class Collider {
 public:
-  virtual Vector<T, 2> gradient(float x, float y) const = 0;
-  virtual T laplacian(float x, float y) const = 0;
-};
-
-template <typename T>
-class VectorField2D : public FieldInterface2D<Vector<T, 2>> {
-  virtual T divergence(float x, float y) const = 0;
-  virtual Vector<T, 2> curl(float x, float y) const = 0;
+  Collider() {}
+  virtual ~Collider() {}
+  void collide(const ponos::Point3 &p, const ponos::vec3 &v, float r, float rc,
+               ponos::Point3 *np, ponos::vec3 *nv);
+  void closestPoint(const ponos::SurfaceInterface &s, const ponos::Point3 &p,
+                    ColliderQueryResult *r) const {
+    r->distance = s->closestDistance(p);
+    r->point = s->closestPoint(p);
+    r->normal = s->closestNormal(p);
+    r->velocity = getVelocity(p);
+  }
+  bool isPenetrating(const Collision &c, const ponos::Point3 &p, float r) {
+    return ponos::dot(p - c.point, c.normal) < 0.f || c.distance < r;
+  }
 };
 
 } // ponos namespace
 
-#endif // PONOS_BLAS_FIELD_H
+#endif // POSEIDON_ELEMENTS_COLLIDER_H

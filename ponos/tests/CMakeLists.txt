@@ -5,6 +5,7 @@ set(TESTS
 	TestBlas.cpp
 	TestBRep.cpp
 	TestFDM.cpp
+	TestGrid.cpp
 	TestQuaternion.cpp
 	TestQueries.cpp
 	TestMatrix.cpp

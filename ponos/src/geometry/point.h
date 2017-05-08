@@ -35,6 +35,7 @@ namespace ponos {
 
 class Point2 {
 public:
+  typedef float ScalarType;
   Point2();
   Point2(float f);
   explicit Point2(float _x, float _y);
@@ -216,6 +217,8 @@ public:
   Point3 operator+(const Vector3 &v) const {
     return Point3(x + v.x, y + v.y, z + v.z);
   }
+  Point3 operator+(const float &f) const { return Point3(x + f, y + f, z + f); }
+  Point3 operator-(const float &f) const { return Point3(x - f, y - f, z - f); }
   Point3 &operator+=(const Vector3 &v) {
     x += v.x;
     y += v.y;
@@ -233,6 +236,9 @@ public:
     y -= v.y;
     z -= v.z;
     return *this;
+  }
+  bool operator==(const Point3 &p) const {
+    return IS_EQUAL(p.x, x) && IS_EQUAL(p.y, y) && IS_EQUAL(p.z, z);
   }
   Point3 operator*(float d) const { return Point3(x * d, y * d, z * d); }
   Point3 operator/(float d) const { return Point3(x / d, y / d, z / d); }
@@ -261,8 +267,6 @@ inline float distance(const Point3 &a, const Point3 &b) {
 inline float distance2(const Point3 &a, const Point3 &b) {
   return (a - b).length2();
 }
-
-typedef Point3 point;
 
 } // ponos namespace
 

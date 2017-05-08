@@ -59,6 +59,9 @@ template <typename S, class V, class M> struct Blas {
 typedef Blas<float, FDMVector2Df, FDMMatrix2Df> FDMBlas2f;
 
 template <> struct Blas<float, FDMVector2Df, FDMMatrix2Df> {
+  typedef float ScalarType;
+  typedef FDMVector2Df VectorType;
+  typedef FDMMatrix2Df MatrixType;
   // Sets the given scalar value to the output vector.
   static void set(float s, FDMVector2Df *result) {
     for (size_t i = 0; i < result->width; i++)

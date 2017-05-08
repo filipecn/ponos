@@ -5,11 +5,15 @@ set(HEADERS
 	src/algorithm/search.h
 	src/algorithm/sort.h
 	src/blas/blas.h
+	src/blas/c_regular_grid.h
   src/blas/cg.h
+	src/blas/fdm_cg_solver.h
 	src/blas/fdm_gauss_seidel_solver.h
 	src/blas/fdm_jacobi_solver.h
 	src/blas/fdm_matrix.h
 	src/blas/fdm_vector.h
+	src/blas/field.h
+	src/blas/field_grid.h
 	src/blas/linear_system.h
   src/blas/pcg.h
 	src/blas/solver_interface.h
@@ -33,6 +37,7 @@ set(HEADERS
 	src/geometry/segment.h
 	src/geometry/shape.h
 	src/geometry/sphere.h
+	src/geometry/surface.h
 	src/geometry/quaternion.h
 	src/geometry/transform.h
 	src/geometry/utils.h
@@ -43,8 +48,7 @@ set(HEADERS
 	src/spatial/spatial_structure_interface.h
 	src/structures/bah.h
 	src/structures/brep.hpp
-	src/structures/c_grid_interface.h
-	src/structures/c_regular_grid.h
+	src/structures/grid_interface.h
 	src/structures/half_edge.h
 	src/structures/level_set.h
 	src/structures/mesh.h

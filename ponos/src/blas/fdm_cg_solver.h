@@ -32,20 +32,23 @@
 
 namespace ponos {
 
-template <typename Preconditioner = IncompleteCholeskyCGPreconditioner>
+template <typename Preconditioner =
+              IncompleteCholeskyCGPreconditioner<FDMBlas2f>>
 class FDMCGSolver2f : public LinearSystemSolver<FDMLinearSystem2f> {
 public:
-  bool solve(FDMLinearSystem2f *s) override {
-    FDMMatrix2Df &matrix = s->A;
-    FDMVector2Df &solution = s->x;
-    FDMVector2Df &rhs = s->b;
+  FDMCGSolver2f(uint _maxNumberOfIterations, double _tolerance)
+      : maxNumberOfIterations(_maxNumberOfIterations), tolerance(_tolerance) {}
+  bool solve(FDMLinearSystem2f *system) override {
+    FDMMatrix2Df &matrix = system->A;
+    FDMVector2Df &solution = system->x;
+    FDMVector2Df &rhs = system->b;
 
     r.resize(matrix.width, matrix.height);
     d.resize(matrix.width, matrix.height);
     q.resize(matrix.width, matrix.height);
     s.resize(matrix.width, matrix.height);
 
-    s->x.set(0.0);
+    system->x.set(0.0);
     r.set(0.0);
     d.set(0.0);
     q.set(0.0);
@@ -61,15 +64,15 @@ public:
            lastNumberOfIterations < maxNumberOfIterations;
   }
 
-private:
-  uint maxNumberOfIterations;
   uint lastNumberOfIterations;
-  uint residualCheckInterval;
-  double tolerance;
   double lastResidual;
 
+private:
+  uint maxNumberOfIterations;
+  double tolerance;
+
   FDMVector2Df r, d, q, s;
-  Preconditioner<FDMBlas2f> precond;
+  Preconditioner precond;
 };
 
 } // ponos namespace
