@@ -8,10 +8,8 @@ namespace aergia {
 
 App::App(uint w, uint h, const char *t, bool defaultViewport)
     : initialized(false), windowWidth(w), windowHeight(h), title(t) {
-  if (defaultViewport) {
+  if (defaultViewport)
     addViewport(0, 0, windowWidth, windowHeight);
-    viewports[0].camera.reset(new aergia::Camera());
-  }
   renderCallback = nullptr;
 }
 

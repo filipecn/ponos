@@ -28,6 +28,8 @@ Point3::Point3(const Vector3 &v) : x(v.x), y(v.y), z(v.z) {
   ASSERT(!HasNaNs());
 }
 
+Point3::Point3(const Point2 &p) : x(p.x), y(p.y), z(0.f) {}
+
 Point3::Point3(const float *v) : x(v[0]), y(v[1]), z(v[2]) {
   ASSERT(!HasNaNs());
 }

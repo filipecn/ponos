@@ -15,7 +15,7 @@ public:
     glBegin(GL_POINTS);
     FOR_INDICES0_2D(color[0].getDimensions(), ij) {
       glColor4f(color[0](ij), color[1](ij), 0, 1.f);
-      glVertex(color[0].worldPosition(ij));
+      glVertex(color[0].dataWorldPosition(ij));
     }
     glEnd();
   }
@@ -55,7 +55,6 @@ int main() {
   app.init();
   for (int i = 0; i < 2; i++) {
     color[i].set(16, 16, ponos::vec2(0.f), 1.f / 16.f);
-    color[i].init();
   }
   ponos::ivec2 ij;
   FOR_INDICES0_2D(color[0].getDimensions(), ij) {

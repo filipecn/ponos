@@ -43,7 +43,10 @@ if first:
 
 if platform.system() == 'Windows':
     make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
+                       [r"/p:Configuration=Release"] +
                        ["PONOS.sln"], shell=True)
+    #make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
+    #                   ["PONOS.sln"], shell=True)
 else:
     make_result = call(["make -j8"], shell=True)
 

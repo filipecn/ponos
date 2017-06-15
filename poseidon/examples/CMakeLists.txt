@@ -15,10 +15,12 @@ include_directories("${AERGIA_SOURCE_DIR}/src")
 
 include_directories("${POSEIDON_SOURCE_DIR}/examples")
 
+add_executable(hello_grid_solver WIN32 hello_grid_solver.cpp)
+
 if(NOT NOGRAPHICS AND NOT NOOPENVDB)
 	add_executable(zgrid WIN32 zgrid.cpp)
 
-set(WINDOWS_BINARIES zgrid)
+set(WINDOWS_BINARIES zgrid hello_grid_solver)
 
 if (MSVC)
     # Tell MSVC to use main instead of WinMain for Windows subsystem executables

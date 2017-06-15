@@ -2,7 +2,10 @@ project(POSEIDON)
 
 set(HEADERS
 	src/algorithms/solver.h
+	src/algorithms/grid_solver.h
+	src/elements/collider.h
   src/elements/particle.h
+	src/elements/simulation_scene.h
   src/math/conjugate_gradient.h
   src/structures/mac_grid.h
   src/structures/particle_grid.h
@@ -12,7 +15,9 @@ set(HEADERS
 )
 
 set(SOURCES
+	src/algorithms/grid_solver.cpp
   src/elements/particle.cpp
+	src/elements/simulation_scene.cpp
   src/math/conjugate_gradient.cpp
   src/structures/particle_grid.cpp
 )
@@ -54,3 +59,5 @@ add_subdirectory(examples)
 if(TESTPOSEIDON)
 	add_subdirectory(tests)
 endif(TESTPOSEIDON)
+
+add_subdirectory(tests/unit_tests)

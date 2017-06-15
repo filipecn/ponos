@@ -111,37 +111,38 @@ public:
    * @d **[in]** dimensions
    * @b **[in]** border (default value)
    */
-  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) { set(d); }
+  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) { this->set(d); }
+  RegularGrid2D(size_t w, size_t h, T v) {
+    this->setDimensions(w, h);
+    this->setAll(v);
+  }
   ~RegularGrid2D() { clear(); }
 
   RegularGrid2D(uint32_t w, uint32_t h) : data(nullptr) {
-    this->useBorder = true;
     this->setDimensions(w, h);
-    set(this->getDimensions());
   }
 
   T getData(int i, int j) const override { return data[i][j]; }
   T &getData(int i, int j) override { return data[i][j]; }
 
-  void set(const ivec2 &d) {
-    this->useBorder = true;
-    clear();
-    this->width = d[0];
-    this->height = d[1];
-    data = new T *[d[0]];
-    int i;
-    FOR_LOOP(i, 0, d[0])
-    data[i] = new T[d[1]];
+  void updateDataStructure() override {
+    // TODO fix that!
+    // clear();
+    data = new T *[this->width];
+    uint32_t i;
+    FOR_LOOP(i, 0, this->width)
+    data[i] = new T[this->height];
   }
 
 private:
   void clear() {
-    if (!data)
+    if (data == nullptr)
       return;
     uint32_t i;
-    FOR_LOOP(i, static_cast<uint32_t>(0), this->width)
+    FOR_LOOP(i, 0, this->width)
     delete[] data[i];
-    delete data;
+    delete[] data;
+    data = nullptr;
   }
 
   T **data;

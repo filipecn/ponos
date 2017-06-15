@@ -49,13 +49,16 @@ void loadOBJ(const std::string &filename, ponos::RawMesh *mesh) {
   mesh->indices.resize(shapes[0].mesh.indices.size());
   memcpy(&mesh->indices[0], &shapes[0].mesh.indices[0],
          shapes[0].mesh.indices.size() * sizeof(tinyobj::index_t));
+  mesh->vertexDescriptor.elementSize = 3;
   mesh->vertexDescriptor.count =
       mesh->vertices.size() / mesh->vertexDescriptor.elementSize;
   mesh->meshDescriptor.elementSize = 3;
   mesh->meshDescriptor.count =
       mesh->indices.size() / mesh->meshDescriptor.elementSize;
+  mesh->primitiveType = ponos::GeometricPrimitiveType::TRIANGLES;
   mesh->computeBBox();
   mesh->splitIndexData();
+  mesh->buildInterleavedData();
   /* tiny obj use
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {

@@ -29,8 +29,7 @@ namespace aergia {
 WireframeMesh::WireframeMesh(const std::string &filename)
     : SceneMesh(filename) {}
 
-WireframeMesh::WireframeMesh(const ponos::RawMesh *m,
-                             const ponos::Transform &t) {
+WireframeMesh::WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t) {
   rawMesh = m;
   setupVertexBuffer();
   setupIndexBuffer();
@@ -54,7 +53,7 @@ void WireframeMesh::draw() const {
 
 void WireframeMesh::setupIndexBuffer() {
   BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
-      1, rawMesh->verticesIndices.size(), GL_LINES);
+      1, rawMesh->verticesIndices.size(), ponos::GeometricPrimitiveType::LINES);
   ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
 }
 

@@ -10,6 +10,8 @@ set(HEADERS
 	src/helpers/camera_model.h
 	src/helpers/cartesian_grid.h
 	src/helpers/geometry_drawers.h
+	src/helpers/grid_model.h
+	src/helpers/quad_tree_model.h
 	src/helpers/vector_grid.h
 	src/io/buffer.h
 	src/io/framebuffer.h

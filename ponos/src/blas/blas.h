@@ -26,6 +26,8 @@
 #define PONOS_BLAS_BLAS_H
 
 #include "blas/fdm_matrix.h"
+#include "blas/sparse_matrix.h"
+#include "blas/sparse_vector.h"
 #include <cmath>
 
 namespace ponos {
@@ -119,6 +121,71 @@ template <> struct Blas<float, FDMVector2Df, FDMMatrix2Df> {
       for (size_t j = 0; j < v.height; j++)
         sum += v(i, j) * v(i, j);
     return sqrtf(sum);
+  }
+};
+
+typedef Blas<double, SparseVector<double>, SparseMatrix<double>> SparseBlas2d;
+
+template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
+  typedef double ScalarType;
+  typedef SparseVector<double> VectorType;
+  typedef SparseMatrix<double> MatrixType;
+  // Sets the given scalar value to the output vector.
+  static void set(ScalarType s, VectorType *result) {
+    result->iterate([s](ScalarType &v, size_t i) { v = s; });
+  }
+  // Sets the given vector to the output vector.
+  static void set(const VectorType &v, VectorType *result) { result->copy(v); }
+  // Sets the given scalar value to the output matrix.
+  static void set(ScalarType s, MatrixType *result) {
+    for (size_t r = 0; r < result->rowCount(); r++)
+      result->iterateRow(r, [s](ScalarType &v, size_t j) { v = s; });
+  }
+  // Sets the given matrix to the output matrix.
+  static void set(const MatrixType &m, MatrixType *result) { result->copy(m); }
+  // Performs dot product.
+  static ScalarType dot(const VectorType &a, const VectorType &b) {
+    return a.dot(b);
+  }
+  // Calculates a*x + y.
+  static void axpy(ScalarType a, const VectorType &x, const VectorType &y,
+                   VectorType *result) {
+    ::ponos::axpy(a, x, y, result);
+  }
+  // Performs matrix-vector multiplication.
+  static void mvm(const MatrixType &m, const VectorType &v,
+                  VectorType *result) {
+    for (size_t r = 0; r < m.rowCount(); r++) {
+      VectorType::const_iterator it(v);
+      ScalarType sum = 0.0;
+      bool nonZero = false;
+      m.iterateRow(r, [&](const ScalarType &v, size_t j) {
+        if (it.rowIndex() < j)
+          while (it.next() && it.rowIndex() < j)
+            ++it;
+        if (!it.next())
+          return;
+        if (it.rowIndex() == j) {
+          nonZero = true;
+          sum += v * it.value();
+        }
+      });
+      if (nonZero)
+        result->insert(r, sum);
+    }
+  }
+  // Calculates b - A*x.
+  static void residual(const MatrixType &a, const VectorType &x,
+                       const VectorType &b, VectorType *result) {
+    mvm(a, x, result);
+    ::ponos::axpy(-1.0, result, b);
+  }
+  // Returns the length of the vector.
+  static ScalarType l2Norm(const VectorType &v) {
+    ScalarType sum = 0.0;
+    for (VectorType::const_iterator it(v); it.next(); ++it)
+      sum += it.value() * it.value();
+    return sqrt(sum);
   }
 };
 

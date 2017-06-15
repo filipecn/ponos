@@ -173,4 +173,20 @@ void glApplyTransform(const ponos::Transform &transform) {
   glMultMatrixf(m);
 }
 
+ponos::Transform glGetProjectionTransform() {
+  float m[16];
+  glGetFloatv(GL_PROJECTION_MATRIX, m);
+  return ponos::Transform(ponos::Matrix4x4(m, false));
+}
+
+ponos::Transform glGetModelviewTransform() {
+  float m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  return ponos::Transform(ponos::Matrix4x4(m, false));
+}
+
+ponos::Transform glGetMVPTransform() {
+  return glGetModelviewTransform() * glGetProjectionTransform();
+}
+
 } // aergia namespace

@@ -39,6 +39,9 @@ public:
   size_t addViewport2D(uint x, uint y, uint w, uint h);
   void init();
   void run();
+  template <typename T> T *getCamera(size_t i = 0) {
+    return static_cast<T *>(viewports[i].camera.get());
+  }
 
   std::vector<ViewportDisplay> viewports;
   std::function<void()> renderCallback;

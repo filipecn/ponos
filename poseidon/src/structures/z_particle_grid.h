@@ -86,7 +86,7 @@ public:
       first = fi + 1;
       cur = first;
     }
-    bool next() { return cur < last; }
+    bool next() const { return cur < last; }
     ParticleObject *get() {
       if (cur >= last)
         return nullptr;
@@ -100,7 +100,7 @@ public:
     ParticleElement *particleElement() { return &grid.particles[cur]; }
 
     void operator++() { cur++; }
-    int count() { return last - first; }
+    int count() const { return last - first; }
 
   private:
     size_t first, cur, last;

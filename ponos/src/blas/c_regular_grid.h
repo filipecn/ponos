@@ -102,7 +102,8 @@ private:
 /**
  */
 template <typename T = float>
-class CRegularGrid2D : public Grid2DInterface<T>, public FieldInterface2D<T> {
+class CRegularGrid2D : public Grid2DInterface<T>,
+                       virtual public FieldInterface2D<T> {
 public:
   CRegularGrid2D();
   CRegularGrid2D(uint32_t w, uint32_t h);
@@ -110,16 +111,8 @@ public:
 
   T getData(int i, int j) const override { return data[i][j]; }
   T &getData(int i, int j) override { return data[i][j]; }
+  void updateDataStructure() override;
   T sample(float x, float y) const override;
-
-  void set(uint32_t w, uint32_t h, Vector2 offset, Vector2 cellSize);
-  void init();
-
-  void filter(std::function<void(T &t)> f) {
-    for (uint32_t i = 0; i < data.size(); ++i)
-      for (uint32_t j = 0; j < data[i].size(); ++j)
-        f(data[i][j]);
-  }
 
   T infNorm() const {
     T r = std::fabs((*this)(0, 0));

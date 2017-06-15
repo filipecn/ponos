@@ -55,6 +55,8 @@ public:
   }
   Point2 operator+(const Vector2 &v) const { return Point2(x + v.x, y + v.y); }
   Point2 operator-(const Vector2 &v) const { return Point2(x - v.x, y - v.y); }
+  Point2 operator-(const float &f) const { return Point2(x - f, y - f); }
+  Point2 operator+(const float &f) const { return Point2(x + f, y + f); }
   Vector2 operator-(const Point2 &p) const {
     return Vector2(x - p.x, y - p.y);
   };
@@ -107,6 +109,7 @@ public:
   Point(T v);
   explicit Point(Point2 p);
   Point(std::initializer_list<T> p) {
+    size = D;
     int k = 0;
     for (auto it = p.begin(); it != p.end(); ++it) {
       if (k >= D)
@@ -203,6 +206,7 @@ public:
   explicit Point3(float _x, float _y, float _z);
   explicit Point3(const Vector3 &v);
   explicit Point3(const float *v);
+  explicit Point3(const Point2 &p);
   explicit operator Vector3() const { return Vector3(x, y, z); }
   // access
   float operator[](int i) const {
@@ -268,6 +272,8 @@ inline float distance2(const Point3 &a, const Point3 &b) {
   return (a - b).length2();
 }
 
+typedef Point<int, 2> Point2i;
+typedef Point<float, 2> Point2f;
 } // ponos namespace
 
 #endif

@@ -39,10 +39,11 @@ namespace ponos {
 /**
  */
 template <typename T>
-class ScalarGrid2D : public CRegularGrid2D<T>, public ScalarField2D<T> {
+class ScalarGrid2D : public CRegularGrid2D<T>, virtual public ScalarField2D<T> {
 public:
   ScalarGrid2D();
   ScalarGrid2D(uint w, uint h);
+  ScalarGrid2D(uint w, uint h, const BBox2D &b);
   virtual ~ScalarGrid2D() {}
   Vector<T, 2> gradient(int x, int y) const;
   Vector<T, 2> gradient(float x, float y) const override;

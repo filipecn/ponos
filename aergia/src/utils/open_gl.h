@@ -74,6 +74,12 @@ void glColor(Color c);
 
 void glApplyTransform(const ponos::Transform &transform);
 
+ponos::Transform glGetProjectionTransform();
+
+ponos::Transform glGetModelviewTransform();
+
+ponos::Transform glGetMVPTransform();
+
 } // aergia namespace
 
 #endif // AERGIA_UTILS_OPEN_GL_H

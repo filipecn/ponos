@@ -40,6 +40,7 @@ public:
   Vector2();
   explicit Vector2(float _x, float _y);
   explicit Vector2(const Point2 &p);
+  explicit Vector2(const Normal2D &n);
   Vector2(float f);
   Vector2(float *f);
   // access
@@ -486,6 +487,22 @@ public:
     return m;
   }
 
+  float length2() const {
+    float sum = 0.f;
+    for (size_t i = 0; i < size; i++)
+      sum += SQR(v[i]);
+    return sum;
+  }
+  float length() const { return std::sqrt(length2()); }
+
+  Vector<T, D> normalized() const {
+    float d = length();
+    Vector<T, D> r;
+    for (size_t i = 0; i < size; i++)
+      r[i] = v[i] / d;
+    return r;
+  }
+
   friend std::ostream &operator<<(std::ostream &os, const Vector &v) {
     os << "Vector[<" << D << ">]";
     for (size_t i = 0; i < v.size; i++)
@@ -503,6 +520,7 @@ inline Vector<T, D> operator*(float f, const Vector<T, D> &v) {
   return v * f;
 }
 
+typedef Vector<float, 2> vec2f;
 typedef Vector<int, 2> ivec2;
 typedef Vector<uint, 2> uivec2;
 typedef Vector<int, 3> ivec3;

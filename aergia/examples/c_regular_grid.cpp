@@ -47,13 +47,13 @@ void render() {
     if (mask(ij) != 1)
       continue;
     glColor(Color(color[0](ij), color[1](ij), color[2](ij)));
-    glVertex(color[0].worldPosition(ij));
+    glVertex(color[0].dataWorldPosition(ij));
   }
   // sample points
   ponos::ivec2 d(0);
   ponos::ivec2 D(100);
   FOR_INDICES2D(d, D, ij) {
-    ponos::Point2 wp = color[0].worldPosition(ij) / 10.f;
+    ponos::Point2 wp = color[0].dataWorldPosition(ij) / 10.f;
     // if (mask(ponos::ivec2(ij[0] / 10, ij[1] / 10)) == 1) {
     glColor(Color(color[0].sample(wp.x, wp.y), color[1].sample(wp.x, wp.y),
                   color[2].sample(wp.x, wp.y)));
@@ -76,7 +76,7 @@ int main() {
   else
     mask(ij) = 0;
   phi.set(10, 10, ponos::vec2(), ponos::vec2(1.f / 10.f));
-  phi.useBorder = true;
+  phi.accessMode = ponos::GridAccessMode::BORDER;
   phi.border = 1 << 16;
   std::vector<ponos::ivec2> points = {ponos::ivec2(0, 9)};
   ponos::fastMarch2D<ponos::CRegularGrid2D<float>, ponos::RegularGrid2D<int>,

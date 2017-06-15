@@ -43,6 +43,33 @@ public:
   float r;
 };
 
+class ImplicitCircle final : public ImplicitCurveInterface {
+public:
+  ImplicitCircle() : r(0.f) {}
+
+  ImplicitCircle(Point2 center, float radius) : c(center), r(radius) {}
+  ~ImplicitCircle() {}
+
+  Point2 closestPoint(const Point2 &p) const override {
+    return c + r * vec2(this->closestNormal(p));
+  }
+  Normal2D closestNormal(const Point2 &p) const override {
+    if (c == p)
+      return Normal2D(1, 0);
+    vec2 n = normalize(c - p);
+    return Normal2D(n.x, n.y);
+  }
+  BBox2D boundingBox() const override { return BBox2D(c - r, c + r); }
+  void closestIntersection(const Ray2 &r,
+                           CurveRayIntersection *i) const override {}
+  double signedDistance(const Point2 &p) const override {
+    return distance(c, p) - r;
+  }
+
+  Point2 c;
+  float r;
+};
+
 class Sphere : public SurfaceInterface {
 public:
   Sphere() : r(0.f) {}
@@ -51,9 +78,9 @@ public:
   virtual ~Sphere() {}
 
   Point3 closestPoint(const Point3 &p) const override {
-    return c + r * vec3(this->closestNomal(p));
+    return c + r * vec3(this->closestNormal(p));
   }
-  Normal closestNomal(const Point3 &p) const override {
+  Normal closestNormal(const Point3 &p) const override {
     if (c == p)
       return Normal(1, 0, 0);
     vec3 n = normalize(c - p);
@@ -67,15 +94,16 @@ public:
 };
 
 class ImplicitSphere final : public ImplicitSurfaceInterface {
+public:
   ImplicitSphere() : r(0.f) {}
 
   ImplicitSphere(Point3 center, float radius) : c(center), r(radius) {}
   ~ImplicitSphere() {}
 
   Point3 closestPoint(const Point3 &p) const override {
-    return c + r * vec3(this->closestNomal(p));
+    return c + r * vec3(this->closestNormal(p));
   }
-  Normal closestNomal(const Point3 &p) const override {
+  Normal closestNormal(const Point3 &p) const override {
     if (c == p)
       return Normal(1, 0, 0);
     vec3 n = normalize(c - p);

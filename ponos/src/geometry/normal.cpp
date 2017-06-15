@@ -33,6 +33,14 @@ Normal2D::Normal2D(const Vector2 &v) : x(v.x), y(v.y) {}
 
 Normal2D::operator Vector2() const { return Vector2(x, y); }
 
+Vector2 reflect(const Vector2 &a, const Normal2D &n) {
+  return a - 2 * dot(a, Vector2(n)) * Vector2(n);
+}
+
+Vector2 project(const Vector2 &v, const Normal2D &n) {
+  return v - dot(v, vec2(n)) * vec2(n);
+}
+
 Normal::Normal(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 
 Normal::Normal(const Vector3 &v) : x(v.x), y(v.y), z(v.z) {}

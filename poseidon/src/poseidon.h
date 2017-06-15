@@ -1,4 +1,7 @@
+#include "algorithms/grid_solver.h"
+#include "elements/collider.h"
 #include "elements/particle.h"
+#include "elements/simulation_scene.h"
 #include "math/conjugate_gradient.h"
 #include "structures/mac_grid.h"
 #include "structures/particle_grid.h"

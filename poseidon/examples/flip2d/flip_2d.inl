@@ -262,16 +262,10 @@ template <typename ParticleType> void FLIP2D<ParticleType>::setup() {
     grid[i] =
         new MacGrid2D<ponos::CRegularGrid2D>(dimensions[0], dimensions[1], dx);
   distances.setDimensions(dimensions[0], dimensions[1]);
-  distances.init();
-  distances.useBorder = false;
   usolid.setDimensions(dimensions[0] + 1, dimensions[1]);
-  usolid.init();
   vsolid.setDimensions(dimensions[0], dimensions[1] + 1);
-  vsolid.init();
   usolid.setAll(0.f);
-  usolid.useBorder = false;
   vsolid.setAll(0.f);
-  vsolid.useBorder = false;
   solver.set(dimensions[0] * dimensions[1]);
 }
 
@@ -392,13 +386,13 @@ void FLIP2D<ParticleType>::sendVelocitiesToGrid() {
   ponos::ivec2 ij;
   // splat U velocaities
   FOR_INDICES0_2D(grid[CUR_GRID]->v_u->getDimensions(), ij) {
-    ponos::Point2 wp = grid[CUR_GRID]->v_u->worldPosition(ij);
+    ponos::Point2 wp = grid[CUR_GRID]->v_u->dataWorldPosition(ij);
     (*grid[CUR_GRID]->v_u)(ij[0], ij[1]) =
         particleGrid->gather(ParticleAttribute::VELOCITY_X, wp, radius);
   }
   // splat V velocities
   FOR_INDICES0_2D(grid[CUR_GRID]->v_v->getDimensions(), ij) {
-    ponos::Point2 wp = grid[CUR_GRID]->v_v->worldPosition(ij);
+    ponos::Point2 wp = grid[CUR_GRID]->v_v->dataWorldPosition(ij);
     (*grid[CUR_GRID]->v_v)(ij[0], ij[1]) =
         particleGrid->gather(ParticleAttribute::VELOCITY_Y, wp, radius);
   }

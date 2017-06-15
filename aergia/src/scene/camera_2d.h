@@ -32,7 +32,7 @@ namespace aergia {
 class Camera2D : public CameraInterface {
 public:
   Camera2D();
-
+  typedef Camera2D CameraType;
   void look() override;
   void resize(float w, float h) override;
   void fit(const ponos::BBox2D &b, float delta = 1.f);

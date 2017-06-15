@@ -6,6 +6,7 @@ add_executable(hello_3d WIN32 hello3D.cpp)
 add_executable(stream_lines WIN32 stream_lines.cpp)
 add_executable(vector_grid WIN32 vector_grid_example.cpp)
 add_executable(geometry_queries WIN32 geometry_queries.cpp)
+add_executable(quad_tree WIN32 quad_tree.cpp)
 add_executable(procedural_texture WIN32 procedural_texture.cpp)
 add_executable(z_grid zgrid_example.cpp)
 add_executable(c_regular_grid_example WIN32 c_regular_grid.cpp)
@@ -26,6 +27,7 @@ set(WINDOWS_BINARIES
 	scene_app
 	hello_3d
 	stream_lines
+	quad_tree
 )
 
 if (MSVC)

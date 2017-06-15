@@ -25,21 +25,30 @@
 #ifndef POSEIDON_ALGORITHMS_GRID_SOLVER_H
 #define POSEIDON_ALGORITHMS_GRID_SOLVER_H
 
-#include <ponos.h>
+#include "elements/simulation_scene.h"
 
 namespace poseidon {
 
+enum class SimCellType { FLUID, SOLID, AIR };
+
 /** Grid based fluid solver.
  */
-class GridSolver {
+class GridSolver2D {
 public:
-  GridSolver() {}
-  virtual ~GridSolver();
+  GridSolver2D();
+  virtual ~GridSolver2D();
+  ponos::StaggeredGrid2f &getGrid() { return macGrid; }
+  SimulationScene2D &getScene() { return scene; }
+  virtual void set(uint rx, const ponos::BBox2D &b);
+  virtual void step(double timeInterval);
 
-protected:
+  void markCells();
   void enforceBoundaries();
 
-  ponos::ScalarGrid2f
+protected:
+  SimulationScene2D scene;
+  ponos::StaggeredGrid2f macGrid;
+  ponos::RegularGrid2D<SimCellType> cell;
 };
 
 } // poseidon namespace

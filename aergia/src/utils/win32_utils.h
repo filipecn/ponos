@@ -3,15 +3,18 @@
 
 #ifdef _WIN32
 
-#define WIN32CONSOLE() \
-/* Open a new console window */ \
-AllocConsole(); \
-AttachConsole(GetCurrentProcessId()); \
-/*-- Associate std input/output with newly opened console window: */ \
-freopen("CONIN$", "r", stdin); \
-freopen("CONOUT$", "w", stdout); \
-freopen("CONOUT$", "w", stderr);
+#define WIN32CONSOLE()                                                         \
+  /* Open a new console window */                                              \
+  AllocConsole();                                                              \
+  AttachConsole(GetCurrentProcessId());                                        \
+  /*-- Associate std input/output with newly opened console window: */         \
+  freopen("CONIN$", "r", stdin);                                               \
+  freopen("CONOUT$", "w", stdout);                                             \
+  freopen("CONOUT$", "w", stderr);
 
+#else
+#define WIN32CONSOLE()                                                         \
+  {}
 #endif
 
 #endif // AERGIA_UTILS_WIN32_UTILS_H

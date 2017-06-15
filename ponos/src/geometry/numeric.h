@@ -106,6 +106,23 @@ inline float mod(int a, int b) {
     a += b;
   return a;
 }
+template <typename T = float, typename S = float>
+inline T bisect(T a, T b, S fa, S fb, S error, const std::function<S(T p)> &f) {
+  if (fb < fa)
+    return bisect(b, a, fb, fa, error, f);
+  S zero = 0;
+  if (fa > zero || IS_EQUAL_ERROR(fa, zero, error))
+    return a;
+  if (fb < zero || IS_EQUAL_ERROR(fb, zero, error))
+    return b;
+  T c = (a + b) / static_cast<T>(2);
+  if (IS_EQUAL(a, c) || IS_EQUAL(b, c))
+    return c;
+  S fc = f(c);
+  if (fc > zero)
+    return bisect(a, c, fa, fc, error, f);
+  return bisect(c, b, fc, fb, error, f);
+}
 /** \brief interpolation
  * \param t **[in]** parametric coordinate
  * \param a **[in]** lower bound **0**

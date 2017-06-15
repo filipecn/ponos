@@ -34,9 +34,7 @@
 
 namespace aergia {
 
-/** \brief descriptor
- *
- * Describes the data contained in a buffer.
+/** Describes the data contained in a buffer.
  */
 struct BufferDescriptor {
   struct Attribute {
@@ -89,8 +87,31 @@ create_vertex_buffer_descriptor(size_t elementSize, size_t elementCount,
 
 inline BufferDescriptor
 create_index_buffer_descriptor(size_t elementSize, size_t elementCount,
-                               GLuint elementType = GL_TRIANGLES) {
-  return BufferDescriptor(elementSize, elementCount, elementType,
+                               ponos::GeometricPrimitiveType elementType) {
+  GLuint type = GL_TRIANGLES;
+  switch (elementType) {
+  case ponos::GeometricPrimitiveType::TRIANGLES:
+    type = GL_TRIANGLES;
+    break;
+  case ponos::GeometricPrimitiveType::LINES:
+    type = GL_LINES;
+    break;
+  case ponos::GeometricPrimitiveType::QUADS:
+    type = GL_QUADS;
+    break;
+  case ponos::GeometricPrimitiveType::LINE_LOOP:
+    type = GL_LINE_LOOP;
+    break;
+  case ponos::GeometricPrimitiveType::TRIANGLE_FAN:
+    type = GL_TRIANGLE_FAN;
+    break;
+  case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:
+    type = GL_TRIANGLE_STRIP;
+    break;
+  default:
+    break;
+  }
+  return BufferDescriptor(elementSize, elementCount, type,
                           GL_ELEMENT_ARRAY_BUFFER);
 }
 

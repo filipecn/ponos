@@ -6,6 +6,8 @@
 #include "helpers/camera_model.h"
 #include "helpers/cartesian_grid.h"
 #include "helpers/geometry_drawers.h"
+#include "helpers/grid_model.h"
+#include "helpers/quad_tree_model.h"
 #include "helpers/vector_grid.h"
 #include "io/buffer.h"
 #include "io/framebuffer.h"

@@ -28,7 +28,7 @@
 #include <vector>
 
 namespace ponos {
-/** Convenient vector structure to use in Finite Difference Methods */
+/** Covenient vector structure to use in Finite Difference Methods */
 template <typename T> class FDMVector2D {
 public:
   FDMVector2D() : width(0), height(0) {}

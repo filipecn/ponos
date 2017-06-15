@@ -60,7 +60,7 @@ const char *fs = "#version 440 core\n"
 
 class ShaderMesh : public aergia::SceneMesh {
 public:
-  ShaderMesh(const ponos::RawMesh *m, aergia::Shader *s) {
+  ShaderMesh(ponos::RawMesh *m, aergia::Shader *s) {
     rawMesh = m;
     shader = s;
     setupVertexBuffer();

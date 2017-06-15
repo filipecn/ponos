@@ -29,10 +29,19 @@
 #include "geometry/transform.h"
 
 #include <algorithm>
+#include <functional>
 
 namespace ponos {
 
 enum class CGridAccessMode { CLAMP_TO_DEDGE, BACKGROUND, REPEAT };
+enum class GridDataPosition {
+  CELL_CENTER,
+  VERTEX_CENTER,
+  U_FACE_CENTER,
+  V_FACE_CENTER,
+  W_FACE_CENTER
+};
+enum class GridAccessMode { CLAMP_TO_EDGE, BORDER, REPEAT, RESTRICT };
 
 /** \brief Continuous 3D grid interface
  *
@@ -110,53 +119,66 @@ public:
  */
 template <typename T> class Grid2DInterface {
 public:
-  virtual T getData(int i, int j) const = 0; /// { return dummy; }
-  virtual T &getData(int i, int j) = 0;      // { return dummy; }
-  T &operator()(const ivec2 &ij) {
-    if (ij[0] < 0 || ij[1] < 0 || ij[0] >= static_cast<int>(width) ||
-        ij[1] >= static_cast<int>(height)) {
-      if (!useBorder) {
-        std::cout << "useBorder = false!\n";
-        exit(1);
-      }
-      return border;
-    }
-    return getData(ij[0], ij[1]);
+  typedef T DataType;
+  virtual T getData(int i, int j) const = 0;
+  virtual T &getData(int i, int j) = 0;
+  virtual void updateDataStructure() = 0;
+  /** iterate through data elements
+   * \param f function called on each element
+   */
+  void forEach(const std::function<void(T &d, size_t i, size_t j)> &f) {
+    for (size_t i = 0; i < width; i++)
+      for (size_t j = 0; j < height; j++)
+        f(getData(i, j), i, j);
   }
-  T operator()(const ivec2 &ij) const {
-    if (ij[0] < 0 || ij[1] < 0 || ij[0] >= static_cast<int>(width) ||
-        ij[1] >= static_cast<int>(height)) {
-      if (!useBorder) {
-        std::cout << "useBorder = false!\n";
-        exit(1);
-      }
-      return border;
-    }
-    return getData(ij[0], ij[1]);
+  /** iterate through data elements
+   * \param f function called on each element
+   */
+  void
+  forEach(const std::function<void(const T &d, size_t i, size_t j)> &f) const {
+    for (size_t i = 0; i < width; i++)
+      for (size_t j = 0; j < height; j++)
+        f(getData(i, j), i, j);
   }
-  T &operator()(int i, int j) {
-    if (i < 0 || j < 0 || i >= static_cast<int>(width) ||
-        j >= static_cast<int>(height)) {
-      if (!this->useBorder) {
-        std::cout << "useBorder = false!\n";
-        exit(1);
+  T accessData(int i, int j) const {
+    if (!belongs(Point<int, 2>({i, j}))) {
+      switch (accessMode) {
+      case GridAccessMode::BORDER:
+        return border;
+      case GridAccessMode::CLAMP_TO_EDGE:
+        return safeData(i, j);
+      case GridAccessMode::RESTRICT:
+        throw "restrict access to grid!";
+      default:
+        return border;
       }
-      return border;
-    }
-    return getData(i, j);
-  }
-  T operator()(int i, int j) const {
-    if (i < 0 || j < 0 || i >= static_cast<int>(width) ||
-        j >= static_cast<int>(height)) {
-      if (!this->useBorder) {
-        std::cout << "useBorder = false!\n";
-        exit(1);
-      }
-      return border;
     }
     return getData(i, j);
   }
+  T &accessData(int i, int j) {
+    if (!belongs(Point<int, 2>({i, j}))) {
+      switch (accessMode) {
+      case GridAccessMode::BORDER:
+        return border;
+      case GridAccessMode::CLAMP_TO_EDGE:
+        return safeData(i, j);
+      case GridAccessMode::RESTRICT:
+        throw "restrict access to grid!";
+      default:
+        return border;
+      }
+    }
+    return getData(i, j);
+  }
+  T &operator()(const ivec2 &ij) { return accessData(ij[0], ij[1]); }
+  T operator()(const ivec2 &ij) const { return accessData(ij[0], ij[1]); }
+  T &operator()(int i, int j) { return accessData(i, j); }
+  T operator()(int i, int j) const { return accessData(i, j); }
   T safeData(int i, int j) const {
+    return getData(std::max(0, std::min(static_cast<int>(width) - 1, i)),
+                   std::max(0, std::min(static_cast<int>(height) - 1, j)));
+  }
+  T &safeData(int i, int j) {
     return getData(std::max(0, std::min(static_cast<int>(width) - 1, i)),
                    std::max(0, std::min(static_cast<int>(height) - 1, j)));
   }
@@ -192,10 +214,15 @@ public:
    * \param w width **[in]** (number of cells)
    * \param h height **[in]** (number of cells)
    */
-  virtual void setDimensions(uint32_t w, uint32_t h) {
+  void setDimensions(uint32_t w, uint32_t h) {
     width = w;
     height = h;
+    updateDataStructure();
   }
+  /** Sets grid's dimensions
+   * \param d (width,height) **[in]** (number of cells)
+   */
+  void set(const ivec2 &d) { setDimensions(d[0], d[1]); }
   /** Sets grid's properties
    * \param w width **[in]** (number of cells)
    * \param h height **[in]** (number of cells)
@@ -206,21 +233,53 @@ public:
     setTransform(_offset, _cellSize);
     setDimensions(w, h);
   }
+  /** Fit grid to bounding box
+   * \param w width **[in]** (number of cells)
+   * \param h height **[in]** (number of cells)
+   * \param b bounding box
+   */
+  void set(uint32_t w, uint32_t h, const BBox2D &b) {
+    setDimensions(w, h);
+    vec2 size(w, h);
+    setTransform(translate(vec2(b.pMin)) *
+                 scale(b.size(0) / size.x, b.size(1) / size.y));
+  }
+  /** data position
+   * \return grid data position relative to grid origin
+   */
+  vec2 dataOffset() const {
+    switch (dataPosition) {
+    case GridDataPosition::CELL_CENTER:
+      return vec2(0.5f, 0.5f);
+    case GridDataPosition::VERTEX_CENTER:
+      return vec2(0.f, 0.f);
+    case GridDataPosition::U_FACE_CENTER:
+      return vec2(0.f, 0.5f);
+    case GridDataPosition::V_FACE_CENTER:
+      return vec2(0.5f, 0.f);
+    default:
+      ASSERT_FATAL(false);
+    }
+    return vec2();
+  }
   /** Cell containing point
    * \param wp point (world position)
    * \return point representing cell's position (index space)
    */
-  Point<int, 2> cell(Point2 wp) const {
-    vec2 delta(0.5f, 0.5f);
-    return Point<int, 2>(toGrid(wp) + delta);
+  Point<int, 2> cell(Point2 wp) const { return Point<int, 2>(toGrid(wp)); }
+  /** Data cell containing point
+   * \param wp point (world position)
+   * \return point representing cell's position (index space)
+   */
+  Point<int, 2> dataCell(Point2 wp) const {
+    return Point<int, 2>(toGrid(wp) - dataOffset());
   }
   /** Interior cell containing point
    * \param wp **[in]** point (world position)
    * \return point representing cell's position (index space)
    */
   Point<int, 2> safeCell(Point2 wp) const {
-    vec2 delta(0.5f, 0.5f);
-    Point<int, 2> gp(toGrid(wp) + delta);
+    Point<int, 2> gp = cell(wp);
     gp[0] = std::min(static_cast<int>(width) - 1,
                      static_cast<int>(std::max(0, gp[0])));
     gp[1] = std::min(static_cast<int>(height) - 1,
@@ -235,26 +294,41 @@ public:
     return 0 <= c[0] && c[0] < static_cast<int>(width) && 0 <= c[1] &&
            c[1] < static_cast<int>(height);
   }
-  /** Index space to world position
+  /** World space to data grid space (diff from index space)
+   * \param wp **[in]** world space
+   * \return data grid position
+   */
+  Point2 dataGridPosition(const Point2 &wp) const {
+    return toGrid(wp) - dataOffset();
+  }
+  /** Index space to world position of data
    * \param ij **[in]** index
    * \return world position
    */
-  Point2 worldPosition(const ivec2 &ij) const {
-    return toWorld(ponos::Point2(ij[0], ij[1]));
+  Point2 dataWorldPosition(const ivec2 &ij) const {
+    return toWorld(ponos::Point2(ij[0], ij[1]) + dataOffset());
+  }
+  /** Index space to world position of data
+   * \param i **[in]** index in x direction
+   * \param j **[in]** index in y direction
+   * \return world position
+   */
+  Point2 dataWorldPosition(int i, int j) const {
+    return toWorld(ponos::Point2(i, j) + dataOffset());
   }
   /** Bounding box of cell **c**
    * \param c **[in]** cell (index space)
    * \return bounding box of **c** in world coordinates
    */
   BBox2D cellWBox(const Point<int, 2> &c) const {
-    Point2 pmin(c[0] - 0.5f, c[1] - 0.5f);
-    Point2 pmax(c[0] + 0.5f, c[1] + 0.5f);
+    Point2 pmin(c[0], c[1]);
+    Point2 pmax(c[0] + 1, c[1] + 1);
     return BBox2D(toWorld(pmin), toWorld(pmax));
   }
   /** Get grid spacing
    * \return cell size
    */
-  ivec2 getDimensions() const { return ponos::ivec2(width, height); }
+  ivec2 getDimensions() const { return ivec2(width, height); }
   /** Get grid dimensions
    * \return dimensions
    */
@@ -262,14 +336,26 @@ public:
     BBox2D b = this->cellWBox(Point<int, 2>({0, 0}));
     return b.extends();
   }
-  T border;            //!< border value
-  bool useBorder;      //!< use border in case of invalid index access?
-  uint32_t width;      //!< number of cells in x direction
-  uint32_t height;     //!< number of cells in y direction
-  Vector2 offset;      //!< grid origin
-  Transform2D toWorld; //!< grid space to world space transform
-  Transform2D toGrid;  //!< world space to grid space transform
+  T border;                      //!< border value
+  uint32_t width;                //!< number of cells in x direction
+  uint32_t height;               //!< number of cells in y direction
+  Vector2 offset;                //!< grid origin
+  Transform2D toWorld;           //!< grid space to world space transform
+  Transform2D toGrid;            //!< world space to grid space transform
+  GridDataPosition dataPosition; //!< grid data position type
+  GridAccessMode accessMode;     //!< grid access mode
 };
+
+template <typename T>
+inline std::ostream &operator<<(std::ostream &os, const Grid2DInterface<T> *g) {
+  for (size_t j = 0; j < g->height; j++) {
+    for (size_t i = 0; i < g->width; i++)
+      os << (*g)(i, j) << " ";
+    os << std::endl;
+  }
+  os << std::endl;
+  return os;
+}
 }
 
 #endif // PONOS_STRUCTURES_C_GRID_INTERFACE_H

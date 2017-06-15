@@ -36,7 +36,7 @@ public:
   virtual T sample(float x, float y) const = 0;
 };
 
-template <class T> class ScalarField2D : public FieldInterface2D<T> {
+template <class T> class ScalarField2D : virtual public FieldInterface2D<T> {
 public:
   virtual Vector<T, 2> gradient(float x, float y) const = 0;
   virtual T laplacian(float x, float y) const = 0;

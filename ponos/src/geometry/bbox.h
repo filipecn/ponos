@@ -79,6 +79,8 @@ inline BBox2D make_union(const BBox2D &a, const BBox2D &b) {
   return make_union(ret, b.pMax);
 }
 
+inline BBox2D make_unit_bbox2D() { return BBox2D(Point2(), Point2(1, 1)); }
+
 class BBox {
 public:
   BBox();

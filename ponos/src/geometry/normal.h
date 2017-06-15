@@ -30,6 +30,19 @@
 namespace ponos {
 
 class Vector2;
+class Normal2D;
+/** \brief  reflects **a** on **b**
+ * \param a vector to be reflected
+ * \param b axis of reflection
+ * \returns reflected **a**
+ */
+Vector2 reflect(const Vector2 &a, const Normal2D &n);
+/** \brief projects **v** on the surface with normal **n**
+ * \param v vector
+ * \param n surface's normal
+ * \Returns projected **v**
+ */
+Vector2 project(const Vector2 &v, const Normal2D &n);
 
 class Normal2D {
 public:

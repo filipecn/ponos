@@ -29,7 +29,35 @@
 
 namespace poseidon {
 
-struct Collision {
+struct Collision2D {
+  float distance;
+  ponos::Point2 point;
+  ponos::Normal2D normal;
+  ponos::vec2 velocity;
+};
+
+class Collider2D {
+public:
+  Collider2D() {}
+  Collider2D(ponos::ImplicitCurveInterface *c) { implicitCurve.reset(c); }
+  virtual ~Collider2D() {}
+  void collide(const ponos::Point2 &p, const ponos::vec2 &v, float r, float rc,
+               ponos::Point2 *np, ponos::vec2 *nv) {}
+  void closestPoint(const ponos::CurveInterface &s, const ponos::Point2 &p,
+                    Collision2D *r) const {
+    r->distance = s.closestDistance(p);
+    r->point = s.closestPoint(p);
+    r->normal = s.closestNormal(p);
+    r->velocity = ponos::vec2(); // getVelocity(p);
+  }
+  bool isPenetrating(const Collision2D &c, const ponos::Point2 &p, float r) {
+    return ponos::dot(p - c.point, ponos::vec2(c.normal)) < 0.f ||
+           c.distance < r;
+  }
+  std::shared_ptr<ponos::ImplicitCurveInterface> implicitCurve;
+};
+
+/* struct Collision {
   float distance;
   ponos::Point3 point;
   ponos::Normal normal;
@@ -43,17 +71,17 @@ public:
   void collide(const ponos::Point3 &p, const ponos::vec3 &v, float r, float rc,
                ponos::Point3 *np, ponos::vec3 *nv);
   void closestPoint(const ponos::SurfaceInterface &s, const ponos::Point3 &p,
-                    ColliderQueryResult *r) const {
+                    Collision *r) const {
     r->distance = s->closestDistance(p);
     r->point = s->closestPoint(p);
-    r->normal = s->closestNormal(p);
+    r->normal = s->closestNormal(p);ndr� Nakano
     r->velocity = getVelocity(p);
   }
   bool isPenetrating(const Collision &c, const ponos::Point3 &p, float r) {
     return ponos::dot(p - c.point, c.normal) < 0.f || c.distance < r;
   }
 };
-
+*/
 } // ponos namespace
 
 #endif // POSEIDON_ELEMENTS_COLLIDER_H

@@ -30,6 +30,39 @@
 
 namespace ponos {
 
+struct CurveRayIntersection {
+  bool exists;     //!< **true** if intersection exists
+  double t;        //!< parametric coordinate from ray
+  Point2 point;    //!< intersection point
+  Normal2D normal; //!< intersection normal
+};
+
+class CurveInterface {
+public:
+  CurveInterface() {}
+  virtual ~CurveInterface() {}
+  virtual Point2 closestPoint(const Point2 &p) const = 0;
+  virtual Normal2D closestNormal(const Point2 &p) const = 0;
+  virtual BBox2D boundingBox() const = 0;
+  virtual void closestIntersection(const Ray2 &r,
+                                   CurveRayIntersection *i) const = 0;
+  virtual bool intersects(const Ray2 &r) const {
+    CurveRayIntersection i;
+    closestIntersection(r, &i);
+    return i.exists;
+  }
+  virtual double closestDistance(const Point2 &p) const {
+    return distance(closestPoint(p), p);
+  }
+};
+
+class ImplicitCurveInterface : public CurveInterface {
+public:
+  ImplicitCurveInterface() {}
+  virtual ~ImplicitCurveInterface() {}
+  virtual double signedDistance(const Point2 &p) const = 0;
+};
+
 struct SurfaceRayIntersection {
   bool exists;   //!< **true** if intersection exists
   double t;      //!< parametric coordinate from ray
@@ -42,7 +75,7 @@ public:
   SurfaceInterface() {}
   virtual ~SurfaceInterface() {}
   virtual Point3 closestPoint(const Point3 &p) const = 0;
-  virtual Normal closestNomal(const Point3 &p) const = 0;
+  virtual Normal closestNormal(const Point3 &p) const = 0;
   virtual BBox boundingBox() const = 0;
   virtual void closestIntersection(const Ray3 &r,
                                    SurfaceRayIntersection *i) const = 0;

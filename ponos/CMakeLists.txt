@@ -2,6 +2,7 @@ project(PONOS)
 
 set(HEADERS
 	src/algorithm/fast_sweep.h
+	src/algorithm/marching_squares.h
 	src/algorithm/search.h
 	src/algorithm/sort.h
 	src/blas/blas.h
@@ -17,6 +18,9 @@ set(HEADERS
 	src/blas/linear_system.h
   src/blas/pcg.h
 	src/blas/solver_interface.h
+	src/blas/sparse_matrix.h
+	src/blas/sparse_vector.h
+	src/blas/staggered_grid.h
 	src/common/defs.h
 	src/common/file.h
 	src/common/macros.h
@@ -54,6 +58,7 @@ set(HEADERS
 	src/structures/mesh.h
 	src/structures/regular_grid.h
 	src/structures/object_pool.h
+	src/structures/quad_tree.h
 	src/structures/raw_mesh.h
 	src/structures/z_grid.h
 	src/ponos.h
@@ -89,3 +94,5 @@ target_link_libraries(ponos ${ponos_LIBRARIES})
 if(TESTPONOS)
   add_subdirectory(tests)
 endif(TESTPONOS)
+
+add_subdirectory(tests/unit_tests)

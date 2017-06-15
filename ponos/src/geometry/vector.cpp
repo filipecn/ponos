@@ -12,6 +12,8 @@ Vector2::Vector2(float _x, float _y) : x(_x), y(_y) { ASSERT(!HasNaNs()); }
 
 Vector2::Vector2(const Point2 &p) : x(p.x), y(p.y) {}
 
+Vector2::Vector2(const Normal2D &n) : x(n.x), y(n.y) {}
+
 Vector2::Vector2(float f) { x = y = f; }
 
 Vector2::Vector2(float *f) {

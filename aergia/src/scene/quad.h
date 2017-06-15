@@ -31,7 +31,7 @@
 namespace aergia {
 
 /** A quadrilateral scene object. */
-class Quad : public aergia::DynamicSceneMesh {
+class Quad : public aergia::SceneMesh {
 public:
   Quad();
   ~Quad() {}

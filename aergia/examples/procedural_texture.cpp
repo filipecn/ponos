@@ -37,9 +37,9 @@ const char *fs2 = "#version 440 core\n"
                   "outColor = vec4(0.0f, 0.0f, 1.0f, 1.0f);"
                   "}";
 
-class Quad : public aergia::DynamicSceneMesh {
+class QQuad : public aergia::SceneMesh {
 public:
-  Quad() {
+  QQuad() {
     rawMesh = new ponos::RawMesh();
     rawMesh->meshDescriptor.elementSize = 4;
     rawMesh->meshDescriptor.count = 1;
@@ -55,10 +55,10 @@ public:
     rawMesh->splitIndexData();
     rawMesh->buildInterleavedData();
     glGenVertexArrays(1, &VAO);
-    setupVertexBuffer(GL_TRIANGLES, GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
+    setupVertexBuffer(/*GL_TRIANGLES, GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW*/);
     setupIndexBuffer();
   }
-  ~Quad() {}
+  ~QQuad() {}
   void set(const ponos::Point2 &pm, const ponos::Point2 &pM) {
     rawMesh->interleavedData[0] = pm.x;
     rawMesh->interleavedData[1] = pm.y;
@@ -89,7 +89,7 @@ private:
   ponos::Point2 pMin, pMax;
   GLuint VAO;
 };
-
+/*
 class ShaderMesh : public aergia::SceneMesh {
 public:
   ShaderMesh(const ponos::RawMesh *m, aergia::Shader *s) {
@@ -116,11 +116,9 @@ public:
 private:
   aergia::Shader *shader;
 };
-
+*/
 int main() {
-#ifdef WIN32
   WIN32CONSOLE();
-#endif
   app.init();
   glEnable(GL_TEXTURE_2D);
   aergia::TextureAttributes attributes;
@@ -161,7 +159,7 @@ int main() {
   static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())->setZoom(1.5f);
   static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
       ->resize(800, 800);
-  Quad quad;
+  QQuad quad;
   quad.shader = new aergia::Shader(sm.loadFromTexts(vs, nullptr, fs));
   quad.shader->addVertexAttribute("position");
   quad.shader->addVertexAttribute("texcoord");

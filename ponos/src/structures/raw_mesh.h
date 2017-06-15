@@ -32,6 +32,18 @@
 
 namespace ponos {
 
+enum class GeometricPrimitiveType {
+  POINTS,
+  LINES,
+  LINE_STRIP,
+  LINE_LOOP,
+  TRIANGLES,
+  TRIANGLE_STRIP,
+  TRIANGLE_FAN,
+  QUADS,
+  CUSTOM
+};
+
 /** \brief mesh structure
  *
  * Stores the elements of the mesh in simple arrays. This class
@@ -41,7 +53,10 @@ namespace ponos {
  */
 class RawMesh {
 public:
-  RawMesh() { vertexDescriptor.count = 3; }
+  RawMesh() {
+    vertexDescriptor.count = 3;
+    primitiveType = GeometricPrimitiveType::TRIANGLES;
+  }
   virtual ~RawMesh() {}
   struct IndexData {
     int vertexIndex;
@@ -96,6 +111,9 @@ public:
     size_t elementSize; //!< number of components per element.
     size_t count;       //!< number of elements.
   };
+  /** clears everything, sets zero to all fields
+   */
+  void clear();
   ArrayDescriptor interleavedDescriptor; //!< interleaved data descriptor
   std::vector<float> interleavedData; //!< flat array on the form [Vi Ni Ti ...]
 
@@ -113,6 +131,7 @@ public:
   std::vector<uint> normalsIndices;
   std::vector<uint> texcoordsIndices;
   BBox bbox; //!< bounding box in object space
+  GeometricPrimitiveType primitiveType;
 };
 
 } // ponos namespace

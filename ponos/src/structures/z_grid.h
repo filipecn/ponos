@@ -15,13 +15,7 @@ public:
   ZGrid();
   ZGrid(uint32_t w, uint32_t h);
 
-  void setDimensions(uint32_t w, uint32_t h) override {
-    this->width = w;
-    this->height = h;
-    init();
-  }
-
-  void init();
+  void updateDataStructure() override;
 
   T getData(int i, int j) const override { return data[morton_code(i, j)]; }
   T &getData(int i, int j) override { return data[morton_code(i, j)]; }
@@ -68,23 +62,17 @@ protected:
 template <class T> class CZGrid : public ZGrid<T> {
 public:
   CZGrid() {}
-  CZGrid(uint32_t w, uint32_t h) {
-    this->useBorder = true;
-    this->setDimensions(w, h);
-    this->init();
-  }
+  CZGrid(uint32_t w, uint32_t h) { this->setDimensions(w, h); }
   T sample(float x, float y) const;
 };
 
-template <class T> ZGrid<T>::ZGrid() { this->useBorder = true; }
+template <class T> ZGrid<T>::ZGrid() {}
 
 template <class T> ZGrid<T>::ZGrid(uint32_t w, uint32_t h) {
-  this->useBorder = true;
   this->setDimensions(w, h);
-  init();
 }
 
-template <class T> void ZGrid<T>::init() {
+template <class T> void ZGrid<T>::updateDataStructure() {
   data.resize(morton_code(this->width, this->height));
 }
 

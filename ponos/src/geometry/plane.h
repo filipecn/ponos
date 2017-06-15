@@ -26,7 +26,8 @@
 #define PONOS_GEOMETRY_PLANE_H
 
 #include "geometry/point.h"
-#include "geometry/normal.h"
+#include "geometry/surface.h"
+#include "geometry/vector.h"
 
 #include <iostream>
 
@@ -63,6 +64,59 @@ public:
   }
 
   Normal normal;
+  float offset;
+};
+
+/** Implements the equation <normal> X = <offset>.
+ */
+class ImplicitPlane2D : public ImplicitCurveInterface {
+public:
+  /// Default constructor
+  ImplicitPlane2D() { offset = 0.f; }
+  /** Constructor
+   * \param n **[in]** normal
+   * \param o **[in]** offset
+   */
+  ImplicitPlane2D(Normal2D n, float o) {
+    normal = n;
+    offset = o;
+  }
+  ImplicitPlane2D(Point2 p, Normal2D n) {
+    normal = n;
+    offset = dot(vec2(normal), vec2(p));
+  }
+  /** \brief  projects **v** on plane
+   * \param v
+   * \returns projected **v**
+   */
+  Vector2 project(const Vector2 &v) { return ponos::project(v, normal); }
+  /** \brief  reflects **v** fron plane
+   * \param v
+   * \returns reflected **v**
+   */
+  Vector2 reflect(const Vector2 &v) { return ponos::reflect(v, normal); }
+  Point2 closestPoint(const Point2 &p) const override {
+    float t = (dot(vec2(normal), vec2(p)) - offset) / vec2(normal).length2();
+    return p - t * vec2(normal);
+  }
+  Normal2D closestNormal(const Point2 &p) const override {
+    if (dot(vec2(normal), vec2(p)) < 0.f)
+      return -normal;
+    return normal;
+  }
+  BBox2D boundingBox() const override { return BBox2D(); }
+  void closestIntersection(const Ray2 &r,
+                           CurveRayIntersection *i) const override {}
+  double signedDistance(const Point2 &p) const override {
+    return (dot(vec2(p), vec2(normal)) - offset) / vec2(normal).length();
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const ImplicitPlane2D &p) {
+    os << "[Plane] offset " << p.offset << " " << p.normal;
+    return os;
+  }
+
+  Normal2D normal;
   float offset;
 };
 

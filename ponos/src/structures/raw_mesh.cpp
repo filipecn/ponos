@@ -41,6 +41,8 @@ void RawMesh::apply(const Transform &t) {
   for (size_t i = 0; i < nv; i++)
     t.applyToPoint(&vertices[i * vertexDescriptor.elementSize],
                    &vertices[i * vertexDescriptor.elementSize]);
+  if (interleavedData.size())
+    buildInterleavedData();
 }
 
 void RawMesh::splitIndexData() {
@@ -139,6 +141,23 @@ void RawMesh::orientFaces(bool ccw) {
       indices[e * meshDescriptor.elementSize + 1] = tmp;
     }
   }
+}
+
+void RawMesh::clear() {
+  meshDescriptor.elementSize = meshDescriptor.count =
+      vertexDescriptor.elementSize = vertexDescriptor.count =
+          normalDescriptor.elementSize = normalDescriptor.count =
+              texcoordDescriptor.elementSize = texcoordDescriptor.count =
+                  interleavedDescriptor.elementSize =
+                      interleavedDescriptor.count = 0;
+  indices.clear();
+  vertices.clear();
+  normals.clear();
+  texcoords.clear();
+  verticesIndices.clear();
+  normalsIndices.clear();
+  texcoordsIndices.clear();
+  interleavedData.clear();
 }
 
 } // aergia namespace

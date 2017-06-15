@@ -102,15 +102,11 @@ template <typename T> void CRegularGrid<T>::normalizeElements() {
   data[ijk[0]][ijk[1]][ijk[2]] = ponos::normalize(data[ijk[0]][ijk[1]][ijk[2]]);
 }
 
-template <typename T> CRegularGrid2D<T>::CRegularGrid2D() {
-  this->useBorder = false;
-}
+template <typename T> CRegularGrid2D<T>::CRegularGrid2D() {}
 
 template <typename T>
 CRegularGrid2D<T>::CRegularGrid2D(uint32_t w, uint32_t h) {
-  this->useBorder = false;
   this->setDimensions(w, h);
-  init();
 }
 
 template <typename T> T CRegularGrid2D<T>::sample(float x, float y) const {
@@ -132,16 +128,7 @@ template <typename T> T CRegularGrid2D<T>::sample(float x, float y) const {
   return ponos::bicubicInterpolate<float>(p, gp.x - x0, gp.y - y0);
 }
 
-template <typename T>
-void CRegularGrid2D<T>::set(uint32_t w, uint32_t h, Vector2 offset,
-                            Vector2 cellSize) {
-  this->setDimensions(w, h);
-  this->setTransform(ponos::translate(offset) *
-                     ponos::scale(cellSize.x, cellSize.y));
-  init();
-}
-
-template <typename T> void CRegularGrid2D<T>::init() {
+template <typename T> void CRegularGrid2D<T>::updateDataStructure() {
   data.resize(this->width, std::vector<T>());
   for (size_t i = 0; i < this->width; i++)
     data[i].resize(this->height);

@@ -33,6 +33,7 @@ namespace aergia {
 
 class CameraInterface {
 public:
+  typedef CameraInterface CameraType;
   CameraInterface() {}
   virtual ~CameraInterface() {}
 
@@ -44,6 +45,7 @@ public:
 
 class Camera : public CameraInterface {
 public:
+  typedef Camera CameraType;
   Camera(CameraProjection *_projection = nullptr);
 
   friend class CameraModel;
