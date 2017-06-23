@@ -28,7 +28,7 @@ if (MSVC)
 		                     LINK_FLAGS "/ENTRY:mainCRTStartup")
 endif()
 
-add_subdirectory(flip2d)
+# add_subdirectory(flip2d)
 
 if(NOT WIN32)
 	# add_subdirectory(openvdb)

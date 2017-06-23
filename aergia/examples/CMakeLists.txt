@@ -36,4 +36,4 @@ if (MSVC)
 		LINK_FLAGS "/ENTRY:mainCRTStartup")
 endif()
 
-add_subdirectory(spheres)
+# add_subdirectory(spheres)
