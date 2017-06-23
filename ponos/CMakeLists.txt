@@ -17,10 +17,16 @@ set(HEADERS
 	src/blas/field_grid.h
 	src/blas/linear_system.h
   src/blas/pcg.h
+	src/blas/rbf.h
 	src/blas/solver_interface.h
+	src/blas/sparse_cg_solver.h
+	src/blas/sparse_gauss_seidel_solver.h
+	src/blas/sparse_jacobi_solver.h
+	src/blas/sparse_sor_solver.h
 	src/blas/sparse_matrix.h
 	src/blas/sparse_vector.h
 	src/blas/staggered_grid.h
+	src/blas/symmetric_matrix.h
 	src/common/defs.h
 	src/common/file.h
 	src/common/macros.h

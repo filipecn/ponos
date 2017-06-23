@@ -32,7 +32,15 @@ namespace ponos {
  */
 template <typename T = double> class SparseMatrix {
 public:
+  SparseMatrix() : n(0), m(0), count(0) {}
   SparseMatrix(size_t _n, size_t _m, size_t mcount) : n(_n), m(_m), count(0) {
+    data.resize(mcount);
+    rowPtr.resize(n + 1, -1);
+  }
+  void set(size_t _n, size_t _m, size_t mcount) {
+    n = _n;
+    m = _m;
+    count = 0;
     data.resize(mcount);
     rowPtr.resize(n + 1, -1);
   }

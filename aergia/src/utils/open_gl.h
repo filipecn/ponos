@@ -25,6 +25,10 @@ namespace aergia {
 #define CHECK_FRAMEBUFFER
 #endif
 
+inline void glfwError(int id, const char *description) {
+  std::cout << description << std::endl;
+}
+
 bool initGLEW();
 /* info
  * @shader **[in]** shader id

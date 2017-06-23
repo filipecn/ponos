@@ -170,6 +170,7 @@ TEST(SparseBlas, residual) {
   SparseBlas2d::residual(m, v, b, &w);
   double expected[5] = {-1.0 * (10 + 0 + 50), -2.0 * (10 + 0 + 40),
                         -3.0 * (10 + 20 + 0), -0.0, -5.0 * (10 + 20 + 40 + 50)};
+  EXPECT_EQ(w.elementCount(), 4u);
   size_t count = 0;
   for (svecd::const_iterator it(w); it.next(); ++it) {
     ASSERT_NEAR(it.value(), expected[count], 1e-8);

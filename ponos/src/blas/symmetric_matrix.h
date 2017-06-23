@@ -22,46 +22,44 @@
  *
 */
 
-#ifndef PONOS_BLAS_LINEAR_SYSTEM_H
-#define PONOS_BLAS_LINEAR_SYSTEM_H
+#ifndef PONOS_BLAS_SYMMETRIC_MATRIX_H
+#define PONOS_BLAS_SYMMETRIC_MATRIX_H
 
-#include "blas/fdm_matrix.h"
-#include "blas/sparse_matrix.h"
+#include <vector>
 
 namespace ponos {
 
-template <typename MatrixType, typename VectorType> struct LinearSystem {
-  LinearSystem() {}
-  void resize(size_t w, size_t h) {}
-  MatrixType A;
-  VectorType x, b;
-};
-
-template <> class LinearSystem<FDMMatrix2Df, FDMVector2Df> {
+template <typename T = double> class SymmetricMatrix {
 public:
-  LinearSystem() {}
-  void resize(size_t w, size_t h) {
-    A.resize(w, h);
-    x.resize(w, h);
-    b.resize(w, h);
+  SymmetricMatrix() : n(0) {}
+  SymmetricMatrix(size_t _n) { set(_n); }
+  void set(size_t _n) {
+    n = _n;
+    data.resize(static_cast<size_t>(n * (1 + n) * .5));
+    size_t sum = 0;
+    for (size_t i = n; i > 0; i--) {
+      rowIndex.emplace_back(sum);
+      sum += i;
+    }
   }
-  FDMMatrix2Df A;
-  FDMVector2Df x, b;
+  T &operator()(size_t i, size_t j) { return data[vIndex(i, j)]; }
+  T operator()(size_t i, size_t j) const { return data[vIndex(i, j)]; }
+
+private:
+  size_t vIndex(size_t i, size_t j) const {
+    // 00 01 02 03
+    // 10 11 12 13
+    // 20 21 22 23
+    // 30 31 32 33
+    if (i > j)
+      return vIndex(j, i);
+    return rowIndex[i] + j - i;
+  }
+  size_t n;
+  std::vector<T> data;
+  std::vector<size_t> rowIndex;
 };
-
-typedef LinearSystem<FDMMatrix2Df, FDMVector2Df> FDMLinearSystem2f;
-
-template <> class LinearSystem<SparseMatrix<double>, SparseVector<double>> {
-public:
-  LinearSystem() {}
-  void resize(size_t w, size_t h) {}
-  SparseMatrix<double> A;
-  SparseVector<double> x, b;
-};
-
-typedef LinearSystem<SparseMatrix<double>, SparseVector<double>>
-    SparseLinearSystemd;
 
 } // ponos namespace
 
-#endif // PONOS_BLAS_LINEAR_SYSTEM_H
+#endif // PONOS_BLAS_SYMMETRIC_MATRIX_H

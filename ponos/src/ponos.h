@@ -14,10 +14,16 @@
 #include "blas/field_grid.h"
 #include "blas/linear_system.h"
 #include "blas/pcg.h"
+#include "blas/rbf.h"
 #include "blas/solver_interface.h"
+#include "blas/sparse_cg_solver.h"
+#include "blas/sparse_gauss_seidel_solver.h"
+#include "blas/sparse_jacobi_solver.h"
+#include "blas/sparse_sor_solver.h"
 #include "blas/sparse_matrix.h"
 #include "blas/sparse_vector.h"
 #include "blas/staggered_grid.h"
+#include "blas/symmetric_matrix.h"
 /** \defgroup Common module
  */
 #include "common/defs.h"

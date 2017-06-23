@@ -97,24 +97,21 @@ private:
 };
 
 int main() {
-#ifdef WIN32
   WIN32CONSOLE();
-#endif
   ponos::RawMesh rm;
   aergia::loadPLY("C:/Users/fuiri/Desktop/2d.tar/2d/PLY/circle.ply", &rm);
   std::cout << rm.bbox.pMin << rm.bbox.pMax << std::endl;
   app.init();
   app.addViewport2D(0, 0, 800, 800);
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
+  app.getCamera<aergia::Camera2D>(0)
       ->fit(ponos::BBox2D(rm.bbox.pMin.xy(), rm.bbox.pMax.xy()), 1.1f);
   app.scene.add(new HEMeshObject(&rm));
   text = new aergia::Text("C:/Windows/Fonts/Arial.ttf");
   app.scrollCallback = [](double dx, double dy) {
     static float z = 1.f;
     z *= (dy < 0.f) ? 0.9f : 1.1f;
-    static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())->setZoom(z);
-    ponos::vec2 p = static_cast<aergia::Camera2D *>(
-                        app.viewports[0].camera.get())->getPos();
+    app.getCamera<aergia::Camera2D>(0)->setZoom(z);
+    ponos::vec2 p = app.getCamera<aergia::Camera2D>(0)->getPos();
   };
   app.run();
   return 0;

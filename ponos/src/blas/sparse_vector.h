@@ -33,9 +33,26 @@ namespace ponos {
 
 template <typename T> class SparseVector {
 public:
+  SparseVector() : n(0), count(0) {}
   SparseVector(size_t _n, size_t mcount = 0) : n(_n), count(0) {
     if (mcount)
       data.resize(mcount);
+  }
+  SparseVector<T> &operator*=(const T &a) {
+    for (size_t i = 0; i < count; i++)
+      data[i].value *= a;
+    return *this;
+  }
+  void resetCount() { count = 0; }
+  void set(size_t _n, size_t mcount) {
+    count = 0;
+    n = _n;
+    data.resize(mcount);
+  }
+  void swap(SparseVector<T> *v) {
+    std::swap(n, v->n);
+    std::swap(count, v->count);
+    std::swap(data, v->data);
   }
   void insert(size_t i, const T &v) {
     if (count >= data.size())
@@ -83,6 +100,12 @@ public:
     size_t rowIndex() const { return v.data[cur].rowIndex; }
     void operator++() { cur++; }
     int count() const { return v.count; }
+    bool jumpTo(size_t i) {
+      while (next() && rowIndex() < i)
+        cur++;
+      return next() && rowIndex() == i;
+    }
+    bool operator==(size_t i) const { return next() && rowIndex() == i; }
 
   private:
     const SparseVector<T> &v;

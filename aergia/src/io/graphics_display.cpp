@@ -54,6 +54,7 @@ void GraphicsDisplay::set(int w, int h, const char *windowTitle) {
 }
 
 bool GraphicsDisplay::init() {
+  glfwSetErrorCallback(&glfwError);
   if (!glfwInit())
     return false;
   window = glfwCreateWindow(width, height, title, NULL, NULL);

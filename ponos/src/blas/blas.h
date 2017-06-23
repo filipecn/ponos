@@ -177,8 +177,9 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
   // Calculates b - A*x.
   static void residual(const MatrixType &a, const VectorType &x,
                        const VectorType &b, VectorType *result) {
-    mvm(a, x, result);
-    ::ponos::axpy(-1.0, result, b);
+    VectorType tmp;
+    mvm(a, x, &tmp);
+    ::ponos::axpy(-1.0, tmp, b, result);
   }
   // Returns the length of the vector.
   static ScalarType l2Norm(const VectorType &v) {
@@ -186,6 +187,24 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
     for (VectorType::const_iterator it(v); it.next(); ++it)
       sum += it.value() * it.value();
     return sqrt(sum);
+  }
+  static ScalarType infNorm(const VectorType &av, const VectorType &bv) {
+    ScalarType m = 0.0;
+    VectorType::const_iterator a(av);
+    VectorType::const_iterator b(bv);
+    while (a.next() || b.next()) {
+      ScalarType d = 0.0;
+      if ((a.next() && !b.next()) ||
+          (a.next() && b.next() && a.rowIndex() < b.rowIndex()))
+        d = std::fabs(a.value()), ++a;
+      else if ((!a.next() && b.next()) ||
+               (a.next() && b.next() && b.rowIndex() < a.rowIndex()))
+        d = std::fabs(b.value()), ++b;
+      else
+        d = std::fabs(a.value() - b.value()), ++b, ++a;
+      m = std::max(m, d);
+    }
+    return m;
   }
 };
 
