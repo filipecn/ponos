@@ -45,19 +45,19 @@ public:
       xTmp.swap(&s->x);
       if (it != 0 && it % residualCheckInterval == 0) {
         SparseBlas2d::residual(s->A, s->x, s->b, &residual);
-        // if (SparseBlas2d::l2Norm(residual) < tolerance) {
-        if (SparseBlas2d::infNorm(s->x, xTmp) < tolerance) {
+        if (SparseBlas2d::infNorm(residual) < tolerance) {
+          // if (SparseBlas2d::infNorm(s->x, xTmp) < tolerance) {
           break;
         }
       }
     }
     SparseBlas2d::residual(s->A, s->x, s->b, &residual);
-    residual.iterate([](const double &v, size_t i) {
-      std::cout << "---> " << v << std::endl;
-    });
+    // residual.iterate([](const double &v, size_t i) {
+    //   std::cout << "---> " << v << std::endl;
+    // });
     // std::cout << residual.elementCount() << std::endl;
-    // lastResidual = SparseBlas2d::l2Norm(residual);
-    lastResidual = SparseBlas2d::infNorm(s->x, xTmp);
+    lastResidual = SparseBlas2d::infNorm(residual);
+    // lastResidual = SparseBlas2d::infNorm(s->x, xTmp);
     return lastResidual < tolerance;
   }
 

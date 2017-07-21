@@ -46,6 +46,8 @@ public:
   std::vector<ViewportDisplay> viewports;
   std::function<void()> renderCallback;
   std::function<void(double, double)> scrollCallback;
+	std::function<void(double, double)> mouseCallback;
+	std::function<void(int, int)> buttonCallback;
 
 protected:
   bool initialized;

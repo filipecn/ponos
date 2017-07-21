@@ -23,11 +23,13 @@ inline Color mix(float t, const Color &a, const Color &b) {
                ponos::lerp(t, a.b, b.b));
 }
 
-#define COLOR_TRANSPARENT Color(0.f, 0.f, 0.f, 0.f);
+#define COLOR_TRANSPARENT Color(0.f, 0.f, 0.f, 0.f)
 #define COLOR_BLACK Color(0.f, 0.f, 0.f, 1.f)
+#define COLOR_WHITE Color(1.f, 1.f, 1.f, 1.f)
 #define COLOR_RED Color(1.f, 0.f, 0.f, 1.f)
 #define COLOR_GREEN Color(0.f, 1.f, 0.f, 1.f)
 #define COLOR_BLUE Color(0.f, 0.f, 1.f, 1.f)
+#define COLOR_PURPLE Color(1.f, 0.f, 1.f, 1.f)
 
 } // aergia namespace
 

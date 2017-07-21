@@ -1,8 +1,8 @@
 #ifndef AERGIA_HELPERS_GEOMETRY_DRAWERS_H
 #define AERGIA_HELPERS_GEOMETRY_DRAWERS_H
 
+#include "colors/color_palette.h"
 #include "utils/open_gl.h"
-
 #include <ponos.h>
 
 namespace aergia {
@@ -10,6 +10,9 @@ namespace aergia {
 void fill_box(const ponos::Point2 &a, const ponos::Point2 &b);
 
 void draw_bbox(const ponos::BBox2D &bbox, float *fillColor = nullptr);
+
+void draw_bbox(const ponos::BBox2D &bbox, const Color &edgeColor,
+               const Color &fillColor);
 
 void draw_bbox(const ponos::BBox &bbox);
 

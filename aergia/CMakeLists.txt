@@ -11,7 +11,9 @@ set(HEADERS
 	src/helpers/cartesian_grid.h
 	src/helpers/geometry_drawers.h
 	src/helpers/grid_model.h
+	src/helpers/hemesh_model.h
 	src/helpers/quad_tree_model.h
+	src/helpers/scene_handle.h
 	src/helpers/vector_grid.h
 	src/io/buffer.h
 	src/io/framebuffer.h
@@ -36,6 +38,7 @@ set(HEADERS
 	src/scene/wireframe_mesh.h
 	src/ui/app.h
 	src/ui/interactive_object_interface.h
+	src/ui/modifier_cursor.h
 	src/ui/scene_app.h
 	src/ui/text.h
 	src/ui/trackball.h

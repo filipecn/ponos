@@ -74,9 +74,10 @@ Point3 RawMesh::vertexElement(size_t e, size_t v) const {
       vertices[indices[e * meshDescriptor.elementSize + v].vertexIndex *
                    vertexDescriptor.elementSize +
                1],
+							 ((vertexDescriptor.elementSize == 3) ?
       vertices[indices[e * meshDescriptor.elementSize + v].vertexIndex *
                    vertexDescriptor.elementSize +
-               2]);
+               2] : 0.f));
 }
 
 BBox RawMesh::elementBBox(size_t i) const {
@@ -125,8 +126,8 @@ void RawMesh::orientFaces(bool ccw) {
     bool flip = false;
     for (size_t i = 0; i < meshDescriptor.elementSize; i++) {
       ponos::Point3 a3 = vertexElement(e, i);
-      ponos::Point3 b3 = vertexElement(e, i + 1 % meshDescriptor.elementSize);
-      ponos::Point3 c3 = vertexElement(e, i + 2 % meshDescriptor.elementSize);
+      ponos::Point3 b3 = vertexElement(e, (i + 1) % meshDescriptor.elementSize);
+      ponos::Point3 c3 = vertexElement(e, (i + 2) % meshDescriptor.elementSize);
       ponos::Point2 a(a3.x, a3.y);
       ponos::Point2 b(b3.x, b3.y);
       ponos::Point2 c(c3.x, c3.y);

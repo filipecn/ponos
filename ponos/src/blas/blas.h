@@ -132,7 +132,11 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
   typedef SparseMatrix<double> MatrixType;
   // Sets the given scalar value to the output vector.
   static void set(ScalarType s, VectorType *result) {
-    result->iterate([s](ScalarType &v, size_t i) { v = s; });
+    if (IS_EQUAL_ERROR(s, static_cast<ScalarType>(0.0),
+                       static_cast<ScalarType>(1e-8)))
+      result->resetCount();
+    else
+      result->iterate([s](ScalarType &v, size_t i) { v = s; });
   }
   // Sets the given vector to the output vector.
   static void set(const VectorType &v, VectorType *result) { result->copy(v); }
@@ -150,11 +154,14 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
   // Calculates a*x + y.
   static void axpy(ScalarType a, const VectorType &x, const VectorType &y,
                    VectorType *result) {
-    ::ponos::axpy(a, x, y, result);
+    VectorType tmp;
+    ::ponos::axpy(a, x, y, &tmp);
+    result->copy(tmp);
   }
   // Performs matrix-vector multiplication.
   static void mvm(const MatrixType &m, const VectorType &v,
                   VectorType *result) {
+    result->resetCount();
     for (size_t r = 0; r < m.rowCount(); r++) {
       VectorType::const_iterator it(v);
       ScalarType sum = 0.0;
@@ -203,6 +210,16 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
       else
         d = std::fabs(a.value() - b.value()), ++b, ++a;
       m = std::max(m, d);
+    }
+    return m;
+  }
+
+  static ScalarType infNorm(const VectorType &v) {
+    ScalarType m = 0.0;
+    VectorType::const_iterator a(v);
+    while (a.next()) {
+      m = std::max(m, a.value());
+      ++a;
     }
     return m;
   }

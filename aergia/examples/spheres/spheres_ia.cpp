@@ -1,6 +1,6 @@
+#include "interval_method.h"
 #include <aergia.h>
 #include <ponos.h>
-#include "interval_method.h"
 
 using namespace aergia;
 

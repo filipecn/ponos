@@ -22,39 +22,31 @@
  *
 */
 
-#ifndef AERGIA_SCENE_CAMERA_2D_H
-#define AERGIA_SCENE_CAMERA_2D_H
+#ifndef PONOS_ALGORITHM_SCATTER_H
+#define PONOS_ALGORITHM_SCATTER_H
 
-#include "scene/camera.h"
+#include "common/macros.h"
+#include "geometry/sphere.h"
+#include "geometry/transform.h"
 
-namespace aergia {
+#include <vector>
 
-class Camera2D : public CameraInterface {
-public:
-  Camera2D();
-  typedef Camera2D CameraType;
-  void look() override;
-  void resize(float w, float h) override;
-  void fit(const ponos::BBox2D &b, float delta = 1.f);
-  void setZoom(float z);
-  void setPos(ponos::vec2 p);
-  ponos::vec2 getPos() const { return pos; }
-  void update();
-  ponos::Transform getTransform() const override;
-  ponos::Ray3 pickRay(ponos::Point2 p) const override;
-  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
+namespace ponos {
 
-private:
-  float ratio;
-  float zoom;
-  ponos::vec2 pos;
-  ponos::vec2 display;
-  ponos::vec2 clipSize;
-  ponos::Transform projection;
-  ponos::Transform view;
-  ponos::Transform model;
-};
+template <typename T>
+void grid_scatter(const BBox2D &bbox, size_t w, size_t h,
+                  std::vector<T> &points) {
+  Transform2D t(bbox);
+  ivec2 ij, D(w, h);
+  FOR_INDICES0_2D(D, ij) {
+    Point2 p = t(Point2(static_cast<float>(ij[0]) / D[0],
+                        static_cast<float>(ij[1]) / D[1]));
+    points.emplace_back(p.x, p.y);
+  }
+}
 
-} // aergia namespace
+void scatter(const Circle &circle, size_t n, std::vector<Point2> &points);
 
-#endif // AERGIA_SCENE_CAMERA_2D_H
+} // ponos namespace
+
+#endif // PONOS_ALGORITHM_SCATTER_H

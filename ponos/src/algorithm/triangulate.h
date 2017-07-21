@@ -22,39 +22,22 @@
  *
 */
 
-#ifndef AERGIA_SCENE_CAMERA_2D_H
-#define AERGIA_SCENE_CAMERA_2D_H
+#ifndef PONOS_ALGORITHM_TRIANGULATE_H
+#define PONOS_ALGORITHM_TRIANGULATE_H
 
-#include "scene/camera.h"
+#include "structures/raw_mesh.h"
 
-namespace aergia {
+namespace ponos {
 
-class Camera2D : public CameraInterface {
-public:
-  Camera2D();
-  typedef Camera2D CameraType;
-  void look() override;
-  void resize(float w, float h) override;
-  void fit(const ponos::BBox2D &b, float delta = 1.f);
-  void setZoom(float z);
-  void setPos(ponos::vec2 p);
-  ponos::vec2 getPos() const { return pos; }
-  void update();
-  ponos::Transform getTransform() const override;
-  ponos::Ray3 pickRay(ponos::Point2 p) const override;
-  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
+	struct MeshData {
+		std::vector<int> vertexBoundaryMarker;
+		std::vector<int> edgeBoundaryMarker;
+		std::vector<std::vector<float>> vertexAttributes;
+		std::vector<std::pair<float, float>> holes;
+	};
 
-private:
-  float ratio;
-  float zoom;
-  ponos::vec2 pos;
-  ponos::vec2 display;
-  ponos::vec2 clipSize;
-  ponos::Transform projection;
-  ponos::Transform view;
-  ponos::Transform model;
-};
+	void triangulate(const RawMesh* input, const MeshData* data, RawMesh *output);
 
-} // aergia namespace
+} // ponos namespace
 
-#endif // AERGIA_SCENE_CAMERA_2D_H
+#endif // PONOS_ALGORITHM_TRIANGULATE_H

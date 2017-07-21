@@ -25,9 +25,9 @@
 #ifndef PONOS_BLAS_RBF_H
 #define PONOS_BLAS_RBF_H
 
-#include "geometry/vector.h"
 #include "blas/field.h"
 #include "blas/symmetric_matrix.h"
+#include "geometry/vector.h"
 #include <functional>
 
 namespace ponos {
@@ -56,30 +56,40 @@ private:
 template <typename T, typename P>
 class RBF2D : virtual public ScalarField2D<float> {
 public:
-  RBF2D(const std::vector<P> &p, const std::vector<T> &f, Kernel<T> *k)
+  RBF2D() {}
+  RBF2D(const std::vector<P> &p, Kernel<T> *k,
+        const std::function<T(const P &, const P &)> &d2f =
+            [](const P &a, const P &b) -> T { return 0.0; })
       : phi(k), points(p) {
-    weights.resize(p.size());
+    d2Function = d2f;
+    /*weights.resize(p.size());
     LinearSystem<SymmetricMatrix<T>, std::vector<T>> system;
     system.A.set(points.size());
     for (size_t i = 0; i < p.size(); i++)
       for (size_t j = i; j < p.size(); j++)
-        system.A(i, j) = (*phi)(distance2(points[i], points[j]));
+        system.A(i, j) = (*phi)(d2Function(points[i], points[j]));
     std::copy(f.begin(), f.end(), std::back_inserter(system.b));
     std::copy(system.x.begin(), system.x.end(), std::back_inserter(weights));
+                */
   }
   virtual T sample(float x, float y) const override {
     float sum = 0.f;
-    Point2 p(x, y);
+    P p(x, y);
     for (size_t i = 0; i < points.size(); i++)
-      sum += weights[i] * (*phi)(distance2(points[i], p));
-    return 0.0;
+      sum += weights[i] * (*phi)(d2Function(points[i], p));
+    return sum;
   }
   virtual Vector<T, 2> gradient(float x, float y) const override {
     return Vector<T, 2>();
   }
   virtual T laplacian(float x, float y) const override { return 0.0; }
+  void setWeights(const std::vector<T> &w) {
+    weights.clear();
+    std::copy(w.begin(), w.end(), std::back_inserter(weights));
+  }
 
   Kernel<T> *phi;
+  std::function<T(const P &, const P &)> d2Function;
 
 private:
   const std::vector<P> &points;

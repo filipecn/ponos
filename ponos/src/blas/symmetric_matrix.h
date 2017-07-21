@@ -44,6 +44,7 @@ public:
   }
   T &operator()(size_t i, size_t j) { return data[vIndex(i, j)]; }
   T operator()(size_t i, size_t j) const { return data[vIndex(i, j)]; }
+	size_t size() const { return n; }
 
 private:
   size_t vIndex(size_t i, size_t j) const {

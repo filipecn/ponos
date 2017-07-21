@@ -39,27 +39,26 @@ public:
   SparseCGSolverd(uint _maxNumberOfIterations, double _tolerance)
       : maxNumberOfIterations(_maxNumberOfIterations), tolerance(_tolerance) {}
   bool solve(SparseLinearSystemd *system) override {
-    /*SparseMatrix<double> &matrix = system->A;
+    SparseMatrix<double> &matrix = system->A;
     SparseVector<double> &solution = system->x;
     SparseVector<double> &rhs = system->b;
-        r.resize(matrix.width, matrix.height);
-        d.resize(matrix.width, matrix.height);
-        q.resize(matrix.width, matrix.height);
-        s.resize(matrix.width, matrix.height);
 
-        system->x.set(0.0);
-        r.set(0.0);
-        d.set(0.0);
-        q.set(0.0);
-        s.set(0.0);
+    r.set(solution.size());
+    d.set(solution.size());
+    q.set(solution.size());
+    s.set(solution.size());
 
-        precond.build(matrix);
+    // system->x.resetCount();
+    r.resetCount();
+    d.resetCount();
+    q.resetCount();
+    s.resetCount();
 
-        pcg<SparseBlas2d, Preconditioner>(
-            matrix, rhs, maxNumberOfIterations, tolerance, &precond, &solution,
-       &r,
-            &d, &q, &s, &lastNumberOfIterations, &lastResidual);
-    */
+    precond.build(matrix);
+
+    pcg<SparseBlas2d, Preconditioner>(
+        matrix, rhs, maxNumberOfIterations, tolerance, &precond, &solution, &r,
+        &d, &q, &s, &lastNumberOfIterations, &lastResidual);
     return lastResidual <= tolerance ||
            lastNumberOfIterations < maxNumberOfIterations;
   }

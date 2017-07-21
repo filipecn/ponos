@@ -29,8 +29,8 @@
 #include "scene/camera.h"
 #include "ui/trackball.h"
 
-#include <ponos.h>
 #include <iostream>
+#include <ponos.h>
 
 namespace aergia {
 

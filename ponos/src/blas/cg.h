@@ -39,30 +39,36 @@ void pcg(const typename BlasType::MatrixType &A,
   BlasType::set(0, d);
   BlasType::set(0, q);
   BlasType::set(0, s);
-  M->build(A);
+  // r = b - A * x
   BlasType::residual(A, *x, b, r);
-  M->solve(*r, d);
-  double sigmaNew = BlasType::dot(*r, *d);
-  double sigma0 = sigmaNew;
+  // d = r
+  BlasType::set(*r, d);
+  // sigma = r '* r
+  double sigma = BlasType::dot(*r, *r);
   uint it = 0;
-  while (sigmaNew > SQR(tolerance) * sigma0 && it < maxNumberOfIterations) {
+  while (it < maxNumberOfIterations) {
+    // q = Ad
     BlasType::mvm(A, *d, q);
-    double alpha = sigmaNew / BlasType::dot(*d, *q);
+    // alpha = sigma / (d '* Ad)
+    double alpha = sigma / BlasType::dot(*d, *q);
+    // x = alpha * d + x
     BlasType::axpy(alpha, *d, *x, x);
-    if (it % 50 == 0 && it > 0)
-      BlasType::residual(A, *x, b, r);
-    else
-      BlasType::axpy(-alpha, *q, *r, r);
-    M->solve(*r, s);
-    double sigmaOld = sigmaNew;
-    sigmaNew = BlasType::dot(*r, *s);
-    double beta = sigmaNew / sigmaOld;
-    BlasType::axpy(beta, *d, *s, d);
+    // r = r - alpha * Ad
+    BlasType::axpy(-alpha, *q, *r, r);
+    // sigmaNew = r '* r
+    double sigmaNew = BlasType::dot(*r, *r);
+    if (sigmaNew < SQR(tolerance))
+      break;
+    // d = r + (sigmaNew / sigma) * d
+    BlasType::axpy(sigmaNew / sigma, *d, *r, d);
+    sigma = sigmaNew;
     ++it;
   }
+
   *lastNumberOfIterations = it;
-  *lastResidual = sigmaNew;
+  *lastResidual = sigma;
 }
+
 template <typename BlasType, typename PrecondType>
 void cg(const typename BlasType::MatrixType &A,
         const typename BlasType::VectorType &b,

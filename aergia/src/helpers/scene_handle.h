@@ -22,39 +22,44 @@
  *
 */
 
-#ifndef AERGIA_SCENE_CAMERA_2D_H
-#define AERGIA_SCENE_CAMERA_2D_H
+#ifndef AERGIA_HELPERS_SCENE_HANDLE_H
+#define AERGIA_HELPERS_SCENE_HANDLE_H
 
-#include "scene/camera.h"
+#include "colors/color_palette.h"
+#include "scene/scene_object.h"
+#include <functional>
 
 namespace aergia {
 
-class Camera2D : public CameraInterface {
+template <typename T> class CircleHandle : public SceneObject {
 public:
-  Camera2D();
-  typedef Camera2D CameraType;
-  void look() override;
-  void resize(float w, float h) override;
-  void fit(const ponos::BBox2D &b, float delta = 1.f);
-  void setZoom(float z);
-  void setPos(ponos::vec2 p);
-  ponos::vec2 getPos() const { return pos; }
-  void update();
-  ponos::Transform getTransform() const override;
-  ponos::Ray3 pickRay(ponos::Point2 p) const override;
-  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
+  CircleHandle() {
+    fillColor = selectedColor = COLOR_BLUE;
+    fillColor.a = 0.1f;
+    circle.c = ponos::Point2();
+    circle.r = 0.1f;
+  }
+  void draw() const override {
+    glColor(fillColor);
+    if (this->selected)
+      glColor(selectedColor);
+    // draw_circle(circle, &this->transform);
+  }
+
+  bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
+    return ponos::distance2(circle.c, ponos::Point2(r.o.x, r.o.y)) <=
+           SQR(circle.r);
+  }
+
+  ponos::Circle circle;
+  Color fillColor;
+  Color selectedColor;
+  std::function<void(T *)> updateCallback;
 
 private:
-  float ratio;
-  float zoom;
-  ponos::vec2 pos;
-  ponos::vec2 display;
-  ponos::vec2 clipSize;
-  ponos::Transform projection;
-  ponos::Transform view;
-  ponos::Transform model;
+  T *data;
 };
 
 } // aergia namespace
 
-#endif // AERGIA_SCENE_CAMERA_2D_H
+#endif // AERGIA_HELPERS_SCENE_HANDLE_H

@@ -42,7 +42,7 @@ include_directories(${AERGIA_INCLUDES})
 include_directories(${POSEIDON_INCLUDES})
 link_libraries(${POSEIDON_LIBRARIES})
 
-link_libraries(ponos)
+link_libraries(ponos ${PONOS_LIBRARIES})
 include_directories("${PONOS_SOURCE_DIR}/src")
 link_libraries(aergia)
 include_directories("${AERGIA_SOURCE_DIR}/src")

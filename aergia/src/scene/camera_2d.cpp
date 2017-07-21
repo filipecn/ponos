@@ -58,9 +58,15 @@ Transform Camera2D::getTransform() const { return model * view * projection; }
 
 ponos::Ray3 Camera2D::pickRay(ponos::Point2 p) const {
   ponos::Point3 P = ponos::inverse(model * view)(ponos::inverse(projection) *
-                                                 ponos::Point3(p.x, p.y, -1.f));
-  ponos::Point3 position(pos.x, pos.y, 0.f);
-  return ponos::Ray3(position, P - position);
+                                                 ponos::Point3(p.x, p.y, 1.f));
+  // ponos::Point3 position(pos.x, pos.y, 0.f);
+  return ponos::Ray3(P, vec3(P.x, P.y, -1.f));
+}
+
+ponos::Line Camera2D::viewLineFromWindow(ponos::Point2 p) const {
+  ponos::Point3 P = ponos::inverse(model * view)(ponos::inverse(projection) *
+                                                 ponos::Point3(p.x, p.y, 1.f));
+  return ponos::Line(P, vec3(P.x, P.y, -1.f));
 }
 
 void Camera2D::fit(const ponos::BBox2D &b, float delta) {

@@ -3,8 +3,10 @@ project(PONOS)
 set(HEADERS
 	src/algorithm/fast_sweep.h
 	src/algorithm/marching_squares.h
+	src/algorithm/scatter.h
 	src/algorithm/search.h
 	src/algorithm/sort.h
+	src/algorithm/triangulate.h
 	src/blas/blas.h
 	src/blas/c_regular_grid.h
   src/blas/cg.h
@@ -71,6 +73,8 @@ set(HEADERS
 	)
 
 set(SOURCES
+	src/algorithm/scatter.cpp
+	src/algorithm/triangulate.cpp
 	src/common/file.cpp
 	src/geometry/bbox.cpp
 	src/geometry/queries.cpp
@@ -89,13 +93,16 @@ set(SOURCES
 	)
 
 include_directories("${PONOS_SOURCE_DIR}/src")
+include_directories(${PONOS_INCLUDES})
 
 add_library(ponos ${SOURCES} ${HEADERS})
 set_target_properties(ponos PROPERTIES
 	OUTPUT_NAME "ponos"
 	FOLDER "PONOS")
 
-target_link_libraries(ponos ${ponos_LIBRARIES})
+target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
+
+add_subdirectory(examples)
 
 if(TESTPONOS)
   add_subdirectory(tests)

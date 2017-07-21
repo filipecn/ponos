@@ -11,6 +11,8 @@ App::App(uint w, uint h, const char *t, bool defaultViewport)
   if (defaultViewport)
     addViewport(0, 0, windowWidth, windowHeight);
   renderCallback = nullptr;
+	mouseCallback = nullptr;
+	buttonCallback = nullptr;
 }
 
 size_t App::addViewport(uint x, uint y, uint w, uint h) {
@@ -57,11 +59,15 @@ void App::render() {
 void App::button(int button, int action) {
   for (size_t i = 0; i < viewports.size(); i++)
     viewports[i].button(button, action);
+	if(buttonCallback)
+		buttonCallback(button, action);
 }
 
 void App::mouse(double x, double y) {
   for (size_t i = 0; i < viewports.size(); i++)
     viewports[i].mouse(x, y);
+	if(mouseCallback)
+		mouseCallback(x, y);
 }
 
 void App::scroll(double dx, double dy) {

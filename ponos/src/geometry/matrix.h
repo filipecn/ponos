@@ -29,6 +29,40 @@
 
 namespace ponos {
 
+template <typename T = float> class DenseMatrix {
+public:
+  DenseMatrix(size_t n) : N(n), M(n), data(nullptr) { set(n, n); }
+  virtual ~DenseMatrix() {
+    if (data) {
+      for (size_t i = 0; i < N; i++)
+        delete[] data[i];
+      delete[] data;
+    }
+  }
+
+  T &operator()(size_t i, size_t j) { return data[i][j]; }
+  T operator()(size_t i, size_t j) const { return data[i][j]; }
+
+  void set(size_t rows, size_t columns) {
+    N = rows, M = columns;
+    if (data) {
+      for (size_t i = 0; i < N; i++)
+        delete[] data[i];
+      delete[] data;
+    }
+    data = new T *[N];
+    for (size_t i = 0; i < N; i++)
+      data[i] = new T[M];
+  }
+
+  size_t rowsNumber() const { return N; }
+  size_t columnsNumber() const { return M; }
+
+private:
+  size_t N, M;
+  T **data;
+};
+
 template <typename T = float, size_t N = 5, size_t M = 5> class Matrix {
 public:
   Matrix() {}

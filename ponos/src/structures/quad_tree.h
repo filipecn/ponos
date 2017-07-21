@@ -62,6 +62,9 @@ public:
 
   QuadTree();
   QuadTree(const BBox2D &region, const std::function<bool(Node &node)> &f);
+  QuadTree(const BBox2D &region, NodeData rootData,
+           const std::function<bool(Node &node)> &f,
+           std::function<void(Node &)> sf = nullptr);
   virtual ~QuadTree();
   size_t height() const { return height; }
   size_t nodeCount() const { return count; }
@@ -70,7 +73,8 @@ public:
   Node *root;
 
 private:
-  void refine(Node *node, const std::function<bool(Node &node)> &f);
+  void refine(Node *node, const std::function<bool(Node &node)> &f,
+              std::function<void(Node &)> sf = nullptr);
   void traverse(Node *node, const std::function<bool(Node &node)> &f);
   void traverse(Node *node,
                 const std::function<bool(const Node &node)> &f) const;
@@ -85,6 +89,8 @@ template <typename NodeData> struct NeighbourQuadTreeNode {
   bool isPhantom;
   std::vector<typename QuadTree<NeighbourQuadTreeNode<NodeData>>::Node *>
       neighbours;
+  enum class NeighbourPosition { TOP, BOTTOM, LEFT, RIGHT };
+  std::vector<NeighbourPosition> neighboursPosition;
 };
 
 template <typename NodeData>
@@ -96,7 +102,11 @@ void buildLeafNeighbourhood(QuadTree<NodeData> *tree) {
           return;
         if (left->isLeaf() && right->isLeaf()) {
           left->data.neighbours.emplace_back(right);
+          left->data.neighboursPosition.emplace_back(
+              NodeData::NeighbourPosition::RIGHT);
           right->data.neighbours.emplace_back(left);
+          right->data.neighboursPosition.emplace_back(
+              NodeData::NeighbourPosition::LEFT);
         } else if (left->isLeaf()) {
           horizontalProcess(left, right->children[0]);
           horizontalProcess(left, right->children[2]);
@@ -114,7 +124,11 @@ void buildLeafNeighbourhood(QuadTree<NodeData> *tree) {
           return;
         if (top->isLeaf() && bottom->isLeaf()) {
           top->data.neighbours.emplace_back(bottom);
+          top->data.neighboursPosition.emplace_back(
+              NodeData::NeighbourPosition::BOTTOM);
           bottom->data.neighbours.emplace_back(top);
+          bottom->data.neighboursPosition.emplace_back(
+              NodeData::NeighbourPosition::TOP);
         } else if (top->isLeaf()) {
           verticalProcess(top, bottom->children[0]);
           verticalProcess(top, bottom->children[1]);

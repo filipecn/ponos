@@ -41,6 +41,7 @@ public:
   virtual void look() = 0;
   virtual void resize(float w, float h) = 0;
   virtual ponos::Transform getTransform() const = 0;
+  virtual ponos::Line viewLineFromWindow(ponos::Point2 p) const = 0;
 };
 
 class Camera : public CameraInterface {
@@ -67,7 +68,7 @@ public:
   ponos::Transform getTransform() const override;
   ponos::Point3 viewPointOnWorldCoord() const;
   // p must be in norm dev coord (windowCoordToNormDevCoord)
-  ponos::Line viewLineFromWindow(ponos::Point2 p) const;
+  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
   ponos::Ray3 pickRay(ponos::Point2 p) const override;
   ponos::Plane viewPlane(ponos::Point3 p) const;
 

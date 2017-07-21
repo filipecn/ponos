@@ -26,7 +26,7 @@ if (MSVC)
     # Tell MSVC to use main instead of WinMain for Windows subsystem executables
 		set_target_properties(${WINDOWS_BINARIES} PROPERTIES
 		                     LINK_FLAGS "/ENTRY:mainCRTStartup")
-endif()
+endif(MSVC)
 
 # add_subdirectory(flip2d)
 
@@ -34,4 +34,4 @@ if(NOT WIN32)
 	# add_subdirectory(openvdb)
 endif(NOT WIN32)
 
-endif(NOT NOGRAPHICS)
+endif(NOT NOGRAPHICS AND NOT NOOPENVDB)

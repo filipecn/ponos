@@ -75,6 +75,26 @@ public:
     for (int k = rowPtr[r]; k < rowPtr[r] + rc; k++)
       f(data[k].value, data[k].columnIndex);
   }
+  void printDense() const {
+    for (size_t r = 0; r < n; r++) {
+      size_t column = 0;
+      iterateRow(r, [&column](const T &v, size_t c) {
+        if (c > column)
+          while (column < c) {
+            std::cout << " 0 ";
+            column++;
+          }
+        if (v >= 0.0)
+          std::cout << " " << v << " ";
+        else
+          std::cout << v << " ";
+        column++;
+      });
+      while (column++ < m)
+        std::cout << " 0 ";
+      std::cout << std::endl;
+    }
+  }
   size_t rowCount() const { return n; }
   size_t columnCount() const { return m; }
   void copy(const SparseMatrix<T> &mat) {

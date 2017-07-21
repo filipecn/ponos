@@ -1,5 +1,5 @@
-#include <ponos.h>
 #include <gtest/gtest.h>
+#include <ponos.h>
 
 using namespace ponos;
 

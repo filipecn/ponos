@@ -44,10 +44,11 @@ public:
     return *this;
   }
   void resetCount() { count = 0; }
-  void set(size_t _n, size_t mcount) {
+  void set(size_t _n, size_t mcount = 0) {
     count = 0;
     n = _n;
-    data.resize(mcount);
+    if (mcount)
+      data.resize(mcount);
   }
   void swap(SparseVector<T> *v) {
     std::swap(n, v->n);
@@ -60,6 +61,10 @@ public:
     data[count].value = v;
     data[count].rowIndex = i;
     count++;
+  }
+  void iterate(std::function<void(const T &v, size_t i)> f) const {
+    for (size_t r = 0; r < count; r++)
+      f(data[r].value, data[r].rowIndex);
   }
   void iterate(std::function<void(T &v, size_t i)> f) {
     for (size_t r = 0; r < count; r++)
@@ -126,6 +131,14 @@ public:
     size_t cur;
   };
 
+  template <typename S>
+  friend std::ostream &operator<<(std::ostream &os, const SparseVector<S> &v) {
+    v.iterate([&os](const S &v, size_t i) {
+      os << "(i= " << i << ", v= " << v << ") ";
+    });
+    os << std::endl;
+    return os;
+  }
   // private:
   struct Element {
     T value;

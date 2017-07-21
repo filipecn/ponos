@@ -53,6 +53,24 @@ void draw_bbox(const ponos::BBox2D &bbox, float *fillColor) {
   }
 }
 
+void draw_bbox(const ponos::BBox2D &bbox, const Color &edgeColor,
+               const Color &fillColor) {
+  glColor4fv(edgeColor.asArray());
+  glBegin(GL_LINE_LOOP);
+  glVertex(ponos::Point2(bbox.pMin.x, bbox.pMin.y));
+  glVertex(ponos::Point2(bbox.pMax.x, bbox.pMin.y));
+  glVertex(ponos::Point2(bbox.pMax.x, bbox.pMax.y));
+  glVertex(ponos::Point2(bbox.pMin.x, bbox.pMax.y));
+  glEnd();
+  glColor4fv(fillColor.asArray());
+  glBegin(GL_QUADS);
+  glVertex(ponos::Point2(bbox.pMin.x, bbox.pMin.y));
+  glVertex(ponos::Point2(bbox.pMax.x, bbox.pMin.y));
+  glVertex(ponos::Point2(bbox.pMax.x, bbox.pMax.y));
+  glVertex(ponos::Point2(bbox.pMin.x, bbox.pMax.y));
+  glEnd();
+}
+
 void draw_bbox(const ponos::BBox &bbox) {
   glBegin(GL_LINE_LOOP);
   glVertex(ponos::Point3(bbox.pMin.x, bbox.pMin.y, bbox.pMin.z));

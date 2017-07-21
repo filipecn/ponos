@@ -54,7 +54,7 @@ enum class GeometricPrimitiveType {
 class RawMesh {
 public:
   RawMesh() {
-    vertexDescriptor.count = 3;
+    vertexDescriptor.elementSize = 3;
     primitiveType = GeometricPrimitiveType::TRIANGLES;
   }
   virtual ~RawMesh() {}

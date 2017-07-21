@@ -48,7 +48,10 @@ public:
   /** \brief  add
    * \param o pointer to the object
    */
-  void add(SceneObject *o) { s.add(o); }
+  SceneObject *add(SceneObject *o) {
+    s.add(o);
+    return o;
+  }
 
   void render() {
     float pm[16];

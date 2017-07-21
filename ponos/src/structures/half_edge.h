@@ -68,6 +68,7 @@ public:
     }
   }
   struct Vertex {
+		Vertex(T x, T y) : position(Point<T, D>({x, y})), edge(-1) {}
     Vertex(const Point<T, D> &p) : position(p), edge(-1) {}
     Point<T, D> position; //!< HE vertex position
     int edge;             //!< HE connected to this vertex
@@ -103,6 +104,7 @@ public:
     edges.resize(edges.size() + 2);
 
     // std::cout << "for edge " << e1 << std::endl;
+		// std::cout << "vertices " << a << " and " << b << std::endl;
     edges[e1].pair = e2;
     edges[e1].face = -1;
     edges[e1].orig = a;
@@ -139,40 +141,33 @@ public:
     if (edges[e1].prev >= 0)
       edges[edges[e1].prev].next = e1;
 
-    // if (edges[e1].next >= 0)
-    //  std::cout << "conected next-previous " << edges[e1].next << " "
-    //            << edges[edges[e1].next].prev << std::endl;
-    // if (edges[e1].prev >= 0)
-    //  std::cout << "conected previous-next " << edges[e1].prev << " "
-    //            << edges[edges[e1].prev].next << std::endl;
-
     if (edges[e2].next >= 0)
       edges[edges[e2].next].prev = e2;
     if (edges[e2].prev >= 0)
       edges[edges[e2].prev].next = e2;
 
-    // if (edges[e2].next >= 0)
-    //  std::cout << "conected next-previous " << edges[e2].next << " "
-    //            << edges[edges[e2].next].prev << std::endl;
-    // if (edges[e2].prev >= 0)
-    //  std::cout << "conected previous-next " << edges[e2].prev << " "
-    //            << edges[edges[e2].prev].next << std::endl;
-
     if (vertices[a].edge < 0)
       vertices[a].edge = e1;
     if (vertices[b].edge < 0)
       vertices[b].edge = e2;
-
+		// std::cout << "vertex " << a << " has edge " << vertices[a].edge << std::endl;
+		// std::cout << "vertex " << b << " has edge " << vertices[b].edge << std::endl;
     // std::cout << "Edge created\n";
-    // std::cout << edges[e1].next << " ";
-    // std::cout << edges[e1].prev << " ";
-    // std::cout << edges[e1].pair << " ";
-    // std::cout << edges[e1].face << "\n";
+		// std::cout << "edge " << e1 << std::endl;
+		// std::cout << "a " << edges[e1].orig << " b "
+		// 	<< edges[e1].dest << std::endl;
+    // std::cout << "next " << edges[e1].next << " ";
+    // std::cout << "prev " << edges[e1].prev << " ";
+    // std::cout << "pair " << edges[e1].pair << " ";
+    // std::cout << "face " << edges[e1].face << "\n";
     // std::cout << std::endl;
-    // std::cout << edges[e2].next << " ";
-    // std::cout << edges[e2].prev << " ";
-    // std::cout << edges[e2].pair << " ";
-    // std::cout << edges[e2].face << "\n";
+		// std::cout << "edge " << e2 << std::endl;
+		// std::cout << "a " << edges[e2].orig << " b "
+		// 	<< edges[e2].dest << std::endl;
+    // std::cout << "next " << edges[e2].next << " ";
+    // std::cout << "prev " << edges[e2].prev << " ";
+    // std::cout << "pair " << edges[e2].pair << " ";
+    // std::cout << "face " << edges[e2].face << "\n";
     // std::cout << std::endl;
     return e1;
   }
@@ -216,7 +211,7 @@ public:
       } while (he != begin);
     }
   }
-  void traversePolygonEdges(int f, std::function<void(int e)> g) {
+  void traversePolygonEdges(int f, std::function<void(int e)> g) const {
     if (faces[f].edge >= 0) {
       int begin = faces[f].edge;
       int he = begin;
@@ -241,7 +236,6 @@ private:
     double vAngle = ponos::atanPI_2(v.y, v.x);
     int xAngleId = -1;
     int nextEdge = -1;
-    // std::cout << "find next " << incident << std::endl;
     if (incident) {
       xAngle = -(1 << 20);
       double nextAngle = -(1 << 20);
@@ -252,7 +246,6 @@ private:
             vec2 curVec = normalize(vertices[edges[e].dest].position.floatXY() -
                                     vertices[edges[e].orig].position.floatXY());
             double angle = ponos::atanPI_2(curVec.y, curVec.x);
-            // std::cout << e << " " << TO_DEGREES(angle) << "\n";
             if (angle > xAngle)
               xAngle = angle, xAngleId = e;
             if (angle < vAngle && angle > nextAngle)
@@ -277,7 +270,6 @@ private:
     }
     if (nextEdge < 0)
       nextEdge = xAngleId;
-    // std::cout << " found edge " << nextEdge << std::endl;
     return nextEdge;
   }
   int vertexNext(int e) { return edges[edges[e].pair].next; }

@@ -33,7 +33,18 @@ QuadTree<NodeData>::QuadTree(const BBox2D &region,
     : root(new Node(region, nullptr)) {
   height_ = 0;
   count = 0;
-  refine(root, f);
+  refine(root, f, nullptr);
+}
+
+template <typename NodeData>
+QuadTree<NodeData>::QuadTree(const BBox2D &region, NodeData rootData,
+                             const std::function<bool(Node &node)> &f,
+                             std::function<void(Node &)> sf)
+    : root(new Node(region, nullptr)) {
+  height_ = 0;
+  count = 0;
+  root->data = rootData;
+  refine(root, f, sf);
 }
 
 template <typename NodeData> QuadTree<NodeData>::~QuadTree() {
@@ -84,7 +95,8 @@ template <typename NodeData> void QuadTree<NodeData>::clean(Node *node) {
 
 template <typename NodeData>
 void QuadTree<NodeData>::refine(Node *node,
-                                const std::function<bool(Node &node)> &f) {
+                                const std::function<bool(Node &node)> &f,
+                                std::function<void(Node &)> sf) {
   if (!node)
     return;
   node->id = count++;
@@ -99,9 +111,11 @@ void QuadTree<NodeData>::refine(Node *node,
     node->children[2] = new Node(BBox2D(pmin, mid), node);
     node->children[3] =
         new Node(BBox2D(Point2(mid.x, pmin.y), Point2(pmax.x, mid.y)), node);
+    if (sf)
+      sf(*node);
     for (int i = 0; i < 4; i++) {
       node->children[i]->childNumber = i;
-      refine(node->children[i], f);
+      refine(node->children[i], f, sf);
     }
   }
 }
