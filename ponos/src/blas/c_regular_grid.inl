@@ -76,15 +76,15 @@ template <typename T> void CRegularGrid<T>::setAll(T v) {
 }
 
 template <typename T> T CRegularGrid<T>::safeData(int i, int j, int k) const {
-  return data[max(0, min(this->dimensions[0] - 1, i))][max(
-      0, min(this->dimensions[1] - 1, j))][max(0, min(this->dimensions[2] - 1,
-                                                      k))];
+  return data[max(0, min(this->dimensions[0] - 1, i))]
+             [max(0, min(this->dimensions[1] - 1, j))]
+             [max(0, min(this->dimensions[2] - 1, k))];
 }
 
 template <typename T> void CRegularGrid<T>::set(const ivec3 &i, const T &v) {
   this->data[std::max(0, std::min(this->dimensions[0] - 1, i[0]))]
-            [std::max(0, std::min(this->dimensions[1] - 1, i[1]))][std::max(
-                0, std::min(this->dimensions[2] - 1, i[2]))] = v;
+            [std::max(0, std::min(this->dimensions[1] - 1, i[1]))]
+            [std::max(0, std::min(this->dimensions[2] - 1, i[2]))] = v;
 }
 
 template <typename T> void CRegularGrid<T>::normalize() {
@@ -120,12 +120,12 @@ template <typename T> T CRegularGrid2D<T>::sample(float x, float y) const {
   x1 = std::max(0, std::min(static_cast<int>(this->width) - 1, x1));
   y1 = std::max(0, std::min(static_cast<int>(this->height) - 1, y1));
 
-  float p[4][4];
+  T p[4][4];
   int delta[] = {-1, 0, 1, 2};
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++)
       p[i][j] = this->safeData(x0 + delta[i], y0 + delta[j]);
-  return ponos::bicubicInterpolate<float>(p, gp.x - x0, gp.y - y0);
+  return ponos::bicubicInterpolate<T>(p, gp.x - x0, gp.y - y0);
 }
 
 template <typename T> void CRegularGrid2D<T>::updateDataStructure() {

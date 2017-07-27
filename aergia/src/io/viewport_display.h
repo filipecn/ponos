@@ -1,8 +1,8 @@
 #ifndef AERGIA_IO_VIEWPORT_DISPLAY_H
 #define AERGIA_IO_VIEWPORT_DISPLAY_H
 
-#include "ui/trackball_interface.h"
 #include "scene/camera.h"
+#include "ui/trackball_interface.h"
 
 #include <ponos.h>
 
@@ -48,12 +48,14 @@ public:
   void mouse(double x, double y);
   void button(int b, int a);
   void scroll(double dx, double dy);
+  void key(int k, int action);
 
   // render callback
   std::function<void()> renderCallback;
   std::function<void(int, int)> buttonCallback;
   std::function<void(double, double)> mouseCallback;
   std::function<void(double, double)> scrollCallback;
+  std::function<void(int, int)> keyCallback;
 
   // viewport
   int x, y, width, height;

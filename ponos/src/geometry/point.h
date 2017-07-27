@@ -258,6 +258,8 @@ public:
   }
 
   Point2 xy() const { return Point2(x, y); }
+  Point2 yz() const { return Point2(y, z); }
+  Point2 xz() const { return Point2(x, z); }
   bool HasNaNs() const;
 
   friend std::ostream &operator<<(std::ostream &os, const Point3 &p);

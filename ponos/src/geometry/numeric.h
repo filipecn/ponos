@@ -27,8 +27,8 @@
 
 #include "common/defs.h"
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <functional>
 
 namespace ponos {
@@ -56,6 +56,10 @@ namespace ponos {
 #define IS_EQUAL(A, B) (fabs((A) - (B)) < 1e-6)
 
 #define IS_EQUAL_ERROR(A, B, C) (fabs((A) - (B)) < C)
+
+#define IS_BETWEEN(A, B, C) ((A) > (B) && (A) < (C))
+
+#define IS_BETWEEN_CLOSE(A, B, C) ((A) >= (B) && (A) <= (C))
 
 /** \brief computes the arc-tangent of y/x
  * \param y

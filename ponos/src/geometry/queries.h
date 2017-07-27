@@ -5,13 +5,13 @@
 #include "geometry/interval.h"
 #include "geometry/line.h"
 #include "geometry/plane.h"
+#include "geometry/polygon.h"
 #include "geometry/ray.h"
 #include "geometry/segment.h"
 #include "geometry/sphere.h"
+#include "geometry/transform.h"
 #include "geometry/utils.h"
 #include "geometry/vector.h"
-#include "geometry/transform.h"
-#include "geometry/polygon.h"
 
 namespace ponos {
 
@@ -131,7 +131,11 @@ bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1,
  *
  * /return **true** if intersection exists
  */
+void triangle_barycentric_coordinates(const Point2 &p, const Point2 &a,
+                                      const Point2 &b, const Point2 &c,
+                                      float &u, float &v, float &w);
 bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1);
+bool triangle_point_intersection(const Point2 &p, const Point2 *vertices);
 /** \brief  intersection test
  * \param p1 **[in]** first triangle's vertex
  * \param p2 **[in]** second triangle's vertex

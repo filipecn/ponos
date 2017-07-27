@@ -27,8 +27,8 @@
 
 #include "geometry/point.h"
 
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 namespace ponos {
 
@@ -118,6 +118,9 @@ public:
       return 1;
     return 2;
   }
+  BBox2D xy() const { return BBox2D(pMin.xy(), pMax.xy()); }
+  BBox2D yz() const { return BBox2D(pMin.yz(), pMax.yz()); }
+  BBox2D xz() const { return BBox2D(pMin.xz(), pMax.xz()); }
   Point3 centroid() const { return pMin * .5f + vec3(pMax * .5f); }
   const Point3 &operator[](int i) const { return (i == 0) ? pMin : pMax; }
   Point3 &operator[](int i) { return (i == 0) ? pMin : pMax; }

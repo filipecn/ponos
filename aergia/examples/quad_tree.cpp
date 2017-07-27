@@ -20,7 +20,7 @@ int main() {
   buildLeafPhantomNeighbours(&tree);
   QuadTreeModel<TreeType> model(&tree);
   model.edgesColor = Color(0, 0, 0, 0.2);
-  Text text("C:/Windows/Fonts/Arial.ttf");
+  Text text("/run/media/filipecn/OS/Windows/Fonts/arial.ttf");
   model.drawCallback = [&text](const typename TreeType::Node &n) {
     for (auto neighbour : n.data.neighbours) {
       if (neighbour->data.isPhantom)

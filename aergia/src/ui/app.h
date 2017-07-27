@@ -39,6 +39,7 @@ public:
   size_t addViewport2D(uint x, uint y, uint w, uint h);
   void init();
   void run();
+  void exit();
   template <typename T> T *getCamera(size_t i = 0) {
     return static_cast<T *>(viewports[i].camera.get());
   }
@@ -46,8 +47,9 @@ public:
   std::vector<ViewportDisplay> viewports;
   std::function<void()> renderCallback;
   std::function<void(double, double)> scrollCallback;
-	std::function<void(double, double)> mouseCallback;
-	std::function<void(int, int)> buttonCallback;
+  std::function<void(double, double)> mouseCallback;
+  std::function<void(int, int)> buttonCallback;
+  std::function<void(int, int)> keyCallback;
 
 protected:
   bool initialized;
@@ -58,6 +60,7 @@ protected:
   virtual void button(int b, int a);
   virtual void mouse(double x, double y);
   virtual void scroll(double dx, double dy);
+  virtual void key(int key, int action);
 };
 
 } // aergia namespace

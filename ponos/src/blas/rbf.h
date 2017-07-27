@@ -47,7 +47,7 @@ public:
 template <typename T> class PowKernel : public Kernel<T> {
 public:
   PowKernel(T _e) : e(_e) {}
-  virtual T operator()(T r2) const override { return pow(r2, e); }
+  virtual T operator()(T r2) const override { return pow(std::sqrt(r2), e); }
 
 private:
   T e;
@@ -62,15 +62,6 @@ public:
             [](const P &a, const P &b) -> T { return 0.0; })
       : phi(k), points(p) {
     d2Function = d2f;
-    /*weights.resize(p.size());
-    LinearSystem<SymmetricMatrix<T>, std::vector<T>> system;
-    system.A.set(points.size());
-    for (size_t i = 0; i < p.size(); i++)
-      for (size_t j = i; j < p.size(); j++)
-        system.A(i, j) = (*phi)(d2Function(points[i], points[j]));
-    std::copy(f.begin(), f.end(), std::back_inserter(system.b));
-    std::copy(system.x.begin(), system.x.end(), std::back_inserter(weights));
-                */
   }
   virtual T sample(float x, float y) const override {
     float sum = 0.f;
@@ -87,7 +78,8 @@ public:
     weights.clear();
     std::copy(w.begin(), w.end(), std::back_inserter(weights));
   }
-
+  const std::vector<P> &getPoints() const { return points; }
+  const std::vector<T> &getWeights() const { return weights; }
   Kernel<T> *phi;
   std::function<T(const P &, const P &)> d2Function;
 

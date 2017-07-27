@@ -46,7 +46,7 @@ public:
     static bool first = true;
     if (first)
       last = position, first = false;
-    mouseUpdate();
+    mouseMove();
   }
 
   void button(CameraInterface &camera, ponos::Point2 p, int button,
@@ -57,7 +57,7 @@ public:
       dragging = true;
       start = position;
     }
-    mouseUpdate();
+    mouseButton(button, action);
   }
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
@@ -65,7 +65,8 @@ public:
     return true;
   }
 
-  virtual void mouseUpdate() {}
+  virtual void mouseMove() {}
+  virtual void mouseButton(int b, int a) {}
 
   bool dragging;
   ponos::Point2 position;
@@ -93,13 +94,19 @@ public:
     draw_circle(c);
   }
 
-  void mouseUpdate() override {
+  void mouseMove() override {
     circle.c = this->position;
     if (mouseCallback)
       mouseCallback(*this, position - last);
   }
 
+  void mouseButton(int b, int a) override {
+    if (buttonCallback)
+      buttonCallback(*this, b, a);
+  }
+
   std::function<void(const CircleCursor &, ponos::vec2)> mouseCallback;
+  std::function<void(const CircleCursor &, int b, int a)> buttonCallback;
   Color fillColor;
   Color activeColor;
   ponos::Circle circle;

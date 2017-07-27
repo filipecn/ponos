@@ -68,7 +68,7 @@ public:
     }
   }
   struct Vertex {
-		Vertex(T x, T y) : position(Point<T, D>({x, y})), edge(-1) {}
+    Vertex(T x, T y) : position(Point<T, D>({x, y})), edge(-1) {}
     Vertex(const Point<T, D> &p) : position(p), edge(-1) {}
     Point<T, D> position; //!< HE vertex position
     int edge;             //!< HE connected to this vertex
@@ -77,7 +77,7 @@ public:
   struct Edge {
     Edge() { orig = dest = pair = face = next = prev = -1; }
     int orig; //!< origin
-    int dest; //!< origin
+    int dest; //!< destination
     int pair; //!< oposite half edge
     int face; //!< face on the left
     int next; //!< successor HE
@@ -104,7 +104,7 @@ public:
     edges.resize(edges.size() + 2);
 
     // std::cout << "for edge " << e1 << std::endl;
-		// std::cout << "vertices " << a << " and " << b << std::endl;
+    // std::cout << "vertices " << a << " and " << b << std::endl;
     edges[e1].pair = e2;
     edges[e1].face = -1;
     edges[e1].orig = a;
@@ -150,20 +150,22 @@ public:
       vertices[a].edge = e1;
     if (vertices[b].edge < 0)
       vertices[b].edge = e2;
-		// std::cout << "vertex " << a << " has edge " << vertices[a].edge << std::endl;
-		// std::cout << "vertex " << b << " has edge " << vertices[b].edge << std::endl;
+    // std::cout << "vertex " << a << " has edge " << vertices[a].edge <<
+    // std::endl;
+    // std::cout << "vertex " << b << " has edge " << vertices[b].edge <<
+    // std::endl;
     // std::cout << "Edge created\n";
-		// std::cout << "edge " << e1 << std::endl;
-		// std::cout << "a " << edges[e1].orig << " b "
-		// 	<< edges[e1].dest << std::endl;
+    // std::cout << "edge " << e1 << std::endl;
+    // std::cout << "a " << edges[e1].orig << " b "
+    // 	<< edges[e1].dest << std::endl;
     // std::cout << "next " << edges[e1].next << " ";
     // std::cout << "prev " << edges[e1].prev << " ";
     // std::cout << "pair " << edges[e1].pair << " ";
     // std::cout << "face " << edges[e1].face << "\n";
     // std::cout << std::endl;
-		// std::cout << "edge " << e2 << std::endl;
-		// std::cout << "a " << edges[e2].orig << " b "
-		// 	<< edges[e2].dest << std::endl;
+    // std::cout << "edge " << e2 << std::endl;
+    // std::cout << "a " << edges[e2].orig << " b "
+    // 	<< edges[e2].dest << std::endl;
     // std::cout << "next " << edges[e2].next << " ";
     // std::cout << "prev " << edges[e2].prev << " ";
     // std::cout << "pair " << edges[e2].pair << " ";
@@ -222,6 +224,7 @@ public:
     }
   }
   size_t vertexCount() const { return vertices.size(); }
+  size_t faceCount() const { return faces.size(); }
 
 private:
   /** \brief
@@ -239,34 +242,30 @@ private:
     if (incident) {
       xAngle = -(1 << 20);
       double nextAngle = -(1 << 20);
-      traverseEdgesFromVertex(
-          vertex,
-          [nv, &xAngle, &xAngleId, &vAngle, &nextAngle, &nextEdge, this](
-              int e) {
-            vec2 curVec = normalize(vertices[edges[e].dest].position.floatXY() -
-                                    vertices[edges[e].orig].position.floatXY());
-            double angle = ponos::atanPI_2(curVec.y, curVec.x);
-            if (angle > xAngle)
-              xAngle = angle, xAngleId = e;
-            if (angle < vAngle && angle > nextAngle)
-              nextAngle = angle, nextEdge = e;
-          });
+      traverseEdgesFromVertex(vertex, [nv, &xAngle, &xAngleId, &vAngle,
+                                       &nextAngle, &nextEdge, this](int e) {
+        vec2 curVec = normalize(vertices[edges[e].dest].position.floatXY() -
+                                vertices[edges[e].orig].position.floatXY());
+        double angle = ponos::atanPI_2(curVec.y, curVec.x);
+        if (angle > xAngle)
+          xAngle = angle, xAngleId = e;
+        if (angle < vAngle && angle > nextAngle)
+          nextAngle = angle, nextEdge = e;
+      });
     } else {
       xAngle = (1 << 20);
       double nextAngle = (1 << 20);
-      traverseEdgesToVertex(
-          vertex,
-          [nv, &xAngle, &xAngleId, &vAngle, &nextAngle, &nextEdge, this](
-              int e) {
-            vec2 curVec = normalize(vertices[edges[e].orig].position.floatXY() -
-                                    vertices[edges[e].dest].position.floatXY());
-            double angle = ponos::atanPI_2(curVec.y, curVec.x);
-            // std::cout << e << " " << TO_DEGREES(angle) << "\n";
-            if (angle < xAngle)
-              xAngle = angle, xAngleId = e;
-            if (angle > vAngle && angle < nextAngle)
-              nextAngle = angle, nextEdge = e;
-          });
+      traverseEdgesToVertex(vertex, [nv, &xAngle, &xAngleId, &vAngle,
+                                     &nextAngle, &nextEdge, this](int e) {
+        vec2 curVec = normalize(vertices[edges[e].orig].position.floatXY() -
+                                vertices[edges[e].dest].position.floatXY());
+        double angle = ponos::atanPI_2(curVec.y, curVec.x);
+        // std::cout << e << " " << TO_DEGREES(angle) << "\n";
+        if (angle < xAngle)
+          xAngle = angle, xAngleId = e;
+        if (angle > vAngle && angle < nextAngle)
+          nextAngle = angle, nextEdge = e;
+      });
     }
     if (nextEdge < 0)
       nextEdge = xAngleId;

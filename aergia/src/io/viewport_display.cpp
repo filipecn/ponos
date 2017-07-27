@@ -42,6 +42,11 @@ void ViewportDisplay::button(int b, int a) {
     trackball.buttonPress(*camera.get(), b, getMouseNPos());
 }
 
+void ViewportDisplay::key(int k, int action) {
+  if (keyCallback)
+    keyCallback(k, action);
+}
+
 ponos::Point2 ViewportDisplay::getMouseNPos() {
   int viewport[] = {0, 0, width, height};
   ponos::Point2 mp =

@@ -198,6 +198,29 @@ bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit0) {
   return bbox_ray_intersection(box, ray, hit0);
 }
 
+void triangle_barycentric_coordinates(const Point2 &p, const Point2 &a,
+                                      const Point2 &b, const Point2 &c,
+                                      float &u, float &v, float &w) {
+  vec2 v0 = b - a, v1 = c - a, v2 = p - a;
+  float d00 = dot(v0, v0);
+  float d01 = dot(v0, v1);
+  float d11 = dot(v1, v1);
+  float d20 = dot(v2, v0);
+  float d21 = dot(v2, v1);
+  float d = d00 * d11 - d01 * d01;
+  v = (d11 * d20 - d01 * d21) / d;
+  w = (d00 * d21 - d01 * d20) / d;
+  u = 1.0f - v - w;
+}
+
+bool triangle_point_intersection(const Point2 &p, const Point2 *vertices) {
+  float u = -1, v = -1, w = -1;
+  triangle_barycentric_coordinates(p, vertices[0], vertices[1], vertices[2], u,
+                                   v, w);
+  return IS_BETWEEN_CLOSE(u, 0.f, 1.f) && IS_BETWEEN_CLOSE(v, 0.f, 1.f) &&
+         IS_BETWEEN_CLOSE(w, 0.f, 1.f);
+}
+
 bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
                                const Point3 &p3, const Ray3 &ray, float *tHit,
                                float *b1, float *b2) {

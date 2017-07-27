@@ -161,6 +161,10 @@ void GraphicsDisplay::registerKeyFunc(void (*f)(int, int)) {
   this->keyCallback = f;
 }
 
+void GraphicsDisplay::registerKeyFunc(std::function<void(int, int)> f) {
+  this->keyCallback = f;
+}
+
 void GraphicsDisplay::key_callback(GLFWwindow *window, int key, int scancode,
                                    int action, int mods) {
   if (instance_.keyCallback)

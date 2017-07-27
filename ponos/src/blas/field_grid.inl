@@ -67,8 +67,7 @@ template <typename T> T ScalarGrid2D<T>::sample(float x, float y) const {
   Point2 gp = this->dataGridPosition(Point2(x, y));
   return bilerp(gp.x - i, gp.y - j, (*this)(i, j), (*this)(i + 1, j),
                 (*this)(i + 1, j + 1), (*this)(i, j + 1));
-  */ Point2 gp =
-      this->dataGridPosition(Point2(x, y));
+  */ Point2 gp = this->dataGridPosition(Point2(x, y));
   int x0 = static_cast<int>(gp.x);
   int y0 = static_cast<int>(gp.y);
   int x1 = x0 + 1;
@@ -84,4 +83,53 @@ template <typename T> T ScalarGrid2D<T>::sample(float x, float y) const {
     for (int j = 0; j < 4; j++)
       p[i][j] = this->safeData(x0 + delta[i], y0 + delta[j]);
   return ponos::bicubicInterpolate<float>(p, gp.x - x0, gp.y - y0);
+}
+
+template <typename T> VectorGrid2D<T>::VectorGrid2D() {}
+
+template <typename T> VectorGrid2D<T>::VectorGrid2D(uint w, uint h) {
+  this->dataPosition = GridDataPosition::CELL_CENTER;
+  this->accessMode = GridAccessMode::CLAMP_TO_EDGE;
+  this->setDimensions(w, h);
+}
+
+template <typename T>
+VectorGrid2D<T>::VectorGrid2D(uint w, uint h, const BBox2D &b) {
+  this->dataPosition = GridDataPosition::CELL_CENTER;
+  this->accessMode = GridAccessMode::CLAMP_TO_EDGE;
+  this->set(w, h, b);
+}
+
+template <typename T> T VectorGrid2D<T>::divergence(int i, int j) const {
+  vec2 cs = 2 * this->cellSize();
+  return ((*this)(i + 1, j)[0] - (*this)(i - 1, j)[0]) / cs[0] +
+         ((*this)(i, j + 1)[1] - (*this)(i, j - 1)[1]) / cs[1];
+}
+
+template <typename T> T VectorGrid2D<T>::divergence(float x, float y) const {
+  return static_cast<T>(0.0);
+}
+
+template <typename T>
+Vector<T, 2> VectorGrid2D<T>::curl(float x, float y) const {
+  return Vector<T, 2>();
+}
+
+template <typename T>
+Vector<T, 2> VectorGrid2D<T>::sample(float x, float y) const {
+  return Vector<T, 2>();
+}
+
+template <typename T>
+void computeDivergenceField(const VectorGrid2D<T> &vectorGrid,
+                            ScalarGrid2D<T> *scalarGrid) {
+  ivec2 d = vectorGrid.getDimensions();
+  if (scalarGrid->getDimensions() != d)
+    scalarGrid->setDimensions(d[0], d[1]);
+  scalarGrid->setTransform(vectorGrid.toWorld);
+  scalarGrid->accessMode = vectorGrid.accessMode;
+  scalarGrid->dataPosition = vectorGrid.dataPosition;
+  scalarGrid->forEach([&vectorGrid](T &d, size_t i, size_t j) {
+    d = vectorGrid.divergence(static_cast<int>(i), static_cast<int>(j));
+  });
 }

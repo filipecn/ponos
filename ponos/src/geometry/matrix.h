@@ -58,6 +58,15 @@ public:
   size_t rowsNumber() const { return N; }
   size_t columnsNumber() const { return M; }
 
+  friend std::ostream &operator<<(std::ostream &os, const DenseMatrix<T> &m) {
+    for (size_t i = 0; i < m.N; i++) {
+      for (size_t j = 0; j < m.M; j++)
+        os << m(i, j) << " ";
+      os << std::endl;
+    }
+    return os;
+  }
+
 private:
   size_t N, M;
   T **data;

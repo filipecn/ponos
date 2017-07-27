@@ -43,7 +43,8 @@ public:
 };
 
 template <typename T>
-class VectorField2D : public FieldInterface2D<Vector<T, 2>> {
+class VectorField2D : virtual public FieldInterface2D<Vector<T, 2>> {
+public:
   virtual T divergence(float x, float y) const = 0;
   virtual Vector<T, 2> curl(float x, float y) const = 0;
 };

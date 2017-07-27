@@ -11,8 +11,9 @@ App::App(uint w, uint h, const char *t, bool defaultViewport)
   if (defaultViewport)
     addViewport(0, 0, windowWidth, windowHeight);
   renderCallback = nullptr;
-	mouseCallback = nullptr;
-	buttonCallback = nullptr;
+  mouseCallback = nullptr;
+  buttonCallback = nullptr;
+  keyCallback = nullptr;
 }
 
 size_t App::addViewport(uint x, uint y, uint w, uint h) {
@@ -40,6 +41,7 @@ void App::init() {
   gd.registerButtonFunc([this](int b, int a) { button(b, a); });
   gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
   gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
+  gd.registerKeyFunc([this](int k, int a) { key(k, a); });
   initialized = true;
 }
 
@@ -48,6 +50,8 @@ void App::run() {
     init();
   GraphicsDisplay::instance().start();
 }
+
+void App::exit() { GraphicsDisplay::instance().stop(); }
 
 void App::render() {
   for (size_t i = 0; i < viewports.size(); i++)
@@ -59,15 +63,15 @@ void App::render() {
 void App::button(int button, int action) {
   for (size_t i = 0; i < viewports.size(); i++)
     viewports[i].button(button, action);
-	if(buttonCallback)
-		buttonCallback(button, action);
+  if (buttonCallback)
+    buttonCallback(button, action);
 }
 
 void App::mouse(double x, double y) {
   for (size_t i = 0; i < viewports.size(); i++)
     viewports[i].mouse(x, y);
-	if(mouseCallback)
-		mouseCallback(x, y);
+  if (mouseCallback)
+    mouseCallback(x, y);
 }
 
 void App::scroll(double dx, double dy) {
@@ -75,6 +79,13 @@ void App::scroll(double dx, double dy) {
     viewports[i].scroll(dx, dy);
   if (scrollCallback)
     scrollCallback(dx, dy);
+}
+
+void App::key(int k, int action) {
+  for (size_t i = 0; i < viewports.size(); i++)
+    viewports[i].key(k, action);
+  if (keyCallback)
+    keyCallback(k, action);
 }
 
 } // aergia namespace

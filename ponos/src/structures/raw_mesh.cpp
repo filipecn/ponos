@@ -37,10 +37,10 @@ void RawMesh::addFace(std::initializer_list<IndexData> l) {
 }
 
 void RawMesh::apply(const Transform &t) {
-  size_t nv = vertices.size() / vertexDescriptor.elementSize;
-  for (size_t i = 0; i < nv; i++)
+  for (size_t i = 0; i < vertexDescriptor.count; i++)
     t.applyToPoint(&vertices[i * vertexDescriptor.elementSize],
-                   &vertices[i * vertexDescriptor.elementSize]);
+                   &vertices[i * vertexDescriptor.elementSize],
+                   vertexDescriptor.elementSize);
   if (interleavedData.size())
     buildInterleavedData();
 }
@@ -74,10 +74,11 @@ Point3 RawMesh::vertexElement(size_t e, size_t v) const {
       vertices[indices[e * meshDescriptor.elementSize + v].vertexIndex *
                    vertexDescriptor.elementSize +
                1],
-							 ((vertexDescriptor.elementSize == 3) ?
-      vertices[indices[e * meshDescriptor.elementSize + v].vertexIndex *
-                   vertexDescriptor.elementSize +
-               2] : 0.f));
+      ((vertexDescriptor.elementSize == 3)
+           ? vertices[indices[e * meshDescriptor.elementSize + v].vertexIndex *
+                          vertexDescriptor.elementSize +
+                      2]
+           : 0.f));
 }
 
 BBox RawMesh::elementBBox(size_t i) const {

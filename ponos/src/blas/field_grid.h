@@ -25,10 +25,10 @@
 #ifndef PONOS_BLAS_FIELD_GRID_H
 #define PONOS_BLAS_FIELD_GRID_H
 
+#include "blas/c_regular_grid.h"
 #include "blas/field.h"
 #include "common/macros.h"
 #include "log/debug.h"
-#include "blas/c_regular_grid.h"
 
 #include <algorithm>
 #include <memory>
@@ -51,9 +51,28 @@ public:
   T sample(float x, float y) const override;
 };
 
-#include "field_grid.inl"
-
 typedef ScalarGrid2D<float> ScalarGrid2f;
+
+template <typename T>
+class VectorGrid2D : public CRegularGrid2D<Vector<T, 2>>,
+                     virtual public VectorField2D<T> {
+public:
+  VectorGrid2D();
+  VectorGrid2D(uint w, uint h);
+  VectorGrid2D(uint w, uint h, const BBox2D &b);
+  T divergence(int i, int j) const;
+  T divergence(float x, float y) const override;
+  Vector<T, 2> curl(float x, float y) const override;
+  Vector<T, 2> sample(float x, float y) const override;
+
+private:
+};
+
+template <typename T>
+void computeDivergenceField(const VectorGrid2D<T> &vectorGrid2D,
+                            ScalarGrid2D<T> *scalarGrid = nullptr);
+
+#include "field_grid.inl"
 
 } // ponos namespace
 

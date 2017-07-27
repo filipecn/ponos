@@ -67,20 +67,55 @@ public:
   Color gridColor;
   Color dataColor;
 
-private:
+protected:
   const GridType *grid;
+};
+
+template <typename T>
+class VectorGrid2DModel : public GridModel<ponos::VectorGrid2D<T>> {
+public:
+  enum class Mode { RAW, EQUAL };
+  VectorGrid2DModel() {}
+  VectorGrid2DModel(const ponos::VectorGrid2D<T> *g, float sf = 1.f) {
+    this->gridColor = COLOR_TRANSPARENT;
+    this->dataColor = COLOR_RED;
+    this->grid = g;
+    scaleFactor = sf;
+    mode = Mode::RAW;
+    this->f = [&](const ponos::Vector<T, 2> v, ponos::Point3 p) {
+      glColor4fv(this->dataColor.asArray());
+      glPointSize(3.f);
+      glBegin(GL_POINTS);
+      glVertex(p);
+      glEnd();
+      switch (mode) {
+      case Mode::RAW:
+        draw_vector(ponos::Point2(p.x, p.y),
+                    scaleFactor * ponos::vec2(v[0], v[1]));
+        break;
+      case Mode::EQUAL:
+        draw_vector(ponos::Point2(p.x, p.y),
+                    scaleFactor * ponos::normalize(ponos::vec2(v[0], v[1])));
+        break;
+      }
+    };
+  }
+
+  float scaleFactor;
+  Mode mode;
 };
 
 template <typename SGridType> class StaggeredGrid2DModel : public SceneObject {
 public:
-  StaggeredGrid2DModel(const SGridType *g) : grid(g) {
+  StaggeredGrid2DModel(const SGridType *g) {
+    this->grid = g;
     text = new Text("C:/Windows/Fonts/Arial.ttf");
     u_model.reset(
-        new GridModel<typename SGridType::InternalGridType>(&grid->u));
+        new GridModel<typename SGridType::InternalGridType>(&this->grid->u));
     v_model.reset(
-        new GridModel<typename SGridType::InternalGridType>(&grid->v));
+        new GridModel<typename SGridType::InternalGridType>(&this->grid->v));
     p_model.reset(
-        new GridModel<typename SGridType::InternalGridType>(&grid->p));
+        new GridModel<typename SGridType::InternalGridType>(&this->grid->p));
     setupModel(u_model.get(), Color(0, 0, 0, 0), Color(1, 0, 0, 0.5));
     setupModel(v_model.get(), Color(0, 0, 0, 0), Color(0, 0, 1, 0.5));
   }
@@ -110,7 +145,7 @@ public:
   std::shared_ptr<GridModel<typename SGridType::InternalGridType>> p_model;
 
 private:
-  const SGridType *grid;
+  //  const SGridType *grid;
   Text *text;
 };
 
