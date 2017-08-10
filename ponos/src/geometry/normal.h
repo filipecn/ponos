@@ -31,16 +31,16 @@ namespace ponos {
 
 class Vector2;
 class Normal2D;
-/** \brief  reflects **a** on **b**
+/** \brief  reflects **a** on **n**
  * \param a vector to be reflected
- * \param b axis of reflection
+ * \param n axis of reflection
  * \returns reflected **a**
  */
 Vector2 reflect(const Vector2 &a, const Normal2D &n);
 /** \brief projects **v** on the surface with normal **n**
  * \param v vector
  * \param n surface's normal
- * \Returns projected **v**
+ * \returns projected **v**
  */
 Vector2 project(const Vector2 &v, const Normal2D &n);
 
@@ -66,16 +66,16 @@ public:
 
 class Vector3;
 class Normal;
-/** \brief  reflects **a** on **b**
+/** \brief  reflects **a** on **n**
  * \param a vector to be reflected
- * \param b axis of reflection
+ * \param n axis of reflection
  * \returns reflected **a**
  */
 Vector3 reflect(const Vector3 &a, const Normal &n);
 /** \brief projects **v** on the surface with normal **n**
  * \param v vector
  * \param n surface's normal
- * \Returns projected **v**
+ * \returns projected **v**
  */
 Vector3 project(const Vector3 &v, const Normal &n);
 /** normal vector */
@@ -95,13 +95,13 @@ public:
   }
 
   /** \brief  reflects **v** from this
-   * \param a vector to be reflected
+   * \param v vector to be reflected
    * \returns reflected **v**
    */
   Vector3 reflect(const Vector3 &v);
   /** \brief projects **v** on the surface with this normal
    * \param v vector
-   * \Returns projected **v**
+   * \returns projected **v**
    */
   Vector3 project(const Vector3 &v);
   /** \brief compute the two orthogonal-tangential vectors from this

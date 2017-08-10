@@ -37,6 +37,20 @@ template <typename MatrixType, typename VectorType> struct LinearSystem {
   VectorType x, b;
 };
 
+template <typename T> class LinearSystem<DenseMatrix<T>, DenseVector<T>> {
+public:
+  LinearSystem() {}
+  void resize(size_t n, size_t m) {
+    A.set(n, m);
+    x.set(n);
+    b.set(n);
+  }
+  DenseMatrix<T> A;
+  DenseVector<T> x, b;
+};
+
+typedef LinearSystem<DenseMatrix<float>, DenseVector<float>> DenseLinearSystemf;
+
 template <> class LinearSystem<FDMMatrix2Df, FDMVector2Df> {
 public:
   LinearSystem() {}

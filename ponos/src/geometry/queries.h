@@ -55,7 +55,7 @@ bool ray_segment_intersection(const Ray3 &r, const Segment3 &s,
  * \param l **[in]** line
  * \param p **[out]** intersection point
  *
- * <Plane> / <Line> intersection test
+ * Plane / Line intersection test
  *
  * /return **true** if intersection exists
  */
@@ -63,11 +63,10 @@ bool plane_line_intersection(const Plane pl, const Line l, Point3 &p);
 /** \brief  intersection test
  * \param s **[in]** sphere
  * \param l **[in]** line
- * \param p **[out]** intersection point
  * \param p1 **[out]** first intersection
  * \param p2 **[out]** second intersection
  *
- * <Sphere> / <Line> intersection test
+ * Sphere / Line intersection test
  *
  * **p1** = **p2** if line is tangent to sphere
  *
@@ -92,7 +91,7 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r,
  * \param hit2 **[out]** second intersection
  * \param normal **[out | optional]** collision normal
  *
- * <BBox2D> / <Ray> intersection test.
+ * BBox2D / Ray intersection test.
  *
  * **hit1** and **hit2** are in the ray's parametric coordinate.
  *
@@ -109,7 +108,7 @@ bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit1,
  * \param hit1 **[out]** first intersection
  * \param hit2 **[out]** second intersection
  *
- * <BBox> / <Ray3> intersection test.
+ * BBox / Ray3 intersection test.
  *
  * **hit1** and **hit2** are in the ray's parametric coordinate.
  *
@@ -124,17 +123,17 @@ bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1,
  * \param ray **[in]**
  * \param hit1 **[out]** closest intersection
  *
- * <BBox> / <Ray3> intersection test. Computes the closest intersection from the
+ * BBox / Ray3 intersection test. Computes the closest intersection from the
  *ray's origin.
  *
  * **hit1** in in the ray's parametric coordinate.
  *
  * /return **true** if intersection exists
  */
+bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1);
 void triangle_barycentric_coordinates(const Point2 &p, const Point2 &a,
                                       const Point2 &b, const Point2 &c,
                                       float &u, float &v, float &w);
-bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1);
 bool triangle_point_intersection(const Point2 &p, const Point2 *vertices);
 /** \brief  intersection test
  * \param p1 **[in]** first triangle's vertex
@@ -145,7 +144,7 @@ bool triangle_point_intersection(const Point2 &p, const Point2 *vertices);
  * \param b1 **[out]** barycentric coordinate
  * \param b2 **[out]** barycentric coordinate
  *
- * <BBox> / <Ray3> intersection test
+ * BBox / Ray3 intersection test
  *
  * **b1** and **b2**, if not null, receive the barycentric coordinates of the
  *intersection point.

@@ -28,6 +28,7 @@
 #include "geometry/bbox.h"
 
 #include <functional>
+#include <queue>
 
 namespace ponos {
 
@@ -220,6 +221,38 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
       };
   horizontalProcess(tree->root, nullptr);
   horizontalProcess(nullptr, tree->root);
+}
+
+template <typename NodeData>
+void iterateNeighbours(
+    QuadTree<NodeData> *tree, int leafCount,
+    const std::function<void(typename QuadTree<NodeData>::Node *)> &f) {
+  typedef typename QuadTree<NodeData>::Node NodeType;
+  bool found = false;
+  NodeType *leaf = nullptr;
+  tree->traverse([&found, &leaf](NodeType &node) -> bool {
+    if (found)
+      return false;
+    if (!node.isLeaf())
+      return true;
+    leaf = &node;
+    found = true;
+    return false;
+  });
+  ASSERT_FATAL(leaf != nullptr);
+  std::vector<bool> visited(leafCount, false);
+  std::queue<NodeType *> q;
+  q.push(leaf);
+  while (!q.empty()) {
+    auto n = q.front();
+    q.pop();
+    visited[n->data.data.index] = true;
+    f(n);
+    for (auto neighbour : n->data.neighbours) {
+      if (!visited[neighbour->data.data.index])
+        q.push(neighbour);
+    }
+  }
 }
 
 #include "structures/quad_tree.inl"

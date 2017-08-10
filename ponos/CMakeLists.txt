@@ -17,6 +17,7 @@ set(HEADERS
 	src/blas/fdm_vector.h
 	src/blas/field.h
 	src/blas/field_grid.h
+	src/blas/gauss_jordan.h
 	src/blas/linear_system.h
   src/blas/pcg.h
 	src/blas/rbf.h
@@ -66,6 +67,7 @@ set(HEADERS
 	src/structures/mesh.h
 	src/structures/regular_grid.h
 	src/structures/object_pool.h
+	#src/structures/octree.h
 	src/structures/quad_tree.h
 	src/structures/raw_mesh.h
 	src/structures/z_grid.h

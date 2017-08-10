@@ -1,5 +1,5 @@
-#include <ponos.h>
 #include <gtest/gtest.h>
+#include <ponos.h>
 
 using namespace ponos;
 
@@ -143,6 +143,7 @@ TEST(ScalarGrid2f, DataCell) {
 TEST(ScalarGrid2f, Gradient) {
   float error = 1e-6;
   ScalarGrid2f grid;
+  grid.dataPosition = GridDataPosition::CELL_CENTER;
   grid.set(10, 10, vec2(), vec2(1));
   grid.forEach([&](float &f, int i, int j) { f = i; });
   grid.forEach([&](float &f, int i, int j) {

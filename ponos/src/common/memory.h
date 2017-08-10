@@ -31,12 +31,12 @@ private:
 #define CACHE_L1_LINE_SIZE 64
 #endif
 
-#define ALLOCA(TYPE, COUNT) (TYPE *) alloca((COUNT) * sizeof(TYPE))
+#define ALLOCA(TYPE, COUNT) (TYPE *)alloca((COUNT) * sizeof(TYPE))
 
 /** \brief allocAligned
  *
  * Allocates cache-aligned memory blocks of **size** bytes.
- * @param size bytes
+ * \param size bytes
  */
 inline void *allocAligned(uint32 size) {
 #ifdef _WIN32
@@ -49,7 +49,7 @@ inline void *allocAligned(uint32 size) {
 /** \brief allocAligned
  *
  * Allocates cache-aligned **count** objects.
- * @param count number of objects.
+ * \param count number of objects.
  */
 template <typename T> T *allocAligned(uint32 count) {
   return static_cast<T *>(allocAligned(count * sizeof(T)));
@@ -66,7 +66,7 @@ inline void freeAligned(void *ptr) { free(ptr); }
 class MemoryArena {
 public:
   /** \brief Constructor.
-   * @param bs **[in]** amount of bytes per region to be allocated
+   * \param bs **[in]** amount of bytes per region to be allocated
    * (**blockSize**).
    */
   MemoryArena(uint32 bs = 32768) {
@@ -77,8 +77,8 @@ public:
   virtual ~MemoryArena() {}
 
   /** \brief allocation
-   * @param sz **[in]** block size to be allocated.
-   * @return pointer to the allocated area. If there is not enough space.. //
+   * \param sz **[in]** block size to be allocated.
+   * \returns pointer to the allocated area. If there is not enough space.. //
    * TODO
    * Allocates **sz** bytes.
    */
@@ -101,9 +101,9 @@ public:
   }
 
   /** \brief allocation
-   * @param count **[in]** number of objects
+   * \param count **[in]** number of objects
    * alloc allocates space for **count** objects.
-   * @return pointer of the first object in the list.
+   * \returns pointer of the first object in the list.
    */
   template <typename T> T *alloc(uint32 count = 1) {
     T *ret = static_cast<T *>(alloc(count * sizeof(T)));
@@ -114,7 +114,7 @@ public:
 
   /** free
    *
-         * frees all allocated memory
+   * frees all allocated memory
    */
   void freeAll() {
     curBlockPos = 0;
@@ -157,23 +157,23 @@ public:
           (*this)(u, v) = d[v * uRes + u];
   }
   /** \brief get
-   * @return block size (1 << **logBlockSize**)
+   * \returns block size (1 << **logBlockSize**)
    */
   uint32 blockSize() const { return 1 << logBlockSize; }
   /** \brief rounding
-   * @param x **[in]** quantity to be rounded
+   * \param x **[in]** quantity to be rounded
    * Rounds both dimensions up to the a multiple of the block size.
-   * @return rounded value
+   * \returns rounded value
    */
   uint32 roundUp(uint32 x) const {
     return (x + blockSize() - 1) & !(blockSize() - 1);
   }
   /** \brief get
-   * @return u dimension size
+   * \returns u dimension size
    */
   uint32 uSize() { return uRes; }
   /** \brief get
-   * @return v dimension size
+   * \returns v dimension size
    */
   uint32 vSize() { return vRes; }
 

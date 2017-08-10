@@ -1,6 +1,7 @@
 #ifndef PONOS_STRUCTURES_Z_GRID_H
 #define PONOS_STRUCTURES_Z_GRID_H
 
+#include "geometry/numeric.h"
 #include "log/debug.h"
 #include "structures/grid_interface.h"
 
@@ -17,8 +18,8 @@ public:
 
   void updateDataStructure() override;
 
-  T getData(int i, int j) const override { return data[morton_code(i, j)]; }
-  T &getData(int i, int j) override { return data[morton_code(i, j)]; }
+  T getData(int i, int j) const override { return data[mortonCode(i, j)]; }
+  T &getData(int i, int j) override { return data[mortonCode(i, j)]; }
 
   void reset(std::function<void(T &t)> f) {
     for (uint32_t i = 0; i < data.size(); ++i)
@@ -44,19 +45,7 @@ public:
   }
 
 protected:
-  uint32_t separate_by_1(uint32_t n) const {
-    n = (n ^ (n << 8)) & 0x00ff00ff;
-    n = (n ^ (n << 4)) & 0x0f0f0f0f;
-    n = (n ^ (n << 2)) & 0x33333333;
-    n = (n ^ (n << 1)) & 0x55555555;
-    return n;
-  }
-
-  uint32_t morton_code(uint32_t x, uint32_t y) const {
-    return (separate_by_1(y) << 1) + separate_by_1(x);
-  }
-
-  std::vector<T> data;
+  std::vector<T> data; //!< data storage
 };
 
 template <class T> class CZGrid : public ZGrid<T> {
@@ -73,7 +62,7 @@ template <class T> ZGrid<T>::ZGrid(uint32_t w, uint32_t h) {
 }
 
 template <class T> void ZGrid<T>::updateDataStructure() {
-  data.resize(morton_code(this->width, this->height));
+  data.resize(mortonCode(this->width, this->height));
 }
 
 template <class T> T CZGrid<T>::sample(float x, float y) const {

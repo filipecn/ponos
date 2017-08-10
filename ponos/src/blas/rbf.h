@@ -34,20 +34,43 @@ namespace ponos {
 
 template <typename T> class Kernel {
 public:
-  virtual T operator()(T r2) const = 0;
+  virtual T operator()(T r) const = 0;
+  virtual T D(T r) const { return r; }
+  virtual T D2(T r) const { return r; }
+  virtual T L(T r) const { return r; }
+};
+
+template <typename T> class MultiquadricKernel : public Kernel<T> {
+public:
+  MultiquadricKernel(T epsilon) : e(epsilon) {}
+  virtual T operator()(T r) const override {
+    return 1 / std::sqrt(1 + SQR(e * r));
+  }
+  virtual T D(T r) const override { return -SQR(e) * r * pow((*this)(r), 3); }
+  virtual T D2(T r) const override {
+    return SQR(e) * (2.0 * SQR(e * r) - 1.0) * pow((*this)(r), 5);
+  }
+  virtual T L(T r) const override {
+    return D2(r) - SQR(e) * pow((*this)(r), 3);
+  }
+  T e;
 };
 
 template <typename T> class GaussianKernel : public Kernel<T> {
 public:
-  GaussianKernel(T e) : k(e) {}
-  virtual T operator()(T r2) const override { return exp(-SQR(k * r2)); }
-  T k;
+  GaussianKernel(T ep) : e(ep) {}
+  virtual T operator()(T r) const override { return exp(-SQR(e * r)); }
+  virtual T D(T r) const override { return -2.0 * SQR(e) * r * (*this)(r); }
+  virtual T D2(T r) const override {
+    return (4.0 * SQR(e) * SQR(e) * SQR(r) - 2.0 * SQR(e)) * (*this)(r);
+  }
+  T e;
 };
 
 template <typename T> class PowKernel : public Kernel<T> {
 public:
   PowKernel(T _e) : e(_e) {}
-  virtual T operator()(T r2) const override { return pow(std::sqrt(r2), e); }
+  virtual T operator()(T r) const override { return pow(r, e); }
 
 private:
   T e;

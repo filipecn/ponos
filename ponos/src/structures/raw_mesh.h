@@ -71,12 +71,12 @@ public:
   void splitIndexData();
   void computeBBox();
   /** \brief add vertex
-   * \param coordinate values {v00, v01, .... }
+   * \param l coordinate values {v00, v01, .... }
    * Append positions.
    */
   void addVertex(std::initializer_list<float> l);
   /** \brief add face(s)
-   * \param indices values {v00, v01, .... }
+   * \param l indices values {v00, v01, .... }
    * Append indices.
    */
   void addFace(std::initializer_list<IndexData> l);

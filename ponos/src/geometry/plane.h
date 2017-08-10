@@ -33,7 +33,7 @@
 
 namespace ponos {
 
-/** Implements the equation <normal> X = <offset>.
+/** Implements the equation normal X = offset.
  */
 class Plane {
 public:
@@ -67,7 +67,7 @@ public:
   float offset;
 };
 
-/** Implements the equation <normal> X = <offset>.
+/** Implements the equation normal X = offset.
  */
 class ImplicitPlane2D : public ImplicitCurveInterface {
 public:

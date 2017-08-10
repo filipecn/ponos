@@ -26,12 +26,22 @@
 #define PONOS_GEOMETRY_MATRIX_H
 
 #include "geometry/vector.h"
+#include <vector>
 
 namespace ponos {
 
 template <typename T = float> class DenseMatrix {
 public:
+  DenseMatrix() : N(0), M(0), data(nullptr) {}
   DenseMatrix(size_t n) : N(n), M(n), data(nullptr) { set(n, n); }
+  DenseMatrix(size_t n, size_t m) : N(n), M(m), data(nullptr) { set(n, m); }
+  DenseMatrix(const DenseMatrix<T> &A) : DenseMatrix() {
+    set(A.N, A.M);
+    // TODO make this copy faster
+    for (size_t r = 0; r < A.N; r++)
+      for (size_t c = 0; c < A.M; c++)
+        data[r][c] = A.data[r][c];
+  }
   virtual ~DenseMatrix() {
     if (data) {
       for (size_t i = 0; i < N; i++)
@@ -42,7 +52,17 @@ public:
 
   T &operator()(size_t i, size_t j) { return data[i][j]; }
   T operator()(size_t i, size_t j) const { return data[i][j]; }
-
+  DenseMatrix<T> operator*(const DenseMatrix<T> &A) const {
+    ASSERT_FATAL(M == A.N && N == A.M);
+    DenseMatrix<T> R(N, A.M);
+    for (size_t r = 0; r < R.N; r++)
+      for (size_t c = 0; c < R.M; c++) {
+        R(r, c) = 0;
+        for (size_t i = 0; i < N; i++)
+          R(r, c) += data[r][i] * A.data[c][i];
+      }
+    return R;
+  }
   void set(size_t rows, size_t columns) {
     N = rows, M = columns;
     if (data) {
@@ -51,8 +71,10 @@ public:
       delete[] data;
     }
     data = new T *[N];
-    for (size_t i = 0; i < N; i++)
+    for (size_t i = 0; i < N; i++) {
       data[i] = new T[M];
+      memset(data[i], 0, sizeof(T) * M);
+    }
   }
 
   size_t rowsNumber() const { return N; }
@@ -71,6 +93,19 @@ private:
   size_t N, M;
   T **data;
 };
+
+template <typename T>
+inline std::vector<T> operator*(const std::vector<T> &v, DenseMatrix<T> &m) {
+  ASSERT_FATAL(v.size() == m.rowsNumber());
+  std::vector<T> r;
+  for (size_t c = 0; c < m.columnsNumber(); c++) {
+    T sum;
+    for (size_t i = 0; i < v.size(); i++)
+      sum = sum + v[i] * m(i, c);
+    r.emplace_back(sum);
+  }
+  return r;
+}
 
 template <typename T = float, size_t N = 5, size_t M = 5> class Matrix {
 public:

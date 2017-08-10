@@ -31,8 +31,31 @@
 
 #include <cstring>
 #include <initializer_list>
+#include <vector>
 
 namespace ponos {
+template <typename T> class DenseVector {
+public:
+  DenseVector() {}
+  DenseVector(size_t n) { set(n); }
+  void set(size_t n) {
+    v.resize(n);
+    std::fill(v.begin(), v.end(), 0);
+  }
+  T operator[](size_t i) const { return v[i]; }
+  T &operator[](size_t i) { return v[i]; }
+  friend std::ostream &operator<<(std::ostream &os, const DenseVector<T> &m) {
+    for (size_t j = 0; j < m.size(); j++)
+      os << m[j] << " ";
+    os << std::endl;
+    return os;
+  }
+
+  size_t size() const { return v.size(); }
+
+private:
+  std::vector<T> v;
+};
 
 class Point2;
 class Vector2 {
@@ -109,6 +132,15 @@ inline Vector2 operator/(float f, const Vector2 &v) {
 
 inline float dot(const Vector2 &a, const Vector2 &b) {
   return a.x * b.x + a.y * b.y;
+}
+
+template <typename T>
+inline T dot(const std::vector<T> &a, const std::vector<T> &b) {
+  ASSERT_FATAL(a.size() == b.size());
+  T sum = T(0);
+  for (size_t i = 0; i < a.size(); i++)
+    sum = sum + a[i] * b[i];
+  return sum;
 }
 
 inline Vector2 normalize(const Vector2 &v) { return v / v.length(); }

@@ -73,13 +73,13 @@ template <typename T> T atanPI_2(T y, T x) {
   return angle;
 }
 /** \brief normalization (dummy function)
- * \param param n
+ * \param n
  * \returns n
  */
 inline float normalize(float n) { return n; }
 /** \brief max function
- * \param param a
- * \param param b
+ * \param a
+ * \param b
  * \returns a if a >= b, b otherwise
  */
 inline float max(float a, float b) { return std::max(a, b); }

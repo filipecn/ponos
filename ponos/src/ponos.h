@@ -14,6 +14,7 @@
 #include "blas/fdm_vector.h"
 #include "blas/field.h"
 #include "blas/field_grid.h"
+#include "blas/gauss_jordan.h"
 #include "blas/linear_system.h"
 #include "blas/pcg.h"
 #include "blas/rbf.h"

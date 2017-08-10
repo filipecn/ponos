@@ -119,7 +119,7 @@ public:
  */
 template <typename T> class Grid2DInterface {
 public:
-  typedef T DataType;
+  typedef T DataType; //!< grid data typename
   virtual T getData(int i, int j) const = 0;
   virtual T &getData(int i, int j) = 0;
   virtual void updateDataStructure() = 0;
