@@ -2,6 +2,7 @@
 #define AERGIA_UTILS_OPEN_GL_H
 
 #include <GL/glew.h>
+
 #include <GL/freeglut.h>
 
 //#include <vulkan/vulkan.h>
@@ -14,6 +15,24 @@
 #include "colors/color.h"
 
 #define GL_DEBUG
+
+#define GL_DRAW_POINTS(SIZE, CODE)                                             \
+  glPointSize(SIZE);                                                           \
+  glBegin(GL_POINTS);                                                          \
+  CODE glEnd();                                                                \
+  glPointSize(1);
+
+#define GL_DRAW_LINES(SIZE, CODE)                                              \
+  glLineWidth(SIZE);                                                           \
+  glBegin(GL_LINES);                                                           \
+  CODE glEnd();                                                                \
+  glLineWidth(1);
+
+#define GL_DRAW_LINE_LOOP(SIZE, CODE)                                          \
+  glLineWidth(SIZE);                                                           \
+  glBegin(GL_LINE_LOOP);                                                       \
+  CODE glEnd();                                                                \
+  glLineWidth(1);
 
 namespace aergia {
 

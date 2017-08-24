@@ -22,24 +22,38 @@
  *
 */
 
-#include "algorithm/scatter.h"
+#ifndef PONOS_GEOMETRY_ELLIPSE_H
+#define PONOS_GEOMETRY_ELLIPSE_H
+
+#include "geometry/parametric_surface.h"
+#include "geometry/shape.h"
+#include "geometry/transform.h"
 
 namespace ponos {
 
-void scatter(const Circle &circle, size_t n, std::vector<Point2> &points) {
-  float step = PI_2 / static_cast<float>(n);
-  for (size_t i = 0; i < n; i++) {
-    float angle = static_cast<float>(i) * step;
-    points.emplace_back(circle.c + circle.r * vec2(cosf(angle), sinf(angle)));
-  }
-}
+class Ellipse : public Shape {
+public:
+  Ellipse() : a(0.f), b(0.f) {}
+  Ellipse(float _a, float _b, Point2 center) : a(_a), b(_b), c(center) {}
+  float a;  //!< x denominator
+  float b;  //!< y denominator
+  Point2 c; //!< center
+};
 
-void scatter(const ParametricCurveInterface *pcurve, size_t n,
-             std::vector<Point2> &points) {
-  for (size_t i = 0; i < n; i++) {
-    points.emplace_back(
-        (*pcurve)(static_cast<float>(i) / static_cast<float>(n)));
+class ParametricEllipse final : public Ellipse,
+                                public ParametricCurveInterface {
+public:
+  ParametricEllipse() : Ellipse() {}
+  ParametricEllipse(float a, float b, Point2 c) : Ellipse(a, b, c) {}
+  /** Compute euclidian coordinates
+   * \param t parametric param **[0, 1]**
+   * \returns euclidian coordinates
+   */
+  Point2 operator()(float t) const override {
+    float angle = t * PI_2;
+    return this->c + vec2(this->a * cosf(angle), this->b * sinf(angle));
   }
-}
-
+};
 } // ponos namespace
+
+#endif // PONOS_GEOMETRY_ELLIPSE_H

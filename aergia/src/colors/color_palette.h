@@ -25,7 +25,7 @@ public:
 class ColorPalette {
 public:
   ColorPalette() : a(1.f) {}
-  explicit ColorPalette(std::initializer_list<int> c) {
+  explicit ColorPalette(std::initializer_list<int> c) : ColorPalette() {
     int n = c.size() / 3;
     auto it = c.begin();
     for (int i = 0; i < n; i++) {
@@ -35,7 +35,7 @@ public:
       colors.emplace_back(r, g, b);
     }
   }
-  explicit ColorPalette(std::initializer_list<double> c) {
+  explicit ColorPalette(std::initializer_list<double> c) : ColorPalette() {
     int n = c.size() / 3;
     auto it = c.begin();
     for (int i = 0; i < n; i++) {

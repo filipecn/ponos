@@ -37,6 +37,7 @@ set(HEADERS
 	src/common/random.h
 	src/common/timer.h
 	src/geometry/bbox.h
+	src/geometry/ellipse.h
 	src/geometry/frustum.h
 	src/geometry/queries.h
 	src/geometry/interval.h
@@ -44,6 +45,7 @@ set(HEADERS
 	src/geometry/matrix.h
 	src/geometry/normal.h
 	src/geometry/numeric.h
+	src/geometry/parametric_surface.h
 	src/geometry/point.h
 	src/geometry/plane.h
 	src/geometry/ray.h

@@ -25,7 +25,7 @@
 #ifndef PONOS_GEOMETRY_SPHERE_H
 #define PONOS_GEOMETRY_SPHERE_H
 
-#include "geometry/surface.h"
+#include "geometry/parametric_surface.h"
 #include "geometry/shape.h"
 #include "geometry/transform.h"
 
@@ -41,6 +41,20 @@ public:
 
   Point2 c;
   float r;
+};
+
+class ParametricCircle final : public Circle, public ParametricCurveInterface {
+public:
+  ParametricCircle() { r = 0.f; }
+  ParametricCircle(Point2 center, float radius) : Circle(center, radius) {}
+  /** Compute euclidian coordinates
+   * \param t parametric param **[0, 1]**
+   * \returns euclidian coordinates
+   */
+  Point2 operator()(float t) const override {
+    float angle = t * PI_2;
+    return this->c + this->r * vec2(cosf(angle), sinf(angle));
+  }
 };
 
 class ImplicitCircle final : public ImplicitCurveInterface {

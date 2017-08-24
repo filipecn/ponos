@@ -22,24 +22,22 @@
  *
 */
 
-#include "algorithm/scatter.h"
+#ifndef PONOS_GEOMETRY_PARAMETRIC_SURFACE_H
+#define PONOS_GEOMETRY_PARAMETRIC_SURFACE_H
+
+#include "geometry/surface.h"
 
 namespace ponos {
 
-void scatter(const Circle &circle, size_t n, std::vector<Point2> &points) {
-  float step = PI_2 / static_cast<float>(n);
-  for (size_t i = 0; i < n; i++) {
-    float angle = static_cast<float>(i) * step;
-    points.emplace_back(circle.c + circle.r * vec2(cosf(angle), sinf(angle)));
-  }
-}
-
-void scatter(const ParametricCurveInterface *pcurve, size_t n,
-             std::vector<Point2> &points) {
-  for (size_t i = 0; i < n; i++) {
-    points.emplace_back(
-        (*pcurve)(static_cast<float>(i) / static_cast<float>(n)));
-  }
-}
+/** Interface for parametric surfaces imerse in 2D.
+ */
+class ParametricCurveInterface {
+public:
+  ParametricCurveInterface() {}
+  virtual ~ParametricCurveInterface() {}
+  virtual Point2 operator()(float t) const = 0;
+};
 
 } // ponos namespace
+
+#endif // PONOS_GEOMETRY_PARAMETRIC_SURFACE_H

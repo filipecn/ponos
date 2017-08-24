@@ -26,6 +26,7 @@
 #define PONOS_ALGORITHM_SCATTER_H
 
 #include "common/macros.h"
+#include "geometry/parametric_surface.h"
 #include "geometry/sphere.h"
 #include "geometry/transform.h"
 
@@ -64,6 +65,9 @@ inline void grid_scatter(const BBox2D &bbox, size_t w, size_t h,
 }
 
 void scatter(const Circle &circle, size_t n, std::vector<Point2> &points);
+
+void scatter(const ParametricCurveInterface *pcurve, size_t n,
+             std::vector<Point2> &points);
 
 } // ponos namespace
 
