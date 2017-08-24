@@ -100,7 +100,7 @@ void computeU(std::vector<double> &u, const std::vector<double> &phi) {
 
 int main(int argc, char **argv) {
   dx = L / static_cast<double>(N);
-  dt = dx / 4.0;
+  dt = 0.25 * dx * dx;
   std::vector<double> unext, unext_cn;
   std::vector<double> phi, phi_cn;
   computeExplicit(unext);

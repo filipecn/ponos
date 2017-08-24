@@ -38,6 +38,11 @@ template <typename T> class DenseVector {
 public:
   DenseVector() {}
   DenseVector(size_t n) { set(n); }
+  DenseVector(const DenseVector<T> &V) { v = V.v; }
+  DenseVector<T> &operator=(DenseVector<T> other) {
+    v = other.v;
+    return *this;
+  }
   void set(size_t n) {
     v.resize(n);
     std::fill(v.begin(), v.end(), 0);
@@ -50,6 +55,10 @@ public:
     os << std::endl;
     return os;
   }
+  template <typename... Args> void emplace_back(Args &&... args) {
+    v.emplace_back(std::forward<Args>(args)...);
+  }
+  void resize(size_t n) { v.resize(n); }
 
   size_t size() const { return v.size(); }
 
@@ -154,6 +163,16 @@ inline Vector2 orthonormal(const Vector2 &v, bool first = true) {
 
 inline float cross(const Vector2 &a, const Vector2 &b) {
   return a.x * b.y - a.y * b.x;
+}
+
+/** Projects a vector onto another.
+ * \param a **[in]**
+ * \param b **[in]**
+ *
+ * \returns the projection of **a** onto **b**
+ */
+inline Vector2 project(const Vector2 &a, const Vector2 &b) {
+  return (dot(b, a) / b.length2()) * b;
 }
 
 class Point3;
@@ -535,6 +554,8 @@ public:
     return r;
   }
 
+  Vector<T, 2> right() const { return Vector<T, 2>(v[1], -v[0]); }
+  Vector<T, 2> left() const { return Vector<T, 2>(-v[1], v[0]); }
   friend std::ostream &operator<<(std::ostream &os, const Vector &v) {
     os << "Vector[<" << D << ">]";
     for (size_t i = 0; i < v.size; i++)
@@ -587,6 +608,12 @@ Vector<int, 2> floor(const Vector2 &v);
 
 Vector<int, 2> min(Vector<int, 2> a, Vector<int, 2> b);
 Vector<int, 2> max(Vector<int, 2> a, Vector<int, 2> b);
+
+template <typename T, size_t D> T normalize(Vector<T, D> &v) {
+  float d = v.length();
+  for (size_t i = 0; i < D; i++)
+    v[i] = v[i] / d;
+}
 
 } // ponos namespace
 

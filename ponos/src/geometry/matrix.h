@@ -52,6 +52,12 @@ public:
 
   T &operator()(size_t i, size_t j) { return data[i][j]; }
   T operator()(size_t i, size_t j) const { return data[i][j]; }
+  DenseMatrix<T> &operator=(DenseMatrix<T> A) {
+    set(A.N, A.M);
+    for (size_t r = 0; r < A.N; r++)
+      std::copy(&A.data[r][0], &A.data[r][0] + A.M, &data[r][0]);
+    return *this;
+  }
   DenseMatrix<T> operator*(const DenseMatrix<T> &A) const {
     ASSERT_FATAL(M == A.N && N == A.M);
     DenseMatrix<T> R(N, A.M);

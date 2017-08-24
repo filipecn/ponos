@@ -40,9 +40,9 @@ public:
   virtual T L(T r) const { return r; }
 };
 
-template <typename T> class MultiquadricKernel : public Kernel<T> {
+template <typename T> class InverseMultiquadricKernel : public Kernel<T> {
 public:
-  MultiquadricKernel(T epsilon) : e(epsilon) {}
+  InverseMultiquadricKernel(T epsilon) : e(epsilon) {}
   virtual T operator()(T r) const override {
     return 1 / std::sqrt(1 + SQR(e * r));
   }
@@ -64,6 +64,7 @@ public:
   virtual T D2(T r) const override {
     return (4.0 * SQR(e) * SQR(e) * SQR(r) - 2.0 * SQR(e)) * (*this)(r);
   }
+  virtual T L(T r) const override { return D2(r) - 2.0 * SQR(e) * (*this)(r); }
   T e;
 };
 

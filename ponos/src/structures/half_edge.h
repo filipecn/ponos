@@ -71,6 +71,7 @@ public:
     Vertex(T x, T y) : position(Point<T, D>({x, y})), edge(-1) {}
     Vertex(const Point<T, D> &p) : position(p), edge(-1) {}
     Point<T, D> position; //!< HE vertex position
+    Vector<T, D> normal;  //!< HE vertex normal
     int edge;             //!< HE connected to this vertex
     V data;               //!< vertex user's data
   };
@@ -86,9 +87,11 @@ public:
   };
   struct Face {
     Face() : edge(-1) {}
-    int edge; //!< one half edge
-    F data;   //!< face user's data
+    int edge;            //!< one half edge
+    F data;              //!< face user's data
+    Vector<T, D> normal; //!< face's normal
   };
+  Vertex &getVertex(size_t v) { return vertices[v]; }
   void setVertexData(size_t v, const V &data) { vertices[v].data = data; }
   const std::vector<Vertex> &getVertices() const { return vertices; }
   const std::vector<Edge> &getEdges() const { return edges; }
@@ -228,7 +231,7 @@ public:
 
 private:
   /** \brief
-   * \param v (always leaving vertex)
+   * \param v **(always leaving vertex)**
    * \param vertex
    * \param incident the original v is incident to vertex?
    * \returns
@@ -280,6 +283,32 @@ private:
 };
 
 typedef HEMesh<float, 2> HEMesh2DF;
+
+inline void computeBoundaryNormals(HEMesh2DF *mesh) {
+  if (!mesh)
+    return;
+  auto &vertices = mesh->getVertices();
+  auto &edges = mesh->getEdges();
+  std::vector<bool> vis(vertices.size(), false);
+  // loop over every boundary edge
+  for (size_t e = 0; e < edges.size(); e++) {
+    if (edges[e].face >= 0)
+      continue;
+    int otherEdge = -1;
+    mesh->traverseEdgesToVertex(edges[e].orig, [&edges, &otherEdge](int i) {
+      if (edges[i].face >= 0)
+        return;
+      otherEdge = i;
+    });
+    ASSERT_FATAL(otherEdge >= 0);
+    auto &a = vertices[edges[otherEdge].orig].position;
+    auto &b = vertices[edges[e].dest].position;
+    auto &v = mesh->getVertex(edges[e].orig);
+    v.normal = Vector<float, 2>(
+                   0.5f * ((b - v.position).left() + (v.position - a).left()))
+                   .normalized();
+  }
+}
 
 } // ponos namespace
 

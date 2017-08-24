@@ -162,4 +162,38 @@ void RawMesh::clear() {
   interleavedData.clear();
 }
 
+void fitToBBox(RawMesh *rm, const BBox2D &bbox) {
+  float ratio = rm->bbox.size(1) / rm->bbox.size(0);
+  if (rm->bbox.size(0) > rm->bbox.size(1))
+    rm->apply(
+        scale(1.f / rm->bbox.size(0), ratio * (1.f / rm->bbox.size(0)), 0) *
+        translate(Point3() - rm->bbox.pMin));
+  else
+    rm->apply(
+        scale((1.f / rm->bbox.size(1)) / ratio, 1.f / rm->bbox.size(1), 0) *
+        translate(Point3() - rm->bbox.pMin));
+  rm->computeBBox();
+}
+
+std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
+  os << "RawMesh:\n";
+  os << "vertex description (dim = " << rm.vertexDescriptor.elementSize
+     << ", count = " << rm.vertexDescriptor.count << ")\n";
+  for (size_t i = 0; i < rm.vertexDescriptor.count; i++) {
+    std::cout << "v" << i << " = ";
+    for (size_t j = 0; j < rm.vertexDescriptor.elementSize; j++)
+      std::cout << rm.vertices[i * rm.vertexDescriptor.elementSize + j] << " ";
+    std::cout << std::endl;
+  }
+  os << "mesh description (dim = " << rm.meshDescriptor.elementSize
+     << ", count = " << rm.meshDescriptor.count << ")\n";
+  for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
+    std::cout << "f" << i << " = ";
+    for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)
+      std::cout << rm.indices[i * rm.meshDescriptor.elementSize + j].vertexIndex
+                << " ";
+    std::cout << std::endl;
+  }
+  return os;
+}
 } // aergia namespace

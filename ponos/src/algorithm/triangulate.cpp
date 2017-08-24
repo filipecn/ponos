@@ -22,6 +22,8 @@
  *
 */
 
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+
 #include "algorithm/triangulate.h"
 
 typedef int VOID;
@@ -33,111 +35,265 @@ extern "C" {
 
 namespace ponos {
 
+void report(struct triangulateio *io, int markers, int reporttriangles,
+            int reportneighbors, int reportsegments, int reportedges,
+            int reportnorms) {
+  int i, j;
+
+  for (i = 0; i < io->numberofpoints; i++) {
+    printf("Point %4d:", i);
+    for (j = 0; j < 2; j++) {
+      printf("  %.6g", io->pointlist[i * 2 + j]);
+    }
+    if (io->numberofpointattributes > 0) {
+      printf("   attributes");
+    }
+    for (j = 0; j < io->numberofpointattributes; j++) {
+      printf("  %.6g",
+             io->pointattributelist[i * io->numberofpointattributes + j]);
+    }
+    if (markers) {
+      printf("   marker %d\n", io->pointmarkerlist[i]);
+    } else {
+      printf("\n");
+    }
+  }
+  printf("\n");
+
+  if (reporttriangles || reportneighbors) {
+    for (i = 0; i < io->numberoftriangles; i++) {
+      if (reporttriangles) {
+        printf("Triangle %4d points:", i);
+        for (j = 0; j < io->numberofcorners; j++) {
+          printf("  %4d", io->trianglelist[i * io->numberofcorners + j]);
+        }
+        if (io->numberoftriangleattributes > 0) {
+          printf("   attributes");
+        }
+        for (j = 0; j < io->numberoftriangleattributes; j++) {
+          printf("  %.6g",
+                 io->triangleattributelist[i * io->numberoftriangleattributes +
+                                           j]);
+        }
+        printf("\n");
+      }
+      if (reportneighbors) {
+        printf("Triangle %4d neighbors:", i);
+        for (j = 0; j < 3; j++) {
+          printf("  %4d", io->neighborlist[i * 3 + j]);
+        }
+        printf("\n");
+      }
+    }
+    printf("\n");
+  }
+
+  if (reportsegments) {
+    for (i = 0; i < io->numberofsegments; i++) {
+      printf("Segment %4d points:", i);
+      for (j = 0; j < 2; j++) {
+        printf("  %4d", io->segmentlist[i * 2 + j]);
+      }
+      if (markers) {
+        printf("   marker %d\n", io->segmentmarkerlist[i]);
+      } else {
+        printf("\n");
+      }
+    }
+    printf("\n");
+  }
+
+  if (reportedges) {
+    for (i = 0; i < io->numberofedges; i++) {
+      printf("Edge %4d points:", i);
+      for (j = 0; j < 2; j++) {
+        printf("  %4d", io->edgelist[i * 2 + j]);
+      }
+      if (reportnorms && (io->edgelist[i * 2 + 1] == -1)) {
+        for (j = 0; j < 2; j++) {
+          printf("  %.6g", io->normlist[i * 2 + j]);
+        }
+      }
+      if (markers) {
+        printf("   marker %d\n", io->edgemarkerlist[i]);
+      } else {
+        printf("\n");
+      }
+    }
+    printf("\n");
+  }
+}
+
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
-  struct triangulateio in, out;
-  in.numberofpoints = input->vertexDescriptor.count;
-  in.pointlist =
-      (REAL *)malloc(input->vertexDescriptor.count * 2 * sizeof(REAL));
-  // std::copy(input->vertices.begin(), input->vertices.end(), in.pointlist);
-  printf("%lu\n", input->vertexDescriptor.count);
-  for (int i = 0; i < in.numberofpoints; i++) {
-    in.pointlist[i * 2 + 0] = input->vertices[i * 2 + 0];
-    in.pointlist[i * 2 + 1] = input->vertices[i * 2 + 1];
-    std::cout << in.pointlist[i * 2 + 0] << " " << in.pointlist[i * 2 + 1]
-              << std::endl;
+  {
+    FILE *fp = fopen("D.poly", "w+");
+    fprintf(fp, "%lu 2 0 1\n", input->vertexDescriptor.count);
+    for (size_t i = 0; i < input->vertexDescriptor.count; i++)
+      fprintf(fp, "%lu %f %f %d\n", i, input->vertices[i * 2],
+              input->vertices[i * 2 + 1], data->vertexBoundaryMarker[i]);
+    fprintf(fp, "%lu 0\n", input->meshDescriptor.count);
+    for (size_t i = 0; i < input->meshDescriptor.count; i++)
+      fprintf(fp, "%lu %d %d\n", i, input->indices[i * 2].vertexIndex,
+              input->indices[i * 2 + 1].vertexIndex);
+    fprintf(fp, "0\n");
+    fclose(fp);
   }
-  in.numberofpointattributes =
-      data->vertexAttributes.size() ? data->vertexAttributes[0].size() : 0;
-  if (in.numberofpointattributes) {
-    in.pointattributelist = (float *)malloc(in.numberofpointattributes *
-                                            in.numberofpoints * sizeof(float));
-    for (size_t i = 0; i < data->vertexAttributes.size(); i++)
-      for (size_t k = 0; k < data->vertexAttributes[i].size(); k++)
-        in.pointattributelist[i * in.numberofpointattributes + k] =
-            data->vertexAttributes[i][k];
-  }
-  if (data->vertexBoundaryMarker.size()) {
-    in.pointmarkerlist = (int *)malloc(in.numberofpoints * sizeof(int));
-    for (int i = 0; i < in.numberofpoints; i++)
-      in.pointmarkerlist[i] = data->vertexBoundaryMarker[i];
-  }
-  in.trianglelist = nullptr;
-  in.triangleattributelist = nullptr;
-  in.trianglearealist = nullptr;
-  in.numberoftriangles = 0;
-  in.numberoftriangleattributes = 0;
-  in.numberofcorners = 0;
+  // struct triangulateio in, out;
 
-  in.numberofsegments = input->meshDescriptor.count;
-  if (in.numberofsegments) {
-    in.segmentlist =
-        (int *)malloc(input->meshDescriptor.count *
-                      input->meshDescriptor.elementSize * sizeof(int));
-    for (int i = 0; i < in.numberofsegments; i++) {
-      in.segmentlist[i * 2 + 0] = input->indices[i * 2 + 0].vertexIndex;
-      in.segmentlist[i * 2 + 1] = input->indices[i * 2 + 1].vertexIndex;
-      std::cout << in.segmentlist[i * 2 + 0] << " " << in.segmentlist[i * 2 + 1]
-                << std::endl;
-    }
-  }
-  if (data->edgeBoundaryMarker.size()) {
-    in.segmentmarkerlist = (int *)malloc(in.numberofsegments * sizeof(int));
-    for (int i = 0; i < in.numberofsegments; i++)
-      in.segmentmarkerlist[i] = data->edgeBoundaryMarker[i];
-  }
-  in.numberofholes = data->holes.size();
-  if (in.numberofholes) {
-    in.holelist = (float *)malloc(in.numberofholes * 2 * sizeof(float));
-    for (int i = 0; i < in.numberofholes; i++) {
-      in.holelist[i * 2 + 0] = data->holes[i].first;
-      in.holelist[i * 2 + 1] = data->holes[i].second;
-    }
-  }
+  struct triangulateio in, mid; //, out, vorout;
+
+  in.numberofpoints = 4;
+  in.numberofpointattributes = 0;
+  in.pointlist = (REAL *)malloc(in.numberofpoints * 2 * sizeof(REAL));
+  in.pointlist[0] = 0.0;
+  in.pointlist[1] = 0.0;
+  in.pointlist[2] = 1.0;
+  in.pointlist[3] = 0.0;
+  in.pointlist[4] = 1.0;
+  in.pointlist[5] = 1.0;
+  in.pointlist[6] = 0.0;
+  in.pointlist[7] = 1.0;
+  in.pointattributelist = (REAL *)NULL;
+  in.pointmarkerlist = (int *)malloc(in.numberofpoints * sizeof(int));
+  in.pointmarkerlist[0] = 1;
+  in.pointmarkerlist[1] = 1;
+  in.pointmarkerlist[2] = 1;
+  in.pointmarkerlist[3] = 1;
+
+  in.numberofsegments = 4;
+  in.segmentlist = (int *)malloc(in.numberofsegments * 2 * sizeof(int));
+  in.segmentlist[0] = 0;
+  in.segmentlist[1] = 1;
+  in.segmentlist[2] = 1;
+  in.segmentlist[3] = 2;
+  in.segmentlist[4] = 2;
+  in.segmentlist[5] = 3;
+  in.segmentlist[6] = 3;
+  in.segmentlist[7] = 0;
+  in.segmentmarkerlist = (int *)malloc(in.numberofpoints * sizeof(int));
+  in.segmentmarkerlist[0] = 1;
+  in.segmentmarkerlist[1] = 1;
+  in.segmentmarkerlist[2] = 1;
+  in.segmentmarkerlist[3] = 1;
+  in.numberofholes = 0;
   in.numberofregions = 0;
+  in.regionlist = (REAL *)NULL;
 
-  out.pointlist = (REAL *)NULL; /* Not needed if -N switch used. */
-  /* Not needed if -N switch used or number of point attributes is zero: */
-  out.pointattributelist = (REAL *)NULL;
-  out.pointmarkerlist = (int *)NULL; /* Not needed if -N or -B switch used. */
-  out.trianglelist = (int *)NULL;    /* Not needed if -E switch used. */
-  /* Not needed if -E switch used or number of triangle attributes is zero: */
-  out.triangleattributelist = (REAL *)NULL;
-  out.neighborlist = (int *)NULL; /* Needed only if -n switch used. */
-  /* Needed only if segments are output (-p or -c) and -P not used: */
-  out.segmentlist = (int *)NULL;
-  /* Needed only if segments are output (-p or -c) and -P and -B not used: */
-  out.segmentmarkerlist = (int *)NULL;
-  out.edgelist = (int *)NULL;       /* Needed only if -e switch used. */
-  out.edgemarkerlist = (int *)NULL; /* Needed if -e used and -B not used. */
+  printf("Input point set:\n\n");
+  report(&in, 1, 0, 0, 0, 0, 0);
 
-  char sw[100];
-  std::strcpy(sw, "pzcVDN");
-  triangulate(sw, &in, &out, nullptr);
+  mid.pointlist = (REAL *)NULL; /* Not needed if -N switch used. */
+  mid.pointattributelist = (REAL *)NULL;
+  mid.pointmarkerlist = (int *)NULL; /* Not needed if -N or -B switch used. */
+  mid.trianglelist = (int *)NULL;    /* Not needed if -E switch used. */
+  mid.triangleattributelist = (REAL *)NULL;
+  mid.neighborlist = (int *)NULL; /* Needed only if -n switch used. */
+  mid.segmentlist = (int *)NULL;
+  mid.segmentmarkerlist = (int *)NULL;
+  mid.edgelist = (int *)NULL;       /* Needed only if -e switch used. */
+  mid.edgemarkerlist = (int *)NULL; /* Needed if -e used and -B not used. */
 
-  output->primitiveType = GeometricPrimitiveType::TRIANGLES;
-  output->meshDescriptor = {3, static_cast<size_t>(out.numberoftriangles)};
-  output->vertexDescriptor = {2, static_cast<size_t>(out.numberofpoints)};
-  for (int i = 0; i < out.numberofpoints; i++) {
-    output->addVertex({out.pointlist[i * 2 + 0], out.pointlist[i * 2 + 1]});
-    std::cout << out.pointlist[i * 2 + 0] << " " << out.pointlist[i * 2 + 1]
-              << std::endl;
+  triangulate("pzYAen", &in, &mid, (struct triangulateio *)NULL);
+  printf("Initial triangulation:\n\n");
+  report(&mid, 1, 1, 1, 1, 1, 0);
+  /*
+in.numberofpoints = input->vertexDescriptor.count;
+in.pointlist = (REAL *)malloc(in.numberofpoints * 2 * sizeof(REAL));
+for (int i = 0; i < in.numberofpoints; i++) {
+in.pointlist[i * 2 + 0] = input->vertices[i * 2 + 0];
+in.pointlist[i * 2 + 1] = input->vertices[i * 2 + 1];
+}
+in.numberofpointattributes =
+data->vertexAttributes.size() ? data->vertexAttributes[0].size() : 0;
+if (in.numberofpointattributes) {
+in.pointattributelist = (float *)malloc(in.numberofpointattributes *
+                  in.numberofpoints * sizeof(float));
+for (size_t i = 0; i < data->vertexAttributes.size(); i++)
+for (size_t k = 0; k < data->vertexAttributes[i].size(); k++)
+in.pointattributelist[i * in.numberofpointattributes + k] =
+data->vertexAttributes[i][k];
+}
+// if (data->vertexBoundaryMarker.size()) {
+in.pointmarkerlist = (int *)malloc(in.numberofpoints * sizeof(int));
+for (int i = 0; i < in.numberofpoints; i++)
+in.pointmarkerlist[i] = 1; // data->vertexBoundaryMarker[i];
+//}
+in.trianglelist = (int *)NULL;
+in.triangleattributelist = (REAL *)NULL;
+in.trianglearealist = (REAL *)NULL;
+in.numberoftriangles = 0;
+in.numberoftriangleattributes = 0;
+in.numberofcorners = 0;
+in.numberofsegments = input->meshDescriptor.count;
+if (in.numberofsegments) {
+in.segmentlist = (int *)malloc(in.numberofsegments * 2 * sizeof(int));
+for (int i = 0; i < in.numberofsegments; i++) {
+in.segmentlist[i * 2 + 0] = input->indices[i * 2 + 0].vertexIndex;
+in.segmentlist[i * 2 + 1] = input->indices[i * 2 + 1].vertexIndex;
+}
+}
+// if (data->edgeBoundaryMarker.size()) {
+in.segmentmarkerlist = (int *)malloc(in.numberofsegments * sizeof(int));
+for (int i = 0; i < in.numberofsegments; i++)
+in.segmentmarkerlist[i] = 1; // data->edgeBoundaryMarker[i];
+//}
+in.numberofholes = data->holes.size();
+if (in.numberofholes) {
+in.holelist = (float *)malloc(in.numberofholes * 2 * sizeof(float));
+for (int i = 0; i < in.numberofholes; i++) {
+in.holelist[i * 2 + 0] = data->holes[i].first;
+in.holelist[i * 2 + 1] = data->holes[i].second;
+}
+}
+in.numberofregions = 0;
+
+printf("Input point set:\n\n");
+report(&in, 1, 1, 1, 1, 1, 1);
+
+out.numberofpoints = 0;
+out.pointlist = (REAL *)NULL;
+out.pointattributelist = (REAL *)NULL;
+out.pointmarkerlist = (int *)NULL;
+out.numberoftriangleattributes = 0;
+out.triangleattributelist = (REAL *)NULL;
+out.numberoftriangles = 0;
+out.trianglelist = (int *)NULL;
+out.triangleattributelist = (REAL *)NULL;
+out.neighborlist = (int *)NULL;
+out.numberofsegments = 0;
+out.segmentlist = (int *)NULL;
+out.segmentmarkerlist = (int *)NULL;
+out.numberofedges = 0;
+out.edgelist = (int *)NULL;
+out.edgemarkerlist = (int *)NULL;
+printf("Output point set:\n\n");
+report(&out, 1, 1, 1, 1, 0, 0);
+char sw[256];
+// std::strcpy(sw, "YBNz");
+snprintf(sw, 256, "YBNz");
+triangulate(sw, &in, &out, (triangulateio *)NULL);
+printf("After:\n\n");
+// report(&out, 1, 1, 1, 1, 0, 0);
+
+output->primitiveType = GeometricPrimitiveType::TRIANGLES;
+output->meshDescriptor = {3, static_cast<size_t>(out.numberoftriangles)};
+output->vertexDescriptor = {2, static_cast<size_t>(in.numberofpoints)};
+for (int i = 0; i < in.numberofpoints; i++) {
+  output->addVertex({in.pointlist[i * 2 + 0], in.pointlist[i * 2 + 1]});
+}
+for (int i = 0; i < out.numberoftriangles; i++) {
+  for (int k = 0; k < 3; k++) {
+    RawMesh::IndexData a = {out.trianglelist[i * 3 + k], 0, 0};
+    output->indices.emplace_back(a);
   }
-  for (int i = 0; i < out.numberoftriangles; i++) {
-    for (int k = 0; k < 3; k++) {
-      RawMesh::IndexData a = {out.trianglelist[i * 3 + k], 0, 0};
-      std::cout << out.trianglelist[i * 3 + k] << " ";
-      output->indices.emplace_back(a);
-    }
-    std::cout << std::endl;
-  }
-  output->computeBBox();
-  output->splitIndexData();
-  output->buildInterleavedData();
-  std::cout << output->bbox.pMin.xy() << " " << output->bbox.pMax.xy()
-            << std::endl;
-  free(in.pointlist);
-  free(in.segmentlist);
-  free(in.pointmarkerlist);
+}
+output->computeBBox();
+output->splitIndexData();
+output->buildInterleavedData();
+free(in.pointlist);
+free(in.segmentlist);
+free(in.pointmarkerlist);
+      */
 }
 
 } // ponos namespace

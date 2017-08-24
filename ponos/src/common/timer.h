@@ -1,4 +1,3 @@
-/** @ingroup Common */
 #ifndef PONOS_COMMON_TIMER_H
 #define PONOS_COMMON_TIMER_H
 
@@ -7,21 +6,20 @@
 
 namespace ponos {
 
-/** @brief timer
- * Helper class to measure time.
+/** \brief Helper class to measure time.
  */
 class Timer {
 public:
   /** \brief Default constructor.
-   * 	Starts the timer.
+   * Starts the timer.
    */
   Timer() { tick(); }
   /** \brief  tick
    *  mark current time
    */
   void tick() { lastTick = std::chrono::high_resolution_clock::now(); }
-  /** @brief  get
-   *  \return elapsed time since last call to **tick**
+  /** \brief  get
+   *  \return elapsed time since last call to **tick** in milliseconds
    */
   double tack() {
     auto curTick = std::chrono::high_resolution_clock::now();
@@ -45,4 +43,3 @@ private:
 } // ponos namespace
 
 #endif // PONOS_COMMON_TIMER_H
-       /**@}*/

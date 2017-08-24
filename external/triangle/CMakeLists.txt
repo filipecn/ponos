@@ -2,7 +2,7 @@ project(TRIANGLE)
 
 cmake_minimum_required(VERSION 2.8.7)
 
-# set(CMAKE_CXX_FLAGS "-DTRILIBRARY")
+set(CMAKE_CXX_FLAGS "-DTRILIBRARY -DLINUX -fPIC")
 
 add_definitions(-DTRILIBRARY -DLINUX)
 

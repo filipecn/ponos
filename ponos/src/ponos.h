@@ -27,8 +27,6 @@
 #include "blas/sparse_vector.h"
 #include "blas/staggered_grid.h"
 #include "blas/symmetric_matrix.h"
-/** \defgroup Common module
- */
 #include "common/defs.h"
 #include "common/file.h"
 #include "common/macros.h"

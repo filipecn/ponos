@@ -25,7 +25,7 @@
 #ifndef PONOS_STRUCTURES_RAW_MESH_H
 #define PONOS_STRUCTURES_RAW_MESH_H
 
-#include "geometry/bbox.h"
+// #include "geometry/bbox.h"
 #include "geometry/transform.h"
 
 #include <vector>
@@ -133,6 +133,15 @@ public:
   BBox bbox; //!< bounding box in object space
   GeometricPrimitiveType primitiveType;
 };
+
+/** Reshapes the raw mesh to fit into a BBox.
+ * \param rm **[in/out]** Raw Mesh that will soffer the transformation
+ * \param bbox **[in]** Bounding box to be fitted
+ * The rm must have this Bounding Box computed before passsing to this function.
+ */
+void fitToBBox(RawMesh *rm, const BBox2D &bbox);
+
+std::ostream &operator<<(std::ostream &os, RawMesh &rm);
 
 } // ponos namespace
 

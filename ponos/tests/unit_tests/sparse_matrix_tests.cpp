@@ -1,5 +1,5 @@
-#include <ponos.h>
 #include <gtest/gtest.h>
+#include <ponos.h>
 
 using namespace ponos;
 //    0   1   2   3   4
@@ -58,5 +58,11 @@ TEST(SparseMatrixCRS, Iterate) {
     EXPECT_EQ(columns.size(), ec[i].size());
     for (size_t j = 0; j < columns.size(); j++)
       EXPECT_EQ(columns[j], ec[i][j]);
+  }
+  size_t expectedRowIndices[9] = {0, 0, 0, 1, 2, 2, 2, 4, 4};
+  size_t k = 0;
+  for (SparseMatrix<double>::const_iterator it(m); it.next(); ++it) {
+    EXPECT_EQ(expectedRowIndices[k], it.rowIndex());
+    k++;
   }
 }

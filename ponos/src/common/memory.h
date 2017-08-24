@@ -33,10 +33,9 @@ private:
 
 #define ALLOCA(TYPE, COUNT) (TYPE *)alloca((COUNT) * sizeof(TYPE))
 
-/** \brief allocAligned
- *
- * Allocates cache-aligned memory blocks of **size** bytes.
+/** \brief Allocates cache-aligned memory blocks of **size** bytes.
  * \param size bytes
+ * \returns pointer to allocated region.
  */
 inline void *allocAligned(uint32 size) {
 #ifdef _WIN32
@@ -46,10 +45,9 @@ inline void *allocAligned(uint32 size) {
 #endif
 }
 
-/** \brief allocAligned
- *
- * Allocates cache-aligned **count** objects.
+/** \brief Allocates cache-aligned **count** objects.
  * \param count number of objects.
+ * \returns pointer to allocated region.
  */
 template <typename T> T *allocAligned(uint32 count) {
   return static_cast<T *>(allocAligned(count * sizeof(T)));

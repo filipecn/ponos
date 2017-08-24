@@ -108,21 +108,31 @@ public:
   }
   class const_iterator {
   public:
-    const_iterator(const SparseMatrix<T> &_m) : m(_m), cur(0) {}
+    const_iterator(const SparseMatrix<T> &_m) : m(_m), cur(0), curRow(0) {
+      updateCurRow();
+    }
     bool next() const { return cur < m.data.size(); }
     T value() { return m.data[cur].value; }
-    size_t rowIndex() const {
-      size_t i = 0;
-      while (m.rowPtr[i] > static_cast<int>(cur))
-        i++;
-      return i;
-    }
+    size_t rowIndex() const { return curRow; }
     size_t columnIndex() const { return m.data[cur].columnIndex; }
-    void operator++() { cur++; }
+    void operator++() {
+      cur++;
+      updateCurRow();
+    }
 
   private:
+    void updateCurRow() {
+      size_t i = curRow, last = curRow;
+      while (i < m.rowPtr.size() && m.rowPtr[i] <= static_cast<int>(cur)) {
+        i++;
+        if (m.rowPtr[i] >= 0 && m.rowPtr[i] <= static_cast<int>(cur))
+          last = i;
+      }
+      curRow = last;
+    }
     const SparseMatrix<T> &m;
     size_t cur;
+    size_t curRow;
   };
 
 private:
@@ -145,6 +155,7 @@ private:
 };
 
 typedef SparseMatrix<double> smatrixd;
+typedef SparseMatrix<float> smatrixf;
 
 } // ponos namespace
 

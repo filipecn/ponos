@@ -225,7 +225,7 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
 
 template <typename NodeData>
 void iterateNeighbours(
-    QuadTree<NodeData> *tree, int leafCount,
+    QuadTree<NodeData> *tree,
     const std::function<void(typename QuadTree<NodeData>::Node *)> &f) {
   typedef typename QuadTree<NodeData>::Node NodeType;
   bool found = false;
@@ -240,15 +240,25 @@ void iterateNeighbours(
     return false;
   });
   ASSERT_FATAL(leaf != nullptr);
-  std::vector<bool> visited(leafCount, false);
+  std::vector<bool> visited;
   std::queue<NodeType *> q;
   q.push(leaf);
   while (!q.empty()) {
     auto n = q.front();
     q.pop();
+    if (n->data.isPhantom)
+      continue;
+    if (n->data.data.index >= visited.size())
+      visited.resize(n->data.data.index + 1, false);
+    if (visited[n->data.data.index])
+      continue;
     visited[n->data.data.index] = true;
     f(n);
     for (auto neighbour : n->data.neighbours) {
+      if (neighbour->data.isPhantom)
+        continue;
+      if (neighbour->data.data.index >= visited.size())
+        visited.resize(neighbour->data.data.index + 1, false);
       if (!visited[neighbour->data.data.index])
         q.push(neighbour);
     }
