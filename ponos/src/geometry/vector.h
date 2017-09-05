@@ -59,6 +59,7 @@ public:
     v.emplace_back(std::forward<Args>(args)...);
   }
   void resize(size_t n) { v.resize(n); }
+  void resize(size_t n, T t) { v.resize(n, t); }
 
   size_t size() const { return v.size(); }
 
@@ -286,6 +287,10 @@ inline float dot(const Vector3 &a, const Vector3 &b) {
 inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
   return Vector3((a.y * b.z) - (a.z * b.y), (a.z * b.x) - (a.x * b.z),
                  (a.x * b.y) - (a.y * b.x));
+}
+
+inline float triple(const Vector3 &a, const Vector3 &b, const Vector3 &c) {
+  return dot(a, cross(b, c));
 }
 
 inline Vector3 normalize(const Vector3 &v) {

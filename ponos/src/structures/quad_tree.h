@@ -169,6 +169,8 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
                                 Point2(r.pMax.x, r.pMin.y))));
         top->data.neighbours[top->data.neighbours.size() - 1]->data.isPhantom =
             true;
+        top->data.neighboursPosition.emplace_back(
+            NodeData::NeighbourPosition::BOTTOM);
       } else {
         verticalProcess(top->children[2], bottom);
         verticalProcess(top->children[3], bottom);
@@ -181,6 +183,8 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
                                 Point2(r.pMax.x, r.pMax.y + r.size(1)))));
         bottom->data.neighbours[bottom->data.neighbours.size() - 1]
             ->data.isPhantom = true;
+        bottom->data.neighboursPosition.emplace_back(
+            NodeData::NeighbourPosition::TOP);
       } else {
         verticalProcess(top, bottom->children[0]);
         verticalProcess(top, bottom->children[1]);
@@ -201,6 +205,8 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
                                     Point2(r.pMax.x + r.size(0), r.pMax.y))));
             left->data.neighbours[left->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
+            left->data.neighboursPosition.emplace_back(
+                NodeData::NeighbourPosition::RIGHT);
           } else {
             horizontalProcess(left->children[1], right);
             horizontalProcess(left->children[3], right);
@@ -213,6 +219,8 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
                                     Point2(r.pMin.x, r.pMax.y))));
             right->data.neighbours[right->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
+            right->data.neighboursPosition.emplace_back(
+                NodeData::NeighbourPosition::LEFT);
           } else {
             horizontalProcess(left, right->children[0]);
             horizontalProcess(left, right->children[2]);

@@ -81,7 +81,7 @@ public:
       iterateRow(r, [&column](const T &v, size_t c) {
         if (c > column)
           while (column < c) {
-            std::cout << " 0 ";
+            std::cout << " 0.0000 ";
             column++;
           }
         if (v >= 0.0)
@@ -91,7 +91,7 @@ public:
         column++;
       });
       while (column++ < m)
-        std::cout << " 0 ";
+        std::cout << " 0.0000 ";
       std::cout << std::endl;
     }
   }

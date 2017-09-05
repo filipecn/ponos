@@ -35,6 +35,22 @@
 
 namespace ponos {
 
+template <typename T> inline std::vector<T> linspace(T a, T b, int n) {
+  T step = (b - a) / static_cast<T>(n - 1);
+  std::vector<T> r;
+  for (int i = 0; i < n; i++)
+    r.emplace_back(i * step);
+  return r;
+}
+
+template <typename T>
+inline std::vector<T> scatter(T a, T b, int n, std::function<T(T x)> shape) {
+  std::vector<T> v = linspace(a, b, n);
+  for (auto &vv : v)
+    vv = shape(vv);
+  return v;
+}
+
 inline Transform2D linearSpaceTransform(const BBox2D &b, size_t w, size_t h) {
   vec2 size(w - 1, h - 1);
   return translate(vec2(b.pMin)) *

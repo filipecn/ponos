@@ -26,6 +26,11 @@
 
 #include "algorithm/triangulate.h"
 
+#ifdef _WIN32
+namespace ponos {
+void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {}
+}
+#else
 typedef int VOID;
 typedef float REAL;
 extern "C" {
@@ -297,3 +302,4 @@ free(in.pointmarkerlist);
 }
 
 } // ponos namespace
+#endif

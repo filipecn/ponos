@@ -7,9 +7,11 @@ set(HEADERS
 	src/algorithm/search.h
 	src/algorithm/sort.h
 	src/algorithm/triangulate.h
+	src/blas/bicg.h
 	src/blas/blas.h
 	src/blas/c_regular_grid.h
   src/blas/cg.h
+	src/blas/custom_matrix.h
 	src/blas/fdm_cg_solver.h
 	src/blas/fdm_gauss_seidel_solver.h
 	src/blas/fdm_jacobi_solver.h
@@ -72,6 +74,7 @@ set(HEADERS
 	#src/structures/octree.h
 	src/structures/quad_tree.h
 	src/structures/raw_mesh.h
+	src/structures/tetrahedron_mesh.h
 	src/structures/z_grid.h
 	src/ponos.h
 	)

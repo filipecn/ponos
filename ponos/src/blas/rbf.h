@@ -40,6 +40,24 @@ public:
   virtual T L(T r) const { return r; }
 };
 
+template <typename T> class Wendland33Kernel : public Kernel<T> {
+public:
+  Wendland33Kernel(T _e) : e(_e) {}
+  virtual T operator()(T r) const override {
+    return pow(std::max(0.f, 1.f - e * r), 8) *
+           (32.f * CUBE(e * r) + 25.f * SQR(e * r) + 8.f * e * r + 1.f);
+  }
+  virtual T D(T r) const override {
+    return -22.f * SQR(e) * pow(std::max(0.f, 1.f - e * r), 7) +
+           (16.f * SQR(e * r) + 7.f * e * r + 1.f);
+  }
+  virtual T D2(T r) const override {
+    return 528.f * pow(e, 4) * pow(std::max(0.f, 1.f - e * r), 6) +
+           (6.f * e * r + 1.f);
+  }
+  T e;
+};
+
 template <typename T> class InverseMultiquadricKernel : public Kernel<T> {
 public:
   InverseMultiquadricKernel(T epsilon) : e(epsilon) {}

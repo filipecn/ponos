@@ -41,6 +41,7 @@ enum class GeometricPrimitiveType {
   TRIANGLE_STRIP,
   TRIANGLE_FAN,
   QUADS,
+  TETRAHEDRA,
   CUSTOM
 };
 
@@ -71,7 +72,7 @@ public:
   void splitIndexData();
   void computeBBox();
   /** \brief add vertex
-   * \param l coordinate values {v00, v01, .... }
+   * \param l coordinate values {v0, v1, .... }
    * Append positions.
    */
   void addVertex(std::initializer_list<float> l);
