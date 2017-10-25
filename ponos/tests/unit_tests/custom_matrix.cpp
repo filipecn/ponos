@@ -33,6 +33,8 @@ public:
   }
   virtual void iterateRow(size_t i,
                           std::function<void(T &, size_t)> f) override {
+    UNUSED_VARIABLE(i);
+    UNUSED_VARIABLE(f);
     exit(1);
   }
   virtual void
@@ -42,7 +44,10 @@ public:
       f(m[i][j], i);
   }
   virtual void iterateColumn(size_t j,
-                             std::function<void(T &, size_t)> f) override {}
+                             std::function<void(T &, size_t)> f) override {
+    UNUSED_VARIABLE(j);
+    UNUSED_VARIABLE(f);
+  }
   size_t rowCount() const override { return D; }
   size_t columnCount() const override { return D; }
 
@@ -54,6 +59,7 @@ TEST(CustomMatrix, ConstAccessor) {
   MatrixConstAccessor<CustomMatrix<4, int>, int> acc(&m);
   for (size_t i = 0; i < 4; i++)
     acc.iterateRow(i, [](const int &v, size_t j) {
+      UNUSED_VARIABLE(j);
       static int k = 0;
       EXPECT_EQ(k, v);
       k++;
@@ -62,6 +68,7 @@ TEST(CustomMatrix, ConstAccessor) {
   for (size_t i = 0; i < 4; i++) {
     int k = i;
     acct.iterateRow(i, [&k](const int &v, size_t j) {
+      UNUSED_VARIABLE(j);
       EXPECT_EQ(k, v);
       k += 4;
     });

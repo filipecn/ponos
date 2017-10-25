@@ -1,5 +1,5 @@
-#include <ponos.h>
 #include <gtest/gtest.h>
+#include <ponos.h>
 
 using namespace ponos;
 
@@ -58,8 +58,10 @@ TEST(SparseSolvers, j_gs_sor) {
       system.x.insert(i, -10.0);
     SparseJacobiSolverd solver(1000, 1e-4, 4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);
@@ -70,8 +72,10 @@ TEST(SparseSolvers, j_gs_sor) {
       system.x.insert(i, -10.0);
     SparseGaussSeidelSolverd solver(1000, 1e-4, 4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);
@@ -82,8 +86,10 @@ TEST(SparseSolvers, j_gs_sor) {
       system.x.insert(i, -10.0);
     SparseSORSolverd solver(1.79, 1000, 1e-4, 4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);
@@ -106,8 +112,10 @@ TEST(SparseSolvers, CG) {
     system.x.insert(1, 1);
     SparseCGSolverd<NullCGPreconditioner<SparseBlas2d>> solver(2, 1e-4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);
@@ -167,8 +175,10 @@ TEST(SparseSolvers, PCG) {
     system.x.set(8, 8);
     SparseGaussSeidelSolverd solver(1000, 1e-4, 4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);
@@ -177,8 +187,10 @@ TEST(SparseSolvers, PCG) {
     system.x.set(8, 8);
     SparseSORSolverd solver(1.79, 1000, 1e-4, 4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);
@@ -187,8 +199,10 @@ TEST(SparseSolvers, PCG) {
     system.x.set(8, 8);
     SparseCGSolverd<NullCGPreconditioner<SparseBlas2d>> solver(8, 1e-4);
     bool r = solver.solve(&system);
-    system.x.iterate(
-        [](const double &v, size_t i) { std::cout << v << std::endl; });
+    system.x.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
+      std::cout << v << std::endl;
+    });
     std::cout << solver.lastNumberOfIterations << std::endl;
     std::cout << solver.lastResidual << std::endl;
     EXPECT_EQ(r, true);

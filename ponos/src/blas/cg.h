@@ -35,6 +35,7 @@ void pcg(const typename BlasType::MatrixType &A,
          typename BlasType::VectorType *d, typename BlasType::VectorType *q,
          typename BlasType::VectorType *s, unsigned int *lastNumberOfIterations,
          double *lastResidual) {
+  UNUSED_VARIABLE(M);
   BlasType::set(0, r);
   BlasType::set(0, d);
   BlasType::set(0, q);

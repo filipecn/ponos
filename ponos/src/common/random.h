@@ -15,11 +15,11 @@ public:
   /** \brief  Default constructor.
    * \param seed
    */
-  RNG(uint32 seed = 0) {}
+  RNG(uint32 seed = 0) { UNUSED_VARIABLE(seed); }
   /** \brief
    * \param seed
    */
-  void setSeed(uint32 seed) {}
+  void setSeed(uint32 seed) { UNUSED_VARIABLE(seed); }
   /** \brief pseudo-random floating-point number.
    * \return a float in the range [0, 1)
    */

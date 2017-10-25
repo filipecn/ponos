@@ -26,8 +26,10 @@
 #define PONOS_LOG_DEBUG_H
 
 #include <cmath>
+#include <common/defs.h>
 #include <iostream>
-#include "common/defs.h"
+
+#define UNUSED_VARIABLE(x) ((void)x)
 
 #define LOG_LOCATION "[" << __FILE__ << ", line " << __LINE__ << "]"
 

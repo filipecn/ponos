@@ -68,7 +68,10 @@ typedef LinearSystem<FDMMatrix2Df, FDMVector2Df> FDMLinearSystem2f;
 template <> class LinearSystem<SparseMatrix<double>, SparseVector<double>> {
 public:
   LinearSystem() {}
-  void resize(size_t w, size_t h) {}
+  void resize(size_t w, size_t h) {
+    UNUSED_VARIABLE(w);
+    UNUSED_VARIABLE(h);
+  }
   SparseMatrix<double> A;
   SparseVector<double> x, b;
 };

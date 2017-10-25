@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <ponos.h>
 
+#ifdef TRIANGLE_INCLUDED
+
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 #ifdef SINGLE
 #define REAL float
@@ -161,7 +163,9 @@ TEST(Triangulate, triangulate) {
   mid.edgelist = (int *)NULL;       /* Needed only if -e switch used. */
   mid.edgemarkerlist = (int *)NULL; /* Needed if -e used and -B not used. */
 
-  triangulate("pzYAen", &in, &mid, (struct triangulateio *)NULL);
+  // triangulate("pzYAen", &in, &mid, (struct triangulateio *)NULL);
   printf("Initial triangulation:\n\n");
   report(&mid, 1, 1, 1, 1, 1, 0);
 }
+
+#endif

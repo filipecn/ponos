@@ -19,8 +19,9 @@ if len(sys.argv) < 2:
 
 if sys.argv[1] == 'docs':
     call(["doxygen Doxyfile"], shell=True)
-    call(["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
-         shell=True)
+    call(
+        ["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
+        shell=True)
     call(["python doxml2md.py doc/xml/all.xml"], shell=True)
     sys.exit(1)
 
@@ -36,17 +37,15 @@ os.chdir(build_path)
 
 if first:
     if platform.system() == 'Windows':
-        call(["cmake"] + ['-G'] + ['Visual Studio 14 2015 Win64'] +
+        call(["cmake"] + ['-G'] + ['Visual Studio 15 2017 Win64'] +
              sys.argv[2:] + [cur_path])
     else:
         call(["cmake"] + sys.argv[2:] + [cur_path])
 
 if platform.system() == 'Windows':
     make_result =\
-        call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
-             [r"/p:Configuration=Release"] + ["PONOS.sln"], shell=True)
-# make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
-#                   ["PONOS.sln"], shell=True)
+        call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["PONOS.sln"],
+             shell=True)
 else:
     make_result = call(["make -j8"], shell=True)
 
@@ -88,9 +87,10 @@ if sys.argv[1] != 'test':
 result = 0
 test_libs = ['ponos', 'hercules', 'poseidon']
 for l in test_libs:
-    tests = list(filter(lambda x: x.find('Test', 0) == 0,
-                        os.listdir(cur_path + "/" + l + "/tests")))
-    if os.path.isdir(build_path + "/" + l + "/tests") == True:
+    tests = list(
+        filter(lambda x: x.find('Test', 0) == 0,
+               os.listdir(cur_path + "/" + l + "/tests")))
+    if os.path.isdir(build_path + "/" + l + "/tests"):
         os.chdir(build_path + "/" + l + "/tests")
         print(["./run_" + l + "_tests"] + [x[:-4] for x in tests])
         if platform.system() == 'Windows':

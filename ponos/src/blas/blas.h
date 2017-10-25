@@ -77,9 +77,15 @@ template <> struct Blas<float, FDMVector2Df, FDMMatrix2Df> {
         (*result)(i, j) = v(i, j);
   }
   // Sets the given scalar value to the output matrix.
-  static void set(float s, FDMMatrix2Df *result) {}
+  static void set(float s, FDMMatrix2Df *result) {
+    UNUSED_VARIABLE(s);
+    UNUSED_VARIABLE(result);
+  }
   // Sets the given matrix to the output matrix.
-  static void set(const FDMMatrix2Df &m, FDMMatrix2Df *result) {}
+  static void set(const FDMMatrix2Df &m, FDMMatrix2Df *result) {
+    UNUSED_VARIABLE(m);
+    UNUSED_VARIABLE(result);
+  }
   // Performs dot product.
   static float dot(const FDMVector2Df &a, const FDMVector2Df &b) {
     float sum = 0.f;
@@ -136,14 +142,20 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
                        static_cast<ScalarType>(1e-8)))
       result->resetCount();
     else
-      result->iterate([s](ScalarType &v, size_t i) { v = s; });
+      result->iterate([s](ScalarType &v, size_t i) {
+        UNUSED_VARIABLE(i);
+        v = s;
+      });
   }
   // Sets the given vector to the output vector.
   static void set(const VectorType &v, VectorType *result) { result->copy(v); }
   // Sets the given scalar value to the output matrix.
   static void set(ScalarType s, MatrixType *result) {
     for (size_t r = 0; r < result->rowCount(); r++)
-      result->iterateRow(r, [s](ScalarType &v, size_t j) { v = s; });
+      result->iterateRow(r, [s](ScalarType &v, size_t j) {
+        UNUSED_VARIABLE(j);
+        v = s;
+      });
   }
   // Sets the given matrix to the output matrix.
   static void set(const MatrixType &m, MatrixType *result) { result->copy(m); }
