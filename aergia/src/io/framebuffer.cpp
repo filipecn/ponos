@@ -43,6 +43,7 @@ Framebuffer::~Framebuffer() {
 }
 
 void Framebuffer::set(size_t w, size_t h, size_t d) {
+  UNUSED_VARIABLE(d);
   glGenFramebuffers(1, &framebufferObject);
   glBindFramebuffer(GL_FRAMEBUFFER, framebufferObject);
 

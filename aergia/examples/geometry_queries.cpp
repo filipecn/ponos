@@ -34,4 +34,5 @@ int main() {
   static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())->setZoom(0.1f);
   app.init();
   app.run();
+  return 0;
 }

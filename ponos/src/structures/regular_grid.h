@@ -111,7 +111,10 @@ public:
    * @d **[in]** dimensions
    * @b **[in]** border (default value)
    */
-  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) { this->set(d); }
+  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) {
+    UNUSED_VARIABLE(b);
+    this->set(d);
+  }
   RegularGrid2D(size_t w, size_t h, T v) {
     this->setDimensions(w, h);
     this->setAll(v);

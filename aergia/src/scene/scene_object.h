@@ -27,9 +27,9 @@
 
 #include <ponos.h>
 
+#include "graphics/shader.h"
 #include "io/buffer.h"
 #include "io/utils.h"
-#include "graphics/shader.h"
 #include "ui/interactive_object_interface.h"
 
 namespace aergia {
@@ -54,6 +54,8 @@ public:
    * \return **true** if intersection is found
    */
   virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) {
+    UNUSED_VARIABLE(t);
+    UNUSED_VARIABLE(r);
     return false;
   }
 
@@ -79,7 +81,8 @@ public:
     setupIndexBuffer();
   }
   SceneMesh(ponos::RawMesh *m,
-            std::function<void(Shader *s)> f = [](Shader *s) {},
+            std::function<void(Shader *s)> f =
+                [](Shader *s) { UNUSED_VARIABLE(s); },
             Shader *s = nullptr) {
     this->visible = true;
     this->rawMesh = m;

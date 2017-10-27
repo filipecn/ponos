@@ -30,6 +30,7 @@ void TrackballInterface::draw() { modes[curMode]->draw(tb); }
 
 void TrackballInterface::buttonRelease(CameraInterface &camera, int button,
                                        ponos::Point2 p) {
+  UNUSED_VARIABLE(button);
   modes[curMode]->stop(tb, static_cast<Camera &>(camera), p);
 }
 

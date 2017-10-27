@@ -40,20 +40,28 @@ public:
   TrackMode() : dragging_(false) {}
   virtual ~TrackMode() {}
 
-  virtual void draw(const Trackball &tb) {}
+  virtual void draw(const Trackball &tb) { UNUSED_VARIABLE(tb); }
 
   // CONTROL
   virtual void start(Trackball &tb, const CameraInterface &camera,
                      ponos::Point2 p) {
+    UNUSED_VARIABLE(camera);
+    UNUSED_VARIABLE(tb);
     start_ = p;
     dragging_ = true;
   }
   virtual void update(Trackball &tb, Camera &camera, ponos::Point2 p) = 0;
   virtual void stop(Trackball &tb, Camera &camera, ponos::Point2 p) {
+    UNUSED_VARIABLE(p);
+    UNUSED_VARIABLE(camera);
     dragging_ = false;
     tb.transform = ponos::Transform();
   }
-  virtual void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) {}
+  virtual void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) {
+    UNUSED_VARIABLE(tb);
+    UNUSED_VARIABLE(camera);
+    UNUSED_VARIABLE(d);
+  }
 
 protected:
   ponos::Point3 hitViewPlane(Trackball &tb, Camera &camera, ponos::Point2 p) {
@@ -72,8 +80,13 @@ class ScaleMode : public TrackMode {
 public:
   ScaleMode() : TrackMode() {}
   ~ScaleMode() {}
-  void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {}
+  void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {
+    UNUSED_VARIABLE(tb);
+    UNUSED_VARIABLE(camera);
+    UNUSED_VARIABLE(p);
+  }
   void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) override {
+    UNUSED_VARIABLE(camera);
     float scale = (d.y > 0.f) ? 1.1f : 0.9f;
     tb.transform = tb.transform * ponos::scale(scale, scale, scale);
   }
@@ -84,7 +97,7 @@ public:
   PanMode() : TrackMode() {}
   ~PanMode() {}
 
-  void draw(Trackball tb) {}
+  void draw(Trackball tb) { UNUSED_VARIABLE(tb); }
 
   void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {
     if (!dragging_)
