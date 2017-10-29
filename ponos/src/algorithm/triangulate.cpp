@@ -126,6 +126,7 @@ void report(struct triangulateio *io, int markers, int reporttriangles,
 }
 
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
+  UNUSED_VARIABLE(output);
   {
     FILE *fp = fopen("D.poly", "w+");
     fprintf(fp, "%lu 2 0 1\n", input->vertexDescriptor.count);

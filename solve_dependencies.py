@@ -48,7 +48,7 @@ if platform.system() != 'Windows':
 else:
     call(['cmake'] + ['../tinyobj'] + ['-G'] + [msversion])
 #    call( [r"MSBuild.exe"] + # [r'/t:tinyobjloader'] +
-            # [r'/GS'] + ['/TP /W3 /Zc:wchar_t /Zi /Gm- /Od /Ob0 /Fd"tinyobjloader.dir\Debug\tinyobjloader.pdb" /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /D "CMAKE_INTDIR=\"Debug\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /RTC1 /GR /Gd /MDd /Fa"Debug/" /EHsc /nologo /Fo"tinyobjloader.dir\Debug\" /Fp"tinyobjloader.dir\Debug\tinyobjloader.pch" /diagnostics:classic']
+# [r'/GS'] + ['/TP /W3 /Zc:wchar_t /Zi /Gm- /Od /Ob0 /Fd"tinyobjloader.dir\Debug\tinyobjloader.pdb" /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /D "CMAKE_INTDIR=\"Debug\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /RTC1 /GR /Gd /MDd /Fa"Debug/" /EHsc /nologo /Fo"tinyobjloader.dir\Debug\" /Fp"tinyobjloader.dir\Debug\tinyobjloader.pch" /diagnostics:classic']
 #            [r"/p:PlatformToolset=v140"] + [r"/p:Configuration=Release"] + ["tinyobjloader.sln"],
 #        shell=True)
 
@@ -56,10 +56,10 @@ else:
 os.chdir(root_path)
 urllib.request.urlretrieve(
     'http://download.savannah.gnu.org/releases/freetype/' +
-    'freetype-2.8.tar.gz', 'freetype-2.8.tar.gz')
-call(['tar'] + ['-vxf'] + ['freetype-2.8.tar.gz'])
-os.chdir('freetype-2.8')
-build_path = root_path + '/freetype-2.8/build'
+    'freetype-2.8.1.tar.gz', 'freetype-2.8.1.tar.gz')
+call(['tar'] + ['-vxf'] + ['freetype-2.8.1.tar.gz'])
+os.chdir('freetype-2.8.1')
+build_path = root_path + '/freetype-2.8.1/build'
 if os.path.exists(build_path):
     shutil.rmtree(build_path)
 os.mkdir(build_path)
@@ -74,12 +74,12 @@ else:
         [r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["freetype.sln"],
         shell=True)
     shutil.move(build_path + '/Release/freetype.lib', root_path + '/lib')
-shutil.move(root_path + '/freetype-2.8/include/freetype',
+shutil.move(root_path + '/freetype-2.8.1/include/freetype',
             root_path + '/include')
-shutil.move(root_path + '/freetype-2.8/include/ft2build.h',
+shutil.move(root_path + '/freetype-2.8.1/include/ft2build.h',
             root_path + '/include')
-shutil.rmtree(root_path + '/freetype-2.8', ignore_errors=True)
-os.remove(root_path + '/freetype-2.8.tar.gz')
+# shutil.rmtree(root_path + '/freetype-2.8.1', ignore_errors=True)
+os.remove(root_path + '/freetype-2.8.1.tar.gz')
 
 if platform.system() != 'Windows':
     # LIBPNG
@@ -100,7 +100,8 @@ if platform.system() != 'Windows':
 
 # ZLIB
 os.chdir(root_path)
-urllib.request.urlretrieve('https://zlib.net/zlib-1.2.11.tar.gz', 'zlib-1.2.11.tar.gz')
+urllib.request.urlretrieve('https://zlib.net/zlib-1.2.11.tar.gz',
+                           'zlib-1.2.11.tar.gz')
 call(['tar'] + ['-vxf'] + ['zlib-1.2.11.tar.gz'])
 os.chdir(root_path + '/zlib-1.2.11')
 build_path = root_path + '/zlib-1.2.11/build'
@@ -123,26 +124,19 @@ os.remove(root_path + '/zlib-1.2.11.tar.gz')
 
 # GLFW3 ########################################################################
 os.chdir(root_path)
-urllib.request.urlretrieve(
-    'https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.zip',
-    'glfw-3.2.1.zip')
-call(['unzip'] + ['glfw-3.2.1.zip'])
-os.chdir(root_path + '/glfw-3.2.1')
-build_path = root_path + '/glfw-3.2.1/build'
+build_path = root_path + '/glfw_build'
 if os.path.exists(build_path):
     shutil.rmtree(build_path)
 os.mkdir(build_path)
 os.chdir(build_path)
 if platform.system() != 'Windows':
-    call(['cmake'] + ['-G'] + ['Unix Makefiles'] + ['..'])
+    call(['cmake'] + ['-G'] + ['Unix Makefiles'] + ['../glfw'])
     call(['make'])
     shutil.move(build_path + '/src/libglfw3.a', root_path + '/lib')
 else:
-    call(['cmake'] + ['..'] + ['-G'] + [msversion])
+    call(['cmake'] + ['../glfw'] + ['-G'] + [msversion])
     call(
         [r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["glfw.sln"],
         shell=True)
     shutil.move(build_path + '/src/Release/glfw3.lib', root_path + '/lib')
-shutil.move(root_path + '/glfw-3.2.1/include/GLFW', root_path + '/include')
-shutil.rmtree(root_path + '/glfw-3.2.1', ignore_errors=True)
-os.remove(root_path + '/glfw-3.2.1.zip')
+shutil.copytree(root_path + '/glfw/include/GLFW', root_path + '/include/GLFW')

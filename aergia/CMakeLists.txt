@@ -83,7 +83,7 @@ if(WIN32)
 	link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
 else(WIN32)
 	include_directories(${TINYOBJLOADER_INCLUDE_DIRS})
-	link_libraries(glfw ${TINYOBJLOADER_LIBRARIES})
+	link_libraries(${AERGIA_LIBRARIES} ${TINYOBJLOADER_LIBRARIES})
 endif(WIN32)
 
 link_libraries(ponos)
