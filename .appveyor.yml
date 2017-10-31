@@ -10,7 +10,7 @@ environment:
 branches:
   # whitelist
   only:
-    - master
+    - refactor
 
 # Operating system (build VM template)
 os: Visual Studio 2015
