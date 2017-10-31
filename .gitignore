@@ -1,0 +1,4 @@
+*.cson
+*~
+win_build
+build
