@@ -48,7 +48,7 @@ before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo add-apt-repository ppa:george-edison55/precise-backports --yes
   - sudo apt-get update -qq
-  - sudo pip3 install codecov
+  - sudo pip install codecov
 script:
   - git submodule update --init --recursive
   - python3 solve_dependencies.py
