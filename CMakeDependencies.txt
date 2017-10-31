@@ -26,10 +26,11 @@ find_package(PkgConfig)
 # find_library(VULKAN_LIB NAMES vulkan-1 vulkan)
 # find_package(Vulkan REQUIRED)
 
-find_package(OpenGL QUIET REQUIRED)
-
-pkg_check_modules (GLFW QUIET REQUIRED glfw3)
-pkg_check_modules (FREETYPE REQUIRED freetype2)
+if(NOT TRAVIS)
+	find_package(OpenGL QUIET REQUIRED)
+	pkg_check_modules (GLFW QUIET REQUIRED glfw3)
+	pkg_check_modules (FREETYPE REQUIRED freetype2)
+endif(NOT TRAVIS)
 
 set(PONOS_INCLUDES "${TRIANGLE_INCLUDE}")
 set(PONOS_LIBRARIES "${TRIANGLE_LIB}")
