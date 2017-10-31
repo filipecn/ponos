@@ -77,7 +77,7 @@ shutil.move(root_path + '/freetype-2.8.1/include/freetype',
             root_path + '/include')
 shutil.move(root_path + '/freetype-2.8.1/include/ft2build.h',
             root_path + '/include')
-# shutil.rmtree(root_path + '/freetype-2.8.1', ignore_errors=True)
+shutil.rmtree(root_path + '/freetype-2.8.1', ignore_errors=True)
 os.remove(root_path + '/freetype-2.8.1.tar.gz')
 
 exit(1)

@@ -2,3 +2,5 @@
 *~
 win_build
 build
+external/include
+external/lib

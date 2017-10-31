@@ -51,6 +51,7 @@ before_install:
   - sudo pip install codecov
 script:
   - git submodule update --init --recursive
+  - python solve_dependencies.py
   - python build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
 after_success:
   - codecov
