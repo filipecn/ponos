@@ -10,8 +10,11 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-4.9
+            - cmake
+            - cmake-data
       env: COMPILER=g++-4.9
     - compiler: gcc
       addons:
@@ -49,15 +52,6 @@ before_install:
   - sudo add-apt-repository ppa:george-edison55/precise-backports --yes
   - sudo apt-get update -qq
   - sudo pip install codecov
-  - CMAKE_VERSION=3.7.2
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      CMAKE_URL="https://cmake.org/files/v${CMAKE_VERSION%.[0-9]}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
-      mkdir cmake && travis_retry wget --no-check-certificate -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    else
-      brew install cmake || brew upgrade cmake
-    fi
   - cmake --version
 script:
   - git submodule update --init --recursive
