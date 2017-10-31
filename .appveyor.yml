@@ -29,7 +29,7 @@ build_script:
   # - cmd: example-run-Win-VS2015.bat
   - git submodule update --init --recursive
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - cmd: "%PYTHON%/python.exe build.py all"
+  - cmd: "%PYTHON%/python.exe build.py all -DTRAVIS=1"
 
 # Notifications:
 notifications:
