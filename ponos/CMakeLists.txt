@@ -22,7 +22,8 @@ file(GLOB SOURCES
 include_directories("${PONOS_SOURCE_DIR}/src")
 include_directories(${PONOS_INCLUDES})
 
-add_library(ponos ${SOURCES} ${HEADERS})
+add_library(ponos STATIC ${SOURCES} ${HEADERS})
+add_library(ponos_shared SHARED ${SOURCES} ${HEADERS})
 set_target_properties(ponos PROPERTIES
 	OUTPUT_NAME "ponos"
 	FOLDER "PONOS")
