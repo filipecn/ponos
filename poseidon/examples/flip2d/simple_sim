@@ -1,8 +1,0 @@
-dimensions 16 16
-density 1
-pic_flip_ratio 0.96
-subcell 1
-dt 0.001
-dx 0.01
-curStep 1
-
