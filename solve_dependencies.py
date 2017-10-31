@@ -30,7 +30,6 @@ if platform.system() != 'Windows':
     shutil.move(build_path + '/libtriangle.a', 'lib')
     shutil.copyfile('triangle/triangle.h', 'include/triangle.h')
     shutil.rmtree('triangle_build')
-
 # TINYOBJ ######################################################################
 os.chdir(root_path)
 build_path = root_path + '/tinyobj_build'
@@ -81,6 +80,7 @@ shutil.move(root_path + '/freetype-2.8.1/include/ft2build.h',
 # shutil.rmtree(root_path + '/freetype-2.8.1', ignore_errors=True)
 os.remove(root_path + '/freetype-2.8.1.tar.gz')
 
+exit(1)
 if platform.system() != 'Windows':
     # LIBPNG
     os.chdir(root_path)
