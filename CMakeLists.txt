@@ -26,7 +26,7 @@ add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
 include_directories(external/googletest/googletest/include)
 
 set(TRIANGLE_INCLUDE "")
-include("${PROJECT_SOURCE_DIR}/cmake_dependencies.txt")
+include("${PROJECT_SOURCE_DIR}/CMakeDependencies.txt")
 if (NOT("${TRIANGLE_INCLUDE}" STREQUAL "" OR "${TRIANGLE_LIB}" STREQUAL ""))
 	add_definitions(-DTRIANGLE_INCLUDED)
 endif (NOT("${TRIANGLE_INCLUDE}" STREQUAL "" OR "${TRIANGLE_LIB}" STREQUAL ""))

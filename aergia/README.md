@@ -23,7 +23,7 @@ blog: http://aergia.weebly.com/
 Aergia makes use of some stuff to work:
 
  - [GLFW](http://www.glfw.org)
- - [glm](http://glm.g-truc.net/0.9.5/index.html)
+
 
 ## Changelog
 
