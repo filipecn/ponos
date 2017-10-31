@@ -106,7 +106,10 @@ public:
   }
   BBox2D boundingBox() const override { return BBox2D(); }
   void closestIntersection(const Ray2 &r,
-                           CurveRayIntersection *i) const override {}
+                           CurveRayIntersection *i) const override {
+    UNUSED_VARIABLE(r);
+    UNUSED_VARIABLE(i);
+  }
   double signedDistance(const Point2 &p) const override {
     return (dot(vec2(p), vec2(normal)) - offset) / vec2(normal).length();
   }

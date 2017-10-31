@@ -10,6 +10,7 @@ TEST(ScalarGrid2f, Access) {
   grid.setAll(1.f);
   int count = 0;
   grid.forEach([&](float &f, int i, int j) {
+    UNUSED_VARIABLE(f);
     count++;
     ASSERT_NEAR(grid(i, j), 1.f, error);
     ASSERT_NEAR(grid(ivec2(i, j)), 1.f, error);
@@ -145,8 +146,12 @@ TEST(ScalarGrid2f, Gradient) {
   ScalarGrid2f grid;
   grid.dataPosition = GridDataPosition::CELL_CENTER;
   grid.set(10, 10, vec2(), vec2(1));
-  grid.forEach([&](float &f, int i, int j) { f = i; });
   grid.forEach([&](float &f, int i, int j) {
+    UNUSED_VARIABLE(j);
+    f = i;
+  });
+  grid.forEach([&](float &f, int i, int j) {
+    UNUSED_VARIABLE(f);
     if (i == 0 || j == 0 || i == 9 || j == 9)
       return;
     vec2f g = grid.gradient(i, j);
@@ -161,7 +166,10 @@ TEST(ScalarGrid2f, Sample) {
   float error = 1e-2;
   ScalarGrid2f grid;
   grid.set(10, 10, vec2(), vec2(1));
-  grid.forEach([&](float &f, int i, int j) { f = i; });
+  grid.forEach([&](float &f, int i, int j) {
+    UNUSED_VARIABLE(j);
+    f = i;
+  });
   grid.dataPosition = GridDataPosition::VERTEX_CENTER;
   for (float s = 1.f; s < 7; s += 0.1)
     ASSERT_NEAR(grid.sample(s, 5.f), s, error);

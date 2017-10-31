@@ -106,6 +106,7 @@ uint32_t BVH::flattenBVHTree(BVHNode *node, uint32_t *offset) {
 }
 
 int BVH::intersect(const ponos::Ray3 &ray, float *t) {
+  UNUSED_VARIABLE(t);
   if (!nodes.size())
     return false;
   ponos::Transform inv = ponos::inverse(sceneMesh->transform);

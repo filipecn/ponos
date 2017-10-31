@@ -1,6 +1,6 @@
 #include <aergia.h>
-#include <ponos.h>
 #include <iostream>
+#include <ponos.h>
 #include <vector>
 
 int WIDTH = 1600, HEIGHT = 800;
@@ -21,6 +21,8 @@ void button(int button, int action) {
 }
 
 void mouse(double x, double y) {
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
   trackball.mouseMove(*cameraview.camera.get(), cameraview.getMouseNPos());
   //	cameraview.camera->setPos(trackball.tb.transform(cameraview.camera->getPos()));
   //	cameraview.camera->setTarget(trackball.tb.transform(cameraview.camera->getTarget()));

@@ -54,6 +54,7 @@ public:
     }
     SparseBlas2d::residual(s->A, s->x, s->b, &residual);
     residual.iterate([](const double &v, size_t i) {
+      UNUSED_VARIABLE(i);
       std::cout << "---> " << v << std::endl;
     });
     // std::cout << residual.elementCount() << std::endl;

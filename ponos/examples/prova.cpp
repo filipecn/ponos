@@ -41,13 +41,14 @@ void computeCrankNicolson(std::vector<double> &unext) {
   SparseCGSolverd<NullCGPreconditioner<SparseBlas2d>> solver(size, 1e-8);
   if (!solver.solve(&ls))
     std::cout << "ops\n";
-  double lastResidual = 10000;
-  int iterations = 0;
-  iterations = solver.lastNumberOfIterations;
-  lastResidual = solver.lastResidual;
+  // double lastResidual = 10000;
+  // int iterations = 0;
+  // iterations = solver.lastNumberOfIterations;
+  // lastResidual = solver.lastResidual;
   // std::cout << " re " << solver.lastResidual << std::endl;
   unext.emplace_back(0);
   ls.x.iterate([&unext](const double &v, size_t i) {
+    UNUSED_VARIABLE(i);
     unext.emplace_back(v);
     // std::cout << v << std::endl;
   });
@@ -81,12 +82,13 @@ void computePhi(const std::vector<double> &u, std::vector<double> &x) {
   SparseCGSolverd<NullCGPreconditioner<SparseBlas2d>> solver(size, 1e-8);
   if (!solver.solve(&ls))
     std::cout << "ops\n";
-  double lastResidual = 10000;
-  int iterations = 0;
-  iterations = solver.lastNumberOfIterations;
-  lastResidual = solver.lastResidual;
+  // double lastResidual = 10000;
+  // int iterations = 0;
+  // iterations = solver.lastNumberOfIterations;
+  // lastResidual = solver.lastResidual;
   // std::cout << " re " << solver.lastResidual << std::endl;
   ls.x.iterate([&x](const double &v, size_t i) {
+    UNUSED_VARIABLE(i);
     x.emplace_back(v);
     // std::cout << v << std::endl;
   });
@@ -99,6 +101,8 @@ void computeU(std::vector<double> &u, const std::vector<double> &phi) {
 }
 
 int main(int argc, char **argv) {
+  UNUSED_VARIABLE(argv);
+  UNUSED_VARIABLE(argc);
   dx = L / static_cast<double>(N);
   dt = 0.25 * dx * dx;
   std::vector<double> unext, unext_cn;

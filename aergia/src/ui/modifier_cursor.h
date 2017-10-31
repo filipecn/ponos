@@ -40,6 +40,7 @@ public:
   virtual ~ModifierCursor() {}
 
   void mouse(CameraInterface &camera, ponos::Point2 p) override {
+    UNUSED_VARIABLE(camera);
     ponos::Point3 P = inverse(glGetMVPTransform())(p);
     last = position;
     position = ponos::Point2(P.x, P.y);
@@ -51,6 +52,8 @@ public:
 
   void button(CameraInterface &camera, ponos::Point2 p, int button,
               int action) override {
+    UNUSED_VARIABLE(p);
+    UNUSED_VARIABLE(camera);
     if (action == GLFW_RELEASE) {
       dragging = false;
     } else {
@@ -61,12 +64,16 @@ public:
   }
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
+    UNUSED_VARIABLE(r);
     *t = 0.0000001;
     return true;
   }
 
   virtual void mouseMove() {}
-  virtual void mouseButton(int b, int a) {}
+  virtual void mouseButton(int b, int a) {
+    UNUSED_VARIABLE(a);
+    UNUSED_VARIABLE(b);
+  }
 
   bool dragging;
   ponos::Point2 position;

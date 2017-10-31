@@ -19,34 +19,31 @@ if len(sys.argv) < 2:
 
 if sys.argv[1] == 'docs':
     call(["doxygen Doxyfile"], shell=True)
-    call(["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
-         shell=True)
+    call(
+        ["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
+        shell=True)
     call(["python doxml2md.py doc/xml/all.xml"], shell=True)
     sys.exit(1)
 
 if os.path.exists(build_path) and sys.argv[1] == 'all':
-    shutil.rmtree(build_path)
+    shutil.rmtree(build_path, ignore_errors=True)
 
-first = False
 if not os.path.exists(build_path):
     os.mkdir(build_path)
-    first = True
 
 os.chdir(build_path)
 
-if first:
+if sys.argv[1] == 'all':
     if platform.system() == 'Windows':
-        call(["cmake"] + ['-G'] + ['Visual Studio 14 2015 Win64'] +
+        call(["cmake"] + ['-G'] + ['Visual Studio 15 2017 Win64'] +
              sys.argv[2:] + [cur_path])
     else:
         call(["cmake"] + sys.argv[2:] + [cur_path])
 
 if platform.system() == 'Windows':
     make_result =\
-        call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
-             [r"/p:Configuration=Release"] + ["PONOS.sln"], shell=True)
-# make_result = call([r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"] +
-#                   ["PONOS.sln"], shell=True)
+        call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["PONOS.sln"],
+             shell=True)
 else:
     make_result = call(["make -j8"], shell=True)
 
@@ -57,18 +54,25 @@ if make_result != 0:
 include_path = build_path + '/include'
 lib_path = build_path + '/lib'
 if os.path.exists(include_path):
-    shutil.rmtree(include_path)
+    shutil.rmtree(include_path, ignore_errors=True)
 if os.path.exists(lib_path):
-    shutil.rmtree(lib_path)
-os.mkdir(lib_path)
-os.mkdir(include_path)
+    shutil.rmtree(lib_path, ignore_errors=True)
+if not os.path.exists(include_path):
+    os.mkdir(include_path)
+if not os.path.exists(lib_path):
+    os.mkdir(lib_path)
 
 # , 'poseidon', 'helios']
 libs = ['ponos', 'aergia']
 for l in libs:
+    if not os.path.exists(build_path + '/' + l):
+        continue
+    if not os.path.exists(include_path + '/' + l):
+        os.mkdir(include_path + '/' + l)
     for root, subdirs, files in os.walk(cur_path + '/' + l):
-        print(root)
         path = root.split(l + '/src/')
+        if platform.system() == 'Windows':
+            path = root.split(l + '\\src\\')
         if len(path) > 1:
             dst = include_path + '/' + l + '/' + path[1]
             os.makedirs(dst)
@@ -78,25 +82,9 @@ for l in libs:
                     print('copying ' + root + '/' + f + ' to ' + dst + '/' + f)
     shutil.copyfile(cur_path + '/' + l + '/src/' + l + '.h',
                     include_path + '/' + l + '/' + l + '.h')
-    shutil.copyfile(build_path + '/' + l + '/lib' + l + '.a',
-                    lib_path + '/lib' + l + '.a')
-
-if sys.argv[1] != 'test':
-    sys.exit(0)
-
-# run tests
-result = 0
-test_libs = ['ponos', 'hercules', 'poseidon']
-for l in test_libs:
-    tests = list(filter(lambda x: x.find('Test', 0) == 0,
-                        os.listdir(cur_path + "/" + l + "/tests")))
-    if os.path.isdir(build_path + "/" + l + "/tests") == True:
-        os.chdir(build_path + "/" + l + "/tests")
-        print(["./run_" + l + "_tests"] + [x[:-4] for x in tests])
-        if platform.system() == 'Windows':
-            result = call(["./Debug/run_" + l + "_tests.exe"] +
-                          [x[:-4] for x in tests])
-        else:
-            result = call(["./run_" + l + "_tests"] + [x[:-4] for x in tests])
-
-sys.exit(result)
+    if platform.system() != 'Windows':
+        shutil.copyfile(build_path + '/' + l + '/lib' + l + '.a',
+                        lib_path + '/lib' + l + '.a')
+    else:
+        shutil.copyfile(build_path + '/' + l + '/Release/' + l + '.lib',
+                        lib_path  + l + '.lib')

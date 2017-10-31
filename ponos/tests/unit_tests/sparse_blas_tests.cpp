@@ -55,8 +55,10 @@ TEST(SparseBlas, setM) {
   SparseBlas2d::set(0.0, &m);
   for (size_t r = 0; r < 100; r++) {
     EXPECT_EQ(m.valuesInRowCount(r), 5);
-    m.iterateRow(r,
-                 [&](const double &v, size_t c) { ASSERT_NEAR(v, 0.0, 1e-8); });
+    m.iterateRow(r, [&](const double &v, size_t c) {
+      UNUSED_VARIABLE(c);
+      ASSERT_NEAR(v, 0.0, 1e-8);
+    });
   }
 }
 

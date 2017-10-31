@@ -163,6 +163,7 @@ void RawMesh::clear() {
 }
 
 void fitToBBox(RawMesh *rm, const BBox2D &bbox) {
+  UNUSED_VARIABLE(bbox);
   float ratio = rm->bbox.size(1) / rm->bbox.size(0);
   if (rm->bbox.size(0) > rm->bbox.size(1))
     rm->apply(

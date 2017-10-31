@@ -24,19 +24,15 @@
 
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
-#include "algorithm/triangulate.h"
+#include <algorithm/triangulate.h>
+#include <algorithm>
 
-#ifdef _WIN32
-namespace ponos {
-void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {}
-}
-#else
+#ifdef TRIANGLE_INCLUDED
 typedef int VOID;
 typedef float REAL;
 extern "C" {
 #include <triangle.h>
 }
-#include <algorithm>
 
 namespace ponos {
 
@@ -130,6 +126,7 @@ void report(struct triangulateio *io, int markers, int reporttriangles,
 }
 
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
+  UNUSED_VARIABLE(output);
   {
     FILE *fp = fopen("D.poly", "w+");
     fprintf(fp, "%lu 2 0 1\n", input->vertexDescriptor.count);
@@ -198,7 +195,7 @@ void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
   mid.edgelist = (int *)NULL;       /* Needed only if -e switch used. */
   mid.edgemarkerlist = (int *)NULL; /* Needed if -e used and -B not used. */
 
-  triangulate("pzYAen", &in, &mid, (struct triangulateio *)NULL);
+  // triangulate("pzYAen", &in, &mid, (struct triangulateio *)NULL);
   printf("Initial triangulation:\n\n");
   report(&mid, 1, 1, 1, 1, 1, 0);
   /*
@@ -302,4 +299,13 @@ free(in.pointmarkerlist);
 }
 
 } // ponos namespace
+
+#else
+namespace ponos {
+void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
+  UNUSED_VARIABLE(input);
+  UNUSED_VARIABLE(data);
+  UNUSED_VARIABLE(output);
+}
+}
 #endif

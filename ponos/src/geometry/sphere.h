@@ -75,7 +75,10 @@ public:
   }
   BBox2D boundingBox() const override { return BBox2D(c - r, c + r); }
   void closestIntersection(const Ray2 &r,
-                           CurveRayIntersection *i) const override {}
+                           CurveRayIntersection *i) const override {
+    UNUSED_VARIABLE(r);
+    UNUSED_VARIABLE(i);
+  }
   double signedDistance(const Point2 &p) const override {
     return distance(c, p) - r;
   }
@@ -102,7 +105,10 @@ public:
   }
   BBox boundingBox() const override { return BBox(c - r, c + r); }
   void closestIntersection(const Ray3 &r,
-                           SurfaceRayIntersection *i) const override {}
+                           SurfaceRayIntersection *i) const override {
+    UNUSED_VARIABLE(r);
+    UNUSED_VARIABLE(i);
+  }
   Point3 c;
   float r;
 };
@@ -125,7 +131,10 @@ public:
   }
   BBox boundingBox() const override { return BBox(c - r, c + r); }
   void closestIntersection(const Ray3 &r,
-                           SurfaceRayIntersection *i) const override {}
+                           SurfaceRayIntersection *i) const override {
+    UNUSED_VARIABLE(r);
+    UNUSED_VARIABLE(i);
+  }
   double signedDistance(const Point3 &p) const override {
     return distance(c, p) - r;
   }

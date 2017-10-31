@@ -45,6 +45,7 @@ namespace aergia {
 #endif
 
 inline void glfwError(int id, const char *description) {
+  UNUSED_VARIABLE(id);
   std::cout << description << std::endl;
 }
 

@@ -84,6 +84,7 @@ uint32_t BAH::flattenBAHTree(BAHNode *node, uint32_t *offset) {
 }
 
 int BAH::intersect(const ponos::Ray2 &ray, float *t) {
+  UNUSED_VARIABLE(t);
   if (!nodes.size())
     return false;
   ponos::Transform2D inv = ponos::inverse(mesh->getTransform());
@@ -134,6 +135,8 @@ int BAH::intersect(const ponos::Ray2 &ray, float *t) {
 bool BAH::intersect(const ponos::BBox2D &bounds, const ponos::Ray2 &ray,
                     const ponos::vec2 &invDir,
                     const uint32_t dirIsNeg[2]) const {
+  UNUSED_VARIABLE(invDir);
+  UNUSED_VARIABLE(dirIsNeg);
   float hit1, hit2;
   return ponos::bbox_ray_intersection(bounds, ray, hit1, hit2);
 }

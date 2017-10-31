@@ -18,8 +18,11 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-5
+            - cmake
+            - cmake-data
       env: COMPILER=g++-5
 #    - compiler: clang
 #      addons:
@@ -43,11 +46,10 @@ python:
   - "3.5"
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository ppa:george-edison55/precise-backports --yes
   - sudo apt-get update -qq
   - sudo pip install codecov
-  - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 script:
-  - python build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1 -DTESTPONOS=1 -DTESTHERCULES=1 -DONLYTESTS=1
-  - python build.py test
+  - python build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
 after_success:
   - codecov

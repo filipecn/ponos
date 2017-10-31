@@ -25,6 +25,7 @@ public:
   }
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
+    UNUSED_VARIABLE(t);
     selected = ponos::sphere_ray_intersection(sphere, r);
     return selected;
   }
@@ -46,6 +47,7 @@ public:
   }
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
+    UNUSED_VARIABLE(t);
     float h1, h2;
     selected = ponos::bbox_ray_intersection(bbox, r, h1, h2);
     return selected;
@@ -73,6 +75,7 @@ class BBoxSampler : public aergia::SceneObject {
 public:
   BBoxSampler() {}
   BBoxSampler(const ponos::BBox &b, uint size, aergia::BVH *_bvh) : bbox(b) {
+    UNUSED_VARIABLE(_bvh);
     rng[0] = new ponos::HaltonSequence(2);
     rng[1] = new ponos::HaltonSequence(3);
     rng[2] = new ponos::HaltonSequence(5);
@@ -119,6 +122,8 @@ class StreamLine : public aergia::SceneObject {
 public:
   StreamLine(aergia::BVH *b, ponos::CRegularGrid<ponos::vec3> *g,
              const ponos::Point3 &o) {
+    UNUSED_VARIABLE(g);
+    UNUSED_VARIABLE(b);
     ponos::Point3 cur = o;
     points.emplace_back(cur);
     int i = 0;

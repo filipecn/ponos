@@ -144,6 +144,7 @@ void GraphicsDisplay::processInput() { glfwPollEvents(); }
 int GraphicsDisplay::keyState(int key) { return glfwGetKey(window, key); }
 
 void GraphicsDisplay::error_callback(int error, const char *description) {
+  UNUSED_VARIABLE(error);
   fputs(description, stderr);
 }
 
@@ -167,6 +168,9 @@ void GraphicsDisplay::registerKeyFunc(std::function<void(int, int)> f) {
 
 void GraphicsDisplay::key_callback(GLFWwindow *window, int key, int scancode,
                                    int action, int mods) {
+  UNUSED_VARIABLE(scancode);
+  UNUSED_VARIABLE(mods);
+  UNUSED_VARIABLE(window);
   if (instance_.keyCallback)
     instance_.keyCallback(key, action);
   else
@@ -192,13 +196,18 @@ void GraphicsDisplay::registerButtonFunc(std::function<void(int, int)> f) {
 
 void GraphicsDisplay::button_callback(GLFWwindow *window, int button,
                                       int action, int mods) {
+  UNUSED_VARIABLE(window);
+  UNUSED_VARIABLE(mods);
   if (instance_.buttonCallback)
     instance_.buttonCallback(button, action);
   else
     instance_.buttonFunc(button, action);
 }
 
-void GraphicsDisplay::buttonFunc(int button, int action) {}
+void GraphicsDisplay::buttonFunc(int button, int action) {
+  UNUSED_VARIABLE(button);
+  UNUSED_VARIABLE(action);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE MOTION FUNCTIONS
 ///////////////////////////////////////////////
@@ -211,13 +220,17 @@ void GraphicsDisplay::registerMouseFunc(std::function<void(double, double)> f) {
 }
 
 void GraphicsDisplay::pos_callback(GLFWwindow *window, double x, double y) {
+  UNUSED_VARIABLE(window);
   if (instance_.mouseCallback)
     instance_.mouseCallback(x, y);
   else
     instance_.mouseFunc(x, y);
 }
 
-void GraphicsDisplay::mouseFunc(double x, double y) {}
+void GraphicsDisplay::mouseFunc(double x, double y) {
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE SCROLL FUNCTIONS
 ///////////////////////////////////////////////
@@ -231,19 +244,24 @@ void GraphicsDisplay::registerScrollFunc(
 }
 
 void GraphicsDisplay::scroll_callback(GLFWwindow *window, double x, double y) {
+  UNUSED_VARIABLE(window);
   if (instance_.scrollCallback)
     instance_.scrollCallback(x, y);
   else
     instance_.scrollFunc(x, y);
 }
 
-void GraphicsDisplay::scrollFunc(double x, double y) {}
+void GraphicsDisplay::scrollFunc(double x, double y) {
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicsDisplay::registerResizeFunc(void (*f)(int, int)) {
   this->resizeCallback = f;
 }
 
 void GraphicsDisplay::resize_callback(GLFWwindow *window, int w, int h) {
+  UNUSED_VARIABLE(window);
   instance_.resizeFunc(w, h);
   if (instance_.resizeCallback) {
     instance_.getWindowSize(w, h);
@@ -252,6 +270,8 @@ void GraphicsDisplay::resize_callback(GLFWwindow *window, int w, int h) {
 }
 
 void GraphicsDisplay::resizeFunc(int w, int h) {
+  UNUSED_VARIABLE(w);
+  UNUSED_VARIABLE(h);
   glfwGetFramebufferSize(window, &this->width, &this->height);
 }
 

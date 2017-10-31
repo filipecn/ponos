@@ -19,10 +19,13 @@ void Transform2D::reset() { m.setIdentity(); }
 
 void Transform2D::translate(const Vector2 &d) {
   // TODO update inverse and make a better implementarion
+  UNUSED_VARIABLE(d);
 }
 
 void Transform2D::scale(float x, float y) {
   // TODO update inverse and make a better implementarion
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
 }
 
 void Transform2D::rotate(float angle) {
@@ -80,10 +83,14 @@ void Transform::reset() { m.setIdentity(); }
 
 void Transform::translate(const Vector3 &d) {
   // TODO update inverse and make a better implementarion
+  UNUSED_VARIABLE(d);
 }
 
 void Transform::scale(float x, float y, float z) {
   // TODO update inverse and make a better implementarion
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
+  UNUSED_VARIABLE(z);
 }
 
 bool Transform::swapsHandedness() const {

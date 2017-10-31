@@ -61,6 +61,7 @@ public:
   }
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
+    UNUSED_VARIABLE(t);
     ray = r;
     return false;
   }

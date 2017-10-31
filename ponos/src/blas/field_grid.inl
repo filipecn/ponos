@@ -58,6 +58,8 @@ Vector<T, 2> ScalarGrid2D<T>::gradient(float x, float y) const {
 }
 
 template <typename T> T ScalarGrid2D<T>::laplacian(float x, float y) const {
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
   return 0;
 }
 
