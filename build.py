@@ -85,6 +85,8 @@ for l in libs:
     if platform.system() != 'Windows':
         shutil.copyfile(build_path + '/' + l + '/lib' + l + '.a',
                         lib_path + '/lib' + l + '.a')
+        shutil.copyfile(build_path + '/' + l + '/lib' + l + '_shared.so',
+                        lib_path + '/lib' + l + '_shared.so')
     else:
         shutil.copyfile(build_path + '/' + l + '/Release/' + l + '.lib',
                         lib_path + l + '.lib')

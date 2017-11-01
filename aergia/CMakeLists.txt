@@ -91,6 +91,7 @@ include_directories("${PONOS_SOURCE_DIR}/src")
 include_directories("${AERGIA_SOURCE_DIR}/src")
 
 add_library(aergia ${SOURCES} ${HEADERS})
+add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
 set_target_properties(aergia PROPERTIES
 	OUTPUT_NAME "aergia"
 	FOLDER "AERGIA")

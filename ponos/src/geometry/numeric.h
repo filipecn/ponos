@@ -37,29 +37,57 @@ namespace ponos {
 #define INFINITY FLT_MAX
 #endif
 
+#ifndef PI
 #define PI 3.14159265358979323846f
+#endif
+#ifndef PI_2
 #define PI_2 6.28318530718
+#endif
+#ifndef INV_PI
 #define INV_PI 0.31830988618379067154f
+#endif
+#ifndef INV_TWOPI
 #define INV_TWOPI 0.15915494309189533577f
+#endif
+#ifndef INV_FOURPI
 #define INV_FOURPI 0.07957747154594766788f
+#endif
 
+#ifndef SQR
 #define SQR(A) ((A) * (A))
+#endif
 
+#ifndef CUBE
 #define CUBE(A) ((A) * (A) * (A))
+#endif
 
+#ifndef TO_DEGREES
 #define TO_DEGREES(A) ((A)*180.f / PI)
+#endif
 
+#ifndef TO_RADIANS
 #define TO_RADIANS(A) ((A)*PI / 180.f)
+#endif
 
+#ifndef IS_ZERO
 #define IS_ZERO(A) (fabs(A) < 1e-8)
+#endif
 
+#ifndef IS_EQUAL
 #define IS_EQUAL(A, B) (fabs((A) - (B)) < 1e-6)
+#endif
 
+#ifndef IS_EQUAL_ERROR
 #define IS_EQUAL_ERROR(A, B, C) (fabs((A) - (B)) < C)
+#endif
 
+#ifndef IS_BETWEEN
 #define IS_BETWEEN(A, B, C) ((A) > (B) && (A) < (C))
+#endif
 
+#ifndef IS_BETWEEN_CLOSE
 #define IS_BETWEEN_CLOSE(A, B, C) ((A) >= (B) && (A) <= (C))
+#endif
 
 /** \brief computes the arc-tangent of y/x
  * \param y
