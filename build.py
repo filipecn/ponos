@@ -87,4 +87,4 @@ for l in libs:
                         lib_path + '/lib' + l + '.a')
     else:
         shutil.copyfile(build_path + '/' + l + '/Release/' + l + '.lib',
-                        lib_path  + l + '.lib')
+                        lib_path + l + '.lib')

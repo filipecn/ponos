@@ -26,15 +26,18 @@ find_package(PkgConfig)
 # find_library(VULKAN_LIB NAMES vulkan-1 vulkan)
 # find_package(Vulkan REQUIRED)
 
-if(NOT TRAVIS)
+if(NOT TRAVIS OR NOT WIN32)
 	find_package(OpenGL QUIET REQUIRED)
-	pkg_check_modules (GLFW QUIET REQUIRED glfw3)
-	pkg_check_modules (FREETYPE REQUIRED freetype2)
+	pkg_check_modules (GLFW QUIET glfw3)
+	pkg_check_modules (FREETYPE QUIET freetype2)
   set(TRIANGLE_INCLUDE "")
-endif(NOT TRAVIS)
+endif(NOT TRAVIS OR NOT WIN32)
 
 set(PONOS_INCLUDES "${TRIANGLE_INCLUDE}")
 set(PONOS_LIBRARIES "${TRIANGLE_LIB}")
+
+# set(FREETYPE_LIB "${PROJECT_SOURCE_DIR}/external/lib/libfreetype.a")
+# set(FREETYPE_LIBRARIES ${FREETYPE_LIB} "${PROJECT_SOURCE_DIR}/external/lib/libz.a" "${PROJECT_SOURCE_DIR}/external/lib/libpng16.a" "${PROJECT_SOURCE_DIR}/external/lib/libbz2.a" "${PROJECT_SOURCE_DIR}/external/lib/libharfbuzz.a" "${PROJECT_SOURCE_DIR}/external/lib/libgraphite2.so.3.0.1" png glib-2.0 pcre graphite2)
 
 set(AERGIA_INCLUDES "${FREETYPE_INCLUDE}" "${GLFW_INCLUDE_DIRS}" "${GLEW_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIRS}")
 set(AERGIA_LIBRARIES ${GLFW_STATIC_LIBRARIES} ${VULKAN_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIB} ${FREETYPE_STATIC_LIBRARIES})

@@ -9,3 +9,7 @@
 
 git submodule update --init --recursive
 
+## Aergia Dependencies
+
+- [freetype](https://www.freetype.org/)
+- [GLFW](http://www.glfw.org)
