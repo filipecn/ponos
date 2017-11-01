@@ -9,6 +9,14 @@
 
 git submodule update --init --recursive
 
+first time: python3 build.py all
+
+python3 build.py make
+
+## Dependencies
+
+python3 solve_dependencies.py
+
 ## Aergia Dependencies
 
 - [freetype](https://www.freetype.org/)
