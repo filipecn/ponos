@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <ponos.h>
+#include <ponos/ponos.h>
 
 #ifdef TRIANGLE_INCLUDED
 

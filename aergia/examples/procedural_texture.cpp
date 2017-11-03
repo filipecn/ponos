@@ -1,4 +1,4 @@
-#include <aergia.h>
+#include <aergia/aergia.h>
 
 aergia::SceneApp<> app(800, 800, "");
 aergia::ProceduralTexture *pt;

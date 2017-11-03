@@ -1,4 +1,4 @@
-#include <aergia.h>
+#include <aergia/aergia.h>
 
 int WIDTH = 800, HEIGHT = 800;
 

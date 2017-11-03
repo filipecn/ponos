@@ -1,6 +1,6 @@
-#include <aergia.h>
+#include <aergia/aergia.h>
 #include <iostream>
-#include <ponos.h>
+#include <ponos/ponos.h>
 #include <vector>
 
 int WIDTH = 1600, HEIGHT = 800;

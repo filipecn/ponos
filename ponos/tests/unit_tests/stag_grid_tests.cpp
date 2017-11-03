@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <ponos.h>
+#include <ponos/ponos.h>
 
 using namespace ponos;
 

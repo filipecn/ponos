@@ -36,6 +36,6 @@ add_subdirectory(ponos)
 # add_subdirectory(helios)
 
 if(NOT TRAVIS)
-  add_subdirectory(aergia)
+    add_subdirectory(aergia)
 #	add_subdirectory(poseidon)
 endif(NOT TRAVIS)

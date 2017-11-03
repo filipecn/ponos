@@ -1,25 +1,25 @@
 project(PONOS)
 
 file(GLOB HEADERS
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/algorithms/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/common/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/parallel/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/blas/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/structures/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/algorithms/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/geometry/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/parallel/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/blas/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/structures/*.h
 )
 
 file(GLOB SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/algorithm/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/blas/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/parallel/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/common/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/structures/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/algorithm/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/geometry/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/blas/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/parallel/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ponos/structures/*.cpp
 )
 
-include_directories("${PONOS_SOURCE_DIR}/src")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${PONOS_INCLUDES})
 
 add_library(ponos STATIC ${SOURCES} ${HEADERS})
@@ -32,3 +32,9 @@ target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
 add_subdirectory(examples)
 add_subdirectory(tests/unit_tests)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ponos DESTINATION ${ROOT_PROJECT_PATH}/build/include FILES_MATCHING PATTERN "*.h")
+install(TARGETS ponos ponos_shared
+	LIBRARY DESTINATION ${ROOT_PROJECT_PATH}/build/lib
+	ARCHIVE DESTINATION ${ROOT_PROJECT_PATH}/build/lib
+	)

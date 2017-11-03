@@ -1,5 +1,5 @@
-#include <aergia.h>
-#include <ponos.h>
+#include <aergia/aergia.h>
+#include <ponos/ponos.h>
 
 using namespace aergia;
 

@@ -1,6 +1,6 @@
-#include <ponos.h>
-#include <gtest/gtest.h>
 #include <fstream>
+#include <gtest/gtest.h>
+#include <ponos/ponos.h>
 
 using namespace ponos;
 

@@ -1,4 +1,4 @@
-#include <aergia.h>
+#include <aergia/aergia.h>
 using namespace aergia;
 using namespace ponos;
 

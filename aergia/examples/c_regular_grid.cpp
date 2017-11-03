@@ -1,6 +1,6 @@
-#include <aergia.h>
-#include <ponos.h>
+#include <aergia/aergia.h>
 #include <functional>
+#include <ponos/ponos.h>
 #include <queue>
 
 using namespace aergia;

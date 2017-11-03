@@ -4,3 +4,6 @@ win_build
 build
 external/include
 external/lib
+.idea
+cmake-build-debug
+poseidon/app

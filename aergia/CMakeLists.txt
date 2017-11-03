@@ -2,78 +2,78 @@ project(AERGIA)
 
 set(HEADERS
 	external/ply.h
-	src/colors/color.h
-	src/colors/color_palette.h
-	src/graphics/shader.h
-	src/graphics/shader_manager.h
-	src/helpers/bvh_model.h
-	src/helpers/camera_model.h
-	src/helpers/cartesian_grid.h
-	src/helpers/geometry_drawers.h
-	src/helpers/grid_model.h
-	src/helpers/hemesh_model.h
-	src/helpers/quad_tree_model.h
-	src/helpers/scene_handle.h
-	src/helpers/vector_grid.h
-	src/io/buffer.h
-	src/io/framebuffer.h
-	src/io/graphics_display.h
-  src/io/procedural_texture.h
-	src/io/texture.h
-  src/io/texture_parameters.h
-	src/io/utils.h
-	src/io/viewport_display.h
-	#  src/io/vulkan_application.h
-	# src/io/vulkan_resource.h
-	#  src/io/vulkan_utils.h
-  src/scene/bvh.h
-	src/scene/camera.h
-	src/scene/camera_2d.h
-	src/scene/camera_projection.h
-	src/scene/mesh_utils.h
-	src/scene/quad.h
-	src/scene/scene.h
-	src/scene/scene_object.h
-	src/scene/triangle_mesh.h
-	src/scene/wireframe_mesh.h
-	src/ui/app.h
-	src/ui/interactive_object_interface.h
-	src/ui/modifier_cursor.h
-	src/ui/scene_app.h
-	src/ui/text.h
-	src/ui/trackball.h
-	src/ui/trackball_interface.h
-	src/ui/track_mode.h
-	src/utils/open_gl.h
-	src/utils/win32_utils.h
-	src/aergia.h
+	aergia/colors/color.h
+	aergia/colors/color_palette.h
+	aergia/graphics/shader.h
+	aergia/graphics/shader_manager.h
+	aergia/helpers/bvh_model.h
+	aergia/helpers/camera_model.h
+	aergia/helpers/cartesian_grid.h
+	aergia/helpers/geometry_drawers.h
+	aergia/helpers/grid_model.h
+	aergia/helpers/hemesh_model.h
+	aergia/helpers/quad_tree_model.h
+	aergia/helpers/scene_handle.h
+	aergia/helpers/vector_grid.h
+	aergia/io/buffer.h
+	aergia/io/framebuffer.h
+	aergia/io/graphics_display.h
+  aergia/io/procedural_texture.h
+	aergia/io/texture.h
+  aergia/io/texture_parameters.h
+	aergia/io/utils.h
+	aergia/io/viewport_display.h
+	#  aergia/io/vulkan_application.h
+	# aergia/io/vulkan_resource.h
+	#  aergia/io/vulkan_utils.h
+  aergia/scene/bvh.h
+	aergia/scene/camera.h
+	aergia/scene/camera_2d.h
+	aergia/scene/camera_projection.h
+	aergia/scene/mesh_utils.h
+	aergia/scene/quad.h
+	aergia/scene/scene.h
+	aergia/scene/scene_object.h
+	aergia/scene/triangle_mesh.h
+	aergia/scene/wireframe_mesh.h
+	aergia/ui/app.h
+	aergia/ui/interactive_object_interface.h
+	aergia/ui/modifier_cursor.h
+	aergia/ui/scene_app.h
+	aergia/ui/text.h
+	aergia/ui/trackball.h
+	aergia/ui/trackball_interface.h
+	aergia/ui/track_mode.h
+	aergia/utils/open_gl.h
+	aergia/utils/win32_utils.h
+	aergia/aergia.h
 	)
 
 set(SOURCES
 	external/plyfile.c
-	src/graphics/shader.cpp
-	src/graphics/shader_manager.cpp
-	src/helpers/cartesian_grid.cpp
-	src/helpers/geometry_drawers.cpp
-	src/io/framebuffer.cpp
-	src/io/graphics_display.cpp
-  src/io/procedural_texture.cpp
-	src/io/texture.cpp
-	src/io/utils.cpp
-	src/io/viewport_display.cpp
-	#  src/io/vulkan_application.cpp
-  src/scene/bvh.cpp
-	src/scene/camera.cpp
-	src/scene/camera_2d.cpp
-	src/scene/mesh_utils.cpp
-	src/scene/quad.cpp
-	src/scene/triangle_mesh.cpp
-	src/scene/wireframe_mesh.cpp
-	src/ui/app.cpp
-	src/ui/text.cpp
-	src/ui/trackball_interface.cpp
-	src/utils/open_gl.cpp
-	src/aergia.cpp
+	aergia/graphics/shader.cpp
+	aergia/graphics/shader_manager.cpp
+	aergia/helpers/cartesian_grid.cpp
+	aergia/helpers/geometry_drawers.cpp
+	aergia/io/framebuffer.cpp
+	aergia/io/graphics_display.cpp
+  aergia/io/procedural_texture.cpp
+	aergia/io/texture.cpp
+	aergia/io/utils.cpp
+	aergia/io/viewport_display.cpp
+	#  aergia/io/vulkan_application.cpp
+  aergia/scene/bvh.cpp
+	aergia/scene/camera.cpp
+	aergia/scene/camera_2d.cpp
+	aergia/scene/mesh_utils.cpp
+	aergia/scene/quad.cpp
+	aergia/scene/triangle_mesh.cpp
+	aergia/scene/wireframe_mesh.cpp
+	aergia/ui/app.cpp
+	aergia/ui/text.cpp
+	aergia/ui/trackball_interface.cpp
+	aergia/utils/open_gl.cpp
+	aergia/aergia.cpp
 	)
 
 include_directories("${AERGIA_SOURCE_DIR}/external")
@@ -87,8 +87,8 @@ else(WIN32)
 endif(WIN32)
 
 link_libraries(ponos)
-include_directories("${PONOS_SOURCE_DIR}/src")
-include_directories("${AERGIA_SOURCE_DIR}/src")
+include_directories(${PONOS_SOURCE_DIR})
+include_directories(${AERGIA_SOURCE_DIR})
 
 add_library(aergia ${SOURCES} ${HEADERS})
 add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
@@ -97,3 +97,10 @@ set_target_properties(aergia PROPERTIES
 	FOLDER "AERGIA")
 
 add_subdirectory(examples)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/aergia DESTINATION ${ROOT_PROJECT_PATH}/build/include FILES_MATCHING PATTERN "*.h")
+
+install(TARGETS aergia aergia_shared
+	LIBRARY DESTINATION ${ROOT_PROJECT_PATH}/build/lib
+	ARCHIVE DESTINATION ${ROOT_PROJECT_PATH}/build/lib
+	)

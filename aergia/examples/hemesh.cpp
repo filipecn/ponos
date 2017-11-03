@@ -1,5 +1,5 @@
-#include <aergia.h>
-#include <ponos.h>
+#include <aergia/aergia.h>
+#include <ponos/ponos.h>
 
 aergia::SceneApp<> app(800, 800, "HEMesh Example", false);
 

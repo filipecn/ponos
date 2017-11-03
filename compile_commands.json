@@ -1,0 +1,557 @@
+[
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googlemock/include -I/mnt/windows/Projects/ponos/external/googletest/googlemock -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gmock_main.dir/__/googletest/src/gtest-all.o -c /mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest-all.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googlemock/include -I/mnt/windows/Projects/ponos/external/googletest/googlemock -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gmock_main.dir/src/gmock-all.o -c /mnt/windows/Projects/ponos/external/googletest/googlemock/src/gmock-all.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googlemock/src/gmock-all.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googlemock/include -I/mnt/windows/Projects/ponos/external/googletest/googlemock -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gmock_main.dir/src/gmock_main.o -c /mnt/windows/Projects/ponos/external/googletest/googlemock/src/gmock_main.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googlemock/src/gmock_main.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googlemock/include -I/mnt/windows/Projects/ponos/external/googletest/googlemock -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gmock.dir/__/googletest/src/gtest-all.o -c /mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest-all.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googlemock/include -I/mnt/windows/Projects/ponos/external/googletest/googlemock -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gmock.dir/src/gmock-all.o -c /mnt/windows/Projects/ponos/external/googletest/googlemock/src/gmock-all.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googlemock/src/gmock-all.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock/gtest",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gtest_main.dir/src/gtest_main.o -c /mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest_main.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest_main.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/external/googletest/googlemock/gtest",
+  "command": "/usr/bin/c++   -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/external/googletest/googletest   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC    -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -Wall -Wshadow -Werror -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=gnu++11 -o CMakeFiles/gtest.dir/src/gtest-all.o -c /mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest-all.cc",
+  "file": "/mnt/windows/Projects/ponos/external/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/algorithm/scatter.o -c /mnt/windows/Projects/ponos/ponos/ponos/algorithm/scatter.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/algorithm/scatter.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/algorithm/triangulate.o -c /mnt/windows/Projects/ponos/ponos/ponos/algorithm/triangulate.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/algorithm/triangulate.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/bbox.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/bbox.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/bbox.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/matrix.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/matrix.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/matrix.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/normal.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/normal.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/normal.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/point.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/point.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/point.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/quaternion.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/quaternion.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/quaternion.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/queries.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/queries.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/queries.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/ray.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/ray.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/ray.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/transform.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/transform.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/transform.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/geometry/vector.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/vector.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/vector.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/parallel/parallel.o -c /mnt/windows/Projects/ponos/ponos/ponos/parallel/parallel.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/parallel/parallel.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/common/file.o -c /mnt/windows/Projects/ponos/ponos/ponos/common/file.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/common/file.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/structures/bah.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/bah.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/bah.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/structures/level_set.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/level_set.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/level_set.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/structures/mesh.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Dponos_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/ponos_shared.dir/ponos/structures/raw_mesh.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/raw_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/raw_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/algorithm/scatter.o -c /mnt/windows/Projects/ponos/ponos/ponos/algorithm/scatter.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/algorithm/scatter.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/algorithm/triangulate.o -c /mnt/windows/Projects/ponos/ponos/ponos/algorithm/triangulate.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/algorithm/triangulate.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/bbox.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/bbox.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/bbox.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/matrix.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/matrix.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/matrix.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/normal.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/normal.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/normal.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/point.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/point.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/point.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/quaternion.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/quaternion.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/quaternion.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/queries.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/queries.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/queries.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/ray.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/ray.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/ray.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/transform.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/transform.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/transform.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/geometry/vector.o -c /mnt/windows/Projects/ponos/ponos/ponos/geometry/vector.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/geometry/vector.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/parallel/parallel.o -c /mnt/windows/Projects/ponos/ponos/ponos/parallel/parallel.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/parallel/parallel.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/common/file.o -c /mnt/windows/Projects/ponos/ponos/ponos/common/file.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/common/file.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/structures/bah.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/bah.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/bah.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/structures/level_set.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/level_set.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/level_set.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/structures/mesh.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos.dir/ponos/structures/raw_mesh.o -c /mnt/windows/Projects/ponos/ponos/ponos/structures/raw_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/ponos/structures/raw_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/elliptic.dir/prova.o -c /mnt/windows/Projects/ponos/ponos/examples/prova.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/examples/prova.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/c_regular_grid_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/c_regular_grid_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/c_regular_grid_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/custom_matrix.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/custom_matrix.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/custom_matrix.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/direct_solvers.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/direct_solvers.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/direct_solvers.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/main.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/main.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/main.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/rbf_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/rbf_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/rbf_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/sparse_blas_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_blas_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_blas_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/sparse_matrix_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_matrix_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_matrix_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/sparse_solvers_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_solvers_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_solvers_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/sparse_vector_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_vector_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/sparse_vector_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/stag_grid_tests.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/stag_grid_tests.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/stag_grid_tests.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/tetrahedron_mesh.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/tetrahedron_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/tetrahedron_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/ponos/tests/unit_tests   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/ponos_unit_tests.dir/triangulate.o -c /mnt/windows/Projects/ponos/ponos/tests/unit_tests/triangulate.cpp",
+  "file": "/mnt/windows/Projects/ponos/ponos/tests/unit_tests/triangulate.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/cc -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia  -fPIC   -o CMakeFiles/aergia_shared.dir/external/plyfile.c.o   -c /mnt/windows/Projects/ponos/aergia/external/plyfile.c",
+  "file": "/mnt/windows/Projects/ponos/aergia/external/plyfile.c"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/graphics/shader.o -c /mnt/windows/Projects/ponos/aergia/aergia/graphics/shader.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/graphics/shader.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/graphics/shader_manager.o -c /mnt/windows/Projects/ponos/aergia/aergia/graphics/shader_manager.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/graphics/shader_manager.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/helpers/cartesian_grid.o -c /mnt/windows/Projects/ponos/aergia/aergia/helpers/cartesian_grid.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/helpers/cartesian_grid.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/helpers/geometry_drawers.o -c /mnt/windows/Projects/ponos/aergia/aergia/helpers/geometry_drawers.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/helpers/geometry_drawers.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/io/framebuffer.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/framebuffer.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/framebuffer.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/io/graphics_display.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/graphics_display.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/graphics_display.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/io/procedural_texture.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/procedural_texture.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/procedural_texture.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/io/texture.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/texture.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/texture.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/io/utils.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/utils.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/utils.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/io/viewport_display.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/viewport_display.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/viewport_display.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/bvh.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/bvh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/bvh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/camera.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/camera.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/camera.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/camera_2d.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/camera_2d.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/camera_2d.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/mesh_utils.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/mesh_utils.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/mesh_utils.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/quad.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/quad.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/quad.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/triangle_mesh.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/triangle_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/triangle_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/scene/wireframe_mesh.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/wireframe_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/wireframe_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/ui/app.o -c /mnt/windows/Projects/ponos/aergia/aergia/ui/app.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/ui/app.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/ui/text.o -c /mnt/windows/Projects/ponos/aergia/aergia/ui/text.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/ui/text.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/ui/trackball_interface.o -c /mnt/windows/Projects/ponos/aergia/aergia/ui/trackball_interface.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/ui/trackball_interface.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/utils/open_gl.o -c /mnt/windows/Projects/ponos/aergia/aergia/utils/open_gl.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/utils/open_gl.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -Daergia_shared_EXPORTS -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC -fPIC   -std=gnu++11 -o CMakeFiles/aergia_shared.dir/aergia/aergia.o -c /mnt/windows/Projects/ponos/aergia/aergia/aergia.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/aergia.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/cc -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia    -o CMakeFiles/aergia.dir/external/plyfile.c.o   -c /mnt/windows/Projects/ponos/aergia/external/plyfile.c",
+  "file": "/mnt/windows/Projects/ponos/aergia/external/plyfile.c"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/graphics/shader.o -c /mnt/windows/Projects/ponos/aergia/aergia/graphics/shader.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/graphics/shader.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/graphics/shader_manager.o -c /mnt/windows/Projects/ponos/aergia/aergia/graphics/shader_manager.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/graphics/shader_manager.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/helpers/cartesian_grid.o -c /mnt/windows/Projects/ponos/aergia/aergia/helpers/cartesian_grid.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/helpers/cartesian_grid.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/helpers/geometry_drawers.o -c /mnt/windows/Projects/ponos/aergia/aergia/helpers/geometry_drawers.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/helpers/geometry_drawers.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/io/framebuffer.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/framebuffer.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/framebuffer.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/io/graphics_display.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/graphics_display.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/graphics_display.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/io/procedural_texture.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/procedural_texture.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/procedural_texture.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/io/texture.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/texture.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/texture.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/io/utils.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/utils.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/utils.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/io/viewport_display.o -c /mnt/windows/Projects/ponos/aergia/aergia/io/viewport_display.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/io/viewport_display.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/bvh.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/bvh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/bvh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/camera.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/camera.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/camera.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/camera_2d.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/camera_2d.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/camera_2d.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/mesh_utils.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/mesh_utils.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/mesh_utils.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/quad.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/quad.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/quad.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/triangle_mesh.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/triangle_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/triangle_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/scene/wireframe_mesh.o -c /mnt/windows/Projects/ponos/aergia/aergia/scene/wireframe_mesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/scene/wireframe_mesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/ui/app.o -c /mnt/windows/Projects/ponos/aergia/aergia/ui/app.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/ui/app.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/ui/text.o -c /mnt/windows/Projects/ponos/aergia/aergia/ui/text.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/ui/text.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/ui/trackball_interface.o -c /mnt/windows/Projects/ponos/aergia/aergia/ui/trackball_interface.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/ui/trackball_interface.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/utils/open_gl.o -c /mnt/windows/Projects/ponos/aergia/aergia/utils/open_gl.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/utils/open_gl.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/aergia.dir/aergia/aergia.o -c /mnt/windows/Projects/ponos/aergia/aergia/aergia.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/aergia/aergia.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/vector_grid.dir/vector_grid_example.o -c /mnt/windows/Projects/ponos/aergia/examples/vector_grid_example.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/vector_grid_example.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/geometry_queries.dir/geometry_queries.o -c /mnt/windows/Projects/ponos/aergia/examples/geometry_queries.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/geometry_queries.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/hello_aergia_test.dir/hello_aergia.o -c /mnt/windows/Projects/ponos/aergia/examples/hello_aergia.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/hello_aergia.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/scene_app.dir/scene_app.o -c /mnt/windows/Projects/ponos/aergia/examples/scene_app.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/scene_app.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/stream_lines.dir/stream_lines.o -c /mnt/windows/Projects/ponos/aergia/examples/stream_lines.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/stream_lines.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/hemesh_example.dir/hemesh.o -c /mnt/windows/Projects/ponos/aergia/examples/hemesh.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/hemesh.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/hello_3d.dir/hello3D.o -c /mnt/windows/Projects/ponos/aergia/examples/hello3D.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/hello3D.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/procedural_texture.dir/procedural_texture.o -c /mnt/windows/Projects/ponos/aergia/examples/procedural_texture.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/procedural_texture.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/z_grid.dir/zgrid_example.o -c /mnt/windows/Projects/ponos/aergia/examples/zgrid_example.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/zgrid_example.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/quad_tree.dir/quad_tree.o -c /mnt/windows/Projects/ponos/aergia/examples/quad_tree.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/quad_tree.cpp"
+},
+{
+  "directory": "/mnt/windows/Projects/ponos/aergia/examples",
+  "command": "/usr/bin/c++  -DOPENVDB_3_ABI_COMPATIBLE -I/mnt/windows/Projects/ponos/external/googletest/googletest/include -I/mnt/windows/Projects/ponos/aergia/external -I/usr/include/freetype2 -I/mnt/windows/Projects/ponos/external/include -I/mnt/windows/Projects/ponos/ponos -I/mnt/windows/Projects/ponos/aergia   -std=c++11 -O3 -Wall -Wextra -Werror --coverage -fPIC   -std=gnu++11 -o CMakeFiles/c_regular_grid_example.dir/c_regular_grid.o -c /mnt/windows/Projects/ponos/aergia/examples/c_regular_grid.cpp",
+  "file": "/mnt/windows/Projects/ponos/aergia/examples/c_regular_grid.cpp"
+}
+]

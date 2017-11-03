@@ -1,6 +1,6 @@
-#include <aergia.h>
+#include <aergia/aergia.h>
 #include <iostream>
-#include <ponos.h>
+#include <ponos/ponos.h>
 #include <vector>
 
 aergia::GraphicsDisplay &gd = aergia::GraphicsDisplay::instance();
