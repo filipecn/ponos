@@ -98,7 +98,9 @@ set_target_properties(aergia PROPERTIES
 
 add_subdirectory(examples)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/aergia DESTINATION ${ROOT_PROJECT_PATH}/build/include FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/aergia
+	DESTINATION ${ROOT_PROJECT_PATH}/build/include
+	FILES_MATCHING REGEX "(.*\\.[inl|h])")
 
 install(TARGETS aergia aergia_shared
 	LIBRARY DESTINATION ${ROOT_PROJECT_PATH}/build/lib

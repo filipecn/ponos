@@ -7,3 +7,4 @@ external/lib
 .idea
 cmake-build-debug
 poseidon/app
+compile_commands.json
