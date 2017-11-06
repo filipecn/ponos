@@ -44,7 +44,8 @@ if platform.system() == 'Windows':
              shell=True)
 else:
     make_result = call(["make -j8"], shell=True)
-    call(["make install"], shell=True)
+    if "-DTRAVIS=1" not in sys.argv:
+        call(["make install"], shell=True)
 
 if make_result != 0:
     sys.exit(1)
