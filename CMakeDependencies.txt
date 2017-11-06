@@ -30,6 +30,7 @@ if(NOT TRAVIS)
   find_package(OpenGL QUIET REQUIRED)
   pkg_check_modules (GLFW QUIET glfw3)
   pkg_check_modules (FREETYPE QUIET freetype2)
+else(NOT TRAVIS)
   set(TRIANGLE_INCLUDE "")
 endif(NOT TRAVIS)
 
