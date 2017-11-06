@@ -47,14 +47,17 @@ public:
                      ponos::Point2 p) {
     UNUSED_VARIABLE(camera);
     UNUSED_VARIABLE(tb);
+    cameraTransform_ = camera.getModelTransform();
     start_ = p;
     dragging_ = true;
   }
-  virtual void update(Trackball &tb, Camera &camera, ponos::Point2 p) = 0;
-  virtual void stop(Trackball &tb, Camera &camera, ponos::Point2 p) {
+  virtual void update(Trackball &tb, CameraInterface &camera,
+                      ponos::Point2 p) = 0;
+  virtual void stop(Trackball &tb, CameraInterface &camera, ponos::Point2 p) {
     UNUSED_VARIABLE(p);
     UNUSED_VARIABLE(camera);
     dragging_ = false;
+    camera.applyTransform(tb.transform * cameraTransform_);
     tb.transform = ponos::Transform();
   }
   virtual void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) {
@@ -64,7 +67,8 @@ public:
   }
 
 protected:
-  ponos::Point3 hitViewPlane(Trackball &tb, Camera &camera, ponos::Point2 p) {
+  ponos::Point3 hitViewPlane(Trackball &tb, CameraInterface &camera,
+                             ponos::Point2 p) {
     ponos::Line l = camera.viewLineFromWindow(p);
     ponos::Plane vp = camera.viewPlane(tb.center);
     ponos::Point3 hp;
@@ -74,21 +78,24 @@ protected:
 
   bool dragging_;
   ponos::Point2 start_;
+  ponos::Transform cameraTransform_;
 };
 
 class ScaleMode : public TrackMode {
 public:
   ScaleMode() : TrackMode() {}
   ~ScaleMode() {}
-  void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera,
+              ponos::Point2 p) override {
     UNUSED_VARIABLE(tb);
     UNUSED_VARIABLE(camera);
     UNUSED_VARIABLE(p);
   }
   void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) override {
     UNUSED_VARIABLE(camera);
-    float scale = (d.y > 0.f) ? 1.1f : 0.9f;
+    float scale = (d.y < 0.f) ? 1.1f : 0.9f;
     tb.transform = tb.transform * ponos::scale(scale, scale, scale);
+    camera.applyTransform(tb.transform * this->cameraTransform_);
   }
 };
 
@@ -99,13 +106,16 @@ public:
 
   void draw(Trackball tb) { UNUSED_VARIABLE(tb); }
 
-  void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera,
+              ponos::Point2 p) override {
     if (!dragging_)
       return;
     ponos::Point3 a = hitViewPlane(tb, camera, start_);
     ponos::Point3 b = hitViewPlane(tb, camera, p);
-    tb.transform = ponos::translate(b - a);
+    camera.setPosition(camera.getPosition() - (b - a));
+    // tb.transform = tb.transform * ponos::translate(b - a);
     start_ = p;
+    // camera.applyTransform(this->cameraTransform_ * tb.transform);
   }
 };
 
@@ -114,12 +124,14 @@ public:
   ZMode() : TrackMode() {}
   ~ZMode() {}
 
-  void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera,
+              ponos::Point2 p) override {
     if (!dragging_)
       return;
     ponos::Point3 a = hitViewPlane(tb, camera, start_);
     ponos::Point3 b = hitViewPlane(tb, camera, p);
-    ponos::vec3 dir = ponos::normalize(camera.getTarget() - camera.getPos());
+    ponos::vec3 dir =
+        ponos::normalize(camera.getTarget() - camera.getPosition());
     if (p.y - start_.y < 0.f)
       dir *= -1.f;
     tb.transform = ponos::translate(dir * ponos::distance(a, b));
@@ -136,7 +148,8 @@ public:
     glColor4f(0, 0, 0, 0.5);
     draw_sphere(s);
   }
-  void update(Trackball &tb, Camera &camera, ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera,
+              ponos::Point2 p) override {
     if (!dragging_ || p == start_)
       return;
     // std::cout << start_;
@@ -166,7 +179,8 @@ public:
   }
 
 private:
-  ponos::Point3 hitSpherePlane(Trackball &tb, Camera &camera, ponos::Point2 p) {
+  ponos::Point3 hitSpherePlane(Trackball &tb, CameraInterface &camera,
+                               ponos::Point2 p) {
     ponos::Line l = camera.viewLineFromWindow(p);
     ponos::Plane vp = camera.viewPlane(tb.center);
 
@@ -178,15 +192,15 @@ private:
     ponos::Point3 hs, hs1, hs2;
     bool resSp = sphere_line_intersection(s, l, hs1, hs2);
     if (resSp) {
-      if (ponos::distance(camera.getPos(), hs1) <
-          ponos::distance(camera.getPos(), hs2))
+      if (ponos::distance(camera.getPosition(), hs1) <
+          ponos::distance(camera.getPosition(), hs2))
         hs = hs1;
       else
         hs = hs2;
       return hs;
     }
     ponos::Point3 hh;
-    bool resHp = hitHyper(tb, camera.getPos(), vp, hp, hh);
+    bool resHp = hitHyper(tb, camera.getPosition(), vp, hp, hh);
     if ((!resSp && !resHp))
       return l.closestPoint(tb.center);
     if ((resSp && !resHp))
@@ -194,7 +208,7 @@ private:
     if ((!resSp && resHp))
       return hh;
     float angleDeg = TO_DEGREES(
-        asin(ponos::dot(ponos::normalize(camera.getPos() - tb.center),
+        asin(ponos::dot(ponos::normalize(camera.getPosition() - tb.center),
                         ponos::normalize(hs - tb.center))));
     if (angleDeg < 45)
       return hs;

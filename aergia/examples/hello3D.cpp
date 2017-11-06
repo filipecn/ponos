@@ -58,7 +58,7 @@ int main() {
   worldview.camera.reset(new aergia::Camera());
   worldview.camera->resize(WIDTH / 2, HEIGHT);
   static_cast<aergia::Camera *>(worldview.camera.get())
-      ->setPos(ponos::Point3(40.f, 10.f, 10.f));
+      ->setPosition(ponos::Point3(40.f, 10.f, 10.f));
   worldview.renderCallback = renderWorldView;
   // set grid
   grid.setDimension(0, -5, 5);

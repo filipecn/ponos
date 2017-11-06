@@ -59,7 +59,7 @@ void Camera::setZoom(float z) {
   update();
 }
 
-void Camera::setPos(Point3 p) {
+void Camera::setPosition(Point3 p) {
   pos = p;
   update();
 }

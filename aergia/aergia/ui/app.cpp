@@ -27,6 +27,13 @@ size_t App::addViewport2D(uint x, uint y, uint w, uint h) {
   viewports[viewports.size() - 1].camera.reset(new aergia::Camera2D());
   static_cast<aergia::Camera2D *>(viewports[viewports.size() - 1].camera.get())
       ->resize(w, h);
+  if (!scrollCallback)
+    scrollCallback = [&](double dx, double dy) {
+      UNUSED_VARIABLE(dx);
+      static float z = 1.f;
+      z *= (dy < 0.f) ? 0.9f : 1.1f;
+      this->getCamera<Camera2D>(0)->setZoom(z);
+    };
   return viewports.size() - 1;
 }
 

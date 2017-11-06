@@ -25,8 +25,10 @@
 #ifndef AERGIA_UI_TEXT_H
 #define AERGIA_UI_TEXT_H
 
+#ifdef FREETYPE_INCLUDED
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#endif
 #include <map>
 
 #include <aergia/io/graphics_display.h>
@@ -69,8 +71,10 @@ private:
     ponos::ivec2 bearing;     //!< offset from baseline to left/top of glyph
     GLuint advance;           //!< offset to advance to next glyph
   };
+#ifdef FREETYPE_INCLUDED
   FT_Library ft;
   FT_Face ftFace;
+#endif
   std::map<GLchar, Character> characters;
   Quad quad;
 };

@@ -39,10 +39,20 @@ public:
   void setZoom(float z);
   void setPos(ponos::vec2 p);
   ponos::vec2 getPos() const { return pos; }
+  ponos::Point3 getPosition() const override {
+    return ponos::Point3(pos.x, pos.y, 0);
+  }
+  void setPosition(ponos::Point3 p) override;
+  ponos::Point3 getTarget() const override {
+    return ponos::Point3(pos.x, pos.y, 0);
+  }
   void update();
   ponos::Transform getTransform() const override;
+  ponos::Transform getModelTransform() const override;
   ponos::Ray3 pickRay(ponos::Point2 p) const override;
   ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
+  void applyTransform(const ponos::Transform &t) override;
+  ponos::Plane viewPlane(ponos::Point3 p) const override;
 
 private:
   float ratio;

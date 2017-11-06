@@ -90,6 +90,10 @@ link_libraries(ponos)
 include_directories(${PONOS_SOURCE_DIR})
 include_directories(${AERGIA_SOURCE_DIR})
 
+if (NOT("${FREETYPE_INCLUDE}" STREQUAL "" OR "${FREETYPE_LIB}" STREQUAL ""))
+	add_definitions(-DFREETYPE_INCLUDED)
+endif (NOT("${FREETYPE_INCLUDE}" STREQUAL "" OR "${FREETYPE_LIB}" STREQUAL ""))
+
 add_library(aergia ${SOURCES} ${HEADERS})
 add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
 set_target_properties(aergia PROPERTIES

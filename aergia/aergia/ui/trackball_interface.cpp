@@ -31,7 +31,7 @@ void TrackballInterface::draw() { modes[curMode]->draw(tb); }
 void TrackballInterface::buttonRelease(CameraInterface &camera, int button,
                                        ponos::Point2 p) {
   UNUSED_VARIABLE(button);
-  modes[curMode]->stop(tb, static_cast<Camera &>(camera), p);
+  modes[curMode]->stop(tb, camera, p);
 }
 
 void TrackballInterface::buttonPress(const CameraInterface &camera, int button,
@@ -51,7 +51,7 @@ void TrackballInterface::buttonPress(const CameraInterface &camera, int button,
 }
 
 void TrackballInterface::mouseMove(CameraInterface &camera, ponos::Point2 p) {
-  modes[curMode]->update(tb, static_cast<Camera &>(camera), p);
+  modes[curMode]->update(tb, camera, p);
 }
 
 void TrackballInterface::mouseScroll(CameraInterface &camera, ponos::vec2 d) {

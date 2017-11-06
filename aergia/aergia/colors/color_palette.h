@@ -45,7 +45,7 @@ public:
       colors.emplace_back(r, g, b);
     }
   }
-  Color operator()(float t, float alpha = -1) {
+  Color operator()(float t, float alpha = -1) const {
     float ind = ponos::lerp(t, 0.f, static_cast<float>(colors.size()));
     float r = ind - ponos::floor2Int(ind);
     Color c;

@@ -1,10 +1,9 @@
 #ifndef AERGIA_UTILS_OPEN_GL_H
 #define AERGIA_UTILS_OPEN_GL_H
 
+#define GL_DEBUG
+
 #include <GL/glew.h>
-
-#include <GL/freeglut.h>
-
 //#include <vulkan/vulkan.h>
 #define GLFW_INCLUDE_GLU
 //#define GLFW_INCLUDE_VULKAN
@@ -13,8 +12,6 @@
 #include <ponos/ponos.h>
 
 #include <aergia/colors/color.h>
-
-#define GL_DEBUG
 
 #define GL_DRAW_POINTS(SIZE, CODE)                                             \
   glPointSize(SIZE);                                                           \

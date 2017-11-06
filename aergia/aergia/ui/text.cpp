@@ -27,6 +27,7 @@
 namespace aergia {
 
 Text::Text(const char *font) {
+#ifdef FREETYPE_INCLUDED
   if (FT_Init_FreeType(&ft))
     std::cout << "ERROR::FREETYPE: Could not init FreeType Library"
               << std::endl;
@@ -84,9 +85,13 @@ Text::Text(const char *font) {
           "}")));
   quad.shader->addVertexAttribute("position");
   quad.shader->addVertexAttribute("texcoord");
+#else
+  UNUSED_VARIABLE(font);
+#endif
 }
 void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
                   aergia::Color c) {
+#ifdef FREETYPE_INCLUDED
   quad.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
   quad.shader->setUniform(
       "projection", ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
@@ -108,6 +113,13 @@ void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   }
   glBindTexture(GL_TEXTURE_2D, 0);
   quad.shader->end();
+#else
+  UNUSED_VARIABLE(s);
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
+  UNUSED_VARIABLE(scale);
+  UNUSED_VARIABLE(c);
+#endif
 }
 
 void Text::render(std::string s, const ponos::Point3 &p, GLfloat scale,

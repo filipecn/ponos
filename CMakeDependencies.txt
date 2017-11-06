@@ -27,10 +27,10 @@ find_package(PkgConfig)
 # find_package(Vulkan REQUIRED)
 
 if(NOT TRAVIS)
-	find_package(OpenGL QUIET REQUIRED)
-	pkg_check_modules (GLFW QUIET glfw3)
-	pkg_check_modules (FREETYPE QUIET freetype2)
-    set(TRIANGLE_INCLUDE "")
+  find_package(OpenGL QUIET REQUIRED)
+  pkg_check_modules (GLFW QUIET glfw3)
+  pkg_check_modules (FREETYPE QUIET freetype2)
+  set(TRIANGLE_INCLUDE "")
 endif(NOT TRAVIS)
 
 set(PONOS_INCLUDES "${TRIANGLE_INCLUDE}")
@@ -38,14 +38,14 @@ set(PONOS_LIBRARIES "${TRIANGLE_LIB}")
 
 if(MINGW)
     set(GLFW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLFW/libglfw3.a")
-	set(GLEW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLEW/x64/libglew32d.dll.a")
+    set(GLEW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLEW/x64/libglew32d.dll.a")
+    set(FREETYPE_LIB "C:/Program Files (x86)/GnuWin32/lib/libfreetype.dll.a")
 endif(MINGW)
 
-# set(FREETYPE_LIB "${PROJECT_SOURCE_DIR}/external/lib/libfreetype.a")
 # set(FREETYPE_LIBRARIES ${FREETYPE_LIB} "${PROJECT_SOURCE_DIR}/external/lib/libz.a" "${PROJECT_SOURCE_DIR}/external/lib/libpng16.a" "${PROJECT_SOURCE_DIR}/external/lib/libbz2.a" "${PROJECT_SOURCE_DIR}/external/lib/libharfbuzz.a" "${PROJECT_SOURCE_DIR}/external/lib/libgraphite2.so.3.0.1" png glib-2.0 pcre graphite2)
 
 set(AERGIA_INCLUDES "${FREETYPE_INCLUDE}" "${GLFW_INCLUDE_DIRS}" "${GLEW_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIRS}")
-set(AERGIA_LIBRARIES ${GLFW_LIB} ${GLFW_STATIC_LIBRARIES} ${VULKAN_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIB} ${FREETYPE_STATIC_LIBRARIES})
+set(AERGIA_LIBRARIES ${GLFW_LIB} ${GLFW_STATIC_LIBRARIES} ${VULKAN_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIB} ${FREETYPE_LIB} ${FREETYPE_STATIC_LIBRARIES})
 
 set(POSEIDON_INCLUDES "${CBLAS_INCLUDE_DIR}" "${OPENVDB_INCLUDE_DIR}" "${TBB_INCLUDE_DIR}")
 set(POSEIDON_LIBRARIES ${TBB_LIB} ${OPENVDB_LIB})
