@@ -31,8 +31,11 @@ Text::Text(const char *font) {
   if (FT_Init_FreeType(&ft))
     std::cout << "ERROR::FREETYPE: Could not init FreeType Library"
               << std::endl;
-  if (FT_New_Face(ft, font, 0, &ftFace))
-    std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+  if (FT_New_Face(ft, font, 0, &ftFace)) {
+    std::cout << "ERROR::FREETYPE: Failed to load font "
+              << FT_New_Face(ft, font, 0, &ftFace) << std::endl;
+    ;
+  }
   FT_Set_Pixel_Sizes(ftFace, 0, 48);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
   for (GLubyte c = 0; c < 128; c++) {
@@ -119,6 +122,7 @@ void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   UNUSED_VARIABLE(y);
   UNUSED_VARIABLE(scale);
   UNUSED_VARIABLE(c);
+  std::cerr << "FREETYPE not included!\n";
 #endif
 }
 
