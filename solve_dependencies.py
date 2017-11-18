@@ -6,65 +6,83 @@ from subprocess import call
 import platform
 import urllib.request
 import sys
+mingw_make = 'C:/MinGW/bin/mingw32-make.exe'
+msversion = "Unix Makefiles"
+if platform.system() == 'Windows' or 'mingw' in sys.argv:
+    msversion = "MinGW Makefiles"
+if 'msvc' in sys.argv:
+    msversion = "Visual Studio 15 2017 Win64"
 
-msversion = "Visual Studio 15 2017 Win64"
+build_root_path = os.getcwd() + '/build/external'
+if platform.system() == 'Windows':
+    build_root_path = os.getcwd() + '/wbuild/external'
+src_root_path = os.getcwd() + "/external"
+if os.path.exists(build_root_path + '/include'):
+    shutil.rmtree(build_root_path + '/include')
+if os.path.exists(build_root_path + '/lib'):
+    shutil.rmtree(build_root_path + '/lib')
+os.mkdir(build_root_path + '/include')
+os.mkdir(build_root_path + '/lib')
 
-root_path = os.getcwd() + "/external"
-if os.path.exists(root_path + '/include'):
-    shutil.rmtree(root_path + '/include')
-if os.path.exists(root_path + '/lib'):
-    shutil.rmtree(root_path + '/lib')
-os.mkdir(root_path + '/include')
-os.mkdir(root_path + '/lib')
 if platform.system() != 'Windows':
     # TRIANGLE #################################################################
-    os.chdir(root_path)
-    build_path = root_path + '/triangle_build'
+    src_path = src_root_path + '/triangle'
+    build_path = build_root_path + '/triangle_build'
     if os.path.exists(build_path):
         shutil.rmtree(build_path)
     os.mkdir(build_path)
     os.chdir(build_path)
-    call(['cmake'] + ['../triangle'])
+    call(['cmake'] + [src_path] + ['-G'] + [msversion])
     call(['make'])
-    os.chdir(root_path)
-    shutil.move(build_path + '/libtriangle.a', 'lib')
-    shutil.copyfile('triangle/triangle.h', 'include/triangle.h')
-    shutil.rmtree('triangle_build')
+    # os.chdir(root_path)
+    # shutil.move(build_path + '/libtriangle.a', 'lib')
+    # shutil.copyfile('triangle/triangle.h', 'include/triangle.h')
+    # shutil.rmtree('triangle_build')
 # TINYOBJ ######################################################################
-os.chdir(root_path)
-build_path = root_path + '/tinyobj_build'
+src_path = src_root_path + '/tinyobj'
+build_path = build_root_path + '/tinyobj_build'
 if os.path.exists(build_path):
     shutil.rmtree(build_path)
 os.mkdir(build_path)
 os.chdir(build_path)
+call(['cmake'] + [src_path] + ['-G'] + [msversion])
 if platform.system() != 'Windows':
-    call(['cmake'] + ['../tinyobj'])
     call(['make'])
-    os.chdir(root_path)
-    shutil.move(build_path + '/libtinyobjloader.a', 'lib')
-    shutil.copyfile('tinyobj/tiny_obj_loader.h', 'include/tiny_obj_loader.h')
-    shutil.rmtree('tinyobj_build')
-else:
-    call(['cmake'] + ['../tinyobj'] + ['-G'] + [msversion])
+    shutil.move(build_path + '/libtinyobjloader.a', build_root_path + '/lib')
+    shutil.copyfile(src_path + 'tinyobj/tiny_obj_loader.h', build_root_path + 'include/tiny_obj_loader.h')
+    # shutil.rmtree('tinyobj_build')
 
 if 'glfw3' in sys.argv or 'all' in sys.argv:
     # GLFW3 ####################################################################
-    os.chdir(root_path)
-    call(['git'] + ['clone'] + ['https://github.com/glfw/glfw'])
-    os.chdir(root_path + '/glfw')
+    src_path = src_root_path + '/glfw'
+    build_path = build_root_path + '/glfw_build'
+    if not os.path.exists(src_path):
+        os.chdir(src_root_path)
+        call(['git'] + ['clone'] + ['https://github.com/glfw/glfw'])
+    if os.path.exists(build_path):
+        shutil.rmtree(build_path)
+    os.mkdir(build_path)
+    os.chdir(build_path)
+    call(['cmake'] + [src_path] + ['-G'] + [msversion] + ['-DBUILD_SHARED_LIBS=ON'])
     if platform.system() != 'Windows':
-        call(['cmake'] + ['-G'] + ['Unix Makefiles'])
         call(['make'])
-        shutil.move(root_path + '/glfw/src/libglfw3.a', root_path + '/lib')
+        shutil.move(build_path + '/src/libglfw3.a', build_root_path + '/lib')
+        lib_path = build_root_path + '/lib/libglfw3.a'
     else:
-        call(['cmake'] + ['-G'] + [msversion])
-        call(
-            [r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["glfw.sln"],
-            shell=True)
-        shutil.move(root_path + '/glfw/src/Release/glfw3.lib',
-                    root_path + '/lib')
-    shutil.copytree(root_path + '/glfw/include/GLFW',
-                    root_path + '/include/GLFW')
+        if msversion == 'MinGW Makefiles':
+            call([mingw_make], shell=True)
+            shutil.move(build_path + '/src/libglfw3dll.a',
+                        build_root_path + '/lib')
+            lib_path = build_root_path + '/lib/libglfw3dll.a'
+        else:
+            call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["glfw.sln"], shell=True)
+    shutil.copytree(src_path + '/include/GLFW',
+                    build_root_path + '/include/GLFW')
+    with open(build_root_path + '/dependencies.txt', 'a') as file:
+        file.write('SET(GLFW_LIB ' + lib_path.replace('\\','/') + ')' + '\n')
+        file.write('SET(GLFW_INCLUDE_DIRS ' + build_root_path.replace('\\','/') + '/include)' + '\n')
+
+exit(0)
 if 'freetype' in sys.argv or 'all' in sys.argv:
     # GRAPHITE #################################################################
     os.chdir(root_path)

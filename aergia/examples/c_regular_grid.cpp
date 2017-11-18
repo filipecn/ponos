@@ -65,7 +65,7 @@ void render() {
 
 int main() {
 #ifdef WIN32
-  WIN32CONSOLE();
+//  WIN32CONSOLE();
 #endif
   mask.set(ponos::ivec2(10));
   mask.border = 0;

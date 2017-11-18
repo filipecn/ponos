@@ -1,7 +1,7 @@
 #ifndef AERGIA_UTILS_WIN32_UTILS_H
 #define AERGIA_UTILS_WIN32_UTILS_H
 
-#ifdef _WIN32
+#if !defined(__GNUC__) && !defined(__MINGW32__)
 
 #define WIN32CONSOLE()                                                         \
   /* Open a new console window */                                              \

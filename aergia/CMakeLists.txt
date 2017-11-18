@@ -95,18 +95,26 @@ if (NOT("${FREETYPE_INCLUDE}" STREQUAL ""))
 endif (NOT("${FREETYPE_INCLUDE}" STREQUAL ""))
 
 add_library(aergia ${SOURCES} ${HEADERS})
-add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
+if(NOT WIN32)
+  add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
+endif(NOT WIN32)
 set_target_properties(aergia PROPERTIES
 	OUTPUT_NAME "aergia"
 	FOLDER "AERGIA")
 
 add_subdirectory(examples)
 
+if(WIN32)
+  SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
+else(WIN32)
+  SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
+endif(WIN32)
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/aergia
-	DESTINATION ${ROOT_PROJECT_PATH}/build/include
+	DESTINATION ${INSTALL_PATH}/include
 	FILES_MATCHING REGEX "(.*\\.[inl|h])")
 
-install(TARGETS aergia aergia_shared
-	LIBRARY DESTINATION ${ROOT_PROJECT_PATH}/build/lib
-	ARCHIVE DESTINATION ${ROOT_PROJECT_PATH}/build/lib
+install(TARGETS aergia #aergia_shared
+	LIBRARY DESTINATION ${INSTALL_PATH}/lib
+	ARCHIVE DESTINATION ${INSTALL_PATH}//lib
 	)

@@ -5,10 +5,17 @@ from subprocess import call
 import sys
 import platform
 
-cur_path = os.getcwd()
+mingw_make = 'C:/MinGW/bin/mingw32-make.exe'
+msversion = "Unix Makefiles"
+if platform.system() == 'Windows' or 'mingw' in sys.argv:
+    msversion = "MinGW Makefiles"
+if 'msvc' in sys.argv:
+    msversion = "Visual Studio 15 2017 Win64"
+
+src_path = os.getcwd()
 build_path = os.getcwd() + "/build"
 if platform.system() == 'Windows':
-    build_path = os.getcwd() + "/win_build"
+    build_path = os.getcwd() + "/wbuild"
 
 if 'test' in sys.argv:
     os.chdir(build_path)
@@ -29,19 +36,17 @@ if 'all' in sys.argv or not os.path.exists(build_path):
     if not os.path.exists(build_path):
         os.mkdir(build_path)
     os.chdir(build_path)
-    if platform.system() == 'Windows':
-        call(["cmake"] + ['-G'] + ['Visual Studio 15 2017 Win64'] +
-             sys.argv[2:] + [cur_path])
-    else:
-        call(["cmake"] + sys.argv[2:] + [cur_path])
+    call(["cmake"] + ['-G'] + [msversion] + sys.argv[2:] + [src_path])
 
 os.chdir(build_path)
 
 if platform.system() == 'Windows':
-    make_result =\
-        call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] +
-             [r"/p:Machine=X64"] + ["PONOS.sln"],
-             shell=True)
+    if 'MinGW Makefiles' == msversion:
+        make_result = call([mingw_make], shell=True)
+        if "-DTRAVIS=1" not in sys.argv:
+            call([mingw_make] + ["install"], shell=True)
+    else:
+        make_result = call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] + [r"/p:Machine=X64"] + ["PONOS.sln"], shell=True)
 else:
     make_result = call(["make -j8"], shell=True)
     if "-DTRAVIS=1" not in sys.argv:
