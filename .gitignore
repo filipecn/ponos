@@ -2,9 +2,9 @@
 *~
 win_build
 build
-external/include
-external/lib
 .idea
 cmake-build-debug
 poseidon/app
 compile_commands.json
+wbuild
+external/glfw

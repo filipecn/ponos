@@ -38,7 +38,7 @@ set(PONOS_LIBRARIES "${TRIANGLE_LIB}")
 if(MINGW)
     set(GLFW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLFW/libglfw3dll.a")
     set(GLFW_LIB "C:/Projects/ponos/external/glfw/src/libglfw3dll.a")
-    set(GLEW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLEW/x64/libglew32d.dll.a")
+    set(GLEW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLEW/x64/libglew32d.a")
     set(FREETYPE_LIB "C:/Program Files (x86)/GnuWin32/lib/libfreetype.dll.a")
 endif(MINGW)
 
