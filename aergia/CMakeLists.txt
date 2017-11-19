@@ -107,7 +107,7 @@ add_subdirectory(examples)
 if(WIN32)
   SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
 else(WIN32)
-  SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
+  SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
 endif(WIN32)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/aergia

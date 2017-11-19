@@ -24,6 +24,15 @@ if os.path.exists(build_root_path + '/lib'):
 os.mkdir(build_root_path + '/include')
 os.mkdir(build_root_path + '/lib')
 
+if platform.system() == 'Windows':
+    if not os.path.exists(os.getcwd() + '/wbuild'):
+        os.mkdir(os.getcwd() + '/wbuild')
+        os.mkdir(build_root_path)
+else:
+    if not os.path.exists(os.getcwd() + '/build'):
+        os.mkdir(os.getcwd() + '/build')
+        os.mkdir(build_root_path)
+
 if platform.system() != 'Windows':
     # TRIANGLE #################################################################
     src_path = src_root_path + '/triangle'
@@ -49,7 +58,7 @@ call(['cmake'] + [src_path] + ['-G'] + [msversion])
 if platform.system() != 'Windows':
     call(['make'])
     shutil.move(build_path + '/libtinyobjloader.a', build_root_path + '/lib')
-    shutil.copyfile(src_path + 'tinyobj/tiny_obj_loader.h', build_root_path + 'include/tiny_obj_loader.h')
+    shutil.copyfile(src_path + '/tiny_obj_loader.h', build_root_path + '/include/tiny_obj_loader.h')
     # shutil.rmtree('tinyobj_build')
 
 if 'glfw3' in sys.argv or 'all' in sys.argv:
@@ -65,9 +74,9 @@ if 'glfw3' in sys.argv or 'all' in sys.argv:
     os.chdir(build_path)
     call(['cmake'] + [src_path] + ['-G'] + [msversion] + ['-DBUILD_SHARED_LIBS=ON'])
     if platform.system() != 'Windows':
-        call(['make'])
-        shutil.move(build_path + '/src/libglfw3.a', build_root_path + '/lib')
-        lib_path = build_root_path + '/lib/libglfw3.a'
+        call(['make -j8'])
+        shutil.move(build_path + '/src/libglfw.so.3.3', build_root_path + '/lib')
+        lib_path = build_root_path + '/lib/libglfw.so.3.3'
     else:
         if msversion == 'MinGW Makefiles':
             call([mingw_make], shell=True)

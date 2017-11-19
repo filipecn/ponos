@@ -31,8 +31,8 @@ if 'docs' in sys.argv:
     sys.exit(0)
 
 if 'all' in sys.argv or not os.path.exists(build_path):
-    if os.path.exists(build_path):
-        shutil.rmtree(build_path, ignore_errors=True)
+    #if os.path.exists(build_path):
+    #    shutil.rmtree(build_path, ignore_errors=True)
     if not os.path.exists(build_path):
         os.mkdir(build_path)
     os.chdir(build_path)

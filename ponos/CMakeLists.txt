@@ -33,10 +33,17 @@ target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 add_subdirectory(examples)
 add_subdirectory(tests/unit_tests)
 
+if(WIN32)
+	SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
+else(WIN32)
+	SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
+endif(WIN32)
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ponos
-	DESTINATION ${ROOT_PROJECT_PATH}/build/include
+	DESTINATION ${INSTALL_PATH}/include
 	FILES_MATCHING REGEX "(.*\\.[inl|h])")
+
 install(TARGETS ponos ponos_shared
-	LIBRARY DESTINATION ${ROOT_PROJECT_PATH}/build/lib
-	ARCHIVE DESTINATION ${ROOT_PROJECT_PATH}/build/lib
+	LIBRARY DESTINATION ${INSTALL_PATH}/lib
+	ARCHIVE DESTINATION ${INSTALL_PATH}//lib
 	)

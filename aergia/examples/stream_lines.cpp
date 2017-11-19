@@ -230,9 +230,9 @@ int main(int argc, char **argv) {
   fp = fopen(filename, "w+");
   if (!fp)
     return 0;
-  fprintf(fp, "%u\n", streams.size());
+  fprintf(fp, "%u\n", static_cast<unsigned >(streams.size()));
   for (uint i = 0; i < streams.size(); i++) {
-    fprintf(fp, "%u ", streams[i].points.size());
+    fprintf(fp, "%u ", static_cast<unsigned >(streams[i].points.size()));
     for (uint j = 0; j < streams[i].points.size(); j++)
       fprintf(fp, "%f %f %f ", streams[i].points[j].x, streams[i].points[j].y,
               streams[i].points[j].z);
