@@ -89,6 +89,7 @@ private:
   ponos::Point2 pMin, pMax;
   GLuint VAO;
 };
+
 /*
 class ShaderMesh : public aergia::SceneMesh {
 public:

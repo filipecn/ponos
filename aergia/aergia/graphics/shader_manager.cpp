@@ -30,11 +30,11 @@ ShaderManager ShaderManager::instance_;
 
 ShaderManager::ShaderManager() {}
 
-int ShaderManager::loadFromFiles(const char *fl...) {
+int ShaderManager::loadFromFiles(const char *fl, ...) {
   va_list args;
   va_start(args, fl);
-  GLuint objects[] = {0, 0, 0};
-  GLuint types[] = {GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER};
+  std::vector<GLuint> objects;
+  GLuint types[] = {GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
   while (*fl != '\0') {
     std::string filename(fl);
     if (filename.size() < 4)
@@ -44,25 +44,23 @@ int ShaderManager::loadFromFiles(const char *fl...) {
       continue;
     GLuint shaderType = 0;
     switch (filename[filename.size() - 2]) {
-    case 'v':
-      shaderType = 0;
+    case 'v':shaderType = 0;
       break;
-    case 'g':
-      shaderType = 1;
+    case 'g':shaderType = 1;
       break;
-    case 'f':
-      shaderType = 2;
+    case 'f':shaderType = 2;
       break;
-    default:
-      continue;
+    case 'c':shaderType = 3;
+      break;
+    default:continue;
     }
-    objects[shaderType] = compile(source, types[shaderType]);
+    objects.emplace_back(compile(source, types[shaderType]));
     if (source)
       free(source);
     ++fl;
   }
   va_end(args);
-  GLuint program = createProgram(objects, 3);
+  GLuint program = createProgram(objects);
   if (!program)
     return -1;
   return static_cast<int>(program);
@@ -70,14 +68,25 @@ int ShaderManager::loadFromFiles(const char *fl...) {
 
 int ShaderManager::loadFromTexts(const char *vs, const char *gs,
                                  const char *fs) {
-  GLuint objects[] = {0, 0, 0};
+  std::vector<GLuint> objects(3, 0);
   if (vs != nullptr)
     objects[0] = compile(vs, GL_VERTEX_SHADER);
   if (gs != nullptr)
     objects[1] = compile(gs, GL_GEOMETRY_SHADER);
   if (fs != nullptr)
     objects[2] = compile(fs, GL_FRAGMENT_SHADER);
-  GLuint program = createProgram(objects, 3);
+  GLuint program = createProgram(objects);
+  if (!program)
+    return -1;
+  return static_cast<int>(program);
+}
+
+int ShaderManager::loadFromText(const char *s, GLuint shaderType) {
+  std::vector<GLuint> object(1,0);
+  if(!s)
+    return -1;
+  object[0] = compile(s, shaderType);
+  GLuint program = createProgram(object);
   if (!program)
     return -1;
   return static_cast<int>(program);
@@ -143,9 +152,9 @@ GLuint ShaderManager::compile(const char *shaderSource, GLuint shaderType) {
   return shaderObject;
 }
 
-GLuint ShaderManager::createProgram(GLuint objects[], int size) {
+GLuint ShaderManager::createProgram(const std::vector<GLuint> &objects) {
   GLuint programObject = glCreateProgram();
-  for (int i = 0; i < size; ++i)
+  for (unsigned i = 0; i < objects.size(); ++i)
     if (objects[i])
       glAttachShader(programObject, objects[i]);
   glLinkProgram(programObject);

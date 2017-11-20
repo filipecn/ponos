@@ -45,7 +45,7 @@ public:
    * It expects only one file of each type with extensions .fs, .vs and .gs.
    * \return program id. **-1** if error.
    */
-  int loadFromFiles(const char *fl...);
+  int loadFromFiles(const char *fl, ...);
   /** \brief Creates a shader program from strings.
    * \param vs vertex shader
    * \param gs geometry shader
@@ -53,6 +53,7 @@ public:
    * \return program id. **-1** if error.
    */
   int loadFromTexts(const char *vs, const char *gs, const char *fs);
+  int loadFromText(const char *s, GLuint shaderType);
   /** \brief use program
    * \param program **[in]** program's id
    * Activate program
@@ -67,7 +68,7 @@ private:
 
   GLuint createProgram(const GLchar *, const GLchar *);
   GLuint compile(const char *shaderSource, GLuint shaderType);
-  GLuint createProgram(GLuint objects[], int size);
+  GLuint createProgram(const std::vector<GLuint>& objects);
 
   static ShaderManager instance_;
 };

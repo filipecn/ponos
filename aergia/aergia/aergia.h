@@ -1,5 +1,6 @@
 #include <aergia/colors/color.h>
 #include <aergia/colors/color_palette.h>
+#include <aergia/graphics/compute_shader.h>
 #include <aergia/graphics/shader.h>
 #include <aergia/graphics/shader_manager.h>
 #include <aergia/helpers/bvh_model.h>

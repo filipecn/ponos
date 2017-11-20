@@ -39,134 +39,134 @@ namespace aergia {
  * intersected
  * by a ray.
  */
-    class SceneObject : public InteractiveObjectInterface {
-    public:
-        SceneObject() : visible(true) {}
+class SceneObject : public InteractiveObjectInterface {
+public:
+  SceneObject() : visible(true) {}
 
-        virtual ~SceneObject() {}
+  virtual ~SceneObject() {}
 
-        /** \brief draw
-         * render method
-         */
-        virtual void draw() const = 0;
+  /** \brief draw
+   * render method
+   */
+  virtual void draw() const = 0;
 
-        /** \brief query
-         * \param r **[in]** ray
-         * \param t **[out]** receives the parametric value of the intersection
-         * \return **true** if intersection is found
-         */
-        virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) {
-            UNUSED_VARIABLE(t);
-            UNUSED_VARIABLE(r);
-            return false;
-        }
+  /** \brief query
+   * \param r **[in]** ray
+   * \param t **[out]** receives the parametric value of the intersection
+   * \return **true** if intersection is found
+   */
+  virtual bool intersect(const ponos::Ray3 &r, float *t = nullptr) {
+    UNUSED_VARIABLE(t);
+    UNUSED_VARIABLE(r);
+    return false;
+  }
 
-        void updateTransform() override {
-            transform = this->trackball.tb.transform * transform;
-        }
+  void updateTransform() override {
+    transform = this->trackball.tb.transform * transform;
+  }
 
-        ponos::Transform transform;
-        bool visible;
-    };
+  ponos::Transform transform;
+  bool visible;
+};
 
-    class SceneMesh : public SceneObject {
-    public:
-        SceneMesh() {}
+class SceneMesh : public SceneObject {
+public:
+  SceneMesh() {}
 
-        SceneMesh(const std::string &filename) {
-            ponos::RawMesh *m = new ponos::RawMesh();
-            loadOBJ(filename, m);
-            m->computeBBox();
-            m->splitIndexData();
-            m->buildInterleavedData();
-            rawMesh = m;
-            setupVertexBuffer();
-            setupIndexBuffer();
-        }
+  SceneMesh(const std::string &filename) {
+    ponos::RawMesh *m = new ponos::RawMesh();
+    loadOBJ(filename, m);
+    m->computeBBox();
+    m->splitIndexData();
+    m->buildInterleavedData();
+    rawMesh = m;
+    setupVertexBuffer();
+    setupIndexBuffer();
+  }
 
-        SceneMesh(ponos::RawMesh *m,
-                  std::function<void(Shader *s)> f =
-                  [](Shader *s) { UNUSED_VARIABLE(s); },
-                  Shader *s = nullptr) {
-            this->visible = true;
-            this->rawMesh = m;
-            this->setupVertexBuffer();
-            this->setupIndexBuffer();
-            shader = s;
-            drawCallback = f;
-            if (shader)
-                for (auto att : this->vb->bufferDescriptor.attributes)
-                    shader->addVertexAttribute(att.first.c_str());
-        }
+  SceneMesh(ponos::RawMesh *m,
+            std::function<void(Shader *s)> f =
+            [](Shader *s) { UNUSED_VARIABLE(s); },
+            Shader *s = nullptr) {
+    this->visible = true;
+    this->rawMesh = m;
+    this->setupVertexBuffer();
+    this->setupIndexBuffer();
+    shader = s;
+    drawCallback = f;
+    if (shader)
+      for (auto att : this->vb->bufferDescriptor.attributes)
+        shader->addVertexAttribute(att.first.c_str());
+  }
 
-        virtual ~SceneMesh() {}
+  virtual ~SceneMesh() {}
 
-        void draw() const override {
-            if (!visible)
-                return;
-            vb->bind();
-            ib->bind();
-            if (shader)
-                shader->begin(this->vb.get());
-            else {
-                glEnableVertexAttribArray(0);
-                glVertexAttribPointer(
-                        0, vb->bufferDescriptor.elementSize, GL_FLOAT, GL_FALSE,
-                        0 /*sizeof(float) * vb->bufferDescriptor.elementSize*/, 0);
-            }
-            if (drawCallback)
-                drawCallback(shader);
-            glDrawElements(this->ib->bufferDescriptor.elementType,
-                           this->ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT, 0);
-            if (shader)
-                shader->end();
-        }
+  void draw() const override {
+    if (!visible)
+      return;
+    vb->bind();
+    ib->bind();
+    if (shader)
+      shader->begin(this->vb.get());
+    else {
+      glEnableVertexAttribArray(0);
+      glVertexAttribPointer(
+          0, vb->bufferDescriptor.elementSize, GL_FLOAT, GL_FALSE,
+          0 /*sizeof(float) * vb->bufferDescriptor.elementSize*/, 0);
+    }
+    if (drawCallback)
+      drawCallback(shader);
+    glDrawElements(this->ib->bufferDescriptor.elementType,
+                   this->ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT, 0);
+    if (shader)
+      shader->end();
+  }
 
-        ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
+  ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
 
-        ponos::RawMesh *rawMesh;
-        std::function<void(Shader *s)> drawCallback;
+  ponos::RawMesh *rawMesh;
+  std::function<void(Shader *s)> drawCallback;
 
-    protected:
-        virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
-                                       GLuint _type = GL_ARRAY_BUFFER,
-                                       GLuint _use = GL_STATIC_DRAW) {
-            UNUSED_VARIABLE(_elementType);
-            UNUSED_VARIABLE(_type);
-            UNUSED_VARIABLE(_use);
-            BufferDescriptor dataDescriptor(rawMesh->interleavedDescriptor.elementSize,
-                                            rawMesh->interleavedDescriptor.count);
-            dataDescriptor.addAttribute(std::string("position"),
-                                        rawMesh->vertexDescriptor.elementSize, 0,
-                                        GL_FLOAT);
-            size_t offset = rawMesh->vertexDescriptor.elementSize;
-            if (rawMesh->normalDescriptor.count) {
-                dataDescriptor.addAttribute(std::string("normal"),
-                                            rawMesh->normalDescriptor.elementSize,
-                                            offset * sizeof(float), GL_FLOAT);
-                offset += rawMesh->normalDescriptor.elementSize;
-            }
-            if (rawMesh->texcoordDescriptor.count) {
-                dataDescriptor.addAttribute(std::string("texcoord"),
-                                            rawMesh->texcoordDescriptor.elementSize,
-                                            offset * sizeof(float), GL_FLOAT);
-                offset += rawMesh->texcoordDescriptor.elementSize;
-            }
-            vb.reset(new VertexBuffer(&rawMesh->interleavedData[0], dataDescriptor));
-        }
+protected:
+  virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
+                                 GLuint _type = GL_ARRAY_BUFFER,
+                                 GLuint _use = GL_STATIC_DRAW) {
+    UNUSED_VARIABLE(_elementType);
+    UNUSED_VARIABLE(_type);
+    UNUSED_VARIABLE(_use);
+    BufferDescriptor dataDescriptor(rawMesh->interleavedDescriptor.elementSize,
+                                    rawMesh->interleavedDescriptor.count);
+    dataDescriptor.addAttribute(std::string("position"),
+                                rawMesh->vertexDescriptor.elementSize, 0,
+                                GL_FLOAT);
+    size_t offset = rawMesh->vertexDescriptor.elementSize;
+    if (rawMesh->normalDescriptor.count) {
+      dataDescriptor.addAttribute(std::string("normal"),
+                                  rawMesh->normalDescriptor.elementSize,
+                                  offset * sizeof(float), GL_FLOAT);
+      offset += rawMesh->normalDescriptor.elementSize;
+    }
+    if (rawMesh->texcoordDescriptor.count) {
+      dataDescriptor.addAttribute(std::string("texcoord"),
+                                  rawMesh->texcoordDescriptor.elementSize,
+                                  offset * sizeof(float), GL_FLOAT);
+      offset += rawMesh->texcoordDescriptor.elementSize;
+    }
+    vb.reset(new VertexBuffer(&rawMesh->interleavedData[0], dataDescriptor));
+  }
 
-        virtual void setupIndexBuffer() {
-            BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
-                    1, rawMesh->verticesIndices.size(), rawMesh->primitiveType);
-            ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
-        }
+  virtual void setupIndexBuffer() {
+    BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
+        1, rawMesh->verticesIndices.size(), rawMesh->primitiveType);
+    ib.reset(new IndexBuffer(&rawMesh->verticesIndices[0], indexDescriptor));
+  }
 
-        std::shared_ptr<VertexBuffer> vb;
-        std::shared_ptr<IndexBuffer> ib;
+  std::shared_ptr<VertexBuffer> vb;
+  std::shared_ptr<IndexBuffer> ib;
 
-    private:
-        Shader *shader;
-    };
+private:
+  Shader *shader;
+};
 
 } // aergia namespace
 

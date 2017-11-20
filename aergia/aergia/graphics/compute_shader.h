@@ -26,10 +26,23 @@
 #define AERGIA_GRAPHICS_COMPUTE_SHADER_H
 
 #include <aergia/utils/open_gl.h>
+#include <aergia/io/texture.h>
+#include <aergia/graphics/shader.h>
 
 namespace aergia {
 
-class ComputeShader {};
+class ComputeShader {
+public:
+  ComputeShader(const TextureAttributes &a, const TextureParameters &p, const char* source);
+  virtual ~ComputeShader();
+  bool compute();
+  void bindTexture(GLenum t) const;
+
+private:
+  GLuint programId;
+  std::unique_ptr<Texture> texture;
+  ponos::uivec3 groupSize;
+};
 
 } // aergia namespace
 

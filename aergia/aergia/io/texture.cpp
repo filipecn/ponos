@@ -56,13 +56,23 @@ void Texture::bind(GLenum t) const {
   glBindTexture(attributes.target, textureObject);
 }
 
+void Texture::bindImage(GLenum t) const {
+  glActiveTexture(t);
+  glBindImageTexture(0, textureObject, 0, GL_FALSE, 0, GL_WRITE_ONLY, attributes.internalFormat);
+  CHECK_GL_ERRORS;
+}
+
+ponos::uivec3 Texture::size() const {
+  return ponos::uivec3(attributes.width, attributes.height, attributes.depth);
+}
+
 std::ostream &operator<<(std::ostream &out, Texture &pt) {
   int width = pt.attributes.width;
   int height = pt.attributes.height;
 
   unsigned char *data = NULL;
 
-  data = new unsigned char[(int)(width * height)];
+  data = new unsigned char[(int) (width * height)];
 
   for (int i(0); i < width; ++i) {
     for (int j(0); j < height; ++j) {
@@ -81,7 +91,7 @@ std::ostream &operator<<(std::ostream &out, Texture &pt) {
 
   for (int j(height - 1); j >= 0; --j) {
     for (int i(0); i < width; ++i) {
-      out << (int)data[(int)(j * width + i)] << ",";
+      out << (int) data[(int) (j * width + i)] << ",";
     }
     out << std::endl;
   }

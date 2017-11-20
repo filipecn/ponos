@@ -37,6 +37,8 @@ public:
   Texture(const TextureAttributes &a, const TextureParameters &p);
   virtual ~Texture();
   virtual void bind(GLenum t) const;
+  virtual void bindImage(GLenum t) const;
+  ponos::uivec3 size() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 
 protected:
