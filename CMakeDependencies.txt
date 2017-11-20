@@ -32,9 +32,6 @@ else(NOT TRAVIS)
   set(TRIANGLE_INCLUDE "")
 endif(NOT TRAVIS)
 
-set(PONOS_INCLUDES "${TRIANGLE_INCLUDE}")
-set(PONOS_LIBRARIES "${TRIANGLE_LIB}")
-
 if(MINGW)
     set(GLFW_LIB "${PROJECT_SOURCE_DIR}/aergia/external/GLFW/libglfw3dll.a")
     set(GLFW_LIB "C:/Projects/ponos/external/glfw/src/libglfw3dll.a")
@@ -49,6 +46,9 @@ else(MINGW OR WIN32)
 endif(MINGW OR WIN32)
 
 # set(FREETYPE_LIBRARIES ${FREETYPE_LIB} "${PROJECT_SOURCE_DIR}/external/lib/libz.a" "${PROJECT_SOURCE_DIR}/external/lib/libpng16.a" "${PROJECT_SOURCE_DIR}/external/lib/libbz2.a" "${PROJECT_SOURCE_DIR}/external/lib/libharfbuzz.a" "${PROJECT_SOURCE_DIR}/external/lib/libgraphite2.so.3.0.1" png glib-2.0 pcre graphite2)
+
+set(PONOS_INCLUDES "${TRIANGLE_INCLUDE}")
+set(PONOS_LIBRARIES "${TRIANGLE_LIB}")
 
 set(AERGIA_INCLUDES "${FREETYPE_INCLUDE}" "${GLFW_INCLUDE_DIRS}" "${GLEW_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIRS}")
 set(AERGIA_LIBRARIES ${GLEW_LIB} ${GLFW_LIB} ${GLFW_STATIC_LIBRARIES} ${VULKAN_LIBRARY} ${OPENGL_LIBRARIES} ${FREETYPE_LIB} ${FREETYPE_STATIC_LIBRARIES})
