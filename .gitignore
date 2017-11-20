@@ -8,3 +8,5 @@ poseidon/app
 compile_commands.json
 wbuild
 external/glfw
+external/triangle
+external/tinyobj

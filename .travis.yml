@@ -57,7 +57,7 @@ before_install:
   - cmake --version
 script:
   - git submodule update --init --recursive
-  - python3 solve_dependencies.py
+  - python3 solve_dependencies.py triangle
   - python3 build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
 #  - python3 build.py test
 after_success:

@@ -35,7 +35,7 @@ if os.path.exists(build_root_path + '/lib'):
 os.mkdir(build_root_path + '/include')
 os.mkdir(build_root_path + '/lib')
 
-if platform.system() != 'Windows':
+if platform.system() != 'Windows' and ('triangle' in sys.argv or 'all' in sys.argv):
     # TRIANGLE #################################################################
     src_path = src_root_path + '/triangle'
     build_path = build_root_path + '/triangle_build'
@@ -45,10 +45,12 @@ if platform.system() != 'Windows':
     os.chdir(build_path)
     call(['cmake'] + [src_path] + ['-G'] + [msversion])
     call(['make'])
-    # os.chdir(root_path)
-    # shutil.move(build_path + '/libtriangle.a', 'lib')
-    # shutil.copyfile('triangle/triangle.h', 'include/triangle.h')
-    # shutil.rmtree('triangle_build')
+    shutil.copyfile(build_path + '/libtriangle.a', build_root_path + '/lib/libtriangle.a')
+    lib_path = build_root_path + '/lib/libtriangle.a'
+    shutil.copyfile(src_path + '/triangle.h', build_root_path + '/include/triangle.h')
+    with open(build_root_path + '/dependencies.txt', 'a') as file:
+        file.write('SET(TRIANGLE_LIB ' + lib_path.replace('\\', '/') + ')' + '\n')
+        file.write('SET(TRIANGLE_INCLUDE ' + build_root_path.replace('\\', '/') + '/include)' + '\n')
 # TINYOBJ ######################################################################
 if "tinyobj" in sys.argv or 'all' in sys.argv:
     src_path = src_root_path + '/tinyobj'
@@ -61,8 +63,11 @@ if "tinyobj" in sys.argv or 'all' in sys.argv:
     if platform.system() != 'Windows':
         call(['make'])
         shutil.move(build_path + '/libtinyobjloader.a', build_root_path + '/lib')
+        lib_path = build_root_path + '/lib/libtinyobjloader.a'
         shutil.copyfile(src_path + '/tiny_obj_loader.h', build_root_path + '/include/tiny_obj_loader.h')
-        # shutil.rmtree('tinyobj_build')
+        with open(build_root_path + '/dependencies.txt', 'a') as file:
+            file.write('SET(TINY_OBJ_LIB ' + lib_path.replace('\\', '/') + ')' + '\n')
+            file.write('SET(TINY_OBJ_INCLUDE ' + build_root_path.replace('\\', '/') + '/include)' + '\n')
 if 'glfw3' in sys.argv or 'all' in sys.argv:
     # GLFW3 ####################################################################
     src_path = src_root_path + '/glfw'
@@ -74,11 +79,11 @@ if 'glfw3' in sys.argv or 'all' in sys.argv:
         shutil.rmtree(build_path)
     os.mkdir(build_path)
     os.chdir(build_path)
-    call(['cmake'] + [src_path] + ['-G'] + [msversion]) # + ['-DBUILD_SHARED_LIBS=ON'])
+    call(['cmake'] + [src_path] + ['-G'] + [msversion])  # + ['-DBUILD_SHARED_LIBS=ON'])
     if platform.system() != 'Windows':
-        call(['make -j8'])
-        shutil.move(build_path + '/src/libglfw.so.3.3', build_root_path + '/lib')
-        lib_path = build_root_path + '/lib/libglfw.so.3.3'
+        call(['make'] + ['-j8'])
+        shutil.move(build_path + '/src/libglfw3.a', build_root_path + '/lib')
+        lib_path = build_root_path + '/lib/libglfw3.a'
     else:
         if msversion == 'MinGW Makefiles':
             call([mingw_make], shell=True)
