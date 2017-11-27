@@ -1,10 +1,12 @@
 #include <aergia/graphics/compute_shader.h>
 
+#include <memory>
+
 namespace aergia {
 
-ComputeShader::ComputeShader(const TextureAttributes &a, const TextureParameters &p, const char *source) {
-  texture.reset(new Texture(a, p));
-  programId = static_cast<GLuint>(std::max(0, ShaderManager::instance().loadFromText(source, GL_COMPUTE_SHADER)));
+ComputeShader::ComputeShader(const char *source) {
+  this->running = false;
+  this->programId = static_cast<GLuint>(std::max(0, ShaderManager::instance().loadFromText(source, GL_COMPUTE_SHADER)));
   { // query up the workgroups
     int work_grp_size[3], work_grp_inv;
     // maximum global work group (total work in a dispatch)
@@ -25,20 +27,48 @@ ComputeShader::ComputeShader(const TextureAttributes &a, const TextureParameters
   }
 }
 
-ComputeShader::~ComputeShader() {}
+ComputeShader::ComputeShader(const TextureAttributes &a, const TextureParameters &p, const char *source)
+    : ComputeShader(source) {
+  setTexture(a, p);
+}
+
+ComputeShader::~ComputeShader() = default;
 
 bool ComputeShader::compute() {
-  if (!ShaderManager::instance().useShader(programId))
+  if (!Shader::begin())
     return false;
-  texture->bindImage(GL_TEXTURE0);
-  auto size = texture->size();
-  glDispatchCompute(size[0], size[1], 1 );
-  glMemoryBarrier( GL_SHADER_IMAGE_ACCESS_BARRIER_BIT );
+  if (texture)
+    texture->bindImage(GL_TEXTURE0);
+  for (unsigned int i = 0; i < blockIndices.size(); i++) {
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, blockIndices[i], bufferIds[i]);
+    CHECK_GL_ERRORS;
+  }
+  glDispatchCompute(groupSize[0], groupSize[1], groupSize[2]);
   CHECK_GL_ERRORS;
+  glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+  glMemoryBarrier(GL_ALL_BARRIER_BITS);
+  CHECK_GL_ERRORS;
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+  Shader::end();
   return true;
 }
 
 void ComputeShader::bindTexture(GLenum t) const {
   texture->bind(t);
 }
+void ComputeShader::setBuffer(const char *name, GLuint id, GLuint bindingPoint) {
+  UNUSED_VARIABLE(name);
+  // blockIndices.emplace_back(glGetProgramResourceIndex(programId, GL_SHADER_STORAGE_BLOCK, name));
+  blockIndices.emplace_back(bindingPoint);
+  CHECK_GL_ERRORS;
+  bufferIds.emplace_back(id);
+}
+void ComputeShader::setTexture(const TextureAttributes &a, const TextureParameters &p) {
+  texture.reset(new aergia::Texture(a, p));
+  groupSize = texture->size();
+}
+void ComputeShader::setGroupSize(const ponos::uivec3 gs) {
+  groupSize = gs;
+}
+
 } // aergia namespace

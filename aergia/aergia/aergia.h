@@ -13,6 +13,7 @@
 #include <aergia/helpers/scene_handle.h>
 #include <aergia/helpers/vector_grid.h>
 #include <aergia/io/buffer.h>
+#include <aergia/io/storage_buffer.h>
 #include <aergia/io/framebuffer.h>
 #include <aergia/io/graphics_display.h>
 #include <aergia/io/procedural_texture.h>

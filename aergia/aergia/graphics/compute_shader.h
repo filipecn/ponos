@@ -31,17 +31,21 @@
 
 namespace aergia {
 
-class ComputeShader {
+class ComputeShader : public Shader {
 public:
-  ComputeShader(const TextureAttributes &a, const TextureParameters &p, const char* source);
+  ComputeShader(const char *source);
+  ComputeShader(const TextureAttributes &a, const TextureParameters &p, const char *source);
   virtual ~ComputeShader();
   bool compute();
   void bindTexture(GLenum t) const;
+  void setTexture(const TextureAttributes &a, const TextureParameters &p);
+  void setBuffer(const char *name, GLuint id, GLuint bindingPoint);
+  void setGroupSize(const ponos::uivec3 gs);
 
 private:
-  GLuint programId;
   std::unique_ptr<Texture> texture;
   ponos::uivec3 groupSize;
+  std::vector<GLuint> blockIndices, bufferIds;
 };
 
 } // aergia namespace

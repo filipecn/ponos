@@ -92,6 +92,9 @@ if 'glfw3' in sys.argv or 'all' in sys.argv:
             lib_path = build_root_path + '/lib/libglfw3.a'
         else:
             call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] + ["glfw.sln"], shell=True)
+            shutil.move(build_path + '/src/Release/glfw3.lib',
+                        build_root_path + '/lib')
+            lib_path = build_root_path + '/lib/glfw3.lib'
     shutil.copytree(src_path + '/include/GLFW',
                     build_root_path + '/include/GLFW')
     with open(build_root_path + '/dependencies.txt', 'a') as file:
