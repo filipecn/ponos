@@ -123,6 +123,11 @@ public:
    * \param bd **[in]** buffer description
    */
   Buffer(const T *d, const BufferDescriptor &bd) : Buffer() { set(d, bd); }
+  /** \brief Constructor
+   * \param id **[in]** an existent buffer
+   * \param bd **[in]** buffer description
+   */
+  Buffer(GLuint id, const BufferDescriptor &bd) : bufferDescriptor(bd), bufferId(id) {}
   virtual ~Buffer() { glDeleteBuffers(1, &bufferId); }
   /** \brief set
    * \param d **[in]** data pointer
