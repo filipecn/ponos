@@ -68,10 +68,28 @@ private:
 
   GLuint createProgram(const GLchar *, const GLchar *);
   GLuint compile(const char *shaderSource, GLuint shaderType);
-  GLuint createProgram(const std::vector<GLuint>& objects);
+  GLuint createProgram(const std::vector<GLuint> &objects);
 
   static ShaderManager instance_;
 };
+
+#define AERGIA_NO_VAO_VS "#version 440 core\n out vec2 texCoord;" \
+    "void main() {" \
+"    float x = -1.0 + float((gl_VertexID & 1) << 2);"\
+"    float y = -1.0 + float((gl_VertexID & 2) << 1);"\
+"    texCoord.x = (x+1.0)*0.5;"\
+"    texCoord.y = (y+1.0)*0.5;"\
+"    gl_Position = vec4(x, y, 0, 1);"\
+"}"
+
+#define AERGIA_TEX_FS \
+"#version 440 core\n" \
+"out vec4 outColor;" \
+"in vec2 texCoord;"\
+"uniform sampler2D tex;"\
+"void main() {"\
+"outColor = texture(tex, texCoord);"\
+"}"
 
 } // aergia namespace
 
