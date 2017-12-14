@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef AERGIA_UI_SCENE_APP_H
 #define AERGIA_UI_SCENE_APP_H
@@ -98,6 +98,6 @@ protected:
   SceneObject *selectedObject;
 };
 
-} // aergia namespace
+} // namespace aergia
 
 #endif // AERGIA_UI_SCENE_APP_H

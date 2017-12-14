@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <aergia/aergia.h>
 #include <aergia/io/graphics_display.h>
@@ -259,6 +259,11 @@ void GraphicsDisplay::registerResizeFunc(void (*f)(int, int)) {
   this->resizeCallback = f;
 }
 
+void GraphicsDisplay::registerResizeFunc(std::function<void(int, int)> f) {
+  std::cout << "registering callback\n";
+  this->resizeCallback = f;
+}
+
 void GraphicsDisplay::resize_callback(GLFWwindow *window, int w, int h) {
   UNUSED_VARIABLE(window);
   instance_.resizeFunc(w, h);
@@ -274,4 +279,4 @@ void GraphicsDisplay::resizeFunc(int w, int h) {
   glfwGetFramebufferSize(window, &this->width, &this->height);
 }
 
-} // aergia namespace
+} // namespace aergia

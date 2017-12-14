@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef AERGIA_IO_GRAPHICS_DISPLAY_H
 #define AERGIA_IO_GRAPHICS_DISPLAY_H
@@ -106,6 +106,7 @@ public:
   void registerScrollFunc(void (*f)(double, double));
   void registerScrollFunc(std::function<void(double, double)> f);
   void registerResizeFunc(void (*f)(int, int));
+  void registerResizeFunc(std::function<void(int, int)> f);
   // graphics
   void beginFrame();
   void endFrame();
@@ -174,6 +175,6 @@ inline GraphicsDisplay &createGraphicsDisplay(int w, int h,
   return gd;
 }
 
-} // aergia namespace
+} // namespace aergia
 
 #endif // AERGIA_IO_GRAPHICS_DISPLAY_H

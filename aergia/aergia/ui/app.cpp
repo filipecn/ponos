@@ -12,6 +12,7 @@ App::App(uint w, uint h, const char *t, bool defaultViewport)
   mouseCallback = nullptr;
   buttonCallback = nullptr;
   keyCallback = nullptr;
+  resizeCallback = nullptr;
 }
 
 size_t App::addViewport(uint x, uint y, uint w, uint h) {
@@ -47,6 +48,7 @@ void App::init() {
   gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
   gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
   gd.registerKeyFunc([this](int k, int a) { key(k, a); });
+  gd.registerResizeFunc([this](int w, int h) { resize(w, h); });
   initialized = true;
 }
 
@@ -93,4 +95,19 @@ void App::key(int k, int action) {
     keyCallback(k, action);
 }
 
-} // aergia namespace
+void App::resize(int w, int h) {
+  float wRatio = static_cast<float>(w) / windowWidth;
+  float hRatio = static_cast<float>(h) / windowHeight;
+  windowWidth = w;
+  windowHeight = h;
+  for (uint i = 0; i < viewports.size(); i++) {
+    viewports[i].x *= wRatio;
+    viewports[i].y *= hRatio;
+    viewports[i].width *= wRatio;
+    viewports[i].height *= hRatio;
+    if (viewports[i].camera)
+      viewports[i].camera->resize(viewports[i].width, viewports[i].height);
+  }
+}
+
+} // namespace aergia

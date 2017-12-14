@@ -50,6 +50,7 @@ public:
   std::function<void(double, double)> mouseCallback;
   std::function<void(int, int)> buttonCallback;
   std::function<void(int, int)> keyCallback;
+  std::function<void(int, int)> resizeCallback;
 
 protected:
   bool initialized;
@@ -61,8 +62,9 @@ protected:
   virtual void mouse(double x, double y);
   virtual void scroll(double dx, double dy);
   virtual void key(int key, int action);
+  virtual void resize(int w, int h);
 };
 
-} // aergia namespace
+} // namespace aergia
 
 #endif // AERGIA_UI_APP_H

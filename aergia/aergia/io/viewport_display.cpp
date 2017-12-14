@@ -69,4 +69,4 @@ ponos::Point3 ViewportDisplay::unProject() {
          ponos::Point3(getMouseNPos().x, getMouseNPos().y, 0.f);
 }
 
-} // aergia namespace
+} // namespace aergia

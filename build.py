@@ -27,7 +27,7 @@ if 'docs' in sys.argv:
     call(
         ["xsltproc doc/xml/combine.xslt doc/xml/index.xml > doc/xml/all.xml"],
         shell=True)
-    call(["python doxml2md.py doc/xml/all.xml"], shell=True)
+    # call(["python doxml2md.py doc/xml/all.xml"], shell=True)
     sys.exit(0)
 
 if 'all' in sys.argv or not os.path.exists(build_path):
@@ -46,7 +46,10 @@ if platform.system() == 'Windows':
         if "-DTRAVIS=1" not in sys.argv:
             call([mingw_make] + ["install"], shell=True)
     else:
-        make_result = call([r"MSBuild.exe"] + [r"/p:Configuration=Release"] + [r"/p:Machine=X64"] + ["PONOS.sln"], shell=True)
+        make_result = call(
+            [r"MSBuild.exe"] + [r"/p:Configuration=Release"] +
+            [r"/p:Machine=X64"] + ["PONOS.sln"],
+            shell=True)
 else:
     make_result = call(["make -j8"], shell=True)
     if "-DTRAVIS=1" not in sys.argv:
