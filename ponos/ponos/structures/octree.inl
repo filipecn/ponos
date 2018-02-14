@@ -22,52 +22,53 @@
  *
 */
 
-#include "structures/octree.h"
+template<typename NodeData>
+Octree<NodeData>::Octree() : root_(nullptr), height_(0), count_(0) {}
 
-template <typename NodeData> Octree<NodeData>::Octree() : root(nullptr) {
+template<typename NodeData>
+Octree<NodeData>::Octree(const BBox &region, uint h) : root_(new Node(region)) {
   height_ = 0;
-  count = 0;
+  count_ = 0;
+  refine(root_, [h](Node &node) { return node.level() < h; }, nullptr);
 }
 
-template <typename NodeData>
+template<typename NodeData>
 Octree<NodeData>::Octree(const BBox &region,
-                         const std::function<bool(Node &node)> &f)
-    : root(new Node(region, nullptr)) {
+                         const std::function<bool(Node & node)> &f)
+    : root_(new Node(region, nullptr)) {
   height_ = 0;
-  count = 0;
-  refine(root, f, nullptr);
+  count_ = 0;
+  refine(root_, f, nullptr);
 }
 
-template <typename NodeData>
+template<typename NodeData>
 Octree<NodeData>::Octree(const BBox &region, NodeData rootData,
-                         const std::function<bool(Node &node)> &f,
-                         std::function<void(Node &)> sf)
-    : root(new Node(region, nullptr)) {
+                         const std::function<bool(Node & node)> &f,
+                         std::function<void(Node & node)> sf)
+    : root_(new Node(region, nullptr)) {
   height_ = 0;
-  count = 0;
-  root->data = rootData;
-  refine(root, f, sf);
+  count_ = 0;
+  root_->data = rootData;
+  refine(root_, f, sf);
 }
 
-template <typename NodeData> Octree<NodeData>::~Octree() {
-  clean(root);
-  height_ = count = 0;
+template<typename NodeData> Octree<NodeData>::~Octree() {
+  clean(root_);
 }
 
-template <typename NodeData>
-void Octree<NodeData>::traverse(const std::function<bool(Node &node)> &f) {
-  traverse(root, f);
+template<typename NodeData>
+void Octree<NodeData>::traverse(const std::function<bool(Octree::Node &node)> &f) {
+  traverse(root_, f);
 }
 
-template <typename NodeData>
-void Octree<NodeData>::traverse(
-    const std::function<bool(const Node &node)> &f) const {
-  traverse(root, f);
+template<typename NodeData>
+void Octree<NodeData>::traverse(const std::function<bool(const Octree::Node &)> &f) const {
+  traverse(root_, f);
 }
 
-template <typename NodeData>
+template<typename NodeData>
 void Octree<NodeData>::traverse(Node *node,
-                                const std::function<bool(Node &node)> &f) {
+                                const std::function<bool(Node & node)> &f) {
   if (!node)
     return;
   if (!f(*node))
@@ -76,9 +77,9 @@ void Octree<NodeData>::traverse(Node *node,
     traverse(c, f);
 }
 
-template <typename NodeData>
+template<typename NodeData>
 void Octree<NodeData>::traverse(
-    Node *node, const std::function<bool(const Node &node)> &f) const {
+    Node *node, const std::function<bool(const Octree::Node &node)> &f) const {
   if (!node)
     return;
   if (!f(*node))
@@ -87,7 +88,7 @@ void Octree<NodeData>::traverse(
     traverse(c, f);
 }
 
-template <typename NodeData> void Octree<NodeData>::clean(Node *node) {
+template<typename NodeData> void Octree<NodeData>::clean(Node *node) {
   if (!node)
     return;
   for (int i = 0; i < 8; i++)
@@ -95,27 +96,36 @@ template <typename NodeData> void Octree<NodeData>::clean(Node *node) {
   delete node;
 }
 
-template <typename NodeData>
+template<typename NodeData>
 void Octree<NodeData>::refine(Node *node,
-                              const std::function<bool(Node &node)> &f,
-                              std::function<void(Node &)> sf) {
+                              const std::function<bool(Node & node)> &f,
+                              std::function<void(Octree::Node &)> sf) {
   if (!node)
     return;
-  node->id = count++;
-  height_ = std::max(height_, node->l);
-  Point3 pmin = node->bbox.pMin;
-  Point3 pmax = node->bbox.pMax;
-  Point3 mid = node->bbox.center();
+  node->id_ = count_++;
+  height_ = std::max(height_, node->level_);
+  Point3 pmin = node->bbox_.pMin;
+  Point3 pmax = node->bbox_.pMax;
+  Point3 mid = node->bbox_.center();
   if (f(*node)) {
-    node->children[0] = new Node(
-        BBox(Point3(pmin.x, mid.y, mid.z), Point3(mid.x, pmax.y, mid.z)), node);
-    node->children[1] = new Node(BBox(mid, pmax), node);
-    node->children[2] = new Node(BBox(pmin, mid), node);
-    node->children[3] =
-        new Node(BBox2D(Point2(mid.x, pmin.y), Point2(pmax.x, mid.y)), node);
+    node->children[0] = new Node(BBox(pmin, mid), node);
+    node->children[1] = new Node(
+        BBox(Point3(mid.x, pmin.y, pmin.z), Point3(pmax.x, mid.y, mid.z)), node);
+    node->children[2] = new Node(
+        BBox(Point3(pmin.x, mid.y, pmin.z), Point3(mid.x, pmax.y, mid.z)), node);
+    node->children[3] = new Node(
+        BBox(Point3(mid.x, mid.y, pmin.z), Point3(pmax.x, pmax.y, mid.z)), node);
+    node->children[4] = new Node(BBox(Point3(pmin.x, pmin.y, mid.z),
+                                      Point3(mid.x, mid.y, pmax.z)), node);
+    node->children[5] = new Node(
+        BBox(Point3(mid.x, pmin.y, mid.z), Point3(pmax.x, mid.y, pmax.z)), node);
+    node->children[6] = new Node(
+        BBox(Point3(pmin.x, mid.y, mid.z), Point3(mid.x, pmax.y, pmax.z)), node);
+    node->children[7] = new Node(
+        BBox(Point3(mid.x, mid.y, mid.z), Point3(pmax.x, pmax.y, pmax.z)), node);
     if (sf)
       sf(*node);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 8; i++) {
       node->children[i]->childNumber = i;
       refine(node->children[i], f, sf);
     }

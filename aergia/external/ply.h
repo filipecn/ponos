@@ -71,9 +71,9 @@ typedef struct PlyProperty {/* description of a property */
   int offset;        /* offset bytes of prop in a struct */
 
   int is_list;        /* 1 = list, 0 = scalar */
-  int count_external; /* file's count type */
-  int count_internal; /* program's count type */
-  int count_offset;   /* offset byte for list count */
+  int count_external; /* file's count_ type */
+  int count_internal; /* program's count_ type */
+  int count_offset;   /* offset byte for list count_ */
 
 } PlyProperty;
 
@@ -101,7 +101,7 @@ typedef struct OtherData {/* for storing other_props for an other element */
 
 typedef struct OtherElem {   /* data for one "other" element */
   char *elem_name;           /* names of other elements */
-  int elem_count;            /* count of instances of each element */
+  int elem_count;            /* count_ of instances of each element */
   OtherData **other_data;    /* actual property data for the elements */
   PlyOtherProp *other_props; /* description of the property data */
 } OtherElem;

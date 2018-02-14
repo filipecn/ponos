@@ -492,6 +492,25 @@ inline uint32 mortonCode(uint32 x, uint32 y) {
   return (separateBy1(y) << 1) + separateBy1(x);
 }
 
+inline uint32_t separateBy2(uint32_t n) {
+  n = (n ^ (n << 16)) & 0xff0000ff;
+  n = (n ^ (n << 8)) & 0x0300f00f;
+  n = (n ^ (n << 4)) & 0x030c30c3;
+  n = (n ^ (n << 2)) & 0x09249249;
+  return n;
+}
+
+/** \brief morton code
+ * \param x **[in]** number
+ * \param y **[in]** number
+ * \param z **[in]** number
+ * \return the morton code of **x**, **y** and **z**. The morton code is the
+ * combination of the two binary numbers with the bits interleaved.
+ */
+inline uint32_t mortonCode(uint32_t x, uint32_t y, uint32_t z) {
+  return (separateBy2(z) << 2) + (separateBy2(y) << 1) + separateBy2(x);
+}
+
 } // ponos namespace
 
 #endif

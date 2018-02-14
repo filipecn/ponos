@@ -103,7 +103,7 @@ inline float distance2(const Point2 &a, const Point2 &b) {
   return (a - b).length2();
 }
 
-template <class T, int D> class Point {
+template<class T, int D> class Point {
 public:
   Point();
   Point(T v);
@@ -169,25 +169,25 @@ public:
   T v[D];
 };
 
-template <class T, int D> Point<T, D>::Point() {
+template<class T, int D> Point<T, D>::Point() {
   size = D;
   for (int i = 0; i < D; i++)
     v[i] = static_cast<T>(0);
 }
 
-template <class T, int D> Point<T, D>::Point(T v) {
+template<class T, int D> Point<T, D>::Point(T v) {
   size = D;
   for (int i = 0; i < D; i++)
     v[i] = static_cast<T>(v);
 }
 
-template <class T, int D> Point<T, D>::Point(Point2 p) {
+template<class T, int D> Point<T, D>::Point(Point2 p) {
   size = D;
   v[0] = static_cast<T>(p.x);
   v[1] = static_cast<T>(p.y);
 }
 
-template <class T, int D>
+template<class T, int D>
 inline bool operator==(const Point<T, D> &lhs, const Point<T, D> &rhs) {
   for (size_t i = 0; i < lhs.size; ++i)
     if (lhs[i] != rhs[i])
@@ -195,7 +195,7 @@ inline bool operator==(const Point<T, D> &lhs, const Point<T, D> &rhs) {
   return true;
 }
 
-template <class T, int D>
+template<class T, int D>
 inline bool operator!=(const Point<T, D> &lhs, const Point<T, D> &rhs) {
   return !(lhs == rhs);
 }
@@ -244,6 +244,10 @@ public:
   bool operator==(const Point3 &p) const {
     return IS_EQUAL(p.x, x) && IS_EQUAL(p.y, y) && IS_EQUAL(p.z, z);
   }
+
+  bool operator>=(const Point3 &p) const { return x >= p.x && y >= p.y && z >= p.z; }
+
+  bool operator<=(const Point3 &p) const { return x <= p.x && y <= p.y && z <= p.z; }
   Point3 operator*(float d) const { return Point3(x * d, y * d, z * d); }
   Point3 operator/(float d) const { return Point3(x / d, y / d, z / d); }
   Point3 &operator/=(float d) {
@@ -260,6 +264,9 @@ public:
   Point2 xy() const { return Point2(x, y); }
   Point2 yz() const { return Point2(y, z); }
   Point2 xz() const { return Point2(x, z); }
+  Vector3 asVector3() const { return Vector3(x, y, z); }
+  ivec3 asIVec3() const { return ivec3(static_cast<const int &>(x), static_cast<const int &>(y),
+                                       static_cast<const int &>(z)); }
   bool HasNaNs() const;
 
   friend std::ostream &operator<<(std::ostream &os, const Point3 &p);

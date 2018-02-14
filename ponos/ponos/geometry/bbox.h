@@ -37,6 +37,8 @@ public:
   BBox2D();
   BBox2D(const Point2 &p1, const Point2 &p2);
 
+  static BBox2D unitBox() { return {Point2(), Point2(1, 1)}; }
+
   bool inside(const Point2 &p) const {
     return (p.x >= pMin.x && p.x <= pMax.x && p.y >= pMin.y && p.y <= pMax.y);
   }
@@ -79,14 +81,13 @@ inline BBox2D make_union(const BBox2D &a, const BBox2D &b) {
   return make_union(ret, b.pMax);
 }
 
-inline BBox2D make_unit_bbox2D() { return BBox2D(Point2(), Point2(1, 1)); }
-
 class BBox {
 public:
   BBox();
   BBox(const Point3 &p);
   BBox(const Point3 &p1, const Point3 &p2);
   friend BBox make_union(const BBox &b, const BBox &b1);
+  static BBox unitBox() { return {Point3(), Point3(1, 1, 1)}; }
   bool overlaps(const BBox &b) const {
     bool x = (pMax.x >= b.pMin.x) && (pMin.x <= b.pMax.x);
     bool y = (pMax.y >= b.pMin.y) && (pMin.y <= b.pMax.y);
@@ -95,12 +96,13 @@ public:
   }
   bool inside(const Point3 &p) const {
     return (p.x >= pMin.x && p.x <= pMax.x && p.y >= pMin.y && p.y <= pMax.y &&
-            p.z >= pMin.z && p.z <= pMax.z);
+        p.z >= pMin.z && p.z <= pMax.z);
   }
   void expand(float delta) {
     pMin -= Vector3(delta, delta, delta);
     pMax -= Vector3(delta, delta, delta);
   }
+  Point3 center() const { return pMin + (pMax - pMin) * .5f; }
   float size(size_t d) const { return pMax[d] - pMin[d]; }
   float surfaceArea() const {
     Vector3 d = pMax - pMin;

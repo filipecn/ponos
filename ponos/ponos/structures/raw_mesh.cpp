@@ -179,7 +179,7 @@ void fitToBBox(RawMesh *rm, const BBox2D &bbox) {
 std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
   os << "RawMesh:\n";
   os << "vertex description (dim = " << rm.vertexDescriptor.elementSize
-     << ", count = " << rm.vertexDescriptor.count << ")\n";
+     << ", count_ = " << rm.vertexDescriptor.count << ")\n";
   for (size_t i = 0; i < rm.vertexDescriptor.count; i++) {
     std::cout << "v" << i << " = ";
     for (size_t j = 0; j < rm.vertexDescriptor.elementSize; j++)
@@ -187,7 +187,7 @@ std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
     std::cout << std::endl;
   }
   os << "mesh description (dim = " << rm.meshDescriptor.elementSize
-     << ", count = " << rm.meshDescriptor.count << ")\n";
+     << ", count_ = " << rm.meshDescriptor.count << ")\n";
   for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
     std::cout << "f" << i << " = ";
     for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)

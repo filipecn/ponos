@@ -104,7 +104,7 @@ Transform Camera::getTransform() const {
 }
 
 ponos::Line Camera::viewLineFromWindow(ponos::Point2 p) const {
-  // TODO it would be more intuitively calculated by using the inverse of MVP
+  // TODO it would be more intuitive to be calculated by using the inverse of MVP
   /*ponos::vec3 dir = normalize(target - pos);
   ponos::vec3 left = normalize(cross(normalize(up), dir));
   ponos::vec3 new_up = normalize(cross(dir, left));

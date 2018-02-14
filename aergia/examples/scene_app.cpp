@@ -11,7 +11,7 @@ int main() {
   aergia::loadOBJ("C:/Users/fuiri/Desktop/cube.obj", &m);
   m.apply(ponos::scale(5.f, 10.f, 5.f));
   app.init();
-  app.scene.add(new aergia::CartesianGrid(5, 5, 5));
+  aergia::SceneObjectSPtr cg(app.scene.add(new aergia::CartesianGrid(5, 5, 5)));
   app.scene.add(new aergia::SceneMesh(&m, [](aergia::Shader *s) {
     UNUSED_VARIABLE(s);
     glColor4f(0, 0, 0, 0.5);

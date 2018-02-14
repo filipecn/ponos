@@ -25,72 +25,119 @@
 #ifndef PONOS_STRUCTURES_OCTREE_H
 #define PONOS_STRUCTURES_OCTREE_H
 
-#include "geometry/bbox.h"
+#include <ponos/geometry/bbox.h>
 
 #include <functional>
 
 namespace ponos {
 
 /**
- *   /  0  /  1 /
- *  / 2  /  3  /
+ * y
+ * |_ x
+ * z
+ *   /  2  /  3 /
+ *  / 6  /  7  /
  *  ------------
- * |   4 |   5 |
- * | 6   | 7   |
+ * |   0 |   1 |
+ * | 4   | 5   |
  * ------------
  */
-template <typename NodeData> class Octree {
+/// Represents an Octree
+/// \tparam NodeData Data Type stored in each node
+template<typename NodeData> class Octree {
 public:
   struct Node {
-    friend class QuadTree;
-    Node(const BBox &r, Node *p = nullptr) : bbox(r), l(0), parent(p) {
+    friend class Octree;
+    /// Constructor
+    /// \param r root's region on space
+    /// \param p [opitional] a parent node, if so, the new node becomes its child
+    explicit Node(const BBox &r, Node *p = nullptr) : bbox_(r), level_(0), parent(p) {
       for (int i = 0; i < 8; i++)
         children[i] = nullptr;
       if (parent)
-        l = parent->l + 1;
+        level_ = parent->level_ + 1;
     }
+    /// checks if node has any child
+    /// \return **true** if leaf
     bool isLeaf() const {
       return children[0] == nullptr && children[1] == nullptr &&
-             children[2] == nullptr && children[3] == nullptr &&
-             children[4] == nullptr && children[5] == nullptr &&
-             children[6] == nullptr && children[7] == nullptr;
+          children[2] == nullptr && children[3] == nullptr &&
+          children[4] == nullptr && children[5] == nullptr &&
+          children[6] == nullptr && children[7] == nullptr;
     }
-    size_t id;
-    size_t level() const { return l; }
-    BBox region() const { return bbox; }
+    /// node id on the tree
+    /// \return id
+    uint id() const { return id_; }
+    /// node level on the tree
+    /// \return level
+    uint level() const { return level_; }
+    /// region in space the node occupies
+    /// \return a bounding box represent the node's region
+    BBox region() const { return bbox_; }
     NodeData data;
     Node *children[8];
 
   private:
-    BBox bbox;
-    size_t l;
-    Node *parent size_t childNumber;
+    uint id_;         ///< node's unique id on the tree
+    BBox bbox_;       ///< region in space this node occupies
+    uint level_;      ///< level on the tree of this node
+    Node *parent;     ///< pointer to parent node
+    uint childNumber; ///< which child is this
   };
-
+  /// Constructor
   Octree();
+  /// Builds full octree
+  /// \param region root's region on space
+  /// \param height tree's height
+  Octree(const BBox &region, uint height);
+  /// Constructor
+  /// \param region  root's region on space
+  /// \param f refinement criteria
   Octree(const BBox &region, const std::function<bool(Node &node)> &f);
+  /// Constructor
+  /// \param region root's region on space
+  /// \param rootData root's data
+  /// \param f refinement criteria
+  /// \param sf **[opitional]** called right after children are created (pre-order traversal)
   Octree(const BBox &region, NodeData rootData,
          const std::function<bool(Node &node)> &f,
          std::function<void(Node &)> sf = nullptr);
   virtual ~Octree();
-  size_t height() const { return height; }
-  size_t nodeCount() const { return count; }
+  /// \return tree's height
+  uint height() const { return height_; }
+  /// \return total number of nodes
+  uint nodeCount() const { return count_; }
+  /// pre-order traversal
+  /// \param f if returns false, stops recursion
   void traverse(const std::function<bool(Node &node)> &f);
+  /// const pre-order traversal
+  /// \param f if returns false, stops recursion
   void traverse(const std::function<bool(const Node &node)> &f) const;
-  Node *root;
 
 private:
+  /// refine tree
+  /// \param node starting node
+  /// \param f refinement criteria
+  /// \param sf **[opitional]** called right after children are created (pre-order traversal)
   void refine(Node *node, const std::function<bool(Node &node)> &f,
               std::function<void(Node &)> sf = nullptr);
+  /// pre-order traversal
+  /// \param node starting node
+  /// \param f if returns false, stops recursion
   void traverse(Node *node, const std::function<bool(Node &node)> &f);
+  /// const pre-order traversal
+  /// \param node starting node
+  /// \param f if returns false, stops recursion
   void traverse(Node *node,
                 const std::function<bool(const Node &node)> &f) const;
+  /// free memory
   void clean(Node *node);
-  size_t height_;
-  size_t count;
+  Node *root_;    ///< tree's root
+  uint height_;   ///< current height
+  uint count_;    ///< current node count
 };
 
-#include "structures/octree.inl"
+#include "ponos/structures/octree.inl"
 
 } // ponos namespace
 

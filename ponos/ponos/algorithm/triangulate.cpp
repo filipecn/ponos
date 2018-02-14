@@ -126,15 +126,15 @@ void report(struct triangulateio *io, int markers, int reporttriangles,
 }
 
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
-  UNUSED_VARIABLE(output);
+  UNUSED(output);
   {
     FILE *fp = fopen("D.poly", "w+");
-    fprintf(fp, "%lu 2 0 1\n", input->vertexDescriptor.count);
-    for (size_t i = 0; i < input->vertexDescriptor.count; i++)
+    fprintf(fp, "%lu 2 0 1\n", input->vertexDescriptor.count_);
+    for (size_t i = 0; i < input->vertexDescriptor.count_; i++)
       fprintf(fp, "%lu %f %f %d\n", i, input->vertices[i * 2],
               input->vertices[i * 2 + 1], data->vertexBoundaryMarker[i]);
-    fprintf(fp, "%lu 0\n", input->meshDescriptor.count);
-    for (size_t i = 0; i < input->meshDescriptor.count; i++)
+    fprintf(fp, "%lu 0\n", input->meshDescriptor.count_);
+    for (size_t i = 0; i < input->meshDescriptor.count_; i++)
       fprintf(fp, "%lu %d %d\n", i, input->indices[i * 2].vertexIndex,
               input->indices[i * 2 + 1].vertexIndex);
     fprintf(fp, "0\n");
@@ -199,7 +199,7 @@ void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
   printf("Initial triangulation:\n\n");
   report(&mid, 1, 1, 1, 1, 1, 0);
   /*
-in.numberofpoints = input->vertexDescriptor.count;
+in.numberofpoints = input->vertexDescriptor.count_;
 in.pointlist = (REAL *)malloc(in.numberofpoints * 2 * sizeof(REAL));
 for (int i = 0; i < in.numberofpoints; i++) {
 in.pointlist[i * 2 + 0] = input->vertices[i * 2 + 0];
@@ -226,7 +226,7 @@ in.trianglearealist = (REAL *)NULL;
 in.numberoftriangles = 0;
 in.numberoftriangleattributes = 0;
 in.numberofcorners = 0;
-in.numberofsegments = input->meshDescriptor.count;
+in.numberofsegments = input->meshDescriptor.count_;
 if (in.numberofsegments) {
 in.segmentlist = (int *)malloc(in.numberofsegments * 2 * sizeof(int));
 for (int i = 0; i < in.numberofsegments; i++) {

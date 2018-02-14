@@ -62,7 +62,7 @@ int readFile(const char *filename, char **text) {
 #endif
 #ifndef WIN32
 int readFile(const char *filename, char **text) {
-  int count;
+  int count_;
 
   int fd = open(filename, O_RDONLY);
   if (fd == -1)
@@ -77,14 +77,14 @@ int readFile(const char *filename, char **text) {
     return 0;
 
   fseek(f, 0, SEEK_SET);
-  count = (int)fread(*text, 1, size, f);
-  (*text)[count] = '\0';
+  count_ = (int)fread(*text, 1, size, f);
+  (*text)[count_] = '\0';
 
   if (ferror(f))
-    count = 0;
+    count_ = 0;
 
   fclose(f);
-  return count;
+  return count_;
 }
 #endif
 } // ponos namespace

@@ -93,6 +93,8 @@ void App::key(int k, int action) {
     viewports[i].key(k, action);
   if (keyCallback)
     keyCallback(k, action);
+  else if (k == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+      GraphicsDisplay::instance().stop();
 }
 
 void App::resize(int w, int h) {

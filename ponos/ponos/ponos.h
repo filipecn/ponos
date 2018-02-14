@@ -66,8 +66,11 @@
 #include <ponos/structures/level_set.h>
 #include <ponos/structures/mesh.h>
 #include <ponos/structures/object_pool.h>
+#include <ponos/structures/octree.h>
+#include <ponos/structures/point_set_interface.h>
 #include <ponos/structures/quad_tree.h>
 #include <ponos/structures/raw_mesh.h>
 #include <ponos/structures/regular_grid.h>
 #include <ponos/structures/tetrahedron_mesh.h>
 #include <ponos/structures/z_grid.h>
+#include <ponos/structures/z_point_set.h>

@@ -269,6 +269,10 @@ public:
     return *this;
   }
   Vector3 operator-() const { return Vector3(-x, -y, -z); }
+
+  bool operator>=(const Vector3 &p) const { return x >= p.x && y >= p.y && z >= p.z; }
+
+  bool operator<=(const Vector3 &p) const { return x <= p.x && y <= p.y && z <= p.z; }
   // normalization
   float length2() const { return x * x + y * y + z * z; }
   float length() const { return sqrtf(length2()); }
@@ -531,8 +535,8 @@ public:
     return Vector<T, 2>(static_cast<float>(v[x]), static_cast<float>(v[y]));
   }
 
-  Vector<T, 3> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2) {
-    return Vector<T, 3>(static_cast<float>(v[x]), static_cast<float>(v[y]),
+  Vector<float, 3> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2) {
+    return Vector<float, 3>(static_cast<float>(v[x]), static_cast<float>(v[y]),
                         static_cast<float>(v[z]));
   }
 

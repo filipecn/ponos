@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_STRUCTURES_QUAD_TREE_H
 #define PONOS_STRUCTURES_QUAD_TREE_H
@@ -157,40 +157,40 @@ void buildLeafNeighbourhood(QuadTree<NodeData> *tree) {
 template <typename NodeData>
 void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
   typedef typename QuadTree<NodeData>::Node NodeType;
-  std::function<void(NodeType *, NodeType *)> verticalProcess = [&](
-      NodeType *top, NodeType *bottom) {
-    if (!top && !bottom)
-      return;
-    if (top) {
-      if (top->isLeaf()) {
-        BBox2D r = top->region();
-        top->data.neighbours.emplace_back(
-            new NodeType(BBox2D(Point2(r.pMin.x, r.pMin.y - r.size(1)),
-                                Point2(r.pMax.x, r.pMin.y))));
-        top->data.neighbours[top->data.neighbours.size() - 1]->data.isPhantom =
-            true;
-        top->data.neighboursPosition.emplace_back(
-            NodeData::NeighbourPosition::BOTTOM);
-      } else {
-        verticalProcess(top->children[2], bottom);
-        verticalProcess(top->children[3], bottom);
-      }
-    } else {
-      if (bottom->isLeaf()) {
-        BBox2D r = bottom->region();
-        bottom->data.neighbours.emplace_back(
-            new NodeType(BBox2D(Point2(r.pMin.x, r.pMax.y),
-                                Point2(r.pMax.x, r.pMax.y + r.size(1)))));
-        bottom->data.neighbours[bottom->data.neighbours.size() - 1]
-            ->data.isPhantom = true;
-        bottom->data.neighboursPosition.emplace_back(
-            NodeData::NeighbourPosition::TOP);
-      } else {
-        verticalProcess(top, bottom->children[0]);
-        verticalProcess(top, bottom->children[1]);
-      }
-    }
-  };
+  std::function<void(NodeType *, NodeType *)> verticalProcess =
+      [&](NodeType *top, NodeType *bottom) {
+        if (!top && !bottom)
+          return;
+        if (top) {
+          if (top->isLeaf()) {
+            BBox2D r = top->region();
+            top->data.neighbours.emplace_back(
+                new NodeType(BBox2D(Point2(r.pMin.x, r.pMin.y - r.size(1)),
+                                    Point2(r.pMax.x, r.pMin.y))));
+            top->data.neighbours[top->data.neighbours.size() - 1]
+                ->data.isPhantom = true;
+            top->data.neighboursPosition.emplace_back(
+                NodeData::NeighbourPosition::BOTTOM);
+          } else {
+            verticalProcess(top->children[2], bottom);
+            verticalProcess(top->children[3], bottom);
+          }
+        } else {
+          if (bottom->isLeaf()) {
+            BBox2D r = bottom->region();
+            bottom->data.neighbours.emplace_back(
+                new NodeType(BBox2D(Point2(r.pMin.x, r.pMax.y),
+                                    Point2(r.pMax.x, r.pMax.y + r.size(1)))));
+            bottom->data.neighbours[bottom->data.neighbours.size() - 1]
+                ->data.isPhantom = true;
+            bottom->data.neighboursPosition.emplace_back(
+                NodeData::NeighbourPosition::TOP);
+          } else {
+            verticalProcess(top, bottom->children[0]);
+            verticalProcess(top, bottom->children[1]);
+          }
+        }
+      };
   verticalProcess(tree->root, nullptr);
   verticalProcess(nullptr, tree->root);
   std::function<void(NodeType *, NodeType *)> horizontalProcess =
@@ -247,7 +247,7 @@ void iterateNeighbours(
     found = true;
     return false;
   });
-  ASSERT_FATAL(leaf != nullptr);
+  // ASSERT_FATAL(leaf != nullptr);
   std::vector<bool> visited;
   std::queue<NodeType *> q;
   q.push(leaf);
@@ -275,6 +275,6 @@ void iterateNeighbours(
 
 #include <ponos/structures/quad_tree.inl>
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_STRUCTURES_QUAD_TREE_H

@@ -168,6 +168,8 @@ private:
   Shader *shader;
 };
 
+typedef std::shared_ptr<SceneObject> SceneObjectSPtr;
+
 } // aergia namespace
 
 #endif // AERGIA_SCENE_SCENE_OBJECT_H

@@ -48,9 +48,9 @@ public:
   /** \brief  add
    * \param o pointer to the object
    */
-  SceneObject *add(SceneObject *o) {
+  template <typename T = SceneObject> T *add(SceneObject *o) {
     s.add(o);
-    return o;
+    return static_cast<T*>(o);
   }
 
   void render() {

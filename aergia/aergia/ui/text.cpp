@@ -89,7 +89,7 @@ Text::Text(const char *font) {
   quad.shader->addVertexAttribute("position");
   quad.shader->addVertexAttribute("texcoord");
 #else
-  UNUSED_VARIABLE(font);
+  UNUSED(font);
 #endif
 }
 void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
@@ -117,11 +117,11 @@ void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   glBindTexture(GL_TEXTURE_2D, 0);
   quad.shader->end();
 #else
-  UNUSED_VARIABLE(s);
-  UNUSED_VARIABLE(x);
-  UNUSED_VARIABLE(y);
-  UNUSED_VARIABLE(scale);
-  UNUSED_VARIABLE(c);
+  UNUSED(s);
+  UNUSED(x);
+  UNUSED(y);
+  UNUSED(scale);
+  UNUSED(c);
   std::cerr << "FREETYPE not included!\n";
 #endif
 }

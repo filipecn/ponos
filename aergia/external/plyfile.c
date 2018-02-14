@@ -978,7 +978,7 @@ void setup_other_props(PlyFile *plyfile, PlyElement *elem) {
           size += sizeof(void *); /* always use size of a pointer here */
         }
 
-        /* count of number of list elements */
+        /* count_ of number of list elements */
         if (type_size == ply_type_size[prop->count_external]) {
           prop->count_offset = size;
           size += ply_type_size[prop->count_external];
@@ -1123,7 +1123,7 @@ PlyOtherElems *ply_get_other_element(PlyFile *plyfile, char *elem_name,
     other_elems->num_elems++;
   }
 
-  /* count of element instances in file */
+  /* count_ of element instances in file */
   other->elem_count = elem_count;
 
   /* save name of element */

@@ -12,6 +12,7 @@ add_executable(procedural_texture WIN32 procedural_texture.cpp)
 add_executable(z_grid zgrid_example.cpp)
 add_executable(c_regular_grid_example WIN32 c_regular_grid.cpp)
 add_executable(hemesh_example WIN32 hemesh.cpp)
+add_executable(advect WIN32 advect.cpp)
 #add_executable(triangulate_example WIN32 triangulate_example.cpp)
 
 if (WIN32)
