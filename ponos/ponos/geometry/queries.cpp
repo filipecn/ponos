@@ -9,7 +9,15 @@ namespace ponos {
 bool bbox_bbox_intersection(const BBox2D &a, const BBox2D &b) {
   for (int i = 0; i < 2; i++)
     if (!((a.pMin[i] <= b.pMin[i] && a.pMax[i] >= b.pMin[i]) ||
-          (b.pMin[i] <= a.pMin[i] && b.pMax[i] >= a.pMin[i])))
+        (b.pMin[i] <= a.pMin[i] && b.pMax[i] >= a.pMin[i])))
+      return false;
+  return true;
+}
+
+bool bbox_bbox_intersection(const BBox &a, const BBox &b) {
+  for (int i = 0; i < 3; i++)
+    if (!((a.pMin[i] <= b.pMin[i] && a.pMax[i] >= b.pMin[i]) ||
+        (b.pMin[i] <= a.pMin[i] && b.pMax[i] >= a.pMin[i])))
       return false;
   return true;
 }
@@ -130,15 +138,15 @@ bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit0,
       normal[0] = -1;
       normal[1] = 0;
     } else if (ray.o.x > box[1].x && ray.o.y >= box[0].y &&
-               ray.o.y <= box[1].y) {
+        ray.o.y <= box[1].y) {
       normal[0] = 1;
       normal[1] = 0;
     } else if (ray.o.y < box[0].y && ray.o.x >= box[0].x &&
-               ray.o.x <= box[1].x) {
+        ray.o.x <= box[1].x) {
       normal[0] = 0;
       normal[1] = -1;
     } else if (ray.o.y > box[0].y && ray.o.x >= box[0].x &&
-               ray.o.x <= box[1].x) {
+        ray.o.x <= box[1].x) {
       normal[0] = 0;
       normal[1] = 1;
     } else if (ray.o.x < box[0].x && ray.o.y < box[0].y) {
@@ -217,7 +225,7 @@ bool triangle_point_intersection(const Point2 &p, const Point2 *vertices) {
   triangle_barycentric_coordinates(p, vertices[0], vertices[1], vertices[2], u,
                                    v, w);
   return IS_BETWEEN_CLOSE(u, 0.f, 1.f) && IS_BETWEEN_CLOSE(v, 0.f, 1.f) &&
-         IS_BETWEEN_CLOSE(w, 0.f, 1.f);
+      IS_BETWEEN_CLOSE(w, 0.f, 1.f);
 }
 
 bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
@@ -257,7 +265,7 @@ bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
 Point3 closest_point_plane(const Point3 &p, const Plane &pl) {
   float t =
       (dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset) /
-      dot(static_cast<vec3>(pl.normal), static_cast<vec3>(pl.normal));
+          dot(static_cast<vec3>(pl.normal), static_cast<vec3>(pl.normal));
   return p - t * static_cast<vec3>(pl.normal);
 }
 
@@ -281,14 +289,14 @@ Point3 closest_point_bbox(const Point3 &p, const BBox &b) {
 
 float distance_point_plane(const Point3 &p, const Plane &pl) {
   return (dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset) /
-         dot(static_cast<vec3>(pl.normal), static_cast<vec3>(pl.normal));
+      dot(static_cast<vec3>(pl.normal), static_cast<vec3>(pl.normal));
 }
 
 float distance_point_n_plane(const Point3 &p, const Plane &pl) {
   return dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset;
 }
 
-template <typename T>
+template<typename T>
 float distance2_point_segment(const T &p, const Segment<T> &s) {
   float e = dot(p - s.a, s.b - s.a);
   if (e <= 0.f)

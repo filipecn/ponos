@@ -38,7 +38,7 @@ public:
   virtual uint add(Point3) = 0;
   virtual void setPosition(uint, Point3) = 0;
   virtual void remove(uint) = 0;
-  //virtual void search(const BBox &, const std::function<void(uint)> &) = 0;
+  virtual void search(const BBox &, const std::function<void(uint)> &) = 0;
   //virtual void
   //iteratePoints(const std::function<void(uint, Point3)> &f) const = 0;
 };

@@ -2264,7 +2264,7 @@ GROUP_GRAPHS           = YES
 
 UML_LOOK               = NO
 
-# If the UML_LOOK tag is enabled, the fields and methods are shown inside the
+# If the UML_LOOK tag is enabled, the fields and methods are shown contains the
 # class node. If there are many fields or methods and many nodes the graph may
 # become too big to be useful. The UML_LIMIT_NUM_FIELDS threshold limits the
 # number of items for each type to make the size more manageable. Set this to 0

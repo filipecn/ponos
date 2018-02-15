@@ -94,7 +94,7 @@ public:
     bool z = (pMax.z >= b.pMin.z) && (pMin.z <= b.pMax.z);
     return (x && y && z);
   }
-  bool inside(const Point3 &p) const {
+  bool contains(const Point3 &p) const {
     return (p.x >= pMin.x && p.x <= pMax.x && p.y >= pMin.y && p.y <= pMax.y &&
         p.z >= pMin.z && p.z <= pMax.z);
   }

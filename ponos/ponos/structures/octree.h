@@ -114,7 +114,7 @@ public:
   /// \param f if returns false, stops recursion
   void traverse(const std::function<bool(const Node &node)> &f) const;
 
-private:
+protected:
   /// refine tree
   /// \param node starting node
   /// \param f refinement criteria

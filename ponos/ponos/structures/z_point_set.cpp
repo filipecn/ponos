@@ -27,6 +27,7 @@
 namespace ponos {
 
 ZPointSet::ZPointSet() {
+  tree_ = nullptr;
   end_ = 0;
   lastId_ = 0;
   nbits_ = 0;
@@ -39,9 +40,10 @@ ZPointSet::ZPointSet() {
 
 ZPointSet::~ZPointSet() = default;
 
-ZPointSet::ZPointSet(uint maxCoordinates) {
+ZPointSet::ZPointSet(uint maxCoordinates) : ZPointSet() {
   FATAL_ASSERT(isPowerOf2(maxCoordinates));
   resolution_ = Point3(maxCoordinates, maxCoordinates, maxCoordinates);
+  // TODO: solve this
   //auto h = 1.f / maxCoordinates;
   //toSet_ = scale(h, h, h);
   maxZCode_ = computeIndex(resolution_);
@@ -49,8 +51,6 @@ ZPointSet::ZPointSet(uint maxCoordinates) {
   for (nbits_ = 0; n; n >>= 1)
     nbits_++;
   maxDepth_ = nbits_;
-  end_ = 0;
-  lastId_ = 0;
 }
 
 void ZPointSet::update() {
@@ -84,8 +84,9 @@ void ZPointSet::update() {
     while (end_ > 0 && !points_[end_ - 1].active)
       end_--;
   }
-  // delete _tree;
-  // tree = new SearchTree(*this);
+  if (tree_)
+    delete tree_;
+  tree_ = new search_tree(*this);
   needUpdate_ = false;
   sizeChanged_ = false;
 }
@@ -136,6 +137,14 @@ Point3 ZPointSet::operator[](uint i) const {
 
 uint ZPointSet::computeIndex(const Point3 &p) {
   return mortonCode(static_cast<uint32_t>(p.x), static_cast<uint32_t>(p.y), static_cast<uint32_t>(p.z));
+}
+
+void ZPointSet::search(const BBox &b, const std::function<void(uint)> &f) {
+  if (!tree_ || needUpdate_ || needZUpdate_)
+    update();
+  if (!tree_)
+    return;
+  tree_->iteratePoints(b, [&](uint id) { f(id); });
 }
 
 } // ponos namespace

@@ -22,6 +22,12 @@ namespace ponos {
  */
 bool bbox_bbox_intersection(const BBox2D &a, const BBox2D &b);
 /** \brief  intersection test
+ * \param a **[in]**
+ * \param b **[in]**
+ * /return
+ */
+bool bbox_bbox_intersection(const BBox &a, const BBox &b);
+/** \brief  intersection test
 * \param a **[in]**
 * \param b **[in]**
 * /return
