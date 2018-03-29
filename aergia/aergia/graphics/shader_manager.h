@@ -40,7 +40,7 @@ namespace aergia {
 class ShaderManager {
 public:
   static ShaderManager &instance() { return instance_; }
-  virtual ~ShaderManager() {}
+  virtual ~ShaderManager() = default;
   /** \brief Creates a shader program from shader files.
    * It expects only one file of each type with extensions .fs, .vs and .gs.
    * \return program id. **-1** if error.
@@ -61,10 +61,10 @@ public:
    */
   bool useShader(GLuint program);
 
-private:
-  ShaderManager();
   ShaderManager(ShaderManager const &) = delete;
   void operator=(ShaderManager const &) = delete;
+private:
+  ShaderManager();
 
   GLuint createProgram(const GLchar *, const GLchar *);
   GLuint compile(const char *shaderSource, GLuint shaderType);

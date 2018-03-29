@@ -68,7 +68,7 @@ ParticleSystemModel::ParticleSystemModel(ParticleSystem &ps, float r)
       "   outColor = vertex.color;"
       "}";
   // generate base mesh
-  particleMesh_.reset(aergia::create_icosphere_mesh(ponos::Point3(), 1.f, 3));
+  particleMesh_.reset(ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, false, false));
   // create a vertex buffer for base mesh
   particleSceneMesh_.reset(new aergia::SceneMesh(*particleMesh_.get()));
   instances_.reset(

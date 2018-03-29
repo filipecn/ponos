@@ -1,5 +1,4 @@
 #include <aergia/io/graphics_display.h>
-#include <aergia/scene/camera_2d.h>
 #include <aergia/ui/app.h>
 
 namespace aergia {

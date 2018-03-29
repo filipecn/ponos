@@ -4,7 +4,7 @@
 #include <vector>
 
 aergia::GraphicsDisplay &gd = aergia::GraphicsDisplay::instance();
-aergia::Camera2D camera;
+aergia::UserCamera2D camera;
 ponos::Transform toWorld;
 ponos::Brep<float, 2> brep;
 ponos::BBox2D bbox;
@@ -157,7 +157,7 @@ int main() {
   bbox = ponos::make_union(bbox, ponos::Point2(5, -5));
   // loadMesh();
   // set camera
-  camera.setPos(ponos::vec2(bbox.center().x, bbox.center().y));
+  // camera.setPos(ponos::vec2(bbox.center().x, bbox.center().y));
   camera.setZoom((bbox.pMax - bbox.pMin)[0]);
   camera.resize(800, 800);
   toWorld = ponos::Transform(ponos::inverse(camera.getTransform()));

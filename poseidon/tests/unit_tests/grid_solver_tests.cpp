@@ -1,5 +1,5 @@
-#include <poseidon/poseidon.h>
 #include <gtest/gtest.h>
+#include <poseidon/poseidon.h>
 
 // using namespace ponos;
 using namespace poseidon;

@@ -28,7 +28,6 @@
 //#includ<aergia/ >io/vulkan_utils.h>
 #include <aergia/scene/bvh.h>
 #include <aergia/scene/camera.h>
-// #include <aergia/scene/camera_2d.h>
 #include <aergia/scene/instance_set.h>
 #include <aergia/scene/mesh_utils.h>
 #include <aergia/scene/quad.h>

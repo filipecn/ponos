@@ -1,4 +1,4 @@
-// Created by filipecn on 2/27/18.
+// Created by filipecn on 3/28/18.
 /*
  * Copyright (c) 2018 FilipeCN
  *
@@ -23,18 +23,27 @@
  *
 */
 
-#include <poseidon/math/numerical.h>
+#ifndef AERGIA_TEXT_MANAGER_H
+#define AERGIA_TEXT_MANAGER_H
 
-namespace poseidon {
+#include <aergia/ui/text.h>
 
-ponos::vec3d enrightField(ponos::Point3 p) {
-  return ponos::vec3d({2. * std::sin(ponos::Constants::pi * p.x) * std::sin(2. * ponos::Constants::pi * p.y)
-                           * std::sin(2. * ponos::Constants::pi * p.z),
-                       -std::sin(2. * ponos::Constants::pi * p.x) * SQR(std::sin(ponos::Constants::pi * p.y))
-                           * std::sin(2. * ponos::Constants::pi * p.z),
-                       -std::sin(2. * ponos::Constants::pi * p.x) * std::sin(2. * ponos::Constants::pi * p.y)
-                           * SQR(std::sin(ponos::Constants::pi * p.z))});
-}
+namespace aergia {
 
-} // numerical namespace
+/// Manages font texts
+class TextManager {
+public:
+  static TextManager &instance();
+  virtual ~TextManager();
+  TextManager(TextManager const &) = delete;
+  void operator=(TextManager const &) = delete;
 
+private:
+  TextManager();
+  static TextManager instance_;
+  std::vector<Text> text_;
+};
+
+} // aergia namespace
+
+#endif //AERGIA_TEXT_MANAGER_H

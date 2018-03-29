@@ -1,4 +1,4 @@
-// Created by filipecn on 2/27/18.
+// Created by filipecn on 3/28/18.
 /*
  * Copyright (c) 2018 FilipeCN
  *
@@ -23,18 +23,18 @@
  *
 */
 
-#include <poseidon/math/numerical.h>
+#include "text_manager.h"
 
-namespace poseidon {
+namespace aergia {
 
-ponos::vec3d enrightField(ponos::Point3 p) {
-  return ponos::vec3d({2. * std::sin(ponos::Constants::pi * p.x) * std::sin(2. * ponos::Constants::pi * p.y)
-                           * std::sin(2. * ponos::Constants::pi * p.z),
-                       -std::sin(2. * ponos::Constants::pi * p.x) * SQR(std::sin(ponos::Constants::pi * p.y))
-                           * std::sin(2. * ponos::Constants::pi * p.z),
-                       -std::sin(2. * ponos::Constants::pi * p.x) * std::sin(2. * ponos::Constants::pi * p.y)
-                           * SQR(std::sin(ponos::Constants::pi * p.z))});
+TextManager TextManager::instance_;
+
+TextManager &TextManager::instance() {
+  return instance_;
 }
 
-} // numerical namespace
+TextManager::TextManager() = default;
 
+TextManager::~TextManager() = default;
+
+} // aergia namespace

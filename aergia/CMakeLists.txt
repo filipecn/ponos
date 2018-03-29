@@ -48,6 +48,7 @@ set(HEADERS
         aergia/ui/modifier_cursor.h
         aergia/ui/scene_app.h
         aergia/ui/text.h
+        aergia/ui/text_manager.h
         aergia/ui/trackball.h
         aergia/ui/trackball_interface.h
         aergia/ui/track_mode.h
@@ -85,6 +86,7 @@ set(SOURCES
         aergia/scene/wireframe_mesh.cpp
         aergia/ui/app.cpp
         aergia/ui/text.cpp
+        aergia/ui/text_manager.cpp
         aergia/ui/trackball_interface.cpp
         aergia/ui/ui_camera.cpp
         aergia/utils/open_gl.cpp

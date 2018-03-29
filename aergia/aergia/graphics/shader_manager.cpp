@@ -154,9 +154,9 @@ GLuint ShaderManager::compile(const char *shaderSource, GLuint shaderType) {
 
 GLuint ShaderManager::createProgram(const std::vector<GLuint> &objects) {
   GLuint programObject = glCreateProgram();
-  for (unsigned i = 0; i < objects.size(); ++i)
-    if (objects[i])
-      glAttachShader(programObject, objects[i]);
+  for (unsigned int object : objects)
+    if (object)
+      glAttachShader(programObject, object);
   glLinkProgram(programObject);
   CHECK_GL_ERRORS;
   GLint linked;

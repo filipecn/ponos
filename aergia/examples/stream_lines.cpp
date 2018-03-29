@@ -16,7 +16,7 @@ public:
     selected = false;
   }
 
-  void draw() const override {
+  void draw() override {
     glColor4f(0, 0, 0, 0.3);
     if (selected)
       glColor4f(1, 0, 0, 0.5);
@@ -38,7 +38,7 @@ class Box : public aergia::SceneObject {
 public:
   Box(ponos::BBox b) : bbox(b) { selected = false; }
 
-  void draw() const override {
+  void draw() override {
     glLineWidth(1.f);
     if (selected)
       glLineWidth(4.f);
@@ -61,7 +61,7 @@ class Line : public aergia::SceneObject {
 public:
   Line(ponos::Ray3 r) { ray = r; }
 
-  void draw() const override {
+  void draw() override {
     glBegin(GL_LINES);
     aergia::glVertex(ray.o);
     aergia::glVertex(ray.o + 1000.f * ray.d);
@@ -91,7 +91,7 @@ public:
     }
   }
 
-  void draw() const override {
+  void draw() override {
     glColor4f(1, 0.1, 0.2, 0.8);
     glPointSize(4);
     glBegin(GL_POINTS);
@@ -145,7 +145,7 @@ public:
     }
     origin = o;
   }
-  void draw() const override {
+  void draw() override {
     glLineWidth(2);
     glColor4f(1, 0, 0.2, 0.3);
     glBegin(GL_LINES);
@@ -188,7 +188,7 @@ int main(int argc, char **argv) {
   app.scene.add(new aergia::WireframeMesh(
       aergia::create_wireframe_mesh(bvh->sceneMesh->rawMesh),
       bvh->sceneMesh->transform));
-  app.scene.add(new Box(bvh->sceneMesh->getBBox()));
+  // app.scene.add(new Box(bvh->sceneMesh->getBBox()));
   ponos::ivec3 ijk;
   if (argc < 4) {
     FILE *fp = fopen("points", "w+");
@@ -216,7 +216,7 @@ int main(int argc, char **argv) {
   int nstreams = 1000;
   if (argc > 4)
     sscanf(argv[4], "%d", &nstreams);
-
+/*
   BBoxSampler samples(bvh->sceneMesh->getBBox(), nstreams, bvh);
   app.scene.add(&samples);
   std::vector<StreamLine> streams;
@@ -239,5 +239,6 @@ int main(int argc, char **argv) {
     fprintf(fp, "\n");
   }
   fclose(fp);
+  */
   return 0;
 }

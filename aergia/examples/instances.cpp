@@ -37,7 +37,7 @@ int main() {
   aergia::SceneApp<> app(800, 800);
   app.init();
   // generate base mesh
-  ponos::RawMeshSPtr m(aergia::create_icosphere_mesh(ponos::Point3(), 1.f, 3));
+  ponos::RawMeshSPtr m(ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, false, false));
   // create a vertex buffer for base mesh
   aergia::SceneMesh sm(*m.get());
   // create instances container for 1000 instances (this number could be changed

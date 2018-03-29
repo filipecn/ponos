@@ -13,7 +13,7 @@ class VectorsGrid : public SceneObject {
 public:
   VectorsGrid() {}
   /* @inherit */
-  void draw() const override {
+  void draw() override {
     glPointSize(3);
     glBegin(GL_POINTS);
     ponos::ivec3 ijk;
@@ -41,7 +41,7 @@ public:
     }
   }
 
-  void draw() const override {
+  void draw() override {
     glPointSize(4);
     glBegin(GL_POINTS);
     for (uint i = 0; i < points.size(); i++) {

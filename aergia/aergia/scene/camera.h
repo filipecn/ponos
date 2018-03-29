@@ -154,21 +154,7 @@ protected:
   ponos::Frustum frustum;
   std::shared_ptr<CameraProjection> projection;
 };
-/*
-class Camera : public CameraInterface {
-public:
-  typedef Camera CameraType;
-  friend class CameraModel;
-  explicit Camera(CameraProjection *proj = new PerspectiveProjection(45.f));
-  void setUp(const ponos::vec3 &u);
-  void setFov(float f);
-  void update() override;
-  // INTERFACE
-  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
-  ponos::Ray3 pickRay(ponos::Point2 p) const override;
-  ponos::Plane viewPlane(ponos::Point3 p) const override;
-};
-*/
+
 } // aergia namespace
 
 #endif // AERGIA_SCENE_CAMERA_H

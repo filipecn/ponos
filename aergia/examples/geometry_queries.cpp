@@ -25,13 +25,13 @@ void render() {
 
 int main() {
   app.viewports[0].renderCallback = render;
-  app.viewports[0].camera.reset(new aergia::Camera2D());
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
+  app.viewports[0].camera.reset(new aergia::UserCamera2D());
+  static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())
       ->resize(WIDTH / 2, HEIGHT);
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
-      ->setPos(ponos::vec2(bb.pMin[0] + bb.size(0) * 0.5f,
-                           bb.pMin[1] + bb.size(1) * 0.5f));
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())->setZoom(0.1f);
+  //static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())
+  //    ->setPos(ponos::vec2(bb.pMin[0] + bb.size(0) * 0.5f,
+  //                         bb.pMin[1] + bb.size(1) * 0.5f));
+  static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())->setZoom(0.1f);
   app.init();
   app.run();
   return 0;
