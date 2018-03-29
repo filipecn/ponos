@@ -64,21 +64,21 @@ bool Mesh2D::intersect(const ponos::Point2 &p) {
   int hitCount = 0;
   for (size_t i = 0; i < mesh->meshDescriptor.count; i++) {
     ponos::Point2 a(
-        mesh->vertices[mesh->indices[i * mesh->meshDescriptor.elementSize + 0]
-                               .vertexIndex *
+        mesh->positions[mesh->indices[i * mesh->meshDescriptor.elementSize + 0]
+                               .positionIndex *
                            2 +
                        0],
-        mesh->vertices[mesh->indices[i * mesh->meshDescriptor.elementSize + 0]
-                               .vertexIndex *
+        mesh->positions[mesh->indices[i * mesh->meshDescriptor.elementSize + 0]
+                               .positionIndex *
                            2 +
                        1]);
     ponos::Point2 b(
-        mesh->vertices[mesh->indices[i * mesh->meshDescriptor.elementSize + 1]
-                               .vertexIndex *
+        mesh->positions[mesh->indices[i * mesh->meshDescriptor.elementSize + 1]
+                               .positionIndex *
                            2 +
                        0],
-        mesh->vertices[mesh->indices[i * mesh->meshDescriptor.elementSize + 1]
-                               .vertexIndex *
+        mesh->positions[mesh->indices[i * mesh->meshDescriptor.elementSize + 1]
+                               .positionIndex *
                            2 +
                        1]);
     if (ray_segment_intersection(Ray2(pp, vec2(1, 0)), Segment2(a, b)))

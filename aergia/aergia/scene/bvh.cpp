@@ -29,7 +29,7 @@
 
 namespace aergia {
 
-BVH::BVH(SceneMesh *m) {
+BVH::BVH(SceneMeshObject *m) {
   sceneMesh.reset(m);
   std::vector<BVHElement> buildData;
   for (size_t i = 0; i < sceneMesh->rawMesh->meshDescriptor.count; i++)
@@ -122,11 +122,11 @@ int BVH::intersect(const ponos::Ray3 &ray, float *t) {
       if (node->nElements > 0) {
         // intersect ray with primitives
         for (uint32_t i = 0; i < node->nElements; i++) {
-          ponos::Point3 v0 = sceneMesh->rawMesh->vertexElement(
+          ponos::Point3 v0 = sceneMesh->rawMesh->positionElement(
               orderedElements[node->elementsOffset + i], 0);
-          ponos::Point3 v1 = sceneMesh->rawMesh->vertexElement(
+          ponos::Point3 v1 = sceneMesh->rawMesh->positionElement(
               orderedElements[node->elementsOffset + i], 1);
-          ponos::Point3 v2 = sceneMesh->rawMesh->vertexElement(
+          ponos::Point3 v2 = sceneMesh->rawMesh->positionElement(
               orderedElements[node->elementsOffset + i], 2);
           if (ponos::triangle_ray_intersection(v0, v1, v2, r))
             hit++;
@@ -186,9 +186,9 @@ bool BVH::isInside(const ponos::Point3 &p) {
 
   int hit = 0, hit2 = 0;
   for (size_t i = 0; i < sceneMesh->rawMesh->meshDescriptor.count; i++) {
-    ponos::Point3 v0 = sceneMesh->rawMesh->vertexElement(i, 0);
-    ponos::Point3 v1 = sceneMesh->rawMesh->vertexElement(i, 1);
-    ponos::Point3 v2 = sceneMesh->rawMesh->vertexElement(i, 2);
+    ponos::Point3 v0 = sceneMesh->rawMesh->positionElement(i, 0);
+    ponos::Point3 v1 = sceneMesh->rawMesh->positionElement(i, 1);
+    ponos::Point3 v2 = sceneMesh->rawMesh->positionElement(i, 2);
     if (ponos::triangle_ray_intersection(v0, v1, v2, r))
       hit++;
     if (ponos::triangle_ray_intersection(v0, v1, v2, r2))

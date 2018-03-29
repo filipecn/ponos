@@ -39,7 +39,7 @@ namespace aergia {
  */
 class Shader {
 public:
-  Shader(GLuint id = 0);
+  Shader(int id = 0);
   /** \brief Creates a shader program from shader files.
    * It expects only one file of each type with extensions .fs, .vs and .gs.
    * \return program id. **-1** if error.
@@ -49,13 +49,16 @@ public:
    * \param b buffer pointer (must match attribute names)
    */
   bool begin(const VertexBuffer *b = nullptr);
-  /** \brief Deactivate shader program
-   */
+  /// Deactivate shader program
   void end();
   /** \brief
    * \param name
    */
   void addVertexAttribute(const char *name);
+  /// locates atribute **name** in shader's program
+  /// \param name attibute's name, must match name in shader code
+  /// \return attributes layout location
+  int locateAttribute(const std::string& name) const;
   // Uniforms
   void setUniform(const char *name, const ponos::mat4 &m);
   void setUniform(const char *name, const ponos::mat3 &m);

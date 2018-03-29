@@ -30,13 +30,17 @@
 namespace aergia {
 class Texture {
 public:
-  /** \brief Constructor.
-   * \param a texture attributes
-   * \param p texture parameters
-   */
+  Texture() = default;
+  /// \param a texture attributes
+  /// \param p texture parameters
   Texture(const TextureAttributes &a, const TextureParameters &p);
   virtual ~Texture();
+  /// Binds texture
+  /// \param t texture unit (ex: GL_TEXTURE0)
   virtual void bind(GLenum t) const;
+  /// Binds image texture to an image unit for  the purpose of reading and
+  /// writing it from shaders
+  /// \param t texture unit  (ex: GL_TEXTURE0)
   virtual void bindImage(GLenum t) const;
   ponos::uivec3 size() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
@@ -46,6 +50,7 @@ protected:
   TextureParameters parameters;
   GLuint textureObject;
 };
+
 } // aergia namespace
 
 #endif // AERGIA_IO_TEXTURE_H

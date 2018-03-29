@@ -11,12 +11,15 @@
 #include <aergia/helpers/hemesh_model.h>
 #include <aergia/helpers/quad_tree_model.h>
 #include <aergia/helpers/scene_handle.h>
+#include <aergia/helpers/tmesh_model.h>
 #include <aergia/helpers/vector_grid.h>
 #include <aergia/io/buffer.h>
+#include <aergia/io/display_renderer.h>
 #include <aergia/io/storage_buffer.h>
 #include <aergia/io/framebuffer.h>
 #include <aergia/io/graphics_display.h>
-#include <aergia/io/procedural_texture.h>
+#include <aergia/io/image_texture.h>
+#include <aergia/io/render_texture.h>
 #include <aergia/io/texture.h>
 #include <aergia/io/texture_parameters.h>
 #include <aergia/io/viewport_display.h>
@@ -25,10 +28,12 @@
 //#includ<aergia/ >io/vulkan_utils.h>
 #include <aergia/scene/bvh.h>
 #include <aergia/scene/camera.h>
-#include <aergia/scene/camera_2d.h>
+// #include <aergia/scene/camera_2d.h>
+#include <aergia/scene/instance_set.h>
 #include <aergia/scene/mesh_utils.h>
 #include <aergia/scene/quad.h>
 #include <aergia/scene/scene.h>
+#include <aergia/scene/scene_mesh.h>
 #include <aergia/scene/scene_object.h>
 #include <aergia/scene/triangle_mesh.h>
 #include <aergia/scene/wireframe_mesh.h>

@@ -57,7 +57,7 @@ public:
     float pm[16];
     transform.matrix().column_major(pm);
     glMultMatrixf(pm);
-    s.iterate([](const SceneObject *o) {
+    s.iterate([](SceneObject *o) {
       if (o->visible)
         o->draw();
     });

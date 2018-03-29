@@ -34,43 +34,56 @@
 
 namespace aergia {
 
-/** \brief Defines how a trackball is manipulated. */
+/// Defines the behavior of a trackball been manipulated.
 class TrackMode {
 public:
   TrackMode() : dragging_(false) {}
-  virtual ~TrackMode() {}
-
+  virtual ~TrackMode() = default;
+  /// Renders trackball mode helpers
+  /// \param tb trackball reference
   virtual void draw(const Trackball &tb) { UNUSED_VARIABLE(tb); }
-
-  // CONTROL
+  /// Starts the manipulation (usually triggered by a button press)
+  /// \param tb trackball reference
+  /// \param camera active viewport camera
+  /// \param p mouse position in normalized window position (NPos)
   virtual void start(Trackball &tb, const CameraInterface &camera,
                      ponos::Point2 p) {
     UNUSED_VARIABLE(camera);
     UNUSED_VARIABLE(tb);
-    cameraTransform_ = camera.getModelTransform();
     start_ = p;
     dragging_ = true;
   }
-  virtual void update(Trackball &tb, CameraInterface &camera,
-                      ponos::Point2 p) = 0;
+  /// Updates track mode state (usually after a mouse moviment or scroll)
+  /// \param tb trackball reference
+  /// \param camera active viewport camera
+  /// \param p mouse position in normalized window position (NPos)
+  /// \param d scroll delta
+  virtual void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) = 0;
+  /// Stops the manipulation (usually after a button release)
+  /// \param tb trackball reference
+  /// \param camera active viewport camera
+  /// \param p mouse position in normalized window position (NPos)
   virtual void stop(Trackball &tb, CameraInterface &camera, ponos::Point2 p) {
     UNUSED_VARIABLE(p);
     UNUSED_VARIABLE(camera);
     dragging_ = false;
-    camera.applyTransform(tb.transform * cameraTransform_);
-    tb.transform = ponos::Transform();
+    ////    camera.applyTransform(tb.transform * partialTransform_);
+    ////    tb.transform = ponos::Transform();
+    tb.applyPartialTransform();
   }
-  virtual void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) {
-    UNUSED_VARIABLE(tb);
-    UNUSED_VARIABLE(camera);
-    UNUSED_VARIABLE(d);
-  }
+  /// \return true if active
+  bool isActive() const { return dragging_; }
 
 protected:
+  /// Casts a ray from mouse's position to view plane
+  /// \param tb trackball reference
+  /// \param camera active viewport camera
+  /// \param p mouse position in normalized window position (NPos)
+  /// \return hit position
   ponos::Point3 hitViewPlane(Trackball &tb, CameraInterface &camera,
                              ponos::Point2 p) {
     ponos::Line l = camera.viewLineFromWindow(p);
-    ponos::Plane vp = camera.viewPlane(tb.center);
+    ponos::Plane vp = camera.viewPlane(tb.center());
     ponos::Point3 hp;
     ponos::plane_line_intersection(vp, l, hp);
     return hp;
@@ -78,54 +91,53 @@ protected:
 
   bool dragging_;
   ponos::Point2 start_;
-  ponos::Transform cameraTransform_;
 };
 
+/// Applies a scale
 class ScaleMode : public TrackMode {
 public:
   ScaleMode() : TrackMode() {}
-  ~ScaleMode() {}
-  void update(Trackball &tb, CameraInterface &camera,
-              ponos::Point2 p) override {
-    UNUSED_VARIABLE(tb);
-    UNUSED_VARIABLE(camera);
+  ~ScaleMode() override = default;
+  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) override {
+    if (d == ponos::vec2())
+      return;
     UNUSED_VARIABLE(p);
-  }
-  void update(Trackball &tb, CameraInterface &camera, ponos::vec2 d) override {
     UNUSED_VARIABLE(camera);
+    UNUSED_VARIABLE(tb);
     float scale = (d.y < 0.f) ? 1.1f : 0.9f;
-    tb.transform = tb.transform * ponos::scale(scale, scale, scale);
-    camera.applyTransform(tb.transform * this->cameraTransform_);
+    tb.accumulatePartialTransform(ponos::scale(scale, scale, scale));
   }
 };
 
+/// Applies a translation
 class PanMode : public TrackMode {
 public:
   PanMode() : TrackMode() {}
-  ~PanMode() {}
+  ~PanMode() override = default;
 
   void draw(Trackball tb) { UNUSED_VARIABLE(tb); }
 
-  void update(Trackball &tb, CameraInterface &camera,
-              ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) override {
+    UNUSED_VARIABLE(d);
     if (!dragging_)
       return;
     ponos::Point3 a = hitViewPlane(tb, camera, start_);
     ponos::Point3 b = hitViewPlane(tb, camera, p);
-    camera.setPosition(camera.getPosition() - (b - a));
-    // tb.transform = tb.transform * ponos::translate(b - a);
+    // it is -(b - a), because moving the mouse up should move the camera down
+    // (so the image goes up)
+    tb.accumulatePartialTransform(ponos::translate(a - b));
     start_ = p;
-    // camera.applyTransform(this->cameraTransform_ * tb.transform);
   }
 };
 
+/// Applies a translation in camera's z axis
 class ZMode : public TrackMode {
 public:
   ZMode() : TrackMode() {}
-  ~ZMode() {}
+  ~ZMode() override = default;
 
-  void update(Trackball &tb, CameraInterface &camera,
-              ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) override {
+    UNUSED_VARIABLE(d);
     if (!dragging_)
       return;
     ponos::Point3 a = hitViewPlane(tb, camera, start_);
@@ -134,47 +146,31 @@ public:
         ponos::normalize(camera.getTarget() - camera.getPosition());
     if (p.y - start_.y < 0.f)
       dir *= -1.f;
-    tb.transform = ponos::translate(dir * ponos::distance(a, b));
+    tb.accumulatePartialTransform(ponos::translate(dir * ponos::distance(a, b)));
     start_ = p;
   }
 };
 
+/// Applies a rotation
 class RotateMode : public TrackMode {
 public:
   RotateMode() : TrackMode() {}
-  ~RotateMode() {}
+  ~RotateMode() override = default;
   void draw(const Trackball &tb) override {
-    ponos::Sphere s(tb.center, tb.radius * 2.f);
+    ponos::Sphere s(tb.center(), tb.radius() * 2.f);
     glColor4f(0, 0, 0, 0.5);
     draw_sphere(s);
   }
-  void update(Trackball &tb, CameraInterface &camera,
-              ponos::Point2 p) override {
+  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) override {
+    UNUSED_VARIABLE(d);
     if (!dragging_ || p == start_)
       return;
-    // std::cout << start_;
-    // std::cout << p;
     ponos::Point3 a = hitSpherePlane(tb, camera, start_);
     ponos::Point3 b = hitSpherePlane(tb, camera, p);
-
     ponos::vec3 axis =
-        ponos::normalize(ponos::cross((a - tb.center), (b - tb.center)));
-    // std::cout << "a " << a;
-    // std::cout << "b " << b;
-    // std::cout << "axis " << axis;
-
-    float phi = ponos::distance(a, b) / tb.radius;
-    // std::cout << phi << std::endl;
-    /*		vec3 newAxis = glm::normalize(glm::inverse(
-                                            glm::mat3(
-                                                    glm::toMat4(tb.transform.r)
-                                                    *
-                                                    modelviewMatrix()
-                                                    ))*axis);*/
-    // cout << newAxis << endl;
-    // tb.transform.r = glm::angleAxis(glm::degrees(phi)*0.4f, newAxis);
-    tb.transform = ponos::rotate(TO_DEGREES(phi) * 0.4f, axis);
-
+        ponos::normalize(ponos::cross((a - tb.center()), (b - tb.center())));
+    float phi = ponos::distance(a, b) / tb.radius();
+    tb.accumulatePartialTransform(ponos::rotate(-TO_DEGREES(phi) * 0.7f, axis));
     start_ = p;
   }
 
@@ -182,9 +178,9 @@ private:
   ponos::Point3 hitSpherePlane(Trackball &tb, CameraInterface &camera,
                                ponos::Point2 p) {
     ponos::Line l = camera.viewLineFromWindow(p);
-    ponos::Plane vp = camera.viewPlane(tb.center);
+    ponos::Plane vp = camera.viewPlane(tb.center());
 
-    ponos::Sphere s(tb.center, tb.radius);
+    ponos::Sphere s(tb.center(), tb.radius());
 
     ponos::Point3 hp;
     ponos::plane_line_intersection(vp, l, hp);
@@ -202,14 +198,14 @@ private:
     ponos::Point3 hh;
     bool resHp = hitHyper(tb, camera.getPosition(), vp, hp, hh);
     if ((!resSp && !resHp))
-      return l.closestPoint(tb.center);
+      return l.closestPoint(tb.center());
     if ((resSp && !resHp))
       return hs;
     if ((!resSp && resHp))
       return hh;
     float angleDeg = TO_DEGREES(
-        asin(ponos::dot(ponos::normalize(camera.getPosition() - tb.center),
-                        ponos::normalize(hs - tb.center))));
+        asin(ponos::dot(ponos::normalize(camera.getPosition() - tb.center()),
+                        ponos::normalize(hs - tb.center()))));
     if (angleDeg < 45)
       return hs;
     else
@@ -217,12 +213,12 @@ private:
   }
   bool hitHyper(Trackball tb, ponos::Point3 viewpoint, ponos::Plane vp,
                 ponos::Point3 hitplane, ponos::Point3 &hit) {
-    float hitplaney = ponos::distance(tb.center, hitplane);
-    float viewpointx = ponos::distance(tb.center, viewpoint);
+    float hitplaney = ponos::distance(tb.center(), hitplane);
+    float viewpointx = ponos::distance(tb.center(), viewpoint);
 
     float a = hitplaney / viewpointx;
     float b = -hitplaney;
-    float c = (float)((tb.radius * tb.radius) / 2.f);
+    float c = (float) ((tb.radius() * tb.radius()) / 2.f);
     float delta = b * b - 4 * a * c;
     float x1, xval, yval;
 
@@ -232,9 +228,9 @@ private:
       yval = c / xval;
     } else
       return false;
-    ponos::vec3 dirRadial = ponos::normalize(hitplane - tb.center);
+    ponos::vec3 dirRadial = ponos::normalize(hitplane - tb.center());
     ponos::vec3 dirView = ponos::normalize(ponos::vec3(vp.normal));
-    hit = tb.center + dirRadial * yval + dirView * xval;
+    hit = tb.center() + dirRadial * yval + dirView * xval;
     return true;
   }
 };

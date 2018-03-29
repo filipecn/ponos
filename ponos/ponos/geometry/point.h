@@ -268,7 +268,7 @@ public:
   ivec3 asIVec3() const { return ivec3(static_cast<const int &>(x), static_cast<const int &>(y),
                                        static_cast<const int &>(z)); }
   bool HasNaNs() const;
-
+  static uint dimension() { return 3; }
   friend std::ostream &operator<<(std::ostream &os, const Point3 &p);
   float x, y, z;
 };

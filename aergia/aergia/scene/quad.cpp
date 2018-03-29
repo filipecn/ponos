@@ -30,15 +30,15 @@ Quad::Quad() {
   this->rawMesh = new ponos::RawMesh();
   this->rawMesh->meshDescriptor.elementSize = 4;
   this->rawMesh->meshDescriptor.count = 1;
-  this->rawMesh->vertexDescriptor.elementSize = 2;
-  this->rawMesh->vertexDescriptor.count = 4;
+  this->rawMesh->positionDescriptor.elementSize = 2;
+  this->rawMesh->positionDescriptor.count = 4;
   this->rawMesh->texcoordDescriptor.elementSize = 2;
   this->rawMesh->texcoordDescriptor.count = 4;
-  this->rawMesh->vertices = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
+  this->rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
   this->rawMesh->texcoords = std::vector<float>({0, 1, 1, 1, 1, 0, 0, 0});
   this->rawMesh->indices.resize(4);
   for (int i = 0; i < 4; i++)
-    this->rawMesh->indices[i].vertexIndex = rawMesh->indices[i].texcoordIndex =
+    this->rawMesh->indices[i].positionIndex = rawMesh->indices[i].texcoordIndex =
         i;
   this->rawMesh->splitIndexData();
   this->rawMesh->buildInterleavedData();
@@ -61,7 +61,7 @@ void Quad::set(const ponos::Point2 &pm, const ponos::Point2 &pM) {
   glBindVertexArray(0);
 }
 
-void Quad::draw() const {
+void Quad::draw() {
   glBindVertexArray(VAO);
   vb->bind();
   ib->bind();

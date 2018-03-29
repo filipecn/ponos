@@ -27,15 +27,25 @@
 #include <algorithm>
 #include <ponos/algorithm/triangulate.h>
 
-#ifdef TRIANGLE_INCLUDED
 typedef int VOID;
-typedef float REAL;
+typedef double REAL;
+
+#ifdef TRIANGLE_INCLUDED
 extern "C" {
 #include <triangle.h>
 }
+#endif
+
+#ifdef TETGEN_INCLUDED
+#ifndef TETLIBRARY
+#define TETLIBRARY
+#endif
+#include <tetgen.h>
+#endif
 
 namespace ponos {
 
+#ifdef TRIANGLE_INCLUDED
 void report(struct triangulateio *io, int markers, int reporttriangles,
             int reportneighbors, int reportsegments, int reportedges,
             int reportnorms) {
@@ -74,7 +84,7 @@ void report(struct triangulateio *io, int markers, int reporttriangles,
         for (j = 0; j < io->numberoftriangleattributes; j++) {
           printf("  %.6g",
                  io->triangleattributelist[i * io->numberoftriangleattributes +
-                                           j]);
+                     j]);
         }
         printf("\n");
       }
@@ -124,19 +134,20 @@ void report(struct triangulateio *io, int markers, int reporttriangles,
     printf("\n");
   }
 }
-
+#endif
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
-  UNUSED(output);
+#ifdef TRIANGLE_INCLUDED
+  UNUSED_VARIABLE(output);
   {
     FILE *fp = fopen("D.poly", "w+");
-    fprintf(fp, "%lu 2 0 1\n", input->vertexDescriptor.count_);
-    for (size_t i = 0; i < input->vertexDescriptor.count_; i++)
-      fprintf(fp, "%lu %f %f %d\n", i, input->vertices[i * 2],
-              input->vertices[i * 2 + 1], data->vertexBoundaryMarker[i]);
-    fprintf(fp, "%lu 0\n", input->meshDescriptor.count_);
-    for (size_t i = 0; i < input->meshDescriptor.count_; i++)
-      fprintf(fp, "%lu %d %d\n", i, input->indices[i * 2].vertexIndex,
-              input->indices[i * 2 + 1].vertexIndex);
+    fprintf(fp, "%lu 2 0 1\n", input->positionDescriptor.count);
+    for (size_t i = 0; i < input->positionDescriptor.count; i++)
+      fprintf(fp, "%lu %f %f %d\n", i, input->positions[i * 2],
+              input->positions[i * 2 + 1], data->vertexBoundaryMarker[i]);
+    fprintf(fp, "%lu 0\n", input->meshDescriptor.count);
+    for (size_t i = 0; i < input->meshDescriptor.count; i++)
+      fprintf(fp, "%lu %d %d\n", i, input->indices[i * 2].positionIndex,
+              input->indices[i * 2 + 1].positionIndex);
     fprintf(fp, "0\n");
     fclose(fp);
   }
@@ -146,7 +157,7 @@ void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
 
   in.numberofpoints = 4;
   in.numberofpointattributes = 0;
-  in.pointlist = (REAL *)malloc(in.numberofpoints * 2 * sizeof(REAL));
+  in.pointlist = (REAL *) malloc(in.numberofpoints * 2 * sizeof(REAL));
   in.pointlist[0] = 0.0;
   in.pointlist[1] = 0.0;
   in.pointlist[2] = 1.0;
@@ -155,15 +166,15 @@ void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
   in.pointlist[5] = 1.0;
   in.pointlist[6] = 0.0;
   in.pointlist[7] = 1.0;
-  in.pointattributelist = (REAL *)NULL;
-  in.pointmarkerlist = (int *)malloc(in.numberofpoints * sizeof(int));
+  in.pointattributelist = (REAL *) NULL;
+  in.pointmarkerlist = (int *) malloc(in.numberofpoints * sizeof(int));
   in.pointmarkerlist[0] = 1;
   in.pointmarkerlist[1] = 1;
   in.pointmarkerlist[2] = 1;
   in.pointmarkerlist[3] = 1;
 
   in.numberofsegments = 4;
-  in.segmentlist = (int *)malloc(in.numberofsegments * 2 * sizeof(int));
+  in.segmentlist = (int *) malloc(in.numberofsegments * 2 * sizeof(int));
   in.segmentlist[0] = 0;
   in.segmentlist[1] = 1;
   in.segmentlist[2] = 1;
@@ -172,28 +183,28 @@ void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
   in.segmentlist[5] = 3;
   in.segmentlist[6] = 3;
   in.segmentlist[7] = 0;
-  in.segmentmarkerlist = (int *)malloc(in.numberofpoints * sizeof(int));
+  in.segmentmarkerlist = (int *) malloc(in.numberofpoints * sizeof(int));
   in.segmentmarkerlist[0] = 1;
   in.segmentmarkerlist[1] = 1;
   in.segmentmarkerlist[2] = 1;
   in.segmentmarkerlist[3] = 1;
   in.numberofholes = 0;
   in.numberofregions = 0;
-  in.regionlist = (REAL *)NULL;
+  in.regionlist = (REAL *) NULL;
 
   printf("Input point set:\n\n");
   report(&in, 1, 0, 0, 0, 0, 0);
 
-  mid.pointlist = (REAL *)NULL; /* Not needed if -N switch used. */
-  mid.pointattributelist = (REAL *)NULL;
-  mid.pointmarkerlist = (int *)NULL; /* Not needed if -N or -B switch used. */
-  mid.trianglelist = (int *)NULL;    /* Not needed if -E switch used. */
-  mid.triangleattributelist = (REAL *)NULL;
-  mid.neighborlist = (int *)NULL; /* Needed only if -n switch used. */
-  mid.segmentlist = (int *)NULL;
-  mid.segmentmarkerlist = (int *)NULL;
-  mid.edgelist = (int *)NULL;       /* Needed only if -e switch used. */
-  mid.edgemarkerlist = (int *)NULL; /* Needed if -e used and -B not used. */
+  mid.pointlist = (REAL *) NULL; /* Not needed if -N switch used. */
+  mid.pointattributelist = (REAL *) NULL;
+  mid.pointmarkerlist = (int *) NULL; /* Not needed if -N or -B switch used. */
+  mid.trianglelist = (int *) NULL;    /* Not needed if -E switch used. */
+  mid.triangleattributelist = (REAL *) NULL;
+  mid.neighborlist = (int *) NULL; /* Needed only if -n switch used. */
+  mid.segmentlist = (int *) NULL;
+  mid.segmentmarkerlist = (int *) NULL;
+  mid.edgelist = (int *) NULL;       /* Needed only if -e switch used. */
+  mid.edgemarkerlist = (int *) NULL; /* Needed if -e used and -B not used. */
 
   // triangulate("pzYAen", &in, &mid, (struct triangulateio *)NULL);
   printf("Initial triangulation:\n\n");
@@ -296,16 +307,64 @@ free(in.pointlist);
 free(in.segmentlist);
 free(in.pointmarkerlist);
       */
-}
-
-} // ponos namespace
-
 #else
-namespace ponos {
-void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
   UNUSED_VARIABLE(input);
   UNUSED_VARIABLE(data);
   UNUSED_VARIABLE(output);
-}
-}
 #endif
+}
+
+void tetrahedralize(const RawMesh *input, RawMesh *output) {
+#ifdef TETGEN_INCLUDED
+  FATAL_ASSERT(input->primitiveType == GeometricPrimitiveType::TRIANGLES);
+  // add vertices
+  tetgenio in, out;
+  in.mesh_dim = 3;
+  in.firstnumber = 0;
+  in.numberofpoints = static_cast<int>(input->positionDescriptor.count);
+  in.pointlist = new REAL[in.numberofpoints * in.mesh_dim];
+  for (size_t i = 0; i < input->positions.size(); i++)
+    in.pointlist[i] = input->positions[i];
+  in.numberoffacets = static_cast<int>(input->meshDescriptor.count);
+  in.facetlist = new tetgenio::facet[in.numberoffacets];
+  in.facetmarkerlist = new int[in.numberoffacets];
+  for (size_t i = 0; i < input->meshDescriptor.count; i++) {
+    auto f = &in.facetlist[i];
+    f->numberofpolygons = 1;
+    f->polygonlist = new tetgenio::polygon[f->numberofpolygons];
+    f->numberofholes = 0;
+    f->holelist = nullptr;
+    auto p = &f->polygonlist[0];
+    p->numberofvertices = 3;
+    p->vertexlist = new int[p->numberofvertices];
+    for (size_t k = 0; k < 3u; k++)
+      p->vertexlist[k] = input->indices[i * input->meshDescriptor.elementSize + k].positionIndex;
+    in.facetmarkerlist[i] = 1;
+  }
+  char params[20];
+  strcpy(params, "VYa0.05qCMz");
+  try {
+    tetrahedralize(params, &in, &out);
+  } catch(int e) {
+    std::cerr << e << std::endl;
+  }
+  // set fields
+  output->positionDescriptor.elementSize = input->positionDescriptor.elementSize;
+  output->positionDescriptor.count = static_cast<size_t>(out.numberofpoints);
+  output->meshDescriptor.elementSize = 4;
+  output->meshDescriptor.count = static_cast<size_t>(out.numberoftetrahedra);
+  for (int i = 0; i < out.numberofpoints * 3; i++)
+    output->positions.emplace_back(out.pointlist[i]);
+  for (int i = 0; i < out.numberoftetrahedra; i++)
+    for (int k = 0; k < 4; k++)
+      output->addFace({out.tetrahedronlist[i * 4 + k]});
+  output->primitiveType = GeometricPrimitiveType::TETRAHEDRA;
+  DUMP_VECTOR(input->positions);
+  DUMP_VECTOR(output->positions);
+#else
+  UNUSED_VARIABLE(input);
+  UNUSED_VARIABLE(output);
+#endif
+}
+
+} // ponos namespace

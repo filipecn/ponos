@@ -4,6 +4,7 @@
 #include <ponos/algorithm/search.h>
 #include <ponos/algorithm/sort.h>
 #include <ponos/algorithm/triangulate.h>
+#include <ponos/algorithm/geometric_shapes.h>
 #include <ponos/blas/bicg.h>
 #include <ponos/blas/blas.h>
 #include <ponos/blas/c_regular_grid.h>
@@ -17,6 +18,8 @@
 #include <ponos/blas/field.h>
 #include <ponos/blas/field_grid.h>
 #include <ponos/blas/gauss_jordan.h>
+#include <ponos/blas/interpolator.h>
+#include <ponos/blas/kernels.h>
 #include <ponos/blas/linear_system.h>
 #include <ponos/blas/pcg.h>
 #include <ponos/blas/rbf.h>

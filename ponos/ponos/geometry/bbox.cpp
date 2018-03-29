@@ -50,4 +50,9 @@ BBox::BBox(const Point3 &p1, const Point3 &p2) {
       Point3(std::max(p1.x, p2.x), std::max(p1.y, p2.y), std::max(p1.z, p2.z));
 }
 
+BBox::BBox(const Point3 &c, float r) {
+  pMin = c - Vector3(r,r,r);
+  pMax = c + Vector3(r,r,r);
+}
+
 } // ponos namespace

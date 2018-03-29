@@ -38,6 +38,8 @@ struct MeshData {
 
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output);
 
+void tetrahedralize(const RawMesh *input, RawMesh *output);
+
 } // ponos namespace
 
 #endif // PONOS_ALGORITHM_TRIANGULATE_H

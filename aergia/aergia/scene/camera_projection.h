@@ -7,8 +7,12 @@ namespace aergia {
 
 class CameraProjection {
 public:
-  CameraProjection() {}
-  virtual ~CameraProjection() {}
+  CameraProjection() {
+    ratio = 1.f;
+    znear = 0.01f;
+    zfar = 1000.f;
+  }
+  virtual ~CameraProjection() = default;
 
   virtual void update() = 0;
 
@@ -21,7 +25,7 @@ public:
 
 class PerspectiveProjection : public CameraProjection {
 public:
-  PerspectiveProjection(float _fov = 45.f) : fov(_fov) {}
+  explicit PerspectiveProjection(float _fov = 45.f) : fov(_fov) {}
   void update() override {
     this->transform =
         ponos::perspective(fov, this->ratio, this->znear, this->zfar);
@@ -32,14 +36,28 @@ public:
 
 class OrthographicProjection : public CameraProjection {
 public:
-  OrthographicProjection() {}
+  OrthographicProjection() {
+    _region.pMin.x = _region.pMin.y = this->znear = -1.f;
+    _region.pMax.x = _region.pMax.y = this->zfar = 1.f;
+  }
+  void zoom(float z) {
+    _region = ponos::scale(z,z)(_region);
+  }
+  void set(float left, float right, float bottom, float top) {
+    _region.pMin.x = left;
+    _region.pMin.y = bottom;
+    _region.pMax.x = right;
+    _region.pMax.y = top;
+    update();
+  }
   void update() override {
     this->transform =
-        ponos::scale(1.f, 1.f, 1.f / (this->zfar - this->znear)) *
-        ponos::translate(
-            ponos::vec3(0.f, 0.f, -this->znear)); // ponos::ortho(-1, 1, -1, 1,
-                                                  // this->znear, this->zfar);
+        ponos::ortho(_region.pMin.x, _region.pMax.x, _region.pMin.y,
+                     _region.pMax.y, this->znear, this->zfar);
   }
+
+private:
+  ponos::BBox2D _region;
 };
 
 } // aergia namespace

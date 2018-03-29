@@ -26,7 +26,10 @@
 
 namespace aergia {
 
-Shader::Shader(GLuint id) : programId(id) { running = false; }
+Shader::Shader(int id) {
+  FATAL_ASSERT(id >= 0);
+  programId = static_cast<GLuint>(id);
+  running = false; }
 
 bool Shader::loadFromFiles(const char *fl...) {
   running = false;
@@ -51,6 +54,10 @@ bool Shader::begin(const VertexBuffer *b) {
   }
   running = true;
   return true;
+}
+
+int Shader::locateAttribute(const std::string &name) const {
+  return glGetAttribLocation(programId, name.c_str());
 }
 
 void Shader::end() {

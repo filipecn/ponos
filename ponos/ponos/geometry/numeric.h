@@ -37,9 +37,13 @@ namespace ponos {
 #define INFINITY FLT_MAX
 #endif
 
-#ifndef PI
-#define PI 3.14159265358979323846f
-#endif
+class Constants {
+public:
+  static double pi;// = 3.14159265358979323846f;
+};
+///#ifndef PI
+///#define PI 3.14159265358979323846f
+///#endif
 #ifndef PI_2
 #define PI_2 6.28318530718
 #endif
@@ -62,11 +66,11 @@ namespace ponos {
 #endif
 
 #ifndef TO_DEGREES
-#define TO_DEGREES(A) ((A)*180.f / PI)
+#define TO_DEGREES(A) ((A)*180.f / ponos::Constants::pi)
 #endif
 
 #ifndef TO_RADIANS
-#define TO_RADIANS(A) ((A)*PI / 180.f)
+#define TO_RADIANS(A) ((A)*Constants::pi / 180.f)
 #endif
 
 #ifndef IS_ZERO
@@ -225,9 +229,10 @@ template <typename T> T clamp(const T &n, const T &l, const T &u) {
  * \param b **[in]** upper bound
  * \return Hermit value between **0** and **1**
  */
-inline float smoothStep(float v, float a, float b) {
-  float t = clamp((v - a) / (b - a), 0.f, 1.f);
-  return t * t * (3.f - 2.f * t);
+template<typename T>
+T smoothStep(T v, T a, T b) {
+  float t = clamp((v - a) / (b - a), T(0), T(1));
+  return t * t * (T(3) - 2 * t);
 }
 /** \brief linear interpolation
  * \param v **[in]** coordinate

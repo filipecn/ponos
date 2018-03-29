@@ -51,6 +51,15 @@
       std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
   }
 #endif
+#ifndef ASSERT_EQ
+#define ASSERT_EQ(A, B)                                                        \
+  {                                                                            \
+    if((A) != (B)) {                                                           \
+      std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
+      std::cout << (A) << " != " << (B) << std::endl;                          \
+    }                                                                          \
+  }
+#endif
 #ifndef CHECK_IN_BETWEEN
 #define CHECK_IN_BETWEEN(A, B, C)                                              \
   {                                                                            \

@@ -5,6 +5,7 @@ set(HEADERS
         aergia/colors/color.h
         aergia/colors/color_palette.h
         aergia/graphics/compute_shader.h
+        aergia/graphics/post_effect.h
         aergia/graphics/shader.h
         aergia/graphics/shader_manager.h
         aergia/helpers/bvh_model.h
@@ -16,24 +17,29 @@ set(HEADERS
         aergia/helpers/quad_tree_model.h
         aergia/helpers/scene_handle.h
         aergia/helpers/vector_grid.h
+        aergia/helpers/tmesh_model.h
         aergia/io/buffer.h
+        aergia/io/display_renderer.h
         aergia/io/framebuffer.h
         aergia/io/graphics_display.h
-        aergia/io/procedural_texture.h
+        aergia/io/image_texture.h
+        aergia/io/render_texture.h
         aergia/io/texture.h
         aergia/io/texture_parameters.h
         aergia/io/utils.h
         aergia/io/viewport_display.h
+        aergia/io/user_input.h
         #  aergia/io/vulkan_application.h
         # aergia/io/vulkan_resource.h
         #  aergia/io/vulkan_utils.h
         aergia/scene/bvh.h
         aergia/scene/camera.h
-        aergia/scene/camera_2d.h
+        # aergia/scene/camera_2d.h
         aergia/scene/camera_projection.h
         aergia/scene/mesh_utils.h
         aergia/scene/quad.h
         aergia/scene/scene.h
+        aergia/scene/scene_mesh.h
         aergia/scene/scene_object.h
         aergia/scene/triangle_mesh.h
         aergia/scene/wireframe_mesh.h
@@ -45,6 +51,7 @@ set(HEADERS
         aergia/ui/trackball.h
         aergia/ui/trackball_interface.h
         aergia/ui/track_mode.h
+        aergia/ui/ui_camera.h
         aergia/utils/open_gl.h
         aergia/utils/win32_utils.h
         aergia/aergia.h
@@ -53,30 +60,36 @@ set(HEADERS
 set(SOURCES
         external/plyfile.c
         aergia/graphics/compute_shader.cpp
+        aergia/graphics/post_effect.cpp
         aergia/graphics/shader.cpp
         aergia/graphics/shader_manager.cpp
         aergia/helpers/cartesian_grid.cpp
         aergia/helpers/geometry_drawers.cpp
+        aergia/io/buffer.cpp
+        aergia/io/display_renderer.cpp
         aergia/io/framebuffer.cpp
         aergia/io/graphics_display.cpp
-        aergia/io/procedural_texture.cpp
+        aergia/io/image_texture.cpp
+        aergia/io/render_texture.cpp
         aergia/io/texture.cpp
         aergia/io/utils.cpp
         aergia/io/viewport_display.cpp
         #  aergia/io/vulkan_application.cpp
         aergia/scene/bvh.cpp
         aergia/scene/camera.cpp
-        aergia/scene/camera_2d.cpp
+        # aergia/scene/camera_2d.cpp
         aergia/scene/mesh_utils.cpp
         aergia/scene/quad.cpp
+        aergia/scene/scene_mesh.cpp
         aergia/scene/triangle_mesh.cpp
         aergia/scene/wireframe_mesh.cpp
         aergia/ui/app.cpp
         aergia/ui/text.cpp
         aergia/ui/trackball_interface.cpp
+        aergia/ui/ui_camera.cpp
         aergia/utils/open_gl.cpp
         aergia/aergia.cpp
-        )
+        aergia/scene/instance_set.cpp aergia/scene/instance_set.h)
 
 include_directories("${AERGIA_SOURCE_DIR}/external")
 include_directories(${AERGIA_INCLUDES})

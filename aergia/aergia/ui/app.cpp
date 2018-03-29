@@ -17,24 +17,19 @@ App::App(uint w, uint h, const char *t, bool defaultViewport)
 
 size_t App::addViewport(uint x, uint y, uint w, uint h) {
   viewports.emplace_back(x, y, w, h);
-  viewports[viewports.size() - 1].camera.reset(new Camera());
-  static_cast<aergia::Camera *>(viewports[viewports.size() - 1].camera.get())
+  viewports[viewports.size() - 1].camera.reset(new UserCamera3D());
+  TrackballInterface::createDefault3D(viewports[viewports.size() - 1].camera->trackball);
+  dynamic_cast<UserCamera3D *>(viewports[viewports.size() - 1].camera.get())
       ->resize(w, h);
   return viewports.size() - 1;
 }
 
 size_t App::addViewport2D(uint x, uint y, uint w, uint h) {
   viewports.emplace_back(x, y, w, h);
-  viewports[viewports.size() - 1].camera.reset(new aergia::Camera2D());
-  static_cast<aergia::Camera2D *>(viewports[viewports.size() - 1].camera.get())
+  viewports[viewports.size() - 1].camera.reset(new UserCamera2D());
+  TrackballInterface::createDefault2D(viewports[viewports.size() - 1].camera->trackball);
+  dynamic_cast<UserCamera2D *>(viewports[viewports.size() - 1].camera.get())
       ->resize(w, h);
-  if (!scrollCallback)
-    scrollCallback = [&](double dx, double dy) {
-      UNUSED_VARIABLE(dx);
-      static float z = 1.f;
-      z *= (dy < 0.f) ? 0.9f : 1.1f;
-      this->getCamera<Camera2D>(0)->setZoom(z);
-    };
   return viewports.size() - 1;
 }
 
@@ -61,54 +56,58 @@ void App::run() {
 void App::exit() { GraphicsDisplay::instance().stop(); }
 
 void App::render() {
-  for (size_t i = 0; i < viewports.size(); i++)
-    viewports[i].render();
+  for (auto &viewport : viewports)
+    viewport.render();
   if (renderCallback)
     renderCallback();
 }
 
 void App::button(int button, int action) {
-  for (size_t i = 0; i < viewports.size(); i++)
-    viewports[i].button(button, action);
+  for (auto &viewport : viewports) {
+    if (action == GLFW_PRESS && !viewport.hasMouseFocus())
+      continue;
+    viewport.button(button, action);
+  }
   if (buttonCallback)
     buttonCallback(button, action);
 }
 
 void App::mouse(double x, double y) {
-  for (size_t i = 0; i < viewports.size(); i++)
-    viewports[i].mouse(x, y);
+  for (auto &viewport : viewports)
+    viewport.mouse(x, y);
   if (mouseCallback)
     mouseCallback(x, y);
 }
 
 void App::scroll(double dx, double dy) {
-  for (size_t i = 0; i < viewports.size(); i++)
-    viewports[i].scroll(dx, dy);
+  for (auto &viewport : viewports)
+    if (viewport.hasMouseFocus())
+      viewport.scroll(dx, dy);
   if (scrollCallback)
     scrollCallback(dx, dy);
 }
 
 void App::key(int k, int action) {
-  for (size_t i = 0; i < viewports.size(); i++)
-    viewports[i].key(k, action);
+  for (auto &viewport : viewports)
+    viewport.key(k, action);
   if (keyCallback)
     keyCallback(k, action);
   else if (k == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-      GraphicsDisplay::instance().stop();
+    GraphicsDisplay::instance().stop();
 }
 
 void App::resize(int w, int h) {
   float wRatio = static_cast<float>(w) / windowWidth;
   float hRatio = static_cast<float>(h) / windowHeight;
-  windowWidth = w;
-  windowHeight = h;
-  for (uint i = 0; i < viewports.size(); i++) {
-    viewports[i].x *= wRatio;
-    viewports[i].y *= hRatio;
-    viewports[i].width *= wRatio;
-    viewports[i].height *= hRatio;
-    if (viewports[i].camera)
-      viewports[i].camera->resize(viewports[i].width, viewports[i].height);
+  windowWidth = static_cast<uint>(w);
+  windowHeight = static_cast<uint>(h);
+  for (auto &viewport : viewports) {
+    viewport.x *= wRatio;
+    viewport.y *= hRatio;
+    viewport.width *= wRatio;
+    viewport.height *= hRatio;
+    if (viewport.camera)
+      viewport.camera->resize(viewport.width, viewport.height);
   }
 }
 

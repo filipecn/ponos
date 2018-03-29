@@ -17,7 +17,7 @@ class BVHModel : public SceneObject {
 public:
   BVHModel(const BVH *_bvh) : bvh(_bvh) {}
   /* @inherit */
-  void draw() const override {
+  void draw() override {
     ponos::Transform inv = ponos::inverse(bvh->sceneMesh->transform);
     ponos::Ray3 r(ponos::Point3(0, 0, 0), ponos::vec3(1, 1, 1));
     glBegin(GL_LINES);

@@ -141,26 +141,28 @@ void triangle_barycentric_coordinates(const Point2 &p, const Point2 &a,
                                       const Point2 &b, const Point2 &c,
                                       float &u, float &v, float &w);
 bool triangle_point_intersection(const Point2 &p, const Point2 *vertices);
-/** \brief  intersection test
- * \param p1 **[in]** first triangle's vertex
- * \param p2 **[in]** second triangle's vertex
- * \param p3 **[in]** third triangle's vertex
- * \param ray **[in]**
- * \param tHit **[out]** intersection (parametric coordinate)
- * \param b1 **[out]** barycentric coordinate
- * \param b2 **[out]** barycentric coordinate
- *
- * BBox / Ray3 intersection test
- *
- * **b1** and **b2**, if not null, receive the barycentric coordinates of the
- *intersection point.
- *
- * /return **true** if intersection exists
- */
+/// BBox / Ray3 intersection test.
+/// **b1** and **b2**, if not null, receive the barycentric coordinates of the
+/// intersection point.
+/// \param p1 **[in]** first triangle's vertex
+/// \param p2 **[in]** second triangle's vertex
+/// \param p3 **[in]** third triangle's vertex
+/// \param ray **[in]**
+/// \param tHit **[out]** intersection (parametric coordinate)
+/// \param b1 **[out]** barycentric coordinate
+/// \param b2 **[out]** barycentric coordinate
+/// return **true** if intersection exists
 bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
                                const Point3 &p3, const Ray3 &ray,
                                float *tHit = nullptr, float *b1 = nullptr,
                                float *b2 = nullptr);
+///
+/// \param p **[in]** source point
+/// \param p1 **[in]** first triangle's vertex
+/// \param p2 **[in]** second triangle's vertex
+/// \param p3 **[in]** third triangle's vertex
+/// \return closest point on triangle **(p1,p2,p3)** to point **p**
+Point3 closest_point_triangle(const Point3& p, const Point3& p1, const Point3& p2, const Point3& p3);
 /** \brief  closest point
  * \param p **[in]** point
  * \param pl **[in]** plane

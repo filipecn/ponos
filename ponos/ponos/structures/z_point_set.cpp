@@ -54,7 +54,7 @@ ZPointSet::ZPointSet(uint maxCoordinates) : ZPointSet() {
 }
 
 void ZPointSet::update() {
-  if (!points_.size())
+  if (points_.empty())
     return;
   if (needZUpdate_) {
     for (uint i = 0; i < end_; i++) {
@@ -84,11 +84,15 @@ void ZPointSet::update() {
     while (end_ > 0 && !points_[end_ - 1].active)
       end_--;
   }
-  if (tree_)
-    delete tree_;
-  tree_ = new search_tree(*this);
   needUpdate_ = false;
   sizeChanged_ = false;
+}
+
+void ZPointSet::buildAccelerationStructure() {
+  if (tree_)
+    delete tree_;
+  update();
+  tree_ = new search_tree(*this);
 }
 
 uint ZPointSet::size() {
@@ -97,7 +101,7 @@ uint ZPointSet::size() {
   return end_;
 }
 
-size_t ZPointSet::add(Point3 p) {
+uint ZPointSet::add(Point3 p) {
   if (end_ == points_.size()) {
     points_.emplace_back();
     points_[end_].id = lastId_++;
@@ -116,7 +120,7 @@ size_t ZPointSet::add(Point3 p) {
   return points_[end_ - 1].id;
 }
 
-void ZPointSet::setPosition(unsigned int i, Point3 p) {
+void ZPointSet::setPosition(uint i, Point3 p) {
   positions_[i] = p;
   needZUpdate_ = true;
   needUpdate_ = true;
@@ -142,9 +146,38 @@ uint ZPointSet::computeIndex(const Point3 &p) {
 void ZPointSet::search(const BBox &b, const std::function<void(uint)> &f) {
   if (!tree_ || needUpdate_ || needZUpdate_)
     update();
-  if (!tree_)
+  if (tree_) {
+    tree_->iteratePoints(b, [&](uint id) { f(id); });
     return;
-  tree_->iteratePoints(b, [&](uint id) { f(id); });
+  }
+  // perform an implicit search
+  std::function<void(uint, uint, const BBox &, const BBox &,
+                     const std::function<void(uint)> &)>
+      implictTraverse = [&](uint level, uint zcode, const BBox &region,
+                            const BBox &bbox,
+                            const std::function<void(uint)> &callBack) {
+    if (level >= maxDepth_)
+      return;
+    // check if node is fully contained by bbox or node is leaf, refine otherwise
+    if (bbox.contains(region) || level == maxDepth_ - 1) {
+      if (bbox_bbox_intersection(bbox, region))
+        for (iterator it(*this, zcode, level); it.next(); ++it)
+          if (bbox.contains(it.getWorldPosition()))
+            f(it.getId());
+      return;
+    }
+    uint d = (nbits_ - level - 1) * 3;
+    auto regions = region.splitBy8();
+    for (uint i = 0; i < 8; i++)
+      implictTraverse(level + 1, zcode | (i << d), regions[i], bbox, callBack);
+
+  };
+  implictTraverse(0, 0, BBox(Point3(), resolution_), b, f);
+}
+
+void ZPointSet::iteratePoints(const std::function<void(uint, Point3)> &f) const {
+  for (uint i = 0; i < end_; i++)
+    f(points_[i].id, positions_[points_[i].id]);
 }
 
 } // ponos namespace

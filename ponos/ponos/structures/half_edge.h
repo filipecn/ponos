@@ -40,18 +40,18 @@ public:
   HEMesh() {}
   HEMesh(const RawMesh *rm) {
     FATAL_ASSERT(rm->meshDescriptor.elementSize == 3);
-    for (size_t i = 0; i < rm->vertexDescriptor.count; i++)
+    for (size_t i = 0; i < rm->positionDescriptor.count; i++)
       addVertex(Point<float, 2>(
-          {rm->vertices[i * rm->vertexDescriptor.elementSize + 0],
-           rm->vertices[i * rm->vertexDescriptor.elementSize + 1]}));
+          {rm->positions[i * rm->positionDescriptor.elementSize + 0],
+           rm->positions[i * rm->positionDescriptor.elementSize + 1]}));
     std::map<std::pair<int, int>, int> m;
     for (size_t i = 0; i < rm->meshDescriptor.count; i++) {
       int faceEdges[3];
       for (size_t e = 0; e < 3; e++) {
         std::pair<int, int> edge = std::make_pair(
-            rm->indices[i * rm->meshDescriptor.elementSize + e].vertexIndex,
+            rm->indices[i * rm->meshDescriptor.elementSize + e].positionIndex,
             rm->indices[i * rm->meshDescriptor.elementSize + (e + 1) % 3]
-                .vertexIndex);
+                .positionIndex);
         std::pair<int, int> edgePair = std::make_pair(edge.second, edge.first);
         auto itA = m.find(edge);
         auto itB = m.find(edgePair);

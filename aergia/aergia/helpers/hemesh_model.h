@@ -44,7 +44,7 @@ public:
     distanceFromVertex = dv;
   }
 
-  void draw() const override {
+  void draw() override {
     const std::vector<ponos::HEMesh2DF::Vertex> &vertices = mesh->getVertices();
     const std::vector<ponos::HEMesh2DF::Edge> &edges = mesh->getEdges();
     const std::vector<ponos::HEMesh2DF::Face> &faces = mesh->getFaces();

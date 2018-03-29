@@ -84,7 +84,11 @@ inline BBox2D make_union(const BBox2D &a, const BBox2D &b) {
 class BBox {
 public:
   BBox();
-  BBox(const Point3 &p);
+  explicit BBox(const Point3 &p);
+  /// Creates a bounding box of 2r side centered at c
+  /// \param c center point
+  /// \param r radius
+  BBox(const Point3& c, float r);
   BBox(const Point3 &p1, const Point3 &p2);
   friend BBox make_union(const BBox &b, const BBox &b1);
   static BBox unitBox() { return {Point3(), Point3(1, 1, 1)}; }
@@ -98,9 +102,38 @@ public:
     return (p.x >= pMin.x && p.x <= pMax.x && p.y >= pMin.y && p.y <= pMax.y &&
         p.z >= pMin.z && p.z <= pMax.z);
   }
+  /// \param b bbox
+  /// \return true if bbox is fully inside
+  bool contains(const BBox &b) const {
+    return contains(b.pMin) && contains(b.pMax);
+  }
   void expand(float delta) {
     pMin -= Vector3(delta, delta, delta);
     pMax -= Vector3(delta, delta, delta);
+  }
+  /**
+ * y
+ * |_ x
+ * z
+ *   /  2  /  3 /
+ *  / 6  /  7  /
+ *  ------------
+ * |   0 |   1 |
+ * | 4   | 5   |
+ * ------------
+ */
+  std::vector<BBox> splitBy8() const {
+    auto mid = center();
+    std::vector<BBox> children;
+    children.emplace_back(pMin, mid);
+    children.emplace_back(Point3(mid.x, pMin.y, pMin.z), Point3(pMax.x, mid.y, mid.z));
+    children.emplace_back(Point3(pMin.x, mid.y, pMin.z), Point3(mid.x, pMax.y, mid.z));
+    children.emplace_back(Point3(mid.x, mid.y, pMin.z), Point3(pMax.x, pMax.y, mid.z));
+    children.emplace_back(Point3(pMin.x, pMin.y, mid.z), Point3(mid.x, mid.y, pMax.z));
+    children.emplace_back(Point3(mid.x, pMin.y, mid.z), Point3(pMax.x, mid.y, pMax.z));
+    children.emplace_back(Point3(pMin.x, mid.y, mid.z), Point3(mid.x, pMax.y, pMax.z));
+    children.emplace_back(Point3(mid.x, mid.y, mid.z), Point3(pMax.x, pMax.y, pMax.z));
+    return children;
   }
   Point3 center() const { return pMin + (pMax - pMin) * .5f; }
   float size(size_t d) const { return pMax[d] - pMin[d]; }
@@ -145,6 +178,7 @@ inline BBox make_union(const BBox &a, const BBox &b) {
   BBox ret = make_union(a, b.pMin);
   return make_union(ret, b.pMax);
 }
+
 
 } // ponos namespace
 

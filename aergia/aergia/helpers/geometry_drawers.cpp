@@ -132,7 +132,7 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
     glPushMatrix();
     glApplyTransform(*transform);
   }
-  const float vStep = PI / 20.f;
+  const float vStep = ponos::Constants::pi / 20.f;
   const float hStep = PI_2 / 20.f;
   glBegin(GL_TRIANGLES);
   // south pole
@@ -160,7 +160,7 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
 
   glEnd();
   glBegin(GL_QUADS);
-  for (float vAngle = vStep; vAngle <= PI - vStep; vAngle += vStep) {
+  for (float vAngle = vStep; vAngle <= ponos::Constants::pi - vStep; vAngle += vStep) {
     float r = sphere.r * sinf(vAngle);
     float R = sphere.r * sinf(vAngle + vStep);
     for (float angle = 0.f; angle < PI_2; angle += hStep) {
@@ -200,21 +200,21 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2D *t) {
   glBegin(GL_LINES);
   for (size_t i = 0; i < rm->meshDescriptor.count; i++) {
     ponos::Point2 a(
-        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 0]
-                             .vertexIndex *
+        rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 0]
+                             .positionIndex *
                          2 +
                      0],
-        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 0]
-                             .vertexIndex *
+        rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 0]
+                             .positionIndex *
                          2 +
                      1]);
     ponos::Point2 b(
-        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 1]
-                             .vertexIndex *
+        rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 1]
+                             .positionIndex *
                          2 +
                      0],
-        rm->vertices[rm->indices[i * rm->meshDescriptor.elementSize + 1]
-                             .vertexIndex *
+        rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 1]
+                             .positionIndex *
                          2 +
                      1]);
     if (t)

@@ -31,7 +31,7 @@
 namespace aergia {
 
 /** A quadrilateral scene object. */
-class Quad : public aergia::SceneMesh {
+class Quad : public aergia::SceneMeshObject {
 public:
   Quad();
   ~Quad() {}
@@ -40,7 +40,7 @@ public:
    * \param pM maximum extreme
    */
   void set(const ponos::Point2 &pm, const ponos::Point2 &pM);
-  void draw() const override;
+  void draw() override;
 
   std::shared_ptr<aergia::Shader> shader; //!< shader applyed on draw
 

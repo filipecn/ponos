@@ -1,26 +1,18 @@
 project(POSEIDON)
 
 set(HEADERS
-	src/algorithms/solver.h
-	src/algorithms/grid_solver.h
-	src/elements/collider.h
-  src/elements/particle.h
-	src/elements/simulation_scene.h
-  # src/math/conjugate_gradient.h
-  src/structures/mac_grid.h
-  src/structures/particle_grid.h
-  src/structures/particle_set.h
-  src/structures/z_particle_grid.h
-  src/poseidon.h
-)
+        poseidon/structures/particle_system.h
+        poseidon/structures/particle_system.inl
+        poseidon/math/numerical.h
+        poseidon/poseidon.h
+        poseidon/helpers/particle_system_model.h
+        )
 
 set(SOURCES
-	src/algorithms/grid_solver.cpp
-  src/elements/particle.cpp
-	src/elements/simulation_scene.cpp
-  # src/math/conjugate_gradient.cpp
-  src/structures/particle_grid.cpp
-)
+        poseidon/structures/particle_system.cpp
+        poseidon/math/numerical.cpp
+        poseidon/helpers/particle_system_model.cpp
+        )
 
 #if(NOT WIN32 AND NOT NOOPENVDB)
 #  set(HEADERS ${HEADERS}
@@ -43,21 +35,21 @@ include_directories(${POSEIDON_INCLUDES})
 link_libraries(${POSEIDON_LIBRARIES})
 
 link_libraries(ponos ${PONOS_LIBRARIES})
-include_directories("${PONOS_SOURCE_DIR}/src")
+include_directories("${PONOS_SOURCE_DIR}")
 link_libraries(aergia)
-include_directories("${AERGIA_SOURCE_DIR}/src")
+include_directories("${AERGIA_SOURCE_DIR}")
 
-include_directories("${POSEIDON_SOURCE_DIR}/src")
+include_directories("${POSEIDON_SOURCE_DIR}")
 
 add_library(poseidon ${SOURCES} ${HEADERS})
 set_target_properties(poseidon PROPERTIES
-  OUTPUT_NAME "poseidon"
-FOLDER "POSEIDON")
+        OUTPUT_NAME "poseidon"
+        FOLDER "POSEIDON")
 
 add_subdirectory(examples)
 
-if(TESTPOSEIDON)
-	add_subdirectory(tests)
-endif(TESTPOSEIDON)
+if (TESTPOSEIDON)
+    #	add_subdirectory(tests)
+endif (TESTPOSEIDON)
 
 add_subdirectory(tests/unit_tests)

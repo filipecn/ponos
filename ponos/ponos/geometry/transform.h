@@ -188,7 +188,7 @@ public:
   bool swapsHandedness() const;
   const float *c_matrix() const { return &m.m[0][0]; }
   const Matrix4x4 &matrix() const { return m; }
-  Vector3 getTranslate() { return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]); }
+  Vector3 getTranslate() const { return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]); }
   void computeInverse() { m_inv = inverse(m); }
   bool isIdentity() { return m.isIdentity(); }
   void applyToPoint(const float *p, float *r, size_t d = 3) const {

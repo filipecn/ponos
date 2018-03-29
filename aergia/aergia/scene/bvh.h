@@ -16,10 +16,10 @@ public:
   /* Constructor.
    * @m **[in]**
    */
-  BVH(SceneMesh *m);
+  BVH(SceneMeshObject *m);
   virtual ~BVH() {}
 
-  std::shared_ptr<SceneMesh> sceneMesh;
+  std::shared_ptr<SceneMeshObject> sceneMesh;
 
   int intersect(const ponos::Ray3 &ray, float *t = nullptr);
   bool isInside(const ponos::Point3 &p);

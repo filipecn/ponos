@@ -180,11 +180,36 @@ Matrix<T, N, N> inverse(const Matrix<T, N, N> &m) {
   return r;
 }
 
+/// 4x4 Matrix representation
+/// Access: m[ROW][COLUMN]
 class Matrix4x4 {
 public:
-  Matrix4x4();
-  Matrix4x4(float mat[16], bool rowMajor = true);
-  Matrix4x4(float mat[4][4]);
+  /// \param isIdentity [optional | def = true] initialize as an identity matrix
+  explicit Matrix4x4(bool isIdentity = true);
+  /// \param values list of values
+  /// \param isColumnMajor [optional | default = false] values configuration
+  Matrix4x4(std::initializer_list<float> values, bool columnMajor = false);
+  /// \param mat list of values
+  /// \param isColumnMajor [optional | default = false] values configuration
+  explicit Matrix4x4(const float mat[16], bool columnMajor = false);
+  /// \param mat matrix entries in [ROW][COLUMN] form
+  explicit Matrix4x4(float mat[4][4]);
+  /// \param m00 value of entry at row 0 column 0
+  /// \param m01 value of entry at row 0 column 1
+  /// \param m02 value of entry at row 0 column 2
+  /// \param m03 value of entry at row 0 column 3
+  /// \param m10 value of entry at row 1 column 0
+  /// \param m11 value of entry at row 1 column 1
+  /// \param m12 value of entry at row 1 column 2
+  /// \param m13 value of entry at row 1 column 3
+  /// \param m20 value of entry at row 2 column 0
+  /// \param m21 value of entry at row 2 column 1
+  /// \param m22 value of entry at row 2 column 2
+  /// \param m23 value of entry at row 2 column 3
+  /// \param m30 value of entry at row 3 column 0
+  /// \param m31 value of entry at row 3 column 1
+  /// \param m32 value of entry at row 3 column 2
+  /// \param m33 value of entry at row 3 column 3
   Matrix4x4(float m00, float m01, float m02, float m03, float m10, float m11,
             float m12, float m13, float m20, float m21, float m22, float m23,
             float m30, float m31, float m32, float m33);

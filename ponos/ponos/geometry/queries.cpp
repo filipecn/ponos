@@ -262,6 +262,45 @@ bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
   return true;
 }
 
+Point3 closest_point_triangle(const Point3 &p, const Point3 &p1, const Point3 &p2, const Point3 &p3) {
+  auto ab = p2 - p1;
+  auto ac = p3 - p1;
+  auto ap = p - p1;
+  float d1 = dot(ab, ap);
+  float d2 = dot(ac, ap);
+  if(d1 <= 0.0f && d2 <= 0.0f)
+    return p1;
+  auto bp = p - p2;
+  float d3 = dot(ab, bp);
+  float d4 = dot(ac, bp);
+  if(d3 >= 0.0f && d4 <= d3)
+    return p2;
+  float vc = d1 * d4 - d3 * d2;
+  if(vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
+    float v = d1 / (d1 - d3);
+    return p1 + v * ab;
+  }
+  auto cp = p - p3;
+  float d5 = dot(ab, cp);
+  float d6 = dot(ac, cp);
+  if(d6 >= 0.f && d5 <= d6)
+    return p3;
+  float vb = d5 * d2 - d1 * d6;
+  if(vb <= 0.f && d2 >= 0.f && d6 <= 0.f) {
+    float w = d2 / (d2 - d6);
+    return p1 + w * ac;
+  }
+  float va = d3 * d6 - d5 * d4;
+  if(va <= 0.f && (d4 - d3) >= 0.f && (d5 - d6) >= 0.f) {
+    float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+    return p2 + w * (p3 - p2);
+  }
+  float den = 1.f / (va + vb + vc);
+  float v = vb * den;
+  float w = vc * den;
+  return p1 + ab * v + ac * w;
+}
+
 Point3 closest_point_plane(const Point3 &p, const Plane &pl) {
   float t =
       (dot(static_cast<vec3>(pl.normal), static_cast<vec3>(p)) - pl.offset) /

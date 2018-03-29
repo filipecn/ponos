@@ -23,42 +23,64 @@
 */
 
 #include <aergia/ui/trackball_interface.h>
+#include <aergia/io/user_input.h>
 
 namespace aergia {
 
-void TrackballInterface::draw() { modes[curMode]->draw(tb); }
+TrackballInterface::~TrackballInterface() = default;
+
+void TrackballInterface::draw() { modes_[curMode_]->draw(tb); }
 
 void TrackballInterface::buttonRelease(CameraInterface &camera, int button,
                                        ponos::Point2 p) {
   UNUSED_VARIABLE(button);
-  modes[curMode]->stop(tb, camera, p);
+  if (curMode_ != Mode::NONE)
+    modes_[curMode_]->stop(tb, camera, p);
 }
 
 void TrackballInterface::buttonPress(const CameraInterface &camera, int button,
                                      ponos::Point2 p) {
-  switch (button) {
-  case GLFW_MOUSE_BUTTON_LEFT:
-    curMode = 2;
-    break;
-  case GLFW_MOUSE_BUTTON_MIDDLE:
-    curMode = 1;
-    break;
-  case GLFW_MOUSE_BUTTON_RIGHT:
-    curMode = 0;
-    break;
-  }
-  modes[curMode]->start(tb, camera, p);
+  if (buttonMap_.find(button) == buttonMap_.end())
+    return;
+  curMode_ = buttonMap_[button];
+  modes_[curMode_]->start(tb, camera, p);
 }
 
 void TrackballInterface::mouseMove(CameraInterface &camera, ponos::Point2 p) {
-  modes[curMode]->update(tb, camera, p);
+  if (curMode_ != Mode::NONE)
+    modes_[curMode_]->update(tb, camera, p, ponos::vec2());
 }
 
-void TrackballInterface::mouseScroll(CameraInterface &camera, ponos::vec2 d) {
-  if (curMode != 3) {
-    curMode = 3;
+void TrackballInterface::mouseScroll(CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) {
+  if (buttonMap_.find(MOUSE_SCROLL) != buttonMap_.end()) {
+    curMode_ = buttonMap_[MOUSE_SCROLL];
+    modes_[curMode_]->update(tb, camera, p, d);
+    curMode_ = Mode::NONE;
   }
-  modes[curMode]->update(tb, camera, d);
+}
+
+void TrackballInterface::attachTrackMode(int button, TrackballInterface::Mode mode, TrackMode *tm) {
+  buttonMap_[button] = mode;
+  modes_[mode] = tm;
+}
+
+void TrackballInterface::createDefault2D(TrackballInterface &t) {
+  t.attachTrackMode(MOUSE_SCROLL, Mode::SCALE, new ScaleMode());
+  t.attachTrackMode(MOUSE_BUTTON_LEFT, Mode::PAN, new PanMode());
+}
+
+void TrackballInterface::createDefault3D(TrackballInterface &t) {
+  t.attachTrackMode(MOUSE_SCROLL, Mode::SCALE, new ScaleMode());
+  t.attachTrackMode(MOUSE_BUTTON_RIGHT, Mode::PAN, new PanMode());
+  t.attachTrackMode(MOUSE_BUTTON_LEFT, Mode::ROTATE, new RotateMode());
+  t.attachTrackMode(MOUSE_BUTTON_MIDDLE, Mode::Z, new ZMode());
+}
+
+bool TrackballInterface::isActive() const {
+  auto m = modes_.find(curMode_);
+  if(m != modes_.end())
+    return m->second->isActive();
+  return false;
 }
 
 } // aergia namespace

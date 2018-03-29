@@ -33,13 +33,13 @@
 
 namespace aergia {
 
-class TriangleMesh : public SceneMesh {
+class TriangleMesh : public SceneMeshObject {
 public:
   TriangleMesh(const std::string &filename);
   TriangleMesh(ponos::RawMesh *m);
   virtual ~TriangleMesh() {}
   /* @inherit */
-  void draw() const override;
+  void draw() override;
 };
 
 } // aergia namespace

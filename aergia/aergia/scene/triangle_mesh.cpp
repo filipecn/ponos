@@ -4,10 +4,10 @@
 
 namespace aergia {
 
-TriangleMesh::TriangleMesh(const std::string &filename) : SceneMesh(filename) {}
+TriangleMesh::TriangleMesh(const std::string &filename) : SceneMeshObject(filename) {}
 
-TriangleMesh::TriangleMesh(ponos::RawMesh *m) : SceneMesh(m) {}
+TriangleMesh::TriangleMesh(ponos::RawMesh *m) : SceneMeshObject(m) {}
 
-void TriangleMesh::draw() const {}
+void TriangleMesh::draw() {}
 
 } // aergia namespace

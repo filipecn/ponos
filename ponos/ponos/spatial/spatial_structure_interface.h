@@ -64,6 +64,7 @@ public:
    * Iterates thourgh all objects in the structure
    */
   virtual void iterate(std::function<void(const ObjectType *o)> f) const = 0;
+  virtual void iterate(std::function<void(ObjectType *o)> f) = 0;
   /* init
    * some structures need to be initialized after all objects have been added
    */

@@ -27,6 +27,7 @@
 
 #include <ponos/ponos.h>
 
+#include <aergia/utils/open_gl.h>
 #include "camera_projection.h"
 
 namespace aergia {
@@ -34,66 +35,140 @@ namespace aergia {
 class CameraInterface {
 public:
   typedef CameraInterface CameraType;
-  CameraInterface() {}
-  virtual ~CameraInterface() {}
-
-  virtual ponos::Ray3 pickRay(ponos::Point2 p) const = 0;
-  virtual void look() = 0;
-  virtual void resize(float w, float h) = 0;
-  virtual ponos::Transform getTransform() const = 0;
-  virtual ponos::Transform getModelTransform() const = 0;
-  virtual ponos::Line viewLineFromWindow(ponos::Point2 p) const = 0;
-  virtual void applyTransform(const ponos::Transform &t) = 0;
-  virtual ponos::Plane viewPlane(ponos::Point3 p) const = 0;
-  virtual ponos::Point3 getPosition() const = 0;
-  virtual ponos::Point3 getTarget() const = 0;
-  virtual void setPosition(ponos::Point3 p) = 0;
-};
-
-class Camera : public CameraInterface {
-public:
-  typedef Camera CameraType;
-  Camera(CameraProjection *_projection = nullptr);
-
-  friend class CameraModel;
-
-  void look() override;
-  void resize(float w, float h) override;
-  void setZoom(float z);
-  ponos::Point3 getPos() const { return pos; }
-  ponos::Point3 getPosition() const override { return pos; }
-  void setPosition(ponos::Point3 p) override;
-  ponos::Point3 getTarget() const override { return target; }
-  void setTarget(ponos::Point3 p);
-  void setUp(const ponos::vec3 &u);
-  void setFov(float f);
-  void setFar(float f);
-  void setNear(float n);
-  float getNear() const { return projection->znear; }
-  float getFar() const { return projection->zfar; }
-  void update();
-  ponos::Transform getTransform() const override;
-  ponos::Transform getModelTransform() const override { return model; }
-  ponos::Point3 viewPointOnWorldCoord() const;
-  // p must be in norm dev coord (windowCoordToNormDevCoord)
-  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
-  ponos::Ray3 pickRay(ponos::Point2 p) const override;
-  ponos::Plane viewPlane(ponos::Point3 p) const override;
-  void applyTransform(const ponos::Transform &t) override {
-    UNUSED_VARIABLE(t);
+  /// \param p projection type
+  explicit CameraInterface(CameraProjection *p = nullptr) : zoom(1.f), projection(p) {}
+  virtual ~CameraInterface() = default;
+  /// \param p normalized mouse position
+  /// \return camera's ray in world space
+  virtual ponos::Ray3 pickRay(ponos::Point2 p) const {
+    ponos::Point3 O = ponos::inverse(model * view)(
+        ponos::inverse(projection->transform) * ponos::Point3(p.x, p.y, 0.f));
+    ponos::Point3 D = ponos::inverse(model * view)(
+        ponos::inverse(projection->transform) * ponos::Point3(p.x, p.y, 1.f));
+    return ponos::Ray3(O, D - O);
   }
+  /// multiplies MVP matrix to OpenGL pipeline
+  virtual void look() {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glApplyTransform(projection->transform);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glApplyTransform(view);
+    glApplyTransform(model);
+  }
+  /// \param w width in pixels
+  /// \param h height in pixels
+  virtual void resize(float w, float h) {
+    projection->ratio = w / h;
+    projection->clipSize = ponos::vec2(zoom, zoom);
+    if (w < h)
+      projection->clipSize.y = projection->clipSize.x / projection->ratio;
+    else
+      projection->clipSize.x = projection->clipSize.y * projection->ratio;
+    projection->update();
+    update();
+  }
+  /// \return MVP transform
+  virtual ponos::Transform getTransform() const {
+    return model * view * projection->transform;
+  }
+  /// \return camera projection const ptr
+  const CameraProjection* getCameraProjection() const { return projection.get(); }
+  /// \return projection transform
+  ponos::Transform getProjectionTransform() const { return projection->transform; }
+  /// \return model transform
+  virtual ponos::Transform getModelTransform() const { return model; }
+  virtual ponos::Transform getViewTransform() const { return view; }
+  /// \param p normalized mouse position
+  /// \return line object in world space
+  virtual ponos::Line viewLineFromWindow(ponos::Point2 p) const {
+    ponos::Point3 O = ponos::inverse( model * view)(ponos::inverse(projection->transform)
+                                                        * ponos::Point3(p.x, p.y, 0.f));
+    ponos::Point3 D = ponos::inverse( model * view)(ponos::inverse(projection->transform)
+                                                        * ponos::Point3(p.x, p.y, 1.f));
+    return {O, D - O};
+  }
+  /// Applies **t** to camera transform (usually model transformation)
+  /// \param t transform
+  virtual void applyTransform(const ponos::Transform &t) {
+    pos = target + t(pos - target) + t.getTranslate();
+    target += t.getTranslate();
+    up = t(up);
+    // model = model * t;
+    update();
+  }
+  /// \param p point in world space
+  /// \return plane containing **p**, perpendicular to camera's view axis
+  virtual ponos::Plane viewPlane(ponos::Point3 p) const {
+    ponos::vec3 n = pos - p;
+    if (fabs(n.length()) < 1e-8)
+      n = ponos::vec3(0, 0, 0);
+    else
+      n = ponos::normalize(n);
+    return {ponos::Normal(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z))};
+  }
+  /// \return up vector
+  virtual ponos::vec3 getUpVector() const { return up; };
+  /// \return eye position
+  virtual ponos::Point3 getPosition() const { return pos; };
+  /// \return  target position
+  virtual ponos::Point3 getTarget() const { return target; }
+  /// \param p target position
+  virtual void setTarget(ponos::Point3 p) {
+    target = p;
+    update();
+  }
+  /// \param p eye position
+  virtual void setPosition(ponos::Point3 p) {
+    pos = p;
+    update();
+  }
+  /// \param z
+  virtual void setZoom(float z) {
+    zoom = z;
+    update();
+  }
+  /// \param f
+  virtual void setFar(float f) {
+    projection->zfar = f;
+    projection->update();
+  }
+  /// \param n
+  virtual void setNear(float n) {
+    projection->znear = n;
+    projection->update();
+  }
+  virtual float getNear() const { return projection->znear; }
+  virtual float getFar() const { return projection->zfar; }
+  ///
+  virtual void update() = 0;
 
-private:
+protected:
   float zoom;
-  ponos::Point3 pos, target;
   ponos::vec3 up;
-  ponos::vec2 display;
+  ponos::Point3 pos;
+  ponos::Point3 target;
   ponos::Transform view;
   ponos::Transform model;
   ponos::Frustum frustum;
   std::shared_ptr<CameraProjection> projection;
 };
-
+/*
+class Camera : public CameraInterface {
+public:
+  typedef Camera CameraType;
+  friend class CameraModel;
+  explicit Camera(CameraProjection *proj = new PerspectiveProjection(45.f));
+  void setUp(const ponos::vec3 &u);
+  void setFov(float f);
+  void update() override;
+  // INTERFACE
+  ponos::Line viewLineFromWindow(ponos::Point2 p) const override;
+  ponos::Ray3 pickRay(ponos::Point2 p) const override;
+  ponos::Plane viewPlane(ponos::Point3 p) const override;
+};
+*/
 } // aergia namespace
 
 #endif // AERGIA_SCENE_CAMERA_H

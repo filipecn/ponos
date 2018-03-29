@@ -26,6 +26,10 @@
 #define PONOS_STRUCTURES_TETRAHEDRON_H
 
 #include <ponos/structures/raw_mesh.h>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <set>
 
 namespace ponos {
 
@@ -36,47 +40,72 @@ namespace ponos {
  * \tparam E Edge data
  * \tparam P Tetrahedron data
  */
-template <typename V = float, typename F = float, typename E = float,
-          typename P = float>
+template<typename V = float, typename F = float, typename E = float,
+    typename P = float>
 class TMesh {
 public:
   struct Vertex {
-    Vertex(float x, float y, float z) : position(Point3(x, y, z)), edge(-1) {}
-    Vertex(const Point3 &p) : position(p), edge(-1) {}
+    Vertex(float x, float y, float z) : position(Point3(x, y, z)) {}
+    explicit Vertex(const Point3 &p) : position(p) {}
     Point3 position; //!< vertex position
     Normal normal;   //!< vertex normal
-    int edge;        //!< edge connected to this vertex
+    std::set<size_t> edges; //!< edges connected to this vertex
     V data;          //!< vertex user's data
   };
   struct Edge {
-    Edge() { a = b = face = -1; }
-    int a;    //!< vertex a
-    int b;    //!< vertex b
-    int face; //!< face on the left
+    explicit Edge(size_t _a, size_t _b) : a(_a), b(_b), face(-1) {}
+    size_t a;    //!< vertex a -> smaller index
+    size_t b;    //!< vertex b -> greater index
+    int face; //!< a face that is connected to it
     E data;   //!< edge user's data
   };
   struct Face {
-    Face() : face3(-1) {}
+    Face() : hface(-1), face3(-1) {
+      for (size_t i = 0; i < 3; i++)
+        edges[i] = 0, neighbours[i] = -1;
+    }
+    int hface;         //!< half-face neighbour
     int face3;         //!< index to tetrahedron
-    int edges[3];      //!< index to face's edges list
+    size_t edges[3];   //!< index to face's edges list (starting by the smallest
+                       //!< vertex index)
     int neighbours[3]; //!< neighbours
     F data;            //!< face user's data
     Normal normal;     //!< face's normal
   };
   struct Face3 {
-    Face3() : face(-1) {}
-    int face; //!< one half face
+    explicit Face3(size_t _face) : face(_face) {}
+    size_t face; //!< one half face
     P data;   //!< face3 users'data
   };
-
-  TMesh(const RawMesh &rm);
-
+  /// \param rm input mesh
+  explicit TMesh(const RawMesh &rm);
+  /// \param t tetrahedron index
+  /// \return list of 4 vertex indices
+  std::vector<size_t> tetrahedronVertices(size_t t) const;
+  /// \param t tetrahedron index
+  /// \return list of 4 face indices
+  std::vector<size_t> tetrahedronFaces(size_t t) const;
+  /// \param t tetrahedron index
+  /// \return list of 3 vertex indices
+  std::vector<size_t> faceVertices(size_t f) const;
+  /// \param t tetrahedron index
+  /// \return list of existent tetrahedra indices
+  std::vector<size_t> tetrahedronNeighbours(size_t t) const;
+  /// \param v vertex index
+  /// \return list of neighbour vertices
+  std::vector<size_t> vertexNeighbours(size_t v) const;
+  /// \param v vertex index
+  /// \return list of neighbour tetrahedra
+  std::vector<size_t> vertexTetrahedra(size_t v) const;
+  std::vector<Vertex> vertices;
+  std::vector<Edge> edges;
+  std::vector<Face> faces;
+  std::vector<Face3> tetrahedron;
 private:
   struct IndexContainer {
     std::vector<int> data;
   };
-  IndexContainer edgesFaces;
-  std::vector<Vertex> vertices;
+  IndexContainer edgesFaces_;
 };
 
 #include <ponos/structures/tetrahedron_mesh.inl>

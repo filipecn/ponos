@@ -120,7 +120,7 @@ ponos::Point3 GraphicsDisplay::viewCoordToNormDevCoord(ponos::Point3 p) {
                        (p.y - v[1]) / (v[3] / 2.0) - 1.0, 2 * p.z - 1.0);
 }
 
-ponos::Point3 GraphicsDisplay::unProject(const Camera &c, ponos::Point3 p) {
+ponos::Point3 GraphicsDisplay::unProject(const CameraInterface &c, ponos::Point3 p) {
   return ponos::inverse(c.getTransform()) * p;
 }
 

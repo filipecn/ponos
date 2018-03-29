@@ -31,6 +31,7 @@
 
 #include <map>
 #include <string>
+#include <utility>
 
 namespace aergia {
 
@@ -45,10 +46,13 @@ struct BufferDescriptor {
   std::map<const std::string, Attribute> attributes; //!< name - attribute map
   GLuint elementSize;  //!< how many components are assigned to each element
   size_t elementCount; //!< number of elements
-  GLuint elementType;  //!< type of elements
-  GLuint type;         //!< buffer type
-  GLuint use;          //!< use
-  BufferDescriptor() {}
+  GLuint elementType;  //!< type of elements  (GL_TRIANGLES, ...)
+  GLuint type;         //!< buffer type (GL_ARRAY_BUFFER, ...)
+  GLuint use;          //!< use  (GL_STATIC_DRAW, ...)
+  GLuint dataType;      //!< (GL_FLOAT, ...)
+  BufferDescriptor() :
+      elementSize(0), elementCount(0), elementType(GL_TRIANGLES), type(GL_ARRAY_BUFFER),
+      use(GL_STATIC_DRAW), dataType(GL_FLOAT) {}
   /** \brief Constructor.
    * \param _elementSize **[in]** number of data components that compose an
    * element
@@ -56,12 +60,15 @@ struct BufferDescriptor {
    * \param _elementType **[in | optional]** element type
    * \param _type **[in | optional]** buffer type
    * \param _use **[in | optional]** buffer use
+   * \param _dataType **[in | optional]** data type
    */
   BufferDescriptor(GLuint _elementSize, size_t _elementCount,
                    GLuint _elementType = GL_TRIANGLES,
-                   GLuint _type = GL_ARRAY_BUFFER, GLuint _use = GL_STATIC_DRAW)
+                   GLuint _type = GL_ARRAY_BUFFER, GLuint _use = GL_STATIC_DRAW,
+                   GLuint _dataType = GL_FLOAT)
       : elementSize(_elementSize), elementCount(_elementCount),
-        elementType(_elementType), type(_type), use(_use) {}
+        elementType(_elementType), type(_type), use(_use), dataType(_dataType) {
+  }
   /** \brief  add
    * \param _name attribute name (used in shader programs)
    * \param _size number of components
@@ -90,33 +97,92 @@ create_index_buffer_descriptor(size_t elementSize, size_t elementCount,
                                ponos::GeometricPrimitiveType elementType) {
   GLuint type = GL_TRIANGLES;
   switch (elementType) {
-  case ponos::GeometricPrimitiveType::TRIANGLES:
-    type = GL_TRIANGLES;
+  case ponos::GeometricPrimitiveType::TRIANGLES:type = GL_TRIANGLES;
     break;
-  case ponos::GeometricPrimitiveType::LINES:
-    type = GL_LINES;
+  case ponos::GeometricPrimitiveType::LINES:type = GL_LINES;
     break;
-  case ponos::GeometricPrimitiveType::QUADS:
-    type = GL_QUADS;
+  case ponos::GeometricPrimitiveType::QUADS:type = GL_QUADS;
     break;
-  case ponos::GeometricPrimitiveType::LINE_LOOP:
-    type = GL_LINE_LOOP;
+  case ponos::GeometricPrimitiveType::LINE_LOOP:type = GL_LINE_LOOP;
     break;
-  case ponos::GeometricPrimitiveType::TRIANGLE_FAN:
-    type = GL_TRIANGLE_FAN;
+  case ponos::GeometricPrimitiveType::TRIANGLE_FAN:type = GL_TRIANGLE_FAN;
     break;
-  case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:
-    type = GL_TRIANGLE_STRIP;
+  case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:type = GL_TRIANGLE_STRIP;
     break;
-  default:
-    break;
+  default:break;
   }
   return BufferDescriptor(elementSize, elementCount, type,
                           GL_ELEMENT_ARRAY_BUFFER);
 }
 
-template <typename T> class Buffer {
+/// Creates buffers descriptions from a raw mesh interleaved data
+/// \param m **[in]** raw mesh (interleaved data must be built previously)
+/// \param v **[out]** vertex buffer description
+/// \param i **[out]** index buffer description
+inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
+                                                BufferDescriptor &v,
+                                                BufferDescriptor &i) {
+  GLuint type = GL_TRIANGLES;
+  switch (m.primitiveType) {
+  case ponos::GeometricPrimitiveType::TRIANGLES:type = GL_TRIANGLES;
+    break;
+  case ponos::GeometricPrimitiveType::LINES:type = GL_LINES;
+    break;
+  case ponos::GeometricPrimitiveType::QUADS:type = GL_QUADS;
+    break;
+  case ponos::GeometricPrimitiveType::LINE_LOOP:type = GL_LINE_LOOP;
+    break;
+  case ponos::GeometricPrimitiveType::TRIANGLE_FAN:type = GL_TRIANGLE_FAN;
+    break;
+  case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:type = GL_TRIANGLE_STRIP;
+    break;
+  default:break;
+  }
+  i.elementType = type;
+  i.elementCount = m.meshDescriptor.count;
+  i.elementSize = m.meshDescriptor.elementSize;
+  i.type = GL_ELEMENT_ARRAY_BUFFER;
+  i.use = GL_STATIC_DRAW;
+  i.dataType = GL_UNSIGNED_INT;
+  v.elementCount = m.interleavedDescriptor.count;
+  v.elementSize = m.interleavedDescriptor.elementSize;
+  v.type = GL_ARRAY_BUFFER;
+  v.use = GL_STATIC_DRAW;
+  v.dataType = GL_FLOAT;
+}
+class Shader;
+class BufferInterface {
 public:
+  explicit BufferInterface(GLuint id = 0) : bufferId(id) {}
+  explicit BufferInterface(BufferDescriptor b, GLuint id = 0) : bufferDescriptor(std::move(b)), bufferId(id) {}
+  virtual ~BufferInterface() { glDeleteBuffers(1, &bufferId); }
+  /// Activate buffer
+  void bind() const { glBindBuffer(bufferDescriptor.type, bufferId); }
+  /// \brief register attribute
+  /// \param name **[in]** attribute name
+  /// \param location **[in]** attribute location on shader program
+  void registerAttribute(const std::string &name, GLint location) const {
+    if (bufferDescriptor.attributes.find(name) ==
+        bufferDescriptor.attributes.end())
+      return;
+    const BufferDescriptor::Attribute &va =
+        bufferDescriptor.attributes.find(name)->second;
+    glVertexAttribPointer(static_cast<GLuint>(location), va.size, va.type, GL_FALSE,
+                          bufferDescriptor.elementSize * sizeof(float),
+                          (void *) (va.offset));
+  }
+  /// locates and register buffer attributes in shader program
+  /// \param s shader
+  /// \param d **[optional]** attribute divisor (default = 0)
+  void locateAttributes(const Shader &s, uint d = 0) const;
+  BufferDescriptor bufferDescriptor; //!< buffer description
+protected:
+  GLuint bufferId;
+};
+
+template<typename T> class Buffer : public BufferInterface {
+public:
+  typedef T BufferDataType;
   Buffer() {}
   /** \brief Constructor
    * \param d **[in]** data pointer
@@ -127,55 +193,43 @@ public:
    * \param id **[in]** an existent buffer
    * \param bd **[in]** buffer description
    */
-  Buffer(GLuint id, const BufferDescriptor &bd) : bufferDescriptor(bd), bufferId(id) {}
-  virtual ~Buffer() { glDeleteBuffers(1, &bufferId); }
+  explicit Buffer(const BufferDescriptor &bd, GLuint id = 0) : BufferInterface(bd, id) {}
+  ~Buffer() override { glDeleteBuffers(1, &this->bufferId); }
   /** \brief set
    * \param d **[in]** data pointer
    * \param bd **[in]** buffer description
    */
   void set(const T *d, const BufferDescriptor &bd) {
     data = d;
-    bufferDescriptor = bd;
-    glGenBuffers(1, &bufferId);
-    glBindBuffer(bufferDescriptor.type, bufferId);
-    glBufferData(bufferDescriptor.type,
-                 bufferDescriptor.elementCount * bufferDescriptor.elementSize *
+    this->bufferDescriptor = bd;
+    if (this->bufferId > 0)
+      glDeleteBuffers(1, &this->bufferId);
+    glGenBuffers(1, &this->bufferId);
+    glBindBuffer(this->bufferDescriptor.type, this->bufferId);
+    glBufferData(this->bufferDescriptor.type,
+                 this->bufferDescriptor.elementCount * this->bufferDescriptor.elementSize *
                      sizeof(T),
-                 data, bufferDescriptor.use);
+                 data, this->bufferDescriptor.use);
   }
   /** \brief set
    * \param d **[in]** data pointer
    */
   void set(const T *d) {
     data = d;
-    glBindBuffer(bufferDescriptor.type, bufferId);
-    glBufferSubData(bufferDescriptor.type, 0,
-                    bufferDescriptor.elementCount *
-                        bufferDescriptor.elementSize * sizeof(T),
-                    data);
-  }
-  /** \brief Activate buffer
-   */
-  void bind() const { glBindBuffer(bufferDescriptor.type, bufferId); }
-  /* \brief register attribute
-   * \param name **[in]** attribute name
-   * \param location **[in]** attribute location on shader program
-   */
-  void registerAttribute(const std::string &name, GLint location) const {
-    if (bufferDescriptor.attributes.find(name) ==
-        bufferDescriptor.attributes.end())
+    if (this->bufferId == 0) {
+      set(data, this->bufferDescriptor);
+      CHECK_GL_ERRORS;
       return;
-    const BufferDescriptor::Attribute &va =
-        bufferDescriptor.attributes.find(name)->second;
-    glVertexAttribPointer(location, va.size, va.type, GL_FALSE,
-                          bufferDescriptor.elementSize * sizeof(float),
-                          (void *)(va.offset));
+    }
+    glBindBuffer(this->bufferDescriptor.type, this->bufferId);
+    glBufferSubData(this->bufferDescriptor.type, 0,
+                    this->bufferDescriptor.elementCount *
+                        this->bufferDescriptor.elementSize * sizeof(T),
+                    data);
+    CHECK_GL_ERRORS;
   }
 
-  BufferDescriptor bufferDescriptor; //!< buffer description
-
-protected:
-  GLuint bufferId;
+private:
   const T *data;
 };
 

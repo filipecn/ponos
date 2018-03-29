@@ -32,31 +32,29 @@ namespace aergia {
 
 /** \brief Simple scene with viewports support.
  */
-template <template <typename> class StructureType = ponos::Array>
+template<template<typename> class StructureType = ponos::Array>
 class SceneApp : public App {
 public:
   /** \brief Constructor.
    * \param w **[in]** window width (in pixels)
    * \param h **[in]** window height (in pixels)
-   * \param t **[in]** window title
+   * \param t **[in | optional]** window title (empty string by default)
    * \param defaultViewport **[in | optional]** if true, creates a viewport with
    * the same size of the window
    */
-  explicit SceneApp(uint w, uint h, const char *t, bool defaultViewport = true)
+  explicit SceneApp(uint w, uint h, const char *t = "", bool defaultViewport = true)
       : App(w, h, t, defaultViewport) {
     selectedObject = nullptr;
     activeObjectViewport = false;
   }
-  virtual ~SceneApp() {}
+  ~SceneApp() override = default;
 
-  Scene<StructureType> scene; //!< object container
+  Scene <StructureType> scene; //!< object container
 
 protected:
   void render() override {
-    for (size_t i = 0; i < viewports.size(); i++) {
-      viewports[i].render();
-      scene.render();
-    }
+    for (size_t i = 0; i < viewports.size(); i++)
+      viewports[i].render([&]() { scene.render(); });
     if (this->renderCallback)
       this->renderCallback();
   }
@@ -83,7 +81,6 @@ protected:
         }
       }
     }
-    // scene.transform = trackball.tb.transform * scene.transform;
   }
 
   void button(int b, int a) override {

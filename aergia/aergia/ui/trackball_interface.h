@@ -36,28 +36,51 @@ namespace aergia {
 
 class TrackballInterface {
 public:
+  enum class Mode {ROTATE, Z, PAN, SCALE, NONE};
+
   TrackballInterface() {
-    modes.emplace_back(new RotateMode());
-    modes.emplace_back(new ZMode());
-    modes.emplace_back(new PanMode());
-    modes.emplace_back(new ScaleMode());
-    curMode = 0;
+    curMode_ = Mode::NONE;
   }
 
-  virtual ~TrackballInterface() {}
+  virtual ~TrackballInterface();
+
+  static void createDefault2D(TrackballInterface &t);
+  static void createDefault3D(TrackballInterface &t);
 
   void draw();
-
+  /// process mouse button release event
+  /// \param camera
+  /// \param button button code
+  /// \param p normalized mouse position
   void buttonRelease(CameraInterface &camera, int button, ponos::Point2 p);
+  /// process mouse button press event
+  /// \param camera
+  /// \param button button code
+  /// \param p normalized mouse position
   void buttonPress(const CameraInterface &camera, int button, ponos::Point2 p);
+  /// process mouse move event
+  /// \param camera
+  /// \param p normalized mouse position
   void mouseMove(CameraInterface &camera, ponos::Point2 p);
-  void mouseScroll(CameraInterface &camera, ponos::vec2 d);
+  /// process mouse wheel event
+  /// \param camera
+  /// \param p normalized mouse position
+  /// \param d scroll vector
+  void mouseScroll(CameraInterface &camera, ponos::Point2 p, ponos::vec2 d);
+  /// Attaches a new mode to the interface
+  /// \param button button to be mapped to mode
+  /// \param mode attached mode
+  /// \param tm track object
+  void attachTrackMode(int button, Mode mode, TrackMode* tm);
+  /// \return true if cur mode is active
+  bool isActive() const;
 
   Trackball tb;
-
 protected:
-  size_t curMode;
-  std::vector<TrackMode *> modes;
+  Mode curMode_;
+  /// map button -> mode
+  std::map<int, Mode> buttonMap_;
+  std::map<Mode, TrackMode*> modes_;
 };
 
 } // aergia namespace

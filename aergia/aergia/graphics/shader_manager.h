@@ -82,7 +82,7 @@ private:
 "    gl_Position = vec4(x, y, 0, 1);"\
 "}"
 
-#define AERGIA_TEX_FS \
+#define AERGIA_NO_VAO_FS \
 "#version 440 core\n" \
 "out vec4 outColor;" \
 "in vec2 texCoord;"\

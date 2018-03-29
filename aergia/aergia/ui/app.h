@@ -23,7 +23,7 @@ public:
    * same size of the window
    */
   explicit App(uint w, uint h, const char *t, bool defaultViewport = true);
-  virtual ~App() {}
+  virtual ~App() = default;
   /** \brief add
    * \param x **[in]** first pixel in X
    * \param y **[in]** first pixel in Y
@@ -54,7 +54,7 @@ public:
 
 protected:
   bool initialized;
-  uint windowWidth, windowHeight;
+  size_t windowWidth, windowHeight;
   std::string title;
 
   virtual void render();

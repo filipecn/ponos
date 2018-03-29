@@ -1,8 +1,32 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+*/
+
 #ifndef AERGIA_IO_VIEWPORT_DISPLAY_H
 #define AERGIA_IO_VIEWPORT_DISPLAY_H
 
-#include <aergia/scene/camera.h>
-#include <aergia/ui/trackball_interface.h>
+#include <aergia/ui/ui_camera.h>
+#include <aergia/io/display_renderer.h>
 
 #include <ponos/ponos.h>
 
@@ -23,13 +47,15 @@ public:
    * \param _height **[in]** height (in pixels)
    */
   ViewportDisplay(int _x, int _y, int _width, int _height);
-  virtual ~ViewportDisplay() {}
+  virtual ~ViewportDisplay() = default;
   /* get
    * The point **(x, y)** is mapped from **(0, 0)** and **(x + width, y +
    * height)** to **(1, 1)**
    * \return normalized mouse coordinates relative to the viewport
    */
   ponos::Point2 getMouseNPos();
+  /// \return true if mouse is inside viewport region
+  bool hasMouseFocus() const;
   /* convert
    * \param p **[in]** point (in view space)
    * \return **p** mapped to NDC (**[-1,1]**)
@@ -41,10 +67,10 @@ public:
    * \return the unprojected point by the inverse of the camera transform to
    * world space
    */
-  ponos::Point3 unProject(const Camera &c, ponos::Point3 p);
+  ponos::Point3 unProject(const CameraInterface &c, ponos::Point3 p);
   ponos::Point3 unProject();
 
-  void render();
+  void render(const std::function<void()>& f = nullptr);
   void mouse(double x, double y);
   void button(int b, int a);
   void scroll(double dx, double dy);
@@ -60,8 +86,8 @@ public:
   // viewport
   int x, y, width, height;
 
-  std::shared_ptr<CameraInterface> camera;
-  TrackballInterface trackball;
+  std::shared_ptr<UserCamera> camera;
+  std::shared_ptr<DisplayRenderer> renderer;
 };
 
 } // aergia namespace

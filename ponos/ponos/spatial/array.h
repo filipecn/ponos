@@ -23,6 +23,11 @@ public:
       f(e);
     }
   }
+  void iterate(std::function<void(ObjectType *o)> f) override {
+    for (auto e : objects) {
+      f(e);
+    }
+  }
   /* @inherit */
   ObjectType *intersect(const ponos::Ray3 &r,
                         float *t = nullptr) const override {

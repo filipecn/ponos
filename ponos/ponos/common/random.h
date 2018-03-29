@@ -67,7 +67,9 @@ private:
 class RNGSampler {
 public:
   /// \param rng random number generator
-  explicit RNGSampler(RNG *rngX, RNG *rngY, RNG *rngZ) :
+  explicit RNGSampler(RNG *rngX = new HaltonSequence(3),
+                      RNG *rngY = new HaltonSequence(5),
+                      RNG *rngZ = new HaltonSequence(7)) :
       rngX_(rngX), rngY_(rngY), rngZ_(rngZ) {}
   /// Samples a bbox region
   /// \param region sampling domain

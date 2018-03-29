@@ -101,11 +101,11 @@ int BAH::intersect(const ponos::Ray2 &ray, float *t) {
         for (uint32_t i = 0; i < node->nElements; i++) {
           ponos::Point2 v0 =
               mesh->getMesh()
-                  ->vertexElement(orderedElements[node->elementsOffset + i], 0)
+                  ->positionElement(orderedElements[node->elementsOffset + i], 0)
                   .xy();
           ponos::Point2 v1 =
               mesh->getMesh()
-                  ->vertexElement(orderedElements[node->elementsOffset + i], 1)
+                  ->positionElement(orderedElements[node->elementsOffset + i], 1)
                   .xy();
           if (ponos::ray_segment_intersection(r, ponos::Segment2(v0, v1)))
             hit++;

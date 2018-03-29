@@ -71,8 +71,8 @@ void marchingSquares(const FieldInterface2D<T> *field, const BBox2D &region,
         };
         float x = bisect(wp[0].x, wp[1].x, grid(ij + ivec2(0, i)),
                          grid(ij + ivec2(1, i)), error, f);
-        rm->addVertex({x, wp[i].y});
-        xEdges(ij + ivec2(0, i)) = (rm->vertices.size() / 2) - 1;
+        rm->addPosition({x, wp[i].y});
+        xEdges(ij + ivec2(0, i)) = (rm->positions.size() / 2) - 1;
       }
       if (yEdges(ij + ivec2(i, 0)) < 0 &&
           (((m >> i) & 1) ^ ((m >> (3 - i) & 1)))) {
@@ -81,8 +81,8 @@ void marchingSquares(const FieldInterface2D<T> *field, const BBox2D &region,
         };
         float y = bisect(wp[0].y, wp[1].y, grid(ij + ivec2(i, 0)),
                          grid(ij + ivec2(i, 1)), error, f);
-        rm->addVertex({wp[i].x, y});
-        yEdges(ij + ivec2(i, 0)) = (rm->vertices.size() / 2) - 1;
+        rm->addPosition({wp[i].x, y});
+        yEdges(ij + ivec2(i, 0)) = (rm->positions.size() / 2) - 1;
       }
     }
   }
@@ -115,9 +115,9 @@ void marchingSquares(const FieldInterface2D<T> *field, const BBox2D &region,
     }
   }
   rm->meshDescriptor.count = rm->indices.size() / 2;
-  rm->vertexDescriptor.count = rm->vertices.size() / 2;
+  rm->positionDescriptor.count = rm->positions.size() / 2;
   rm->meshDescriptor.elementSize = 2;
-  rm->vertexDescriptor.elementSize = 2;
+  rm->positionDescriptor.elementSize = 2;
   rm->primitiveType = GeometricPrimitiveType::LINES;
   rm->splitIndexData();
   rm->buildInterleavedData();

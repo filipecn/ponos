@@ -104,25 +104,10 @@ void Octree<NodeData>::refine(Node *node,
     return;
   node->id_ = count_++;
   height_ = std::max(height_, node->level_);
-  Point3 pmin = node->bbox_.pMin;
-  Point3 pmax = node->bbox_.pMax;
-  Point3 mid = node->bbox_.center();
   if (f(*node)) {
-    node->children[0] = new Node(BBox(pmin, mid), node);
-    node->children[1] = new Node(
-        BBox(Point3(mid.x, pmin.y, pmin.z), Point3(pmax.x, mid.y, mid.z)), node);
-    node->children[2] = new Node(
-        BBox(Point3(pmin.x, mid.y, pmin.z), Point3(mid.x, pmax.y, mid.z)), node);
-    node->children[3] = new Node(
-        BBox(Point3(mid.x, mid.y, pmin.z), Point3(pmax.x, pmax.y, mid.z)), node);
-    node->children[4] = new Node(BBox(Point3(pmin.x, pmin.y, mid.z),
-                                      Point3(mid.x, mid.y, pmax.z)), node);
-    node->children[5] = new Node(
-        BBox(Point3(mid.x, pmin.y, mid.z), Point3(pmax.x, mid.y, pmax.z)), node);
-    node->children[6] = new Node(
-        BBox(Point3(pmin.x, mid.y, mid.z), Point3(mid.x, pmax.y, pmax.z)), node);
-    node->children[7] = new Node(
-        BBox(Point3(mid.x, mid.y, mid.z), Point3(pmax.x, pmax.y, pmax.z)), node);
+    auto regions = node->region().splitBy8();
+    for(int i = 0; i < 8; i++)
+      node->children[i] = new Node(regions[i], node);
     if (sf)
       sf(*node);
     for (int i = 0; i < 8; i++) {

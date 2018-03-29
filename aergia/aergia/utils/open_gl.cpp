@@ -24,6 +24,7 @@ void printShaderInfoLog(GLuint shader) {
     }
     glGetShaderInfoLog(shader, infologLength, &charsWritten, infoLog);
     printf("Shader InfoLog:\n%s\n\n", infoLog);
+    std::cerr << "Shader InfoLog:\n" << infoLog << std::endl;
     free(infoLog);
     if (charsWritten) {
       exit(1);
@@ -62,8 +63,7 @@ bool printOglError(const char *file, int line) {
 
   glErr = glGetError();
   while (glErr != GL_NO_ERROR) {
-    printf("glError in file %s @ line %d: %s\n", file, line,
-           gluErrorString(glErr));
+    std::cerr << "glError in file " << file << " @ line " << line << ": " << gluErrorString(glErr) << std::endl;
     retCode = true;
     glErr = glGetError();
   }
@@ -186,6 +186,7 @@ ponos::Transform glGetModelviewTransform() {
 }
 
 ponos::Transform glGetMVPTransform() {
+  // return glGetProjectionTransform() * glGetModelviewTransform();
   return glGetModelviewTransform() * glGetProjectionTransform();
 }
 

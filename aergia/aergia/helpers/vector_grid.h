@@ -15,7 +15,7 @@ class VectorGrid : public SceneObject {
 public:
   VectorGrid(ponos::CGridInterface<ponos::vec3> &g) : grid(g) {}
   /* @inherit */
-  void draw() const override {
+  void draw() override {
     glColor4f(0, 0, 0, 0.7);
     glLineWidth(3.0);
     glBegin(GL_LINES);

@@ -1,7 +1,7 @@
 #include <aergia/aergia.h>
 
-aergia::SceneApp<> app(800, 800, "");
-aergia::ProceduralTexture *pt;
+aergia::SceneApp<> app(800, 800, "", false);
+aergia::RenderTexture *pt;
 const char *vs = "#version 440 core\n"
                  "in vec2 position;"
                  "in vec2 texcoord;"
@@ -37,21 +37,21 @@ const char *fs2 = "#version 440 core\n"
                   "outColor = vec4(0.0f, 0.0f, 1.0f, 1.0f);"
                   "}";
 
-class QQuad : public aergia::SceneMesh {
+class QQuad : public aergia::SceneMeshObject {
 public:
   QQuad() {
     rawMesh = new ponos::RawMesh();
     rawMesh->meshDescriptor.elementSize = 4;
     rawMesh->meshDescriptor.count = 1;
-    rawMesh->vertexDescriptor.elementSize = 2;
-    rawMesh->vertexDescriptor.count = 4;
+    rawMesh->positionDescriptor.elementSize = 2;
+    rawMesh->positionDescriptor.count = 4;
     rawMesh->texcoordDescriptor.elementSize = 2;
     rawMesh->texcoordDescriptor.count = 4;
-    rawMesh->vertices = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
+    rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
     rawMesh->texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
     rawMesh->indices.resize(4);
     for (int i = 0; i < 4; i++)
-      rawMesh->indices[i].vertexIndex = rawMesh->indices[i].texcoordIndex = i;
+      rawMesh->indices[i].positionIndex = rawMesh->indices[i].texcoordIndex = i;
     rawMesh->splitIndexData();
     rawMesh->buildInterleavedData();
     glGenVertexArrays(1, &VAO);
@@ -72,7 +72,7 @@ public:
     vb->set(&rawMesh->interleavedData[0]);
     glBindVertexArray(0);
   }
-  void draw() const override {
+  void draw() override {
     glBindVertexArray(VAO);
     vb->bind();
     ib->bind();
@@ -104,24 +104,24 @@ int main() {
   aergia::TextureParameters parameters;
   aergia::ShaderManager &sm = aergia::ShaderManager::instance();
   aergia::Shader s2(sm.loadFromTexts(vs2, nullptr, fs2));
-  pt = new aergia::ProceduralTexture(attributes, parameters);
+  pt = new aergia::RenderTexture(attributes, parameters);
   pt->render([&s2]() {
     s2.begin();
     glDrawArrays(GL_TRIANGLES, 0, 3);
     s2.end();
   });
-  app.viewports[0].camera.reset(new aergia::Camera2D());
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
-      ->setPos(ponos::vec2());
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())->setZoom(1.5f);
-  static_cast<aergia::Camera2D *>(app.viewports[0].camera.get())
+  app.addViewport2D(0,0,800,800);
+  static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())
+      ->setPosition(ponos::Point3());
+  static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())->setZoom(1.5f);
+  static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())
       ->resize(800, 800);
   QQuad quad;
   quad.shader = new aergia::Shader(sm.loadFromTexts(vs, nullptr, fs));
   quad.shader->addVertexAttribute("position");
   quad.shader->addVertexAttribute("texcoord");
-  quad.shader->setUniform("proj",
-                          app.viewports[0].camera->getTransform().matrix());
+  quad.shader->setUniform("proj", aergia::glGetMVPTransform().matrix());
+//                          app.viewports[0].camera->getTransform().matrix());
   quad.shader->setUniform("tex", 0);
   pt->bind(GL_TEXTURE0);
   app.scene.add(&quad);

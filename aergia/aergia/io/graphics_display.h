@@ -81,7 +81,7 @@ public:
    * \returns the unprojected point by the inverse of the camera transform to
    * world space
    */
-  ponos::Point3 unProject(const Camera &c, ponos::Point3 p);
+  ponos::Point3 unProject(const CameraInterface &c, ponos::Point3 p);
   /* main loop
    * Starts the application, opens the window and enters in the main loop.
    */

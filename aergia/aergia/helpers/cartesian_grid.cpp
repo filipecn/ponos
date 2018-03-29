@@ -27,9 +27,13 @@
 namespace aergia {
 
 CartesianGrid::CartesianGrid(int d) {
-  for (size_t i = 0; i < 3; i++) {
-    planes[i].low = -d;
-    planes[i].high = d;
+  xAxisColor = COLOR_RED;
+  yAxisColor = COLOR_BLUE;
+  zAxisColor = COLOR_GREEN;
+  gridColor = COLOR_BLACK;
+  for (auto &plane : planes) {
+    plane.low = -d;
+    plane.high = d;
   }
 }
 
@@ -47,8 +51,8 @@ void CartesianGrid::setDimension(size_t d, int a, int b) {
   planes[d].high = b;
 }
 
-void CartesianGrid::draw() const {
-  glColor4f(0, 0, 0, 0.5);
+void CartesianGrid::draw() {
+  glColor(gridColor);
   glBegin(GL_LINES);
   // XY
   for (int x = planes[0].low; x <= planes[0].high; x++) {
@@ -81,13 +85,13 @@ void CartesianGrid::draw() const {
   // axis
   glLineWidth(4.f);
   glBegin(GL_LINES);
-  glColor4f(1, 0, 0, 1);
+  glColor(xAxisColor);
   glVertex(transform(ponos::Point3()));
   glVertex(transform(ponos::Point3(0.5, 0, 0)));
-  glColor4f(0, 1, 0, 1);
+  glColor(yAxisColor);
   glVertex(transform(ponos::Point3()));
   glVertex(transform(ponos::Point3(0, 0.5, 0)));
-  glColor4f(0, 0, 1, 1);
+  glColor(zAxisColor);
   glVertex(transform(ponos::Point3()));
   glVertex(transform(ponos::Point3(0, 0, 0.5)));
   glEnd();

@@ -9,6 +9,12 @@ Vector2::Vector2() { x = y = 0.0f; }
 
 Vector2::Vector2(float _x, float _y) : x(_x), y(_y) { ASSERT(!HasNaNs()); }
 
+Vector3::Vector3(const float *v) {
+  x = v[0];
+  y = v[1];
+  z = v[2];
+}
+
 Vector2::Vector2(const Point2 &p) : x(p.x), y(p.y) {}
 
 Vector2::Vector2(const Normal2D &n) : x(n.x), y(n.y) {}
@@ -47,6 +53,7 @@ std::ostream &operator<<(std::ostream &os, const Vector3 &v) {
   os << "[vector3]" << v.x << " " << v.y << " " << v.z << std::endl;
   return os;
 }
+
 
 Vector4::Vector4() { x = y = z = w = 0.0f; }
 

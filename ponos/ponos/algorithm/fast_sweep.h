@@ -7,6 +7,7 @@
 #include <ponos/geometry/vector.h>
 #include <ponos/structures/half_edge.h>
 #include <ponos/structures/regular_grid.h>
+#include <ponos/structures/tetrahedron_mesh.h>
 
 namespace ponos {
 
@@ -18,7 +19,7 @@ inline void solveDistance(float p, float q, float &r) {
     r = d;
 }
 
-template <typename GridType, typename MaskType, typename T>
+template<typename GridType, typename MaskType, typename T>
 void fastSweep2D(GridType *grid, GridType *distances, MaskType *mask,
                  T MASK_VALUE) {
   // +1 +1
@@ -47,7 +48,7 @@ void fastSweep2D(GridType *grid, GridType *distances, MaskType *mask,
     }
 }
 
-template <typename GridType, typename MaskType, typename T>
+template<typename GridType, typename MaskType, typename T>
 void sweep_y(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
              int i0, int i1, int j0, int j1) {
   int di = (i0 < i1) ? 1 : -1, dj = (j0 < j1) ? 1 : -1;
@@ -59,7 +60,7 @@ void sweep_y(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
         if (dq < 0)
           continue; // not useful on this sweep direction
         dp = 0.5 * ((*phi)(i, j - 1) + (*phi)(i, j) - (*phi)(i - di, j - 1) -
-                    (*phi)(i - di, j));
+            (*phi)(i - di, j));
         if (dp < 0)
           continue; // not useful on this sweep direction
         if (dp + dq == 0)
@@ -71,7 +72,7 @@ void sweep_y(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
       }
 }
 
-template <typename GridType, typename MaskType, typename T>
+template<typename GridType, typename MaskType, typename T>
 void sweep_x(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
              int i0, int i1, int j0, int j1) {
   int di = (i0 < i1) ? 1 : -1, dj = (j0 < j1) ? 1 : -1;
@@ -83,7 +84,7 @@ void sweep_x(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
         if (dq < 0)
           continue; // not useful on this sweep direction
         dp = 0.5 * ((*phi)(i - 1, j) + (*phi)(i, j) - (*phi)(i - 1, j - dj) -
-                    (*phi)(i, j - dj));
+            (*phi)(i, j - dj));
         if (dp < 0)
           continue; // not useful on this sweep direction
         if (dp + dq == 0)
@@ -95,7 +96,7 @@ void sweep_x(GridType *grid, GridType *phi, MaskType *mask, T MASK_VALUE,
       }
 }
 
-template <typename GridType, typename MaskType, typename T>
+template<typename GridType, typename MaskType, typename T>
 void fastMarch2D(GridType *phi, MaskType *mask, T MASK_VALUE,
                  std::vector<ivec2> points) {
   UNUSED_VARIABLE(MASK_VALUE);
@@ -165,14 +166,14 @@ inline void fastMarch2D(HEMesh2DF *phi, std::vector<size_t> points) {
     phi->setVertexData(p.v, p.t);
     // iterate all neighbours
     phi->traverseEdgesFromVertex(p.v, [&q, &phi, &edges, &vertices, &frozen,
-                                       &closestPoint](int e) {
+        &closestPoint](int e) {
       if (frozen[edges[e].dest])
         return;
       phi->setVertexData(edges[e].dest, 1 << 16);
       // iterate neighbours from neighbours
       phi->traverseEdgesFromVertex(edges[e].dest, [&phi, &edges, &vertices,
-                                                   &frozen,
-                                                   &closestPoint](int e2) {
+          &frozen,
+          &closestPoint](int e2) {
         int a = edges[e2].orig;
         // test against vertex
         int b = edges[e2].dest;
@@ -217,6 +218,103 @@ inline void fastMarch2D(HEMesh2DF *phi, std::vector<size_t> points) {
       frozen[edges[e].dest] = 1;
     });
   }
+}
+
+/// Propagates distances from sources to vertices.
+/// \tparam MeshType tetrahedra mesh type
+/// \param input input mesh pointer
+/// \param sources source vertices indices
+/// \param out output mesh pointer
+template<typename MeshType = TMesh<>>
+void fastMarchTetraheda(const MeshType *in, std::vector<size_t> sources, MeshType *out) {
+  // uses an phantom closest point to all (it will always have infinity distance
+  std::vector<size_t> closest(out->vertices.size() + 1, out->vertices.size());
+  std::vector<double> distances(out->vertices.size() + 1, INFINITY);
+  // in case source is not directly visible, the phanton index is used
+  /*auto computeClosestPoint = [&](size_t p, size_t s, double &d) -> size_t {
+    std::cerr << "is visible " << p << " " << s << std::endl;
+    ray3 r(in->vertices[s].position, normalize(in->vertices[p].position -
+        in->vertices[s].position));
+    d = INFINITY;
+    // iterate all neighboring tetrahedra
+    auto ts = in->vertexTetrahedra(p);
+    // r must intersect at least one of its interior faces
+    for (auto t : ts) {
+      auto fs = in->tetrahedronFaces(t);
+      for (auto f : fs)
+        if (in->faces[f].hface >= 0) {
+          auto v = in->faceVertices(f);
+          if (triangle_ray_intersection(in->vertices[v[0]].position,
+                                        in->vertices[v[1]].position,
+                                        in->vertices[v[2]].position,
+                                        r)) {
+            d = distance(in->vertices[s].position, in->vertices[p].position);
+            return s;
+          } else {
+            auto cp = closest_point_triangle(
+                in->vertices[s].position, in->vertices[v[0]].position,
+                in->vertices[v[1]].position, in->vertices[v[2]].position);
+            std::cerr << "cp " << cp << " on " << v[0] << " " << v[1] << " " << v[2] << std::endl;
+            std::cerr << "distances:\n ";
+            std::cerr << distance(in->vertices[s].position, cp) << " " <<
+                      distance(cp, in->vertices[p].position) << std::endl;
+            double dist = distance(in->vertices[s].position, cp) +
+                distance(cp, in->vertices[p].position);
+            d = std::min(d, dist);
+          }
+        }
+    }
+    std::cerr << "not visible\n";
+    return in->vertices.size();
+  };*/
+  std::queue<size_t> q;
+  // initialize queue with sources
+  for (auto s : sources) {
+    distances[s] = 0.f;
+    closest[s] = s;
+    q.push(s);
+  }
+  while (!q.empty()) {
+    size_t cur = q.front();
+    std::cerr << "CUR " << cur << std::endl;
+    q.pop();
+    auto neighbours = in->vertexNeighbours(cur);
+    std::cerr << "with neighbors\n";
+    for (auto n : neighbours)
+      std::cerr << n << " ";
+    std::cerr << std::endl;
+    // for each neighbour, try to update cur vertex by getting their closest source
+    // and considering the source position and mesh
+    for (auto n : neighbours) {
+      auto d = distance(in->vertices[n].position, in->vertices[cur].position) + distances[cur];
+      if(d < distances[n]) {
+        distances[n] = d;
+        q.push(n);
+      }
+      /*if (closest[cur] == cur) {
+        // we are in a source node, so all neighbors have direct visibility
+        auto d = distance(in->vertices[n].position, in->vertices[closest[cur]].position);
+        if (d < distances[n]) {
+          distances[n] = d;
+          closest[n] = cur;
+          q.push(n);
+        }
+        continue;
+      }
+      if (closest[cur] == out->vertices.size() || closest[cur] == closest[n])
+        continue;
+      double d = INFINITY;
+      size_t cp = computeClosestPoint(n, closest[cur], d);
+      std::cerr << "distance " << d << " -> " << cp << std::endl;
+      if (d < distances[n]) {
+        distances[n] = d;
+        closest[n] = cp;
+        q.push(n);
+      }*/
+    }
+  }
+  for (size_t i = 0; i < out->vertices.size(); i++)
+    out->vertices[i].data = distances[i];
 }
 
 } // ponos namespace

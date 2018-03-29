@@ -81,7 +81,7 @@ TEST(Octree, Traversal) {
       float s = node.region().size(0);
       EXPECT_FLOAT_EQ(node.region().size(1), s);
       EXPECT_FLOAT_EQ(node.region().size(2), s);
-      float es = 1. / pow(2., 1. * node.level());
+      float es = 1.f / std::pow(2.f, 1.f * node.level());
       EXPECT_FLOAT_EQ(s, es);
       s = node.region().size(1);
       EXPECT_FLOAT_EQ(s, es);

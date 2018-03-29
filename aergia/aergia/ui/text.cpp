@@ -128,7 +128,8 @@ void Text::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
 
 void Text::render(std::string s, const ponos::Point3 &p, GLfloat scale,
                   aergia::Color c) {
-  ponos::Point3 sp = GraphicsDisplay::instance().normDevCoordToViewCoord(p);
+  auto& gd = GraphicsDisplay::instance();
+  ponos::Point3 sp = gd.normDevCoordToViewCoord(p);
   render(s, sp.x, sp.y, scale, c);
 }
 

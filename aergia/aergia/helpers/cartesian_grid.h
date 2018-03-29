@@ -27,6 +27,7 @@
 
 #include <ponos/ponos.h>
 
+#include <aergia/colors/color_palette.h>
 #include <aergia/scene/scene_object.h>
 #include <aergia/utils/open_gl.h>
 
@@ -61,8 +62,10 @@ public:
    */
   void setDimension(size_t d, int a, int b);
   /* @inherit */
-  void draw() const override;
+  void draw() override;
 
+  Color gridColor;
+  Color xAxisColor, yAxisColor, zAxisColor;
   ponos::Interval<int> planes[3];
 };
 

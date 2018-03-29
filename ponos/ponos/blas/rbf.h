@@ -26,74 +26,12 @@
 #define PONOS_BLAS_RBF_H
 
 #include <functional>
+#include <ponos/blas/kernels.h>
 #include <ponos/blas/field.h>
 #include <ponos/blas/symmetric_matrix.h>
 #include <ponos/geometry/vector.h>
 
 namespace ponos {
-
-template <typename T> class Kernel {
-public:
-  virtual T operator()(T r) const = 0;
-  virtual T D(T r) const { return r; }
-  virtual T D2(T r) const { return r; }
-  virtual T L(T r) const { return r; }
-};
-
-template <typename T> class Wendland33Kernel : public Kernel<T> {
-public:
-  Wendland33Kernel(T _e) : e(_e) {}
-  virtual T operator()(T r) const override {
-    return pow(std::max(0.f, 1.f - e * r), 8) *
-           (32.f * CUBE(e * r) + 25.f * SQR(e * r) + 8.f * e * r + 1.f);
-  }
-  virtual T D(T r) const override {
-    return -22.f * SQR(e) * pow(std::max(0.f, 1.f - e * r), 7) +
-           (16.f * SQR(e * r) + 7.f * e * r + 1.f);
-  }
-  virtual T D2(T r) const override {
-    return 528.f * pow(e, 4) * pow(std::max(0.f, 1.f - e * r), 6) +
-           (6.f * e * r + 1.f);
-  }
-  T e;
-};
-
-template <typename T> class InverseMultiquadricKernel : public Kernel<T> {
-public:
-  InverseMultiquadricKernel(T epsilon) : e(epsilon) {}
-  virtual T operator()(T r) const override {
-    return 1 / std::sqrt(1 + SQR(e * r));
-  }
-  virtual T D(T r) const override { return -SQR(e) * r * pow((*this)(r), 3); }
-  virtual T D2(T r) const override {
-    return SQR(e) * (2.0 * SQR(e * r) - 1.0) * pow((*this)(r), 5);
-  }
-  virtual T L(T r) const override {
-    return D2(r) - SQR(e) * pow((*this)(r), 3);
-  }
-  T e;
-};
-
-template <typename T> class GaussianKernel : public Kernel<T> {
-public:
-  GaussianKernel(T ep) : e(ep) {}
-  virtual T operator()(T r) const override { return exp(-SQR(e * r)); }
-  virtual T D(T r) const override { return -2.0 * SQR(e) * r * (*this)(r); }
-  virtual T D2(T r) const override {
-    return (4.0 * SQR(e) * SQR(e) * SQR(r) - 2.0 * SQR(e)) * (*this)(r);
-  }
-  virtual T L(T r) const override { return D2(r) - 2.0 * SQR(e) * (*this)(r); }
-  T e;
-};
-
-template <typename T> class PowKernel : public Kernel<T> {
-public:
-  PowKernel(T _e) : e(_e) {}
-  virtual T operator()(T r) const override { return pow(r, e); }
-
-private:
-  T e;
-};
 
 template <typename T, typename P>
 class RBF2D : virtual public ScalarField2D<float> {

@@ -7,13 +7,13 @@
 
 namespace aergia {
 
-class WireframeMesh : public SceneMesh {
+class WireframeMesh : public SceneMeshObject {
 public:
   WireframeMesh(const std::string &filename);
   WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t);
   virtual ~WireframeMesh() {}
   /* @inherit */
-  void draw() const override;
+  void draw() override;
 
 protected:
   void setupIndexBuffer() override;

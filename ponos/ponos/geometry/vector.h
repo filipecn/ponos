@@ -182,6 +182,7 @@ public:
   Vector3();
   explicit Vector3(float _f);
   explicit Vector3(float _x, float _y, float _z);
+  explicit Vector3(const float *v);
   explicit Vector3(const Normal &n);
   explicit Vector3(const Point3 &p);
   // boolean
@@ -582,6 +583,7 @@ inline Vector<T, D> operator*(float f, const Vector<T, D> &v) {
   return v * f;
 }
 
+typedef Vector<double, 3> vec3d;
 typedef Vector<float, 2> vec2f;
 typedef Vector<int, 2> ivec2;
 typedef Vector<uint, 2> uivec2;

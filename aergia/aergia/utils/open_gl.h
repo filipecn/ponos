@@ -32,6 +32,10 @@
   CODE glEnd();                                                                \
   glLineWidth(1);
 
+#define GL_DRAW_TRIANGLES(CODE)                                             \
+  glBegin(GL_TRIANGLES);                                                          \
+  CODE glEnd();                                                                \
+  glPointSize(1);
 namespace aergia {
 
 #ifdef GL_DEBUG
@@ -44,7 +48,7 @@ namespace aergia {
 
 inline void glfwError(int id, const char *description) {
   UNUSED_VARIABLE(id);
-  std::cout << description << std::endl;
+  std::cerr << description << std::endl;
 }
 
 bool initGLEW();
@@ -94,6 +98,8 @@ void glVertex(ponos::Point<float, 2> v);
 
 void glColor(Color c);
 
+/// multiplies **t** to current OpenGL matrix
+/// \param transform
 void glApplyTransform(const ponos::Transform &transform);
 
 ponos::Transform glGetProjectionTransform();

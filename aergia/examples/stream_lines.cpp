@@ -182,7 +182,7 @@ int main(int argc, char **argv) {
   int n = 15;
   sscanf(argv[2], "%d", &n);
   app.init();
-  bvh = new aergia::BVH(new aergia::SceneMesh(argv[1]));
+  bvh = new aergia::BVH(new aergia::SceneMeshObject(argv[1]));
   grid = new ponos::CRegularGrid<ponos::vec3>(ponos::ivec3(n), ponos::vec3(),
                                               bvh->sceneMesh->getBBox());
   app.scene.add(new aergia::WireframeMesh(

@@ -43,22 +43,34 @@ void loadOBJ(const std::string &filename, ponos::RawMesh *mesh) {
       tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filename.c_str());
   if (!r)
     return;
-  mesh->vertices = std::vector<float>(attrib.vertices);
+  mesh->positions = std::vector<float>(attrib.vertices);
   mesh->normals = std::vector<float>(attrib.normals);
   mesh->texcoords = std::vector<float>(attrib.texcoords);
   mesh->indices.resize(shapes[0].mesh.indices.size());
   memcpy(&mesh->indices[0], &shapes[0].mesh.indices[0],
          shapes[0].mesh.indices.size() * sizeof(tinyobj::index_t));
-  mesh->vertexDescriptor.elementSize = 3;
-  mesh->vertexDescriptor.count =
-      mesh->vertices.size() / mesh->vertexDescriptor.elementSize;
+  mesh->positionDescriptor.elementSize = 3;
+  mesh->positionDescriptor.count =
+      mesh->positions.size() / mesh->positionDescriptor.elementSize;
+  if (mesh->normals.size()) {
+    mesh->normalDescriptor.elementSize = 3;
+    mesh->normalDescriptor.count =
+        mesh->normals.size() / mesh->normalDescriptor.elementSize;
+  } else
+    mesh->normalDescriptor.count = mesh->normalDescriptor.elementSize = 0;
+  if (mesh->texcoords.size()) {
+    mesh->texcoordDescriptor.elementSize = 2;
+    mesh->texcoordDescriptor.count =
+        mesh->texcoords.size() / mesh->texcoordDescriptor.elementSize;
+  } else
+    mesh->texcoordDescriptor.count = mesh->texcoordDescriptor.elementSize = 0;
   mesh->meshDescriptor.elementSize = 3;
   mesh->meshDescriptor.count =
       mesh->indices.size() / mesh->meshDescriptor.elementSize;
   mesh->primitiveType = ponos::GeometricPrimitiveType::TRIANGLES;
   mesh->computeBBox();
-  mesh->splitIndexData();
-  mesh->buildInterleavedData();
+  //mesh->splitIndexData();
+ // mesh->buildInterleavedData();
   /* tiny obj use
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
@@ -159,29 +171,29 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
     /* if we're on vertex elements, read them in */
     if (equal_strings(vertexString, elem_name)) {
       /* create a vertex list to hold all the vertices */
-      vlist = (Vertex **)malloc(sizeof(Vertex *) * num_elems);
+      vlist = (Vertex **) malloc(sizeof(Vertex *) * num_elems);
       /* set up for getting vertex elements */
       ply_get_property(ply, elem_name, &vert_props[0]);
       ply_get_property(ply, elem_name, &vert_props[1]);
       ply_get_property(ply, elem_name, &vert_props[2]);
-      mesh->vertexDescriptor.count = num_elems;
+      mesh->positionDescriptor.count = num_elems;
       /* grab all the vertex elements */
       for (j = 0; j < num_elems; j++) {
         /* grab and element from the file */
-        vlist[j] = (Vertex *)malloc(sizeof(Vertex));
-        ply_get_element(ply, (void *)vlist[j]);
+        vlist[j] = (Vertex *) malloc(sizeof(Vertex));
+        ply_get_element(ply, (void *) vlist[j]);
         /* print out vertex x,y,z for debugging */
         printf("vertex: %g %g %g\n", vlist[j]->x, vlist[j]->y, vlist[j]->z);
-        mesh->vertexDescriptor.elementSize = 3;
-        mesh->vertices.emplace_back(vlist[j]->x);
-        mesh->vertices.emplace_back(vlist[j]->y);
-        mesh->vertices.emplace_back(vlist[j]->z);
+        mesh->positionDescriptor.elementSize = 3;
+        mesh->positions.emplace_back(vlist[j]->x);
+        mesh->positions.emplace_back(vlist[j]->y);
+        mesh->positions.emplace_back(vlist[j]->z);
       }
     }
     /* if we're on face elements, read them in */
     if (equal_strings(faceString, elem_name)) {
       /* create a list to hold all the face elements */
-      flist = (Face **)malloc(sizeof(Face *) * num_elems);
+      flist = (Face **) malloc(sizeof(Face *) * num_elems);
       /* set up for getting face elements */
       ply_get_property(ply, elem_name, &face_props[0]);
       ply_get_property(ply, elem_name, &face_props[1]);
@@ -189,8 +201,8 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
       /* grab all the face elements */
       for (j = 0; j < num_elems; j++) {
         /* grab and element from the file */
-        flist[j] = (Face *)malloc(sizeof(Face));
-        ply_get_element(ply, (void *)flist[j]);
+        flist[j] = (Face *) malloc(sizeof(Face));
+        ply_get_element(ply, (void *) flist[j]);
         /* print out face info, for debugging */
         printf("face: %d, list = ", flist[j]->intensity);
         mesh->meshDescriptor.elementSize = flist[j]->nverts;
@@ -199,7 +211,7 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
           ponos::RawMesh::IndexData d;
           d.texcoordIndex = 0;
           d.normalIndex = 0;
-          d.vertexIndex = flist[j]->verts[k];
+          d.positionIndex = flist[j]->verts[k];
           mesh->indices.emplace_back(d);
         }
         printf("\n");
@@ -220,7 +232,7 @@ void loadPLY(const std::string &filename, ponos::RawMesh *mesh) {
   /* close the PLY file */
   ply_close(ply);
   mesh->computeBBox();
-  std::cout << mesh->vertices.size() / 3 << std::endl;
+  std::cout << mesh->positions.size() / 3 << std::endl;
   std::cout << mesh->meshDescriptor.count << std::endl;
   std::cout << mesh->meshDescriptor.elementSize << std::endl;
   std::cout << mesh->indices.size() << std::endl;

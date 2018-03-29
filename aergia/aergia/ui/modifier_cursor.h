@@ -92,7 +92,7 @@ public:
   }
   virtual ~CircleCursor() {}
 
-  void draw() const override {
+  void draw() override {
     ponos::Circle c = circle;
     if (this->dragging)
       glColor(activeColor);
