@@ -40,7 +40,7 @@ public:
   void init();
   void run();
   void exit();
-  template <typename T> T *getCamera(size_t i = 0) {
+  template <typename T = UserCamera> T *getCamera(size_t i = 0) {
     return static_cast<T *>(viewports[i].camera.get());
   }
 

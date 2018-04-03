@@ -51,10 +51,19 @@
       std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
   }
 #endif
+
+#ifndef ASSERT_MESSAGE
+#define ASSERT_MESSAGE(A, B)                                                   \
+  {                                                                            \
+    if (!(A))                                                                  \
+      std::cerr << "Assertion failed in " << LOG_LOCATION << std::endl         \
+                << B << std::endl;                                             \
+  }
+#endif
 #ifndef ASSERT_EQ
 #define ASSERT_EQ(A, B)                                                        \
   {                                                                            \
-    if((A) != (B)) {                                                           \
+    if ((A) != (B)) {                                                          \
       std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
       std::cout << (A) << " != " << (B) << std::endl;                          \
     }                                                                          \

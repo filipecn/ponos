@@ -26,14 +26,14 @@
 #define AERGIA_HELPERS_HEMESH_MODEL_H
 
 #include <aergia/scene/scene_object.h>
-#include <aergia/ui/text.h>
+#include <aergia/ui/text_renderer.h>
 #include <aergia/utils/open_gl.h>
 
 namespace aergia {
 
 class HEMeshObject : public aergia::SceneObject {
 public:
-  HEMeshObject(const ponos::HEMesh2DF *m, Text *t, float de = 0.03f,
+  HEMeshObject(const ponos::HEMesh2DF *m, TextRenderer *t, float de = 0.03f,
                float dv = 0.015f) {
     // mesh.reset(new ponos::HEMesh2DF(rm));
     mesh = m;
@@ -128,7 +128,7 @@ public:
     }
   }
 
-  Text *text;
+  TextRenderer *text;
   float distanceFromEdge;
   float distanceFromVertex;
 

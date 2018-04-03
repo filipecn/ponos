@@ -5,6 +5,7 @@ file(GLOB HEADERS
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/algorithm/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/geometry/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ponos/log/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/parallel/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/blas/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/blas/*.inl

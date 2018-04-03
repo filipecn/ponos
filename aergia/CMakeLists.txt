@@ -23,6 +23,7 @@ set(HEADERS
         aergia/io/framebuffer.h
         aergia/io/graphics_display.h
         aergia/io/image_texture.h
+        aergia/io/font_texture.h
         aergia/io/render_texture.h
         aergia/io/texture.h
         aergia/io/texture_parameters.h
@@ -47,8 +48,8 @@ set(HEADERS
         aergia/ui/interactive_object_interface.h
         aergia/ui/modifier_cursor.h
         aergia/ui/scene_app.h
-        aergia/ui/text.h
-        aergia/ui/text_manager.h
+        aergia/ui/text_renderer.h
+        aergia/ui/font_manager.h
         aergia/ui/trackball.h
         aergia/ui/trackball_interface.h
         aergia/ui/track_mode.h
@@ -72,6 +73,7 @@ set(SOURCES
         aergia/io/graphics_display.cpp
         aergia/io/image_texture.cpp
         aergia/io/render_texture.cpp
+        aergia/io/font_texture.cpp
         aergia/io/texture.cpp
         aergia/io/utils.cpp
         aergia/io/viewport_display.cpp
@@ -85,8 +87,8 @@ set(SOURCES
         aergia/scene/triangle_mesh.cpp
         aergia/scene/wireframe_mesh.cpp
         aergia/ui/app.cpp
-        aergia/ui/text.cpp
-        aergia/ui/text_manager.cpp
+        aergia/ui/text_renderer.cpp
+        aergia/ui/font_manager.cpp
         aergia/ui/trackball_interface.cpp
         aergia/ui/ui_camera.cpp
         aergia/utils/open_gl.cpp
@@ -95,6 +97,8 @@ set(SOURCES
 
 include_directories("${AERGIA_SOURCE_DIR}/external")
 include_directories(${AERGIA_INCLUDES})
+
+add_definitions(-DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")
 
 if (WIN32)
     link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)

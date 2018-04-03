@@ -176,17 +176,17 @@ void glApplyTransform(const ponos::Transform &transform) {
 ponos::Transform glGetProjectionTransform() {
   float m[16];
   glGetFloatv(GL_PROJECTION_MATRIX, m);
-  return ponos::Transform(ponos::Matrix4x4(m, false));
+  return ponos::Transform(ponos::Matrix4x4(m, true));
 }
 
 ponos::Transform glGetModelviewTransform() {
   float m[16];
   glGetFloatv(GL_MODELVIEW_MATRIX, m);
-  return ponos::Transform(ponos::Matrix4x4(m, false));
+  return ponos::Transform(ponos::Matrix4x4(m, true));
 }
 
 ponos::Transform glGetMVPTransform() {
-  // return glGetProjectionTransform() * glGetModelviewTransform();
+  return glGetProjectionTransform() * glGetModelviewTransform();
   return glGetModelviewTransform() * glGetProjectionTransform();
 }
 

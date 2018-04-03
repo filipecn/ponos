@@ -30,11 +30,14 @@
 namespace aergia {
 class Texture {
 public:
-  Texture() = default;
+  Texture();
   /// \param a texture attributes
   /// \param p texture parameters
   Texture(const TextureAttributes &a, const TextureParameters &p);
   virtual ~Texture();
+  /// \param a texture attributes
+  /// \param p texture parameters
+  void set(const TextureAttributes &a, const TextureParameters& p);
   /// Binds texture
   /// \param t texture unit (ex: GL_TEXTURE0)
   virtual void bind(GLenum t) const;

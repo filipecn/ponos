@@ -26,22 +26,38 @@
 #ifndef AERGIA_TEXT_MANAGER_H
 #define AERGIA_TEXT_MANAGER_H
 
-#include <aergia/ui/text.h>
+#ifdef FREETYPE_INCLUDED
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#endif
+
+#include <aergia/ui/text_renderer.h>
+#include <aergia/io/font_texture.h>
 
 namespace aergia {
 
 /// Manages font texts
-class TextManager {
+class FontManager {
 public:
-  static TextManager &instance();
-  virtual ~TextManager();
-  TextManager(TextManager const &) = delete;
-  void operator=(TextManager const &) = delete;
-
+  static FontManager &instance();
+  virtual ~FontManager();
+  FontManager(FontManager const &) = delete;
+  void operator=(FontManager const &) = delete;
+  /// \param filename .ttf full path
+  /// \return font id
+  int loadFromFile(const char *filename);
+  /// \param id font id
+  /// \return font texture
+  const FontTexture& fontTexture(size_t id = 0);
 private:
-  TextManager();
-  static TextManager instance_;
-  std::vector<Text> text_;
+  FontManager();
+  void init();
+  static FontManager instance_;
+  bool initialized_;
+  std::vector<FontTexture> fonts_; //!< fonts textures
+#ifdef FREETYPE_INCLUDED
+  FT_Library ft;
+#endif
 };
 
 } // aergia namespace

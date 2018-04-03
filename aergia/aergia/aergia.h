@@ -40,7 +40,7 @@
 #include <aergia/ui/interactive_object_interface.h>
 #include <aergia/ui/modifier_cursor.h>
 #include <aergia/ui/scene_app.h>
-#include <aergia/ui/text.h>
+#include <aergia/ui/text_renderer.h>
 #include <aergia/ui/track_mode.h>
 #include <aergia/ui/trackball.h>
 #include <aergia/ui/trackball_interface.h>

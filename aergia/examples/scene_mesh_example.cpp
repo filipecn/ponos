@@ -43,9 +43,10 @@ int main() {
   app.addViewport(0, 0, 800, 800);
   ponos::RawMesh mesh;
   // aergia::loadOBJ("/mnt/windows/Users/fuiri/Desktop/dragon.obj", &mesh);
-  aergia::loadOBJ("/mnt/windows/Projects/ponos/aergia/examples/assets/suzanne.obj", &mesh);
+  aergia::loadOBJ("/mnt/windows/Projects/ponos/aergia/examples/assets/torusknot.obj", &mesh);
   mesh.apply(ponos::scale(0.1, 0.1, 0.1));
   auto texture = aergia::ImageTexture::checkBoard(64, 64);
+  std::cerr << texture;
   //ponos::RawMeshSPtr m(ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, true, false));
   // create a vertex buffer for base mesh
   //aergia::SceneMesh sm(*m.get());

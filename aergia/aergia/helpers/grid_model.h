@@ -29,7 +29,7 @@
 
 #include <aergia/colors/color.h>
 #include <aergia/scene/scene_object.h>
-#include <aergia/ui/text.h>
+#include <aergia/ui/text_renderer.h>
 #include <aergia/utils/open_gl.h>
 
 #include <functional>
@@ -109,7 +109,6 @@ template <typename SGridType> class StaggeredGrid2DModel : public SceneObject {
 public:
   StaggeredGrid2DModel(const SGridType *g) {
     this->grid = g;
-    text = new Text("C:/Windows/Fonts/Arial.ttf");
     u_model.reset(
         new GridModel<typename SGridType::InternalGridType>(&this->grid->u));
     v_model.reset(
@@ -119,7 +118,7 @@ public:
     setupModel(u_model.get(), Color(0, 0, 0, 0), Color(1, 0, 0, 0.5));
     setupModel(v_model.get(), Color(0, 0, 0, 0), Color(0, 0, 1, 0.5));
   }
-  void draw() const override {
+  void draw() override {
     u_model->draw();
     v_model->draw();
     p_model->draw();
@@ -146,7 +145,7 @@ public:
 
 private:
   //  const SGridType *grid;
-  Text *text;
+  TextRenderer *text;
 };
 
 } // aergia namespace

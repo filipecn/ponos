@@ -27,11 +27,24 @@
 
 namespace aergia {
 
+Texture::Texture() = default;
+
 Texture::Texture(const TextureAttributes &a, const TextureParameters &p)
     : attributes(a), parameters(p) {
-  ASSERT(a.target == p.target);
+  set(a, p);
+}
 
+Texture::~Texture() {
+  if (textureObject)
+    glDeleteTextures(1, &textureObject);
+}
+
+void Texture::set(const TextureAttributes &a, const TextureParameters &p) {
+  ASSERT(a.target == p.target);
+  attributes = a;
+  parameters = p;
   glGenTextures(1, &textureObject);
+  ASSERT(textureObject);
   glBindTexture(p.target, textureObject);
   parameters.apply();
   if (a.target == GL_TEXTURE_3D)
@@ -44,11 +57,6 @@ Texture::Texture(const TextureAttributes &a, const TextureParameters &p)
                  attributes.data);
   CHECK_GL_ERRORS;
   glBindTexture(attributes.target, 0);
-}
-
-Texture::~Texture() {
-  if (textureObject)
-    glDeleteTextures(1, &textureObject);
 }
 
 void Texture::bind(GLenum t) const {
@@ -67,10 +75,10 @@ ponos::uivec3 Texture::size() const {
 }
 
 std::ostream &operator<<(std::ostream &out, Texture &pt) {
-  int width = pt.attributes.width;
-  int height = pt.attributes.height;
+  auto width = static_cast<int>(pt.attributes.width);
+  auto height = static_cast<int>(pt.attributes.height);
 
-  unsigned char *data = NULL;
+  unsigned char *data = nullptr;
 
   data = new unsigned char[(int) (width * height)];
 
@@ -81,6 +89,7 @@ std::ostream &operator<<(std::ostream &out, Texture &pt) {
   }
 
   glActiveTexture(GL_TEXTURE0);
+  std::cerr << "texture object " << pt.textureObject << std::endl;
   glBindTexture(pt.attributes.target, pt.textureObject);
   glGetTexImage(pt.attributes.target, 0, pt.attributes.format,
                 pt.attributes.type, data);

@@ -1,4 +1,4 @@
-// Created by filipecn on 3/28/18.
+// Created by filipecn on 3/29/18.
 /*
  * Copyright (c) 2018 FilipeCN
  *
@@ -23,18 +23,31 @@
  *
 */
 
-#include "text_manager.h"
+#include "font_texture.h"
 
 namespace aergia {
 
-TextManager TextManager::instance_;
+FontTexture::FontTexture() = default;
 
-TextManager &TextManager::instance() {
-  return instance_;
+FontTexture::~FontTexture() = default;
+
+void FontTexture::addCharacter(GLubyte c,
+                               ponos::ivec2 s,
+                               aergia::TextureAttributes a,
+                               aergia::TextureParameters p,
+                               ponos::ivec2 bearing,
+                               GLuint advance) {
+  Character character;
+  character.texture.reset(new Texture(a, p));
+  character.size = s;
+  character.bearing = bearing;
+  character.advance = advance;
+  characters.insert(std::pair<GLchar, Character>(c, character));
 }
 
-TextManager::TextManager() = default;
+const FontTexture::Character &FontTexture::operator[](GLubyte c) const {
+  auto it = characters.find(c);
+  return it->second;
+}
 
-TextManager::~TextManager() = default;
-
-} // aergia namespace
+}

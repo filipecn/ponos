@@ -30,7 +30,7 @@
 #include <aergia/colors/color_palette.h>
 #include <aergia/helpers/geometry_drawers.h>
 #include <aergia/scene/scene_object.h>
-#include <aergia/ui/text.h>
+#include <aergia/ui/text_renderer.h>
 #include <aergia/utils/open_gl.h>
 
 #include <functional>
