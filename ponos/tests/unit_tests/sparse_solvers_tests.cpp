@@ -208,3 +208,38 @@ TEST(SparseSolvers, PCG) {
     EXPECT_EQ(r, true);
   }
 }
+
+TEST(SparseSolvers, FDMPCG) {
+  size_t n = 7, m = 7;
+  FDMLinearSystem2f system;
+  system.resize(n, m);
+  for (size_t i = 0; i < n; i++)
+    for (size_t j = 0; j < m; j++) {
+      system.A(i, j).center = 19600;
+      if (i + 1 < 7)
+        system.A(i, j).right = -4900;
+      else
+        system.A(i, j).right = 0;
+      if (j + 1 < 7)
+        system.A(i, j).up = -4900;
+      else
+        system.A(i, j).up = 0;
+    }
+  system.x.set(0.0);
+  system.b.set(1.0);
+  FDMCGSolver2f<NullCGPreconditioner<FDMBlas2f>> solver(100, 1e-7);
+  EXPECT_TRUE(solver.solve(&system));
+  FDMVector2Df B(n, m);
+  FDMBlas2f::mvm(system.A, system.x, &B);
+  for (size_t i = 0; i < n; i++)
+    for (size_t j = 0; j < m; j++)
+      EXPECT_TRUE(std::fabs(B(i, j) - system.b(i, j)) < 1e-5);
+  FDMJacobiSolver2f jsolver(100, 1e-5, 4);
+  EXPECT_TRUE(jsolver.solve(&system));
+  B.set(0.f);
+  FDMBlas2f::mvm(system.A, system.x, &B);
+  for (size_t i = 0; i < n; i++)
+    for (size_t j = 0; j < m; j++)
+      EXPECT_TRUE(std::fabs(B(i, j) - system.b(i, j)) < 1e-5);
+
+}

@@ -45,7 +45,7 @@ int main() {
   aergia::SceneApp<> app(800, 800, "", false);
   app.init();
   app.addViewport(0,0,800,800);
-  app.getCamera<aergia::UserCamera>(0)->setPosition(ponos::Point3(2));
+  app.getCamera()->setPosition(ponos::Point3(2));
   poseidon::ParticleSystemModel psm(ps, 0.005);
   psm.addPropertyColor<double>(p1, aergia::HEAT_GREEN_COLOR_PALETTE);
   psm.selectProperty<double>(p1);

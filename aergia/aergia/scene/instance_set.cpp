@@ -145,8 +145,8 @@ void InstanceSet::draw() {
   }
   CHECK_GL_ERRORS;
   shader_.begin();
-  shader_.setUniform("view_matrix", glGetModelviewTransform().matrix());
-  shader_.setUniform("projection_matrix", glGetProjectionTransform().matrix());
+  shader_.setUniform("view_matrix", ponos::transpose(glGetModelviewTransform().matrix()));
+  shader_.setUniform("projection_matrix", ponos::transpose(glGetProjectionTransform().matrix()));
   glDrawElementsInstanced(baseMesh_.indexBuffer()->bufferDescriptor.elementType,
                           baseMesh_.indexBuffer()->bufferDescriptor.elementCount,
                           baseMesh_.indexBuffer()->bufferDescriptor.dataType, 0,

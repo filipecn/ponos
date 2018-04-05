@@ -207,12 +207,15 @@ Point3 closest_point_n_plane(const Point3 &p, const Plane &pl);
  * /return closest point on **b** from **p**
  */
 Point3 closest_point_bbox(const Point3 &p, const BBox &b);
-/** \brief  distance
- * \param p **[in]** point
- * \param pl **[in]** plane
- *
- * /return signed distance of **p** to **pl**
- */
+/// distance from point to line
+/// \param p **[in]** point
+/// \param l **[in]** line
+/// \return distance from **p** to **l**
+float distance_point_line(const Point3 &p, const Line &l);
+/// \brief  distance
+/// \param p **[in]** point
+/// \param pl **[in]** plane
+/// \return signed distance of **p** to **pl**
 float distance_point_plane(const Point3 &p, const Plane &pl);
 /** \brief  distance
  * \param p **[in]** point

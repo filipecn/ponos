@@ -30,6 +30,7 @@ if(NOT TRAVIS)
   pkg_check_modules (FREETYPE QUIET freetype2)
 else(NOT TRAVIS)
   set(TRIANGLE_INCLUDE "")
+  set(TETGEN_INCLUDE "")
 endif(NOT TRAVIS)
 
 if(MINGW)

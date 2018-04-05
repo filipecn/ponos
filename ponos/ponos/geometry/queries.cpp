@@ -202,7 +202,8 @@ bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit0,
 }
 
 bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit0) {
-  return bbox_ray_intersection(box, ray, hit0);
+  float hit1 = 0;
+  return bbox_ray_intersection(box, ray, hit0, hit1);
 }
 
 void triangle_barycentric_coordinates(const Point2 &p, const Point2 &a,
@@ -262,7 +263,8 @@ bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
   return true;
 }
 
-Point3 closest_point_triangle(const Point3 &p, const Point3 &p1, const Point3 &p2, const Point3 &p3) {
+Point3 closest_point_triangle(const Point3 &p, const Point3 &p1,
+                              const Point3 &p2, const Point3 &p3) {
   auto ab = p2 - p1;
   auto ac = p3 - p1;
   auto ap = p - p1;
@@ -324,6 +326,10 @@ Point3 closest_point_bbox(const Point3 &p, const BBox &b) {
     cp[i] = v;
   }
   return cp;
+}
+
+float distance_point_line(const Point3 &p, const Line &l) {
+  return distance(p, l.closestPoint(p));
 }
 
 float distance_point_plane(const Point3 &p, const Plane &pl) {

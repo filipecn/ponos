@@ -1,15 +1,11 @@
 link_libraries(ponos)
 
 set(TESTS
-	TestBBox.cpp
-	TestBlas.cpp
-	TestBRep.cpp
-	TestFDM.cpp
-	TestGrid.cpp
+        TestBRep.cpp
+        TestGrid.cpp
 	TestQuaternion.cpp
 	TestQueries.cpp
-	TestMatrix.cpp
-	TestObjectPool.cpp
+		TestObjectPool.cpp
 	TestParallel.cpp
 	TestSearch.cpp
 	TestSort.cpp

@@ -193,3 +193,23 @@ TEST(SparseBlas, l2Norm) {
   EXPECT_EQ(v.elementCount(), 50u);
   ASSERT_NEAR(sqrt(s), SparseBlas2d::l2Norm(v), 1e-8);
 }
+
+TEST(SparseBlas, FDM) {
+  { // set scalar to vector
+    FDMVector2Df v(10, 10);
+    FDMBlas2f::set(1.f, &v);
+    for (size_t i = 0; i < 10; i++)
+      for (size_t j = 0; j < 10; j++)
+        EXPECT_TRUE(IS_EQUAL(v(i, j), 1.f));
+  }
+  { // set vector to vector
+    FDMVector2Df a(10, 10);
+    FDMVector2Df b(10, 10);
+    FDMBlas2f::set(1.f, &a);
+    FDMBlas2f::set(3.f, &b);
+    for (size_t i = 0; i < 10; i++)
+      for (size_t j = 0; j < 10; j++)
+        EXPECT_TRUE(IS_EQUAL(a(i, j) * 3.f, b(i, j)));
+  }
+  // FDMMatrix2Df m(10, 10);
+}

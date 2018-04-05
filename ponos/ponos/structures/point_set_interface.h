@@ -26,6 +26,7 @@
 #define PONOS_POINT_SET_INTERFACE_H
 
 #include <ponos/geometry/bbox.h>
+#include <ponos/geometry/ray.h>
 
 namespace ponos {
 
@@ -41,6 +42,8 @@ public:
   virtual void search(const BBox &, const std::function<void(uint)> &) = 0;
   virtual void
   iteratePoints(const std::function<void(uint, Point3)> &f) const = 0;
+  virtual int intersect(const Ray3& r, float e) = 0;
+  virtual void cast(const Ray3& r, const std::function<void(uint)>& f) = 0;
 };
 
 } // ponos namespace
