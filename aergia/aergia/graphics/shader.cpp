@@ -29,7 +29,17 @@ namespace aergia {
 Shader::Shader(int id) {
   FATAL_ASSERT(id >= 0);
   programId = static_cast<GLuint>(id);
-  running = false; }
+  running = false;
+}
+
+Shader::Shader(const char *vs, const char *gs, const char *fs) : Shader(ShaderManager::instance().loadFromTexts(vs,
+                                                                                                                gs,
+                                                                                                                fs)) {
+}
+
+Shader::Shader(const char *fl...) : programId(0) {
+  loadFromFiles(fl);
+}
 
 bool Shader::loadFromFiles(const char *fl...) {
   running = false;
@@ -126,7 +136,6 @@ void Shader::setUniform(const char *name, float f) {
   if (wasNotRunning)
     end();
 }
-
 GLint Shader::getUniLoc(const GLchar *name) {
   if (!ShaderManager::instance().useShader(programId))
     return -1;

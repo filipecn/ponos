@@ -123,10 +123,36 @@ FXAA::FXAA() {
   shader.reset(new Shader(
       ShaderManager::instance().loadFromTexts(vs, nullptr, fs)));
 }
+
 void FXAA::apply(const RenderTexture &in, RenderTexture &out) {
   in.bind(GL_TEXTURE0);
   shader->setUniform("tex", 0);
   shader->setUniform("texSize", ponos::vec2(in.size()[0], in.size()[1]));
+  out.render([&]() {
+    shader->begin();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    shader->end();
+  });
+}
+
+GammaCorrection::GammaCorrection(float g) : gamma(g) {
+  const char *fs = "#version 440 core\n"
+      "out vec4 outColor;"
+      "in vec2 texCoord;"
+      "uniform sampler2D tex;"
+      "uniform float gamma;"
+      "void main() {"
+      "outColor = texture(tex, texCoord);"
+      "outColor.rgb = pow(outColor.rgb, vec3(1.0 / gamma));"
+      "}";
+  shader.reset(new Shader(
+      ShaderManager::instance().loadFromTexts(AERGIA_NO_VAO_VS, nullptr, fs)));
+}
+
+void GammaCorrection::apply(const RenderTexture &in, RenderTexture &out) {
+  in.bind(GL_TEXTURE0);
+  shader->setUniform("tex", 0);
+  shader->setUniform("gamma", gamma);
   out.render([&]() {
     shader->begin();
     glDrawArrays(GL_TRIANGLES, 0, 3);

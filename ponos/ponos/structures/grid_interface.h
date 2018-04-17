@@ -33,7 +33,7 @@
 
 namespace ponos {
 
-enum class CGridAccessMode { CLAMP_TO_DEDGE, BACKGROUND, REPEAT };
+enum class CGridAccessMode { CLAMP_TO_EDGE, BACKGROUND, REPEAT };
 enum class GridDataPosition {
   CELL_CENTER,
   VERTEX_CENTER,

@@ -34,36 +34,32 @@
 
 namespace aergia {
 
-/** \brief singleton
- * Manages shader programs
- */
+/// \brief singleton
+/// Manages shader programs
 class ShaderManager {
-public:
+ public:
   static ShaderManager &instance() { return instance_; }
   virtual ~ShaderManager() = default;
-  /** \brief Creates a shader program from shader files.
-   * It expects only one file of each type with extensions .fs, .vs and .gs.
-   * \return program id. **-1** if error.
-   */
+  /// \brief Creates a shader program from shader files.
+  /// It expects only one file of each type with extensions .fs, .vs and .gs.
+  ///\return program id. **-1** if error.
   int loadFromFiles(const char *fl, ...);
-  /** \brief Creates a shader program from strings.
-   * \param vs vertex shader
-   * \param gs geometry shader
-   * \param fs fragment shader
-   * \return program id. **-1** if error.
-   */
+  /// \brief Creates a shader program from strings.
+  /// \param vs vertex shader
+  /// \param gs geometry shader
+  /// \param fs fragment shader
+  /// \return program id. **-1** if error.
   int loadFromTexts(const char *vs, const char *gs, const char *fs);
   int loadFromText(const char *s, GLuint shaderType);
-  /** \brief use program
-   * \param program **[in]** program's id
-   * Activate program
-   * \return **true** if success
-   */
+  /// \brief use program
+  ///\param program **[in]** program's id
+  ///Activate program
+  ///\return **true** if success
   bool useShader(GLuint program);
 
   ShaderManager(ShaderManager const &) = delete;
   void operator=(ShaderManager const &) = delete;
-private:
+ private:
   ShaderManager();
 
   GLuint createProgram(const GLchar *, const GLchar *);

@@ -42,9 +42,7 @@ int main() {
   aergia::SceneMesh sm(*m.get());
   // create instances container for 1000 instances (this number could be changed
   // later with resize())
-  aergia::InstanceSet s(sm,
-                        aergia::Shader(aergia::ShaderManager::instance().loadFromTexts(vs, nullptr, fs)),
-                        2);
+  aergia::InstanceSet s(sm, aergia::Shader(vs, nullptr, fs), 2);
   // create a buffer for particles positions + sizes
   aergia::BufferDescriptor posSiz;
   posSiz.elementSize = 4;  // x y z s

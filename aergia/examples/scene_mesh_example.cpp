@@ -58,8 +58,8 @@ int main() {
     smesh.vertexBuffer()->locateAttributes(s);
     texture.bind(GL_TEXTURE0);
     s.begin();
-    s.setUniform("proj", aergia::glGetProjectionTransform().matrix());
-    s.setUniform("model", aergia::glGetModelviewTransform().matrix());
+    s.setUniform("proj", ponos::transpose(aergia::glGetProjectionTransform().matrix()));
+    s.setUniform("model", ponos::transpose(aergia::glGetModelviewTransform().matrix()));
     s.setUniform("tex", 0);
 //    s.setUniform("ldir", ponos::vec3(1,0,0));
     aergia::CHECK_GL_ERRORS;

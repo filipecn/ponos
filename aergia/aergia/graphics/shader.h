@@ -34,31 +34,33 @@
 
 namespace aergia {
 
-/** \brief shader class
- * Holds a program id and serves as an interface for setting its uniforms.
- */
+/// Holds a program id and serves as an interface for setting its uniforms.
 class Shader {
-public:
-  Shader(int id = 0);
-  /** \brief Creates a shader program from shader files.
-   * It expects only one file of each type with extensions .fs, .vs and .gs.
-   * \return program id. **-1** if error.
-   */
+ public:
+  explicit Shader(int id = 0);
+  /// It expects only one file of each type with extensions .fs, .vs and .gs.
+  /// \brief Creates a shader program from strings.
+  /// \param vs vertex shader
+  /// \param gs geometry shader
+  /// \param fs fragment shader
+  Shader(const char *vs, const char *gs, const char *fs);
+  /// It expects only one file of each type with extensions .fs, .vs and .gs.
+  explicit Shader(const char *fl...);
+  /// \brief Creates a shader program from shader files.
+  /// It expects only one file of each type with extensions .fs, .vs and .gs.
+  /// \return program id. **-1** if error.
   bool loadFromFiles(const char *fl...);
-  /** \brief Acctivate shader program
-   * \param b buffer pointer (must match attribute names)
-   */
+  /// Activate shader program
+  /// \param b buffer pointer (must match attribute names)
   bool begin(const VertexBuffer *b = nullptr);
   /// Deactivate shader program
   void end();
-  /** \brief
-   * \param name
-   */
+  /// \param name
   void addVertexAttribute(const char *name);
   /// locates atribute **name** in shader's program
   /// \param name attibute's name, must match name in shader code
   /// \return attributes layout location
-  int locateAttribute(const std::string& name) const;
+  int locateAttribute(const std::string &name) const;
   // Uniforms
   void setUniform(const char *name, const ponos::mat4 &m);
   void setUniform(const char *name, const ponos::mat3 &m);
@@ -70,7 +72,7 @@ public:
 
   bool running;
 
-protected:
+ protected:
   GLuint programId;
 
   std::set<const char *> vertexAttributes;

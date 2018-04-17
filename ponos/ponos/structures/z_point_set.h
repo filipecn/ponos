@@ -220,38 +220,15 @@ public:
   /// setup an internal search tree to accelerate point search
   void buildAccelerationStructure();
   // INTERFACE
-  /// active points count
-  /// \return number of active points
+
   uint size() override;
-  /// adds new point with position **p**
-  /// \param p position to be added
-  /// \return element id, so this position can be accessed later
   uint add(Point3 p) override;
-  /// sets position **p** to element **i**
-  /// \param i element id
-  /// \param p new position value
   void setPosition(uint i, Point3 p) override;
-  /// removes element **i**
-  /// \param i element id
   void remove(uint i) override;
-  /// random access operator
-  /// \param i point index
-  /// \return position of point **i**
   Point3 operator[](uint i) const override;
-  /// search points that intersect a bbox. If the internal tree has not been
-  /// created it searchs with an implicit tree.
-  /// \param b search region, world coordinates
-  /// \param f callback to receive the id of each found point
   void search(const BBox &b, const std::function<void(uint)> &f) override;
-  /// iterate over active points
-  /// \param f callback to receive the id and position of each found point
   void iteratePoints(const std::function<void(uint, Point3)> &f) const override;
-  /// \param r ray
-  /// \param e the max distance from ray line a point can be intersected
-  /// \return -1 if no point is intersect, point id otherwise
   int intersect(const Ray3& r, float e) override;
-  /// \param r ray
-  /// \param f callback to every point **r** intersects
   void cast(const Ray3& r, const std::function<void(uint)>& f) override;
 private:
   /// morton code transform

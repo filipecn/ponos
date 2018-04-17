@@ -34,15 +34,39 @@ class PointSetInterface {
 public:
   PointSetInterface() = default;
   virtual ~PointSetInterface() = default;
-  virtual Point3 operator[](uint) const = 0;
+  /// random access operator
+  /// \param i point index
+  /// \return position of point **i**
+  virtual Point3 operator[](uint i) const = 0;
+  /// active points count
+  /// \return number of active points
   virtual uint size() = 0;
-  virtual uint add(Point3) = 0;
-  virtual void setPosition(uint, Point3) = 0;
-  virtual void remove(uint) = 0;
-  virtual void search(const BBox &, const std::function<void(uint)> &) = 0;
+  /// adds new point with position **p**
+  /// \param p position to be added
+  /// \return element id, so this position can be accessed later
+  virtual uint add(Point3 p) = 0;
+  /// sets position **p** to element **i**
+  /// \param i element id
+  /// \param p new position value
+  virtual void setPosition(uint i, Point3 p) = 0;
+  /// removes element **i**
+  /// \param i element id
+  virtual void remove(uint i) = 0;
+  /// search points that intersect a bbox. If the internal tree has not been
+  /// created it searchs with an implicit tree.
+  /// \param b search region, world coordinates
+  /// \param f callback to receive the id of each found point
+  virtual void search(const BBox &b, const std::function<void(uint)> &f) = 0;
+  /// iterate over active points
+  /// \param f callback to receive the id and position of each found point
   virtual void
   iteratePoints(const std::function<void(uint, Point3)> &f) const = 0;
+  /// \param r ray
+  /// \param e the max distance from ray line a point can be intersected
+  /// \return -1 if no point is intersect, point id otherwise
   virtual int intersect(const Ray3& r, float e) = 0;
+  /// \param r ray
+  /// \param f callback to every point **r** intersects
   virtual void cast(const Ray3& r, const std::function<void(uint)>& f) = 0;
 };
 

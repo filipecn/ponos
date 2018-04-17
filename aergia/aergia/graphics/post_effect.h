@@ -32,7 +32,7 @@ namespace aergia {
 
 /// Applies post rendering effects to final frame
 class PostEffect {
-public:
+ public:
   /// \param s [optional | default = no effect] effect
   explicit PostEffect(Shader *s = nullptr);
   /// Apply effect to texture
@@ -40,15 +40,24 @@ public:
   /// \param out result of effect applied
   virtual void apply(const RenderTexture &in, RenderTexture &out);
 
-protected:
+ protected:
   std::shared_ptr<Shader> shader;
 };
 
-/// Fast Approximate Anti-Aliasing (FXAA) is an anti-aliasing algorithm created by Timothy Lottes under NVIDIA.
+/// Fast Approximate Anti-Aliasing (FXAA) is an anti-aliasing algorithm created
+/// by Timothy Lottes under NVIDIA.
 class FXAA : public PostEffect {
-public:
+ public:
   FXAA();
-  void apply(const RenderTexture &in, RenderTexture &out);
+  void apply(const RenderTexture &in, RenderTexture &out) override;
+};
+
+/// Applies gamma correction to image following the equation: color^(1 / gamma)
+class GammaCorrection : public PostEffect {
+ public:
+  explicit GammaCorrection(float g = 2.f);
+  void apply(const RenderTexture &in, RenderTexture &out) override;
+  float gamma;
 };
 
 } // aergia namespace

@@ -18,7 +18,7 @@ public:
    * @return
    */
   Mesh(const ponos::RawMesh *m, const ponos::Transform &t);
-  virtual ~Mesh() {}
+  virtual ~Mesh() = default;
 
   bool intersect(const ponos::Point3 &p);
   const ponos::BBox &getBBox() const;
@@ -42,7 +42,7 @@ public:
    * @return
    */
   Mesh2D(const ponos::RawMesh *m, const ponos::Transform2D &t);
-  virtual ~Mesh2D() {}
+  virtual ~Mesh2D() = default;
 
   bool intersect(const ponos::Point2 &p);
   const ponos::BBox2D &getBBox() const;
