@@ -33,7 +33,7 @@ set_target_properties(ponos PROPERTIES
 
 target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
-add_subdirectory(examples)
+# add_subdirectory(examples)
 add_subdirectory(tests/unit_tests)
 
 if (WIN32)

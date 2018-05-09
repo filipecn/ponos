@@ -7,7 +7,7 @@ import platform
 import urllib.request
 import sys
 
-mingw_make = 'C:/MinGW/bin/mingw32-make.exe'
+mingw_make = 'C:/Program Files (x86)/mingw-w64/i686-5.3.0-posix-dwarf-rt_v4-rev0/mingw32/bin/mingw32-make.exe'
 msversion = "Unix Makefiles"
 if platform.system() == 'Windows' or 'mingw' in sys.argv:
     msversion = "MinGW Makefiles"

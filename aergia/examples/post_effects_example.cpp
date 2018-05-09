@@ -24,10 +24,10 @@ const char *fs = "#version 440 core\n"
 int main() {
   aergia::SceneApp<> app(WIDTH, HEIGHT, "Post Effects Example");
   app.init();
-  app.viewports[0].renderer->addEffect(new aergia::FXAA());
+  app.viewports[0].renderer->addEffect(new aergia::GammaCorrection());
+//  app.viewports[0].renderer->addEffect(new aergia::FXAA());
   app.viewports[0].renderer->addEffect(new aergia::PostEffect(
       new aergia::Shader(AERGIA_NO_VAO_VS, nullptr, fs)));
-  app.viewports[0].renderer->addEffect(new aergia::GammaCorrection());
   std::shared_ptr<aergia::CartesianGrid> grid(
       app.scene.add<aergia::CartesianGrid>(new aergia::CartesianGrid(5)));
   app.run();

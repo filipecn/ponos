@@ -116,9 +116,6 @@ if (NOT ("${FREETYPE_INCLUDE}" STREQUAL ""))
 endif (NOT ("${FREETYPE_INCLUDE}" STREQUAL ""))
 
 add_library(aergia ${SOURCES} ${HEADERS} aergia/io/storage_buffer.cpp aergia/io/storage_buffer.h)
-if (NOT WIN32)
-    # add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
-endif (NOT WIN32)
 set_target_properties(aergia PROPERTIES
         OUTPUT_NAME "aergia"
         FOLDER "AERGIA")
