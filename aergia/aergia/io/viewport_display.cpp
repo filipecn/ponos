@@ -1,6 +1,5 @@
 #include <aergia/io/graphics_display.h>
 #include <aergia/io/viewport_display.h>
-#include <aergia/utils/open_gl.h>
 
 namespace aergia {
 
@@ -9,12 +8,12 @@ ViewportDisplay::ViewportDisplay(int _x, int _y, int _width, int _height)
   renderer.reset(new DisplayRenderer(width, height));
 }
 
-void ViewportDisplay::render(const std::function<void()>& f) {
+void ViewportDisplay::render(const std::function<void()> &f) {
   glEnable(GL_DEPTH_TEST);
   renderer->process([&]() {
     if (camera)
       camera->look();
-    if(f)
+    if (f)
       f();
     if (renderCallback)
       renderCallback();
@@ -42,15 +41,15 @@ void ViewportDisplay::scroll(double dx, double dy) {
   camera->mouseScroll(getMouseNPos(), ponos::vec2(dx, dy));
 }
 
-void ViewportDisplay::button(int b, int a) {
+void ViewportDisplay::button(int b, int a, int m) {
   if (buttonCallback)
-    buttonCallback(b, a);
+    buttonCallback(b, a, m);
   camera->mouseButton(a, b, getMouseNPos());
 }
 
-void ViewportDisplay::key(int k, int action) {
+void ViewportDisplay::key(int k, int scancode, int action, int modifiers) {
   if (keyCallback)
-    keyCallback(k, action);
+    keyCallback(k, scancode, action, modifiers);
 }
 
 ponos::Point2 ViewportDisplay::getMouseNPos() {

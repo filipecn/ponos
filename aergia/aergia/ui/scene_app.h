@@ -34,7 +34,7 @@ namespace aergia {
  */
 template<template<typename> class StructureType = ponos::Array>
 class SceneApp : public App {
-public:
+ public:
   /** \brief Constructor.
    * \param w **[in]** window width (in pixels)
    * \param h **[in]** window height (in pixels)
@@ -51,7 +51,7 @@ public:
 
   Scene <StructureType> scene; //!< object container
 
-protected:
+ protected:
   void render() override {
     for (size_t i = 0; i < viewports.size(); i++)
       viewports[i].render([&]() { scene.render(); });
@@ -83,8 +83,8 @@ protected:
     }
   }
 
-  void button(int b, int a) override {
-    App::button(b, a);
+  void button(int b, int a, int m) override {
+    App::button(b, a, m);
     if (selectedObject)
       selectedObject->button(*viewports[activeObjectViewport].camera.get(),
                              viewports[activeObjectViewport].getMouseNPos(), b,

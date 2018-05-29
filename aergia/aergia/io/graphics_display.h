@@ -97,10 +97,10 @@ class GraphicsDisplay {
   // IO
   void registerRenderFunc(void (*f)());
   void registerRenderFunc(std::function<void()> f);
-  void registerButtonFunc(void (*f)(int, int));
-  void registerButtonFunc(std::function<void(int, int)> f);
-  void registerKeyFunc(void (*f)(int, int));
-  void registerKeyFunc(std::function<void(int, int)> f);
+  void registerButtonFunc(void (*f)(int, int, int));
+  void registerButtonFunc(std::function<void(int, int, int)> f);
+  void registerKeyFunc(void (*f)(int, int, int, int));
+  void registerKeyFunc(std::function<void(int, int, int, int)> f);
   void registerMouseFunc(void (*f)(double, double));
   void registerMouseFunc(std::function<void(double, double)> f);
   void registerScrollFunc(void (*f)(double, double));
@@ -139,21 +139,27 @@ class GraphicsDisplay {
 
   // USER CALLBACKS
   std::function<void()> renderCallback;
-  std::function<void(int, int)> buttonCallback;
-  std::function<void(int, int)> keyCallback;
+  std::function<void(unsigned int)> charCallback;
+  std::function<void(int, const char **)> dropCallback;
+  std::function<void(int, int, int)> buttonCallback;
+  std::function<void(int, int, int, int)> keyCallback;
   std::function<void(double, double)> mouseCallback;
   std::function<void(double, double)> scrollCallback;
   std::function<void(int, int)> resizeCallback;
 
   // DEFAULT CALLBACKS
-  void buttonFunc(int button, int action);
-  void keyFunc(int key, int action);
+  void charFunc(unsigned int codepoint);
+  void dropFunc(int count, const char **filenames);
+  void buttonFunc(int button, int action, int modifiers);
+  void keyFunc(int key, int scancode, int action, int modifiers);
   void mouseFunc(double x, double y);
   void scrollFunc(double x, double y);
   void resizeFunc(int w, int h);
 
   // CALLBACKS
   static void error_callback(int error, const char *description);
+  static void char_callback(GLFWwindow *window, unsigned int codepoint);
+  static void drop_callback(GLFWwindow *window, int count, const char **filenames);
   static void key_callback(GLFWwindow *window, int key, int scancode,
                            int action, int mods);
   static void button_callback(GLFWwindow *window, int button, int action,

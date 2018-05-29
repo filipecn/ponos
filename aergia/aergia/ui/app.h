@@ -13,7 +13,7 @@ namespace aergia {
  * An App makes the creation of viewports easy.
  */
 class App {
-public:
+ public:
   /* Constructor.
    * \param w **[in]** window width (in pixels)
    * \param h **[in]** window height (in pixels)
@@ -40,7 +40,8 @@ public:
   void init();
   void run();
   void exit();
-  template <typename T = UserCamera> T *getCamera(size_t i = 0) {
+  template<typename T = UserCamera>
+  T *getCamera(size_t i = 0) {
     return static_cast<T *>(viewports[i].camera.get());
   }
 
@@ -48,20 +49,20 @@ public:
   std::function<void()> renderCallback;
   std::function<void(double, double)> scrollCallback;
   std::function<void(double, double)> mouseCallback;
-  std::function<void(int, int)> buttonCallback;
-  std::function<void(int, int)> keyCallback;
+  std::function<void(int, int, int)> buttonCallback;
+  std::function<void(int, int, int, int)> keyCallback;
   std::function<void(int, int)> resizeCallback;
 
-protected:
+ protected:
   bool initialized;
   size_t windowWidth, windowHeight;
   std::string title;
 
   virtual void render();
-  virtual void button(int b, int a);
+  virtual void button(int b, int a, int m);
   virtual void mouse(double x, double y);
   virtual void scroll(double dx, double dy);
-  virtual void key(int key, int action);
+  virtual void key(int key, int scancode, int action, int modifiers);
   virtual void resize(int w, int h);
 };
 

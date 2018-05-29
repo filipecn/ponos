@@ -38,10 +38,10 @@ void App::init() {
   GraphicsDisplay &gd =
       createGraphicsDisplay(windowWidth, windowHeight, title.c_str());
   gd.registerRenderFunc([this]() { render(); });
-  gd.registerButtonFunc([this](int b, int a) { button(b, a); });
+  gd.registerButtonFunc([this](int b, int a, int m) { button(b, a, m); });
   gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
   gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
-  gd.registerKeyFunc([this](int k, int a) { key(k, a); });
+  gd.registerKeyFunc([this](int k, int s, int a, int m) { key(k, s, a, m); });
   gd.registerResizeFunc([this](int w, int h) { resize(w, h); });
   initialized = true;
 }
@@ -61,14 +61,14 @@ void App::render() {
     renderCallback();
 }
 
-void App::button(int button, int action) {
+void App::button(int button, int action, int modifiers) {
   for (auto &viewport : viewports) {
     if (action == GLFW_PRESS && !viewport.hasMouseFocus())
       continue;
-    viewport.button(button, action);
+    viewport.button(button, action, modifiers);
   }
   if (buttonCallback)
-    buttonCallback(button, action);
+    buttonCallback(button, action, modifiers);
 }
 
 void App::mouse(double x, double y) {
@@ -86,11 +86,11 @@ void App::scroll(double dx, double dy) {
     scrollCallback(dx, dy);
 }
 
-void App::key(int k, int action) {
+void App::key(int k, int scancode, int action, int modifiers) {
   for (auto &viewport : viewports)
-    viewport.key(k, action);
+    viewport.key(k, scancode, action, modifiers);
   if (keyCallback)
-    keyCallback(k, action);
+    keyCallback(k, scancode, action, modifiers);
   else if (k == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     GraphicsDisplay::instance().stop();
 }

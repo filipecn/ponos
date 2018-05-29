@@ -39,7 +39,7 @@ namespace aergia {
  * Defines a region in the screen.
  */
 class ViewportDisplay {
-public:
+ public:
   /* Constructor
    * \param _x **[in]** start pixel in X
    * \param _y **[in]** start pixel in Y
@@ -70,18 +70,18 @@ public:
   ponos::Point3 unProject(const CameraInterface &c, ponos::Point3 p);
   ponos::Point3 unProject();
 
-  void render(const std::function<void()>& f = nullptr);
+  void render(const std::function<void()> &f = nullptr);
   void mouse(double x, double y);
-  void button(int b, int a);
+  void button(int b, int a, int m);
   void scroll(double dx, double dy);
-  void key(int k, int action);
+  void key(int k, int scancode, int action, int modifiers);
 
   // render callback
   std::function<void()> renderCallback;
-  std::function<void(int, int)> buttonCallback;
+  std::function<void(int, int, int)> buttonCallback;
   std::function<void(double, double)> mouseCallback;
   std::function<void(double, double)> scrollCallback;
-  std::function<void(int, int)> keyCallback;
+  std::function<void(int, int, int, int)> keyCallback;
 
   // viewport
   int x, y, width, height;

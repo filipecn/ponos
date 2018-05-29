@@ -61,6 +61,8 @@ bool GraphicsDisplay::init() {
     return false;
   }
   glfwMakeContextCurrent(window);
+  glfwSetCharCallback(window, char_callback);
+  glfwSetDropCallback(window, drop_callback);
   glfwSetKeyCallback(window, key_callback);
   glfwSetMouseButtonCallback(window, button_callback);
   glfwSetCursorPosCallback(window, pos_callback);
@@ -154,39 +156,64 @@ void GraphicsDisplay::registerRenderFunc(std::function<void()> f) {
   this->renderCallback = f;
 }
 
-/////////////////////////// KEY FUNCTIONS
-///////////////////////////////////////////////////////
-void GraphicsDisplay::registerKeyFunc(void (*f)(int, int)) {
+/////////////////////////// CHAR FUNCTIONS ///////////////////////////////////////////////////////
+void GraphicsDisplay::charFunc(unsigned int codepoint) {
+  UNUSED_VARIABLE(codepoint);
+}
+
+void GraphicsDisplay::char_callback(GLFWwindow *window, unsigned int codepoint) {
+  UNUSED_VARIABLE(window);
+  if (instance_.keyCallback)
+    instance_.charCallback(codepoint);
+  else
+    instance_.charFunc(codepoint);
+}
+
+/////////////////////////// DROP FUNCTIONS ///////////////////////////////////////////////////////
+void GraphicsDisplay::dropFunc(int count, const char **filenames) {
+  UNUSED_VARIABLE(count);
+  UNUSED_VARIABLE(filenames);
+}
+
+void GraphicsDisplay::drop_callback(GLFWwindow *window, int count, const char **filenames) {
+  UNUSED_VARIABLE(window);
+  if (instance_.keyCallback)
+    instance_.dropCallback(count, filenames);
+  else
+    instance_.dropFunc(count, filenames);
+}
+/////////////////////////// KEY FUNCTIONS ///////////////////////////////////////////////////////
+void GraphicsDisplay::registerKeyFunc(void (*f)(int, int, int, int)) {
   this->keyCallback = f;
 }
 
-void GraphicsDisplay::registerKeyFunc(std::function<void(int, int)> f) {
+void GraphicsDisplay::registerKeyFunc(std::function<void(int, int, int, int)> f) {
   this->keyCallback = f;
 }
 
 void GraphicsDisplay::key_callback(GLFWwindow *window, int key, int scancode,
                                    int action, int mods) {
-  UNUSED_VARIABLE(scancode);
-  UNUSED_VARIABLE(mods);
   UNUSED_VARIABLE(window);
   if (instance_.keyCallback)
-    instance_.keyCallback(key, action);
+    instance_.keyCallback(key, scancode, action, mods);
   else
-    instance_.keyFunc(key, action);
+    instance_.keyFunc(key, scancode, action, mods);
 }
 
-void GraphicsDisplay::keyFunc(int key, int action) {
+void GraphicsDisplay::keyFunc(int key, int scancode, int action, int modifiers) {
+  UNUSED_VARIABLE(scancode);
+  UNUSED_VARIABLE(modifiers);
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// BUTTON FUNCTIONS
 /////////////////////////////////////////////////////
-void GraphicsDisplay::registerButtonFunc(void (*f)(int, int)) {
+void GraphicsDisplay::registerButtonFunc(void (*f)(int, int, int)) {
   this->buttonCallback = f;
 }
 
-void GraphicsDisplay::registerButtonFunc(std::function<void(int, int)> f) {
+void GraphicsDisplay::registerButtonFunc(std::function<void(int, int, int)> f) {
   this->buttonCallback = f;
 }
 
@@ -195,14 +222,15 @@ void GraphicsDisplay::button_callback(GLFWwindow *window, int button,
   UNUSED_VARIABLE(window);
   UNUSED_VARIABLE(mods);
   if (instance_.buttonCallback)
-    instance_.buttonCallback(button, action);
+    instance_.buttonCallback(button, action, mods);
   else
-    instance_.buttonFunc(button, action);
+    instance_.buttonFunc(button, action, mods);
 }
 
-void GraphicsDisplay::buttonFunc(int button, int action) {
+void GraphicsDisplay::buttonFunc(int button, int action, int modifiers) {
   UNUSED_VARIABLE(button);
   UNUSED_VARIABLE(action);
+  UNUSED_VARIABLE(modifiers);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE MOTION FUNCTIONS
@@ -275,6 +303,7 @@ void GraphicsDisplay::resizeFunc(int w, int h) {
   UNUSED_VARIABLE(h);
   glfwGetFramebufferSize(window, &this->width, &this->height);
 }
+
 GLFWwindow *GraphicsDisplay::getGLFWwindow() {
   return window;
 }
