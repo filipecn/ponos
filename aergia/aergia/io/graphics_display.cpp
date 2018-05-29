@@ -23,7 +23,6 @@
  */
 
 #include <aergia/aergia.h>
-#include <aergia/io/graphics_display.h>
 
 namespace aergia {
 
@@ -275,6 +274,9 @@ void GraphicsDisplay::resizeFunc(int w, int h) {
   UNUSED_VARIABLE(w);
   UNUSED_VARIABLE(h);
   glfwGetFramebufferSize(window, &this->width, &this->height);
+}
+GLFWwindow *GraphicsDisplay::getGLFWwindow() {
+  return window;
 }
 
 } // namespace aergia

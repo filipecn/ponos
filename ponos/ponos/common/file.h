@@ -25,6 +25,8 @@
 #ifndef PONOS_COMMON_FILE_H
 #define PONOS_COMMON_FILE_H
 
+#include <vector>
+
 namespace ponos {
 
 /** \brief loads contents from file
@@ -34,6 +36,9 @@ namespace ponos {
  */
 int readFile(const char *filename, char **text);
 
+/// \param filename **[in]** path/to/file
+/// \return vector of bytes read
+std::vector<unsigned char> readFile(const char *filename);
 } // ponos namespace
 
 #endif // PONOS_COMMON_FILE_H

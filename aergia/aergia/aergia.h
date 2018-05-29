@@ -16,6 +16,7 @@
 #include <aergia/io/buffer.h>
 #include <aergia/io/display_renderer.h>
 #include <aergia/io/storage_buffer.h>
+#include <aergia/io/font_texture.h>
 #include <aergia/io/framebuffer.h>
 #include <aergia/io/graphics_display.h>
 #include <aergia/io/image_texture.h>

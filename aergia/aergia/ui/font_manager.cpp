@@ -90,6 +90,7 @@ void FontManager::init() {
 #ifdef FREETYPE_INCLUDED
   ASSERT_MESSAGE(!FT_Init_FreeType(&ft),
                  "ERROR::FREETYPE: Could not init FreeType Library");
+  std::cerr << "FREETYPE loaded";
 #endif
   initialized_ = true;
 }

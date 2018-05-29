@@ -29,11 +29,49 @@
 #include <ponos/ponos.h>
 #include <aergia/io/texture.h>
 #include <aergia/scene/quad.h>
+#include <stb_truetype.h>
+#include <memory>
 
 namespace aergia {
 
+class FontAtlas {
+ public:
+  struct {
+    const size_t size = 40;
+    const size_t atlasWidth = 1024;
+    const size_t atlasHeight = 1024;
+    const size_t oversampleX = 2;
+    const size_t oversampleY = 2;
+    const size_t firstChar = ' ';
+    const size_t charCount = '~' - ' ';
+    std::unique_ptr<stbtt_packedchar[]> charInfo;
+    GLuint texture = 0;
+  } font;
+
+  struct {
+    GLuint vao = 0;
+    GLuint vertexBuffer = 0;
+    GLuint uvBuffer = 0;
+    GLuint indexBuffer = 0;
+    uint16_t indexElementCount = 0;
+    float angle = 0;
+  } rotatingLabel;
+
+  struct Glyph {
+    ponos::vec3 positions[4];
+    ponos::vec2 uvs[4];
+    float offsetX = 0;
+    float offsetY = 0;
+  };
+
+  void loadFont(const char *path);
+  Glyph getGlyph(uint character, float offsetX, float offsetY);
+  void setText(std::string text);
+  void render();
+};
+
 class FontTexture {
-public:
+ public:
   struct Character {
     std::shared_ptr<aergia::Texture> texture;  //!< the glyph texture
     ponos::ivec2 size;        //!< size of glyph
@@ -53,7 +91,7 @@ public:
   /// \param c character ascii code
   /// \return character object
   const Character &operator[](GLubyte c) const;
-private:
+ private:
   std::map<GLchar, Character> characters;
 };
 

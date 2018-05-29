@@ -42,7 +42,7 @@ namespace aergia {
  * window.
  */
 class GraphicsDisplay {
-public:
+ public:
   ~GraphicsDisplay();
   static GraphicsDisplay &instance() { return instance_; }
   /* set
@@ -122,8 +122,9 @@ public:
   void processInput();
   // user input
   int keyState(int key);
+  GLFWwindow *getGLFWwindow();
 
-private:
+ private:
   static GraphicsDisplay instance_;
   GraphicsDisplay();
   GraphicsDisplay(GraphicsDisplay const &) = delete;

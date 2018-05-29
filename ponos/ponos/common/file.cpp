@@ -39,7 +39,10 @@
 #include <cstdio>
 #else
 #include <unistd.h>
+#include <ponos/geometry/vector.h>
 #endif
+
+#include <fstream>
 
 namespace ponos {
 #ifdef WIN32
@@ -68,7 +71,7 @@ int readFile(const char *filename, char **text) {
   if (fd == -1)
     return 0;
 
-  size_t size = (size_t)(lseek(fd, 0, SEEK_END) + 1);
+  size_t size = (size_t) (lseek(fd, 0, SEEK_END) + 1);
   close(fd);
   *text = new char[size];
 
@@ -77,7 +80,7 @@ int readFile(const char *filename, char **text) {
     return 0;
 
   fseek(f, 0, SEEK_SET);
-  count_ = (int)fread(*text, 1, size, f);
+  count_ = (int) fread(*text, 1, size, f);
   (*text)[count_] = '\0';
 
   if (ferror(f))
@@ -86,5 +89,19 @@ int readFile(const char *filename, char **text) {
   fclose(f);
   return count_;
 }
+
 #endif
+
+std::vector<unsigned char> readFile(const char *filename) {
+  std::ifstream file(filename, std::ios::binary | std::ios::ate);
+  if (!file.is_open())
+    return std::vector<unsigned char>();
+  const auto size = file.tellg();
+  file.seekg(0, std::ios::beg);
+  auto bytes = std::vector<unsigned char>(size);
+  file.read(reinterpret_cast<char *>(&bytes[0]), size);
+  file.close();
+  return bytes;
+}
+
 } // ponos namespace
