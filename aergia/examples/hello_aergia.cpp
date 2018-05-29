@@ -1,7 +1,4 @@
 #include <aergia/aergia.h>
-#include <iostream>
-#include <ponos/ponos.h>
-#include <vector>
 
 aergia::GraphicsDisplay &gd = aergia::GraphicsDisplay::instance();
 aergia::UserCamera2D camera;
@@ -25,7 +22,8 @@ int selectVertex(ponos::Point2 wp) {
   return -1;
 }
 
-void button(int button, int action) {
+void button(int button, int action, int mods) {
+  UNUSED_VARIABLE(mods);
   if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
     mode = (mode + 1) % MODES;
     return;
@@ -33,29 +31,33 @@ void button(int button, int action) {
   ponos::Point2 wp = worldMousePoint();
   if (action == GLFW_RELEASE) {
     switch (mode) {
-    case VERTEX: {
-      sVertex = selectVertex(wp);
-      if (sVertex < 0)
-        sVertex = brep.addVertex(ponos::Point<float, 2>(wp));
-    } break;
-    case EDGE: {
-      sVertex = selectVertex(wp);
-      if (sVertex < 0)
-        sVertex = brep.addVertex(ponos::Point<float, 2>(wp));
-      if (sA != sVertex)
-        brep.addEdge(sA, sVertex);
-      sA = sVertex = -1;
-    } break;
+      case VERTEX: {
+        sVertex = selectVertex(wp);
+        if (sVertex < 0)
+          sVertex = brep.addVertex(ponos::Point<float, 2>(wp));
+      }
+        break;
+      case EDGE: {
+        sVertex = selectVertex(wp);
+        if (sVertex < 0)
+          sVertex = brep.addVertex(ponos::Point<float, 2>(wp));
+        if (sA != sVertex)
+          brep.addEdge(sA, sVertex);
+        sA = sVertex = -1;
+      }
+        break;
     }
   } else {
     switch (mode) {
-    case VERTEX: {
-    } break;
-    case EDGE: {
-      sA = selectVertex(wp);
-      if (sA < 0)
-        sA = brep.addVertex(ponos::Point<float, 2>(wp));
-    } break;
+      case VERTEX: {
+      }
+        break;
+      case EDGE: {
+        sA = selectVertex(wp);
+        if (sA < 0)
+          sA = brep.addVertex(ponos::Point<float, 2>(wp));
+      }
+        break;
     }
   }
 }
