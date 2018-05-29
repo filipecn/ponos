@@ -37,12 +37,20 @@ void App::init() {
     return;
   GraphicsDisplay &gd =
       createGraphicsDisplay(windowWidth, windowHeight, title.c_str());
-  gd.registerRenderFunc([this]() { render(); });
-  gd.registerButtonFunc([this](int b, int a, int m) { button(b, a, m); });
-  gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
-  gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
-  gd.registerKeyFunc([this](int k, int s, int a, int m) { key(k, s, a, m); });
-  gd.registerResizeFunc([this](int w, int h) { resize(w, h); });
+  gd.charCallback = [this](unsigned char pointcode) { charFunc(pointcode); };
+  gd.dropCallback = [this](int count, const char **filenames) { drop(count, filenames); };
+//  gd.registerRenderFunc([this]() { render(); });
+  gd.renderCallback = [this]() { render(); };
+//  gd.registerButtonFunc([this](int b, int a, int m) { button(b, a, m); });
+  gd.buttonCallback = [this](int b, int a, int m) { button(b, a, m); };
+//  gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
+  gd.mouseCallback = [this](double x, double y) { mouse(x, y); };
+//  gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
+  gd.scrollCallback = [this](double dx, double dy) { scroll(dx, dy); };
+//  gd.registerKeyFunc([this](int k, int s, int a, int m) { key(k, s, a, m); });
+  gd.keyCallback = [this](int k, int s, int a, int m) { key(k, s, a, m); };
+//  gd.registerResizeFunc([this](int w, int h) { resize(w, h); });
+  gd.resizeCallback = [this](int w, int h) { resize(w, h); };
   initialized = true;
 }
 
@@ -108,6 +116,16 @@ void App::resize(int w, int h) {
     if (viewport.camera)
       viewport.camera->resize(viewport.width, viewport.height);
   }
+}
+
+void App::charFunc(unsigned int pointcode) {
+  if (charCallback)
+    charCallback(pointcode);
+}
+
+void App::drop(int count, const char **filenames) {
+  if (dropCallback)
+    dropCallback(count, filenames);
 }
 
 } // namespace aergia

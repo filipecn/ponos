@@ -47,6 +47,8 @@ class App {
 
   std::vector<ViewportDisplay> viewports;
   std::function<void()> renderCallback;
+  std::function<void(unsigned int)> charCallback;
+  std::function<void(int, const char **)> dropCallback;
   std::function<void(double, double)> scrollCallback;
   std::function<void(double, double)> mouseCallback;
   std::function<void(int, int, int)> buttonCallback;
@@ -59,6 +61,8 @@ class App {
   std::string title;
 
   virtual void render();
+  virtual void charFunc(unsigned int pointcode);
+  virtual void drop(int count, const char **filenames);
   virtual void button(int b, int a, int m);
   virtual void mouse(double x, double y);
   virtual void scroll(double dx, double dy);

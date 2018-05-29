@@ -148,13 +148,13 @@ void GraphicsDisplay::error_callback(int error, const char *description) {
   fputs(description, stderr);
 }
 
-void GraphicsDisplay::registerRenderFunc(void (*f)()) {
-  this->renderCallback = f;
-}
+//void GraphicsDisplay::registerRenderFunc(void (*f)()) {
+//  this->renderCallback = f;
+//}
 
-void GraphicsDisplay::registerRenderFunc(std::function<void()> f) {
-  this->renderCallback = f;
-}
+//void GraphicsDisplay::registerRenderFunc(std::function<void()> f) {
+//  this->renderCallback = f;
+//}
 
 /////////////////////////// CHAR FUNCTIONS ///////////////////////////////////////////////////////
 void GraphicsDisplay::charFunc(unsigned int codepoint) {
@@ -183,13 +183,13 @@ void GraphicsDisplay::drop_callback(GLFWwindow *window, int count, const char **
     instance_.dropFunc(count, filenames);
 }
 /////////////////////////// KEY FUNCTIONS ///////////////////////////////////////////////////////
-void GraphicsDisplay::registerKeyFunc(void (*f)(int, int, int, int)) {
-  this->keyCallback = f;
-}
+//void GraphicsDisplay::registerKeyFunc(void (*f)(int, int, int, int)) {
+//  this->keyCallback = f;
+//}
 
-void GraphicsDisplay::registerKeyFunc(std::function<void(int, int, int, int)> f) {
-  this->keyCallback = f;
-}
+//void GraphicsDisplay::registerKeyFunc(std::function<void(int, int, int, int)> f) {
+//  this->keyCallback = f;
+//}
 
 void GraphicsDisplay::key_callback(GLFWwindow *window, int key, int scancode,
                                    int action, int mods) {
@@ -209,13 +209,13 @@ void GraphicsDisplay::keyFunc(int key, int scancode, int action, int modifiers) 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// BUTTON FUNCTIONS
 /////////////////////////////////////////////////////
-void GraphicsDisplay::registerButtonFunc(void (*f)(int, int, int)) {
-  this->buttonCallback = f;
-}
+//void GraphicsDisplay::registerButtonFunc(void (*f)(int, int, int)) {
+//  this->buttonCallback = f;
+//}
 
-void GraphicsDisplay::registerButtonFunc(std::function<void(int, int, int)> f) {
-  this->buttonCallback = f;
-}
+//void GraphicsDisplay::registerButtonFunc(std::function<void(int, int, int)> f) {
+//  this->buttonCallback = f;
+//}
 
 void GraphicsDisplay::button_callback(GLFWwindow *window, int button,
                                       int action, int mods) {
@@ -235,13 +235,13 @@ void GraphicsDisplay::buttonFunc(int button, int action, int modifiers) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE MOTION FUNCTIONS
 ///////////////////////////////////////////////
-void GraphicsDisplay::registerMouseFunc(void (*f)(double, double)) {
-  this->mouseCallback = f;
-}
+//void GraphicsDisplay::registerMouseFunc(void (*f)(double, double)) {
+//  this->mouseCallback = f;
+//}
 
-void GraphicsDisplay::registerMouseFunc(std::function<void(double, double)> f) {
-  this->mouseCallback = f;
-}
+//void GraphicsDisplay::registerMouseFunc(std::function<void(double, double)> f) {
+//  this->mouseCallback = f;
+//}
 
 void GraphicsDisplay::pos_callback(GLFWwindow *window, double x, double y) {
   UNUSED_VARIABLE(window);
@@ -258,14 +258,14 @@ void GraphicsDisplay::mouseFunc(double x, double y) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE SCROLL FUNCTIONS
 ///////////////////////////////////////////////
-void GraphicsDisplay::registerScrollFunc(void (*f)(double, double)) {
-  this->scrollCallback = f;
-}
+//void GraphicsDisplay::registerScrollFunc(void (*f)(double, double)) {
+//  this->scrollCallback = f;
+//}
 
-void GraphicsDisplay::registerScrollFunc(
-    std::function<void(double, double)> f) {
-  this->scrollCallback = f;
-}
+//void GraphicsDisplay::registerScrollFunc(
+//    std::function<void(double, double)> f) {
+//  this->scrollCallback = f;
+//}
 
 void GraphicsDisplay::scroll_callback(GLFWwindow *window, double x, double y) {
   UNUSED_VARIABLE(window);
@@ -280,14 +280,14 @@ void GraphicsDisplay::scrollFunc(double x, double y) {
   UNUSED_VARIABLE(y);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicsDisplay::registerResizeFunc(void (*f)(int, int)) {
-  this->resizeCallback = f;
-}
+//void GraphicsDisplay::registerResizeFunc(void (*f)(int, int)) {
+//  this->resizeCallback = f;
+//}
 
-void GraphicsDisplay::registerResizeFunc(std::function<void(int, int)> f) {
-  std::cout << "registering callback\n";
-  this->resizeCallback = f;
-}
+//void GraphicsDisplay::registerResizeFunc(std::function<void(int, int)> f) {
+//  std::cout << "registering callback\n";
+//  this->resizeCallback = f;
+//}
 
 void GraphicsDisplay::resize_callback(GLFWwindow *window, int w, int h) {
   UNUSED_VARIABLE(window);

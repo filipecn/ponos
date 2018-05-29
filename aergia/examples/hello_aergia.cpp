@@ -165,9 +165,9 @@ int main() {
   toWorld = ponos::Transform(ponos::inverse(camera.getTransform()));
   // init window
   aergia::createGraphicsDisplay(800, 800, "FLIP - 2D");
-  gd.registerRenderFunc(render);
-  gd.registerButtonFunc(button);
-  gd.registerMouseFunc(mouse);
+  gd.renderCallback = render;
+  gd.buttonCallback = button;
+  gd.mouseCallback = mouse;
   gd.start();
   return 0;
 }

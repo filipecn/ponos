@@ -95,18 +95,18 @@ class GraphicsDisplay {
    */
   bool isRunning();
   // IO
-  void registerRenderFunc(void (*f)());
-  void registerRenderFunc(std::function<void()> f);
-  void registerButtonFunc(void (*f)(int, int, int));
-  void registerButtonFunc(std::function<void(int, int, int)> f);
-  void registerKeyFunc(void (*f)(int, int, int, int));
-  void registerKeyFunc(std::function<void(int, int, int, int)> f);
-  void registerMouseFunc(void (*f)(double, double));
-  void registerMouseFunc(std::function<void(double, double)> f);
-  void registerScrollFunc(void (*f)(double, double));
-  void registerScrollFunc(std::function<void(double, double)> f);
-  void registerResizeFunc(void (*f)(int, int));
-  void registerResizeFunc(std::function<void(int, int)> f);
+//  void registerRenderFunc(void (*f)());
+//  void registerRenderFunc(std::function<void()> f);
+//  void registerButtonFunc(void (*f)(int, int, int));
+//  void registerButtonFunc(std::function<void(int, int, int)> f);
+//  void registerKeyFunc(void (*f)(int, int, int, int));
+//  void registerKeyFunc(std::function<void(int, int, int, int)> f);
+//  void registerMouseFunc(void (*f)(double, double));
+//  void registerMouseFunc(std::function<void(double, double)> f);
+//  void registerScrollFunc(void (*f)(double, double));
+//  void registerScrollFunc(std::function<void(double, double)> f);
+//  void registerResizeFunc(void (*f)(int, int));
+//  void registerResizeFunc(std::function<void(int, int)> f);
   // graphics
   void beginFrame();
   void endFrame();
@@ -124,6 +124,16 @@ class GraphicsDisplay {
   int keyState(int key);
   GLFWwindow *getGLFWwindow();
 
+  // USER CALLBACKS
+  std::function<void()> renderCallback;
+  std::function<void(unsigned int)> charCallback;
+  std::function<void(int, const char **)> dropCallback;
+  std::function<void(int, int, int)> buttonCallback;
+  std::function<void(int, int, int, int)> keyCallback;
+  std::function<void(double, double)> mouseCallback;
+  std::function<void(double, double)> scrollCallback;
+  std::function<void(int, int)> resizeCallback;
+
  private:
   static GraphicsDisplay instance_;
   GraphicsDisplay();
@@ -136,16 +146,6 @@ class GraphicsDisplay {
   GLFWwindow *window;
   const char *title;
   int width, height;
-
-  // USER CALLBACKS
-  std::function<void()> renderCallback;
-  std::function<void(unsigned int)> charCallback;
-  std::function<void(int, const char **)> dropCallback;
-  std::function<void(int, int, int)> buttonCallback;
-  std::function<void(int, int, int, int)> keyCallback;
-  std::function<void(double, double)> mouseCallback;
-  std::function<void(double, double)> scrollCallback;
-  std::function<void(int, int)> resizeCallback;
 
   // DEFAULT CALLBACKS
   void charFunc(unsigned int codepoint);
