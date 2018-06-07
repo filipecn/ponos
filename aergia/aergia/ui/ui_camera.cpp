@@ -43,7 +43,7 @@ void UserCamera::mouseButton(int action, int button, ponos::Point2 p) {
 }
 
 void UserCamera::mouseMove(ponos::Point2 p) {
-  if(trackball.isActive()) {
+  if (trackball.isActive()) {
     trackball.mouseMove(*this, p);
     trackball.tb.applyPartialTransform();
     applyTransform(trackball.tb.transform());
@@ -78,14 +78,20 @@ void UserCamera2D::update() {
 
 void UserCamera2D::fit(const ponos::BBox2D &b, float delta) {
   //setPos(ponos::vec2(b.center()));
-  setZoom((b.size(b.maxExtent()) / 2.f) * delta);
+  //setZoom((b.size(b.maxExtent()) / 2.f) * delta);
+  setPosition(ponos::Point3(b.center().x, b.center().y, 1.f));
+  setTarget(ponos::Point3(b.center().x, b.center().y, 0.f));
+  dynamic_cast<OrthographicProjection *>(this->projection.get())->zoom((b.size(b.maxExtent()) / 2.f) * delta);
+  trackball.tb.setTransform(ponos::Transform());
+  trackball.tb.setCenter(target);
+  projection->update();
   update();
 }
 void UserCamera2D::mouseScroll(ponos::Point2 p, ponos::vec2 d) {
   trackball.mouseScroll(*this, p, d);
   trackball.tb.applyPartialTransform();
-  auto z = trackball.tb.transform()(ponos::Point3(zoom,zoom,zoom));
-  dynamic_cast<OrthographicProjection*>(this->projection.get())->zoom(z.x);
+  auto z = trackball.tb.transform()(ponos::Point3(zoom, zoom, zoom));
+  dynamic_cast<OrthographicProjection *>(this->projection.get())->zoom(z.x);
   trackball.tb.setTransform(ponos::Transform());
   trackball.tb.setCenter(target);
   projection->update();
