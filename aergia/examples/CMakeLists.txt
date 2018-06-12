@@ -1,5 +1,7 @@
-link_libraries(aergia ${AERGIA_LIBRARIES} ${PONOS_LIBRARIES})
+link_libraries(aergia ${AERGIA_LIBRARIES} ${PONOS_LIBRARIES} ${NANOGUI_LIBS})
 add_executable(hello_aergia_test WIN32 hello_aergia.cpp)
+add_executable(nanogui_example WIN32 nanogui_example.cpp)
+target_include_directories(nanogui_example PUBLIC ${NANOGUI_INCLUDES} ${EIGEN_INCLUDES} ${NANOVG_INCLUDES})
 add_executable(scene_app WIN32 scene_app.cpp)
 add_executable(compute_shader WIN32 compute_shader.cpp)
 add_executable(stream_lines WIN32 stream_lines.cpp)
