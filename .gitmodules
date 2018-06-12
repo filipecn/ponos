@@ -4,3 +4,9 @@
 [submodule "external/tinyobj"]
 	path = external/tinyobj
 	url = https://github.com/syoyo/tinyobjloader
+[submodule "external/nanogui"]
+	path = external/nanogui
+	url = https://github.com/filipecn/nanogui.git
+[submodule "external/glfw"]
+	path = external/glfw
+	url = https://github.com/glfw/glfw.git

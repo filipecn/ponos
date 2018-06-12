@@ -78,19 +78,17 @@ void FontAtlas::loadFont(const char *path) {
 
   stbtt_PackEnd(&context);
 
-  glGenTextures(1, &font.texture);
-  glBindTexture(GL_TEXTURE_2D, font.texture);
+  TextureParameters textureParameters;
+  TextureAttributes textureAttributes;
+  textureAttributes.target = GL_TEXTURE_2D;
+  textureAttributes.width = font.atlasWidth;
+  textureAttributes.height = font.atlasHeight;
+  textureAttributes.type = GL_UNSIGNED_BYTE;
+  textureAttributes.internalFormat = GL_RGB;
+  textureAttributes.format = GL_RED;
+  textureAttributes.data = atlasData.get();
+  texture.set(textureAttributes, textureParameters);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glTexImage2D(GL_TEXTURE_2D,
-               0,
-               GL_RGB,
-               font.atlasWidth,
-               font.atlasHeight,
-               0,
-               GL_RED,
-               GL_UNSIGNED_BYTE,
-               atlasData.get());
-  glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
   glGenerateMipmap(GL_TEXTURE_2D);
 }
 
@@ -120,9 +118,15 @@ FontAtlas::Glyph FontAtlas::getGlyph(uint character, float offsetX, float offset
 }
 
 void FontAtlas::setText(std::string text) {
-  std::vector<ponos::vec3> vertices;
-  std::vector<ponos::vec2> uvs;
-  std::vector<uint> indexes;
+  rawMesh.clear();
+  rawMesh.meshDescriptor.elementSize = 3;
+  rawMesh.meshDescriptor.count = text.size() * 2;
+  rawMesh.positionDescriptor.elementSize = 3;
+  rawMesh.positionDescriptor.count = text.size() * 4;
+  rawMesh.texcoordDescriptor.elementSize = 2;
+  rawMesh.texcoordDescriptor.count = text.size() * 4;
+  rawMesh.normalDescriptor.elementSize = 0;
+  rawMesh.normalDescriptor.count = 0;
 
   uint16_t lastIndex = 0;
   float offsetX = 0, offsetY = 0;
@@ -130,53 +134,40 @@ void FontAtlas::setText(std::string text) {
     const auto glyphInfo = getGlyph(c, offsetX, offsetY);
     offsetX = glyphInfo.offsetX;
     offsetY = glyphInfo.offsetY;
-
-    vertices.emplace_back(glyphInfo.positions[0]);
-    vertices.emplace_back(glyphInfo.positions[1]);
-    vertices.emplace_back(glyphInfo.positions[2]);
-    vertices.emplace_back(glyphInfo.positions[3]);
-    uvs.emplace_back(glyphInfo.uvs[0]);
-    uvs.emplace_back(glyphInfo.uvs[1]);
-    uvs.emplace_back(glyphInfo.uvs[2]);
-    uvs.emplace_back(glyphInfo.uvs[3]);
-    indexes.push_back(lastIndex);
-    indexes.push_back(lastIndex + 1);
-    indexes.push_back(lastIndex + 2);
-    indexes.push_back(lastIndex);
-    indexes.push_back(lastIndex + 2);
-    indexes.push_back(lastIndex + 3);
+    for (int k = 0; k < 4; k++) {
+      for (int j = 0; j < 3; j++)
+        rawMesh.positions.emplace_back(glyphInfo.positions[k][j]);
+      for (int j = 0; j < 2; j++)
+        rawMesh.texcoords.emplace_back(glyphInfo.uvs[k][j]);
+    }
+    ponos::RawMesh::IndexData data;
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
+    rawMesh.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 1;
+    rawMesh.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 2;
+    rawMesh.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
+    rawMesh.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 2;
+    rawMesh.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 3;
+    rawMesh.indices.emplace_back(data);
 
     lastIndex += 4;
   }
-
-  glGenVertexArrays(1, &rotatingLabel.vao);
-  glBindVertexArray(rotatingLabel.vao);
-
-  glGenBuffers(1, &rotatingLabel.vertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(ponos::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-  glEnableVertexAttribArray(0);
-
-  glGenBuffers(1, &rotatingLabel.uvBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.uvBuffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(ponos::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-  glEnableVertexAttribArray(1);
-
-  rotatingLabel.indexElementCount = indexes.size();
-  glGenBuffers(1, &rotatingLabel.indexBuffer);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               sizeof(uint16_t) * rotatingLabel.indexElementCount,
-               indexes.data(),
-               GL_STATIC_DRAW);
+  rawMesh.buildInterleavedData();
+  mesh.reset(new SceneMesh(rawMesh));
 }
 
 void FontAtlas::render() {
-  glBindVertexArray(rotatingLabel.vao);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-  glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
+//  glBindVertexArray(rotatingLabel.vao);
+//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
+//  glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
+}
+
+FontAtlas::FontAtlas() {
+
 }
 
 }

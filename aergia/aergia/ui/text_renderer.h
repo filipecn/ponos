@@ -32,12 +32,14 @@
 #include <aergia/scene/quad.h>
 #include <aergia/utils/open_gl.h>
 #include <sstream>
+#include <aergia/io/font_texture.h>
 
 namespace aergia {
 
 /// Draws texts on the screen.
 class TextRenderer {
-public:
+ public:
+  explicit TextRenderer(const char *filename);
   /// \param s text size
   /// \param c text color
   /// \param id font id (from font manager)
@@ -73,7 +75,8 @@ public:
   /// \param tr text renderer reference
   /// \return text renderer reference
   TextRenderer &operator<<(TextRenderer &tr);
-  template<typename T> TextRenderer &operator<<(T t) {
+  template<typename T>
+  TextRenderer &operator<<(T t) {
     std::stringstream s;
     s << t;
     render(s.str(), dynamicPosition_.x, dynamicPosition_.y, dynamicScale_,
@@ -83,11 +86,12 @@ public:
   size_t fontId;   //!< font id (from font manager)
   float scale;     //!< text scale
   Color textColor; //!< text color
-private:
+ private:
   ponos::Point2 dynamicPosition_;
   float dynamicScale_;
   Color dynamicColor_;
   Quad quad_;
+  FontAtlas atlas;
 };
 
 } // aergia namespace

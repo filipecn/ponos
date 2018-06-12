@@ -1,7 +1,6 @@
-# Use new trusty images, should yield newer compilers and packages
-sudo: required
-dist: precise
 language: cpp
+dist: trusty
+sudo: required
 
 matrix:
   include:
@@ -57,8 +56,9 @@ before_install:
   - cmake --version
 script:
   - git submodule update --init --recursive
-  - python3 solve_dependencies.py triangle
-  - python3 build.py all -DCMAKE_CXX_COMPILER=$COMPILER -DTRAVIS=1
+  - cmake --version
+  - cmake .
+  - make
 #  - python3 build.py test
 after_success:
   - codecov

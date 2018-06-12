@@ -24,7 +24,6 @@
 
 #include <aergia/ui/text_renderer.h>
 #include <aergia/ui/font_manager.h>
-#include <sstream>
 
 namespace aergia {
 
@@ -61,10 +60,26 @@ TextRenderer::TextRenderer(float scale, Color c, size_t id)
 
 void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
                           aergia::Color c) {
+  UNUSED_VARIABLE(x);
+  UNUSED_VARIABLE(y);
+  UNUSED_VARIABLE(scale);
+  atlas.setText(s);
+  atlas.mesh->bind();
+  atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader.get());
+  atlas.texture.bind(GL_TEXTURE0);
+  quad_.shader->begin();
   quad_.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
   quad_.shader->setUniform(
       "projection", ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
   quad_.shader->setUniform("tex", 0);
+  aergia::CHECK_GL_ERRORS;
+  auto ib = atlas.mesh->indexBuffer();
+  glDrawElements(ib->bufferDescriptor.elementType,
+                 ib->bufferDescriptor.elementCount *
+                     ib->bufferDescriptor.elementSize,
+                 ib->bufferDescriptor.dataType, 0);
+  aergia::CHECK_GL_ERRORS;
+/*
   std::string::const_iterator it;
   auto font = FontManager::instance().fontTexture(fontId);
   for (it = s.begin(); it != s.end(); it++) {
@@ -81,7 +96,8 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
     // Bitshift by 6 to get value in pixels (2^6 = 64)
     x += (ch.advance >> 6) * scale;
   }
-  glBindTexture(GL_TEXTURE_2D, 0);
+  */
+//  glBindTexture(GL_TEXTURE_2D, 0);
   quad_.shader->end();
 }
 
@@ -119,6 +135,10 @@ TextRenderer &TextRenderer::withColor(Color c) {
 
 TextRenderer &TextRenderer::operator<<(TextRenderer &tr) {
   return tr;
+}
+
+TextRenderer::TextRenderer(const char *filename) : TextRenderer() {
+  atlas.loadFont(filename);
 }
 
 } // aergia namespace

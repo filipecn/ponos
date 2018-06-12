@@ -1,7 +1,6 @@
 project(AERGIA)
 
 set(HEADERS
-        external/ply.h
         aergia/colors/color.h
         aergia/colors/color_palette.h
         aergia/graphics/compute_shader.h
@@ -25,6 +24,7 @@ set(HEADERS
         aergia/io/image_texture.h
         aergia/io/font_texture.h
         aergia/io/render_texture.h
+        aergia/io/storage_buffer.h
         aergia/io/texture.h
         aergia/io/texture_parameters.h
         aergia/io/utils.h
@@ -60,7 +60,6 @@ set(HEADERS
         )
 
 set(SOURCES
-        external/plyfile.c
         aergia/graphics/compute_shader.cpp
         aergia/graphics/post_effect.cpp
         aergia/graphics/shader.cpp
@@ -74,6 +73,7 @@ set(SOURCES
         aergia/io/image_texture.cpp
         aergia/io/render_texture.cpp
         aergia/io/font_texture.cpp
+        aergia/io/storage_buffer.cpp
         aergia/io/texture.cpp
         aergia/io/utils.cpp
         aergia/io/viewport_display.cpp
@@ -95,30 +95,17 @@ set(SOURCES
         aergia/aergia.cpp
         aergia/scene/instance_set.cpp aergia/scene/instance_set.h)
 
-include_directories("${AERGIA_SOURCE_DIR}/external")
-include_directories(${AERGIA_INCLUDES})
-
-add_definitions(-DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")
-
 if (WIN32)
     link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
-else (WIN32)
-    include_directories(${TINYOBJLOADER_INCLUDE_DIRS})
-    link_libraries(${AERGIA_LIBRARIES} ${TINYOBJLOADER_LIBRARIES})
 endif (WIN32)
 
-link_libraries(ponos)
-include_directories(${PONOS_SOURCE_DIR})
-include_directories(${AERGIA_SOURCE_DIR})
-
-if (NOT ("${FREETYPE_INCLUDE}" STREQUAL ""))
-    add_definitions(-DFREETYPE_INCLUDED)
-endif (NOT ("${FREETYPE_INCLUDE}" STREQUAL ""))
-
-add_library(aergia ${SOURCES} ${HEADERS} aergia/io/storage_buffer.cpp aergia/io/storage_buffer.h)
+add_library(aergia ${SOURCES} ${HEADERS})
 set_target_properties(aergia PROPERTIES
         OUTPUT_NAME "aergia"
         FOLDER "AERGIA")
+target_compile_definitions(aergia PUBLIC -DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")
+target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${STB_INCLUDES})
+target_link_libraries(aergia PUBLIC ponos ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} GLEW GLU)
 
 add_subdirectory(examples)
 

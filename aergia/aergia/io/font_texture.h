@@ -27,10 +27,13 @@
 #define AERGIA_FONT_TEXTURE_H
 
 #include <ponos/ponos.h>
+#include <aergia/graphics/shader_manager.h>
 #include <aergia/io/texture.h>
 #include <aergia/scene/quad.h>
-#include <stb_truetype.h>
 #include <memory>
+
+#include <stb_truetype.h>
+#include <aergia/scene/scene_mesh.h>
 
 namespace aergia {
 
@@ -47,27 +50,20 @@ class FontAtlas {
     std::unique_ptr<stbtt_packedchar[]> charInfo;
     GLuint texture = 0;
   } font;
-
-  struct {
-    GLuint vao = 0;
-    GLuint vertexBuffer = 0;
-    GLuint uvBuffer = 0;
-    GLuint indexBuffer = 0;
-    uint16_t indexElementCount = 0;
-    float angle = 0;
-  } rotatingLabel;
-
   struct Glyph {
     ponos::vec3 positions[4];
     ponos::vec2 uvs[4];
     float offsetX = 0;
     float offsetY = 0;
   };
-
+  FontAtlas();
   void loadFont(const char *path);
   Glyph getGlyph(uint character, float offsetX, float offsetY);
   void setText(std::string text);
   void render();
+  ponos::RawMesh rawMesh;
+  std::shared_ptr<SceneMesh> mesh;
+  Texture texture;
 };
 
 class FontTexture {
