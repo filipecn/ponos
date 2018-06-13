@@ -19,7 +19,9 @@ set(GOOGLE_TEST_INCLUDES "external/googletest/googletest/include")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/nanogui" "external_build/nanogui")
 set_target_properties(nanogui PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 set(NANOGUI_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external/nanogui/include")
-set(NANOGUI_LIBS glfw GL Xxf86vm Xrandr Xinerama Xcursor Xi X11 pthread)
+set(EIGEN_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external/nanogui/ext/eigen")
+set(NANOVG_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external/nanogui/ext/nanovg/src")
+set(NANOGUI_LIBS glfw GL Xxf86vm Xrandr Xinerama Xcursor Xi X11 pthread nanogui)
 # tiny obj
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/tinyobj" "external_build/tinyobj")
 set_target_properties(tinyobjloader PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
@@ -37,6 +39,11 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/ply" "external_build/ply"
 set_target_properties(ply PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 set(PLY_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external/ply")
 set(PLY_LIBS ply)
+# glad
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/glad" "external_build/glad")
+set_target_properties(glad PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+target_compile_definitions(glad PUBLIC GLAD_GENERATOR="c++")
+set(GLAD_INCLUDES "${CMAKE_BINARY_DIR}/external_build/glad/include")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_CXX_STANDARD 11)

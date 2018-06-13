@@ -104,8 +104,8 @@ set_target_properties(aergia PROPERTIES
         OUTPUT_NAME "aergia"
         FOLDER "AERGIA")
 target_compile_definitions(aergia PUBLIC -DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")
-target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${STB_INCLUDES})
-target_link_libraries(aergia PUBLIC ponos ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} GLEW GLU)
+target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${STB_INCLUDES} ${GLAD_INCLUDES})
+target_link_libraries(aergia PUBLIC ponos glad ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} GLU)
 
 add_subdirectory(examples)
 

@@ -2,9 +2,10 @@
 #define AERGIA_UTILS_OPEN_GL_H
 
 #define GL_DEBUG
-#define GLEW_BUILD
-#define GLEW_STATIC
-#include <GL/glew.h>
+//#define GLEW_BUILD
+//#define GLEW_STATIC
+//#include <GL/glew.h>
+#include <glad/glad.h>
 //#include <vulkan/vulkan.h>
 #define GLFW_INCLUDE_GLU
 //#define GLFW_INCLUDE_VULKAN
