@@ -42,7 +42,7 @@ template <typename QT> class QuadTreeModel : public SceneObject {
 public:
   QuadTreeModel() : tree(nullptr) {}
   QuadTreeModel(const QT *qt) : tree(qt) { edgesColor = COLOR_BLACK; }
-  void draw() const override {
+  void draw() const {
     tree->traverse([this](const typename QT::Node &node) -> bool {
       glColor4fv(edgesColor.asArray());
       draw_bbox(node.region());

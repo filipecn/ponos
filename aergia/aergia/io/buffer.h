@@ -76,7 +76,7 @@ struct BufferDescriptor {
     type = other.type;
     use = other.use;
     dataType = other.dataType;
-    attributes = other.attributes;
+//    attributes = other.attributes;
   }
   BufferDescriptor(const BufferDescriptor&& other) {
     elementSize = other.elementSize;
@@ -85,7 +85,7 @@ struct BufferDescriptor {
     type = other.type;
     use = other.use;
     dataType = other.dataType;
-    attributes = other.attributes;
+//    attributes = other.attributes;
   }
   BufferDescriptor& operator=(const BufferDescriptor& other){
     elementSize = other.elementSize;
@@ -94,7 +94,7 @@ struct BufferDescriptor {
     type = other.type;
     use = other.use;
     dataType = other.dataType;
-    attributes = other.attributes;
+//    attributes = other.attributes;
     return *this;
   }
   /** \brief  add
