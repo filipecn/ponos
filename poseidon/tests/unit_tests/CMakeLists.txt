@@ -8,6 +8,8 @@ file(GLOB SOURCES
 add_executable(${target} ${SOURCES})
 if(WIN32)
 target_link_libraries(${target} poseidon gtest)
+elsif(APPLE)
+	target_link_libraries(${target} ${PONOS_LIBRARIES} poseidon gtest pthread)
 else(WIN32)
 	target_link_libraries(${target} ${PONOS_LIBRARIES} poseidon gtest gcov pthread)
 endif(WIN32)
