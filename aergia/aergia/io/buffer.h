@@ -69,6 +69,9 @@ struct BufferDescriptor {
       : elementSize(_elementSize), elementCount(_elementCount),
         elementType(_elementType), type(_type), use(_use), dataType(_dataType) {
   }
+  BufferDescriptor(const BufferDescriptor& other) {
+
+  }
   /** \brief  add
    * \param _name attribute name (used in shader programs)
    * \param _size number of components
