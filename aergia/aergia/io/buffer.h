@@ -70,7 +70,32 @@ struct BufferDescriptor {
         elementType(_elementType), type(_type), use(_use), dataType(_dataType) {
   }
   BufferDescriptor(const BufferDescriptor& other) {
-
+    elementSize = other.elementSize;
+    elementCount = other.elementCount;
+    elementType = other.elementType;
+    type = other.type;
+    use = other.use;
+    dataType = other.dataType;
+    attributes = other.attributes;
+  }
+  BufferDescriptor(const BufferDescriptor&& other) {
+    elementSize = other.elementSize;
+    elementCount = other.elementCount;
+    elementType = other.elementType;
+    type = other.type;
+    use = other.use;
+    dataType = other.dataType;
+    attributes = other.attributes;
+  }
+  BufferDescriptor& operator=(const BufferDescriptor& other){
+    elementSize = other.elementSize;
+    elementCount = other.elementCount;
+    elementType = other.elementType;
+    type = other.type;
+    use = other.use;
+    dataType = other.dataType;
+    attributes = other.attributes;
+    return *this;
   }
   /** \brief  add
    * \param _name attribute name (used in shader programs)

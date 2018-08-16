@@ -41,7 +41,7 @@ template <typename GridType> class GridModel : public SceneObject {
 public:
   GridModel() {}
   GridModel(const GridType *g) : grid(g) {}
-  void draw() const override {
+  void draw() const {
     glColor4fv(gridColor.asArray());
     glBegin(GL_LINES); // XY
     for (size_t x = 0; x <= grid->width; x++) {
