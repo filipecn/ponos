@@ -106,7 +106,7 @@ set_target_properties(aergia PROPERTIES
 target_compile_definitions(aergia PUBLIC -DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")
 #target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${STB_INCLUDES} ${GLAD_INCLUDES} ${NANOGUI_INCLUDES})
 target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${GLAD_INCLUDES} ${NANOGUI_INCLUDES})
-target_link_libraries(aergia PUBLIC ponos glad ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} GLU)
+target_link_libraries(aergia PUBLIC ponos glad ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS})# GLU)
 
 #add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
 #target_compile_definitions(aergia_shared PUBLIC -DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")

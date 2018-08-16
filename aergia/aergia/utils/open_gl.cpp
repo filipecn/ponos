@@ -60,7 +60,7 @@ bool printOglError(const char *file, int line) {
 
   glErr = glad_glGetError();
   while (glErr != GL_NO_ERROR) {
-    std::cerr << "glError in file " << file << " @ line " << line << ": " << gluErrorString(glErr) << std::endl;
+    std::cerr << "glError in file " << file << " @ line " << line << ": " << /*gluErrorString(glErr) <<*/ std::endl;
     retCode = true;
     glErr = glad_glGetError();
   }
