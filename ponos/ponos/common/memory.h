@@ -5,7 +5,9 @@
 
 #include <algorithm>
 #include <cstdlib>
+#ifdef __linux__
 #include <malloc.h>
+#endif
 #include <vector>
 
 namespace ponos {
@@ -40,9 +42,10 @@ private:
 inline void *allocAligned(uint32 size) {
 #ifdef _WIN32
   return _aligned_malloc(CACHE_L1_LINE_SIZE, size);
-#else
+#elifdef __linux
   return memalign(CACHE_L1_LINE_SIZE, size);
 #endif
+  return nullptr;
 }
 
 /** \brief Allocates cache-aligned **count** objects.
