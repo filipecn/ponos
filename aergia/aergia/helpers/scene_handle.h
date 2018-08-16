@@ -39,7 +39,7 @@ public:
     circle.c = ponos::Point2();
     circle.r = 0.1f;
   }
-  void draw() const override {
+  void draw() const {
     glColor(fillColor);
     if (this->selected)
       glColor(selectedColor);
