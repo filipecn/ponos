@@ -50,7 +50,12 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/glad" "external_build/gla
 set_target_properties(glad PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 target_compile_definitions(glad PUBLIC GLAD_GENERATOR="c++")
 set(GLAD_INCLUDES "${CMAKE_BINARY_DIR}/external_build/glad/include")
-set(GLAD_LIBS "${CMAKE_BINARY_DIR}/external_build/glad/libgladd.so")
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    set(GLAD_LIBS "${CMAKE_BINARY_DIR}/external_build/glad/libgladd.so")
+ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+IF(CMAKE_BUILD_TYPE MATCHES RELEASE)
+    set(GLAD_LIBS "${CMAKE_BINARY_DIR}/external_build/glad/libglad.so")
+ENDIF(CMAKE_BUILD_TYPE MATCHES RELEASE)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_CXX_STANDARD 11)

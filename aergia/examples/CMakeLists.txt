@@ -1,4 +1,5 @@
-#link_libraries(aergia GLU ${AERGIA_LIBRARIES} ${PONOS_LIBRARIES} ${NANOGUI_LIBS})
+link_libraries(aergia GLU ${AERGIA_LIBRARIES} ${PONOS_LIBRARIES} ${NANOGUI_LIBS})
+include_directories(${PONOS_SOURCE_DIR} ${AERGIA_SOURCE_DIR} ${GLAD_INCLUDES} ${NANOGUI_INCLUDES} ${EIGEN_INCLUDES} ${NANOVG_INCLUDES})
 add_executable(hello_aergia_test WIN32 hello_aergia.cpp)
 add_executable(scene_app WIN32 scene_app.cpp)
 add_executable(compute_shader WIN32 compute_shader.cpp)
