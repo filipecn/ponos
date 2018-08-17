@@ -6,10 +6,23 @@
 //#define GLEW_STATIC
 //#include <GL/glew.h>
 #include <glad/glad.h>
+#include <nanogui/nanogui.h>
 //#include <vulkan/vulkan.h>
 //#define GLFW_INCLUDE_GLU
 //#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#if defined(NANOGUI_GLAD)
+#if defined(NANOGUI_SHARED) && !defined(GLAD_GLAPI_EXPORT)
+#define GLAD_GLAPI_EXPORT
+#endif
+#else
+#if defined(__APPLE__)
+#define GLFW_INCLUDE_GLCOREARB
+#else
+#define GL_GLEXT_PROTOTYPES
+#endif
+#endif
+
 
 #include <ponos/ponos.h>
 

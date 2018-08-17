@@ -9,6 +9,9 @@ bool initialize() {
   if (!gladLoadGL()) {
     std::cerr << "GLAD failed.";
   }
+  if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+    throw std::runtime_error("Could not initialize GLAD!");
+  glGetError(); // pull and ignore unhandled errors like GL_INVALID_ENUM
   printf("OpenGL %d.%d\n", GLVersion.major, GLVersion.minor);
   /*int gl_major, gl_minor;
   // Initialize the "OpenGL Extension Wrangler" library

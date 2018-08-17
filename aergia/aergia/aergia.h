@@ -24,9 +24,6 @@
 #include <aergia/io/texture.h>
 #include <aergia/io/texture_parameters.h>
 #include <aergia/io/viewport_display.h>
-//#includ<aergia/ >io/vulkan_application.h>
-//#includ<aergia/ >io/vulkan_resource.h>
-//#includ<aergia/ >io/vulkan_utils.h>
 #include <aergia/scene/bvh.h>
 #include <aergia/scene/camera.h>
 #include <aergia/scene/instance_set.h>
@@ -40,6 +37,7 @@
 #include <aergia/ui/app.h>
 #include <aergia/ui/interactive_object_interface.h>
 #include <aergia/ui/modifier_cursor.h>
+#include <aergia/ui/nanogui_screen.h>
 #include <aergia/ui/scene_app.h>
 #include <aergia/ui/text_renderer.h>
 #include <aergia/ui/track_mode.h>
