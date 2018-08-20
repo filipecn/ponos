@@ -71,7 +71,6 @@ script:
   - cmake --version
   - cmake .
   - make
-#  - python3 build.py test
 after_success:
 #  - codecov
 #  - lcoveralls

@@ -1,32 +1,20 @@
-environment:
-  matrix:
-    - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4.1"
-      PYTHON_ARCH: "64"
-      WINDOWS_SDK_VERSION: "v7.1"
-      DISTRIBUTIONS: "bdist_wheel"
-
-# Branches to build:
+version: 1.0.{build}
+os: Visual Studio 2015
+test: off
+clone_folder: C:\projects\ponos
 branches:
-  # whitelist
   only:
     - master
-
-# Operating system (build VM template)
-os: Visual Studio 2015
-
-# Init:
-init:
-  - "echo %PYTHON%"
-
-# Install:
 install:
-  # - "%PYTHON%/Scripts/pip.exe install colorama"
-
-# Build:
-build_script:
   - git submodule update --init --recursive
-  - cmd: "%PYTHON%/python.exe build.py mingw all -DTRAVIS=1"
+  - cinstall: python
+build_script:
+  - echo Running cmake...
+  - cd c:\projects\ponos
+  - cmake -G "Visual Studio 14 2015 Win64" -DPYTHON_EXECUTABLE:FILEPATH=C:/Python34-x64/python.exe
+  - set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - set MSBuildOptions=/v:m /p:Configuration=Release /logger:%MSBuildLogger%
+  - msbuild %MSBuildOptions% ponos.sln
 
 # Notifications:
 notifications:

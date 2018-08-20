@@ -46,7 +46,9 @@ int main(int /* argc */, char ** /* argv */) {
       });
 
   gui->addGroup("Other widgets");
-  gui->addButton("A button", []() { std::cout << "Button pressed." << std::endl; })->setTooltip(
+  gui->addButton("A button", []() {
+    std::cout << "Button pressed." << std::endl;
+  })->setTooltip(
       "Testing a much longer tooltip, that will wrap around to new lines multiple times.");;
 
   screen->setVisible(true);

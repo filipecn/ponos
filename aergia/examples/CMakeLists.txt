@@ -14,11 +14,6 @@ add_executable(instances WIN32 instances.cpp)
 add_executable(scene_mesh WIN32 scene_mesh_example.cpp)
 add_executable(post_effects_example WIN32 post_effects_example.cpp)
 add_executable(tmesh WIN32 tmesh.cpp)
-#add_executable(triangulate_example WIN32 triangulate_example.cpp)
-
-if (WIN32)
-    # add_executable(hello_vulkan WIN32 hello_vulkan.cpp)
-endif (WIN32)
 
 set(WINDOWS_BINARIES
         hemesh_example

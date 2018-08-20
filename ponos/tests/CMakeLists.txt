@@ -15,7 +15,7 @@ else (APPLE)
     target_link_libraries(${target} ponos gtest gcov pthread)
 endif (APPLE)
 
-add_custom_target(tests
+add_custom_target(test_ponos
         COMMAND ponos_unit_tests DEPENDS ponos_unit_tests
         COMMAND lcov --directory .. --capture -output-file cov.info
         COMMAND lcov --remove cov.info '/usr/*' --output-file cov.info
