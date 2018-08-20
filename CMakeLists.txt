@@ -101,3 +101,7 @@ if (NOT TRAVIS)
     add_subdirectory(aergia)
     add_subdirectory(poseidon)
 endif (NOT TRAVIS)
+
+if (PONOS_HAS_PARENT)
+    set(PONOS_INCLUDES ${PROJECT_SOURCE_DIR}/ponos ${GAD_INCLUDES} PARENT_SCOPE)
+endif (PONOS_HAS_PARENT)

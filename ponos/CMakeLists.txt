@@ -104,11 +104,11 @@ add_library(ponos STATIC ${SOURCES} ${HEADERS})
 set_target_properties(ponos PROPERTIES
         OUTPUT_NAME "ponos"
         FOLDER "PONOS")
-target_include_directories(ponos PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${PONOS_INCLUDES})
+target_include_directories(ponos PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
 add_library(ponos_shared SHARED ${SOURCES} ${HEADERS})
-target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${PONOS_INCLUDES})
+target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos_shared ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
 # add_subdirectory(examples)
