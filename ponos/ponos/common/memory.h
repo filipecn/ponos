@@ -42,7 +42,8 @@ private:
 inline void *allocAligned(uint32 size) {
 #ifdef _WIN32
   return _aligned_malloc(CACHE_L1_LINE_SIZE, size);
-#elifdef __linux
+#endif
+#ifdef __linux
   return memalign(CACHE_L1_LINE_SIZE, size);
 #endif
   return nullptr;
