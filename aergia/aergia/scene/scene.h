@@ -53,13 +53,10 @@ public:
     return static_cast<T*>(o);
   }
 
-  void render() {
-    float pm[16];
-    transform.matrix().column_major(pm);
-    glMultMatrixf(pm);
-    s.iterate([](SceneObject *o) {
+  void render(CameraInterface* camera) {
+    s.iterate([&](SceneObject *o) {
       if (o->visible)
-        o->draw();
+        o->draw(camera, transform);
     });
   }
 

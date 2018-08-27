@@ -70,14 +70,14 @@ class ViewportDisplay {
   ponos::Point3 unProject(const CameraInterface &c, ponos::Point3 p);
   ponos::Point3 unProject();
 
-  void render(const std::function<void()> &f = nullptr);
+  void render(const std::function<void(CameraInterface*)> &f = nullptr);
   void mouse(double x, double y);
   void button(int b, int a, int m);
   void scroll(double dx, double dy);
   void key(int k, int scancode, int action, int modifiers);
 
   // render callback
-  std::function<void()> renderCallback;
+  std::function<void(CameraInterface*)> renderCallback;
   std::function<void(int, int, int)> buttonCallback;
   std::function<void(double, double)> mouseCallback;
   std::function<void(double, double)> scrollCallback;

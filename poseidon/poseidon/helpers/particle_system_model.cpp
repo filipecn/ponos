@@ -100,7 +100,7 @@ ParticleSystemModel::ParticleSystemModel(ParticleSystem &ps, float r)
 ParticleSystemModel::~ParticleSystemModel() = default;
 
 void ParticleSystemModel::draw() {
-  instances_->draw();
+  instances_->draw(nullptr, ponos::Transform(), 0);
 }
 
 bool ParticleSystemModel::intersect(const ponos::Ray3 &r, float *t) {

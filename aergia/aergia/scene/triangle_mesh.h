@@ -39,7 +39,7 @@ public:
   TriangleMesh(ponos::RawMesh *m);
   virtual ~TriangleMesh() {}
   /* @inherit */
-  void draw() override;
+  void draw(const CameraInterface *camera, ponos::Transform transform) override;
 };
 
 } // aergia namespace

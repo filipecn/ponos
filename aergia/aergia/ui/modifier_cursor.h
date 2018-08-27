@@ -92,7 +92,7 @@ public:
   }
   virtual ~CircleCursor() {}
 
-  void draw() override {
+  void draw(const CameraInterface* camera, ponos::Transform transform) override {
     ponos::Circle c = circle;
     if (this->dragging)
       glColor(activeColor);

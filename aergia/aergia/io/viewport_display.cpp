@@ -8,23 +8,21 @@ ViewportDisplay::ViewportDisplay(int _x, int _y, int _width, int _height)
   renderer.reset(new DisplayRenderer(width, height));
 }
 
-void ViewportDisplay::render(const std::function<void()> &f) {
+void ViewportDisplay::render(const std::function<void(CameraInterface*)> &f) {
   glEnable(GL_DEPTH_TEST);
   renderer->process([&]() {
-    if (camera)
-      camera->look();
     if (f)
-      f();
+      f(camera.get());
     if (renderCallback)
-      renderCallback();
+      renderCallback(camera.get());
   });
-  glDisable(GL_DEPTH_TEST);
+//  glDisable(GL_DEPTH_TEST);
   GraphicsDisplay &gd = GraphicsDisplay::instance();
   glViewport(x, y, width, height);
   glScissor(x, y, width, height);
   glEnable(GL_SCISSOR_TEST);
-  gd.clearScreen(1.f, 1.f, 1.f, 0.f);
-  //glEnable(GL_DEPTH_TEST);
+  gd.clearScreen(0.f, 1.f, 1.f, 0.f);
+//  glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   renderer->render();

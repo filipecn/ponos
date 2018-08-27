@@ -36,7 +36,7 @@ WireframeMesh::WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t) {
   transform = t;
 }
 
-void WireframeMesh::draw() {
+void WireframeMesh::draw(const CameraInterface *camera, ponos::Transform transform) {
   glPushMatrix();
   vb->bind();
   ib->bind();

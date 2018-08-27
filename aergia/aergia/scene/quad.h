@@ -40,9 +40,9 @@ public:
    * \param pM maximum extreme
    */
   void set(const ponos::Point2 &pm, const ponos::Point2 &pM);
-  void draw() override;
+  void draw(const CameraInterface* camera, ponos::Transform transform) override;
 
-  std::shared_ptr<aergia::Shader> shader; //!< shader applyed on draw
+  std::shared_ptr<aergia::Shader> shader; //!< shader applied on draw
 
 private:
   GLuint VAO;

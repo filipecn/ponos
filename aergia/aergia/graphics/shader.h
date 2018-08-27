@@ -51,16 +51,23 @@ class Shader {
   /// \return program id. **-1** if error.
   bool loadFromFiles(const char *fl...);
   /// Activate shader program
-  /// \param b buffer pointer (must match attribute names)
-  bool begin(const VertexBuffer *b = nullptr);
+  bool begin();
   /// Deactivate shader program
   void end();
   /// \param name
-  void addVertexAttribute(const char *name);
+  /// \param location
+  void addVertexAttribute(const char *name, GLint location);
+  ///
+  /// \param name
+  /// \param location
+  void addUniform(const std::string & name, GLint location);
   /// locates atribute **name** in shader's program
   /// \param name attibute's name, must match name in shader code
   /// \return attributes layout location
   int locateAttribute(const std::string &name) const;
+  /// Register shader attributes into vertex buffer
+  /// \param b buffer pointer (must match attribute names)
+  void registerVertexAttributes(const VertexBuffer *b);
   // Uniforms
   void setUniform(const char *name, const ponos::mat4 &m);
   void setUniform(const char *name, const ponos::mat3 &m);
@@ -76,6 +83,8 @@ class Shader {
   GLuint programId;
 
   std::set<const char *> vertexAttributes;
+  std::map<std::string, GLint> attrLocations;
+  std::map<std::string, GLint> uniformLocations;
 
   GLint getUniLoc(const GLchar *name);
 };

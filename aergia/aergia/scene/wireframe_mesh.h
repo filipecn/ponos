@@ -13,7 +13,7 @@ public:
   WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t);
   virtual ~WireframeMesh() {}
   /* @inherit */
-  void draw() override;
+  void draw(const CameraInterface *camera, ponos::Transform transform) override;
 
 protected:
   void setupIndexBuffer() override;

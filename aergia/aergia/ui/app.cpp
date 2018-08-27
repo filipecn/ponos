@@ -5,13 +5,14 @@ namespace aergia {
 
 App::App(uint w, uint h, const char *t, bool defaultViewport)
     : initialized(false), windowWidth(w), windowHeight(h), title(t) {
-  if (defaultViewport)
-    addViewport(0, 0, windowWidth, windowHeight);
   renderCallback = nullptr;
   mouseCallback = nullptr;
   buttonCallback = nullptr;
   keyCallback = nullptr;
   resizeCallback = nullptr;
+  init();
+  if (defaultViewport)
+    addViewport(0, 0, windowWidth, windowHeight);
 }
 
 size_t App::addViewport(uint x, uint y, uint w, uint h) {
@@ -39,17 +40,11 @@ void App::init() {
       createGraphicsDisplay(windowWidth, windowHeight, title.c_str());
   gd.charCallback = [this](unsigned char pointcode) { charFunc(pointcode); };
   gd.dropCallback = [this](int count, const char **filenames) { drop(count, filenames); };
-//  gd.registerRenderFunc([this]() { render(); });
   gd.renderCallback = [this]() { render(); };
-//  gd.registerButtonFunc([this](int b, int a, int m) { button(b, a, m); });
   gd.buttonCallback = [this](int b, int a, int m) { button(b, a, m); };
-//  gd.registerMouseFunc([this](double x, double y) { mouse(x, y); });
   gd.mouseCallback = [this](double x, double y) { mouse(x, y); };
-//  gd.registerScrollFunc([this](double dx, double dy) { scroll(dx, dy); });
   gd.scrollCallback = [this](double dx, double dy) { scroll(dx, dy); };
-//  gd.registerKeyFunc([this](int k, int s, int a, int m) { key(k, s, a, m); });
   gd.keyCallback = [this](int k, int s, int a, int m) { key(k, s, a, m); };
-//  gd.registerResizeFunc([this](int w, int h) { resize(w, h); });
   gd.resizeCallback = [this](int w, int h) { resize(w, h); };
   initialized = true;
 }

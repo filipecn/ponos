@@ -71,8 +71,8 @@ uint InstanceSet::add(BufferDescriptor d) {
       dataF_[dataF_.size() - 1].resize(bs);
   }
   }
-  for (auto &attribute : d.attributes)
-    shader_.addVertexAttribute(attribute.first.c_str());
+//  for (auto &attribute : d.attributes)
+//    shader_.addVertexAttribute(attribute.first.c_str());
   return b;
 }
 
@@ -133,7 +133,7 @@ void InstanceSet::bind(uint b) {
   buffers_[b]->bind();
 }
 
-void InstanceSet::draw() {
+void InstanceSet::draw(const CameraInterface *camera, ponos::Transform transform) {
   // bind buffers and locate attributes
   // configure regular attributes
   baseMesh_.bind();

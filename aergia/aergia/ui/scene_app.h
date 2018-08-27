@@ -54,7 +54,7 @@ class SceneApp : public App {
  protected:
   void render() override {
     for (size_t i = 0; i < viewports.size(); i++)
-      viewports[i].render([&]() { scene.render(); });
+      viewports[i].render([&](CameraInterface*c) { scene.render(c); });
     if (this->renderCallback)
       this->renderCallback();
   }

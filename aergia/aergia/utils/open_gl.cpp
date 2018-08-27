@@ -54,15 +54,53 @@ void printProgramInfoLog(GLuint program) {
   CHECK_GL_ERRORS;
 }
 
+std::string glErrorToString(GLenum error, bool description) {
+  std::string s, d;
+  switch (error) {
+    case GL_NO_ERROR:s += "GL_NO_ERROR";
+      break;
+    case GL_INVALID_ENUM:s += "GL_INVALID_ENUM";
+      d +=
+          "Given when an enumeration parameter is not a legal enumeration for that function. This is given only for local problems; if the spec allows the enumeration in certain circumstances, where other parameters or state dictate those circumstances, then GL_INVALID_OPERATION is the result instead.";
+      break;
+    case GL_INVALID_VALUE:s += "GL_INVALID_VALUE";
+      d +=
+          "Given when a value parameter is not a legal value for that function. This is only given for local problems; if the spec allows the value in certain circumstances, where other parameters or state dictate those circumstances, then GL_INVALID_OPERATION is the result instead.";
+      break;
+    case GL_INVALID_OPERATION:s += "GL_INVALID_OPERATION";
+      d +=
+          "Given when the set of state for a command is not legal for the parameters given to that command. It is also given for commands where combinations of parameters define what the legal parameters are.";
+      break;
+    case GL_STACK_OVERFLOW:s += "GL_STACK_OVERFLOW";
+      d +=
+          "Given when a stack pushing operation cannot be done because it would overflow the limit of that stack's size.";
+      break;
+    case GL_STACK_UNDERFLOW:s += "GL_STACK_UNDERFLOW";
+      d += "Given when a stack popping operation cannot be done because the stack is already at its lowest point.";
+      break;
+    case GL_OUT_OF_MEMORY:s += "GL_OUT_OF_MEMORY";
+      d +=
+          "Given when performing an operation that can allocate memory, and the memory cannot be allocated. The results of OpenGL functions that return this error are undefined; it is allowable for partial operations to happen.";
+      break;
+    case GL_INVALID_FRAMEBUFFER_OPERATION:s += "GL_INVALID_FRAMEBUFFER_OPERATION";
+      d +=
+          "Given when doing anything that would attempt to read from or write/render to a framebuffer that is not complete.";
+      break;
+    case GL_CONTEXT_LOST:s += "GL_CONTEXT_LOST";
+      d += "Given if the OpenGL context has been lost, due to a graphics card reset.";
+      break;
+    default:s += "Undefined error code";
+  }
+  return s + ((description) ? "(" + d + ")" : "");
+}
+
 bool printOglError(const char *file, int line) {
   GLenum glErr;
   bool retCode = false;
 
-  glErr = glad_glGetError();
-  while (glErr != GL_NO_ERROR) {
-    std::cerr << "glError in file " << file << " @ line " << line << ": " << /*gluErrorString(glErr) <<*/ std::endl;
+  while ((glErr = glad_glGetError()) != GL_NO_ERROR) {
+    std::cerr << "glError in file " << file << " @ line " << line << ": " << glErrorToString(glErr) << std::endl;
     retCode = true;
-    glErr = glad_glGetError();
   }
   return retCode;
 }
@@ -163,24 +201,32 @@ void glVertex(ponos::Point<float, 2> v) { glVertex2f(v[0], v[1]); }
 void glColor(Color c) { glColor4f(c.r, c.g, c.b, c.a); }
 
 void glApplyTransform(const ponos::Transform &transform) {
+  std::cerr << "forbiden call in opengl.cpp";
+  exit(-1);
   float m[16];
   transform.matrix().column_major(m);
   glMultMatrixf(m);
 }
 
 ponos::Transform glGetProjectionTransform() {
+  std::cerr << "forbiden call in opengl.cpp";
+  exit(-1);
   float m[16];
   glGetFloatv(GL_PROJECTION_MATRIX, m);
   return ponos::Transform(ponos::Matrix4x4(m, true));
 }
 
 ponos::Transform glGetModelviewTransform() {
+  std::cerr << "forbiden call in opengl.cpp";
+  exit(-1);
   float m[16];
   glGetFloatv(GL_MODELVIEW_MATRIX, m);
   return ponos::Transform(ponos::Matrix4x4(m, true));
 }
 
 ponos::Transform glGetMVPTransform() {
+  std::cerr << "forbiden call in opengl.cpp";
+  exit(-1);
   return glGetProjectionTransform() * glGetModelviewTransform();
   return glGetModelviewTransform() * glGetProjectionTransform();
 }

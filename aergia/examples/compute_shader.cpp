@@ -33,7 +33,6 @@ Vec3 np[PARTICLE_COUNT], nv[PARTICLE_COUNT];
 float floats[PARTICLE_COUNT], nf[PARTICLE_COUNT];
 int main() {
   aergia::SceneApp<> app(800, 800, "Compute Shader Example");
-  app.init();
   StorageBuffer positionsBuffer(PARTICLE_COUNT * sizeof(Vec3), &positions[0]);
   StorageBuffer velocitiesBuffer(PARTICLE_COUNT * sizeof(Vec3), &velocities[0]);
   StorageBuffer floatsBuffer(PARTICLE_COUNT * sizeof(float), &floats[0]);
@@ -57,6 +56,6 @@ int main() {
   }
   for(int i = 0; i < 10; i++)
     std::cout << nf[i] << std::endl;
-  // app.run();
+  app.run();
   return 0;
 }

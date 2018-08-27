@@ -33,28 +33,24 @@
 
 namespace aergia {
 
-/* cartesian grid
- * Represents the main planes of a cartesian grid.
- */
+/* Represents the main planes of a cartesian grid. */
 class CartesianGrid : public SceneObject {
 public:
-  CartesianGrid() {}
-  /* Constructor.
-   * @d **[in]** delta in all axis
-   * Creates a grid **[-d, d] x [-d, d] x [-d, d]**
+  CartesianGrid();
+  /* Creates a grid **[-d, d] x [-d, d] x [-d, d]**
+   * \param d **[in]** delta in all axis
    */
-  CartesianGrid(int d);
-  /* Constructor.
-   * @dx **[in]** delta X
-   * @dy **[in]** delta Y
-   * @dz **[in]** delta Z
-   * Creates a grid **[-dx, dx] x [-dy, dy] x [-dz, dz]**
+  explicit CartesianGrid(int d);
+  /* Creates a grid **[-dx, dx] x [-dy, dy] x [-dz, dz]**
+   * \param dx **[in]** delta X
+   * \param dy **[in]** delta Y
+   * \param dz **[in]** delta Z
    */
   CartesianGrid(int dx, int dy, int dz);
   /* set
-   * @d **[in]** dimension index (x = 0, ...)
-   * @a **[in]** lowest coordinate
-   * @b **[in]** highest coordinate
+   * \param d **[in]** dimension index (x = 0, ...)
+   * \param a **[in]** lowest coordinate
+   * \param b **[in]** highest coordinate
    * Set the limits of the grid for an axis.
    *
    * **Example:** If we want a grid with **y** coordinates in **[-5,5]**, we
@@ -62,11 +58,18 @@ public:
    */
   void setDimension(size_t d, int a, int b);
   /* @inherit */
-  void draw() override;
+  void draw(const CameraInterface* camera, ponos::Transform t) override;
 
   Color gridColor;
   Color xAxisColor, yAxisColor, zAxisColor;
   ponos::Interval<int> planes[3];
+ private:
+  void updateBuffers();
+
+  GLuint VAO_grid_;
+  std::shared_ptr<Shader> gridShader_;
+  std::shared_ptr<VertexBuffer> vb;
+  ponos::RawMesh mesh;
 };
 
 } // aergia namespace

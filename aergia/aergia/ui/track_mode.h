@@ -218,7 +218,7 @@ private:
 
     float a = hitplaney / viewpointx;
     float b = -hitplaney;
-    float c = (float) ((tb.radius() * tb.radius()) / 2.f);
+    float c = (tb.radius() * tb.radius()) / 2.f;
     float delta = b * b - 4 * a * c;
     float x1, xval, yval;
 

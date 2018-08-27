@@ -98,11 +98,8 @@ public:
   /// \param ccw make ccw ?
   void orientFaces(bool ccw = true);
   struct ArrayDescriptor {
-    ///  \param s element size
-    ///  \param c element count
-    explicit ArrayDescriptor(size_t s = 0, size_t c = 0) : elementSize(s), count(c) {}
-    size_t elementSize; //!< number of components per element.
-    size_t count;       //!< number of elements.
+    size_t elementSize = 0; //!< number of components per element.
+    size_t count = 0;       //!< number of elements.
   };
   /// clears everything, sets zero to all fields
   void clear();

@@ -44,7 +44,9 @@ public:
   SceneObject() : visible(true) {}
   virtual ~SceneObject() {}
   /// render method
-  virtual void draw() = 0;
+  /// \param c cur active camera
+  /// \param t object transform
+  virtual void draw(const CameraInterface* c, ponos::Transform t) = 0;
   /// query
   /// \param r **[in]** ray
   /// \param t **[out]** receives the parametric value of the intersection
@@ -88,21 +90,22 @@ public:
     this->setupIndexBuffer();
     shader = s;
     drawCallback = f;
-    if (shader)
-      for (auto att : this->vb->bufferDescriptor.attributes)
-        shader->addVertexAttribute(att.first.c_str());
+    //if (shader)
+    //  for (auto att : this->vb->bufferDescriptor.attributes)
+    //    shader->addVertexAttribute(att.first.c_str());
   }
 
   virtual ~SceneMeshObject() {}
 
-  void draw() override {
+  void draw(const CameraInterface* camera, ponos::Transform t) override {
     if (!visible)
       return;
     vb->bind();
     ib->bind();
-    if (shader)
-      shader->begin(this->vb.get());
-    else {
+    if (shader) {
+      shader->registerVertexAttributes(vb.get());
+      shader->begin();
+    } else {
       glEnableVertexAttribArray(0);
       glVertexAttribPointer(
           0, vb->bufferDescriptor.elementSize, GL_FLOAT, GL_FALSE,

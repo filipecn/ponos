@@ -1,4 +1,4 @@
-// Created by filipecn on 3/3/18.
+// Created by filipecn on 8/26/18.
 /*
  * Copyright (c) 2018 FilipeCN
  *
@@ -21,42 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- */
+*/
 
-#ifndef AERGIA_DISPLAY_RENDERER_H
-#define AERGIA_DISPLAY_RENDERER_H
-
-#include <aergia/io/render_texture.h>
-#include <aergia/graphics/post_effect.h>
-#include <aergia/scene/quad.h>
-#include "screen_quad.h"
+#ifndef AERGIA_SCREEN_QUAD_H
+#define AERGIA_SCREEN_QUAD_H
 
 namespace aergia {
+  class ScreenQuad {
+   public:
+    ScreenQuad();
+    ~ScreenQuad();
+    void render();
+    std::shared_ptr<Shader> shader;
+   private:
+    ponos::RawMesh mesh_;
+    std::shared_ptr<VertexBuffer> vb_;
+    std::shared_ptr<IndexBuffer> ib_;
+    GLuint VAO;
+  };
+}
 
-/// Renders to the display. Allows multiple post-effects. Post effects are applied
-/// on the same order they were added.
-class DisplayRenderer {
-public:
-  DisplayRenderer(size_t w, size_t h);
-  /// \param e post effect.
-  void addEffect(PostEffect *e);
-  /// \param f render callback of the original frame
-  void process(const std::function<void()> &f);
-  void render();
-  /// \param w width in pixels
-  /// \param h height in pixels
-  void resize(size_t w, size_t h);
-
-private:
-  ScreenQuad screen;
-  bool needsResize_;
-  size_t curBuffer_;
-  std::vector<std::shared_ptr<PostEffect>> effects_;
-  TextureAttributes attributes_;
-  TextureParameters parameters_;
-  std::vector<std::shared_ptr<RenderTexture>> buffers_;
-};
-
-} // aergia namespace
-
-#endif //AERGIA_DISPLAY_RENDERER_H
+#endif //AERGIA_SCREEN_QUAD_H

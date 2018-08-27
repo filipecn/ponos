@@ -120,7 +120,6 @@ BBox RawMesh::elementBBox(size_t i) const {
 
 void RawMesh::buildInterleavedData() {
   interleavedData.clear();
-  std::cerr << positions.size() << " " << normals.size() << " "  << texcoords.size() << std::endl;
   for (size_t i = 0; i < positionDescriptor.count; i++) {
     for (size_t k = 0; k < positionDescriptor.elementSize; k++)
       interleavedData.emplace_back(

@@ -21,6 +21,7 @@
 #include <aergia/io/graphics_display.h>
 #include <aergia/io/image_texture.h>
 #include <aergia/io/render_texture.h>
+#include <aergia/io/screen_quad.h>
 #include <aergia/io/texture.h>
 #include <aergia/io/texture_parameters.h>
 #include <aergia/io/viewport_display.h>

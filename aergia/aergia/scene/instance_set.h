@@ -59,7 +59,7 @@ public:
   uint* instanceU(uint b, uint i);
   /// \param b buffer index
   void bind(uint b);
-  void draw() override;
+  void draw(const CameraInterface *camera, ponos::Transform transform) override;
 
 private:
   Shader shader_;

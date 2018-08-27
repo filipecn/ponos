@@ -26,10 +26,10 @@ int main() {
   app.init();
   app.viewports[0].renderer->addEffect(new aergia::GammaCorrection());
 //  app.viewports[0].renderer->addEffect(new aergia::FXAA());
-  app.viewports[0].renderer->addEffect(new aergia::PostEffect(
-      new aergia::Shader(AERGIA_NO_VAO_VS, nullptr, fs)));
-  std::shared_ptr<aergia::CartesianGrid> grid(
-      app.scene.add<aergia::CartesianGrid>(new aergia::CartesianGrid(5)));
+//  app.viewports[0].renderer->addEffect(new aergia::PostEffect(
+//      new aergia::Shader(AERGIA_NO_VAO_VS, nullptr, fs)));
+//  std::shared_ptr<aergia::CartesianGrid> grid(
+//      app.scene.add<aergia::CartesianGrid>(new aergia::CartesianGrid(5)));
   app.run();
   return 0;
 }

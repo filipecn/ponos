@@ -57,9 +57,11 @@ bool GraphicsDisplay::init() {
     return false;
   glfwSetTime(0);
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+#ifdef __APPLE__
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   glfwWindowHint(GLFW_SAMPLES, 0);
@@ -94,7 +96,7 @@ void GraphicsDisplay::start() {
     if (this->renderCallback) {
       this->renderCallback();
     }
-    for(const auto& c : renderCallbacks)
+    for (const auto &c : renderCallbacks)
       c();
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -165,12 +167,12 @@ void GraphicsDisplay::error_callback(int error, const char *description) {
   fputs(description, stderr);
 }
 
-void GraphicsDisplay::registerRenderFunc(const std::function<void()>& f) {
+void GraphicsDisplay::registerRenderFunc(const std::function<void()> &f) {
   renderCallbacks.push_back(f);
 }
 
 /////////////////////////// CHAR FUNCTIONS ///////////////////////////////////////////////////////
-void GraphicsDisplay::registerCharFunc(const std::function<void(unsigned int)>& f) {
+void GraphicsDisplay::registerCharFunc(const std::function<void(unsigned int)> &f) {
   charCallbacks.push_back(f);
 }
 
@@ -184,12 +186,12 @@ void GraphicsDisplay::char_callback(GLFWwindow *window, unsigned int codepoint) 
     instance_.charCallback(codepoint);
   else
     instance_.charFunc(codepoint);
-  for(const auto& c : instance_.charCallbacks)
+  for (const auto &c : instance_.charCallbacks)
     c(codepoint);
 }
 
 /////////////////////////// DROP FUNCTIONS ///////////////////////////////////////////////////////
-void GraphicsDisplay::registerDropFunc(const std::function<void(int, const char **)>& f) {
+void GraphicsDisplay::registerDropFunc(const std::function<void(int, const char **)> &f) {
   dropCallbacks.push_back(f);
 }
 
@@ -204,11 +206,12 @@ void GraphicsDisplay::drop_callback(GLFWwindow *window, int count, const char **
     instance_.dropCallback(count, filenames);
   else
     instance_.dropFunc(count, filenames);
-  for(const auto& c : instance_.dropCallbacks)
+  for (const auto &c : instance_.dropCallbacks)
     c(count, filenames);
 }
+
 /////////////////////////// KEY FUNCTIONS ///////////////////////////////////////////////////////
-void GraphicsDisplay::registerKeyFunc(const std::function<void(int, int, int, int)>& f) {
+void GraphicsDisplay::registerKeyFunc(const std::function<void(int, int, int, int)> &f) {
   keyCallbacks.push_back(f);
 }
 
@@ -219,7 +222,7 @@ void GraphicsDisplay::key_callback(GLFWwindow *window, int key, int scancode,
     instance_.keyCallback(key, scancode, action, mods);
   else
     instance_.keyFunc(key, scancode, action, mods);
-  for(const auto& c : instance_.keyCallbacks)
+  for (const auto &c : instance_.keyCallbacks)
     c(key, scancode, action, mods);
 }
 
@@ -229,10 +232,11 @@ void GraphicsDisplay::keyFunc(int key, int scancode, int action, int modifiers) 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// BUTTON FUNCTIONS
 /////////////////////////////////////////////////////
-void GraphicsDisplay::registerButtonFunc(const std::function<void(int, int, int)>& f) {
+void GraphicsDisplay::registerButtonFunc(const std::function<void(int, int, int)> &f) {
   buttonCallbacks.push_back(f);
 }
 
@@ -243,7 +247,7 @@ void GraphicsDisplay::button_callback(GLFWwindow *window, int button,
     instance_.buttonCallback(button, action, mods);
   else
     instance_.buttonFunc(button, action, mods);
-  for(const auto& c : instance_.buttonCallbacks)
+  for (const auto &c : instance_.buttonCallbacks)
     c(button, action, mods);
 }
 
@@ -252,10 +256,11 @@ void GraphicsDisplay::buttonFunc(int button, int action, int modifiers) {
   UNUSED_VARIABLE(action);
   UNUSED_VARIABLE(modifiers);
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE MOTION FUNCTIONS
 ///////////////////////////////////////////////
-void GraphicsDisplay::registerMouseFunc(const std::function<void(double, double)>& f) {
+void GraphicsDisplay::registerMouseFunc(const std::function<void(double, double)> &f) {
   mouseCallbacks.push_back(f);
 }
 
@@ -265,7 +270,7 @@ void GraphicsDisplay::pos_callback(GLFWwindow *window, double x, double y) {
     instance_.mouseCallback(x, y);
   else
     instance_.mouseFunc(x, y);
-  for(const auto& c : instance_.mouseCallbacks)
+  for (const auto &c : instance_.mouseCallbacks)
     c(x, y);
 }
 
@@ -273,10 +278,11 @@ void GraphicsDisplay::mouseFunc(double x, double y) {
   UNUSED_VARIABLE(x);
   UNUSED_VARIABLE(y);
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// MOUSE SCROLL FUNCTIONS
 ///////////////////////////////////////////////
-void GraphicsDisplay::registerScrollFunc(const std::function<void(double, double)>& f) {
+void GraphicsDisplay::registerScrollFunc(const std::function<void(double, double)> &f) {
   scrollCallbacks.push_back(f);
 }
 
@@ -286,7 +292,7 @@ void GraphicsDisplay::scroll_callback(GLFWwindow *window, double x, double y) {
     instance_.scrollCallback(x, y);
   else
     instance_.scrollFunc(x, y);
-  for(const auto& c : instance_.scrollCallbacks)
+  for (const auto &c : instance_.scrollCallbacks)
     c(x, y);
 }
 
@@ -294,8 +300,9 @@ void GraphicsDisplay::scrollFunc(double x, double y) {
   UNUSED_VARIABLE(x);
   UNUSED_VARIABLE(y);
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicsDisplay::registerResizeFunc(const std::function<void(int, int)>& f) {
+void GraphicsDisplay::registerResizeFunc(const std::function<void(int, int)> &f) {
   resizeCallbacks.push_back(f);
 }
 
@@ -306,7 +313,7 @@ void GraphicsDisplay::resize_callback(GLFWwindow *window, int w, int h) {
     instance_.getWindowSize(w, h);
     instance_.resizeCallback(w, h);
   }
-  for(const auto& c : instance_.resizeCallbacks)
+  for (const auto &c : instance_.resizeCallbacks)
     c(w, h);
 }
 

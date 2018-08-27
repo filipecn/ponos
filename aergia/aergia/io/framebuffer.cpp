@@ -50,7 +50,7 @@ void Framebuffer::set(uint w, uint h, uint d) {
   glGenRenderbuffers(1, &renderBufferObject);
   glBindRenderbuffer(GL_RENDERBUFFER, renderBufferObject);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h);
-  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+//  glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   // attach the renderbuffer to depth attachment point
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, // 1. fbo target: GL_FRAMEBUFFER

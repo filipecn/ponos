@@ -50,24 +50,35 @@ bool Shader::loadFromFiles(const char *fl...) {
   return true;
 }
 
-bool Shader::begin(const VertexBuffer *b) {
+bool Shader::begin() {
   if (running)
     return true;
   if (!ShaderManager::instance().useShader(programId))
     return false;
-  if (b) {
-    for (auto va : vertexAttributes) {
-      GLint attribute = glGetAttribLocation(programId, va);
-      glEnableVertexAttribArray(attribute);
-      b->registerAttribute(std::string(va), attribute);
-    }
-  }
   running = true;
   return true;
 }
 
+void Shader::registerVertexAttributes(const VertexBuffer *b) {
+  if (!ShaderManager::instance().useShader(programId))
+    return;
+  for (auto va : vertexAttributes) {
+    auto it = attrLocations.find(va);
+    GLint attribute = locateAttribute(va);// glGetAttribLocation(programId, va);
+    glEnableVertexAttribArray(attribute);
+    CHECK_GL_ERRORS;
+    b->registerAttribute(std::string(va), attribute);
+    CHECK_GL_ERRORS;
+  }
+  end();
+}
+
 int Shader::locateAttribute(const std::string &name) const {
-  return glGetAttribLocation(programId, name.c_str());
+  auto it = attrLocations.find(name);
+  if (it == attrLocations.end())
+    return -1;
+  return it->second;
+//  return glGetAttribLocation(programId, name.c_str());
 }
 
 void Shader::end() {
@@ -75,8 +86,13 @@ void Shader::end() {
   running = false;
 }
 
-void Shader::addVertexAttribute(const char *name) {
-  vertexAttributes.insert(name);
+void Shader::addVertexAttribute(const char *name, GLint location) {
+//  vertexAttributes.insert(name);
+  attrLocations[name] = location;
+}
+
+void Shader::addUniform(const std::string &name, GLint location) {
+  uniformLocations[name] = location;
 }
 
 void Shader::setUniform(const char *name, const ponos::mat4 &m) {
@@ -137,9 +153,13 @@ void Shader::setUniform(const char *name, float f) {
     end();
 }
 GLint Shader::getUniLoc(const GLchar *name) {
-  if (!ShaderManager::instance().useShader(programId))
+//  if (!ShaderManager::instance().useShader(programId))
+//    return -1;
+  auto it = uniformLocations.find(name);
+  if (it == uniformLocations.end())
     return -1;
-  return glGetUniformLocation(programId, name);
+  return it->second;
+//  return glGetUniformLocation(programId, name);
 }
 
 } // aergia namespace

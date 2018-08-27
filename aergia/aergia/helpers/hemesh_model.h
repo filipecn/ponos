@@ -44,7 +44,7 @@ public:
     distanceFromVertex = dv;
   }
 
-  void draw() override {
+  void draw(const CameraInterface* camera, ponos::Transform transform) override {
     const std::vector<ponos::HEMesh2DF::Vertex> &vertices = mesh->getVertices();
     const std::vector<ponos::HEMesh2DF::Edge> &edges = mesh->getEdges();
     const std::vector<ponos::HEMesh2DF::Face> &faces = mesh->getFaces();

@@ -35,10 +35,10 @@ TextRenderer::TextRenderer(float scale, Color c, size_t id)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   static int sid = aergia::ShaderManager::instance().loadFromTexts(
       "#version 440 core\n"
-          "in vec2 position;"
-          "in vec2 texcoord;"
+          "layout (location = 0) in vec2 position;"
+          "layout (location = 1) in vec2 texcoord;"
           "out vec2 TexCoords;"
-          "uniform mat4 projection;"
+          "layout (location = 0) uniform mat4 projection;"
           "void main() {"
           "  TexCoords = texcoord;"
           "  gl_Position = projection * vec4(position, 0.0, 1.0);"
@@ -47,15 +47,15 @@ TextRenderer::TextRenderer(float scale, Color c, size_t id)
       "#version 440 core\n"
           "in vec2 TexCoords;"
           "out vec4 color;"
-          "uniform sampler2D text;"
+          "layout (location  1) uniform sampler2D text;"
           "uniform vec4 textColor;"
           "void main() {"
           "  vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);"
           "  color = textColor * sampled;"
           "}");
   quad_.shader.reset(new aergia::Shader(sid));
-  quad_.shader->addVertexAttribute("position");
-  quad_.shader->addVertexAttribute("texcoord");
+  quad_.shader->addVertexAttribute("position", 0);
+  quad_.shader->addVertexAttribute("texcoord", 1);
 }
 
 void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,

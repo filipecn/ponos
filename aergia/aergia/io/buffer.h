@@ -69,32 +69,35 @@ struct BufferDescriptor {
       : elementSize(_elementSize), elementCount(_elementCount),
         elementType(_elementType), type(_type), use(_use), dataType(_dataType) {
   }
-  BufferDescriptor(const BufferDescriptor& other) {
+  BufferDescriptor(const BufferDescriptor &other) {
     elementSize = other.elementSize;
     elementCount = other.elementCount;
     elementType = other.elementType;
     type = other.type;
     use = other.use;
     dataType = other.dataType;
-//    attributes = other.attributes;
+    for (auto a : other.attributes)
+      attributes[a.first] = a.second;
   }
-  BufferDescriptor(const BufferDescriptor&& other) {
+  BufferDescriptor(const BufferDescriptor &&other) {
     elementSize = other.elementSize;
     elementCount = other.elementCount;
     elementType = other.elementType;
     type = other.type;
     use = other.use;
     dataType = other.dataType;
-//    attributes = other.attributes;
+    for (auto a : other.attributes)
+      attributes[a.first] = a.second;
   }
-  BufferDescriptor& operator=(const BufferDescriptor& other){
+  BufferDescriptor &operator=(const BufferDescriptor &other) {
     elementSize = other.elementSize;
     elementCount = other.elementCount;
     elementType = other.elementType;
     type = other.type;
     use = other.use;
     dataType = other.dataType;
-//    attributes = other.attributes;
+    for (auto a : other.attributes)
+      attributes[a.first] = a.second;
     return *this;
   }
   /** \brief  add
@@ -112,7 +115,11 @@ struct BufferDescriptor {
     attributes[_name] = att;
   }
 };
-
+///
+/// \param elementSize
+/// \param elementCount
+/// \param elementType
+/// \return
 inline BufferDescriptor
 create_vertex_buffer_descriptor(size_t elementSize, size_t elementCount,
                                 GLuint elementType = GL_TRIANGLES) {
@@ -125,19 +132,19 @@ create_index_buffer_descriptor(size_t elementSize, size_t elementCount,
                                ponos::GeometricPrimitiveType elementType) {
   GLuint type = GL_TRIANGLES;
   switch (elementType) {
-  case ponos::GeometricPrimitiveType::TRIANGLES:type = GL_TRIANGLES;
-    break;
-  case ponos::GeometricPrimitiveType::LINES:type = GL_LINES;
-    break;
-  case ponos::GeometricPrimitiveType::QUADS:type = GL_QUADS;
-    break;
-  case ponos::GeometricPrimitiveType::LINE_LOOP:type = GL_LINE_LOOP;
-    break;
-  case ponos::GeometricPrimitiveType::TRIANGLE_FAN:type = GL_TRIANGLE_FAN;
-    break;
-  case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:type = GL_TRIANGLE_STRIP;
-    break;
-  default:break;
+    case ponos::GeometricPrimitiveType::TRIANGLES:type = GL_TRIANGLES;
+      break;
+    case ponos::GeometricPrimitiveType::LINES:type = GL_LINES;
+      break;
+    case ponos::GeometricPrimitiveType::QUADS:type = GL_QUADS;
+      break;
+    case ponos::GeometricPrimitiveType::LINE_LOOP:type = GL_LINE_LOOP;
+      break;
+    case ponos::GeometricPrimitiveType::TRIANGLE_FAN:type = GL_TRIANGLE_FAN;
+      break;
+    case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:type = GL_TRIANGLE_STRIP;
+      break;
+    default:break;
   }
   return BufferDescriptor(elementSize, elementCount, type,
                           GL_ELEMENT_ARRAY_BUFFER);
@@ -152,19 +159,19 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
                                                 BufferDescriptor &i) {
   GLuint type = GL_TRIANGLES;
   switch (m.primitiveType) {
-  case ponos::GeometricPrimitiveType::TRIANGLES:type = GL_TRIANGLES;
-    break;
-  case ponos::GeometricPrimitiveType::LINES:type = GL_LINES;
-    break;
-  case ponos::GeometricPrimitiveType::QUADS:type = GL_QUADS;
-    break;
-  case ponos::GeometricPrimitiveType::LINE_LOOP:type = GL_LINE_LOOP;
-    break;
-  case ponos::GeometricPrimitiveType::TRIANGLE_FAN:type = GL_TRIANGLE_FAN;
-    break;
-  case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:type = GL_TRIANGLE_STRIP;
-    break;
-  default:break;
+    case ponos::GeometricPrimitiveType::TRIANGLES:type = GL_TRIANGLES;
+      break;
+    case ponos::GeometricPrimitiveType::LINES:type = GL_LINES;
+      break;
+    case ponos::GeometricPrimitiveType::QUADS:type = GL_QUADS;
+      break;
+    case ponos::GeometricPrimitiveType::LINE_LOOP:type = GL_LINE_LOOP;
+      break;
+    case ponos::GeometricPrimitiveType::TRIANGLE_FAN:type = GL_TRIANGLE_FAN;
+      break;
+    case ponos::GeometricPrimitiveType::TRIANGLE_STRIP:type = GL_TRIANGLE_STRIP;
+      break;
+    default:break;
   }
   i.elementType = type;
   i.elementCount = m.meshDescriptor.count;
@@ -177,10 +184,23 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
   v.type = GL_ARRAY_BUFFER;
   v.use = GL_STATIC_DRAW;
   v.dataType = GL_FLOAT;
+  v.addAttribute(std::string("position"), m.positionDescriptor.elementSize, 0,
+                 GL_FLOAT);
+  size_t offset = m.positionDescriptor.elementSize;
+  if (m.normalDescriptor.count) {
+    v.addAttribute(std::string("normal"), m.normalDescriptor.elementSize,
+                   offset * sizeof(float), GL_FLOAT);
+    offset += m.normalDescriptor.elementSize;
+  }
+  if (m.texcoordDescriptor.count) {
+    v.addAttribute(std::string("texcoord"), m.texcoordDescriptor.elementSize,
+                   offset * sizeof(float), GL_FLOAT);
+    offset += m.texcoordDescriptor.elementSize;
+  }
 }
 class Shader;
 class BufferInterface {
-public:
+ public:
   explicit BufferInterface(GLuint id = 0) : bufferId(id) {}
   explicit BufferInterface(BufferDescriptor b, GLuint id = 0) : bufferDescriptor(std::move(b)), bufferId(id) {}
   virtual ~BufferInterface() { glDeleteBuffers(1, &bufferId); }
@@ -204,12 +224,13 @@ public:
   /// \param d **[optional]** attribute divisor (default = 0)
   void locateAttributes(const Shader &s, uint d = 0) const;
   BufferDescriptor bufferDescriptor; //!< buffer description
-protected:
+ protected:
   GLuint bufferId;
 };
 
-template<typename T> class Buffer : public BufferInterface {
-public:
+template<typename T>
+class Buffer : public BufferInterface {
+ public:
   typedef T BufferDataType;
   Buffer() {}
   /** \brief Constructor
@@ -226,6 +247,7 @@ public:
   /** \brief set
    * \param d **[in]** data pointer
    * \param bd **[in]** buffer description
+   * The buffer remains bound
    */
   void set(const T *d, const BufferDescriptor &bd) {
     data = d;
@@ -238,6 +260,7 @@ public:
                  this->bufferDescriptor.elementCount * this->bufferDescriptor.elementSize *
                      sizeof(T),
                  data, this->bufferDescriptor.use);
+    CHECK_GL_ERRORS;
   }
   /** \brief set
    * \param d **[in]** data pointer
@@ -257,7 +280,7 @@ public:
     CHECK_GL_ERRORS;
   }
 
-private:
+ private:
   const T *data;
 };
 

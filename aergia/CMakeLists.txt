@@ -24,6 +24,7 @@ set(HEADERS
         aergia/io/image_texture.h
         aergia/io/font_texture.h
         aergia/io/render_texture.h
+        aergia/io/screen_quad.h
         aergia/io/storage_buffer.h
         aergia/io/texture.h
         aergia/io/texture_parameters.h
@@ -75,6 +76,7 @@ set(SOURCES
         aergia/io/render_texture.cpp
         aergia/io/font_texture.cpp
         aergia/io/storage_buffer.cpp
+        aergia/io/screen_quad.cpp
         aergia/io/texture.cpp
         aergia/io/utils.cpp
         aergia/io/viewport_display.cpp

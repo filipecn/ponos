@@ -44,15 +44,15 @@ int ShaderManager::loadFromFiles(const char *fl, ...) {
       continue;
     GLuint shaderType = 0;
     switch (filename[filename.size() - 2]) {
-    case 'v':shaderType = 0;
-      break;
-    case 'g':shaderType = 1;
-      break;
-    case 'f':shaderType = 2;
-      break;
-    case 'c':shaderType = 3;
-      break;
-    default:continue;
+      case 'v':shaderType = 0;
+        break;
+      case 'g':shaderType = 1;
+        break;
+      case 'f':shaderType = 2;
+        break;
+      case 'c':shaderType = 3;
+        break;
+      default:continue;
     }
     objects.emplace_back(compile(source, types[shaderType]));
     if (source)
@@ -82,8 +82,8 @@ int ShaderManager::loadFromTexts(const char *vs, const char *gs,
 }
 
 int ShaderManager::loadFromText(const char *s, GLuint shaderType) {
-  std::vector<GLuint> object(1,0);
-  if(!s)
+  std::vector<GLuint> object(1, 0);
+  if (!s)
     return -1;
   object[0] = compile(s, shaderType);
   GLuint program = createProgram(object);
@@ -115,15 +115,19 @@ GLuint ShaderManager::createProgram(const GLchar *vertexShaderSource,
   glCompileShader(VertexShaderObject);
   CHECK_GL_ERRORS;
   glGetShaderiv(VertexShaderObject, GL_COMPILE_STATUS, &vertCompiled);
-  printShaderInfoLog(VertexShaderObject);
+  if (!vertCompiled)
+    printShaderInfoLog(VertexShaderObject);
   // Compile the brick vertex shader, and print out
   // the compiler log file.
   glCompileShader(FragmentShaderObject);
   CHECK_GL_ERRORS;
   glGetShaderiv(FragmentShaderObject, GL_COMPILE_STATUS, &fragCompiled);
-  printShaderInfoLog(FragmentShaderObject);
-  if (!vertCompiled || !fragCompiled)
+  if (!fragCompiled)
+    printShaderInfoLog(FragmentShaderObject);
+  if (!vertCompiled || !fragCompiled) {
+    std::cerr << "couldn't compile shader!\n";
     return 0;
+  }
   // Create a program object and attach the two compiled shaders
   ProgramObject = glCreateProgram();
   glAttachShader(ProgramObject, VertexShaderObject);
@@ -147,7 +151,10 @@ GLuint ShaderManager::compile(const char *shaderSource, GLuint shaderType) {
   glCompileShader(shaderObject);
   CHECK_GL_ERRORS;
   glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &compiled);
-  printShaderInfoLog(shaderObject);
+  if (!compiled) {
+    printShaderInfoLog(shaderObject);
+    std::cerr << "failed to compile shader\n";
+  }
 
   return shaderObject;
 }

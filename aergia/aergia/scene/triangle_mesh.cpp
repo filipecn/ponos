@@ -8,6 +8,6 @@ TriangleMesh::TriangleMesh(const std::string &filename) : SceneMeshObject(filena
 
 TriangleMesh::TriangleMesh(ponos::RawMesh *m) : SceneMeshObject(m) {}
 
-void TriangleMesh::draw() {}
+void TriangleMesh::draw(const CameraInterface *camera, ponos::Transform transform) {}
 
 } // aergia namespace

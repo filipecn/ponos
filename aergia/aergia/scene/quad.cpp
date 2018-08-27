@@ -28,23 +28,53 @@ namespace aergia {
 
 Quad::Quad() {
   this->rawMesh = new ponos::RawMesh();
-  this->rawMesh->meshDescriptor.elementSize = 4;
-  this->rawMesh->meshDescriptor.count = 1;
+  this->rawMesh->meshDescriptor.elementSize = 3;
+  this->rawMesh->meshDescriptor.count = 2;
   this->rawMesh->positionDescriptor.elementSize = 2;
   this->rawMesh->positionDescriptor.count = 4;
   this->rawMesh->texcoordDescriptor.elementSize = 2;
   this->rawMesh->texcoordDescriptor.count = 4;
   this->rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
   this->rawMesh->texcoords = std::vector<float>({0, 1, 1, 1, 1, 0, 0, 0});
-  this->rawMesh->indices.resize(4);
-  for (int i = 0; i < 4; i++)
-    this->rawMesh->indices[i].positionIndex = rawMesh->indices[i].texcoordIndex =
-        i;
+  this->rawMesh->indices.resize(6);
+  this->rawMesh->indices[0].positionIndex = this->rawMesh->indices[0].texcoordIndex = 0;
+  this->rawMesh->indices[1].positionIndex = this->rawMesh->indices[1].texcoordIndex = 1;
+  this->rawMesh->indices[2].positionIndex = this->rawMesh->indices[2].texcoordIndex = 2;
+  this->rawMesh->indices[3].positionIndex = this->rawMesh->indices[3].texcoordIndex = 0;
+  this->rawMesh->indices[4].positionIndex = this->rawMesh->indices[4].texcoordIndex = 2;
+  this->rawMesh->indices[5].positionIndex = this->rawMesh->indices[5].texcoordIndex = 3;
   this->rawMesh->splitIndexData();
   this->rawMesh->buildInterleavedData();
+  const char *fs = "#version 440 core\n"
+      "in vec2 texCoord;"
+      "out vec4 outColor;"
+      "layout (location = 1) uniform sampler2D tex;"
+      "void main(){"
+      " outColor = vec4(1,0,0,1);}";
+  const char *vs = "#version 440 core\n"
+      "layout (location = 0) in vec2 position;"
+      "layout (location = 1) in vec2 texcoord;"
+      "layout (location = 0) uniform mat4 mvp;"
+      "out vec2 texCoord;"
+      "void main() {"
+      " texCoord = texcoord;"
+      "gl_Position = mvp * vec4(position, 0, 1);}";
+  shader.reset(new Shader(vs, nullptr, fs));
+  shader->addVertexAttribute("position", 0);
+  shader->addVertexAttribute("texcoord", 1);
+  shader->addUniform("mvp", 0);
   glGenVertexArrays(1, &VAO);
-  setupVertexBuffer(GL_TRIANGLES, GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
-  setupIndexBuffer();
+  glBindVertexArray(VAO);
+  BufferDescriptor vd, id;
+  create_buffer_description_from_mesh(*this->rawMesh, vd, id);
+  vb.reset(new VertexBuffer(&this->rawMesh->interleavedData[0], vd));
+  ib.reset(new IndexBuffer(&this->rawMesh->positionsIndices[0], id));
+  vb->locateAttributes(*shader.get());
+//  shader->registerVertexAttributes(vb.get());
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  CHECK_GL_ERRORS;
+//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void Quad::set(const ponos::Point2 &pm, const ponos::Point2 &pM) {
@@ -61,13 +91,14 @@ void Quad::set(const ponos::Point2 &pm, const ponos::Point2 &pM) {
   glBindVertexArray(0);
 }
 
-void Quad::draw() {
+void Quad::draw(const CameraInterface *camera, ponos::Transform transform) {
   glBindVertexArray(VAO);
-  vb->bind();
-  ib->bind();
-  shader->begin(vb.get());
-  glDrawElements(GL_QUADS, ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT,
-                 0);
+  shader->begin();
+  shader->setUniform("mvp", ponos::transpose((camera->getProjectionTransform() *
+      camera->getViewTransform() * camera->getModelTransform()).matrix()));
+  glDrawElements(GL_TRIANGLES, ib->bufferDescriptor.elementSize *
+      ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT, 0);
+  CHECK_GL_ERRORS;
   shader->end();
   glBindVertexArray(0);
 }

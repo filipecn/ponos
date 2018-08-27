@@ -26,7 +26,22 @@
 
 namespace aergia {
 
-CartesianGrid::CartesianGrid(int d) {
+CartesianGrid::CartesianGrid() {
+  const char *fs = "#version 440 core\n"
+      "out vec4 outColor;"
+      "void main(){"
+      " outColor = vec4(1,0,0,1);}";
+  const char *vs = "#version 440 core\n"
+      "layout (location = 0) in vec3 position;"
+      "layout (location = 0) uniform mat4 mvp;"
+      "void main() {"
+      "gl_Position = mvp * vec4(position, 1);}";
+  gridShader_.reset(new Shader(vs, nullptr, fs));
+  gridShader_->addVertexAttribute("position", 0);
+  gridShader_->addUniform("mvp", 0);
+}
+
+CartesianGrid::CartesianGrid(int d) : CartesianGrid() {
   xAxisColor = COLOR_RED;
   yAxisColor = COLOR_BLUE;
   zAxisColor = COLOR_GREEN;
@@ -35,6 +50,7 @@ CartesianGrid::CartesianGrid(int d) {
     plane.low = -d;
     plane.high = d;
   }
+  updateBuffers();
 }
 
 CartesianGrid::CartesianGrid(int dx, int dy, int dz) {
@@ -51,37 +67,16 @@ void CartesianGrid::setDimension(size_t d, int a, int b) {
   planes[d].high = b;
 }
 
-void CartesianGrid::draw() {
-  glColor(gridColor);
-  glBegin(GL_LINES);
-  // XY
-  for (int x = planes[0].low; x <= planes[0].high; x++) {
-    glVertex(transform(ponos::Point3(1.f * x, 1.f * planes[1].low, 0.f)));
-    glVertex(transform(ponos::Point3(1.f * x, 1.f * planes[1].high, 0.f)));
-  }
-  for (int y = planes[1].low; y <= planes[1].high; y++) {
-    glVertex(transform(ponos::Point3(1.f * planes[0].low, 1.f * y, 0.f)));
-    glVertex(transform(ponos::Point3(1.f * planes[0].high, 1.f * y, 0.f)));
-  }
-  // YZ
-  for (int y = planes[1].low; y <= planes[1].high; y++) {
-    glVertex(transform(ponos::Point3(0.f, 1.f * y, 1.f * planes[2].low)));
-    glVertex(transform(ponos::Point3(0.f, 1.f * y, 1.f * planes[2].high)));
-  }
-  for (int z = planes[2].low; z <= planes[2].high; z++) {
-    glVertex(transform(ponos::Point3(0.f, 1.f * planes[1].low, 1.f * z)));
-    glVertex(transform(ponos::Point3(0.f, 1.f * planes[1].high, 1.f * z)));
-  }
-  // XZ
-  for (int x = planes[0].low; x <= planes[0].high; x++) {
-    glVertex(transform(ponos::Point3(1.f * x, 0.f, 1.f * planes[2].low)));
-    glVertex(transform(ponos::Point3(1.f * x, 0.f, 1.f * planes[2].high)));
-  }
-  for (int z = planes[2].low; z <= planes[2].high; z++) {
-    glVertex(transform(ponos::Point3(1.f * planes[1].low, 0.f, 1.f * z)));
-    glVertex(transform(ponos::Point3(1.f * planes[1].high, 0.f, 1.f * z)));
-  }
-  glEnd();
+void CartesianGrid::draw(const CameraInterface *camera, ponos::Transform t) {
+  glBindVertexArray(VAO_grid_);
+  gridShader_->begin();
+  gridShader_->setUniform("mvp", ponos::transpose((camera->getProjectionTransform() * camera->getViewTransform()
+      * camera->getModelTransform()).matrix()));
+  glDrawArrays(GL_LINES, 0, mesh.positions.size());
+  CHECK_GL_ERRORS;
+  gridShader_->end();
+  glBindVertexArray(0);
+  return;
   // axis
   glLineWidth(4.f);
   glBegin(GL_LINES);
@@ -96,6 +91,57 @@ void CartesianGrid::draw() {
   glVertex(transform(ponos::Point3(0, 0, 0.5)));
   glEnd();
   glLineWidth(1.f);
+}
+
+void CartesianGrid::updateBuffers() {
+  mesh.meshDescriptor.elementSize = 2;
+  mesh.meshDescriptor.count = 0;
+  for (int x = planes[0].low; x <= planes[0].high; x++) {
+    mesh.addPosition({1.f * x, 1.f * planes[1].low, 0.f});
+    mesh.addPosition({1.f * x, 1.f * planes[1].high, 0.f});
+    mesh.meshDescriptor.count++;
+  }
+  for (int y = planes[1].low; y <= planes[1].high; y++) {
+    mesh.addPosition({1.f * planes[0].low, 1.f * y, 0.f});
+    mesh.addPosition({1.f * planes[0].high, 1.f * y, 0.f});
+    mesh.meshDescriptor.count++;
+  }
+  // YZ
+  for (int y = planes[1].low; y <= planes[1].high; y++) {
+    mesh.addPosition({0.f, 1.f * y, 1.f * planes[2].low});
+    mesh.addPosition({0.f, 1.f * y, 1.f * planes[2].high});
+    mesh.meshDescriptor.count++;
+  }
+  for (int z = planes[2].low; z <= planes[2].high; z++) {
+    mesh.addPosition({0.f, 1.f * planes[1].low, 1.f * z});
+    mesh.addPosition({0.f, 1.f * planes[1].high, 1.f * z});
+    mesh.meshDescriptor.count++;
+  }
+  // XZ
+  for (int x = planes[0].low; x <= planes[0].high; x++) {
+    mesh.addPosition({1.f * x, 0.f, 1.f * planes[2].low});
+    mesh.addPosition({1.f * x, 0.f, 1.f * planes[2].high});
+    mesh.meshDescriptor.count++;
+  }
+  for (int z = planes[2].low; z <= planes[2].high; z++) {
+    mesh.addPosition({1.f * planes[1].low, 0.f, 1.f * z});
+    mesh.addPosition({1.f * planes[1].high, 0.f, 1.f * z});
+    mesh.meshDescriptor.count++;
+  }
+  mesh.positionDescriptor.elementSize = 3;
+  mesh.positionDescriptor.count = mesh.meshDescriptor.count * 2;
+  BufferDescriptor vd =
+      create_vertex_buffer_descriptor(3, mesh.positionDescriptor.count, GL_LINES);
+  vd.addAttribute(std::string("position"), 3, 0, GL_FLOAT);
+  if (VAO_grid_)
+    glDeleteBuffers(1, &VAO_grid_);
+  glGenVertexArrays(1, &VAO_grid_);
+  glBindVertexArray(VAO_grid_);
+  vb.reset(new VertexBuffer(&mesh.positions[0], vd));
+  vb->locateAttributes(*gridShader_.get());
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  CHECK_GL_ERRORS;
 }
 
 } // aergia namespace

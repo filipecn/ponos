@@ -11,6 +11,7 @@
 //#define GLFW_INCLUDE_GLU
 //#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
 #if defined(NANOGUI_GLAD)
 #if defined(NANOGUI_SHARED) && !defined(GLAD_GLAPI_EXPORT)
 #define GLAD_GLAPI_EXPORT
@@ -60,67 +61,80 @@ namespace aergia {
 #define CHECK_FRAMEBUFFER
 #endif
 
-inline void glfwError(int id, const char *description) {
-  UNUSED_VARIABLE(id);
-  std::cerr << description << std::endl;
-}
+    inline void glfwError(int id, const char *description) {
+        UNUSED_VARIABLE(id);
+        std::cerr << description << std::endl;
+    }
 
-bool initGLEW();
+    bool initGLEW();
+
 /* info
  * @shader **[in]** shader id
  * Print out the information log for a shader object
  */
-void printShaderInfoLog(GLuint shader);
+    void printShaderInfoLog(GLuint shader);
+
 /* info
  * @program **[in]** program id
  * Print out the information log for a program object
  */
-void printProgramInfoLog(GLuint program);
+    void printProgramInfoLog(GLuint program);
+
 /* error check
  * @file **[in]** caller file
  * @line **[in]** caller line
  * @return **true** if any OpenGL error occured
  */
-bool printOglError(const char *file, int line);
+    bool printOglError(const char *file, int line);
+///
+/// \param error
+/// \return string containing error description
+    std::string glErrorToString(GLenum error, bool description = true);
+
 /* error check
  * Check framebuffer is COMPLETE
  * @return **false** if NO errors occured
  */
-bool checkFramebuffer();
+    bool checkFramebuffer();
+
 /* query
  * @major **[out]** receives major version
  * @minor **[out]** receives minor version
  * Retreives opengl version. Any error is sent to **stderr**.
  */
-void getGlVersion(int *major, int *minor);
+    void getGlVersion(int *major, int *minor);
+
 /* glVertex
  * Same as glVertex3f
  */
-void glVertex(ponos::Point3 v);
-/* glVertex
- * Same as glVertex2f
- */
-void glVertex(ponos::Point2 v);
-/* glVertex
- * Same as glVertex2f
- */
-void glVertex(ponos::vec2 v);
-/* glVertex
- * Same as glVertex2f
- */
-void glVertex(ponos::Point<float, 2> v);
+    void glVertex(ponos::Point3 v);
 
-void glColor(Color c);
+/* glVertex
+ * Same as glVertex2f
+ */
+    void glVertex(ponos::Point2 v);
+
+/* glVertex
+ * Same as glVertex2f
+ */
+    void glVertex(ponos::vec2 v);
+
+/* glVertex
+ * Same as glVertex2f
+ */
+    void glVertex(ponos::Point<float, 2> v);
+
+    void glColor(Color c);
 
 /// multiplies **t** to current OpenGL matrix
 /// \param transform
-void glApplyTransform(const ponos::Transform &transform);
+    void glApplyTransform(const ponos::Transform &transform);
 
-ponos::Transform glGetProjectionTransform();
+    ponos::Transform glGetProjectionTransform();
 
-ponos::Transform glGetModelviewTransform();
+    ponos::Transform glGetModelviewTransform();
 
-ponos::Transform glGetMVPTransform();
+    ponos::Transform glGetMVPTransform();
 
 } // aergia namespace
 

@@ -18,12 +18,12 @@ test_enum enumval = Item2;
 Color colval(0.5f, 0.5f, 0.7f, 1.f);
 
 int main(int /* argc */, char ** /* argv */) {
-  aergia::SceneApp<> app(800, 800);
-  app.init();
+  aergia::SceneApp<> app(800, 800, "Nanogui Example", false);
+  app.addViewport2D(0, 0, 800, 800);
   std::shared_ptr<aergia::NanoGUIScreen> screen(new aergia::NanoGUIScreen());
   // Create nanogui gui
   bool enabled = true;
-  FormHelper *gui = new FormHelper(dynamic_cast<nanogui::Screen*>(screen.get()));
+  FormHelper *gui = new FormHelper(dynamic_cast<nanogui::Screen *>(screen.get()));
   ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
   gui->addGroup("Basic types");
   gui->addVariable("bool", bvar)->setTooltip("Test tooltip.");
@@ -54,6 +54,7 @@ int main(int /* argc */, char ** /* argv */) {
   screen->setVisible(true);
   screen->performLayout();
   nanoguiWindow->center();
+  app.scene.add(new aergia::CartesianGrid(5));
   app.run();
   return 0;
 }

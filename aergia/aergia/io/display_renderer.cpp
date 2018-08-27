@@ -56,15 +56,10 @@ void DisplayRenderer::process(const std::function<void()> &f) {
 
 void DisplayRenderer::render() {
   resize(attributes_.width, attributes_.height);
-  if(!screenShader_)
-    screenShader_.reset(new Shader(ShaderManager::instance().loadFromTexts(
-        AERGIA_NO_VAO_VS, nullptr, AERGIA_NO_VAO_FS)));
   // render to display
   buffers_[curBuffer_]->bind(GL_TEXTURE0);
-  screenShader_->begin();
-  screenShader_->setUniform("tex", 0);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-  screenShader_->end();
+  screen.shader->setUniform("tex", 0);
+  screen.render();
 }
 
 void DisplayRenderer::resize(size_t w, size_t h) {
