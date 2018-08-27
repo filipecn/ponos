@@ -35,6 +35,7 @@ void BufferInterface::locateAttributes(const Shader &s, uint d) const {
     if(loc < 0)
       continue;
     glEnableVertexAttribArray(static_cast<GLuint>(loc));
+    CHECK_GL_ERRORS;
     glVertexAttribPointer(static_cast<GLuint>(loc), attribute.second.size,
                           attribute.second.type, GL_FALSE,
                           bufferDescriptor.elementSize * sizeof(float),

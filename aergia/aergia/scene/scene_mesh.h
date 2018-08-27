@@ -37,11 +37,13 @@ public:
   explicit SceneMesh(ponos::RawMesh& rm);
   /// Binds buffers
   void bind();
+  void unbind();
   /// \return vertex buffer pointer
   const VertexBuffer* vertexBuffer() const;
   /// \return index buffer pointer
   const IndexBuffer* indexBuffer() const;
 private:
+  GLuint VAO;
   std::vector<float> vertexData_;
   std::vector<uint> indexData_;
   ponos::RawMesh& mesh_;

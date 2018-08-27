@@ -63,32 +63,17 @@ aergia::SceneMesh::SceneMesh(ponos::RawMesh &rm) : mesh_(rm) {
   }
   aergia::BufferDescriptor ver, ind;
   aergia::create_buffer_description_from_mesh(mesh_, ver, ind);
-  // TODO
-  ver.elementSize = ((rm.positionDescriptor.count) ? rm.positionDescriptor.elementSize : 0) +
-      ((rm.normalDescriptor.count) ? rm.normalDescriptor.elementSize : 0) +
-      ((rm.texcoordDescriptor.count) ? rm.texcoordDescriptor.elementSize : 0);
-  ver.elementCount = vertexData_.size() / ver.elementSize;
-  ver.addAttribute(std::string("position"),
-                   mesh_.positionDescriptor.elementSize, 0,
-                   GL_FLOAT);
-  size_t offset = mesh_.positionDescriptor.elementSize;
-  if (mesh_.normalDescriptor.count) {
-    ver.addAttribute(std::string("normal"),
-                     mesh_.normalDescriptor.elementSize,
-                     offset * sizeof(float), GL_FLOAT);
-    offset += mesh_.normalDescriptor.elementSize;
-  }
-  if (mesh_.texcoordDescriptor.count) {
-    ver.addAttribute(std::string("texcoord"),
-                     mesh_.texcoordDescriptor.elementSize,
-                     offset * sizeof(float), GL_FLOAT);
-    offset += mesh_.texcoordDescriptor.elementSize;
-  }
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
   vertexBuffer_.set(&vertexData_[0], ver);
   indexBuffer_.set(&indexData_[0], ind);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  CHECK_GL_ERRORS;
 }
 
 void aergia::SceneMesh::bind() {
+  glBindVertexArray(VAO);
   vertexBuffer_.bind();
   indexBuffer_.bind();
 }
@@ -99,4 +84,9 @@ const aergia::VertexBuffer *aergia::SceneMesh::vertexBuffer() const {
 
 const aergia::IndexBuffer *aergia::SceneMesh::indexBuffer() const {
   return &indexBuffer_;
+}
+
+void aergia::SceneMesh::unbind() {
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 }

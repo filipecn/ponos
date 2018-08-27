@@ -43,7 +43,7 @@ public:
   /// \param r **[opitional]** particle's radius (default = 0.03)
   explicit ParticleSystemModel(ParticleSystem &ps, float r = 0.03f);
   ~ParticleSystemModel() override;
-  void draw() override;
+  void draw(const aergia::CameraInterface* camera, ponos::Transform t) override;
   bool intersect(const ponos::Ray3 &r, float *t) override;
   /// Defines a color palette for a property
   /// \tparam T property type

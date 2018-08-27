@@ -32,16 +32,16 @@ ParticleSystemModel::ParticleSystemModel(ParticleSystem &ps, float r)
   // initialize instances set
   const char *vs = "#version 440 core\n"
       // regular vertex attributes
-      "in vec3 position;"
-      "in vec3 normal;"
-      "in vec2 texcoord;"
+      "layout (location = 0) in vec3 position;"
+      "layout (location = 1) in vec3 normal;"
+      "layout (location = 2) in vec2 texcoord;"
       // per instance attributes
-      "in vec3 pos;"  // instance position
-      "in float rad;" // instance radius
-      "in vec4 col;"  // instance color
+      "layout (location = 3) in vec3 pos;"  // instance position
+      "layout (location = 4) in float rad;" // instance radius
+      "layout (location = 5) in vec4 col;"  // instance color
       // constants accross draw
-      "uniform mat4 view_matrix;"
-      "uniform mat4 projection_matrix;"
+      "layout (location = 6) uniform mat4 view_matrix;"
+      "layout (location = 7) uniform mat4 projection_matrix;"
       // output to fragment shader
       "out VERTEX {"
       "vec4 color;"
@@ -71,12 +71,17 @@ ParticleSystemModel::ParticleSystemModel(ParticleSystem &ps, float r)
   particleMesh_.reset(ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, false, false));
   // create a vertex buffer for base mesh
   particleSceneMesh_.reset(new aergia::SceneMesh(*particleMesh_.get()));
+  aergia::Shader shader(vs, nullptr, fs);
+  shader.addVertexAttribute("position", 0);
+  shader.addVertexAttribute("normal", 1);
+  shader.addVertexAttribute("texcoord", 2);
+  shader.addVertexAttribute("pos", 3);
+  shader.addVertexAttribute("rad", 4);
+  shader.addVertexAttribute("col", 5);
+  shader.addUniform("view_matrix", 6);
+  shader.addUniform("projection_matrix", 7);
   instances_.reset(
-      new aergia::InstanceSet(
-          *particleSceneMesh_.get(),
-          aergia::Shader(aergia::ShaderManager::instance().loadFromTexts(
-              vs, nullptr, fs)),
-          ps_.size()));
+      new aergia::InstanceSet(*particleSceneMesh_.get(), shader, ps_.size()));
   // create a buffer for particles positions + sizes
   aergia::BufferDescriptor posSiz;
   posSiz.elementSize = 4;  // x y z s
@@ -99,8 +104,8 @@ ParticleSystemModel::ParticleSystemModel(ParticleSystem &ps, float r)
 
 ParticleSystemModel::~ParticleSystemModel() = default;
 
-void ParticleSystemModel::draw() {
-  instances_->draw(nullptr, ponos::Transform(), 0);
+void ParticleSystemModel::draw(const aergia::CameraInterface* camera, ponos::Transform t) {
+  instances_->draw(camera, t);
 }
 
 bool ParticleSystemModel::intersect(const ponos::Ray3 &r, float *t) {

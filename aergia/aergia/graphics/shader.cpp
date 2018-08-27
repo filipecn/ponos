@@ -26,6 +26,32 @@
 
 namespace aergia {
 
+Shader::Shader(const Shader &other) {
+  programId = other.programId;
+  for (auto a : other.attrLocations)
+    attrLocations[a.first] = a.second;
+  for (auto a : other.uniformLocations)
+    uniformLocations[a.first] = a.second;
+}
+
+Shader::Shader(const Shader &&other) {
+  programId = other.programId;
+  for (auto a : other.attrLocations)
+    attrLocations[a.first] = a.second;
+  for (auto a : other.uniformLocations)
+    uniformLocations[a.first] = a.second;
+
+}
+
+Shader &Shader::operator=(const Shader &other) {
+  programId = other.programId;
+  for (auto a : other.attrLocations)
+    attrLocations[a.first] = a.second;
+  for (auto a : other.uniformLocations)
+    uniformLocations[a.first] = a.second;
+  return *this;
+}
+
 Shader::Shader(int id) {
   FATAL_ASSERT(id >= 0);
   programId = static_cast<GLuint>(id);
@@ -62,12 +88,11 @@ bool Shader::begin() {
 void Shader::registerVertexAttributes(const VertexBuffer *b) {
   if (!ShaderManager::instance().useShader(programId))
     return;
-  for (auto va : vertexAttributes) {
-    auto it = attrLocations.find(va);
-    GLint attribute = locateAttribute(va);// glGetAttribLocation(programId, va);
+  for (auto va : attrLocations) {
+    GLint attribute = va.second;
     glEnableVertexAttribArray(attribute);
     CHECK_GL_ERRORS;
-    b->registerAttribute(std::string(va), attribute);
+    b->registerAttribute(va.first, attribute);
     CHECK_GL_ERRORS;
   }
   end();
@@ -96,10 +121,14 @@ void Shader::addUniform(const std::string &name, GLint location) {
 }
 
 void Shader::setUniform(const char *name, const ponos::mat4 &m) {
+  if(!running)
+    begin();
   GLint loc = getUniLoc(name);
   if (loc == -1)
     return;
+  CHECK_GL_ERRORS;
   glUniformMatrix4fv(loc, 1, GL_FALSE, &m.m[0][0]);
+  CHECK_GL_ERRORS;
 }
 
 void Shader::setUniform(const char *name, const ponos::mat3 &m) {

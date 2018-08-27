@@ -38,6 +38,10 @@ namespace aergia {
 class Shader {
  public:
   explicit Shader(int id = 0);
+  Shader(const Shader& other);
+  Shader(const Shader&& other);
+  Shader &operator=(const Shader&other);
+
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
   /// \brief Creates a shader program from strings.
   /// \param vs vertex shader
@@ -77,12 +81,23 @@ class Shader {
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 
-  bool running;
+  bool running = false;
 
+  friend std::ostream& operator<<(std::ostream& o, Shader shader){
+    o << "SHADER (programId " << shader.programId << ")\n";
+    o << "vertex attributes:\n";
+    for(auto a : shader.attrLocations)
+      o << "\t" << a.first << "\t" << a.second << std::endl;
+    o << "uniform list:\n";
+    for(auto a : shader.uniformLocations)
+      o << "\t" << a.first << "\t" << a.second << std::endl;
+    o << std::endl;
+    return o;
+  }
  protected:
-  GLuint programId;
+  GLuint programId = 0;
 
-  std::set<const char *> vertexAttributes;
+//  std::set<const char *> vertexAttributes;
   std::map<std::string, GLint> attrLocations;
   std::map<std::string, GLint> uniformLocations;
 
