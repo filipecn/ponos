@@ -9,53 +9,22 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-#            - george-edison55-precise-backports
-            - deadsnakes
-            - kubuntu-backports
+            - george-edison55-precise-backports
           packages:
-            - g++-4.9
-            - python3.5
-            - python3.5-dev
-            - python3.5-venv
-            - libglu1-mesa-dev
-            - libxxf86vm-dev
-            - libxrandr-dev
-            - libxinerama-dev
-            - libxcursor-dev
-            - libxi-dev
-            - libx11-dev
+            - g++-7
             - cmake
             - cmake-data
-      env: COMPILER=g++-4.9
-    - compiler: gcc
+      env: COMPILER=g++-7
+    - compiler: clang
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
-            - george-edison55-precise-backports
-          packages:
-            - g++-5
-            - cmake
-            - cmake-data
-      env: COMPILER=g++-5
-#    - compiler: clang
-#      addons:
-#        apt:
-#          sources:
 #            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.6
-#          packages:
-#            - clang-3.6
-#      env: COMPILER=clang++-3.6
-#    - compiler: clang
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
 #            - llvm-toolchain-precise-3.7
-#          packages:
-#            - clang-3.7
-#      env: COMPILER=clang++-3.7
+          packages:
+            - clang-5.0
+      env: COMPILER=clang++-5.0
 python:
   - "3.5"
 before_install:
