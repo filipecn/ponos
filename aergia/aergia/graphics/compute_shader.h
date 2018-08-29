@@ -31,7 +31,7 @@
 
 namespace aergia {
 
-class ComputeShader : public Shader {
+class ComputeShader : public ShaderProgram {
 public:
   ComputeShader(const char *source);
   ComputeShader(const TextureAttributes &a, const TextureParameters &p, const char *source);

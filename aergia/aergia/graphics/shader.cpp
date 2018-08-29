@@ -26,7 +26,7 @@
 
 namespace aergia {
 
-Shader::Shader(const Shader &other) {
+ShaderProgram::ShaderProgram(const ShaderProgram &other) {
   programId = other.programId;
   for (auto a : other.attrLocations)
     attrLocations[a.first] = a.second;
@@ -34,7 +34,7 @@ Shader::Shader(const Shader &other) {
     uniformLocations[a.first] = a.second;
 }
 
-Shader::Shader(const Shader &&other) {
+ShaderProgram::ShaderProgram(const ShaderProgram &&other) {
   programId = other.programId;
   for (auto a : other.attrLocations)
     attrLocations[a.first] = a.second;
@@ -43,7 +43,7 @@ Shader::Shader(const Shader &&other) {
 
 }
 
-Shader &Shader::operator=(const Shader &other) {
+ShaderProgram &ShaderProgram::operator=(const ShaderProgram &other) {
   programId = other.programId;
   for (auto a : other.attrLocations)
     attrLocations[a.first] = a.second;
@@ -52,22 +52,22 @@ Shader &Shader::operator=(const Shader &other) {
   return *this;
 }
 
-Shader::Shader(int id) {
+ShaderProgram::ShaderProgram(int id) {
   FATAL_ASSERT(id >= 0);
   programId = static_cast<GLuint>(id);
   running = false;
 }
 
-Shader::Shader(const char *vs, const char *gs, const char *fs) : Shader(ShaderManager::instance().loadFromTexts(vs,
+ShaderProgram::ShaderProgram(const char *vs, const char *gs, const char *fs) : ShaderProgram(ShaderManager::instance().loadFromTexts(vs,
                                                                                                                 gs,
                                                                                                                 fs)) {
 }
 
-Shader::Shader(const char *fl...) : programId(0) {
+ShaderProgram::ShaderProgram(const char *fl...) : programId(0) {
   loadFromFiles(fl);
 }
 
-bool Shader::loadFromFiles(const char *fl...) {
+bool ShaderProgram::loadFromFiles(const char *fl...) {
   running = false;
   int program = ShaderManager::instance().loadFromFiles(fl);
   if (program < 0)
@@ -76,7 +76,7 @@ bool Shader::loadFromFiles(const char *fl...) {
   return true;
 }
 
-bool Shader::begin() {
+bool ShaderProgram::begin() {
   if (running)
     return true;
   if (!ShaderManager::instance().useShader(programId))
@@ -85,7 +85,7 @@ bool Shader::begin() {
   return true;
 }
 
-void Shader::registerVertexAttributes(const VertexBuffer *b) {
+void ShaderProgram::registerVertexAttributes(const VertexBuffer *b) {
   if (!ShaderManager::instance().useShader(programId))
     return;
   for (auto va : attrLocations) {
@@ -98,7 +98,7 @@ void Shader::registerVertexAttributes(const VertexBuffer *b) {
   end();
 }
 
-int Shader::locateAttribute(const std::string &name) const {
+int ShaderProgram::locateAttribute(const std::string &name) const {
   auto it = attrLocations.find(name);
   if (it == attrLocations.end())
     return -1;
@@ -106,21 +106,21 @@ int Shader::locateAttribute(const std::string &name) const {
 //  return glGetAttribLocation(programId, name.c_str());
 }
 
-void Shader::end() {
+void ShaderProgram::end() {
   glUseProgram(0);
   running = false;
 }
 
-void Shader::addVertexAttribute(const char *name, GLint location) {
+void ShaderProgram::addVertexAttribute(const char *name, GLint location) {
 //  vertexAttributes.insert(name);
   attrLocations[name] = location;
 }
 
-void Shader::addUniform(const std::string &name, GLint location) {
+void ShaderProgram::addUniform(const std::string &name, GLint location) {
   uniformLocations[name] = location;
 }
 
-void Shader::setUniform(const char *name, const ponos::mat4 &m) {
+void ShaderProgram::setUniform(const char *name, const ponos::mat4 &m) {
   if(!running)
     begin();
   GLint loc = getUniLoc(name);
@@ -131,28 +131,28 @@ void Shader::setUniform(const char *name, const ponos::mat4 &m) {
   CHECK_GL_ERRORS;
 }
 
-void Shader::setUniform(const char *name, const ponos::mat3 &m) {
+void ShaderProgram::setUniform(const char *name, const ponos::mat3 &m) {
   GLint loc = getUniLoc(name);
   if (loc == -1)
     return;
   glUniformMatrix3fv(loc, 1, GL_FALSE, &m.m[0][0]);
 }
 
-void Shader::setUniform(const char *name, const ponos::vec4 &v) {
+void ShaderProgram::setUniform(const char *name, const ponos::vec4 &v) {
   GLint loc = getUniLoc(name);
   if (loc == -1)
     return;
   glUniform4fv(loc, 1, &v.x);
 }
 
-void Shader::setUniform(const char *name, const ponos::vec3 &v) {
+void ShaderProgram::setUniform(const char *name, const ponos::vec3 &v) {
   GLint loc = getUniLoc(name);
   if (loc == -1)
     return;
   glUniform3fv(loc, 1, &v.x);
 }
 
-void Shader::setUniform(const char *name, const ponos::vec2 &v) {
+void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {
   bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
   if (loc == -1)
@@ -162,7 +162,7 @@ void Shader::setUniform(const char *name, const ponos::vec2 &v) {
     end();
 }
 
-void Shader::setUniform(const char *name, int i) {
+void ShaderProgram::setUniform(const char *name, int i) {
   bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
   if (loc == -1)
@@ -172,7 +172,7 @@ void Shader::setUniform(const char *name, int i) {
     end();
 }
 
-void Shader::setUniform(const char *name, float f) {
+void ShaderProgram::setUniform(const char *name, float f) {
   bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
   if (loc == -1)
@@ -181,7 +181,7 @@ void Shader::setUniform(const char *name, float f) {
   if (wasNotRunning)
     end();
 }
-GLint Shader::getUniLoc(const GLchar *name) {
+GLint ShaderProgram::getUniLoc(const GLchar *name) {
 //  if (!ShaderManager::instance().useShader(programId))
 //    return -1;
   auto it = uniformLocations.find(name);

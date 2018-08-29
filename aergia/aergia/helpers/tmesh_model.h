@@ -53,7 +53,7 @@ public:
     }
   }
 
-  void draw() override {
+  void draw(const CameraInterface* camera, ponos::Transform t) override {
     GL_DRAW_POINTS(
         4.f,
         glColor(COLOR_BLACK);

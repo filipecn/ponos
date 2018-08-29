@@ -67,7 +67,7 @@ public:
   void updateBuffers();
 
   GLuint VAO_grid_ = 0;
-  std::shared_ptr<Shader> gridShader_;
+  std::shared_ptr<ShaderProgram> gridShader_;
   std::shared_ptr<VertexBuffer> vb;
   ponos::RawMesh mesh;
 };

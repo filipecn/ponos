@@ -51,7 +51,7 @@ int main() {
   // create a vertex buffer for base mesh
   //aergia::SceneMesh sm(*m.get());
   aergia::SceneMesh smesh(mesh);
-  auto s = aergia::Shader(aergia::ShaderManager::instance().loadFromTexts(vs, nullptr, fs));
+  auto s = aergia::ShaderProgram(aergia::ShaderManager::instance().loadFromTexts(vs, nullptr, fs));
   // create a buffer for particles positions + sizes
   app.viewports[0].renderCallback = [&]() {
     smesh.bind();

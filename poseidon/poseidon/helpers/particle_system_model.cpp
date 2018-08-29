@@ -71,7 +71,7 @@ ParticleSystemModel::ParticleSystemModel(ParticleSystem &ps, float r)
   particleMesh_.reset(ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, false, false));
   // create a vertex buffer for base mesh
   particleSceneMesh_.reset(new aergia::SceneMesh(*particleMesh_.get()));
-  aergia::Shader shader(vs, nullptr, fs);
+  aergia::ShaderProgram shader(vs, nullptr, fs);
   shader.addVertexAttribute("position", 0);
   shader.addVertexAttribute("normal", 1);
   shader.addVertexAttribute("texcoord", 2);

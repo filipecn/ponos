@@ -41,7 +41,7 @@ template <typename GridType> class GridModel : public SceneObject {
 public:
   GridModel() {}
   GridModel(const GridType *g) : grid(g) {}
-  void draw() const {
+  void draw(const CameraInterface* camera, ponos::Transform t) {
     glColor4fv(gridColor.asArray());
     glBegin(GL_LINES); // XY
     for (size_t x = 0; x <= grid->width; x++) {
@@ -118,7 +118,7 @@ public:
     setupModel(u_model.get(), Color(0, 0, 0, 0), Color(1, 0, 0, 0.5));
     setupModel(v_model.get(), Color(0, 0, 0, 0), Color(0, 0, 1, 0.5));
   }
-  void draw() override {
+  void draw(const CameraInterface* camera, ponos::Transform t) override {
     u_model->draw();
     v_model->draw();
     p_model->draw();

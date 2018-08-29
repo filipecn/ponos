@@ -87,6 +87,37 @@ class ShaderManager {
 "outColor = texture(tex, texCoord);"\
 "}"
 
+#define AERGIA_INSTANCES_VS \
+"#version 440 core\n" \
+"layout (location = 0) in vec3 position;" \
+"layout (location = 1) in vec3 pos;"  \
+"layout (location = 2) in float scale;" \
+"layout (location = 3) in vec4 col;"  \
+"layout (location = 4) uniform mat4 view_matrix;" \
+"layout (location = 5) uniform mat4 projection_matrix;" \
+"out VERTEX {" \
+"vec4 color;" \
+"} vertex;" \
+"void main() {" \
+"    mat4 model_matrix;" \
+"    model_matrix[0] = vec4(scale, 0, 0, 0);" \
+"    model_matrix[1] = vec4(0, scale, 0, 0);" \
+"    model_matrix[2] = vec4(0, 0, scale, 0);" \
+"    model_matrix[3] = vec4(pos.x, pos.y, pos.z, 1);" \
+"    mat4 model_view_matrix = view_matrix * model_matrix;\n" \
+"    gl_Position = projection_matrix * model_view_matrix * " \
+"vec4(position,1);" \
+"   vertex.color = col;" \
+"}"
+
+#define AERGIA_INSTANCES_FS \
+"#version 440 core\n" \
+    "in VERTEX { vec4 color; } vertex;" \
+    "out vec4 outColor;" \
+    "void main() {" \
+    "   outColor = vertex.color;" \
+    "}";
+
 } // aergia namespace
 
 #endif // AERGIA_GRAPHICS_SHADER_MANAGER_H

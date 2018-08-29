@@ -29,7 +29,7 @@
 
 namespace aergia {
 
-void BufferInterface::locateAttributes(const Shader &s, uint d) const {
+void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
   for(auto& attribute : bufferDescriptor.attributes) {
     GLint loc = s.locateAttribute(attribute.first);
     if(loc < 0)

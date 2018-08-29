@@ -36,7 +36,7 @@ CartesianGrid::CartesianGrid() {
       "layout (location = 0) uniform mat4 mvp;"
       "void main() {"
       "gl_Position = mvp * vec4(position, 1);}";
-  gridShader_.reset(new Shader(vs, nullptr, fs));
+  gridShader_.reset(new ShaderProgram(vs, nullptr, fs));
   gridShader_->addVertexAttribute("position", 0);
   gridShader_->addUniform("mvp", 0);
 }

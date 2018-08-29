@@ -41,7 +41,7 @@ public:
   /// \param rm base mesh
   /// \param s shader
   /// \param n **[optional | def = 0]** number of instances
-  explicit InstanceSet(SceneMesh &rm, Shader s, uint n = 0);
+  explicit InstanceSet(SceneMesh &rm, ShaderProgram s, size_t n = 0);
   ~InstanceSet() override;
   /// \param d buffer descriptor
   /// \return index of the new buffer
@@ -62,7 +62,7 @@ public:
   void draw(const CameraInterface *camera, ponos::Transform transform) override;
 
 private:
-  Shader shader_;
+  ShaderProgram shader_; ///< instance shader program
   SceneMesh &baseMesh_; ///< base mesh
   VertexBuffer bv_; ///< base vertex buffer
   IndexBuffer bi_; ///< base index buffer

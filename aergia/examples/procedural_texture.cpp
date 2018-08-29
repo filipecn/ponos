@@ -50,7 +50,7 @@ int main() {
   attributes.format = GL_RGBA;
   aergia::TextureParameters parameters;
   aergia::ShaderManager &sm = aergia::ShaderManager::instance();
-  aergia::Shader s2(sm.loadFromTexts(vs2, nullptr, fs2));
+  aergia::ShaderProgram s2(sm.loadFromTexts(vs2, nullptr, fs2));
   pt = new aergia::RenderTexture(attributes, parameters);
   pt->render([&s2]() {
     s2.begin();
@@ -65,7 +65,7 @@ int main() {
   static_cast<aergia::UserCamera2D *>(app.viewports[0].camera.get())
       ->resize(800, 800);
   aergia::Quad quad;
-  quad.shader.reset(new aergia::Shader(sm.loadFromTexts(vs, nullptr, fs)));
+  quad.shader.reset(new aergia::ShaderProgram(sm.loadFromTexts(vs, nullptr, fs)));
   quad.shader->addVertexAttribute("position");
   quad.shader->addVertexAttribute("texcoord");
 //  quad.shader->setUniform("proj", aergia::glGetMVPTransform().matrix());

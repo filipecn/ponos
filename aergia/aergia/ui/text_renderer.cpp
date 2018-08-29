@@ -53,7 +53,7 @@ TextRenderer::TextRenderer(float scale, Color c, size_t id)
           "  vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);"
           "  color = textColor * sampled;"
           "}");
-  quad_.shader.reset(new aergia::Shader(sid));
+  quad_.shader.reset(new aergia::ShaderProgram(sid));
   quad_.shader->addVertexAttribute("position", 0);
   quad_.shader->addVertexAttribute("texcoord", 1);
 }

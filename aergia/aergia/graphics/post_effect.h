@@ -34,14 +34,14 @@ namespace aergia {
 class PostEffect {
  public:
   /// \param s [optional | default = no effect] effect
-  explicit PostEffect(Shader *s = nullptr);
+  explicit PostEffect(ShaderProgram *s = nullptr);
   /// Apply effect to texture
   /// \param in procedural texture containing input image
   /// \param out result of effect applied
   virtual void apply(const RenderTexture &in, RenderTexture &out);
 
  protected:
-  std::shared_ptr<Shader> shader;
+  std::shared_ptr<ShaderProgram> shader;
 };
 
 /// Fast Approximate Anti-Aliasing (FXAA) is an anti-aliasing algorithm created

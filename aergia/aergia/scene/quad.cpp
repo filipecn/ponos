@@ -59,7 +59,7 @@ Quad::Quad() {
       "void main() {"
       " texCoord = texcoord;"
       "gl_Position = mvp * vec4(position, 0, 1);}";
-  shader.reset(new Shader(vs, nullptr, fs));
+  shader.reset(new ShaderProgram(vs, nullptr, fs));
   shader->addVertexAttribute("position", 0);
   shader->addVertexAttribute("texcoord", 1);
   shader->addUniform("mvp", 0);

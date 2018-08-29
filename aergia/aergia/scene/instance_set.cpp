@@ -32,7 +32,7 @@
 
 namespace aergia {
 
-InstanceSet::InstanceSet(SceneMesh &m, Shader s, uint n) : shader_(s), baseMesh_(m) {
+InstanceSet::InstanceSet(SceneMesh &m, ShaderProgram s, size_t n) : shader_(s), baseMesh_(m) {
   if (n)
     resize(n);
 }

@@ -70,7 +70,7 @@ int main() {
     }
   }
   aergia::SceneMesh smesh(dragonSurface);
-  auto s = aergia::Shader(aergia::ShaderManager::instance().loadFromTexts(vs, nullptr, fs));
+  auto s = aergia::ShaderProgram(aergia::ShaderManager::instance().loadFromTexts(vs, nullptr, fs));
   //std::shared_ptr<aergia::Text> text;
   //text.reset(new aergia::Text("/mnt/windows/Windows/Fonts/arial.ttf"));
   app.viewports[0].renderCallback = [&]() {

@@ -63,7 +63,7 @@ ScreenQuad::ScreenQuad() {
       " texCoord = texcoord;"
       " gl_Position = vec4(position, 0, 1);}";
   const char *gs = nullptr;
-  shader.reset(new Shader(vs, gs, fs));
+  shader.reset(new ShaderProgram(vs, gs, fs));
   shader->addVertexAttribute("position", 0);
   shader->addVertexAttribute("texcoord", 1);
   {

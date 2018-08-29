@@ -26,9 +26,9 @@
 
 namespace aergia {
 
-PostEffect::PostEffect(aergia::Shader *s) {
+PostEffect::PostEffect(aergia::ShaderProgram *s) {
   if (!s)
-    shader.reset(new Shader(ShaderManager::instance().loadFromTexts(
+    shader.reset(new ShaderProgram(ShaderManager::instance().loadFromTexts(
         AERGIA_NO_VAO_VS, nullptr, AERGIA_NO_VAO_FS)));
   else
     shader.reset(s);
@@ -120,7 +120,7 @@ FXAA::FXAA() {
           "        outColor = vec4(rgbB, texColor.a);\n"
           "}";
 
-  shader.reset(new Shader(
+  shader.reset(new ShaderProgram(
       ShaderManager::instance().loadFromTexts(vs, nullptr, fs)));
 }
 
@@ -145,7 +145,7 @@ GammaCorrection::GammaCorrection(float g) : gamma(g) {
       "outColor = texture(tex, texCoord);"
       "outColor.rgb = pow(outColor.rgb, vec3(1.0 / gamma));"
       "}";
-  shader.reset(new Shader(
+  shader.reset(new ShaderProgram(
       ShaderManager::instance().loadFromTexts(AERGIA_NO_VAO_VS, nullptr, fs)));
 }
 

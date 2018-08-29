@@ -39,13 +39,13 @@ namespace aergia {
  */
 struct BufferDescriptor {
   struct Attribute {
-    long offset; //!< attribute data offset (in bytes)
-    size_t size; //!< attribute number of components
-    GLenum type; //!< attribute data type
+    long offset = 0; //!< attribute data offset (in bytes)
+    size_t size = 0; //!< attribute number of components
+    GLenum type = 0; //!< attribute data type
   };
   std::map<const std::string, Attribute> attributes; //!< name - attribute map
-  GLuint elementSize;  //!< how many components are assigned to each element
-  size_t elementCount; //!< number of elements
+  GLuint elementSize = 0;  //!< how many components are assigned to each element
+  size_t elementCount = 0; //!< number of elements
   GLuint elementType;  //!< type of elements  (GL_TRIANGLES, ...)
   GLuint type;         //!< buffer type (GL_ARRAY_BUFFER, ...)
   GLuint use;          //!< use  (GL_STATIC_DRAW, ...)
@@ -115,7 +115,12 @@ struct BufferDescriptor {
     attributes[_name] = att;
   }
 };
-///
+/// \param elementSize
+/// \param dataType
+/// \return
+inline BufferDescriptor create_array_stream_descriptor(GLuint elementSize, GLuint dataType = GL_FLOAT) {
+  return BufferDescriptor(elementSize, 0, GL_TRIANGLES, GL_ARRAY_BUFFER, GL_STREAM_DRAW, dataType);
+}
 /// \param elementSize
 /// \param elementCount
 /// \param elementType
@@ -198,7 +203,7 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
     offset += m.texcoordDescriptor.elementSize;
   }
 }
-class Shader;
+class ShaderProgram;
 class BufferInterface {
  public:
   explicit BufferInterface(GLuint id = 0) : bufferId(id) {}
@@ -222,7 +227,7 @@ class BufferInterface {
   /// locates and register buffer attributes in shader program
   /// \param s shader
   /// \param d **[optional]** attribute divisor (default = 0)
-  void locateAttributes(const Shader &s, uint d = 0) const;
+  void locateAttributes(const ShaderProgram &s, uint d = 0) const;
   BufferDescriptor bufferDescriptor; //!< buffer description
  protected:
   GLuint bufferId;

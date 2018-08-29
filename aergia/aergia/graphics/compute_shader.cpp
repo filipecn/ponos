@@ -35,7 +35,7 @@ ComputeShader::ComputeShader(const TextureAttributes &a, const TextureParameters
 ComputeShader::~ComputeShader() = default;
 
 bool ComputeShader::compute() {
-  if (!Shader::begin())
+  if (!ShaderProgram::begin())
     return false;
   if (texture)
     texture->bindImage(GL_TEXTURE0);
@@ -49,7 +49,7 @@ bool ComputeShader::compute() {
   glMemoryBarrier(GL_ALL_BARRIER_BITS);
   CHECK_GL_ERRORS;
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-  Shader::end();
+  ShaderProgram::end();
   return true;
 }
 

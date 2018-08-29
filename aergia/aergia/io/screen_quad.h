@@ -32,7 +32,7 @@ namespace aergia {
     ScreenQuad();
     ~ScreenQuad();
     void render();
-    std::shared_ptr<Shader> shader;
+    std::shared_ptr<ShaderProgram> shader;
    private:
     ponos::RawMesh mesh_;
     std::shared_ptr<VertexBuffer> vb_;

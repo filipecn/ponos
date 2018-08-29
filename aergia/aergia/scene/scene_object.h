@@ -81,9 +81,9 @@ public:
   }
 
   SceneMeshObject(ponos::RawMesh *m,
-            std::function<void(Shader *s)> f =
-            [](Shader *s) { UNUSED_VARIABLE(s); },
-            Shader *s = nullptr) {
+            std::function<void(ShaderProgram *s)> f =
+            [](ShaderProgram *s) { UNUSED_VARIABLE(s); },
+            ShaderProgram *s = nullptr) {
     this->visible = true;
     this->rawMesh = m;
     this->setupVertexBuffer();
@@ -122,7 +122,7 @@ public:
   ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
 
   ponos::RawMesh *rawMesh;
-  std::function<void(Shader *s)> drawCallback;
+  std::function<void(ShaderProgram *s)> drawCallback;
 
 protected:
   virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
@@ -162,7 +162,7 @@ protected:
   std::shared_ptr<IndexBuffer> ib;
 
 private:
-  Shader *shader;
+  ShaderProgram *shader;
 };
 
 typedef std::shared_ptr<SceneObject> SceneObjectSPtr;

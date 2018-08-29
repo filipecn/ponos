@@ -35,21 +35,21 @@
 namespace aergia {
 
 /// Holds a program id and serves as an interface for setting its uniforms.
-class Shader {
+class ShaderProgram {
  public:
-  explicit Shader(int id = 0);
-  Shader(const Shader& other);
-  Shader(const Shader&& other);
-  Shader &operator=(const Shader&other);
+  explicit ShaderProgram(int id = 0);
+  ShaderProgram(const ShaderProgram& other);
+  ShaderProgram(const ShaderProgram&& other);
+  ShaderProgram &operator=(const ShaderProgram&other);
 
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
   /// \brief Creates a shader program from strings.
   /// \param vs vertex shader
   /// \param gs geometry shader
   /// \param fs fragment shader
-  Shader(const char *vs, const char *gs, const char *fs);
+  ShaderProgram(const char *vs, const char *gs, const char *fs);
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
-  explicit Shader(const char *fl...);
+  explicit ShaderProgram(const char *fl...);
   /// \brief Creates a shader program from shader files.
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
   /// \return program id. **-1** if error.
@@ -83,7 +83,7 @@ class Shader {
 
   bool running = false;
 
-  friend std::ostream& operator<<(std::ostream& o, Shader shader){
+  friend std::ostream& operator<<(std::ostream& o, ShaderProgram shader){
     o << "SHADER (programId " << shader.programId << ")\n";
     o << "vertex attributes:\n";
     for(auto a : shader.attrLocations)
