@@ -148,6 +148,7 @@ void InstanceSet::draw(const CameraInterface *camera, ponos::Transform transform
 //  shader_.setUniform("mvp", ponos::transpose((camera->getProjectionTransform() *
 //      camera->getViewTransform() * camera->getModelTransform()).matrix()));
   glDrawElementsInstanced(baseMesh_.indexBuffer()->bufferDescriptor.elementType,
+                          baseMesh_.indexBuffer()->bufferDescriptor.elementSize *
                               baseMesh_.indexBuffer()->bufferDescriptor.elementCount,
                           baseMesh_.indexBuffer()->bufferDescriptor.dataType, 0,
                           count_);

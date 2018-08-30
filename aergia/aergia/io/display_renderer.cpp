@@ -49,7 +49,8 @@ void DisplayRenderer::process(const std::function<void()> &f) {
   // render image to the first framebuffer
   buffers_[curBuffer_]->render(f);
   for (auto &effect : effects_) {
-    effect->apply(*buffers_[curBuffer_].get(), *buffers_[(curBuffer_ + 1) % 2].get());
+    effect->apply(*buffers_[curBuffer_].get(),
+                  *buffers_[(curBuffer_ + 1) % 2].get());
     curBuffer_ = (curBuffer_ + 1) % 2;
   }
 }
@@ -58,7 +59,9 @@ void DisplayRenderer::render() {
   resize(attributes_.width, attributes_.height);
   // render to display
   buffers_[curBuffer_]->bind(GL_TEXTURE0);
+  screen.shader->begin();
   screen.shader->setUniform("tex", 0);
+  screen.shader->end();
   screen.render();
 }
 

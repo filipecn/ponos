@@ -66,6 +66,7 @@ ScreenQuad::ScreenQuad() {
   shader.reset(new ShaderProgram(vs, gs, fs));
   shader->addVertexAttribute("position", 0);
   shader->addVertexAttribute("texcoord", 1);
+  shader->addUniform("tex", 0);
   {
     glGenVertexArrays(1, &VAO);
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).

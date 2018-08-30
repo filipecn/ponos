@@ -9,6 +9,8 @@ ViewportDisplay::ViewportDisplay(int _x, int _y, int _width, int _height)
 }
 
 void ViewportDisplay::render(const std::function<void(CameraInterface*)> &f) {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);
   renderer->process([&]() {
     if (f)
@@ -16,15 +18,13 @@ void ViewportDisplay::render(const std::function<void(CameraInterface*)> &f) {
     if (renderCallback)
       renderCallback(camera.get());
   });
-//  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_DEPTH_TEST);
   GraphicsDisplay &gd = GraphicsDisplay::instance();
   glViewport(x, y, width, height);
   glScissor(x, y, width, height);
   glEnable(GL_SCISSOR_TEST);
   gd.clearScreen(0.f, 1.f, 1.f, 0.f);
 //  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   renderer->render();
   glDisable(GL_SCISSOR_TEST);
 }

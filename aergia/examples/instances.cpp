@@ -1,53 +1,85 @@
 #include <aergia/aergia.h>
 
-const char *vs = AERGIA_INSTANCES_VS;
-const char *fs = AERGIA_INSTANCES_FS;
 int main() {
   aergia::SceneApp<> app(800, 800);
+  std::shared_ptr<aergia::InstanceSet> spheres, quads;
+  // generate a bunch of random quads
+  // but now each instance has a transform matrix
+  size_t n = 400;
   // generate base mesh
-  ponos::RawMeshSPtr m(ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, false, false));
-  // create a vertex buffer for base mesh
-  aergia::SceneMesh sm(*m.get());
-  // create instances container for 1000 instances (this number could be changed
-  // later with resize())
-  aergia::ShaderProgram shader(vs, nullptr, fs);
-  shader.addVertexAttribute("position", 0);
-  shader.addVertexAttribute("pos", 1);
-  shader.addVertexAttribute("scale", 2);
-  shader.addVertexAttribute("col", 3);
-  shader.addUniform("view_matrix", 4);
-  shader.addUniform("projection_matrix", 5);
-  aergia::InstanceSet s(sm, shader, 2);
-  // create a buffer for particles positions + sizes
-  aergia::BufferDescriptor posSiz =
-      aergia::create_array_stream_descriptor(4); // x y z s
-  posSiz.addAttribute("pos", 3, 0, posSiz.dataType); // 3 -> x y z
-  posSiz.addAttribute("scale", 1, 3 * sizeof(float), posSiz.dataType); // 1 -> s
-  uint pid = s.add(posSiz);
-  // create a buffer for particles colors
-  aergia::BufferDescriptor col =
-      aergia::create_array_stream_descriptor(4); // r g b a
-  col.addAttribute("col", 4, 0, col.dataType); // 4 -> r g b a
-  uint colid = s.add(col);
-  // define instance data
+  ponos::RawMeshSPtr
+      sphereMesh
+      (ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 0, false, false));
+  ponos::RawMeshSPtr quadMesh(ponos::create_quad_mesh(ponos::Point3(0, 0, 0),
+                                                      ponos::Point3(1, 0, 0),
+                                                      ponos::Point3(1, 1, 0),
+                                                      ponos::Point3(0, 1, 0),
+                                                      false,
+                                                      false));
+  ponos::RawMeshSPtr wquadMesh
+      (ponos::create_quad_wireframe_mesh(ponos::Point3(0, 0, 0),
+                                         ponos::Point3(1, 0, 0),
+                                         ponos::Point3(1, 1, 0),
+                                         ponos::Point3(0, 1, 0)));
+  aergia::SceneMesh qm(*wquadMesh.get());
+  const char *qvs = "#version 440 core\n" \
+"layout (location = 0) in vec3 position;" \
+"layout (location = 1) in vec4 col;"  \
+"layout (location = 2) in mat4 trans;" \
+"layout (location = 3) uniform mat4 view_matrix;" \
+"layout (location = 4) uniform mat4 projection_matrix;" \
+"out VERTEX {" \
+"vec4 color;" \
+"} vertex;" \
+"void main() {" \
+"    mat4 model_view_matrix = view_matrix * trans;\n" \
+"    gl_Position = projection_matrix * model_view_matrix * " \
+"vec4(position,1);" \
+"   vertex.color = col;" \
+"}";
+  const char *fs = AERGIA_INSTANCES_FS;
+  aergia::ShaderProgram quadShader(qvs, nullptr, fs);
+  quadShader.addVertexAttribute("position", 0);
+  quadShader.addVertexAttribute("col", 1);
+  quadShader.addVertexAttribute("trans", 2);
+  quadShader.addUniform("view_matrix", 3);
+  quadShader.addUniform("projection_matrix", 4);
+  quads.reset(new aergia::InstanceSet(qm, quadShader, n));
   {
-    auto v = s.instanceF(pid, 0);
-    v[0] = v[1] = v[2] = 0.f;
-    v[3] = 1.f;
-    auto c = s.instanceF(colid, 0);
-    c[0] = c[3] = 1.f;
-    c[1] = c[2] = 0.f;
+    // create a buffer for particles positions + sizes
+    aergia::BufferDescriptor trans =
+        aergia::create_array_stream_descriptor(16);
+    trans.addAttribute("trans", 16, 0, trans.dataType);
+    uint tid = quads->add(trans);
+    // create a buffer for particles colors
+    aergia::BufferDescriptor col =
+        aergia::create_array_stream_descriptor(4); // r g b a
+    col.addAttribute("col", 4, 0, col.dataType); // 4 -> r g b a
+    uint colid = quads->add(col);
+    aergia::ColorPalette palette = aergia::HEAT_MATLAB_PALETTE;
+    ponos::RNGSampler sampler;
+    ponos::HaltonSequence rng;
+    for (size_t i = 0; i < n; i++) {
+      auto color = palette((1.f * i) / n, 1.f);
+      auto c = quads->instanceF(colid, i);
+      c[0] = color.r;
+      c[1] = color.g;
+      c[2] = color.b;
+      c[3] = color.a;
+      auto m = quads->instanceF(tid, i);
+      float t[16];
+      (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
+          ponos::translate(
+              ponos::vec3(sampler.sample(
+                  ponos::BBox(ponos::Point3(-5, -5, -5),
+                              ponos::Point3(5, 5, 5))))
+          )).matrix().column_major(t);
+      for (size_t k = 0; k < 16; k++)
+        m[k] = t[k];
+    }
   }
-  {
-    auto v = s.instanceF(pid, 1);
-    v[0] = v[1] = 2.f;
-    v[2] = 1.f;
-    v[3] = 2.f;
-    auto c = s.instanceF(colid, 1);
-    c[0] = c[2] = .5f;
-    c[1] = c[3] = 1.f;
-  }
-  app.scene.add(&s);
+//  app.scene.add(spheres.get());
+  app.scene.add(quads.get());
   aergia::SceneObjectSPtr grid(new aergia::CartesianGrid(5));
   app.scene.add(grid.get());
   app.run();

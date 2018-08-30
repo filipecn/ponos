@@ -106,15 +106,18 @@ BBox RawMesh::elementBBox(size_t i) const {
     b = make_union(
         b,
         Point3(
-            positions[indices[i * meshDescriptor.elementSize + v].positionIndex *
-                positionDescriptor.elementSize +
-                0],
-            positions[indices[i * meshDescriptor.elementSize + v].positionIndex *
-                positionDescriptor.elementSize +
-                1],
-            positions[indices[i * meshDescriptor.elementSize + v].positionIndex *
-                positionDescriptor.elementSize +
-                2]));
+            positions[
+                indices[i * meshDescriptor.elementSize + v].positionIndex *
+                    positionDescriptor.elementSize +
+                    0],
+            positions[
+                indices[i * meshDescriptor.elementSize + v].positionIndex *
+                    positionDescriptor.elementSize +
+                    1],
+            positions[
+                indices[i * meshDescriptor.elementSize + v].positionIndex *
+                    positionDescriptor.elementSize +
+                    2]));
   return b;
 }
 
@@ -136,9 +139,9 @@ void RawMesh::buildInterleavedData() {
       texcoordDescriptor.elementSize;
   interleavedDescriptor.count = positionDescriptor.count;
   ASSERT_EQ(interleavedData.size(),
-      positionDescriptor.count * positionDescriptor.elementSize +
-          normalDescriptor.count * normalDescriptor.elementSize +
-          texcoordDescriptor.count * texcoordDescriptor.elementSize);
+            positionDescriptor.count * positionDescriptor.elementSize +
+                normalDescriptor.count * normalDescriptor.elementSize +
+                texcoordDescriptor.count * texcoordDescriptor.elementSize);
 }
 
 void RawMesh::orientFaces(bool ccw) {
@@ -146,8 +149,10 @@ void RawMesh::orientFaces(bool ccw) {
     bool flip = false;
     for (size_t i = 0; i < meshDescriptor.elementSize; i++) {
       ponos::Point3 a3 = positionElement(e, i);
-      ponos::Point3 b3 = positionElement(e, (i + 1) % meshDescriptor.elementSize);
-      ponos::Point3 c3 = positionElement(e, (i + 2) % meshDescriptor.elementSize);
+      ponos::Point3
+          b3 = positionElement(e, (i + 1) % meshDescriptor.elementSize);
+      ponos::Point3
+          c3 = positionElement(e, (i + 2) % meshDescriptor.elementSize);
       ponos::Point2 a(a3.x, a3.y);
       ponos::Point2 b(b3.x, b3.y);
       ponos::Point2 c(c3.x, c3.y);
@@ -200,19 +205,47 @@ std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
   os << "vertex description (dim = " << rm.positionDescriptor.elementSize
      << ", count_ = " << rm.positionDescriptor.count << ")\n";
   for (size_t i = 0; i < rm.positionDescriptor.count; i++) {
-    std::cout << "v" << i << " = ";
+    os << "v" << i << " = ";
     for (size_t j = 0; j < rm.positionDescriptor.elementSize; j++)
-      std::cout << rm.positions[i * rm.positionDescriptor.elementSize + j] << " ";
-    std::cout << std::endl;
+      os << rm.positions[i * rm.positionDescriptor.elementSize + j] << " ";
+    os << std::endl;
+  }
+  os << "normal description (dim = " << rm.normalDescriptor.elementSize
+     << ", count_ = " << rm.normalDescriptor.count << ")\n";
+  for (size_t i = 0; i < rm.normalDescriptor.count; i++) {
+    os << "v" << i << " = ";
+    for (size_t j = 0; j < rm.normalDescriptor.elementSize; j++)
+      os << rm.normals[i * rm.normalDescriptor.elementSize + j] << " ";
+    os << std::endl;
+  }
+  os << "texcoord description (dim = " << rm.texcoordDescriptor.elementSize
+     << ", count_ = " << rm.texcoordDescriptor.count << ")\n";
+  for (size_t i = 0; i < rm.texcoordDescriptor.count; i++) {
+    os << "t" << i << " = ";
+    for (size_t j = 0; j < rm.texcoordDescriptor.elementSize; j++)
+      os << rm.texcoords[i * rm.texcoordDescriptor.elementSize + j] << " ";
+    os << std::endl;
   }
   os << "mesh description (dim = " << rm.meshDescriptor.elementSize
      << ", count_ = " << rm.meshDescriptor.count << ")\n";
   for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
-    std::cout << "f" << i << " = ";
+    os << "m" << i << " = ";
     for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)
-      std::cout << rm.indices[i * rm.meshDescriptor.elementSize + j].positionIndex
-                << " ";
-    std::cout << std::endl;
+      os << "(" <<
+         rm.indices[i * rm.meshDescriptor.elementSize + j].positionIndex << ", "
+         << rm.indices[i * rm.meshDescriptor.elementSize + j].normalIndex
+         << ", "  << rm.indices[i * rm.meshDescriptor.elementSize + j].texcoordIndex << ")";
+    os << std::endl;
+  }
+  os << "interleaved description (dim = "
+     << rm.interleavedDescriptor.elementSize
+     << ", count_ = " << rm.interleavedDescriptor.count << ")\n";
+  for (size_t i = 0; i < rm.interleavedDescriptor.count; i++) {
+    os << "i" << i << " = ";
+    for (size_t j = 0; j < rm.interleavedDescriptor.elementSize; j++)
+      os << rm.interleavedData[i * rm.interleavedDescriptor.elementSize + j]
+         << " ";
+    os << std::endl;
   }
   return os;
 }

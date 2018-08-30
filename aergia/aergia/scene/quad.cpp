@@ -37,12 +37,18 @@ Quad::Quad() {
   this->rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
   this->rawMesh->texcoords = std::vector<float>({0, 1, 1, 1, 1, 0, 0, 0});
   this->rawMesh->indices.resize(6);
-  this->rawMesh->indices[0].positionIndex = this->rawMesh->indices[0].texcoordIndex = 0;
-  this->rawMesh->indices[1].positionIndex = this->rawMesh->indices[1].texcoordIndex = 1;
-  this->rawMesh->indices[2].positionIndex = this->rawMesh->indices[2].texcoordIndex = 2;
-  this->rawMesh->indices[3].positionIndex = this->rawMesh->indices[3].texcoordIndex = 0;
-  this->rawMesh->indices[4].positionIndex = this->rawMesh->indices[4].texcoordIndex = 2;
-  this->rawMesh->indices[5].positionIndex = this->rawMesh->indices[5].texcoordIndex = 3;
+  this->rawMesh->indices[0].positionIndex =
+  this->rawMesh->indices[0].texcoordIndex = 0;
+  this->rawMesh->indices[1].positionIndex =
+  this->rawMesh->indices[1].texcoordIndex = 1;
+  this->rawMesh->indices[2].positionIndex =
+  this->rawMesh->indices[2].texcoordIndex = 2;
+  this->rawMesh->indices[3].positionIndex =
+  this->rawMesh->indices[3].texcoordIndex = 0;
+  this->rawMesh->indices[4].positionIndex =
+  this->rawMesh->indices[4].texcoordIndex = 2;
+  this->rawMesh->indices[5].positionIndex =
+  this->rawMesh->indices[5].texcoordIndex = 3;
   this->rawMesh->splitIndexData();
   this->rawMesh->buildInterleavedData();
   const char *fs = "#version 440 core\n"

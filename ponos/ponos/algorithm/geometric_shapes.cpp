@@ -68,6 +68,17 @@ RawMesh *create_icosphere_mesh(const Point3 &center,
   mesh->addFace({6, 2, 10});
   mesh->addFace({8, 6, 7});
   mesh->addFace({9, 8, 1});
+  {
+    // normalize positions
+    size_t n = mesh->positions.size() / 3;
+    for (size_t i = 0; i < n; i++) {
+      Vector3 v(&mesh->positions[i * 3]);
+      v = normalize(v);
+      mesh->positions[i * 3 + 0] = v.x;
+      mesh->positions[i * 3 + 1] = v.y;
+      mesh->positions[i * 3 + 2] = v.z;
+    }
+  }
   std::map<std::pair<int, int>, size_t> indicesCache;
   std::function<size_t(int, int)> midPoint = [&](int a, int b) -> size_t {
     std::pair<int, int> key(std::min(a, b), std::max(a, b));
@@ -114,11 +125,14 @@ RawMesh *create_icosphere_mesh(const Point3 &center,
     mesh->normalDescriptor.elementSize = 3;
   }
   if (generateUVs) {
-    std::function<Point2(float, float, float)> parametric = [](float x, float y, float z) -> Point2 {
+    std::function<Point2(float, float, float)>
+        parametric = [](float x, float y, float z) -> Point2 {
       return Point2(std::atan2(y, x), std::acos(z));
     };
     for (size_t i = 0; i < vertexCount; i++) {
-      auto uv = parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1], mesh->positions[i * 3 + 2]);
+      auto uv = parametric(mesh->positions[i * 3 + 0],
+                           mesh->positions[i * 3 + 1],
+                           mesh->positions[i * 3 + 2]);
       mesh->addUV({uv.x, uv.y});
     }
     mesh->texcoordDescriptor.count = vertexCount;
@@ -132,6 +146,81 @@ RawMesh *create_icosphere_mesh(const Point3 &center,
   mesh->positionDescriptor.elementSize = 3;
   mesh->apply(scale(radius, radius, radius) *
       translate(Vector3(center)));
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
+RawMesh *create_quad_mesh(const Point3 &p1,
+                          const Point3 &p2,
+                          const Point3 &p3,
+                          const Point3 &p4,
+                          bool generateNormals,
+                          bool generateUVs) {
+  auto *mesh = new RawMesh();
+  mesh->addPosition({p1.x, p1.y, p1.z});
+  mesh->addPosition({p2.x, p2.y, p2.z});
+  mesh->addPosition({p3.x, p3.y, p3.z});
+  mesh->addPosition({p4.x, p4.y, p4.z});
+  mesh->addFace({0, 1, 2});
+  mesh->addFace({0, 2, 3});
+  // fix normal and uvs indices
+  for (auto &i : mesh->indices)
+    i.normalIndex = i.texcoordIndex = i.positionIndex;
+  size_t vertexCount = mesh->positions.size() / 3;
+  if (generateNormals) {
+    mesh->normals = mesh->positions;
+    mesh->normalDescriptor.count = vertexCount;
+    mesh->normalDescriptor.elementSize = 3;
+    /// TODO
+    std::cerr << LOG_LOCATION << "Normals are not being generated yet\n";
+  }
+  if (generateUVs) {
+    mesh->addUV({0.f, 0.f});
+    mesh->addUV({1.f, 0.f});
+    mesh->addUV({1.f, 1.f});
+    mesh->addUV({0.f, 1.f});
+    mesh->texcoordDescriptor.count = vertexCount;
+    mesh->texcoordDescriptor.elementSize = 2;
+  }
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::TRIANGLES;
+  mesh->meshDescriptor.count = mesh->indices.size() / 3;
+  mesh->meshDescriptor.elementSize = 3;
+  mesh->positionDescriptor.count = vertexCount;
+  mesh->positionDescriptor.elementSize = 3;
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
+RawMesh *create_quad_wireframe_mesh(const Point3 &p1,
+                                    const Point3 &p2,
+                                    const Point3 &p3,
+                                    const Point3 &p4,
+                                    bool triangleFaces) {
+  auto *mesh = new RawMesh();
+  mesh->addPosition({p1.x, p1.y, p1.z});
+  mesh->addPosition({p2.x, p2.y, p2.z});
+  mesh->addPosition({p3.x, p3.y, p3.z});
+  mesh->addPosition({p4.x, p4.y, p4.z});
+  if (triangleFaces) {
+    mesh->addFace({0, 1, 2});
+    mesh->addFace({0, 2, 3});
+  } else
+    mesh->addFace({0, 1, 2, 3});
+  // fix normal and uvs indices
+  for (auto &i : mesh->indices)
+    i.normalIndex = i.texcoordIndex = i.positionIndex;
+  size_t vertexCount = mesh->positions.size() / 3;
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::LINE_LOOP;
+  mesh->meshDescriptor.count = (triangleFaces) ? 2 : 1;
+  mesh->meshDescriptor.elementSize = (triangleFaces) ? 3 : 4;
+  mesh->positionDescriptor.count = vertexCount;
+  mesh->positionDescriptor.elementSize = 3;
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
