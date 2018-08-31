@@ -84,14 +84,20 @@ void InstanceSet::resize(uint n) {
       case GL_UNSIGNED_INT:
         dataU_[buffersIndices_[i]].resize(buffers_[i]->bufferDescriptor.elementCount *
             buffers_[i]->bufferDescriptor.elementSize);
+        dynamic_cast<Buffer<uint> *>(buffers_[i])->set(&dataU_[buffersIndices_[i]][0],
+                                                       buffers_[i]->bufferDescriptor);
         break;
       case GL_UNSIGNED_BYTE:
         dataC_[buffersIndices_[i]].resize(buffers_[i]->bufferDescriptor.elementCount *
             buffers_[i]->bufferDescriptor.elementSize);
+        dynamic_cast<Buffer<uchar> *>(buffers_[i])->set(&dataC_[buffersIndices_[i]][0],
+                                                       buffers_[i]->bufferDescriptor);
         break;
       default:
         dataF_[buffersIndices_[i]].resize(buffers_[i]->bufferDescriptor.elementCount *
             buffers_[i]->bufferDescriptor.elementSize);
+        dynamic_cast<Buffer<float> *>(buffers_[i])->set(&dataF_[buffersIndices_[i]][0],
+                                                       buffers_[i]->bufferDescriptor);
     }
   }
   dataChanged_.resize(n, false);

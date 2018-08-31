@@ -44,7 +44,7 @@ int main() {
   quadShader.addVertexAttribute("trans", 2);
   quadShader.addUniform("view_matrix", 3);
   quadShader.addUniform("projection_matrix", 4);
-  quads.reset(new aergia::InstanceSet(qm, quadShader, n));
+  quads.reset(new aergia::InstanceSet(qm, quadShader, n/2));
   {
     // create a buffer for particles positions + sizes
     aergia::BufferDescriptor trans =
@@ -56,6 +56,7 @@ int main() {
         aergia::create_array_stream_descriptor(4); // r g b a
     col.addAttribute("col", 4, 0, col.dataType); // 4 -> r g b a
     uint colid = quads->add(col);
+    quads->resize(n);
     aergia::ColorPalette palette = aergia::HEAT_MATLAB_PALETTE;
     ponos::RNGSampler sampler;
     ponos::HaltonSequence rng;
@@ -82,6 +83,11 @@ int main() {
   app.scene.add(quads.get());
   aergia::SceneObjectSPtr grid(new aergia::CartesianGrid(5));
   app.scene.add(grid.get());
+  app.keyCallback = [&](int key, int scancode, int action, int modifiers) {
+    if(action == GLFW_RELEASE) {
+      quads->resize(2 * n);
+    }
+  };
   app.run();
   return 0;
 }
