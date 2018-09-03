@@ -276,6 +276,28 @@ Transform lookAtRH(const Point3 &pos, const Point3 &target, const Vector3 &up) {
   m[3][2] = 0;
   m[3][3] = 1;
 
+/*
+  dir = normalize(target - pos);
+  left = normalize(cross(normalize(up), dir));
+  new_up = cross(dir, left);
+
+  m[0][3] = pos.x;
+  m[1][3] = pos.y;
+  m[2][3] = pos.z;
+  m[3][3] = 1;
+  m[0][0] = left.x;
+  m[1][0] = left.y;
+  m[2][0] = left.z;
+  m[3][0] = 0;
+  m[0][1] = new_up.x;
+  m[1][1] = new_up.y;
+  m[2][1] = new_up.z;
+  m[3][1] = 0;
+  m[0][2] = dir.x;
+  m[1][2] = dir.y;
+  m[2][2] = dir.z;
+  m[3][2] = 0;
+*/
   Matrix4x4 cam_to_world(m);
   return Transform(cam_to_world, inverse(cam_to_world));
 }

@@ -2,6 +2,7 @@
 
 int main() {
   aergia::SceneApp<> app(800, 800);
+  auto camera = app.getCamera();
   std::shared_ptr<aergia::InstanceSet> spheres, quads;
   // generate a bunch of random quads
   // but now each instance has a transform matrix
@@ -32,8 +33,7 @@ int main() {
 "vec4 color;" \
 "} vertex;" \
 "void main() {" \
-"    mat4 model_view_matrix = view_matrix * trans;\n" \
-"    gl_Position = projection_matrix * model_view_matrix * " \
+"    gl_Position = projection_matrix * view_matrix * trans *" \
 "vec4(position,1);" \
 "   vertex.color = col;" \
 "}";
@@ -44,7 +44,7 @@ int main() {
   quadShader.addVertexAttribute("trans", 2);
   quadShader.addUniform("view_matrix", 3);
   quadShader.addUniform("projection_matrix", 4);
-  quads.reset(new aergia::InstanceSet(qm, quadShader, n/2));
+  quads.reset(new aergia::InstanceSet(qm, quadShader, n / 2));
   {
     // create a buffer for particles positions + sizes
     aergia::BufferDescriptor trans =
@@ -72,7 +72,7 @@ int main() {
       (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
           ponos::translate(
               ponos::vec3(sampler.sample(
-                  ponos::BBox(ponos::Point3(-5, -5, -5),
+                  ponos::BBox(ponos::Point3(-5, 0, 0),
                               ponos::Point3(5, 5, 5))))
           )).matrix().column_major(t);
       for (size_t k = 0; k < 16; k++)
@@ -83,11 +83,6 @@ int main() {
   app.scene.add(quads.get());
   aergia::SceneObjectSPtr grid(new aergia::CartesianGrid(5));
   app.scene.add(grid.get());
-  app.keyCallback = [&](int key, int scancode, int action, int modifiers) {
-    if(action == GLFW_RELEASE) {
-      quads->resize(2 * n);
-    }
-  };
   app.run();
   return 0;
 }

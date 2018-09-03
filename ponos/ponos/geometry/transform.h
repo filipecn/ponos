@@ -220,6 +220,7 @@ Transform rotateX(float angle);
 Transform rotateY(float angle);
 Transform rotateZ(float angle);
 Transform rotate(float angle, const Vector3 &axis);
+// Same as OpenGL convention
 Transform frustumTransform(float left, float right, float bottom, float top,
                            float near, float far);
 Transform perspective(float fovy, float aspect, float zNear, float zFar);

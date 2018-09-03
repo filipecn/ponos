@@ -31,7 +31,7 @@ namespace aergia {
 UserCamera::UserCamera() = default;
 
 void UserCamera::mouseButton(int action, int button, ponos::Point2 p) {
-  p.y = 1.f - p.y;
+//  p.y = 1.f - p.y;
   if (action == PRESS)
     trackball.buttonPress(*this, button, p);
   else {
@@ -44,7 +44,7 @@ void UserCamera::mouseButton(int action, int button, ponos::Point2 p) {
 }
 
 void UserCamera::mouseMove(ponos::Point2 p) {
-  p.y = 1.f - p.y;
+//  p.y = 1.f - p.y;
   if (trackball.isActive()) {
     trackball.mouseMove(*this, p);
     trackball.tb.applyPartialTransform();
@@ -55,7 +55,7 @@ void UserCamera::mouseMove(ponos::Point2 p) {
 }
 
 void UserCamera::mouseScroll(ponos::Point2 p, ponos::vec2 d) {
-  p.y = 1.f - p.y;
+//  p.y = 1.f - p.y;
   trackball.mouseScroll(*this, p, d);
   trackball.tb.applyPartialTransform();
   applyTransform(trackball.tb.transform());

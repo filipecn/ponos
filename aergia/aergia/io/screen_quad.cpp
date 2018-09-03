@@ -39,6 +39,7 @@ ScreenQuad::ScreenQuad() {
   mesh_.texcoordDescriptor.count = 4;
   mesh_.positions = std::vector<float>({ -1, -1, 1, -1, 1, 1, -1, 1 });
   mesh_.texcoords = std::vector<float>({0, 1, 1, 1, 1, 0, 0, 0});
+  mesh_.texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
   mesh_.indices.resize(6);
   mesh_.indices[0].positionIndex = mesh_.indices[0].texcoordIndex = 0;
   mesh_.indices[1].positionIndex = mesh_.indices[1].texcoordIndex = 1;
