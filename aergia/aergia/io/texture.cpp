@@ -66,7 +66,13 @@ void Texture::bind(GLenum t) const {
 
 void Texture::bindImage(GLenum t) const {
   glActiveTexture(t);
-  glBindImageTexture(0, textureObject, 0, GL_FALSE, 0, GL_WRITE_ONLY, attributes.internalFormat);
+  glBindImageTexture(0,
+                     textureObject,
+                     0,
+                     GL_FALSE,
+                     0,
+                     GL_WRITE_ONLY,
+                     attributes.internalFormat);
   CHECK_GL_ERRORS;
 }
 
@@ -105,6 +111,21 @@ std::ostream &operator<<(std::ostream &out, Texture &pt) {
     out << std::endl;
   }
   return out;
+}
+
+std::vector<unsigned char> Texture::texels() const {
+  auto width = static_cast<int>(attributes.width);
+  auto height = static_cast<int>(attributes.height);
+
+  std::vector<unsigned char> data(4 * width * height,0);
+//  memset(data, 0, 4 * width * height * sizeof(unsigned char));
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(attributes.target, textureObject);
+  glGetTexImage(attributes.target, 0, attributes.format,
+                attributes.type, &data[0]);
+  CHECK_GL_ERRORS;
+  return data;
 }
 
 } // aergia namespace

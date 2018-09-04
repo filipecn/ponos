@@ -45,6 +45,9 @@ public:
   /// writing it from shaders
   /// \param t texture unit  (ex: GL_TEXTURE0)
   virtual void bindImage(GLenum t) const;
+  /// retrieve texture pixel data
+  /// \return list of pixels by row major
+  std::vector<unsigned char> texels() const;
   ponos::uivec3 size() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 

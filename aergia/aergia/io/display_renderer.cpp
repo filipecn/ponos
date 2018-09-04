@@ -75,4 +75,12 @@ void DisplayRenderer::resize(size_t w, size_t h) {
   needsResize_ = false;
 }
 
+void DisplayRenderer::currentPixels(std::vector<unsigned char>& data,
+                                    size_t &width,
+                                    size_t &height) const {
+  data = buffers_[curBuffer_]->texels();
+  width = attributes_.width;
+  height = attributes_.height;
+}
+
 } // aergia namespace

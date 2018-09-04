@@ -40,6 +40,11 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/triangle" "external_build
 set_target_properties(triangle PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 set(TRIANGLE_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external/triangle")
 set(TRIANGLE_LIBS triangle)
+# Lodepng
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/external/lodepng" "external_build/lodepng")
+set_target_properties(lodepng PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+set(LODEPNG_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external/lodepng")
+set(LODEPNG_LIBS lodepng)
 # stb image library
 set(STB_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/external")
 # ply reader

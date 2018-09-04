@@ -36,7 +36,7 @@ namespace aergia {
 /// Renders to the display. Allows multiple post-effects. Post effects are applied
 /// on the same order they were added.
 class DisplayRenderer {
-public:
+ public:
   DisplayRenderer(size_t w, size_t h);
   /// \param e post effect.
   void addEffect(PostEffect *e);
@@ -46,8 +46,12 @@ public:
   /// \param w width in pixels
   /// \param h height in pixels
   void resize(size_t w, size_t h);
-
-private:
+  ///
+  /// \param data
+  /// \param width
+  /// \param height
+  void currentPixels(std::vector<unsigned char>& data, size_t &width, size_t &height) const;
+ private:
   ScreenQuad screen;
   bool needsResize_;
   size_t curBuffer_;
