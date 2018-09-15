@@ -372,7 +372,7 @@ inline T trilinearInterpolate(float *p, T ***data, T b,
 }
 template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
   int x, y, z;
-  register int i, j, k;
+  int i, j, k;
   float dx, dy, dz;
   float u[4], v[4], w[4];
   T r[4], q[4];
@@ -420,7 +420,7 @@ template <typename T>
 inline T tricubicInterpolate(float *p, T ***data, T b,
                              const int dimensions[3]) {
   int x, y, z;
-  register int i, j, k;
+  int i, j, k;
   float dx, dy, dz;
   float u[4], v[4], w[4];
   T r[4], q[4];

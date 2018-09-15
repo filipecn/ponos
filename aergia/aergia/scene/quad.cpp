@@ -35,7 +35,7 @@ Quad::Quad() {
   this->rawMesh->texcoordDescriptor.elementSize = 2;
   this->rawMesh->texcoordDescriptor.count = 4;
   this->rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
-  this->rawMesh->texcoords = std::vector<float>({0, 1, 1, 1, 1, 0, 0, 0});
+  this->rawMesh->texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
   this->rawMesh->indices.resize(6);
   this->rawMesh->indices[0].positionIndex =
   this->rawMesh->indices[0].texcoordIndex = 0;

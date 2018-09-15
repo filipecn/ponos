@@ -71,6 +71,7 @@ public:
   }
   /// \return MVP transform
   virtual ponos::Transform getTransform() const {
+    return projection->transform * view * model;
     return model * view * projection->transform;
   }
   /// \return camera projection const ptr

@@ -135,7 +135,7 @@ public:
       std::ostringstream stringStream;
       stringStream << v;
       std::string copyOfStr = stringStream.str();
-      text->render(copyOfStr, glGetMVPTransform()(p), 0.4f, dataColor);
+//      text->render(copyOfStr, glGetMVPTransform()(p), 0.4f, dataColor);
     };
   }
 

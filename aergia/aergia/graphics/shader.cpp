@@ -58,9 +58,10 @@ ShaderProgram::ShaderProgram(int id) {
   running = false;
 }
 
-ShaderProgram::ShaderProgram(const char *vs, const char *gs, const char *fs) : ShaderProgram(ShaderManager::instance().loadFromTexts(vs,
-                                                                                                                gs,
-                                                                                                                fs)) {
+ShaderProgram::ShaderProgram(const char *vs, const char *gs, const char *fs)
+    : ShaderProgram(ShaderManager::instance().loadFromTexts(vs,
+                                                            gs,
+                                                            fs)) {
 }
 
 ShaderProgram::ShaderProgram(const char *fl...) : programId(0) {
@@ -121,42 +122,55 @@ void ShaderProgram::addUniform(const std::string &name, GLint location) {
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::mat4 &m) {
-  if(!running)
+  if (!running)
     begin();
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
-  CHECK_GL_ERRORS;
+  }
   glUniformMatrix4fv(loc, 1, GL_FALSE, &m.m[0][0]);
-  CHECK_GL_ERRORS;
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::mat3 &m) {
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
+  }
   glUniformMatrix3fv(loc, 1, GL_FALSE, &m.m[0][0]);
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec4 &v) {
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
+  }
   glUniform4fv(loc, 1, &v.x);
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec3 &v) {
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
+  }
   glUniform3fv(loc, 1, &v.x);
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {
   bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
+  }
   glUniform2fv(loc, 1, &v.x);
   if (wasNotRunning)
     end();
@@ -165,8 +179,11 @@ void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {
 void ShaderProgram::setUniform(const char *name, int i) {
   bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
+  }
   glUniform1i(loc, i);
   if (wasNotRunning)
     end();
@@ -175,8 +192,11 @@ void ShaderProgram::setUniform(const char *name, int i) {
 void ShaderProgram::setUniform(const char *name, float f) {
   bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
-  if (loc == -1)
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
     return;
+  }
   glUniform1f(loc, f);
   if (wasNotRunning)
     end();

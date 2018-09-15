@@ -28,34 +28,40 @@
 namespace aergia {
 
 TextRenderer::TextRenderer(float scale, Color c, size_t id)
-    : fontId(id), scale(scale), textColor(c) {
+    : fontId(id), textSize(scale), textColor(c) {
   dynamicScale_ = 1.f;
   dynamicColor_ = COLOR_BLACK;
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   static int sid = aergia::ShaderManager::instance().loadFromTexts(
       "#version 440 core\n"
-          "layout (location = 0) in vec2 position;"
+          "layout (location = 0) in vec3 position;"
           "layout (location = 1) in vec2 texcoord;"
           "out vec2 TexCoords;"
-          "layout (location = 0) uniform mat4 projection;"
+          "layout (location = 0) uniform mat4 model_matrix;" \
+          "layout (location = 1) uniform mat4 view_matrix;" \
+          "layout (location = 2) uniform mat4 projection_matrix;" \
           "void main() {"
           "  TexCoords = texcoord;"
-          "  gl_Position = projection * vec4(position, 0.0, 1.0);"
+          "  gl_Position = projection_matrix * view_matrix * model_matrix * vec4(position, 1.0);" \
           "}",
       nullptr,
       "#version 440 core\n"
           "in vec2 TexCoords;"
           "out vec4 color;"
-          "layout (location  1) uniform sampler2D text;"
-          "uniform vec4 textColor;"
+          "layout (location = 3) uniform sampler2D text;"
+          "layout (location = 4) uniform vec4 textColor;"
           "void main() {"
           "  vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);"
           "  color = textColor * sampled;"
+          "  color = vec4(textColor.rgb,texture(text, TexCoords).r);"
           "}");
   quad_.shader.reset(new aergia::ShaderProgram(sid));
   quad_.shader->addVertexAttribute("position", 0);
   quad_.shader->addVertexAttribute("texcoord", 1);
+  quad_.shader->addUniform("model_matrix", 0);
+  quad_.shader->addUniform("view_matrix", 1);
+  quad_.shader->addUniform("projection_matrix", 2);
+  quad_.shader->addUniform("text", 3);
+  quad_.shader->addUniform("textColor", 4);
 }
 
 void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
@@ -69,9 +75,17 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   atlas.texture.bind(GL_TEXTURE0);
   quad_.shader->begin();
   quad_.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
-  quad_.shader->setUniform(
-      "projection", ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
-  quad_.shader->setUniform("tex", 0);
+  quad_.shader->setUniform("model_matrix",
+                           ponos::transpose(ponos::translate(ponos::vec3(x,
+                                                                         y,
+                                                                         0)).matrix()));
+  quad_.shader->setUniform("view_matrix", ponos::Transform().matrix());
+  quad_.shader->setUniform("projection_matrix",
+                           ponos::transpose(ponos::ortho(0,
+                                                         800,
+                                                         0,
+                                                         800).matrix()));
+  quad_.shader->setUniform("text", 0);
   aergia::CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
   glDrawElements(ib->bufferDescriptor.elementType,
@@ -79,56 +93,61 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
                      ib->bufferDescriptor.elementSize,
                  ib->bufferDescriptor.dataType, 0);
   aergia::CHECK_GL_ERRORS;
-/*
-  std::string::const_iterator it;
-  auto font = FontManager::instance().fontTexture(fontId);
-  for (it = s.begin(); it != s.end(); it++) {
-    auto ch = font[*it];
-    GLfloat xpos = x + ch.bearing[0] * scale;
-    GLfloat ypos = y - (ch.size[1] - ch.bearing[1]) * scale;
-    GLfloat w = ch.size[0] * scale;
-    GLfloat h = ch.size[1] * scale;
-    ch.texture->bind(GL_TEXTURE0);
-    quad_.set(ponos::Point2(xpos, ypos), ponos::Point2(xpos + w, ypos + h));
-    quad_.draw();
-    // Now advance cursors for next glyph (note that advance is number of 1/64
-    // pixels)
-    // Bitshift by 6 to get value in pixels (2^6 = 64)
-    x += (ch.advance >> 6) * scale;
-  }
-  */
-//  glBindTexture(GL_TEXTURE_2D, 0);
   quad_.shader->end();
 }
 
-void TextRenderer::render(std::string s, const ponos::Point3 &p, GLfloat scale,
+void TextRenderer::render(std::string s,
+                          const ponos::Point3 &p,
+                          const CameraInterface *camera,
+                          GLfloat scale,
                           aergia::Color c) {
-  auto &gd = GraphicsDisplay::instance();
-  ponos::Point3 sp = glGetMVPTransform()(p);
-  sp = gd.normDevCoordToViewCoord(sp);
-  render(s, sp.x, sp.y, scale, c);
+  atlas.setText(s);
+  atlas.mesh->bind();
+  atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader.get());
+  atlas.texture.bind(GL_TEXTURE0);
+  quad_.shader->begin();
+  quad_.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
+  quad_.shader->setUniform("model_matrix",
+                           ponos::transpose((ponos::translate(ponos::vec3(p))
+                               * ponos::scale(scale, scale, scale)).matrix()));
+  quad_.shader->setUniform("view_matrix",
+                           ponos::transpose(camera_->getViewTransform().matrix()));
+  quad_.shader->setUniform("projection_matrix",
+                           ponos::transpose(camera_->getProjectionTransform().matrix()));
+  quad_.shader->setUniform("text", 0);
+  aergia::CHECK_GL_ERRORS;
+  auto ib = atlas.mesh->indexBuffer();
+  glDrawElements(ib->bufferDescriptor.elementType,
+                 ib->bufferDescriptor.elementCount *
+                     ib->bufferDescriptor.elementSize,
+                 ib->bufferDescriptor.dataType, 0);
+  aergia::CHECK_GL_ERRORS;
+  quad_.shader->end();
+}
+
+void TextRenderer::setCamera(const CameraInterface *c) {
+  camera_ = c;
+  usingCamera_ = true;
 }
 
 TextRenderer &TextRenderer::at(const ponos::Point3 &p) {
-  auto &gd = GraphicsDisplay::instance();
-  ponos::Point3 sp = glGetMVPTransform()(p);
-  sp = gd.normDevCoordToViewCoord(sp);
-  dynamicPosition_.x = sp.x;
-  dynamicPosition_.y = sp.y;
+  position_ = p;
   return *this;
 }
 
 TextRenderer &TextRenderer::at(const ponos::Point2 &p) {
-  dynamicPosition_ = p;
+  position_ = ponos::Point3(p.x, p.y, 0);
   return *this;
 }
 
 TextRenderer &TextRenderer::withScale(float s) {
+  usingDynamicScale_ = true;
   dynamicScale_ = s;
   return *this;
 }
 
 TextRenderer &TextRenderer::withColor(Color c) {
+  usingDynamicColor_ = true;
   dynamicColor_ = c;
   return *this;
 }

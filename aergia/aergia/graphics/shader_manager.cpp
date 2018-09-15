@@ -152,6 +152,7 @@ GLuint ShaderManager::compile(const char *shaderSource, GLuint shaderType) {
   CHECK_GL_ERRORS;
   glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &compiled);
   if (!compiled) {
+    std::cerr << shaderSource << std::endl;
     printShaderInfoLog(shaderObject);
     std::cerr << "failed to compile shader\n";
   }

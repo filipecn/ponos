@@ -51,15 +51,20 @@ class TextRenderer {
   /// \param y pixel position (screen coordinates)
   /// \param scale
   /// \param c color
-  void render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
-              aergia::Color c);
+  void render(std::string s, GLfloat x, GLfloat y, GLfloat scale = 1.f,
+              aergia::Color c = COLOR_BLACK);
   /// \brief draws text on screen from a screen position
   /// \param s text
   /// \param p pixel position (in world coordinates)
   /// \param scale
   /// \param c color
-  void render(std::string s, const ponos::Point3 &p, GLfloat scale,
+  void render(std::string s,
+              const ponos::Point3 &p,
+              const CameraInterface *camera,
+              GLfloat scale,
               aergia::Color c);
+  /// \param c camera pointer
+  void setCamera(const CameraInterface *c);
   /// \param p position (world coordinates)
   /// \return text renderer reference
   TextRenderer &at(const ponos::Point3 &p);
@@ -79,17 +84,30 @@ class TextRenderer {
   TextRenderer &operator<<(T t) {
     std::stringstream s;
     s << t;
-    render(s.str(), dynamicPosition_.x, dynamicPosition_.y, dynamicScale_,
-           dynamicColor_);
+    if (camera_ && usingCamera_)
+      render(s.str(),
+             position_,
+             camera_,
+             (usingDynamicScale_) ? dynamicScale_ : textSize,
+             (usingDynamicColor_) ? dynamicColor_ : textColor);
+    else
+      render(s.str(), position_.x, position_.y,
+           (usingDynamicScale_) ? dynamicScale_ : textSize,
+           (usingDynamicColor_) ? dynamicColor_ : textColor);
+    usingDynamicScale_ = usingDynamicColor_ = false;
     return *this;
   }
-  size_t fontId;   //!< font id (from font manager)
-  float scale;     //!< text scale
+  size_t fontId = 0;   //!< font id (from font manager)
+  float textSize = 1.f;     //!< text scale
   Color textColor; //!< text color
  private:
-  ponos::Point2 dynamicPosition_;
-  float dynamicScale_;
+  bool usingCamera_ = false;
+  bool usingDynamicScale_ = false;
+  bool usingDynamicColor_ = false;
+  ponos::Point3 position_;
+  float dynamicScale_ = 1.f;
   Color dynamicColor_;
+  const CameraInterface *camera_ = nullptr; //!< reference camera
   Quad quad_;
   FontAtlas atlas;
 };

@@ -59,10 +59,10 @@ public:
       sprintf(label, "%lu", k);
       ponos::Point3 labelPosition = glGetMVPTransform()(
           ponos::Point3(vertices[k].position[0], vertices[k].position[1], 0));
-      text->render(label, labelPosition, .5f,
-                   aergia::Color(0.8f, 0.2f, 0.7f, 0.1f));
-      sprintf(label, " %f", vertices[k].data);
-      text->render(label, labelPosition, .3f, aergia::Color(1.0f, 0.2f, 0.4f));
+//      text->render(label, labelPosition, .5f,
+//                   aergia::Color(0.8f, 0.2f, 0.7f, 0.1f));
+//      sprintf(label, " %f", vertices[k].data);
+//      text->render(label, labelPosition, .3f, aergia::Color(1.0f, 0.2f, 0.4f));
     }
     int k = 0;
     for (auto e : edges) {
@@ -86,8 +86,8 @@ public:
           glGetMVPTransform()(ponos::Point3(C.x, C.y, 0.f));
       char label[100];
       sprintf(label, "%d", k++);
-      text->render(label, labelPositition, .3f,
-                   aergia::Color(0.4f, 0.2f, 0.7f, 0.3f));
+//      text->render(label, labelPositition, .3f,
+//                   aergia::Color(0.4f, 0.2f, 0.7f, 0.3f));
       aergia::draw_vector(A, B - A, 0.04, 0.05);
       glColor4f(1, 0, 0, 0.2);
       glBegin(GL_LINES);
@@ -123,8 +123,8 @@ public:
       ponos::Point3 labelPosition =
           glGetMVPTransform()(ponos::Point3(mp[0] / 3.f, mp[1] / 3.f, 0.f));
       sprintf(label, "%lu", i);
-      text->render(label, labelPosition, .5f,
-                   aergia::Color(0.8f, 0.5f, 0.2f, 0.2f));
+//      text->render(label, labelPosition, .5f,
+//                   aergia::Color(0.8f, 0.5f, 0.2f, 0.2f));
     }
   }
 

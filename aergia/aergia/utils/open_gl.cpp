@@ -201,7 +201,7 @@ void glVertex(ponos::Point<float, 2> v) { glVertex2f(v[0], v[1]); }
 void glColor(Color c) { glColor4f(c.r, c.g, c.b, c.a); }
 
 void glApplyTransform(const ponos::Transform &transform) {
-  std::cerr << "forbiden call in opengl.cpp";
+  std::cerr << "forbiden call at " << LOG_LOCATION << std::endl;
   exit(-1);
   float m[16];
   transform.matrix().column_major(m);
@@ -209,7 +209,7 @@ void glApplyTransform(const ponos::Transform &transform) {
 }
 
 ponos::Transform glGetProjectionTransform() {
-  std::cerr << "forbiden call in opengl.cpp";
+  std::cerr << "forbiden call at " << LOG_LOCATION << std::endl;
   exit(-1);
   float m[16];
   glGetFloatv(GL_PROJECTION_MATRIX, m);
@@ -217,7 +217,7 @@ ponos::Transform glGetProjectionTransform() {
 }
 
 ponos::Transform glGetModelviewTransform() {
-  std::cerr << "forbiden call in opengl.cpp";
+  std::cerr << "forbiden call at " << LOG_LOCATION << std::endl;
   exit(-1);
   float m[16];
   glGetFloatv(GL_MODELVIEW_MATRIX, m);
@@ -225,7 +225,7 @@ ponos::Transform glGetModelviewTransform() {
 }
 
 ponos::Transform glGetMVPTransform() {
-  std::cerr << "forbiden call in opengl.cpp";
+  std::cerr << "forbiden call at " << LOG_LOCATION << std::endl;
   exit(-1);
   return glGetProjectionTransform() * glGetModelviewTransform();
   return glGetModelviewTransform() * glGetProjectionTransform();

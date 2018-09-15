@@ -3,14 +3,16 @@
 
 int main() {
   aergia::SceneApp<> app(800, 800);
-  app.init();
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  aergia::TextRenderer textRenderer("/mnt/windows/Projects/ponos/aergia/examples/assets/arial.ttf");
-  app.viewports[0].renderCallback = [&]() {
-    textRenderer.withScale(2.f) << textRenderer.withColor(aergia::COLOR_RED)
-                                << textRenderer.at(ponos::Point3()) << "test";
-  };
+  aergia::TextRenderer textRenderer
+      ("/mnt/windows/Projects/ponos/aergia/examples/assets/arial.ttf");
+  app.viewports[0].renderCallback =
+      [&](aergia::CameraInterface *camera) {
+        textRenderer.setCamera(camera);
+        textRenderer.render("bla", 500, 0, 1.f, aergia::COLOR_RED);
+        textRenderer.withScale(.02f) << textRenderer.withColor(aergia::COLOR_BLUE)
+                                    << textRenderer.at(ponos::Point3(1,0,0))
+                                    << "test";
+      };
   app.scene.add(new aergia::CartesianGrid(1));
   app.run();
   return 0;
