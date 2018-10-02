@@ -2,7 +2,6 @@
 
 int main() {
   aergia::SceneApp<> app(800, 800);
-  auto camera = app.getCamera();
   std::shared_ptr<aergia::InstanceSet> spheres, quads;
   // generate a bunch of random quads
   // but now each instance has a transform matrix
@@ -22,7 +21,9 @@ int main() {
                                          ponos::Point3(1, 0, 0),
                                          ponos::Point3(1, 1, 0),
                                          ponos::Point3(0, 1, 0)));
-  aergia::SceneMesh qm(*wquadMesh.get());
+  ponos::RawMeshSPtr cube = ponos::RawMeshes::cube();
+  //aergia::SceneMesh qm(*wquadMesh.get());
+  aergia::SceneMesh qm(*cube.get());
   const char *qvs = "#version 440 core\n" \
 "layout (location = 0) in vec3 position;" \
 "layout (location = 1) in vec4 col;"  \
@@ -67,6 +68,7 @@ int main() {
       c[1] = color.g;
       c[2] = color.b;
       c[3] = color.a;
+      c[3] = 0.4;
       auto m = quads->instanceF(tid, i);
       float t[16];
       (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *

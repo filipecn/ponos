@@ -227,4 +227,112 @@ RawMesh *create_quad_wireframe_mesh(const Point3 &p1,
   return mesh;
 }
 
+RawMeshSPtr RawMeshes::cube(const ponos::Transform &transform,
+                                        bool generateNormals,
+                                        bool generateUVs) {
+  RawMeshSPtr mesh = std::make_shared<RawMesh>();
+  //  y          2      3
+  //  |_x     6      7
+  // z          0       1
+  //          4      5
+  mesh->addPosition({0.f, 0.f, 0.f});
+  mesh->addPosition({1.f, 0.f, 0.f});
+  mesh->addPosition({0.f, 1.f, 0.f});
+  mesh->addPosition({1.f, 1.f, 0.f});
+  mesh->addPosition({0.f, 0.f, 1.f});
+  mesh->addPosition({1.f, 0.f, 1.f});
+  mesh->addPosition({0.f, 1.f, 1.f});
+  mesh->addPosition({1.f, 1.f, 1.f});
+  mesh->addFace({0, 2, 1}); // back
+  mesh->addFace({1, 2, 3}); // back
+  mesh->addFace({4, 5, 6}); // front
+  mesh->addFace({6, 5, 7}); // front
+  mesh->addFace({0, 4, 6}); // left
+  mesh->addFace({0, 6, 2}); // left
+  mesh->addFace({5, 1, 7}); // right
+  mesh->addFace({1, 3, 7}); // right
+  mesh->addFace({0, 1, 5}); // bottom
+  mesh->addFace({0, 5, 4}); // bottom
+  // fix normal and uvs indices
+  for (auto &i : mesh->indices)
+    i.normalIndex = i.texcoordIndex = i.positionIndex;
+  size_t vertexCount = mesh->positions.size() / 3;
+  if (generateNormals) {
+    mesh->normals = mesh->positions;
+    mesh->normalDescriptor.count = vertexCount;
+    mesh->normalDescriptor.elementSize = 3;
+    // TODO
+    std::cerr << LOG_LOCATION << "Normals are not being generated yet\n";
+  }
+  if (generateUVs) {
+    // TODO
+    std::cerr << LOG_LOCATION << "UVs are not being generated yet\n";
+  }
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::TRIANGLES;
+  mesh->meshDescriptor.count = mesh->indices.size() / 3;
+  mesh->meshDescriptor.elementSize = 3;
+  mesh->positionDescriptor.count = vertexCount;
+  mesh->positionDescriptor.elementSize = 3;
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
+RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,
+                                                  bool triangleFaces) {
+  RawMeshSPtr mesh = std::make_shared<RawMesh>();
+  //  y          2      3
+  //  |_x     6      7
+  // z          0       1
+  //          4      5
+  mesh->addPosition({0.f, 0.f, 0.f});
+  mesh->addPosition({1.f, 0.f, 0.f});
+  mesh->addPosition({0.f, 1.f, 0.f});
+  mesh->addPosition({1.f, 1.f, 0.f});
+  mesh->addPosition({0.f, 0.f, 1.f});
+  mesh->addPosition({1.f, 0.f, 1.f});
+  mesh->addPosition({0.f, 1.f, 1.f});
+  mesh->addPosition({1.f, 1.f, 1.f});
+  if (triangleFaces) {
+    mesh->addFace({0, 2, 2, 1}); // back
+    mesh->addFace({1, 2, 2, 3}); // back
+    mesh->addFace({4, 5, 5, 6}); // front
+    mesh->addFace({6, 5, 5, 7}); // front
+    mesh->addFace({0, 4, 4, 6}); // left
+    mesh->addFace({0, 6, 6, 2}); // left
+    mesh->addFace({5, 1, 1, 7}); // right
+    mesh->addFace({1, 3, 3, 7}); // right
+    mesh->addFace({0, 1, 1, 5}); // bottom
+    mesh->addFace({0, 5, 5, 4}); // bottom
+  } else {
+    mesh->addFace({0, 1});
+    mesh->addFace({0, 2});
+    mesh->addFace({0, 4});
+    mesh->addFace({6, 2});
+    mesh->addFace({6, 7});
+    mesh->addFace({6, 4});
+    mesh->addFace({3, 2});
+    mesh->addFace({3, 7});
+    mesh->addFace({3, 1});
+    mesh->addFace({5, 4});
+    mesh->addFace({5, 7});
+    mesh->addFace({5, 1});
+  }
+    // fix normal and uvs indices
+    for (auto &i : mesh->indices)
+      i.normalIndex = i.texcoordIndex = i.positionIndex;
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::LINES;
+  mesh->meshDescriptor.count = mesh->indices.size() / 2;
+  mesh->meshDescriptor.elementSize = 2;
+  mesh->positionDescriptor.count = mesh->positions.size() / 3;
+  mesh->positionDescriptor.elementSize = 3;
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
 } // ponos namespace

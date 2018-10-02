@@ -30,7 +30,6 @@
 
 namespace ponos {
 
-///
 /// \param center
 /// \param radius
 /// \param divisions
@@ -42,7 +41,6 @@ RawMesh *create_icosphere_mesh(const Point3 &center,
                                size_t divisions,
                                bool generateNormals,
                                bool generateUVs);
-///
 /// \param p1
 /// \param p2
 /// \param p3
@@ -56,7 +54,6 @@ RawMesh *create_quad_mesh(const Point3 &p1,
                           const Point3 &p4,
                           bool generateNormals,
                           bool generateUVs);
-///
 /// \param p1
 /// \param p2
 /// \param p3
@@ -68,6 +65,24 @@ RawMesh *create_quad_wireframe_mesh(const Point3 &p1,
                                     const Point3 &p3,
                                     const Point3 &p4,
                                     bool triangleFaces = false);
+
+class RawMeshes {
+ public:
+///
+/// \param transform
+/// \param generateNormals
+/// \param generateUVs
+/// \return
+  static RawMeshSPtr cube(const ponos::Transform &transform = ponos::Transform(),
+                                      bool generateNormals = false,
+                                      bool generateUVs = false);
+  /// \param transform
+  /// \param triangleFaces
+  /// \return
+  static RawMeshSPtr cubeWireframe(const ponos::Transform &transform = ponos::Transform(),
+                                                bool triangleFaces = false);
+};
+
 } // ponos namespace
 
 #endif //PONOS_GEOMETRIC_SHAPES_H

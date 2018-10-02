@@ -51,6 +51,16 @@ ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center,
                                       size_t divisions,
                                       bool generateNormals = false,
                                       bool genereateUVs = false);
+/// Generates a cube mesh represented as a set of triangle faces
+/// \param center cube center
+/// \param size edge size
+/// \param generateNormals include normals
+/// \param generateUVs include texture coordinates
+/// \return Raw Mesh smart pointer
+ponos::RawMeshSPtr create_cube_mesh(const ponos::Point3 &center,
+                                    float size,
+                                    bool generateNormals = false,
+                                    bool generateUVs = false);
 
 } // aergia namespace
 
