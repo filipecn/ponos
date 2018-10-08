@@ -18,22 +18,18 @@ add_executable(instances WIN32 instances.cpp)
 add_executable(post_effects_example WIN32 post_effects_example.cpp)
 #add_executable(tmesh WIN32 tmesh.cpp)
 
-set(WINDOWS_BINARIES
-        hemesh_example
-        c_regular_grid_example
-        compute_shader
-        procedural_texture
-        geometry_queries
-        z_grid
-        vector_grid
-        hello_aergia_test
-        scene_app
-        hello_3d
-        stream_lines
-        quad_tree
-        )
-
 if (MSVC)
+        set(WINDOWS_BINARIES
+                hello_aergia_test
+                scene_app
+                compute_shader
+                hemesh_example
+                save_viewport_example
+                viewports
+                text_example
+                instances
+                post_effects_example
+        )
     # Tell MSVC to use main instead of WinMain for Windows subsystem executables
     set_target_properties(${WINDOWS_BINARIES} PROPERTIES
             LINK_FLAGS "/ENTRY:mainCRTStartup")

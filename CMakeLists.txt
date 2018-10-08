@@ -1,6 +1,33 @@
 project(PONOS)
 
 cmake_minimum_required(VERSION 3.1)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE "ON")
+
+if (CMAKE_COMPILER_IS_GNUCXX)
+    set(DEBUG_FLAGS "${DEBUG_FLAGS} -g -Wall -Wextra --coverage")
+    set(RELEASE_FLAGS "-O3 -Wall -Wextra --coverage -fPIC")
+endif (CMAKE_COMPILER_IS_GNUCXX)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(DEBUG_FLAGS "${DEBUG_FLAGS} -std=c++11 -g -Wall -Wextra --coverage -fPIC")
+    set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra --coverage -fPIC")
+endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if (MINGW)
+    set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra --coverage")
+endif (MINGW)
+if (MSVC)
+    set(DEBUG_FLAGS "/Zi /EHsc /MDd /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
+    set(RELEASE_FLAGS "/EHsc")
+endif (MSVC)
+
+set(ROOT_PROJECT_PATH "${PROJECT_SOURCE_DIR}")
+
+set(CMAKE_CXX_FLAGS ${RELEASE_FLAGS})
+set(CMAKE_CXX_FLAGS_DEBUG ${DEBUG_FLAGS})
+set(CMAKE_CONFIGURATION_TYPES Debug Release)
+
 # Google Tests
 if (NOT TARGET gtest)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -64,31 +91,6 @@ IF (CMAKE_BUILD_TYPE MATCHES RELEASE)
     set(GLAD_LIBS "${CMAKE_BINARY_DIR}/external_build/glad/libglad.so")
 ENDIF (CMAKE_BUILD_TYPE MATCHES RELEASE)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE "ON")
-
-if (CMAKE_COMPILER_IS_GNUCXX)
-    set(DEBUG_FLAGS "${DEBUG_FLAGS} -g -Wall -Wextra --coverage")
-    set(RELEASE_FLAGS "-O3 -Wall -Wextra --coverage -fPIC")
-endif (CMAKE_COMPILER_IS_GNUCXX)
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(DEBUG_FLAGS "${DEBUG_FLAGS} -std=c++11 -g -Wall -Wextra --coverage -fPIC")
-    set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra --coverage -fPIC")
-endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-if (MINGW)
-    set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra --coverage")
-endif (MINGW)
-if (MSVC)
-    set(DEBUG_FLAGS "/Zi /EHsc /MD /MDd")
-    set(RELEASE_FLAGS "/EHsc")
-endif (MSVC)
-
-set(ROOT_PROJECT_PATH "${PROJECT_SOURCE_DIR}")
-
-set(CMAKE_CXX_FLAGS ${RELEASE_FLAGS})
-set(CMAKE_CXX_FLAGS_DEBUG ${DEBUG_FLAGS})
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(TRIANGLE_INCLUDE "")
 set(TETGEN_INCLUDE "")
 
@@ -101,6 +103,7 @@ if (NOT ("${TETGEN_INCLUDE}" STREQUAL "" OR "${TETGEN_LIB}" STREQUAL ""))
     add_definitions(-DTETGEN_INCLUDED)
 endif (NOT ("${TETGEN_INCLUDE}" STREQUAL "" OR "${TETGEN_LIB}" STREQUAL ""))
 
+set(BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(ponos)
 # add_subdirectory(hercules)
 # add_subdirectory(odysseus)

@@ -8,12 +8,11 @@ add_executable(${target} ${SOURCES})
 target_include_directories(${target} PUBLIC ${GOOGLE_TEST_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR})
 if (WIN32)
     target_link_libraries(${target} ponos gtest)
-endif(WIN32)
-if(APPLE)
+elseif(APPLE)
     target_link_libraries(${target} ponos gtest pthread)
-else (APPLE)
+else (WIN32)
     target_link_libraries(${target} ponos gtest gcov pthread)
-endif (APPLE)
+endif (WIN32)
 
 add_custom_target(test_ponos
         COMMAND ponos_unit_tests DEPENDS ponos_unit_tests

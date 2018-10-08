@@ -99,11 +99,7 @@ set(SOURCES
         aergia/aergia.cpp
         aergia/scene/instance_set.cpp aergia/scene/instance_set.h)
 
-if (WIN32)
-    link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY} opengl32 glu32)
-endif (WIN32)
-
-add_library(aergia ${SOURCES} ${HEADERS})
+add_library(aergia STATIC ${SOURCES} ${HEADERS})
 set_target_properties(aergia PROPERTIES
         OUTPUT_NAME "aergia"
         FOLDER "AERGIA")
@@ -120,7 +116,6 @@ target_link_libraries(aergia PUBLIC ponos glad ${NANOGUI_LIBS} ${PLY_LIBS} ${TIN
 add_subdirectory(examples)
 
 if (WIN32)
-    SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
 else (WIN32)
     SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
 endif (WIN32)

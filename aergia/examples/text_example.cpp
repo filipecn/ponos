@@ -5,7 +5,8 @@ int main() {
   aergia::SceneApp<> app(800, 800, "", false);
   app.addViewport2D(0,0,800,800);
   aergia::TextRenderer textRenderer
-      ("/mnt/windows/Projects/ponos/aergia/examples/assets/arial.ttf");
+    //   ("/mnt/windows/Projects/ponos/aergia/examples/assets/arial.ttf");
+      ("C:/Projects/ponos/aergia/examples/assets/arial.ttf");
   app.viewports[0].renderCallback =
       [&](aergia::CameraInterface *camera) {
         textRenderer.setCamera(camera);
