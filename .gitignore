@@ -7,3 +7,7 @@ cmake-build-debug
 poseidon/app
 compile_commands.json
 wbuild
+bazel-*
+doc/*
+.vs*
+external/*
