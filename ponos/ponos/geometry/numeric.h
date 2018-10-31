@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRY_NUMERIC_H
 #define PONOS_GEOMETRY_NUMERIC_H
@@ -38,15 +38,11 @@ namespace ponos {
 #endif
 
 class Constants {
-public:
-  static double pi;// = 3.14159265358979323846f;
+ public:
+  static double pi;      // = 3.14159265358979323846f;
+  static double two_pi;  // = 6.28318530718
 };
-///#ifndef PI
-///#define PI 3.14159265358979323846f
-///#endif
-#ifndef PI_2
-#define PI_2 6.28318530718
-#endif
+
 #ifndef INV_PI
 #define INV_PI 0.31830988618379067154f
 #endif
@@ -98,10 +94,10 @@ public:
  * \param x
  * \returns angle (in radians) between **0** and **2PI**
  */
-template <typename T> T atanPI_2(T y, T x) {
+template <typename T>
+T atanPI_2(T y, T x) {
   T angle = std::atan2(y, x);
-  if (angle < 0.0)
-    return PI_2 + angle;
+  if (angle < 0.0) return Constants::two_pi + angle;
   return angle;
 }
 /** \brief normalization (dummy function)
@@ -138,25 +134,19 @@ inline int round2Int(float f) { return f + .5f; }
 inline float mod(int a, int b) {
   int n = a / b;
   a -= n * b;
-  if (a < 0)
-    a += b;
+  if (a < 0) a += b;
   return a;
 }
 template <typename T = float, typename S = float>
 inline T bisect(T a, T b, S fa, S fb, S error, const std::function<S(T p)> &f) {
-  if (fb < fa)
-    return bisect(b, a, fb, fa, error, f);
+  if (fb < fa) return bisect(b, a, fb, fa, error, f);
   S zero = 0;
-  if (fa > zero || IS_EQUAL_ERROR(fa, zero, error))
-    return a;
-  if (fb < zero || IS_EQUAL_ERROR(fb, zero, error))
-    return b;
+  if (fa > zero || IS_EQUAL_ERROR(fa, zero, error)) return a;
+  if (fb < zero || IS_EQUAL_ERROR(fb, zero, error)) return b;
   T c = (a + b) / static_cast<T>(2);
-  if (IS_EQUAL(a, c) || IS_EQUAL(b, c))
-    return c;
+  if (IS_EQUAL(a, c) || IS_EQUAL(b, c)) return c;
   S fc = f(c);
-  if (fc > zero)
-    return bisect(a, c, fa, fc, error, f);
+  if (fc > zero) return bisect(a, c, fa, fc, error, f);
   return bisect(c, b, fc, fb, error, f);
 }
 /** \brief interpolation
@@ -220,7 +210,8 @@ inline S nearest(T t, const S &a, const S &b) {
  * \param u **[in]** high
  * \return clame **b** to be in **[l, h]**
  */
-template <typename T> T clamp(const T &n, const T &l, const T &u) {
+template <typename T>
+T clamp(const T &n, const T &l, const T &u) {
   return std::max(l, std::min(n, u));
 }
 /** \brief smooth Hermit interpolation when **a** < **v** < **b**
@@ -229,7 +220,7 @@ template <typename T> T clamp(const T &n, const T &l, const T &u) {
  * \param b **[in]** upper bound
  * \return Hermit value between **0** and **1**
  */
-template<typename T>
+template <typename T>
 T smoothStep(T v, T a, T b) {
   float t = clamp((v - a) / (b - a), T(0), T(1));
   return t * t * (T(3) - 2 * t);
@@ -276,8 +267,7 @@ inline uint32 roundUpPow2(uint32 v) {
 }
 inline bool solve_quadratic(float A, float B, float C, float &t0, float &t1) {
   float delta = B * B - 4.f * A * C;
-  if (IS_ZERO(A) || delta <= 0.)
-    return false;
+  if (IS_ZERO(A) || delta <= 0.) return false;
   float sDelta = sqrtf(delta);
   float q;
   if (B < 0.)
@@ -286,24 +276,18 @@ inline bool solve_quadratic(float A, float B, float C, float &t0, float &t1) {
     q = -0.5f * (B + sDelta);
   t0 = q / A;
   t1 = C / q;
-  if (t0 > t1)
-    std::swap(t0, t1);
+  if (t0 > t1) std::swap(t0, t1);
   return true;
 }
 inline float trilinear_hat_function(float r) {
-  if (0.f <= r && r <= 1.f)
-    return 1.f - r;
-  if (-1.f <= r && r <= 0.f)
-    return 1.f + r;
+  if (0.f <= r && r <= 1.f) return 1.f - r;
+  if (-1.f <= r && r <= 0.f) return 1.f + r;
   return 0.f;
 }
 inline float quadraticBSpline(float r) {
-  if (-1.5f <= r && r < -0.5f)
-    return 0.5f * (r + 1.5f) * (r + 1.5f);
-  if (-0.5f <= r && r < 0.5f)
-    return 0.75f - r * r;
-  if (0.5f <= r && r < 1.5f)
-    return 0.5f * (1.5f - r) * (1.5f - r);
+  if (-1.5f <= r && r < -0.5f) return 0.5f * (r + 1.5f) * (r + 1.5f);
+  if (-0.5f <= r && r < 0.5f) return 0.75f - r * r;
+  if (0.5f <= r && r < 1.5f) return 0.5f * (1.5f - r) * (1.5f - r);
   return 0.0f;
 }
 template <typename T>
@@ -311,13 +295,15 @@ inline T bilinearInterpolation(T f00, T f10, T f11, T f01, T x, T y) {
   return f00 * (1.0 - x) * (1.0 - y) + f10 * x * (1.0 - y) +
          f01 * (1.0 - x) * y + f11 * x * y;
 }
-template <typename T> inline T cubicInterpolate(T p[4], T x) {
-  return p[1] +
-         0.5 * x * (p[2] - p[0] +
-                    x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] +
-                         x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
+template <typename T>
+inline T cubicInterpolate(T p[4], T x) {
+  return p[1] + 0.5 * x *
+                    (p[2] - p[0] +
+                     x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] +
+                          x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
 }
-template <typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
+template <typename T>
+inline T bicubicInterpolate(T p[4][4], T x, T y) {
   T arr[4];
   arr[0] = cubicInterpolate(p[0], y);
   arr[1] = cubicInterpolate(p[1], y);
@@ -370,7 +356,8 @@ inline T trilinearInterpolate(float *p, T ***data, T b,
          v110 * x * y * (1.f - z) + v001 * (1.f - x) * (1.f - y) * z +
          v101 * x * (1.f - y) * z + v011 * (1.f - x) * y * z + v111 * x * y * z;
 }
-template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
+template <typename T>
+inline T tricubicInterpolate(float *p, T ***data) {
   int x, y, z;
   int i, j, k;
   float dx, dy, dz;
@@ -516,6 +503,6 @@ inline uint32_t mortonCode(uint32_t x, uint32_t y, uint32_t z) {
   return (separateBy2(z) << 2) + (separateBy2(y) << 1) + separateBy2(x);
 }
 
-} // ponos namespace
+}  // namespace ponos
 
 #endif

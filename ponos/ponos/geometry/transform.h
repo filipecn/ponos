@@ -12,7 +12,7 @@
 namespace ponos {
 
 class Transform2D {
-public:
+ public:
   Transform2D() {}
   Transform2D(const Matrix3x3 &mat, const Matrix3x3 inv_mat);
   Transform2D(const BBox2D &bbox);
@@ -26,8 +26,7 @@ public:
     r->x = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2];
     r->y = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2];
     float wp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2];
-    if (wp != 1.f)
-      *r /= wp;
+    if (wp != 1.f) *r /= wp;
   }
   void operator()(const Vector2 &v, Vector2 *r) const {
     float x = v.x, y = v.y;
@@ -44,8 +43,7 @@ public:
     float xp = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2];
     float yp = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2];
     float wp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2];
-    if (wp == 1.f)
-      return Point2(xp, yp);
+    if (wp == 1.f) return Point2(xp, yp);
     return Point2(xp / wp, yp / wp);
   }
   BBox2D operator()(const BBox2D &b) const {
@@ -73,7 +71,7 @@ public:
   void computeInverse() { m_inv = inverse(m); }
   Matrix3x3 getMatrix() const { return m; }
 
-private:
+ private:
   Matrix3x3 m, m_inv;
   Vector2 s;
 };
@@ -84,7 +82,7 @@ Transform2D translate(const Vector2 &v);
 Transform2D inverse(const Transform2D &t);
 
 class Transform {
-public:
+ public:
   Transform() {}
   Transform(const Matrix4x4 &mat);
   Transform(const Matrix4x4 &mat, const Matrix4x4 inv_mat);
@@ -112,8 +110,7 @@ public:
     float yp = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z + m.m[1][3];
     float zp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z + m.m[2][3];
     float wp = m.m[3][0] * x + m.m[3][1] * y + m.m[3][2] * z + m.m[3][3];
-    if (wp == 1.f)
-      return Point3(xp, yp, zp);
+    if (wp == 1.f) return Point3(xp, yp, zp);
     return Point3(xp, yp, zp) / wp;
   }
   Point3 operator()(const Point3 &p) const {
@@ -122,8 +119,7 @@ public:
     float yp = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z + m.m[1][3];
     float zp = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z + m.m[2][3];
     float wp = m.m[3][0] * x + m.m[3][1] * y + m.m[3][2] * z + m.m[3][3];
-    if (wp == 1.f)
-      return Point3(xp, yp, zp);
+    if (wp == 1.f) return Point3(xp, yp, zp);
     return Point3(xp, yp, zp) / wp;
   }
   void operator()(const Point3 &p, Point3 *r) const {
@@ -132,8 +128,7 @@ public:
     r->y = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z + m.m[1][3];
     r->z = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z + m.m[2][3];
     float wp = m.m[3][0] * x + m.m[3][1] * y + m.m[3][2] * z + m.m[3][3];
-    if (wp != 1.f)
-      *r /= wp;
+    if (wp != 1.f) *r /= wp;
   }
   Vector3 operator()(const Vector3 &v) const {
     float x = v.x, y = v.y, z = v.z;
@@ -188,13 +183,14 @@ public:
   bool swapsHandedness() const;
   const float *c_matrix() const { return &m.m[0][0]; }
   const Matrix4x4 &matrix() const { return m; }
-  Vector3 getTranslate() const { return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]); }
+  Vector3 getTranslate() const {
+    return Vector3(m.m[0][3], m.m[1][3], m.m[2][3]);
+  }
   void computeInverse() { m_inv = inverse(m); }
   bool isIdentity() { return m.isIdentity(); }
   void applyToPoint(const float *p, float *r, size_t d = 3) const {
     float x = p[0], y = p[1], z = 0.f;
-    if (d == 3)
-      z = p[2];
+    if (d == 3) z = p[2];
     r[0] = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2] * z + m.m[0][3];
     r[1] = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z + m.m[1][3];
     if (d == 3)
@@ -204,15 +200,15 @@ public:
       float invwp = 1.f / wp;
       r[0] *= invwp;
       r[1] *= invwp;
-      if (d == 3)
-        r[2] *= invwp;
+      if (d == 3) r[2] *= invwp;
     }
   }
 
-private:
+ private:
   Matrix4x4 m, m_inv;
 };
 
+Transform segmentToSegmentTransform(Point3 a, Point3 b, Point3 c, Point3 d);
 Transform inverse(const Transform &t);
 Transform translate(const Vector3 &d);
 Transform scale(float x, float y, float z);
@@ -231,6 +227,6 @@ Transform ortho(float left, float right, float bottom, float top,
                 float near = -1.f, float far = 1.f);
 
 Transform orthographic(float znear, float zfar);
-} // ponos namespace
+}  // namespace ponos
 
 #endif

@@ -1,5 +1,6 @@
 // Created by filipecn on 6/12/18.
 #include <aergia/aergia.h>
+#include <nanogui_screen.h>
 
 using namespace nanogui;
 

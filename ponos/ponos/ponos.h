@@ -1,10 +1,10 @@
 #include <ponos/algorithm/fast_sweep.h>
+#include <ponos/algorithm/geometric_shapes.h>
 #include <ponos/algorithm/marching_squares.h>
 #include <ponos/algorithm/scatter.h>
 #include <ponos/algorithm/search.h>
 #include <ponos/algorithm/sort.h>
 #include <ponos/algorithm/triangulate.h>
-#include <ponos/algorithm/geometric_shapes.h>
 #include <ponos/blas/bicg.h>
 #include <ponos/blas/blas.h>
 #include <ponos/blas/c_regular_grid.h>
@@ -63,7 +63,7 @@
 #include <ponos/parallel/parallel.h>
 #include <ponos/spatial/array.h>
 #include <ponos/spatial/spatial_structure_interface.h>
-#include <ponos/structures/brep.hpp>
+// #include <ponos/structures/brep.hpp>
 #include <ponos/structures/grid_interface.h>
 #include <ponos/structures/half_edge.h>
 #include <ponos/structures/level_set.h>

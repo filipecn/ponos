@@ -1,4 +1,5 @@
 #include <aergia/utils/open_gl.h>
+#include <string>
 
 namespace aergia {
 

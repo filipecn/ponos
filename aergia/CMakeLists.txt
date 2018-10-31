@@ -48,7 +48,7 @@ set(HEADERS
         aergia/ui/app.h
         aergia/ui/interactive_object_interface.h
         aergia/ui/modifier_cursor.h
-        aergia/ui/nanogui_screen.h
+        # aergia/ui/nanogui_screen.h
         aergia/ui/scene_app.h
         aergia/ui/text_renderer.h
         aergia/ui/font_manager.h
@@ -90,7 +90,7 @@ set(SOURCES
         aergia/scene/triangle_mesh.cpp
         aergia/scene/wireframe_mesh.cpp
         aergia/ui/app.cpp
-        aergia/ui/nanogui_screen.cpp
+        # aergia/ui/nanogui_screen.cpp
         aergia/ui/text_renderer.cpp
         aergia/ui/font_manager.cpp
         aergia/ui/trackball_interface.cpp
@@ -105,7 +105,7 @@ set_target_properties(aergia PROPERTIES
         FOLDER "AERGIA")
 target_compile_definitions(aergia PUBLIC -DASSET_PATH="${AERGIA_SOURCE_DIR}/examples/assets")
 #target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${STB_INCLUDES} ${GLAD_INCLUDES} ${NANOGUI_INCLUDES})
-target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${GLAD_INCLUDES} ${NANOGUI_INCLUDES})
+target_include_directories(aergia PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${TINYOBJLOADER_INCLUDES} ${GLAD_INCLUDES} ${NANOGUI_INCLUDES})
 target_link_libraries(aergia PUBLIC ponos glad ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS})# GLU)
 
 #add_library(aergia_shared SHARED ${SOURCES} ${HEADERS})
@@ -113,11 +113,11 @@ target_link_libraries(aergia PUBLIC ponos glad ${NANOGUI_LIBS} ${PLY_LIBS} ${TIN
 #target_include_directories(aergia_shared PUBLIC ${AERGIA_SOURCE_DIR} ${PLY_INCLUDES} ${STB_INCLUDES} ${GLAD_INCLUDES})
 #target_link_libraries(aergia_shared PUBLIC ponos_shared ${GLAD_LIBS} ${NANOGUI_LIBS} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} GLU)
 
-add_subdirectory(examples)
+# add_subdirectory(examples)
 
 if (WIN32)
 else (WIN32)
-    SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
+        SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
 endif (WIN32)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/aergia

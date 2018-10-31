@@ -15,13 +15,13 @@
 #include <aergia/helpers/vector_grid.h>
 #include <aergia/io/buffer.h>
 #include <aergia/io/display_renderer.h>
-#include <aergia/io/storage_buffer.h>
 #include <aergia/io/font_texture.h>
 #include <aergia/io/framebuffer.h>
 #include <aergia/io/graphics_display.h>
 #include <aergia/io/image_texture.h>
 #include <aergia/io/render_texture.h>
 #include <aergia/io/screen_quad.h>
+#include <aergia/io/storage_buffer.h>
 #include <aergia/io/texture.h>
 #include <aergia/io/texture_parameters.h>
 #include <aergia/io/viewport_display.h>
@@ -38,7 +38,6 @@
 #include <aergia/ui/app.h>
 #include <aergia/ui/interactive_object_interface.h>
 #include <aergia/ui/modifier_cursor.h>
-#include <aergia/ui/nanogui_screen.h>
 #include <aergia/ui/scene_app.h>
 #include <aergia/ui/text_renderer.h>
 #include <aergia/ui/track_mode.h>
@@ -51,4 +50,4 @@ namespace aergia {
 
 bool initialize();
 
-} // aergia namespace
+}  // namespace aergia

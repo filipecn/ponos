@@ -1,0 +1,8 @@
+cc_library(
+    name = "nanogui",
+    srcs = glob(["src/*.cpp"]),
+    hdrs = glob(["include/*", "include/**/*"]),
+    includes = ["include"],
+    deps = ["@eigen//:eigen", "@nanovg//:nanovg", "@glfw//:glfw"],
+    visibility = ["//visibility:public"],
+)

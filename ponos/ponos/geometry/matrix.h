@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRY_MATRIX_H
 #define PONOS_GEOMETRY_MATRIX_H
@@ -30,8 +30,9 @@
 
 namespace ponos {
 
-template <typename T = float> class DenseMatrix {
-public:
+template <typename T = float>
+class DenseMatrix {
+ public:
   DenseMatrix() : N(0), M(0), data(nullptr) {}
   DenseMatrix(size_t n) : N(n), M(n), data(nullptr) { set(n, n); }
   DenseMatrix(size_t n, size_t m) : N(n), M(m), data(nullptr) { set(n, m); }
@@ -39,13 +40,11 @@ public:
     set(A.N, A.M);
     // TODO make this copy faster
     for (size_t r = 0; r < A.N; r++)
-      for (size_t c = 0; c < A.M; c++)
-        data[r][c] = A.data[r][c];
+      for (size_t c = 0; c < A.M; c++) data[r][c] = A.data[r][c];
   }
   virtual ~DenseMatrix() {
     if (data) {
-      for (size_t i = 0; i < N; i++)
-        delete[] data[i];
+      for (size_t i = 0; i < N; i++) delete[] data[i];
       delete[] data;
     }
   }
@@ -64,16 +63,14 @@ public:
     for (size_t r = 0; r < R.N; r++)
       for (size_t c = 0; c < R.M; c++) {
         R(r, c) = 0;
-        for (size_t i = 0; i < N; i++)
-          R(r, c) += data[r][i] * A.data[c][i];
+        for (size_t i = 0; i < N; i++) R(r, c) += data[r][i] * A.data[c][i];
       }
     return R;
   }
   void set(size_t rows, size_t columns) {
     N = rows, M = columns;
     if (data) {
-      for (size_t i = 0; i < N; i++)
-        delete[] data[i];
+      for (size_t i = 0; i < N; i++) delete[] data[i];
       delete[] data;
     }
     data = new T *[N];
@@ -88,14 +85,13 @@ public:
 
   friend std::ostream &operator<<(std::ostream &os, const DenseMatrix<T> &m) {
     for (size_t i = 0; i < m.N; i++) {
-      for (size_t j = 0; j < m.M; j++)
-        os << m(i, j) << " ";
+      for (size_t j = 0; j < m.M; j++) os << m(i, j) << " ";
       os << std::endl;
     }
     return os;
   }
 
-private:
+ private:
   size_t N, M;
   T **data;
 };
@@ -106,15 +102,15 @@ inline std::vector<T> operator*(const std::vector<T> &v, DenseMatrix<T> &m) {
   std::vector<T> r;
   for (size_t c = 0; c < m.columnsNumber(); c++) {
     T sum;
-    for (size_t i = 0; i < v.size(); i++)
-      sum = sum + v[i] * m(i, c);
+    for (size_t i = 0; i < v.size(); i++) sum = sum + v[i] * m(i, c);
     r.emplace_back(sum);
   }
   return r;
 }
 
-template <typename T = float, size_t N = 5, size_t M = 5> class Matrix {
-public:
+template <typename T = float, size_t N = 5, size_t M = 5>
+class Matrix {
+ public:
   Matrix() {}
   Matrix(std::initializer_list<T> vs, bool cm = false) {
     size_t l = 0, c = 0;
@@ -122,12 +118,10 @@ public:
       m[l][c] = *v;
       if (!cm) {
         c++;
-        if (c >= M)
-          c = 0, l++;
+        if (c >= M) c = 0, l++;
       } else {
         l++;
-        if (l >= N)
-          l = 0, c++;
+        if (l >= N) l = 0, c++;
       }
     }
   }
@@ -135,18 +129,17 @@ public:
     Vector<T, N> x;
     for (size_t i = 0; i < N; i++) {
       x[i] = static_cast<T>(0);
-      for (size_t j = 0; j < M; j++)
-        x[i] += v[j] * m[i][j];
+      for (size_t j = 0; j < M; j++) x[i] += v[j] * m[i][j];
     }
     return x;
   }
-  template <size_t P> Matrix<T, N, P> operator*(const Matrix<T, M, P> &b) {
+  template <size_t P>
+  Matrix<T, N, P> operator*(const Matrix<T, M, P> &b) {
     Matrix<T, N, P> c;
     for (size_t i = 0; i < N; i++)
       for (size_t j = 0; j < P; j++) {
         c.m[i][j] = static_cast<T>(0);
-        for (size_t k = 0; k < M; k++)
-          c.m[i][j] += m[i][k] * b.m[k][j];
+        for (size_t k = 0; k < M; k++) c.m[i][j] += m[i][k] * b.m[k][j];
       }
     return c;
   }
@@ -169,21 +162,19 @@ Matrix<T, N, N> inverse(const Matrix<T, N, N> &m) {
   for (size_t k = 0; k < N; k++) {
     em[k] /= em[k][k];
     for (size_t i = 0; i < N; i++) {
-      if (i != k)
-        em[i] -= em[k] * em[i][k];
+      if (i != k) em[i] -= em[k] * em[i][k];
     }
   }
   Matrix<T, N, N> r;
   for (size_t i = 0; i < N; i++)
-    for (size_t j = 0; j < N; j++)
-      r.m[i][j] = em[i][j + N];
+    for (size_t j = 0; j < N; j++) r.m[i][j] = em[i][j + N];
   return r;
 }
 
 /// 4x4 Matrix representation
 /// Access: m[ROW][COLUMN]
 class Matrix4x4 {
-public:
+ public:
   /// \param isIdentity [optional | def = true] initialize as an identity matrix
   explicit Matrix4x4(bool isIdentity = true);
   /// \param values list of values
@@ -217,14 +208,12 @@ public:
   void row_major(float *a) const {
     int k = 0;
     for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-        a[k++] = m[i][j];
+      for (int j = 0; j < 4; j++) a[k++] = m[i][j];
   }
   void column_major(float *a) const {
     int k = 0;
     for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-        a[k++] = m[j][i];
+      for (int j = 0; j < 4; j++) a[k++] = m[j][i];
   }
   Matrix4x4 operator*(const Matrix4x4 &mat) {
     Matrix4x4 r;
@@ -237,15 +226,13 @@ public:
   Vector4 operator*(const Vector4 &v) const {
     Vector4 r;
     for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-        r[i] += m[i][j] * v[j];
+      for (int j = 0; j < 4; j++) r[i] += m[i][j] * v[j];
     return r;
   }
   bool operator==(const Matrix4x4 &_m) const {
     for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++)
-        if (!IS_EQUAL(m[i][j], _m.m[i][j]))
-          return false;
+        if (!IS_EQUAL(m[i][j], _m.m[i][j])) return false;
     return true;
   }
   bool operator!=(const Matrix4x4 &_m) const { return !(*this == _m); }
@@ -270,13 +257,14 @@ public:
   float m[4][4];
 };
 
+Matrix4x4 rowReduce(const Matrix4x4 &p, const Matrix4x4 &q);
 Matrix4x4 transpose(const Matrix4x4 &m);
 Matrix4x4 inverse(const Matrix4x4 &m);
 void decompose(const Matrix4x4 &m, Matrix4x4 &r, Matrix4x4 &s);
 typedef Matrix4x4 mat4;
 
 class Matrix3x3 {
-public:
+ public:
   Matrix3x3();
   Matrix3x3(vec3 a, vec3 b, vec3 c);
   Matrix3x3(float m00, float m01, float m02, float m10, float m11, float m12,
@@ -285,8 +273,7 @@ public:
   Vector3 operator*(const Vector3 &v) const {
     Vector3 r;
     for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++)
-        r[i] += m[i][j] * v[j];
+      for (int j = 0; j < 3; j++) r[i] += m[i][j] * v[j];
     return r;
   }
   Matrix3x3 operator*(const Matrix3x3 &mat) {
@@ -328,7 +315,7 @@ Matrix3x3 star(const Vector3 a);
 typedef Matrix3x3 mat3;
 
 class Matrix2x2 {
-public:
+ public:
   Matrix2x2();
   Matrix2x2(float m00, float m01, float m10, float m11);
   void setIdentity();
@@ -336,8 +323,7 @@ public:
   Vector2 operator*(const Vector2 &v) const {
     Vector2 r;
     for (int i = 0; i < 2; i++)
-      for (int j = 0; j < 2; j++)
-        r[i] += m[i][j] * v[j];
+      for (int j = 0; j < 2; j++) r[i] += m[i][j] * v[j];
     return r;
   }
   Matrix2x2 operator*(const Matrix2x2 &mat) {
@@ -368,6 +354,6 @@ Matrix2x2 inverse(const Matrix2x2 &m);
 
 typedef Matrix2x2 mat2;
 
-} // ponos namespace
+}  // namespace ponos
 
 #endif

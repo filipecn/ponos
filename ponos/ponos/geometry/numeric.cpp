@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <ponos/geometry/numeric.h>
 
 namespace ponos {
 
 double Constants::pi = 3.14159265358979323846f;
+double Constants::two_pi = 6.28318530718;
 
-} // ponos namespace
-
+}  // namespace ponos

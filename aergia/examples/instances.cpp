@@ -7,37 +7,35 @@ int main() {
   // but now each instance has a transform matrix
   size_t n = 400;
   // generate base mesh
-  ponos::RawMeshSPtr
-      sphereMesh
-      (ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 0, false, false));
-  ponos::RawMeshSPtr quadMesh(ponos::create_quad_mesh(ponos::Point3(0, 0, 0),
-                                                      ponos::Point3(1, 0, 0),
-                                                      ponos::Point3(1, 1, 0),
-                                                      ponos::Point3(0, 1, 0),
-                                                      false,
-                                                      false));
-  ponos::RawMeshSPtr wquadMesh
-      (ponos::create_quad_wireframe_mesh(ponos::Point3(0, 0, 0),
-                                         ponos::Point3(1, 0, 0),
-                                         ponos::Point3(1, 1, 0),
-                                         ponos::Point3(0, 1, 0)));
+  ponos::RawMeshSPtr sphereMesh(
+      ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 0, false, false));
+  ponos::RawMeshSPtr quadMesh(ponos::create_quad_mesh(
+      ponos::Point3(0, 0, 0), ponos::Point3(1, 0, 0), ponos::Point3(1, 1, 0),
+      ponos::Point3(0, 1, 0), false, false));
+  ponos::RawMeshSPtr wquadMesh(ponos::create_quad_wireframe_mesh(
+      ponos::Point3(0, 0, 0), ponos::Point3(1, 0, 0), ponos::Point3(1, 1, 0),
+      ponos::Point3(0, 1, 0)));
+  // ponos::RawMeshSPtr circleMesh(ponos::RawMeshes::icosphere());
+  ponos::RawMeshSPtr segmentMesh(
+      ponos::RawMeshes::segment(ponos::Point2(1, 0)));
   ponos::RawMeshSPtr cube = ponos::RawMeshes::cube();
-  //aergia::SceneMesh qm(*wquadMesh.get());
-  aergia::SceneMesh qm(*cube.get());
-  const char *qvs = "#version 440 core\n" \
-"layout (location = 0) in vec3 position;" \
-"layout (location = 1) in vec4 col;"  \
-"layout (location = 2) in mat4 trans;" \
-"layout (location = 3) uniform mat4 view_matrix;" \
-"layout (location = 4) uniform mat4 projection_matrix;" \
-"out VERTEX {" \
-"vec4 color;" \
-"} vertex;" \
-"void main() {" \
-"    gl_Position = projection_matrix * view_matrix * trans *" \
-"vec4(position,1);" \
-"   vertex.color = col;" \
-"}";
+  // aergia::SceneMesh qm(*wquadMesh.get());
+  aergia::SceneMesh qm(*segmentMesh.get());
+  const char *qvs =
+      "#version 440 core\n"
+      "layout (location = 0) in vec3 position;"
+      "layout (location = 1) in vec4 col;"
+      "layout (location = 2) in mat4 trans;"
+      "layout (location = 3) uniform mat4 view_matrix;"
+      "layout (location = 4) uniform mat4 projection_matrix;"
+      "out VERTEX {"
+      "vec4 color;"
+      "} vertex;"
+      "void main() {"
+      "    gl_Position = projection_matrix * view_matrix * trans *"
+      "vec4(position,1);"
+      "   vertex.color = col;"
+      "}";
   const char *fs = AERGIA_INSTANCES_FS;
   aergia::ShaderProgram quadShader(qvs, nullptr, fs);
   quadShader.addVertexAttribute("position", 0);
@@ -48,14 +46,13 @@ int main() {
   quads.reset(new aergia::InstanceSet(qm, quadShader, n / 2));
   {
     // create a buffer for particles positions + sizes
-    aergia::BufferDescriptor trans =
-        aergia::create_array_stream_descriptor(16);
+    aergia::BufferDescriptor trans = aergia::create_array_stream_descriptor(16);
     trans.addAttribute("trans", 16, 0, trans.dataType);
     uint tid = quads->add(trans);
     // create a buffer for particles colors
     aergia::BufferDescriptor col =
-        aergia::create_array_stream_descriptor(4); // r g b a
-    col.addAttribute("col", 4, 0, col.dataType); // 4 -> r g b a
+        aergia::create_array_stream_descriptor(4);  // r g b a
+    col.addAttribute("col", 4, 0, col.dataType);    // 4 -> r g b a
     uint colid = quads->add(col);
     quads->resize(n);
     aergia::ColorPalette palette = aergia::HEAT_MATLAB_PALETTE;
@@ -72,16 +69,14 @@ int main() {
       auto m = quads->instanceF(tid, i);
       float t[16];
       (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
-          ponos::translate(
-              ponos::vec3(sampler.sample(
-                  ponos::BBox(ponos::Point3(-5, 0, 0),
-                              ponos::Point3(5, 5, 5))))
-          )).matrix().column_major(t);
-      for (size_t k = 0; k < 16; k++)
-        m[k] = t[k];
+       ponos::translate(ponos::vec3(sampler.sample(
+           ponos::BBox(ponos::Point3(-5, 0, 0), ponos::Point3(5, 5, 5))))))
+          .matrix()
+          .column_major(t);
+      for (size_t k = 0; k < 16; k++) m[k] = t[k];
     }
   }
-//  app.scene.add(spheres.get());
+  //  app.scene.add(spheres.get());
   app.scene.add(quads.get());
   aergia::SceneObjectSPtr grid(new aergia::CartesianGrid(5));
   app.scene.add(grid.get());

@@ -9,6 +9,8 @@ Point2::Point2() { x = y = 0.f; }
 
 Point2::Point2(float f) { x = y = f; }
 
+Point2::Point2(const float *v) : x(v[0]), y(v[1]) { ASSERT(!HasNaNs()); }
+
 Point2::Point2(float _x, float _y) : x(_x), y(_y) { ASSERT(!HasNaNs()); }
 
 bool Point2::HasNaNs() const { return std::isnan(x) || std::isnan(y); }
@@ -43,4 +45,4 @@ std::ostream &operator<<(std::ostream &os, const Point3 &p) {
   return os;
 }
 
-} // ponos namespace
+}  // namespace ponos

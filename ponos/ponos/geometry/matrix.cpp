@@ -9,8 +9,7 @@ namespace ponos {
 Matrix4x4::Matrix4x4(bool isIdentity) {
   memset(m, 0, sizeof(m));
   if (isIdentity)
-    for (int i = 0; i < 4; i++)
-      m[i][i] = 1.f;
+    for (int i = 0; i < 4; i++) m[i][i] = 1.f;
 }
 
 Matrix4x4::Matrix4x4(std::initializer_list<float> values, bool columnMajor) {
@@ -19,12 +18,10 @@ Matrix4x4::Matrix4x4(std::initializer_list<float> values, bool columnMajor) {
     m[l][c] = v;
     if (columnMajor) {
       l++;
-      if (l >= 4)
-        l = 0, c++;
+      if (l >= 4) l = 0, c++;
     } else {
       c++;
-      if (c >= 4)
-        c = 0, l++;
+      if (c >= 4) c = 0, l++;
     }
   }
 }
@@ -33,18 +30,15 @@ Matrix4x4::Matrix4x4(const float mat[16], bool columnMajor) {
   size_t k = 0;
   if (columnMajor)
     for (int c = 0; c < 4; c++)
-      for (int l = 0; l < 4; l++)
-        m[l][c] = mat[k++];
+      for (int l = 0; l < 4; l++) m[l][c] = mat[k++];
   else
     for (int l = 0; l < 4; l++)
-      for (int c = 0; c < 4; c++)
-        m[l][c] = mat[k++];
+      for (int c = 0; c < 4; c++) m[l][c] = mat[k++];
 }
 
 Matrix4x4::Matrix4x4(float mat[4][4]) {
   for (int i = 0; i < 4; i++)
-    for (int j = 0; j < 4; j++)
-      m[i][j] = mat[i][j];
+    for (int j = 0; j < 4; j++) m[i][j] = mat[i][j];
 }
 
 Matrix4x4::Matrix4x4(float m00, float m01, float m02, float m03, float m10,
@@ -71,17 +65,21 @@ Matrix4x4::Matrix4x4(float m00, float m01, float m02, float m03, float m10,
 
 void Matrix4x4::setIdentity() {
   memset(m, 0, sizeof(m));
-  for (int i = 0; i < 4; i++)
-    m[i][i] = 1.f;
+  for (int i = 0; i < 4; i++) m[i][i] = 1.f;
 }
 
 std::ostream &operator<<(std::ostream &os, const Matrix4x4 &m) {
   for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++)
-      os << m.m[i][j] << " ";
+    for (int j = 0; j < 4; j++) os << m.m[i][j] << " ";
     os << std::endl;
   }
   return os;
+}
+
+Matrix4x4 rowReduce(const Matrix4x4 &p, const Matrix4x4 &q) {
+  Matrix4x4 l = p, r = q;
+  // TODO implement with gauss jordan elimination
+  return r;
 }
 
 Matrix4x4 transpose(const Matrix4x4 &m) {
@@ -97,62 +95,60 @@ bool gluInvertMatrix(const float m[16], float invOut[16]) {
   int i;
 
   inv[0] = m[5] * m[10] * m[15] - m[5] * m[11] * m[14] - m[9] * m[6] * m[15] +
-      m[9] * m[7] * m[14] + m[13] * m[6] * m[11] - m[13] * m[7] * m[10];
+           m[9] * m[7] * m[14] + m[13] * m[6] * m[11] - m[13] * m[7] * m[10];
 
   inv[4] = -m[4] * m[10] * m[15] + m[4] * m[11] * m[14] + m[8] * m[6] * m[15] -
-      m[8] * m[7] * m[14] - m[12] * m[6] * m[11] + m[12] * m[7] * m[10];
+           m[8] * m[7] * m[14] - m[12] * m[6] * m[11] + m[12] * m[7] * m[10];
 
   inv[8] = m[4] * m[9] * m[15] - m[4] * m[11] * m[13] - m[8] * m[5] * m[15] +
-      m[8] * m[7] * m[13] + m[12] * m[5] * m[11] - m[12] * m[7] * m[9];
+           m[8] * m[7] * m[13] + m[12] * m[5] * m[11] - m[12] * m[7] * m[9];
 
   inv[12] = -m[4] * m[9] * m[14] + m[4] * m[10] * m[13] + m[8] * m[5] * m[14] -
-      m[8] * m[6] * m[13] - m[12] * m[5] * m[10] + m[12] * m[6] * m[9];
+            m[8] * m[6] * m[13] - m[12] * m[5] * m[10] + m[12] * m[6] * m[9];
 
   inv[1] = -m[1] * m[10] * m[15] + m[1] * m[11] * m[14] + m[9] * m[2] * m[15] -
-      m[9] * m[3] * m[14] - m[13] * m[2] * m[11] + m[13] * m[3] * m[10];
+           m[9] * m[3] * m[14] - m[13] * m[2] * m[11] + m[13] * m[3] * m[10];
 
   inv[5] = m[0] * m[10] * m[15] - m[0] * m[11] * m[14] - m[8] * m[2] * m[15] +
-      m[8] * m[3] * m[14] + m[12] * m[2] * m[11] - m[12] * m[3] * m[10];
+           m[8] * m[3] * m[14] + m[12] * m[2] * m[11] - m[12] * m[3] * m[10];
 
   inv[9] = -m[0] * m[9] * m[15] + m[0] * m[11] * m[13] + m[8] * m[1] * m[15] -
-      m[8] * m[3] * m[13] - m[12] * m[1] * m[11] + m[12] * m[3] * m[9];
+           m[8] * m[3] * m[13] - m[12] * m[1] * m[11] + m[12] * m[3] * m[9];
 
   inv[13] = m[0] * m[9] * m[14] - m[0] * m[10] * m[13] - m[8] * m[1] * m[14] +
-      m[8] * m[2] * m[13] + m[12] * m[1] * m[10] - m[12] * m[2] * m[9];
+            m[8] * m[2] * m[13] + m[12] * m[1] * m[10] - m[12] * m[2] * m[9];
 
   inv[2] = m[1] * m[6] * m[15] - m[1] * m[7] * m[14] - m[5] * m[2] * m[15] +
-      m[5] * m[3] * m[14] + m[13] * m[2] * m[7] - m[13] * m[3] * m[6];
+           m[5] * m[3] * m[14] + m[13] * m[2] * m[7] - m[13] * m[3] * m[6];
 
   inv[6] = -m[0] * m[6] * m[15] + m[0] * m[7] * m[14] + m[4] * m[2] * m[15] -
-      m[4] * m[3] * m[14] - m[12] * m[2] * m[7] + m[12] * m[3] * m[6];
+           m[4] * m[3] * m[14] - m[12] * m[2] * m[7] + m[12] * m[3] * m[6];
 
   inv[10] = m[0] * m[5] * m[15] - m[0] * m[7] * m[13] - m[4] * m[1] * m[15] +
-      m[4] * m[3] * m[13] + m[12] * m[1] * m[7] - m[12] * m[3] * m[5];
+            m[4] * m[3] * m[13] + m[12] * m[1] * m[7] - m[12] * m[3] * m[5];
 
   inv[14] = -m[0] * m[5] * m[14] + m[0] * m[6] * m[13] + m[4] * m[1] * m[14] -
-      m[4] * m[2] * m[13] - m[12] * m[1] * m[6] + m[12] * m[2] * m[5];
+            m[4] * m[2] * m[13] - m[12] * m[1] * m[6] + m[12] * m[2] * m[5];
 
   inv[3] = -m[1] * m[6] * m[11] + m[1] * m[7] * m[10] + m[5] * m[2] * m[11] -
-      m[5] * m[3] * m[10] - m[9] * m[2] * m[7] + m[9] * m[3] * m[6];
+           m[5] * m[3] * m[10] - m[9] * m[2] * m[7] + m[9] * m[3] * m[6];
 
   inv[7] = m[0] * m[6] * m[11] - m[0] * m[7] * m[10] - m[4] * m[2] * m[11] +
-      m[4] * m[3] * m[10] + m[8] * m[2] * m[7] - m[8] * m[3] * m[6];
+           m[4] * m[3] * m[10] + m[8] * m[2] * m[7] - m[8] * m[3] * m[6];
 
   inv[11] = -m[0] * m[5] * m[11] + m[0] * m[7] * m[9] + m[4] * m[1] * m[11] -
-      m[4] * m[3] * m[9] - m[8] * m[1] * m[7] + m[8] * m[3] * m[5];
+            m[4] * m[3] * m[9] - m[8] * m[1] * m[7] + m[8] * m[3] * m[5];
 
   inv[15] = m[0] * m[5] * m[10] - m[0] * m[6] * m[9] - m[4] * m[1] * m[10] +
-      m[4] * m[2] * m[9] + m[8] * m[1] * m[6] - m[8] * m[2] * m[5];
+            m[4] * m[2] * m[9] + m[8] * m[1] * m[6] - m[8] * m[2] * m[5];
 
   det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
-  if (det == 0)
-    return false;
+  if (det == 0) return false;
 
   det = 1.0 / det;
 
-  for (i = 0; i < 16; i++)
-    invOut[i] = inv[i] * det;
+  for (i = 0; i < 16; i++) invOut[i] = inv[i] * det;
 
   return true;
 }
@@ -164,118 +160,116 @@ Matrix4x4 inverse(const Matrix4x4 &m) {
   if (gluInvertMatrix(mm, inv)) {
     int k = 0;
     for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-        r.m[i][j] = inv[k++];
+      for (int j = 0; j < 4; j++) r.m[i][j] = inv[k++];
     return r;
   }
 
   float det = m.m[0][0] * m.m[1][1] * m.m[2][2] * m.m[3][3] +
-      m.m[1][2] * m.m[2][3] * m.m[3][1] * m.m[1][3] +
-      m.m[2][1] * m.m[3][2] * m.m[1][1] * m.m[2][3] +
-      m.m[3][2] * m.m[1][2] * m.m[2][1] * m.m[3][3] +
-      m.m[1][3] * m.m[2][2] * m.m[3][1] * m.m[0][1] +
-      m.m[0][1] * m.m[2][3] * m.m[3][2] * m.m[0][2] +
-      m.m[2][1] * m.m[3][3] * m.m[0][3] * m.m[2][2] +
-      m.m[3][1] * m.m[0][1] * m.m[2][2] * m.m[3][3] +
-      m.m[0][2] * m.m[2][3] * m.m[3][1] * m.m[0][3] +
-      m.m[2][1] * m.m[3][2] * m.m[0][2] * m.m[0][1] +
-      m.m[1][2] * m.m[3][3] * m.m[0][2] * m.m[1][3] +
-      m.m[3][1] * m.m[0][3] * m.m[1][1] * m.m[3][2] -
-      m.m[0][1] * m.m[1][3] * m.m[3][2] * m.m[0][2] -
-      m.m[1][1] * m.m[3][3] * m.m[0][3] * m.m[1][2] -
-      m.m[3][1] * m.m[0][3] * m.m[0][1] * m.m[1][3] -
-      m.m[2][2] * m.m[0][2] * m.m[1][1] * m.m[2][3] -
-      m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[0][1] -
-      m.m[1][2] * m.m[2][3] * m.m[0][2] * m.m[1][3] -
-      m.m[2][1] * m.m[0][3] * m.m[1][1] * m.m[2][2] -
-      m.m[1][0] * m.m[1][0] * m.m[2][3] * m.m[3][2] -
-      m.m[1][2] * m.m[2][0] * m.m[3][3] * m.m[1][3] -
-      m.m[2][2] * m.m[3][0] * m.m[1][0] * m.m[2][2] -
-      m.m[3][3] * m.m[1][2] * m.m[2][3] * m.m[3][0] -
-      m.m[1][3] * m.m[2][0] * m.m[3][2] * m.m[1][1];
-  if (fabs(det) < 1e-8)
-    return r;
+              m.m[1][2] * m.m[2][3] * m.m[3][1] * m.m[1][3] +
+              m.m[2][1] * m.m[3][2] * m.m[1][1] * m.m[2][3] +
+              m.m[3][2] * m.m[1][2] * m.m[2][1] * m.m[3][3] +
+              m.m[1][3] * m.m[2][2] * m.m[3][1] * m.m[0][1] +
+              m.m[0][1] * m.m[2][3] * m.m[3][2] * m.m[0][2] +
+              m.m[2][1] * m.m[3][3] * m.m[0][3] * m.m[2][2] +
+              m.m[3][1] * m.m[0][1] * m.m[2][2] * m.m[3][3] +
+              m.m[0][2] * m.m[2][3] * m.m[3][1] * m.m[0][3] +
+              m.m[2][1] * m.m[3][2] * m.m[0][2] * m.m[0][1] +
+              m.m[1][2] * m.m[3][3] * m.m[0][2] * m.m[1][3] +
+              m.m[3][1] * m.m[0][3] * m.m[1][1] * m.m[3][2] -
+              m.m[0][1] * m.m[1][3] * m.m[3][2] * m.m[0][2] -
+              m.m[1][1] * m.m[3][3] * m.m[0][3] * m.m[1][2] -
+              m.m[3][1] * m.m[0][3] * m.m[0][1] * m.m[1][3] -
+              m.m[2][2] * m.m[0][2] * m.m[1][1] * m.m[2][3] -
+              m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[0][1] -
+              m.m[1][2] * m.m[2][3] * m.m[0][2] * m.m[1][3] -
+              m.m[2][1] * m.m[0][3] * m.m[1][1] * m.m[2][2] -
+              m.m[1][0] * m.m[1][0] * m.m[2][3] * m.m[3][2] -
+              m.m[1][2] * m.m[2][0] * m.m[3][3] * m.m[1][3] -
+              m.m[2][2] * m.m[3][0] * m.m[1][0] * m.m[2][2] -
+              m.m[3][3] * m.m[1][2] * m.m[2][3] * m.m[3][0] -
+              m.m[1][3] * m.m[2][0] * m.m[3][2] * m.m[1][1];
+  if (fabs(det) < 1e-8) return r;
 
   r.m[0][0] =
       (m.m[1][1] * m.m[2][2] * m.m[3][3] + m.m[1][2] * m.m[2][3] * m.m[3][1] +
-          m.m[1][3] * m.m[2][1] * m.m[3][2] - m.m[1][1] * m.m[2][3] * m.m[3][2] -
-          m.m[1][2] * m.m[2][1] * m.m[3][3] - m.m[1][3] * m.m[2][2] * m.m[3][1]) /
-          det;
+       m.m[1][3] * m.m[2][1] * m.m[3][2] - m.m[1][1] * m.m[2][3] * m.m[3][2] -
+       m.m[1][2] * m.m[2][1] * m.m[3][3] - m.m[1][3] * m.m[2][2] * m.m[3][1]) /
+      det;
   r.m[0][1] =
       (m.m[0][1] * m.m[2][3] * m.m[3][2] + m.m[0][2] * m.m[2][1] * m.m[3][3] +
-          m.m[0][3] * m.m[2][2] * m.m[3][1] - m.m[0][1] * m.m[2][2] * m.m[3][3] -
-          m.m[0][2] * m.m[2][3] * m.m[3][1] - m.m[0][3] * m.m[2][1] * m.m[3][2]) /
-          det;
+       m.m[0][3] * m.m[2][2] * m.m[3][1] - m.m[0][1] * m.m[2][2] * m.m[3][3] -
+       m.m[0][2] * m.m[2][3] * m.m[3][1] - m.m[0][3] * m.m[2][1] * m.m[3][2]) /
+      det;
   r.m[0][2] =
       (m.m[0][1] * m.m[1][2] * m.m[3][3] + m.m[0][2] * m.m[1][3] * m.m[3][1] +
-          m.m[0][3] * m.m[1][1] * m.m[3][2] - m.m[0][1] * m.m[1][3] * m.m[3][2] -
-          m.m[0][2] * m.m[1][1] * m.m[3][3] - m.m[0][3] * m.m[1][2] * m.m[3][1]) /
-          det;
+       m.m[0][3] * m.m[1][1] * m.m[3][2] - m.m[0][1] * m.m[1][3] * m.m[3][2] -
+       m.m[0][2] * m.m[1][1] * m.m[3][3] - m.m[0][3] * m.m[1][2] * m.m[3][1]) /
+      det;
   r.m[0][3] =
       (m.m[0][1] * m.m[1][3] * m.m[2][2] + m.m[0][2] * m.m[1][1] * m.m[2][3] +
-          m.m[0][3] * m.m[1][2] * m.m[2][1] - m.m[0][1] * m.m[1][2] * m.m[2][3] -
-          m.m[0][2] * m.m[1][3] * m.m[2][1] - m.m[0][3] * m.m[1][1] * m.m[2][2]) /
-          det;
+       m.m[0][3] * m.m[1][2] * m.m[2][1] - m.m[0][1] * m.m[1][2] * m.m[2][3] -
+       m.m[0][2] * m.m[1][3] * m.m[2][1] - m.m[0][3] * m.m[1][1] * m.m[2][2]) /
+      det;
   r.m[1][0] =
       (m.m[1][0] * m.m[2][3] * m.m[3][2] + m.m[1][2] * m.m[2][0] * m.m[3][3] +
-          m.m[1][3] * m.m[2][2] * m.m[3][0] - m.m[1][0] * m.m[2][2] * m.m[3][3] -
-          m.m[1][2] * m.m[2][3] * m.m[3][0] - m.m[1][3] * m.m[2][0] * m.m[3][2]) /
-          det;
+       m.m[1][3] * m.m[2][2] * m.m[3][0] - m.m[1][0] * m.m[2][2] * m.m[3][3] -
+       m.m[1][2] * m.m[2][3] * m.m[3][0] - m.m[1][3] * m.m[2][0] * m.m[3][2]) /
+      det;
   r.m[1][1] =
       (m.m[0][0] * m.m[2][2] * m.m[3][3] + m.m[0][2] * m.m[2][3] * m.m[3][0] +
-          m.m[0][3] * m.m[2][0] * m.m[3][2] - m.m[0][0] * m.m[2][3] * m.m[3][2] -
-          m.m[0][2] * m.m[2][0] * m.m[3][3] - m.m[0][3] * m.m[2][2] * m.m[3][0]) /
-          det;
+       m.m[0][3] * m.m[2][0] * m.m[3][2] - m.m[0][0] * m.m[2][3] * m.m[3][2] -
+       m.m[0][2] * m.m[2][0] * m.m[3][3] - m.m[0][3] * m.m[2][2] * m.m[3][0]) /
+      det;
   r.m[1][2] =
       (m.m[0][0] * m.m[1][3] * m.m[3][2] + m.m[0][2] * m.m[1][0] * m.m[3][3] +
-          m.m[0][3] * m.m[1][2] * m.m[3][0] - m.m[0][0] * m.m[1][2] * m.m[3][3] -
-          m.m[0][2] * m.m[1][3] * m.m[3][0] - m.m[0][3] * m.m[1][0] * m.m[3][2]) /
-          det;
+       m.m[0][3] * m.m[1][2] * m.m[3][0] - m.m[0][0] * m.m[1][2] * m.m[3][3] -
+       m.m[0][2] * m.m[1][3] * m.m[3][0] - m.m[0][3] * m.m[1][0] * m.m[3][2]) /
+      det;
   r.m[1][3] =
       (m.m[0][0] * m.m[1][2] * m.m[2][3] + m.m[0][2] * m.m[1][3] * m.m[2][0] +
-          m.m[0][3] * m.m[1][0] * m.m[2][2] - m.m[0][0] * m.m[1][3] * m.m[2][2] -
-          m.m[0][2] * m.m[1][0] * m.m[2][3] - m.m[0][3] * m.m[1][2] * m.m[2][0]) /
-          det;
+       m.m[0][3] * m.m[1][0] * m.m[2][2] - m.m[0][0] * m.m[1][3] * m.m[2][2] -
+       m.m[0][2] * m.m[1][0] * m.m[2][3] - m.m[0][3] * m.m[1][2] * m.m[2][0]) /
+      det;
   r.m[2][0] =
       (m.m[1][0] * m.m[2][1] * m.m[3][3] + m.m[1][1] * m.m[2][3] * m.m[3][0] +
-          m.m[1][3] * m.m[2][0] * m.m[3][1] - m.m[1][0] * m.m[2][3] * m.m[3][1] -
-          m.m[1][1] * m.m[2][0] * m.m[3][3] - m.m[1][3] * m.m[2][1] * m.m[3][0]) /
-          det;
+       m.m[1][3] * m.m[2][0] * m.m[3][1] - m.m[1][0] * m.m[2][3] * m.m[3][1] -
+       m.m[1][1] * m.m[2][0] * m.m[3][3] - m.m[1][3] * m.m[2][1] * m.m[3][0]) /
+      det;
   r.m[2][1] =
       (m.m[0][0] * m.m[2][3] * m.m[3][1] + m.m[0][1] * m.m[2][0] * m.m[3][3] +
-          m.m[0][3] * m.m[2][1] * m.m[3][0] - m.m[0][0] * m.m[2][1] * m.m[3][3] -
-          m.m[0][1] * m.m[2][3] * m.m[3][0] - m.m[0][3] * m.m[2][0] * m.m[3][1]) /
-          det;
+       m.m[0][3] * m.m[2][1] * m.m[3][0] - m.m[0][0] * m.m[2][1] * m.m[3][3] -
+       m.m[0][1] * m.m[2][3] * m.m[3][0] - m.m[0][3] * m.m[2][0] * m.m[3][1]) /
+      det;
   r.m[2][2] =
       (m.m[0][0] * m.m[1][1] * m.m[3][3] + m.m[0][1] * m.m[1][3] * m.m[3][0] +
-          m.m[0][3] * m.m[1][0] * m.m[3][1] - m.m[0][0] * m.m[1][3] * m.m[3][1] -
-          m.m[0][1] * m.m[1][0] * m.m[3][3] - m.m[0][3] * m.m[1][1] * m.m[3][0]) /
-          det;
+       m.m[0][3] * m.m[1][0] * m.m[3][1] - m.m[0][0] * m.m[1][3] * m.m[3][1] -
+       m.m[0][1] * m.m[1][0] * m.m[3][3] - m.m[0][3] * m.m[1][1] * m.m[3][0]) /
+      det;
   r.m[2][3] =
       (m.m[0][0] * m.m[1][3] * m.m[2][1] + m.m[0][1] * m.m[1][0] * m.m[2][3] +
-          m.m[0][3] * m.m[1][1] * m.m[2][0] - m.m[0][0] * m.m[1][1] * m.m[2][3] -
-          m.m[0][1] * m.m[1][3] * m.m[2][0] - m.m[0][3] * m.m[1][0] * m.m[2][1]) /
-          det;
+       m.m[0][3] * m.m[1][1] * m.m[2][0] - m.m[0][0] * m.m[1][1] * m.m[2][3] -
+       m.m[0][1] * m.m[1][3] * m.m[2][0] - m.m[0][3] * m.m[1][0] * m.m[2][1]) /
+      det;
   r.m[3][0] =
       (m.m[1][0] * m.m[2][2] * m.m[3][1] + m.m[1][1] * m.m[2][0] * m.m[3][2] +
-          m.m[1][2] * m.m[2][1] * m.m[3][0] - m.m[1][0] * m.m[2][1] * m.m[3][2] -
-          m.m[1][1] * m.m[2][2] * m.m[3][0] - m.m[1][2] * m.m[2][0] * m.m[3][1]) /
-          det;
+       m.m[1][2] * m.m[2][1] * m.m[3][0] - m.m[1][0] * m.m[2][1] * m.m[3][2] -
+       m.m[1][1] * m.m[2][2] * m.m[3][0] - m.m[1][2] * m.m[2][0] * m.m[3][1]) /
+      det;
   r.m[3][1] =
       (m.m[0][0] * m.m[2][1] * m.m[3][2] + m.m[0][1] * m.m[2][2] * m.m[3][0] +
-          m.m[0][2] * m.m[2][0] * m.m[3][1] - m.m[0][0] * m.m[2][2] * m.m[3][1] -
-          m.m[0][1] * m.m[2][0] * m.m[3][2] - m.m[0][2] * m.m[2][1] * m.m[3][0]) /
-          det;
+       m.m[0][2] * m.m[2][0] * m.m[3][1] - m.m[0][0] * m.m[2][2] * m.m[3][1] -
+       m.m[0][1] * m.m[2][0] * m.m[3][2] - m.m[0][2] * m.m[2][1] * m.m[3][0]) /
+      det;
   r.m[3][2] =
       (m.m[0][0] * m.m[1][2] * m.m[3][1] + m.m[0][1] * m.m[1][0] * m.m[3][2] +
-          m.m[0][2] * m.m[1][1] * m.m[3][0] - m.m[0][0] * m.m[1][1] * m.m[3][2] -
-          m.m[0][1] * m.m[1][2] * m.m[3][0] - m.m[0][2] * m.m[1][0] * m.m[3][1]) /
-          det;
+       m.m[0][2] * m.m[1][1] * m.m[3][0] - m.m[0][0] * m.m[1][1] * m.m[3][2] -
+       m.m[0][1] * m.m[1][2] * m.m[3][0] - m.m[0][2] * m.m[1][0] * m.m[3][1]) /
+      det;
   r.m[3][3] =
       (m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[0][1] * m.m[1][2] * m.m[2][0] +
-          m.m[0][2] * m.m[1][0] * m.m[2][1] - m.m[0][0] * m.m[1][2] * m.m[2][1] -
-          m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][2] * m.m[1][1] * m.m[2][0]) /
-          det;
+       m.m[0][2] * m.m[1][0] * m.m[2][1] - m.m[0][0] * m.m[1][2] * m.m[2][1] -
+       m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][2] * m.m[1][1] * m.m[2][0]) /
+      det;
 
   return r;
 }
@@ -296,8 +290,8 @@ void decompose(const Matrix4x4 &m, Matrix4x4 &r, Matrix4x4 &s) {
     norm = 0.f;
     for (int i = 0; i < 3; i++) {
       float n = fabsf(r.m[i][0] - Rnext.m[i][0]) +
-          fabsf(r.m[i][1] - Rnext.m[i][1]) +
-          fabsf(r.m[i][2] - Rnext.m[i][2]);
+                fabsf(r.m[i][1] - Rnext.m[i][1]) +
+                fabsf(r.m[i][2] - Rnext.m[i][2]);
       norm = std::max(norm, n);
     }
   } while (++count < 100 && norm > .0001f);
@@ -307,8 +301,7 @@ void decompose(const Matrix4x4 &m, Matrix4x4 &r, Matrix4x4 &s) {
 
 Matrix3x3::Matrix3x3() {
   memset(m, 0, sizeof(m));
-  for (int i = 0; i < 3; i++)
-    m[i][i] = 1.f;
+  for (int i = 0; i < 3; i++) m[i][i] = 1.f;
 }
 
 Matrix3x3::Matrix3x3(vec3 a, vec3 b, vec3 c)
@@ -329,18 +322,16 @@ Matrix3x3::Matrix3x3(float m00, float m01, float m02, float m10, float m11,
 
 void Matrix3x3::setIdentity() {
   memset(m, 0, sizeof(m));
-  for (int i = 0; i < 3; i++)
-    m[i][i] = 1.f;
+  for (int i = 0; i < 3; i++) m[i][i] = 1.f;
 }
 
 Matrix3x3 inverse(const Matrix3x3 &m) {
   Matrix3x3 r;
   float det =
       m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[1][0] * m.m[2][1] * m.m[0][2] +
-          m.m[2][0] * m.m[0][1] * m.m[1][2] - m.m[0][0] * m.m[2][1] * m.m[1][2] -
-          m.m[2][0] * m.m[1][1] * m.m[0][2] - m.m[1][0] * m.m[0][1] * m.m[2][2];
-  if (fabs(det) < 1e-8)
-    return r;
+      m.m[2][0] * m.m[0][1] * m.m[1][2] - m.m[0][0] * m.m[2][1] * m.m[1][2] -
+      m.m[2][0] * m.m[1][1] * m.m[0][2] - m.m[1][0] * m.m[0][1] * m.m[2][2];
+  if (fabs(det) < 1e-8) return r;
 
   r.m[0][0] = (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1]) / det;
   r.m[0][1] = (m.m[0][2] * m.m[2][1] - m.m[0][1] * m.m[2][2]) / det;
@@ -364,8 +355,7 @@ Matrix3x3 star(const Vector3 a) {
 }
 std::ostream &operator<<(std::ostream &os, const Matrix3x3 &m) {
   for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 3; j++)
-      os << m.m[i][j] << " ";
+    for (int j = 0; j < 3; j++) os << m.m[i][j] << " ";
     os << std::endl;
   }
   return os;
@@ -373,8 +363,7 @@ std::ostream &operator<<(std::ostream &os, const Matrix3x3 &m) {
 
 Matrix2x2::Matrix2x2() {
   memset(m, 0, sizeof(m));
-  for (int i = 0; i < 2; i++)
-    m[i][i] = 1.f;
+  for (int i = 0; i < 2; i++) m[i][i] = 1.f;
 }
 
 Matrix2x2::Matrix2x2(float m00, float m01, float m10, float m11) {
@@ -386,15 +375,13 @@ Matrix2x2::Matrix2x2(float m00, float m01, float m10, float m11) {
 
 void Matrix2x2::setIdentity() {
   memset(m, 0, sizeof(m));
-  for (int i = 0; i < 2; i++)
-    m[i][i] = 1.f;
+  for (int i = 0; i < 2; i++) m[i][i] = 1.f;
 }
 
 Matrix2x2 inverse(const Matrix2x2 &m) {
   Matrix2x2 r;
   float det = m.m[0][0] * m.m[1][1] - m.m[0][1] * m.m[1][0];
-  if (det == 0.f)
-    return r;
+  if (det == 0.f) return r;
   float k = 1.f / det;
   r.m[0][0] = m.m[1][1] * k;
   r.m[0][1] = -m.m[0][1] * k;
@@ -409,11 +396,10 @@ Matrix2x2 transpose(const Matrix2x2 &m) {
 
 std::ostream &operator<<(std::ostream &os, const Matrix2x2 &m) {
   for (int i = 0; i < 2; i++) {
-    for (int j = 0; j < 2; j++)
-      os << m.m[i][j] << " ";
+    for (int j = 0; j < 2; j++) os << m.m[i][j] << " ";
     os << std::endl;
   }
   return os;
 }
 
-} // ponos namespace
+}  // namespace ponos

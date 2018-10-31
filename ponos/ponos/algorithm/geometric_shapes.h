@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRIC_SHAPES_H
 #define PONOS_GEOMETRIC_SHAPES_H
@@ -36,10 +36,8 @@ namespace ponos {
 /// \param generateNormals
 /// \param generateUVs
 /// \return raw mesh pointer
-RawMesh *create_icosphere_mesh(const Point3 &center,
-                               float radius,
-                               size_t divisions,
-                               bool generateNormals,
+RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
+                               size_t divisions, bool generateNormals,
                                bool generateUVs);
 /// \param p1
 /// \param p2
@@ -48,11 +46,8 @@ RawMesh *create_icosphere_mesh(const Point3 &center,
 /// \param generateNormals
 /// \param generateUVs
 /// \return
-RawMesh *create_quad_mesh(const Point3 &p1,
-                          const Point3 &p2,
-                          const Point3 &p3,
-                          const Point3 &p4,
-                          bool generateNormals,
+RawMesh *create_quad_mesh(const Point3 &p1, const Point3 &p2, const Point3 &p3,
+                          const Point3 &p4, bool generateNormals,
                           bool generateUVs);
 /// \param p1
 /// \param p2
@@ -60,29 +55,39 @@ RawMesh *create_quad_mesh(const Point3 &p1,
 /// \param p4
 /// \param triangleFaces
 /// \return
-RawMesh *create_quad_wireframe_mesh(const Point3 &p1,
-                                    const Point3 &p2,
-                                    const Point3 &p3,
-                                    const Point3 &p4,
+RawMesh *create_quad_wireframe_mesh(const Point3 &p1, const Point3 &p2,
+                                    const Point3 &p3, const Point3 &p4,
                                     bool triangleFaces = false);
 
 class RawMeshes {
  public:
-///
-/// \param transform
-/// \param generateNormals
-/// \param generateUVs
-/// \return
-  static RawMeshSPtr cube(const ponos::Transform &transform = ponos::Transform(),
-                                      bool generateNormals = false,
-                                      bool generateUVs = false);
+  static RawMeshSPtr segment(const Point2 &a, const Point2 &b = Point2());
+  static RawMeshSPtr segment(const Point3 &a, const Point3 &b = Point3());
+  static RawMeshSPtr icosphere(const Point2 &center = Point2(),
+                               float radius = 1.f, size_t divisions = 5,
+                               bool generateNormals = false);
+
+  static RawMeshSPtr icosphere(const Point3 &center, float radius,
+                               size_t divisions, bool generateNormals,
+                               bool generateUVs);
+
+  ///
+  /// \param transform
+  /// \param generateNormals
+  /// \param generateUVs
+  /// \return
+  static RawMeshSPtr cube(
+      const ponos::Transform &transform = ponos::Transform(),
+      bool generateNormals = false, bool generateUVs = false);
+
   /// \param transform
   /// \param triangleFaces
   /// \return
-  static RawMeshSPtr cubeWireframe(const ponos::Transform &transform = ponos::Transform(),
-                                                bool triangleFaces = false);
+  static RawMeshSPtr cubeWireframe(
+      const ponos::Transform &transform = ponos::Transform(),
+      bool triangleFaces = false);
 };
 
-} // ponos namespace
+}  // namespace ponos
 
-#endif //PONOS_GEOMETRIC_SHAPES_H
+#endif  // PONOS_GEOMETRIC_SHAPES_H

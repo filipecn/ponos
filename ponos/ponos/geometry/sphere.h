@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRY_SPHERE_H
 #define PONOS_GEOMETRY_SPHERE_H
@@ -32,7 +32,7 @@
 namespace ponos {
 
 class Circle : public Shape {
-public:
+ public:
   Circle() { r = 0.f; }
   Circle(Point2 center, float radius) : c(center), r(radius) {
     this->type = ShapeType::SPHERE;
@@ -44,7 +44,7 @@ public:
 };
 
 class ParametricCircle final : public Circle, public ParametricCurveInterface {
-public:
+ public:
   ParametricCircle() { r = 0.f; }
   ParametricCircle(Point2 center, float radius) : Circle(center, radius) {}
   /** Compute euclidian coordinates
@@ -52,13 +52,13 @@ public:
    * \returns euclidian coordinates
    */
   Point2 operator()(float t) const override {
-    float angle = t * PI_2;
+    float angle = t * Constants::two_pi;
     return this->c + this->r * vec2(cosf(angle), sinf(angle));
   }
 };
 
 class ImplicitCircle final : public ImplicitCurveInterface {
-public:
+ public:
   ImplicitCircle() : r(0.f) {}
 
   ImplicitCircle(Point2 center, float radius) : c(center), r(radius) {}
@@ -68,8 +68,7 @@ public:
     return c + r * vec2(this->closestNormal(p));
   }
   Normal2D closestNormal(const Point2 &p) const override {
-    if (c == p)
-      return Normal2D(1, 0);
+    if (c == p) return Normal2D(1, 0);
     vec2 n = normalize(c - p);
     return Normal2D(n.x, n.y);
   }
@@ -88,7 +87,7 @@ public:
 };
 
 class Sphere : public SurfaceInterface {
-public:
+ public:
   Sphere() : r(0.f) {}
 
   Sphere(Point3 center, float radius) : c(center), r(radius) {}
@@ -98,8 +97,7 @@ public:
     return c + r * vec3(this->closestNormal(p));
   }
   Normal closestNormal(const Point3 &p) const override {
-    if (c == p)
-      return Normal(1, 0, 0);
+    if (c == p) return Normal(1, 0, 0);
     vec3 n = normalize(c - p);
     return Normal(n.x, n.y, n.z);
   }
@@ -114,7 +112,7 @@ public:
 };
 
 class ImplicitSphere final : public ImplicitSurfaceInterface {
-public:
+ public:
   ImplicitSphere() : r(0.f) {}
 
   ImplicitSphere(Point3 center, float radius) : c(center), r(radius) {}
@@ -124,8 +122,7 @@ public:
     return c + r * vec3(this->closestNormal(p));
   }
   Normal closestNormal(const Point3 &p) const override {
-    if (c == p)
-      return Normal(1, 0, 0);
+    if (c == p) return Normal(1, 0, 0);
     vec3 n = normalize(c - p);
     return Normal(n.x, n.y, n.z);
   }
@@ -160,6 +157,6 @@ inline BBox2D compute_bbox(const Circle &po, const Transform2D *t = nullptr) {
   return b;
 }
 
-} // ponos namespace
+}  // namespace ponos
 
 #endif

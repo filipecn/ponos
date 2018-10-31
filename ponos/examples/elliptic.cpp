@@ -7,8 +7,8 @@
 
 using namespace ponos;
 
-SparseLinearSystemd ls;
-int N, M, size;
+SparseLinearSystemd ls;  
+  int N, M, size;
 double a, b, c, d, h;
 std::function<double(int)> posX, posY;
 double PI2 = SQR(PI);

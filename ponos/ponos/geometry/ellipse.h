@@ -50,7 +50,7 @@ public:
    * \returns euclidian coordinates
    */
   Point2 operator()(float t) const override {
-    float angle = t * PI_2;
+    float angle = t * Constants::two_pi;
     return this->c + vec2(this->a * cosf(angle), this->b * sinf(angle));
   }
 };

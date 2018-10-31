@@ -20,9 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <aergia/helpers/geometry_drawers.h>
+#include <ponos/geometry/numeric.h>
 
 namespace aergia {
 
@@ -115,8 +116,8 @@ void draw_circle(const ponos::Circle &circle,
   else
     glVertex(circle.c);
   float angle = 0.0;
-  float step = PI_2 / 100.f;
-  while (angle < PI_2 + step) {
+  float step = ponos::Constants::two_pi / 100.f;
+  while (angle < ponos::Constants::two_pi + step) {
     ponos::vec2 pp(circle.r * cosf(angle), circle.r * sinf(angle));
     if (transform != nullptr)
       glVertex((*transform)(circle.c + pp));
@@ -133,11 +134,11 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
     glApplyTransform(*transform);
   }
   const float vStep = ponos::Constants::pi / 20.f;
-  const float hStep = PI_2 / 20.f;
+  const float hStep = ponos::Constants::pi / 20.f;
   glBegin(GL_TRIANGLES);
   // south pole
   ponos::Point3 pole(0.f, -sphere.r, 0.f);
-  for (float angle = 0.f; angle < PI_2; angle += hStep) {
+  for (float angle = 0.f; angle < ponos::Constants::two_pi; angle += hStep) {
     float r = sphere.r * sinf(vStep);
     glVertex(sphere.c + ponos::vec3(pole));
     glVertex(sphere.c + ponos::vec3(pole) +
@@ -148,7 +149,7 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
   }
   // north pole
   pole = ponos::Point3(0.f, sphere.r, 0.f);
-  for (float angle = 0.f; angle < PI_2; angle += hStep) {
+  for (float angle = 0.f; angle < ponos::Constants::two_pi; angle += hStep) {
     float r = sphere.r * sinf(vStep);
     glVertex(sphere.c + ponos::vec3(pole));
     glVertex(sphere.c + ponos::vec3(pole) +
@@ -160,10 +161,11 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
 
   glEnd();
   glBegin(GL_QUADS);
-  for (float vAngle = vStep; vAngle <= ponos::Constants::pi - vStep; vAngle += vStep) {
+  for (float vAngle = vStep; vAngle <= ponos::Constants::pi - vStep;
+       vAngle += vStep) {
     float r = sphere.r * sinf(vAngle);
     float R = sphere.r * sinf(vAngle + vStep);
-    for (float angle = 0.f; angle < PI_2; angle += hStep) {
+    for (float angle = 0.f; angle < ponos::Constants::two_pi; angle += hStep) {
       glVertex(sphere.c + ponos::vec3(r * cosf(angle), sphere.r * cosf(vAngle),
                                       r * sinf(angle)));
       glVertex(sphere.c + ponos::vec3(r * cosf(angle + hStep),
@@ -178,8 +180,7 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
     }
   }
   glEnd();
-  if (transform)
-    glPopMatrix();
+  if (transform) glPopMatrix();
 }
 
 void draw_polygon(const ponos::Polygon &polygon,
@@ -201,22 +202,22 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2D *t) {
   for (size_t i = 0; i < rm->meshDescriptor.count; i++) {
     ponos::Point2 a(
         rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 0]
-                             .positionIndex *
-                         2 +
-                     0],
+                              .positionIndex *
+                          2 +
+                      0],
         rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 0]
-                             .positionIndex *
-                         2 +
-                     1]);
+                              .positionIndex *
+                          2 +
+                      1]);
     ponos::Point2 b(
         rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 1]
-                             .positionIndex *
-                         2 +
-                     0],
+                              .positionIndex *
+                          2 +
+                      0],
         rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 1]
-                             .positionIndex *
-                         2 +
-                     1]);
+                              .positionIndex *
+                          2 +
+                      1]);
     if (t)
       glVertex((*t)(a));
     else
@@ -242,4 +243,4 @@ void draw_vector(const ponos::Point2 &p, const ponos::vec2 &v, float w,
   glEnd();
 }
 
-} // aergia namespace
+}  // namespace aergia

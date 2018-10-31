@@ -1,0 +1,32 @@
+config_setting(
+    name = "linux",
+    values = { "cpu": "k8" },
+)
+config_setting(
+    name = "osx",
+    values = { "cpu": "darwin" },
+)
+
+config_setting(
+    name = "windows",
+    values = {"cpu": "x64_windows"}
+)
+
+COMMONDEPS = [
+    "//ponos", 
+    "//ext/glad:glad", 
+    "//ext/stb:stb_truetype", 
+    "//ext/ply",
+    "//ext/tinyobj"]
+
+cc_library(
+    name = "aergia",
+    srcs = glob(["aergia/**/*.cpp"], exclude=["aergia/io/vulkan*"]),
+    hdrs = glob(["aergia/**/*.h", "aergia/*.h"], exclude=["aergia/io/vulkan*"]),
+    includes = ["."],
+    deps = select({
+        ":windows" : COMMONDEPS + ["@glfw//:glfw"],
+        "//conditions:default" : COMMONDEPS + ["@glfwWin32//:glfw"]
+    }),
+    visibility = ["//visibility:public"],
+)
