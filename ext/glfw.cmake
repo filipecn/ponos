@@ -54,7 +54,6 @@ else()
             "${X11_Xrandr_LIB}" "${X11_Xxf86vm_LIB}" "${X11_Xcursor_LIB}"
             "${X11_Xinerama_LIB}" "${X11_Xinput_LIB}"
             "${CMAKE_THREAD_LIBS_INIT}" -lrt -ldl)
-        message(FATAL_ERROR "${GLFW_LIBRARIES}")
     endif()
 endif()
 
