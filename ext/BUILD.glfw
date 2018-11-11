@@ -21,22 +21,22 @@ WIN_DEFINES = [
     "_GLFW_WIN32",
 ]
 
-cc_library(
-    name = "common",
-    srcs = ["src/context.c", "src/init.c", "src/input.c", "src/monitor.c","src/vulkan.c", "src/window.c"],
-    hdrs = ["src/internal.h", "include/GLFW/glfw3.h", "include/GLFW/glfw3native.h"],
-    includes = ["src"],
-    defines = select({":windows": WIN_DEFINES, "//conditions:default": DEFINES}),
-)
+COMMON_SRCS = ["src/context.c", "src/init.c", "src/input.c", "src/monitor.c","src/vulkan.c", "src/window.c"]
+COMMON_HDRS = ["src/internal.h", "include/GLFW/glfw3.h", "include/GLFW/glfw3native.h"]
 
 cc_library(
     name = "glfw",
-    hdrs = select({"windows":["src/win32_platform.h", "src/win32_joystick.h",
+    hdrs = COMMON_HDRS + select({"windows":["src/win32_platform.h", "src/win32_joystick.h",
                      "src/wgl_context.h", "src/egl_context.h"],
+                     "linux":["src/x11_platform.h", "src/xkb_unicode.h", "src/linux_joystick.h", 
+                     "src/posix_time.h", "src/posix_tls.h", "src/glx_context.h", "src/egl_context.h"],
     "//conditions:default": []}),
-    srcs = select({"windows":["src/win32_init.c", "src/win32_joystick.c",
+    srcs = COMMON_SRCS + select({"windows":["src/win32_init.c", "src/win32_joystick.c",
                      "src/win32_monitor.c", "src/win32_time.c", "src/win32_tls.c", "src/win32_window.c",
                      "src/wgl_context.c", "src/egl_context.c"],
+                     "linux":["src/x11_init.c", "src/x11_monitor.c", "src/x11_window.c", "src/xkb_unicode.c", 
+                     "src/linux_joystick.c", "src/posix_time.c", "src/posix_tls.c", 
+                     "src/glx_context.c", "src/egl_context.c"],
     "//conditions:default": []}),
     defines = select({
         ":windows": WIN_DEFINES,
@@ -44,9 +44,9 @@ cc_library(
     # strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     includes = ["include", "src"],
-    deps = select({
-        "windows": [":common"],
-        "//conditions:default": 
-        [":common",],
-    }),
+    #deps = select({
+    #    "windows": [":common"],
+    #    "//conditions:default": 
+    #    [":common",],
+    #}),
 )
