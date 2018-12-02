@@ -30,6 +30,7 @@
 
 #include <ponos/ponos.h>
 
+#include <initializer_list>
 #include <set>
 
 namespace circe {
@@ -49,11 +50,11 @@ public:
   /// \param fs fragment shader
   ShaderProgram(const char *vs, const char *gs, const char *fs);
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
-  explicit ShaderProgram(const char *fl...);
+  explicit ShaderProgram(std::initializer_list<const char *> files);
   /// \brief Creates a shader program from shader files.
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
   /// \return program id. **-1** if error.
-  bool loadFromFiles(const char *fl...);
+  bool loadFromFiles(std::initializer_list<const char *> files);
   /// Activate shader program
   bool begin();
   /// Deactivate shader program
@@ -73,11 +74,13 @@ public:
   /// \param b buffer pointer (must match attribute names)
   void registerVertexAttributes(const VertexBuffer *b);
   // Uniforms
+  void setUniform(const char *name, const ponos::Transform &t);
   void setUniform(const char *name, const ponos::mat4 &m);
   void setUniform(const char *name, const ponos::mat3 &m);
   void setUniform(const char *name, const ponos::vec4 &v);
   void setUniform(const char *name, const ponos::vec3 &v);
   void setUniform(const char *name, const ponos::vec2 &v);
+  void setUniform(const char *name, const ponos::Point3 &v);
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 
@@ -104,6 +107,13 @@ protected:
 
   GLint getUniLoc(const GLchar *name);
 };
+
+typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
+
+template <typename... TArg>
+ShaderProgramPtr createShaderProgramPtr(TArg &&... Args) {
+  return std::make_shared<ShaderProgram>(std::forward<TArg>(Args)...);
+}
 
 } // circe namespace
 

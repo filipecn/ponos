@@ -30,21 +30,20 @@ ShaderManager ShaderManager::instance_;
 
 ShaderManager::ShaderManager() {}
 
-int ShaderManager::loadFromFiles(const char *fl, ...) {
-  va_list args;
-  va_start(args, fl);
+int ShaderManager::loadFromFiles(std::initializer_list<const char *> l) {
   std::vector<GLuint> objects;
   GLuint types[] = {GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER,
                     GL_COMPUTE_SHADER};
-  while (*fl != '\0') {
-    std::string filename(fl);
+  for (auto v : l) {
+    std::string filename(v);
     if (filename.size() < 4)
       continue;
     char *source = nullptr;
+    std::cout << "loading shader file " << filename << std::endl;
     if (!ponos::readFile(filename.c_str(), &source))
       continue;
     GLuint shaderType = 0;
-    switch (filename[filename.size() - 2]) {
+    switch (filename[filename.size() - 4]) {
     case 'v':
       shaderType = 0;
       break;
@@ -63,9 +62,9 @@ int ShaderManager::loadFromFiles(const char *fl, ...) {
     objects.emplace_back(compile(source, types[shaderType]));
     if (source)
       free(source);
-    ++fl;
   }
-  va_end(args);
+  if (objects.empty())
+    return -1;
   GLuint program = createProgram(objects);
   if (!program)
     return -1;

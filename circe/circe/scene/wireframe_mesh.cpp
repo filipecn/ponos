@@ -30,33 +30,34 @@ WireframeMesh::WireframeMesh(const std::string &filename)
     : SceneMeshObject(filename) {}
 
 WireframeMesh::WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t) {
-  rawMesh = m;
-  setupVertexBuffer();
-  setupIndexBuffer();
+  // rawMesh = m;
+  // setupVertexBuffer();
+  // setupIndexBuffer();
   transform = t;
 }
 
 void WireframeMesh::draw(const CameraInterface *camera,
                          ponos::Transform transform) {
   glPushMatrix();
-  vb->bind();
-  ib->bind();
+  // vb->bind();
+  // ib->bind();
   float pm[16];
   transform.matrix().column_major(pm);
   glMultMatrixf(pm);
   glColor4f(0, 0, 0, 0.1);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-  glDrawElements(GL_LINES, ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT,
-                 0);
+  // glDrawElements(GL_LINES, ib->bufferDescriptor.elementCount,
+  // GL_UNSIGNED_INT,
+  //  0);
   glPopMatrix();
 }
 
 void WireframeMesh::setupIndexBuffer() {
-  BufferDescriptor indexDescriptor =
-      create_index_buffer_descriptor(1, rawMesh->positionsIndices.size(),
-                                     ponos::GeometricPrimitiveType::LINES);
-  ib.reset(new IndexBuffer(&rawMesh->positionsIndices[0], indexDescriptor));
+  // BufferDescriptor indexDescriptor =
+  // create_index_buffer_descriptor(1, rawMesh->positionsIndices.size(),
+  //  ponos::GeometricPrimitiveType::LINES);
+  // ib.reset(new IndexBuffer(&rawMesh->positionsIndices[0], indexDescriptor));
 }
 
 } // circe namespace

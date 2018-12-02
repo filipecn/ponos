@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_SCENE_OBJECT_H
 #define CIRCE_SCENE_SCENE_OBJECT_H
@@ -30,6 +30,7 @@
 #include <circe/graphics/shader.h>
 #include <circe/io/buffer.h>
 #include <circe/io/utils.h>
+#include <circe/scene/scene_mesh.h>
 #include <circe/ui/interactive_object_interface.h>
 
 namespace circe {
@@ -70,25 +71,32 @@ public:
   SceneMeshObject() {}
 
   SceneMeshObject(const std::string &filename) {
-    ponos::RawMesh *m = new ponos::RawMesh();
-    loadOBJ(filename, m);
-    m->computeBBox();
-    m->splitIndexData();
-    m->buildInterleavedData();
-    rawMesh = m;
-    setupVertexBuffer();
-    setupIndexBuffer();
+    ponos::RawMeshSPtr rawMesh(new ponos::RawMesh());
+    loadOBJ(filename, rawMesh.get());
+    rawMesh->computeBBox();
+    rawMesh->splitIndexData();
+    rawMesh->buildInterleavedData();
+    mesh_ = createSceneMeshPtr(rawMesh);
+  }
+
+  SceneMeshObject(const std::string &filename, ShaderProgramPtr s)
+      : SceneMeshObject(filename) {
+    shader_ = s;
   }
 
   SceneMeshObject(ponos::RawMesh *m,
-                  std::function<void(ShaderProgram *s)> f =
-                      [](ShaderProgram *s) { UNUSED_VARIABLE(s); },
+                  std::function<void(ShaderProgram *, const CameraInterface *,
+                                     ponos::Transform)>
+                      f =
+                          [](ShaderProgram *s, const CameraInterface *camera,
+                             ponos::Transform t) {
+                            UNUSED_VARIABLE(s);
+                            UNUSED_VARIABLE(camera);
+                            UNUSED_VARIABLE(t);
+                          },
                   ShaderProgram *s = nullptr) {
     this->visible = true;
-    this->rawMesh = m;
-    this->setupVertexBuffer();
-    this->setupIndexBuffer();
-    shader = s;
+    shader_.reset(s);
     drawCallback = f;
     // if (shader)
     //  for (auto att : this->vb->bufferDescriptor.attributes)
@@ -100,32 +108,39 @@ public:
   void draw(const CameraInterface *camera, ponos::Transform t) override {
     if (!visible)
       return;
-    vb->bind();
-    ib->bind();
-    if (shader) {
-      shader->registerVertexAttributes(vb.get());
-      shader->begin();
+    mesh_->bind();
+    if (shader_) {
+      mesh_->vertexBuffer()->locateAttributes(*shader_.get());
+      shader_->begin();
     } else {
       glEnableVertexAttribArray(0);
-      glVertexAttribPointer(
-          0, vb->bufferDescriptor.elementSize, GL_FLOAT, GL_FALSE,
-          0 /*sizeof(float) * vb->bufferDescriptor.elementSize*/, 0);
+      // glVertexAttribPointer(
+      // 0, vb->bufferDescriptor.elementSize, GL_FLOAT, GL_FALSE,
+      // 0 /*sizeof(float) * vb->bufferDescriptor.elementSize*/, 0);
     }
     if (drawCallback)
-      drawCallback(shader);
-    glDrawElements(this->ib->bufferDescriptor.elementType,
-                   this->ib->bufferDescriptor.elementCount, GL_UNSIGNED_INT, 0);
-    if (shader)
-      shader->end();
+      drawCallback(shader_.get(), camera, transform * t);
+    glDrawElements(mesh_->indexBuffer()->bufferDescriptor.elementType,
+                   mesh_->indexBuffer()->bufferDescriptor.elementCount *
+                       mesh_->indexBuffer()->bufferDescriptor.elementSize,
+                   GL_UNSIGNED_INT, 0);
+    mesh_->unbind();
+    if (shader_)
+      shader_->end();
   }
 
-  ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
+  void setShader(ShaderProgramPtr shader) { shader_ = shader; }
+  ShaderProgramPtr shader() { return shader_; }
+  SceneMeshPtr mesh() { return mesh_; }
 
-  ponos::RawMesh *rawMesh;
-  std::function<void(ShaderProgram *s)> drawCallback;
+  // ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
+
+  std::function<void(ShaderProgram *, const CameraInterface *,
+                     ponos::Transform)>
+      drawCallback;
 
 protected:
-  virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
+  /*virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
                                  GLuint _type = GL_ARRAY_BUFFER,
                                  GLuint _use = GL_STATIC_DRAW) {
     UNUSED_VARIABLE(_elementType);
@@ -160,13 +175,19 @@ protected:
 
   std::shared_ptr<VertexBuffer> vb;
   std::shared_ptr<IndexBuffer> ib;
-
-private:
-  ShaderProgram *shader;
+*/
+  SceneMeshPtr mesh_;
+  ShaderProgramPtr shader_;
 };
 
 typedef std::shared_ptr<SceneObject> SceneObjectSPtr;
+typedef std::shared_ptr<SceneMeshObject> SceneMeshObjectSPtr;
 
-} // circe namespace
+template <typename... TArg>
+SceneMeshObjectSPtr createSceneMeshObjectSPtr(TArg &&... Args) {
+  return std::make_shared<SceneMeshObject>(std::forward<TArg>(Args)...);
+}
+
+} // namespace circe
 
 #endif // CIRCE_SCENE_SCENE_OBJECT_H

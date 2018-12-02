@@ -29,14 +29,17 @@
 
 namespace circe {
 
-BVH::BVH(SceneMeshObject *m) {
-  sceneMesh.reset(m);
+BVH::BVH(SceneMeshObjectSPtr m) {
+  sceneMesh = m;
   std::vector<BVHElement> buildData;
-  for (size_t i = 0; i < sceneMesh->rawMesh->meshDescriptor.count; i++)
-    buildData.emplace_back(BVHElement(i, sceneMesh->rawMesh->elementBBox(i)));
+  for (size_t i = 0; i < sceneMesh->mesh()->rawMesh()->meshDescriptor.count;
+       i++)
+    buildData.emplace_back(
+        BVHElement(i, sceneMesh->mesh()->rawMesh()->elementBBox(i)));
   uint32_t totalNodes = 0;
-  orderedElements.reserve(sceneMesh->rawMesh->meshDescriptor.count);
-  root = recursiveBuild(buildData, 0, sceneMesh->rawMesh->meshDescriptor.count,
+  orderedElements.reserve(sceneMesh->mesh()->rawMesh()->meshDescriptor.count);
+  root = recursiveBuild(buildData, 0,
+                        sceneMesh->mesh()->rawMesh()->meshDescriptor.count,
                         &totalNodes, orderedElements);
   nodes.resize(totalNodes);
   for (uint32_t i = 0; i < totalNodes; i++)
@@ -122,11 +125,11 @@ int BVH::intersect(const ponos::Ray3 &ray, float *t) {
       if (node->nElements > 0) {
         // intersect ray with primitives
         for (uint32_t i = 0; i < node->nElements; i++) {
-          ponos::Point3 v0 = sceneMesh->rawMesh->positionElement(
+          ponos::Point3 v0 = sceneMesh->mesh()->rawMesh()->positionElement(
               orderedElements[node->elementsOffset + i], 0);
-          ponos::Point3 v1 = sceneMesh->rawMesh->positionElement(
+          ponos::Point3 v1 = sceneMesh->mesh()->rawMesh()->positionElement(
               orderedElements[node->elementsOffset + i], 1);
-          ponos::Point3 v2 = sceneMesh->rawMesh->positionElement(
+          ponos::Point3 v2 = sceneMesh->mesh()->rawMesh()->positionElement(
               orderedElements[node->elementsOffset + i], 2);
           if (ponos::triangle_ray_intersection(v0, v1, v2, r))
             hit++;
@@ -185,10 +188,11 @@ bool BVH::isInside(const ponos::Point3 &p) {
   return intersect(r, nullptr) % 2 && intersect(r2, nullptr) % 2;
 
   int hit = 0, hit2 = 0;
-  for (size_t i = 0; i < sceneMesh->rawMesh->meshDescriptor.count; i++) {
-    ponos::Point3 v0 = sceneMesh->rawMesh->positionElement(i, 0);
-    ponos::Point3 v1 = sceneMesh->rawMesh->positionElement(i, 1);
-    ponos::Point3 v2 = sceneMesh->rawMesh->positionElement(i, 2);
+  for (size_t i = 0; i < sceneMesh->mesh()->rawMesh()->meshDescriptor.count;
+       i++) {
+    ponos::Point3 v0 = sceneMesh->mesh()->rawMesh()->positionElement(i, 0);
+    ponos::Point3 v1 = sceneMesh->mesh()->rawMesh()->positionElement(i, 1);
+    ponos::Point3 v2 = sceneMesh->mesh()->rawMesh()->positionElement(i, 2);
     if (ponos::triangle_ray_intersection(v0, v1, v2, r))
       hit++;
     if (ponos::triangle_ray_intersection(v0, v1, v2, r2))

@@ -84,6 +84,7 @@ public:
     return projection->transform;
   }
   /// \return model transform
+  virtual ponos::Matrix3x3 getNormalMatrix() const { return normal; }
   virtual ponos::Transform getModelTransform() const { return model; }
   virtual ponos::Transform getViewTransform() const { return view; }
   /// \param p normalized mouse position
@@ -157,6 +158,7 @@ protected:
   ponos::Point3 target;
   ponos::Transform view;
   ponos::Transform model;
+  ponos::Matrix3x3 normal;
   ponos::Frustum frustum;
   std::shared_ptr<CameraProjection> projection;
 };

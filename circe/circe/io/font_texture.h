@@ -61,8 +61,8 @@ public:
   Glyph getGlyph(uint character, float offsetX, float offsetY);
   void setText(std::string text);
   void render();
-  ponos::RawMesh rawMesh;
-  std::shared_ptr<SceneMesh> mesh;
+  ponos::RawMeshSPtr rawMesh;
+  SceneMeshPtr mesh;
   Texture texture;
 };
 

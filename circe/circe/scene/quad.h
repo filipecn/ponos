@@ -41,11 +41,6 @@ public:
    */
   void set(const ponos::Point2 &pm, const ponos::Point2 &pM);
   void draw(const CameraInterface *camera, ponos::Transform transform) override;
-
-  std::shared_ptr<circe::ShaderProgram> shader; //!< shader applied on draw
-
-private:
-  GLuint VAO;
 };
 
 } // circe namespace

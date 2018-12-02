@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/io/buffer.h>
 
@@ -57,4 +57,4 @@ void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
   }
 }
 
-} // circe namespace
+} // namespace circe

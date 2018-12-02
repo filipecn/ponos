@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 //
 // Created by FilipeCN on 2/19/2018.
@@ -153,7 +153,7 @@ void InstanceSet::draw(const CameraInterface *camera,
     bind(i);
     buffers_[i]->locateAttributes(shader_, 1);
   }
-  shader_.setUniform("view_matrix",
+  shader_.setUniform("model_view_matrix",
                      ponos::transpose(camera->getViewTransform().matrix()));
   shader_.setUniform(
       "projection_matrix",
@@ -172,4 +172,4 @@ void InstanceSet::draw(const CameraInterface *camera,
   baseMesh_.unbind();
 }
 
-} // circe namespace
+} // namespace circe

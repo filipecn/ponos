@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
-#include <circe/ui/ui_camera.h>
 #include <circe/io/user_input.h>
+#include <circe/ui/ui_camera.h>
 
 namespace circe {
 
 UserCamera::UserCamera() = default;
 
 void UserCamera::mouseButton(int action, int button, ponos::Point2 p) {
-//  p.y = 1.f - p.y;
+  //  p.y = 1.f - p.y;
   if (action == PRESS)
     trackball.buttonPress(*this, button, p);
   else {
@@ -44,7 +44,7 @@ void UserCamera::mouseButton(int action, int button, ponos::Point2 p) {
 }
 
 void UserCamera::mouseMove(ponos::Point2 p) {
-//  p.y = 1.f - p.y;
+  //  p.y = 1.f - p.y;
   if (trackball.isActive()) {
     trackball.mouseMove(*this, p);
     trackball.tb.applyPartialTransform();
@@ -55,7 +55,7 @@ void UserCamera::mouseMove(ponos::Point2 p) {
 }
 
 void UserCamera::mouseScroll(ponos::Point2 p, ponos::vec2 d) {
-//  p.y = 1.f - p.y;
+  //  p.y = 1.f - p.y;
   trackball.mouseScroll(*this, p, d);
   trackball.tb.applyPartialTransform();
   applyTransform(trackball.tb.transform());
@@ -76,15 +76,17 @@ void UserCamera2D::update() {
   this->view = ponos::lookAtRH(this->pos, this->target, this->up);
   view.computeInverse();
   model.computeInverse();
+  normal = inverse((view * model).upperLeftMatrix());
   projection->transform.computeInverse();
 }
 
 void UserCamera2D::fit(const ponos::BBox2D &b, float delta) {
-  //setPos(ponos::vec2(b.center()));
-  //setZoom((b.size(b.maxExtent()) / 2.f) * delta);
+  // setPos(ponos::vec2(b.center()));
+  // setZoom((b.size(b.maxExtent()) / 2.f) * delta);
   setPosition(ponos::Point3(b.center().x, b.center().y, 1.f));
   setTarget(ponos::Point3(b.center().x, b.center().y, 0.f));
-  dynamic_cast<OrthographicProjection *>(this->projection.get())->zoom((b.size(b.maxExtent()) / 2.f) * delta);
+  dynamic_cast<OrthographicProjection *>(this->projection.get())
+      ->zoom((b.size(b.maxExtent()) / 2.f) * delta);
   trackball.tb.setTransform(ponos::Transform());
   trackball.tb.setCenter(target);
   projection->update();
@@ -125,8 +127,9 @@ void UserCamera3D::update() {
   view = ponos::lookAtRH(pos, target, up);
   view.computeInverse();
   model.computeInverse();
+  normal = inverse((model * view).upperLeftMatrix());
   frustum.set(model * view * projection->transform);
   trackball.tb.setRadius(ponos::distance(pos, target) / 3.f);
 }
 
-} // circe namespace
+} // namespace circe

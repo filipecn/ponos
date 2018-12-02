@@ -34,7 +34,7 @@ namespace circe {
 class SceneMesh {
 public:
   /// \param rm raw mesh
-  explicit SceneMesh(ponos::RawMesh &rm);
+  explicit SceneMesh(ponos::RawMeshSPtr rm);
   /// Binds buffers
   void bind();
   void unbind();
@@ -42,15 +42,22 @@ public:
   const VertexBuffer *vertexBuffer() const;
   /// \return index buffer pointer
   const IndexBuffer *indexBuffer() const;
+  ponos::RawMeshSPtr rawMesh();
 
-private:
+protected:
   GLuint VAO;
   std::vector<float> vertexData_;
   std::vector<uint> indexData_;
-  ponos::RawMesh &mesh_;
+  ponos::RawMeshSPtr mesh_;
   VertexBuffer vertexBuffer_;
   IndexBuffer indexBuffer_;
 };
+
+typedef std::shared_ptr<SceneMesh> SceneMeshPtr;
+
+template <typename... TArg> SceneMeshPtr createSceneMeshPtr(TArg &&... Args) {
+  return std::make_shared<SceneMesh>(std::forward<TArg>(Args)...);
+}
 
 } // circe namespace
 

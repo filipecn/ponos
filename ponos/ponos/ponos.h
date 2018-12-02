@@ -34,6 +34,7 @@
 #include <ponos/blas/symmetric_matrix.h>
 #include <ponos/common/defs.h>
 #include <ponos/common/file.h>
+#include <ponos/common/iterators.h>
 #include <ponos/common/macros.h>
 #include <ponos/common/memory.h>
 #include <ponos/common/random.h>

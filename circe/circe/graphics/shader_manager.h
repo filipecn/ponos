@@ -20,13 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_GRAPHICS_SHADER_MANAGER_H
 #define CIRCE_GRAPHICS_SHADER_MANAGER_H
 
 #include <circe/utils/open_gl.h>
 
+#include <initializer_list>
 #include <map>
 #include <stdarg.h>
 #include <string>
@@ -40,10 +41,10 @@ class ShaderManager {
 public:
   static ShaderManager &instance() { return instance_; }
   virtual ~ShaderManager() = default;
-  /// \brief Creates a shader program from shader files.
-  /// It expects only one file of each type with extensions .fs, .vs and .gs.
+  /// \brief Creates a shader program from a list of shader files.
+  /// It expects only one file of each type with extensions .frag, .vert, etc...
   ///\return program id. **-1** if error.
-  int loadFromFiles(const char *fl, ...);
+  int loadFromFiles(std::initializer_list<const char *> l);
   /// \brief Creates a shader program from strings.
   /// \param vs vertex shader
   /// \param gs geometry shader
@@ -73,88 +74,47 @@ private:
 #define CIRCE_NO_VAO_VS                                                        \
   "#version 440 core\n out vec2 texCoord;"                                     \
   "void main() {"                                                              \
-  \
-"    float x = -1.0 + float((gl_VertexID & 1) << 2);"                     \
-  \
-"    float y = -1.0 + float((gl_VertexID & 2) << 1);"                     \
-  \
-"    texCoord.x = (x+1.0)*0.5;"                                           \
-  \
-"    texCoord.y = (y+1.0)*0.5;"                                           \
-  \
-"    gl_Position = vec4(x, y, 0, 1);"                                     \
-  \
-"}"
+  "    float x = -1.0 + float((gl_VertexID & 1) << 2);"                        \
+  "    float y = -1.0 + float((gl_VertexID & 2) << 1);"                        \
+  "    texCoord.x = (x+1.0)*0.5;"                                              \
+  "    texCoord.y = (y+1.0)*0.5;"                                              \
+  "    gl_Position = vec4(x, y, 0, 1);"                                        \
+  "}"
 
 #define CIRCE_NO_VAO_FS                                                        \
-  \
-"#version 440 core\n"                                                     \
-  \
-"out vec4 outColor;"                                                      \
-  \
-"in vec2 texCoord;"                                                       \
-  \
-"uniform sampler2D tex;"                                                  \
-  \
-"void main() {"                                                           \
-  \
-"outColor = texture(tex, texCoord);"                                      \
-  \
-"}"
+  "#version 440 core\n"                                                        \
+  "out vec4 outColor;"                                                         \
+  "in vec2 texCoord;"                                                          \
+  "uniform sampler2D tex;"                                                     \
+  "void main() {"                                                              \
+  "     outColor = texture(tex, texCoord);"                                    \
+  "}"
 
 #define CIRCE_INSTANCES_VS                                                     \
-  \
-"#version 440 core\n"                                                     \
-  \
-"layout (location = 0) in vec3 position;"                                 \
-  \
-"layout (location = 1) in vec3 pos;"                                      \
-  \
-"layout (location = 2) in float scale;"                                   \
-  \
-"layout (location = 3) in vec4 col;"                                      \
-  \
-"layout (location = 4) uniform mat4 view_matrix;"                         \
-  \
-"layout (location = 5) uniform mat4 projection_matrix;"                   \
-  \
-"out VERTEX {"                                                            \
-  \
-"vec4 color;"                                                             \
-  \
-"} vertex;"                                                               \
-  \
-"void main() {"                                                           \
-  \
-"    mat4 model_matrix;"                                                  \
-  \
-"    model_matrix[0] = vec4(scale, 0, 0, 0);"                             \
-  \
-"    model_matrix[1] = vec4(0, scale, 0, 0);"                             \
-  \
-"    model_matrix[2] = vec4(0, 0, scale, 0);"                             \
-  \
-"    model_matrix[3] = vec4(pos.x, pos.y, pos.z, 1);"                     \
-  \
-"    mat4 model_view_matrix = view_matrix * model_matrix;\n"              \
-  \
-"    gl_Position = projection_matrix * model_view_matrix * "              \
-  \
-"vec4(position,1);"                                                       \
-  \
-"   vertex.color = col;"                                                  \
-  \
-"}"
+  "#version 440 core\n"                                                        \
+  "layout (location = 0) in vec3 position;"                                    \
+  "layout (location = 1) in vec4 color;"                                       \
+  "layout (location = 2) in mat4 transform_matrix;"                            \
+  "layout (location = 3) uniform mat4 model_view_matrix;"                      \
+  "layout (location = 4) uniform mat4 projection_matrix;"                      \
+  "out VERTEX {"                                                               \
+  "     vec4 color;"                                                           \
+  "} vertex;"                                                                  \
+  "void main() {"                                                              \
+  "    gl_Position = projection_matrix * model_view_matrix * "                 \
+  "transform_matrix "                                                          \
+  "*    vec4(position,1);"                                                     \
+  "    vertex.color = color;"                                                  \
+  "}";
 
 #define CIRCE_INSTANCES_FS                                                     \
-  \
-"#version 440 core\n"                                                     \
+  "#version 440 core\n"                                                        \
   "in VERTEX { vec4 color; } vertex;"                                          \
   "out vec4 outColor;"                                                         \
   "void main() {"                                                              \
   "   outColor = vertex.color;"                                                \
   "}";
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_GRAPHICS_SHADER_MANAGER_H

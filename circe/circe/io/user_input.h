@@ -1,7 +1,10 @@
 #ifndef CIRCE_IO_USER_INPUT_H
 #define CIRCE_IO_USER_INPUT_H
 
-namespace aergia {
+#include <circe/utils/open_gl.h>
+#include <string>
+
+namespace circe {
 
 class UserInput {
 public:

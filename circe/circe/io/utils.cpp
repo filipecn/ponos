@@ -41,8 +41,10 @@ void loadOBJ(const std::string &filename, ponos::RawMesh *mesh) {
   std::string err;
   bool r =
       tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filename.c_str());
-  if (!r)
+  if (!r) {
+    std::cerr << err << std::endl;
     return;
+  }
   mesh->positions = std::vector<float>(attrib.vertices);
   mesh->normals = std::vector<float>(attrib.normals);
   mesh->texcoords = std::vector<float>(attrib.texcoords);

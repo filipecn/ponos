@@ -107,7 +107,7 @@ public:
   std::vector<float> interleavedData; //!< flat array on the form [Vi Ni Ti ...]
 
   ArrayDescriptor meshDescriptor;     //!< mesh description
-  ArrayDescriptor positionDescriptor;   //!< position description
+  ArrayDescriptor positionDescriptor; //!< position description
   ArrayDescriptor texcoordDescriptor; //!< texture coordinates description
   ArrayDescriptor normalDescriptor;   //!<< normal description
 

@@ -104,10 +104,10 @@ set_target_properties(circe PROPERTIES
         OUTPUT_NAME "circe"
         FOLDER "CIRCE")
 
-target_compile_definitions(circe PUBLIC -DASSET_PATH="${CIRCE_SOURCE_DIR}/examples/assets")
+target_compile_definitions(circe PUBLIC -DASSETS_PATH="${CIRCE_SOURCE_DIR}/examples/assets" -DSHADERS_PATH="${CIRCE_SOURCE_DIR}/examples/shaders")
 target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PLY_INCLUDES} ${TINYOBJLOADER_INCLUDES} ${GLAD_INCLUDES} ${GLFW_INCLUDE_DIR})
 target_link_libraries(circe PUBLIC ponos  ${GLFW_LIBRARIES} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
-#add_dependencies(circe glfw glad)
+# add_dependencies(circe glfw glad)
 
 add_subdirectory(examples)
 

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/graphics/shader.h>
 
@@ -60,13 +60,14 @@ ShaderProgram::ShaderProgram(int id) {
 ShaderProgram::ShaderProgram(const char *vs, const char *gs, const char *fs)
     : ShaderProgram(ShaderManager::instance().loadFromTexts(vs, gs, fs)) {}
 
-ShaderProgram::ShaderProgram(const char *fl...) : programId(0) {
-  loadFromFiles(fl);
+ShaderProgram::ShaderProgram(std::initializer_list<const char *> files)
+    : programId(0) {
+  loadFromFiles(files);
 }
 
-bool ShaderProgram::loadFromFiles(const char *fl...) {
+bool ShaderProgram::loadFromFiles(std::initializer_list<const char *> files) {
   running = false;
-  int program = ShaderManager::instance().loadFromFiles(fl);
+  int program = ShaderManager::instance().loadFromFiles(files);
   if (program < 0)
     return false;
   programId = static_cast<GLuint>(program);
@@ -117,6 +118,18 @@ void ShaderProgram::addUniform(const std::string &name, GLint location) {
   uniformLocations[name] = location;
 }
 
+void ShaderProgram::setUniform(const char *name, const ponos::Transform &t) {
+  if (!running)
+    begin();
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Must be added first.)\n";
+    return;
+  }
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &t.matrix().m[0][0]);
+}
+
 void ShaderProgram::setUniform(const char *name, const ponos::mat4 &m) {
   if (!running)
     begin();
@@ -150,6 +163,16 @@ void ShaderProgram::setUniform(const char *name, const ponos::vec4 &v) {
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec3 &v) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform3fv(loc, 1, &v.x);
+}
+
+void ShaderProgram::setUniform(const char *name, const ponos::Point3 &v) {
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name
@@ -207,4 +230,4 @@ GLint ShaderProgram::getUniLoc(const GLchar *name) {
   //  return glGetUniformLocation(programId, name);
 }
 
-} // circe namespace
+} // namespace circe

@@ -25,8 +25,8 @@
 
 #include "scene_mesh.h"
 
-circe::SceneMesh::SceneMesh(ponos::RawMesh &rm) : mesh_(rm) {
-  { // convert mesh to buffers
+circe::SceneMesh::SceneMesh(ponos::RawMeshSPtr rm) : mesh_(rm) {
+  /*{ // convert mesh to buffers
     // position index | norm index | texcoord index -> index
     typedef std::pair<std::pair<int, int>, int> MapKey;
     std::map<MapKey, size_t> m;
@@ -60,9 +60,10 @@ circe::SceneMesh::SceneMesh(ponos::RawMesh &rm) : mesh_(rm) {
         index = it->second;
       indexData_.emplace_back(index);
     }
-  }
+  }*/
+  circe::setup_buffer_data_from_mesh(*rm.get(), vertexData_, indexData_);
   circe::BufferDescriptor ver, ind;
-  circe::create_buffer_description_from_mesh(mesh_, ver, ind);
+  circe::create_buffer_description_from_mesh(*mesh_.get(), ver, ind);
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
   vertexBuffer_.set(&vertexData_[0], ver);
@@ -87,6 +88,8 @@ const circe::VertexBuffer *circe::SceneMesh::vertexBuffer() const {
 const circe::IndexBuffer *circe::SceneMesh::indexBuffer() const {
   return &indexBuffer_;
 }
+
+ponos::RawMeshSPtr circe::SceneMesh::rawMesh() { return mesh_; }
 
 void circe::SceneMesh::unbind() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);

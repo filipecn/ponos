@@ -115,15 +115,17 @@ FontAtlas::Glyph FontAtlas::getGlyph(uint character, float offsetX,
 }
 
 void FontAtlas::setText(std::string text) {
-  rawMesh.clear();
-  rawMesh.meshDescriptor.elementSize = 3;
-  rawMesh.meshDescriptor.count = text.size() * 2;
-  rawMesh.positionDescriptor.elementSize = 3;
-  rawMesh.positionDescriptor.count = text.size() * 4;
-  rawMesh.texcoordDescriptor.elementSize = 2;
-  rawMesh.texcoordDescriptor.count = text.size() * 4;
-  rawMesh.normalDescriptor.elementSize = 0;
-  rawMesh.normalDescriptor.count = 0;
+  if (!rawMesh)
+    rawMesh.reset(new ponos::RawMesh());
+  rawMesh->clear();
+  rawMesh->meshDescriptor.elementSize = 3;
+  rawMesh->meshDescriptor.count = text.size() * 2;
+  rawMesh->positionDescriptor.elementSize = 3;
+  rawMesh->positionDescriptor.count = text.size() * 4;
+  rawMesh->texcoordDescriptor.elementSize = 2;
+  rawMesh->texcoordDescriptor.count = text.size() * 4;
+  rawMesh->normalDescriptor.elementSize = 0;
+  rawMesh->normalDescriptor.count = 0;
 
   uint16_t lastIndex = 0;
   float offsetX = 0, offsetY = 0;
@@ -133,27 +135,27 @@ void FontAtlas::setText(std::string text) {
     offsetY = glyphInfo.offsetY;
     for (int k = 0; k < 4; k++) {
       for (int j = 0; j < 3; j++)
-        rawMesh.positions.emplace_back(glyphInfo.positions[k][j]);
+        rawMesh->positions.emplace_back(glyphInfo.positions[k][j]);
       for (int j = 0; j < 2; j++)
-        rawMesh.texcoords.emplace_back(glyphInfo.uvs[k][j]);
+        rawMesh->texcoords.emplace_back(glyphInfo.uvs[k][j]);
     }
     ponos::RawMesh::IndexData data;
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
-    rawMesh.indices.emplace_back(data);
+    rawMesh->indices.emplace_back(data);
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 1;
-    rawMesh.indices.emplace_back(data);
+    rawMesh->indices.emplace_back(data);
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 2;
-    rawMesh.indices.emplace_back(data);
+    rawMesh->indices.emplace_back(data);
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
-    rawMesh.indices.emplace_back(data);
+    rawMesh->indices.emplace_back(data);
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 2;
-    rawMesh.indices.emplace_back(data);
+    rawMesh->indices.emplace_back(data);
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 3;
-    rawMesh.indices.emplace_back(data);
+    rawMesh->indices.emplace_back(data);
 
     lastIndex += 4;
   }
-  rawMesh.buildInterleavedData();
+  rawMesh->buildInterleavedData();
   mesh.reset(new SceneMesh(rawMesh));
 }
 

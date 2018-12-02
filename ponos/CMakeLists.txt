@@ -41,6 +41,7 @@ set(PONOS_PONOS_HEADERS
         ${CMAKE_CURRENT_SOURCE_DIR}ponos/blas/symmetric_matrix.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/defs.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/file.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/iterators.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/macros.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/memory.h
         ${CMAKE_CURRENT_SOURCE_DIR}/ponos/common/parallel.h

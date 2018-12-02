@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_IO_BUFFER_H
 #define CIRCE_IO_BUFFER_H
@@ -115,6 +115,7 @@ struct BufferDescriptor {
     attributes[_name] = att;
   }
 };
+
 /// \param elementSize
 /// \param dataType
 /// \return
@@ -162,6 +163,42 @@ create_index_buffer_descriptor(size_t elementSize, size_t elementCount,
   }
   return BufferDescriptor(elementSize, elementCount, type,
                           GL_ELEMENT_ARRAY_BUFFER);
+}
+
+inline void setup_buffer_data_from_mesh(const ponos::RawMesh &rm,
+                                        std::vector<float> &vertexData,
+                                        std::vector<uint> &indexData) {
+  // convert mesh to buffers
+  // position index | norm index | texcoord index -> index
+  typedef std::pair<std::pair<int, int>, int> MapKey;
+  std::map<MapKey, size_t> m;
+  size_t newIndex = 0;
+  for (auto &i : rm.indices) {
+    auto key = MapKey(std::pair<int, int>(i.positionIndex, i.normalIndex),
+                      i.texcoordIndex);
+    auto it = m.find(key);
+    auto index = newIndex;
+    if (it == m.end()) {
+      // add data
+      if (rm.positionDescriptor.count)
+        for (size_t v = 0; v < rm.positionDescriptor.elementSize; v++)
+          vertexData.emplace_back(
+              rm.positions[i.positionIndex * rm.positionDescriptor.elementSize +
+                           v]);
+      if (rm.normalDescriptor.count)
+        for (size_t n = 0; n < rm.normalDescriptor.elementSize; n++)
+          vertexData.emplace_back(
+              rm.normals[i.normalIndex * rm.normalDescriptor.elementSize + n]);
+      if (rm.texcoordDescriptor.count)
+        for (size_t t = 0; t < rm.texcoordDescriptor.elementSize; t++)
+          vertexData.emplace_back(
+              rm.texcoords[i.texcoordIndex * rm.texcoordDescriptor.elementSize +
+                           t]);
+      m[key] = newIndex++;
+    } else
+      index = it->second;
+    indexData.emplace_back(index);
+  }
 }
 
 /// Creates buffers descriptions from a raw mesh interleaved data
@@ -309,6 +346,6 @@ private:
 typedef Buffer<float> VertexBuffer;
 typedef Buffer<uint> IndexBuffer;
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_IO_BUFFER_H

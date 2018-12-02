@@ -20,39 +20,25 @@ int main() {
       ponos::RawMeshes::segment(ponos::Point2(1, 0)));
   ponos::RawMeshSPtr cube = ponos::RawMeshes::cube();
   // circe::SceneMesh qm(*wquadMesh.get());
-  circe::SceneMesh qm(*segmentMesh.get());
-  const char *qvs =
-      "#version 440 core\n"
-      "layout (location = 0) in vec3 position;"
-      "layout (location = 1) in vec4 col;"
-      "layout (location = 2) in mat4 trans;"
-      "layout (location = 3) uniform mat4 view_matrix;"
-      "layout (location = 4) uniform mat4 projection_matrix;"
-      "out VERTEX {"
-      "vec4 color;"
-      "} vertex;"
-      "void main() {"
-      "    gl_Position = projection_matrix * view_matrix * trans *"
-      "vec4(position,1);"
-      "   vertex.color = col;"
-      "}";
+  circe::SceneMesh qm(segmentMesh);
   const char *fs = CIRCE_INSTANCES_FS;
-  circe::ShaderProgram quadShader(qvs, nullptr, fs);
+  const char *vs = CIRCE_INSTANCES_VS;
+  circe::ShaderProgram quadShader(vs, nullptr, fs);
   quadShader.addVertexAttribute("position", 0);
-  quadShader.addVertexAttribute("col", 1);
-  quadShader.addVertexAttribute("trans", 2);
-  quadShader.addUniform("view_matrix", 3);
+  quadShader.addVertexAttribute("color", 1);
+  quadShader.addVertexAttribute("transform_matrix", 2);
+  quadShader.addUniform("model_view_matrix", 3);
   quadShader.addUniform("projection_matrix", 4);
   quads.reset(new circe::InstanceSet(qm, quadShader, n / 2));
   {
     // create a buffer for particles positions + sizes
     circe::BufferDescriptor trans = circe::create_array_stream_descriptor(16);
-    trans.addAttribute("trans", 16, 0, trans.dataType);
+    trans.addAttribute("transform_matrix", 16, 0, trans.dataType);
     uint tid = quads->add(trans);
     // create a buffer for particles colors
     circe::BufferDescriptor col =
-        circe::create_array_stream_descriptor(4); // r g b a
-    col.addAttribute("col", 4, 0, col.dataType);  // 4 -> r g b a
+        circe::create_array_stream_descriptor(4);  // r g b a
+    col.addAttribute("color", 4, 0, col.dataType); // 4 -> r g b a
     uint colid = quads->add(col);
     quads->resize(n);
     circe::ColorPalette palette = circe::HEAT_MATLAB_PALETTE;

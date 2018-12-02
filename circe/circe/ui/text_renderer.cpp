@@ -25,7 +25,6 @@
 #include <circe/ui/font_manager.h>
 #include <circe/ui/text_renderer.h>
 
-
 namespace circe {
 
 TextRenderer::TextRenderer(float scale, Color c, size_t id)
@@ -56,14 +55,14 @@ TextRenderer::TextRenderer(float scale, Color c, size_t id)
       "  color = textColor * sampled;"
       "  color = vec4(textColor.rgb,texture(text, TexCoords).r);"
       "}");
-  quad_.shader.reset(new circe::ShaderProgram(sid));
-  quad_.shader->addVertexAttribute("position", 0);
-  quad_.shader->addVertexAttribute("texcoord", 1);
-  quad_.shader->addUniform("model_matrix", 0);
-  quad_.shader->addUniform("view_matrix", 1);
-  quad_.shader->addUniform("projection_matrix", 2);
-  quad_.shader->addUniform("text", 3);
-  quad_.shader->addUniform("textColor", 4);
+  quad_.setShader(createShaderProgramPtr(sid));
+  quad_.shader()->addVertexAttribute("position", 0);
+  quad_.shader()->addVertexAttribute("texcoord", 1);
+  quad_.shader()->addUniform("model_matrix", 0);
+  quad_.shader()->addUniform("view_matrix", 1);
+  quad_.shader()->addUniform("projection_matrix", 2);
+  quad_.shader()->addUniform("text", 3);
+  quad_.shader()->addUniform("textColor", 4);
 }
 
 void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
@@ -73,18 +72,18 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   UNUSED_VARIABLE(scale);
   atlas.setText(s);
   atlas.mesh->bind();
-  atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader.get());
+  atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader().get());
   atlas.texture.bind(GL_TEXTURE0);
-  quad_.shader->begin();
-  quad_.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
-  quad_.shader->setUniform(
+  quad_.shader()->begin();
+  quad_.shader()->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
+  quad_.shader()->setUniform(
       "model_matrix",
       ponos::transpose(ponos::translate(ponos::vec3(x, y, 0)).matrix()));
-  quad_.shader->setUniform("view_matrix", ponos::Transform().matrix());
-  quad_.shader->setUniform(
+  quad_.shader()->setUniform("view_matrix", ponos::Transform().matrix());
+  quad_.shader()->setUniform(
       "projection_matrix",
       ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
-  quad_.shader->setUniform("text", 0);
+  quad_.shader()->setUniform("text", 0);
   circe::CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
   glDrawElements(ib->bufferDescriptor.elementType,
@@ -92,7 +91,7 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
                      ib->bufferDescriptor.elementSize,
                  ib->bufferDescriptor.dataType, 0);
   circe::CHECK_GL_ERRORS;
-  quad_.shader->end();
+  quad_.shader()->end();
 }
 
 void TextRenderer::render(std::string s, const ponos::Point3 &p,
@@ -100,20 +99,20 @@ void TextRenderer::render(std::string s, const ponos::Point3 &p,
                           circe::Color c) {
   atlas.setText(s);
   atlas.mesh->bind();
-  atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader.get());
+  atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader().get());
   atlas.texture.bind(GL_TEXTURE0);
-  quad_.shader->begin();
-  quad_.shader->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
-  quad_.shader->setUniform("model_matrix",
-                           ponos::transpose((ponos::translate(ponos::vec3(p)) *
-                                             ponos::scale(scale, scale, scale))
-                                                .matrix()));
-  quad_.shader->setUniform(
+  quad_.shader()->begin();
+  quad_.shader()->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
+  quad_.shader()->setUniform(
+      "model_matrix", ponos::transpose((ponos::translate(ponos::vec3(p)) *
+                                        ponos::scale(scale, scale, scale))
+                                           .matrix()));
+  quad_.shader()->setUniform(
       "view_matrix", ponos::transpose(camera_->getViewTransform().matrix()));
-  quad_.shader->setUniform(
+  quad_.shader()->setUniform(
       "projection_matrix",
       ponos::transpose(camera_->getProjectionTransform().matrix()));
-  quad_.shader->setUniform("text", 0);
+  quad_.shader()->setUniform("text", 0);
   circe::CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
   glDrawElements(ib->bufferDescriptor.elementType,
@@ -121,7 +120,7 @@ void TextRenderer::render(std::string s, const ponos::Point3 &p,
                      ib->bufferDescriptor.elementSize,
                  ib->bufferDescriptor.dataType, 0);
   circe::CHECK_GL_ERRORS;
-  quad_.shader->end();
+  quad_.shader()->end();
 }
 
 void TextRenderer::setCamera(const CameraInterface *c) {

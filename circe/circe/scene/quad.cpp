@@ -27,30 +27,24 @@
 namespace circe {
 
 Quad::Quad() {
-  this->rawMesh = new ponos::RawMesh();
-  this->rawMesh->meshDescriptor.elementSize = 3;
-  this->rawMesh->meshDescriptor.count = 2;
-  this->rawMesh->positionDescriptor.elementSize = 2;
-  this->rawMesh->positionDescriptor.count = 4;
-  this->rawMesh->texcoordDescriptor.elementSize = 2;
-  this->rawMesh->texcoordDescriptor.count = 4;
-  this->rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
-  this->rawMesh->texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
-  this->rawMesh->indices.resize(6);
-  this->rawMesh->indices[0].positionIndex =
-      this->rawMesh->indices[0].texcoordIndex = 0;
-  this->rawMesh->indices[1].positionIndex =
-      this->rawMesh->indices[1].texcoordIndex = 1;
-  this->rawMesh->indices[2].positionIndex =
-      this->rawMesh->indices[2].texcoordIndex = 2;
-  this->rawMesh->indices[3].positionIndex =
-      this->rawMesh->indices[3].texcoordIndex = 0;
-  this->rawMesh->indices[4].positionIndex =
-      this->rawMesh->indices[4].texcoordIndex = 2;
-  this->rawMesh->indices[5].positionIndex =
-      this->rawMesh->indices[5].texcoordIndex = 3;
-  this->rawMesh->splitIndexData();
-  this->rawMesh->buildInterleavedData();
+  ponos::RawMeshSPtr rawMesh(new ponos::RawMesh());
+  rawMesh->meshDescriptor.elementSize = 3;
+  rawMesh->meshDescriptor.count = 2;
+  rawMesh->positionDescriptor.elementSize = 2;
+  rawMesh->positionDescriptor.count = 4;
+  rawMesh->texcoordDescriptor.elementSize = 2;
+  rawMesh->texcoordDescriptor.count = 4;
+  rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
+  rawMesh->texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
+  rawMesh->indices.resize(6);
+  rawMesh->indices[0].positionIndex = rawMesh->indices[0].texcoordIndex = 0;
+  rawMesh->indices[1].positionIndex = rawMesh->indices[1].texcoordIndex = 1;
+  rawMesh->indices[2].positionIndex = rawMesh->indices[2].texcoordIndex = 2;
+  rawMesh->indices[3].positionIndex = rawMesh->indices[3].texcoordIndex = 0;
+  rawMesh->indices[4].positionIndex = rawMesh->indices[4].texcoordIndex = 2;
+  rawMesh->indices[5].positionIndex = rawMesh->indices[5].texcoordIndex = 3;
+  rawMesh->splitIndexData();
+  rawMesh->buildInterleavedData();
   const char *fs = "#version 440 core\n"
                    "in vec2 texCoord;"
                    "out vec4 outColor;"
@@ -65,51 +59,55 @@ Quad::Quad() {
                    "void main() {"
                    " texCoord = texcoord;"
                    "gl_Position = mvp * vec4(position, 0, 1);}";
-  shader.reset(new ShaderProgram(vs, nullptr, fs));
-  shader->addVertexAttribute("position", 0);
-  shader->addVertexAttribute("texcoord", 1);
-  shader->addUniform("mvp", 0);
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
-  BufferDescriptor vd, id;
-  create_buffer_description_from_mesh(*this->rawMesh, vd, id);
-  vb.reset(new VertexBuffer(&this->rawMesh->interleavedData[0], vd));
-  ib.reset(new IndexBuffer(&this->rawMesh->positionsIndices[0], id));
-  vb->locateAttributes(*shader.get());
+  shader_.reset(new ShaderProgram(vs, nullptr, fs));
+  shader_->addVertexAttribute("position", 0);
+  shader_->addVertexAttribute("texcoord", 1);
+  shader_->addUniform("mvp", 0);
+  //   glGenVertexArrays(1, &VAO);
+  //   glBindVertexArray(VAO);
+  this->mesh_ = createSceneMeshPtr(rawMesh);
+  //   BufferDescriptor vd, id;
+  //   create_buffer_description_from_mesh(*this->rawMesh, vd, id);
+  //   vb.reset(new VertexBuffer(&this->rawMesh->interleavedData[0], vd));
+  //   ib.reset(new IndexBuffer(&this->rawMesh->positionsIndices[0], id));
+  //   vb->locateAttributes(*shader.get());
   //  shader->registerVertexAttributes(vb.get());
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-  CHECK_GL_ERRORS;
+  //   glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //   glBindVertexArray(0);
+  //   CHECK_GL_ERRORS;
   //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void Quad::set(const ponos::Point2 &pm, const ponos::Point2 &pM) {
-  this->rawMesh->interleavedData[0] = pm.x;
-  this->rawMesh->interleavedData[1] = pm.y;
-  this->rawMesh->interleavedData[4] = pM.x;
-  this->rawMesh->interleavedData[5] = pm.y;
-  this->rawMesh->interleavedData[8] = pM.x;
-  this->rawMesh->interleavedData[9] = pM.y;
-  this->rawMesh->interleavedData[12] = pm.x;
-  this->rawMesh->interleavedData[13] = pM.y;
-  glBindVertexArray(VAO);
-  this->vb->set(&this->rawMesh->interleavedData[0]);
-  glBindVertexArray(0);
+  this->mesh_->rawMesh()->interleavedData[0] = pm.x;
+  this->mesh_->rawMesh()->interleavedData[1] = pm.y;
+  this->mesh_->rawMesh()->interleavedData[4] = pM.x;
+  this->mesh_->rawMesh()->interleavedData[5] = pm.y;
+  this->mesh_->rawMesh()->interleavedData[8] = pM.x;
+  this->mesh_->rawMesh()->interleavedData[9] = pM.y;
+  this->mesh_->rawMesh()->interleavedData[12] = pm.x;
+  this->mesh_->rawMesh()->interleavedData[13] = pM.y;
+  //   glBindVertexArray(VAO);
+  //   this->vb->set(&this->rawMesh->interleavedData[0]);
+  //   glBindVertexArray(0);
 }
 
 void Quad::draw(const CameraInterface *camera, ponos::Transform transform) {
-  glBindVertexArray(VAO);
-  shader->begin();
-  shader->setUniform("mvp", ponos::transpose((camera->getProjectionTransform() *
-                                              camera->getViewTransform() *
-                                              camera->getModelTransform())
-                                                 .matrix()));
-  glDrawElements(GL_TRIANGLES, ib->bufferDescriptor.elementSize *
-                                   ib->bufferDescriptor.elementCount,
+  //   glBindVertexArray(VAO);
+  this->mesh_->bind();
+  shader_->begin();
+  shader_->setUniform("mvp",
+                      ponos::transpose((camera->getProjectionTransform() *
+                                        camera->getViewTransform() *
+                                        camera->getModelTransform())
+                                           .matrix()));
+  glDrawElements(GL_TRIANGLES,
+                 mesh_->indexBuffer()->bufferDescriptor.elementSize *
+                     mesh_->indexBuffer()->bufferDescriptor.elementCount,
                  GL_UNSIGNED_INT, 0);
   CHECK_GL_ERRORS;
-  shader->end();
-  glBindVertexArray(0);
+  shader_->end();
+  //   glBindVertexArray(0);
 }
 
 } // circe nanespace

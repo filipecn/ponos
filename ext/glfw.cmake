@@ -7,7 +7,7 @@ else()
     message(STATUS "GLFW not found - will build from source")
 
     ExternalProject_Add(
-    glfw
+    glfw PREFIX glfw
     URL "https://github.com/glfw/glfw/archive/3.2.1.tar.gz"
     # URL_HASH SHA1=fe17a0610a239311a726ecabcd2dbd669fb24ca8
     CMAKE_ARGS

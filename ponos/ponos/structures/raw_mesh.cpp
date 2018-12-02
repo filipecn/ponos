@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <ponos/structures/raw_mesh.h>
 
@@ -88,36 +88,35 @@ void RawMesh::computeBBox() {
 Point3 RawMesh::positionElement(size_t e, size_t v) const {
   return Point3(
       positions[indices[e * meshDescriptor.elementSize + v].positionIndex *
-          positionDescriptor.elementSize +
-          0],
+                    positionDescriptor.elementSize +
+                0],
       positions[indices[e * meshDescriptor.elementSize + v].positionIndex *
-          positionDescriptor.elementSize +
-          1],
+                    positionDescriptor.elementSize +
+                1],
       ((positionDescriptor.elementSize == 3)
-       ? positions[indices[e * meshDescriptor.elementSize + v].positionIndex *
-              positionDescriptor.elementSize +
-              2]
-       : 0.f));
+           ? positions[indices[e * meshDescriptor.elementSize + v]
+                               .positionIndex *
+                           positionDescriptor.elementSize +
+                       2]
+           : 0.f));
 }
 
 BBox RawMesh::elementBBox(size_t i) const {
   BBox b;
   for (size_t v = 0; v < meshDescriptor.elementSize; v++)
-    b = make_union(
-        b,
-        Point3(
-            positions[
-                indices[i * meshDescriptor.elementSize + v].positionIndex *
-                    positionDescriptor.elementSize +
-                    0],
-            positions[
-                indices[i * meshDescriptor.elementSize + v].positionIndex *
-                    positionDescriptor.elementSize +
-                    1],
-            positions[
-                indices[i * meshDescriptor.elementSize + v].positionIndex *
-                    positionDescriptor.elementSize +
-                    2]));
+    b = make_union(b,
+                   Point3(positions[indices[i * meshDescriptor.elementSize + v]
+                                            .positionIndex *
+                                        positionDescriptor.elementSize +
+                                    0],
+                          positions[indices[i * meshDescriptor.elementSize + v]
+                                            .positionIndex *
+                                        positionDescriptor.elementSize +
+                                    1],
+                          positions[indices[i * meshDescriptor.elementSize + v]
+                                            .positionIndex *
+                                        positionDescriptor.elementSize +
+                                    2]));
   return b;
 }
 
@@ -135,8 +134,8 @@ void RawMesh::buildInterleavedData() {
           texcoords[i * texcoordDescriptor.elementSize + k]);
   }
   interleavedDescriptor.elementSize = positionDescriptor.elementSize +
-      normalDescriptor.elementSize +
-      texcoordDescriptor.elementSize;
+                                      normalDescriptor.elementSize +
+                                      texcoordDescriptor.elementSize;
   interleavedDescriptor.count = positionDescriptor.count;
   ASSERT_EQ(interleavedData.size(),
             positionDescriptor.count * positionDescriptor.elementSize +
@@ -149,10 +148,10 @@ void RawMesh::orientFaces(bool ccw) {
     bool flip = false;
     for (size_t i = 0; i < meshDescriptor.elementSize; i++) {
       ponos::Point3 a3 = positionElement(e, i);
-      ponos::Point3
-          b3 = positionElement(e, (i + 1) % meshDescriptor.elementSize);
-      ponos::Point3
-          c3 = positionElement(e, (i + 2) % meshDescriptor.elementSize);
+      ponos::Point3 b3 =
+          positionElement(e, (i + 1) % meshDescriptor.elementSize);
+      ponos::Point3 c3 =
+          positionElement(e, (i + 2) % meshDescriptor.elementSize);
       ponos::Point2 a(a3.x, a3.y);
       ponos::Point2 b(b3.x, b3.y);
       ponos::Point2 c(c3.x, c3.y);
@@ -171,11 +170,11 @@ void RawMesh::orientFaces(bool ccw) {
 
 void RawMesh::clear() {
   meshDescriptor.elementSize = meshDescriptor.count =
-  positionDescriptor.elementSize = positionDescriptor.count =
-  normalDescriptor.elementSize = normalDescriptor.count =
-  texcoordDescriptor.elementSize = texcoordDescriptor.count =
-  interleavedDescriptor.elementSize =
-  interleavedDescriptor.count = 0;
+      positionDescriptor.elementSize = positionDescriptor.count =
+          normalDescriptor.elementSize = normalDescriptor.count =
+              texcoordDescriptor.elementSize = texcoordDescriptor.count =
+                  interleavedDescriptor.elementSize =
+                      interleavedDescriptor.count = 0;
   indices.clear();
   positions.clear();
   normals.clear();
@@ -192,11 +191,11 @@ void fitToBBox(RawMesh *rm, const BBox2D &bbox) {
   if (rm->bbox.size(0) > rm->bbox.size(1))
     rm->apply(
         scale(1.f / rm->bbox.size(0), ratio * (1.f / rm->bbox.size(0)), 0) *
-            translate(Point3() - rm->bbox.pMin));
+        translate(Point3() - rm->bbox.pMin));
   else
     rm->apply(
         scale((1.f / rm->bbox.size(1)) / ratio, 1.f / rm->bbox.size(1), 0) *
-            translate(Point3() - rm->bbox.pMin));
+        translate(Point3() - rm->bbox.pMin));
   rm->computeBBox();
 }
 
@@ -231,10 +230,13 @@ std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
   for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
     os << "m" << i << " = ";
     for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)
-      os << "(" <<
-         rm.indices[i * rm.meshDescriptor.elementSize + j].positionIndex << ", "
+      os << "("
+         << rm.indices[i * rm.meshDescriptor.elementSize + j].positionIndex
+         << ", "
          << rm.indices[i * rm.meshDescriptor.elementSize + j].normalIndex
-         << ", "  << rm.indices[i * rm.meshDescriptor.elementSize + j].texcoordIndex << ")";
+         << ", "
+         << rm.indices[i * rm.meshDescriptor.elementSize + j].texcoordIndex
+         << ")";
     os << std::endl;
   }
   os << "interleaved description (dim = "
@@ -249,4 +251,4 @@ std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
   }
   return os;
 }
-} // aergia namespace
+} // namespace ponos

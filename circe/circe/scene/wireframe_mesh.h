@@ -16,7 +16,7 @@ public:
   void draw(const CameraInterface *camera, ponos::Transform transform) override;
 
 protected:
-  void setupIndexBuffer() override;
+  void setupIndexBuffer();
 };
 
 } // circe namespace
