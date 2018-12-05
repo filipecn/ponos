@@ -50,10 +50,25 @@ else()
             message(FATAL_ERROR "Xinput library not found - required for GLFW")
         endif()
 
-        list(APPEND GLFW_LIBRARIES
+        if(APPLE)
+           list(APPEND GLFW_LIBRARIES
             "${X11_Xrandr_LIB}" "${X11_Xxf86vm_LIB}" "${X11_Xcursor_LIB}"
             "${X11_Xinerama_LIB}" "${X11_Xinput_LIB}"
-            "${CMAKE_THREAD_LIBS_INIT}" -lrt -ldl)
+            "${CMAKE_THREAD_LIBS_INIT}" -ldl)
+
+
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit")
+        find_library(COCOA_LIBRARY Cocoa)
+        find_library(CV_LIBRARY CoreVideo)
+        list(APPEND GLFW_LIBRARIES ${GLFW_LIBRARIES} ${COCOA_LIBRARY} ${CV_LIBRARY})
+        else(APPLE)
+          list(APPEND GLFW_LIBRARIES
+            "${X11_Xrandr_LIB}" "${X11_Xxf86vm_LIB}" "${X11_Xcursor_LIB}"
+            "${X11_Xinerama_LIB}" "${X11_Xinput_LIB}"
+            "${CMAKE_THREAD_LIBS_INIT}" -ldl)
+
+
+        endif(APPLE)
     endif()
 endif()
 

@@ -1,8 +1,13 @@
-/** @ingroup Common */
 #ifndef PONOS_GEOMETRY_DEFS_H
 #define PONOS_GEOMETRY_DEFS_H
 
 #include <cstdint>
+
+#ifdef PONOS_DOUBLE
+typedef double real_t;
+#else
+typedef float real_t;
+#endif
 
 typedef int8_t int8;
 typedef int16_t int16;
@@ -22,4 +27,3 @@ typedef unsigned char uchar;
 typedef uint8_t byte;
 
 #endif
-/**@}*/
