@@ -25,7 +25,7 @@
 #include <ponos/blas/staggered_grid.h>
 
 template <typename GridType>
-void StaggeredGrid2D<GridType>::set(uint w, uint h, const BBox2D &b) {
+void StaggeredGrid2D<GridType>::set(uint w, uint h, const bbox2 &b) {
   p.dataPosition = GridDataPosition::CELL_CENTER;
   p.accessMode = GridAccessMode::RESTRICT;
   p.set(w, h, b);
@@ -40,6 +40,6 @@ void StaggeredGrid2D<GridType>::set(uint w, uint h, const BBox2D &b) {
 }
 
 template <typename GridType>
-vec2 StaggeredGrid2D<GridType>::sample(const Point2 &wp) const {
+vec2 StaggeredGrid2D<GridType>::sample(const point2 &wp) const {
   return ponos::vec2(u.sample(wp.x, wp.y), v.sample(wp.x, wp.y));
 }

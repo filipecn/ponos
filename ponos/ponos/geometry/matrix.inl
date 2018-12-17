@@ -1,19 +1,13 @@
-#include <ponos/geometry/matrix.h>
 
-#include <cmath>
-#include <cstring>
-#include <iostream>
-
-namespace ponos {
-
-Matrix4x4::Matrix4x4(bool isIdentity) {
+template <typename T> Matrix4x4<T>::Matrix4x4(bool isIdentity) {
   memset(m, 0, sizeof(m));
   if (isIdentity)
     for (int i = 0; i < 4; i++)
       m[i][i] = 1.f;
 }
 
-Matrix4x4::Matrix4x4(std::initializer_list<float> values, bool columnMajor) {
+template <typename T>
+Matrix4x4<T>::Matrix4x4(std::initializer_list<T> values, bool columnMajor) {
   size_t l = 0, c = 0;
   for (auto v : values) {
     m[l][c] = v;
@@ -29,7 +23,8 @@ Matrix4x4::Matrix4x4(std::initializer_list<float> values, bool columnMajor) {
   }
 }
 
-Matrix4x4::Matrix4x4(const float mat[16], bool columnMajor) {
+template <typename T>
+Matrix4x4<T>::Matrix4x4(const T mat[16], bool columnMajor) {
   size_t k = 0;
   if (columnMajor)
     for (int c = 0; c < 4; c++)
@@ -41,16 +36,16 @@ Matrix4x4::Matrix4x4(const float mat[16], bool columnMajor) {
         m[l][c] = mat[k++];
 }
 
-Matrix4x4::Matrix4x4(float mat[4][4]) {
+template <typename T> Matrix4x4<T>::Matrix4x4(T mat[4][4]) {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++)
       m[i][j] = mat[i][j];
 }
 
-Matrix4x4::Matrix4x4(float m00, float m01, float m02, float m03, float m10,
-                     float m11, float m12, float m13, float m20, float m21,
-                     float m22, float m23, float m30, float m31, float m32,
-                     float m33) {
+template <typename T>
+Matrix4x4<T>::Matrix4x4(T m00, T m01, T m02, T m03, T m10, T m11, T m12, T m13,
+                        T m20, T m21, T m22, T m23, T m30, T m31, T m32,
+                        T m33) {
   m[0][0] = m00;
   m[0][1] = m01;
   m[0][2] = m02;
@@ -69,13 +64,78 @@ Matrix4x4::Matrix4x4(float m00, float m01, float m02, float m03, float m10,
   m[3][3] = m33;
 }
 
-void Matrix4x4::setIdentity() {
+template <typename T> void Matrix4x4<T>::setIdentity() {
   memset(m, 0, sizeof(m));
   for (int i = 0; i < 4; i++)
     m[i][i] = 1.f;
 }
 
-std::ostream &operator<<(std::ostream &os, const Matrix4x4 &m) {
+template <typename T> void Matrix4x4<T>::row_major(T *a) const {
+  int k = 0;
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      a[k++] = m[i][j];
+}
+
+template <typename T> void Matrix4x4<T>::column_major(T *a) const {
+  int k = 0;
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      a[k++] = m[j][i];
+}
+
+template <typename T> Matrix4x4<T> Matrix4x4<T>::operator*(const Matrix4x4 &mat) {
+  Matrix4x4 r;
+  for (int i = 0; i < 4; ++i)
+    for (int j = 0; j < 4; ++j)
+      r.m[i][j] = m[i][0] * mat.m[0][j] + m[i][1] * mat.m[1][j] +
+                  m[i][2] * mat.m[2][j] + m[i][3] * mat.m[3][j];
+  return r;
+}
+
+template <typename T>
+Vector4<T> Matrix4x4<T>::operator*(const Vector4<T> &v) const {
+  Vector4<T> r;
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      r[i] += m[i][j] * v[j];
+  return r;
+}
+
+template <typename T> bool Matrix4x4<T>::operator==(const Matrix4x4 &_m) const {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      if (!IS_EQUAL(m[i][j], _m.m[i][j]))
+        return false;
+  return true;
+}
+
+template <typename T> bool Matrix4x4<T>::operator!=(const Matrix4x4 &_m) const {
+  return !(*this == _m);
+}
+
+template <typename T> bool Matrix4x4<T>::isIdentity() {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      if (i != j && !IS_EQUAL(m[i][j], 0.f))
+        return false;
+      else if (i == j && !IS_EQUAL(m[i][j], 1.f))
+        return false;
+  return true;
+}
+
+template <typename T>
+Matrix4x4<T> Matrix4x4<T>::mul(const Matrix4x4 &m1, const Matrix4x4 &m2) {
+  Matrix4x4 r;
+  for (int i = 0; i < 4; ++i)
+    for (int j = 0; j < 4; ++j)
+      r.m[i][j] = m1.m[i][0] * m2.m[0][j] + m1.m[i][1] * m2.m[1][j] +
+                  m1.m[i][2] * m2.m[2][j] + m1.m[i][3] * m2.m[3][j];
+  return r;
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Matrix4x4<T> &m) {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++)
       os << m.m[i][j] << " ";
@@ -84,22 +144,23 @@ std::ostream &operator<<(std::ostream &os, const Matrix4x4 &m) {
   return os;
 }
 
-Matrix4x4 rowReduce(const Matrix4x4 &p, const Matrix4x4 &q) {
-  Matrix4x4 l = p, r = q;
+template <typename T>
+Matrix4x4<T> rowReduce(const Matrix4x4<T> &p, const Matrix4x4<T> &q) {
+  Matrix4x4<T> l = p, r = q;
   // TODO implement with gauss jordan elimination
   return r;
 }
 
-Matrix4x4 transpose(const Matrix4x4 &m) {
-  return Matrix4x4(m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0], m.m[0][1],
-                   m.m[1][1], m.m[2][1], m.m[3][1], m.m[0][2], m.m[1][2],
-                   m.m[2][2], m.m[3][2], m.m[0][3], m.m[1][3], m.m[2][3],
-                   m.m[3][3]);
+template <typename T> Matrix4x4<T> transpose(const Matrix4x4<T> &m) {
+  return Matrix4x4<T>(m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0], m.m[0][1],
+                      m.m[1][1], m.m[2][1], m.m[3][1], m.m[0][2], m.m[1][2],
+                      m.m[2][2], m.m[3][2], m.m[0][3], m.m[1][3], m.m[2][3],
+                      m.m[3][3]);
 }
 
 // function extracted from MESA implementation of the GLU library
-bool gluInvertMatrix(const float m[16], float invOut[16]) {
-  float inv[16], det;
+template <typename T> bool gluInvertMatrix(const T m[16], T invOut[16]) {
+  T inv[16], det;
   int i;
 
   inv[0] = m[5] * m[10] * m[15] - m[5] * m[11] * m[14] - m[9] * m[6] * m[15] +
@@ -162,10 +223,11 @@ bool gluInvertMatrix(const float m[16], float invOut[16]) {
 
   return true;
 }
+template <typename T>
 
-Matrix4x4 inverse(const Matrix4x4 &m) {
-  Matrix4x4 r;
-  float mm[16], inv[16];
+Matrix4x4<T> inverse(const Matrix4x4<T> &m) {
+  Matrix4x4<T> r;
+  T mm[16], inv[16];
   m.row_major(mm);
   if (gluInvertMatrix(mm, inv)) {
     int k = 0;
@@ -175,30 +237,30 @@ Matrix4x4 inverse(const Matrix4x4 &m) {
     return r;
   }
 
-  float det = m.m[0][0] * m.m[1][1] * m.m[2][2] * m.m[3][3] +
-              m.m[1][2] * m.m[2][3] * m.m[3][1] * m.m[1][3] +
-              m.m[2][1] * m.m[3][2] * m.m[1][1] * m.m[2][3] +
-              m.m[3][2] * m.m[1][2] * m.m[2][1] * m.m[3][3] +
-              m.m[1][3] * m.m[2][2] * m.m[3][1] * m.m[0][1] +
-              m.m[0][1] * m.m[2][3] * m.m[3][2] * m.m[0][2] +
-              m.m[2][1] * m.m[3][3] * m.m[0][3] * m.m[2][2] +
-              m.m[3][1] * m.m[0][1] * m.m[2][2] * m.m[3][3] +
-              m.m[0][2] * m.m[2][3] * m.m[3][1] * m.m[0][3] +
-              m.m[2][1] * m.m[3][2] * m.m[0][2] * m.m[0][1] +
-              m.m[1][2] * m.m[3][3] * m.m[0][2] * m.m[1][3] +
-              m.m[3][1] * m.m[0][3] * m.m[1][1] * m.m[3][2] -
-              m.m[0][1] * m.m[1][3] * m.m[3][2] * m.m[0][2] -
-              m.m[1][1] * m.m[3][3] * m.m[0][3] * m.m[1][2] -
-              m.m[3][1] * m.m[0][3] * m.m[0][1] * m.m[1][3] -
-              m.m[2][2] * m.m[0][2] * m.m[1][1] * m.m[2][3] -
-              m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[0][1] -
-              m.m[1][2] * m.m[2][3] * m.m[0][2] * m.m[1][3] -
-              m.m[2][1] * m.m[0][3] * m.m[1][1] * m.m[2][2] -
-              m.m[1][0] * m.m[1][0] * m.m[2][3] * m.m[3][2] -
-              m.m[1][2] * m.m[2][0] * m.m[3][3] * m.m[1][3] -
-              m.m[2][2] * m.m[3][0] * m.m[1][0] * m.m[2][2] -
-              m.m[3][3] * m.m[1][2] * m.m[2][3] * m.m[3][0] -
-              m.m[1][3] * m.m[2][0] * m.m[3][2] * m.m[1][1];
+  T det = m.m[0][0] * m.m[1][1] * m.m[2][2] * m.m[3][3] +
+          m.m[1][2] * m.m[2][3] * m.m[3][1] * m.m[1][3] +
+          m.m[2][1] * m.m[3][2] * m.m[1][1] * m.m[2][3] +
+          m.m[3][2] * m.m[1][2] * m.m[2][1] * m.m[3][3] +
+          m.m[1][3] * m.m[2][2] * m.m[3][1] * m.m[0][1] +
+          m.m[0][1] * m.m[2][3] * m.m[3][2] * m.m[0][2] +
+          m.m[2][1] * m.m[3][3] * m.m[0][3] * m.m[2][2] +
+          m.m[3][1] * m.m[0][1] * m.m[2][2] * m.m[3][3] +
+          m.m[0][2] * m.m[2][3] * m.m[3][1] * m.m[0][3] +
+          m.m[2][1] * m.m[3][2] * m.m[0][2] * m.m[0][1] +
+          m.m[1][2] * m.m[3][3] * m.m[0][2] * m.m[1][3] +
+          m.m[3][1] * m.m[0][3] * m.m[1][1] * m.m[3][2] -
+          m.m[0][1] * m.m[1][3] * m.m[3][2] * m.m[0][2] -
+          m.m[1][1] * m.m[3][3] * m.m[0][3] * m.m[1][2] -
+          m.m[3][1] * m.m[0][3] * m.m[0][1] * m.m[1][3] -
+          m.m[2][2] * m.m[0][2] * m.m[1][1] * m.m[2][3] -
+          m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[0][1] -
+          m.m[1][2] * m.m[2][3] * m.m[0][2] * m.m[1][3] -
+          m.m[2][1] * m.m[0][3] * m.m[1][1] * m.m[2][2] -
+          m.m[1][0] * m.m[1][0] * m.m[2][3] * m.m[3][2] -
+          m.m[1][2] * m.m[2][0] * m.m[3][3] * m.m[1][3] -
+          m.m[2][2] * m.m[3][0] * m.m[1][0] * m.m[2][2] -
+          m.m[3][3] * m.m[1][2] * m.m[2][3] * m.m[3][0] -
+          m.m[1][3] * m.m[2][0] * m.m[3][2] * m.m[1][1];
   if (fabs(det) < 1e-8)
     return r;
 
@@ -286,38 +348,40 @@ Matrix4x4 inverse(const Matrix4x4 &m) {
   return r;
 }
 
-void decompose(const Matrix4x4 &m, Matrix4x4 &r, Matrix4x4 &s) {
+template <typename T>
+void decompose(const Matrix4x4<T> &m, Matrix4x4<T> &r, Matrix4x4<T> &s) {
   // extract rotation r from transformation matrix
-  float norm;
+  T norm;
   int count = 0;
   r = m;
   do {
     // compute next matrix in series
-    Matrix4x4 Rnext;
-    Matrix4x4 Rit = inverse(transpose(r));
+    Matrix4x4<T> Rnext;
+    Matrix4x4<T> Rit = inverse(transpose(r));
     for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++)
         Rnext.m[i][j] = .5f * (r.m[i][j] + Rit.m[i][j]);
     // compute norm difference between R and Rnext
     norm = 0.f;
     for (int i = 0; i < 3; i++) {
-      float n = fabsf(r.m[i][0] - Rnext.m[i][0]) +
-                fabsf(r.m[i][1] - Rnext.m[i][1]) +
-                fabsf(r.m[i][2] - Rnext.m[i][2]);
+      T n = fabsf(r.m[i][0] - Rnext.m[i][0]) +
+            fabsf(r.m[i][1] - Rnext.m[i][1]) + fabsf(r.m[i][2] - Rnext.m[i][2]);
       norm = std::max(norm, n);
     }
   } while (++count < 100 && norm > .0001f);
   // compute scale S using rotation and original matrix
-  s = Matrix4x4::mul(inverse(r), m);
+  s = Matrix4x4<T>::mul(inverse(r), m);
 }
 
-Matrix3x3::Matrix3x3() { memset(m, 0, sizeof(m)); }
+template <typename T> Matrix3x3<T>::Matrix3x3() { memset(m, 0, sizeof(m)); }
 
-Matrix3x3::Matrix3x3(vec3 a, vec3 b, vec3 c)
+template <typename T>
+Matrix3x3<T>::Matrix3x3(vec3 a, vec3 b, vec3 c)
     : Matrix3x3(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z) {}
 
-Matrix3x3::Matrix3x3(float m00, float m01, float m02, float m10, float m11,
-                     float m12, float m20, float m21, float m22) {
+template <typename T>
+Matrix3x3<T>::Matrix3x3(T m00, T m01, T m02, T m10, T m11, T m12, T m20, T m21,
+                        T m22) {
   m[0][0] = m00;
   m[0][1] = m01;
   m[0][2] = m02;
@@ -329,16 +393,57 @@ Matrix3x3::Matrix3x3(float m00, float m01, float m02, float m10, float m11,
   m[2][2] = m22;
 }
 
-void Matrix3x3::setIdentity() {
+template <typename T> void Matrix3x3<T>::setIdentity() {
   memset(m, 0, sizeof(m));
   for (int i = 0; i < 3; i++)
     m[i][i] = 1.f;
 }
 
-Matrix3x3 inverse(const Matrix3x3 &m) {
+template <typename T>
+Vector3<T> Matrix3x3<T>::operator*(const Vector3<T> &v) const {
+  Vector3<T> r;
+  for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 3; j++)
+      r[i] += m[i][j] * v[j];
+  return r;
+}
+
+template <typename T>
+Matrix3x3<T> Matrix3x3<T>::operator*(const Matrix3x3 &mat) {
   Matrix3x3 r;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      r.m[i][j] =
+          m[i][0] * mat.m[0][j] + m[i][1] * mat.m[1][j] + m[i][2] * mat.m[2][j];
+  return r;
+}
+
+template <typename T> Matrix3x3<T> Matrix3x3<T>::operator*(const T &f) const {
+  return Matrix3x3(m[0][0] * f, m[0][1] * f, m[0][2] * f, m[1][0] * f,
+                   m[1][1] * f, m[1][2] * f, m[2][0] * f, m[2][1] * f,
+                   m[2][2] * f);
+}
+
+template <typename T>
+Matrix3x3<T> Matrix3x3<T>::mul(const Matrix3x3 &m1, const Matrix3x3 &m2) {
+  Matrix3x3 r;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      r.m[i][j] = m1.m[i][0] * m2.m[0][j] + m1.m[i][1] * m2.m[1][j] +
+                  m1.m[i][2] * m2.m[2][j];
+  return r;
+}
+
+template <typename T> T Matrix3x3<T>::determinant() {
+  return m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] +
+         m[0][2] * m[1][0] * m[2][1] - m[2][0] * m[1][1] * m[0][2] -
+         m[2][1] * m[1][2] * m[0][0] - m[2][2] * m[1][0] * m[0][1];
+}
+
+template <typename T> Matrix3x3<T> inverse(const Matrix3x3<T> &m) {
+  Matrix3x3<T> r;
   // r.setIdentity();
-  float det =
+  T det =
       m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[1][0] * m.m[2][1] * m.m[0][2] +
       m.m[2][0] * m.m[0][1] * m.m[1][2] - m.m[0][0] * m.m[2][1] * m.m[1][2] -
       m.m[2][0] * m.m[1][1] * m.m[0][2] - m.m[1][0] * m.m[0][1] * m.m[2][2];
@@ -356,15 +461,17 @@ Matrix3x3 inverse(const Matrix3x3 &m) {
   return r;
 }
 
-Matrix3x3 transpose(const Matrix3x3 &m) {
-  return Matrix3x3(m.m[0][0], m.m[1][0], m.m[2][0], m.m[0][1], m.m[1][1],
-                   m.m[2][1], m.m[0][2], m.m[1][2], m.m[2][2]);
+template <typename T> Matrix3x3<T> transpose(const Matrix3x3<T> &m) {
+  return Matrix3x3<T>(m.m[0][0], m.m[1][0], m.m[2][0], m.m[0][1], m.m[1][1],
+                      m.m[2][1], m.m[0][2], m.m[1][2], m.m[2][2]);
 }
 
-Matrix3x3 star(const Vector3 a) {
-  return Matrix3x3(0, -a[2], a[1], a[2], 0, -a[0], -a[1], a[0], 0);
+template <typename T> Matrix3x3<T> star(const Vector3<T> a) {
+  return Matrix3x3<T>(0, -a[2], a[1], a[2], 0, -a[0], -a[1], a[0], 0);
 }
-std::ostream &operator<<(std::ostream &os, const Matrix3x3 &m) {
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Matrix3x3<T> &m) {
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++)
       os << m.m[i][j] << " ";
@@ -373,31 +480,65 @@ std::ostream &operator<<(std::ostream &os, const Matrix3x3 &m) {
   return os;
 }
 
-Matrix2x2::Matrix2x2() {
+template <typename T> Matrix2x2<T>::Matrix2x2() {
   memset(m, 0, sizeof(m));
   for (int i = 0; i < 2; i++)
     m[i][i] = 1.f;
 }
 
-Matrix2x2::Matrix2x2(float m00, float m01, float m10, float m11) {
+template <typename T> Matrix2x2<T>::Matrix2x2(T m00, T m01, T m10, T m11) {
   m[0][0] = m00;
   m[0][1] = m01;
   m[1][0] = m10;
   m[1][1] = m11;
 }
 
-void Matrix2x2::setIdentity() {
+template <typename T> void Matrix2x2<T>::setIdentity() {
   memset(m, 0, sizeof(m));
   for (int i = 0; i < 2; i++)
     m[i][i] = 1.f;
 }
 
-Matrix2x2 inverse(const Matrix2x2 &m) {
+template <typename T> T Matrix2x2<T>::determinant() {
+  return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+}
+
+template<typename T>
+Vector2<T> Matrix2x2<T>::operator*(const Vector2<T> &v) const {
+  Vector2<T> r;
+  for (int i = 0; i < 2; i++)
+    for (int j = 0; j < 2; j++)
+      r[i] += m[i][j] * v[j];
+  return r;
+}
+
+template <typename T> Matrix2x2<T> Matrix2x2<T>::operator*(const Matrix2x2<T> &mat) {
   Matrix2x2 r;
-  float det = m.m[0][0] * m.m[1][1] - m.m[0][1] * m.m[1][0];
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j)
+      r.m[i][j] = m[i][0] * mat.m[0][j] + m[i][1] * mat.m[1][j];
+  return r;
+}
+
+template <typename T> Matrix2x2<T> Matrix2x2<T>::operator*(const T &f) const {
+  return Matrix2x2(m[0][0] * f, m[0][1] * f, m[1][0] * f, m[1][1] * f);
+}
+
+template <typename T>
+Matrix2x2<T> Matrix2x2<T>::mul(const Matrix2x2 &m1, const Matrix2x2 &m2) {
+  Matrix2x2 r;
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j)
+      r.m[i][j] = m1.m[i][0] * m2.m[0][j] + m1.m[i][1] * m2.m[1][j];
+  return r;
+}
+
+template <typename T> Matrix2x2<T> inverse(const Matrix2x2<T> &m) {
+  Matrix2x2<T> r;
+  T det = m.m[0][0] * m.m[1][1] - m.m[0][1] * m.m[1][0];
   if (det == 0.f)
     return r;
-  float k = 1.f / det;
+  T k = 1.f / det;
   r.m[0][0] = m.m[1][1] * k;
   r.m[0][1] = -m.m[0][1] * k;
   r.m[1][0] = -m.m[1][0] * k;
@@ -405,11 +546,12 @@ Matrix2x2 inverse(const Matrix2x2 &m) {
   return r;
 }
 
-Matrix2x2 transpose(const Matrix2x2 &m) {
-  return Matrix2x2(m.m[0][0], m.m[1][0], m.m[0][1], m.m[1][1]);
+template <typename T> Matrix2x2<T> transpose(const Matrix2x2<T> &m) {
+  return Matrix2x2<T>(m.m[0][0], m.m[1][0], m.m[0][1], m.m[1][1]);
 }
 
-std::ostream &operator<<(std::ostream &os, const Matrix2x2 &m) {
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Matrix2x2<T> &m) {
   for (int i = 0; i < 2; i++) {
     for (int j = 0; j < 2; j++)
       os << m.m[i][j] << " ";
@@ -417,5 +559,3 @@ std::ostream &operator<<(std::ostream &os, const Matrix2x2 &m) {
   }
   return os;
 }
-
-} // namespace ponos

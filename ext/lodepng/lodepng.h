@@ -894,7 +894,7 @@ TODO:
 [.] test if there are no memory leaks or security exploits - done a lot but needs to be checked often
 [.] check compatibility with various compilers  - done but needs to be redone for every newer version
 [X] converting color to 16-bit per channel types
-[ ] read all public PNG chunk types (but never let the color profile and gamma ones touch RGB values)
+[ ] read all public PNG chunk types (but never let the color profile and gammaBound ones touch RGB values)
 [ ] make sure encoder generates no chunks with size > (2^31)-1
 [ ] partial decoding (stream processing)
 [X] let the "isFullyOpaque" function check color keys and transparent palettes too
@@ -1022,7 +1022,7 @@ The following features are _not_ supported:
 *) The following public chunks are not supported but treated as unknown chunks by LodePNG
     cHRM, gAMA, iCCP, sRGB, sBIT, hIST, sPLT
    Some of these are not supported on purpose: LodePNG wants to provide the RGB values
-   stored in the pixels, not values modified by system dependent gamma or color models.
+   stored in the pixels, not values modified by system dependent gammaBound or color models.
 
 
 2. C and C++ version

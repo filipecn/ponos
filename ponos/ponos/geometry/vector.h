@@ -34,43 +34,42 @@
 #include <vector>
 
 namespace ponos {
-
-class Point2;
-class Vector2 {
+template <typename T> class Point2;
+template <typename T> class Vector2 {
 public:
   Vector2();
-  explicit Vector2(real_t _x, real_t _y);
-  explicit Vector2(const Point2 &p);
-  explicit Vector2(const Normal2D &n);
-  explicit Vector2(real_t f);
-  explicit Vector2(real_t *f);
+  explicit Vector2(T _x, T _y);
+  explicit Vector2(const Point2<T> &p);
+  explicit Vector2(const Normal2<T> &n);
+  explicit Vector2(T f);
+  explicit Vector2(T *f);
   // access
-  real_t operator[](int i) const;
-  real_t &operator[](int i);
+  T operator[](size_t i) const;
+  T &operator[](size_t i);
   // arithmetic
   Vector2 operator+(const Vector2 &v) const;
   Vector2 &operator+=(const Vector2 &v);
   Vector2 operator-(const Vector2 &v) const;
   Vector2 &operator-=(const Vector2 &v);
-  Vector2 operator*(real_t f) const;
-  Vector2 &operator*=(real_t f);
-  Vector2 operator/(real_t f) const;
-  Vector2 &operator/=(real_t f);
+  Vector2 operator*(T f) const;
+  Vector2 &operator*=(T f);
+  Vector2 operator/(T f) const;
+  Vector2 &operator/=(T f);
   Vector2 operator-() const;
   bool operator==(const Vector2 &v);
   // normalization
-  real_t length2() const;
-  real_t length() const;
+  T length2() const;
+  T length() const;
   Vector2 right() const;
   Vector2 left() const;
   bool HasNaNs() const;
   friend std::ostream &operator<<(std::ostream &os, const Vector2 &v);
-  real_t x, y;
+  T x, y;
 };
 
-Vector2 operator*(real_t f, const Vector2 &v);
-Vector2 operator/(real_t f, const Vector2 &v);
-real_t dot(const Vector2 &a, const Vector2 &b);
+template <typename T> Vector2<T> operator*(T f, const Vector2<T> &v);
+template <typename T> Vector2<T> operator/(T f, const Vector2<T> &v);
+template <typename T> T dot(const Vector2<T> &a, const Vector2<T> &b);
 
 template <typename T>
 inline T dot(const std::vector<T> &a, const std::vector<T> &b) {
@@ -81,9 +80,10 @@ inline T dot(const std::vector<T> &a, const std::vector<T> &b) {
   return sum;
 }
 
-Vector2 normalize(const Vector2 &v);
-Vector2 orthonormal(const Vector2 &v, bool first = true);
-real_t cross(const Vector2 &a, const Vector2 &b);
+template <typename T> Vector2<T> normalize(const Vector2<T> &v);
+template <typename T>
+Vector2<T> orthonormal(const Vector2<T> &v, bool first = true);
+template <typename T> T cross(const Vector2<T> &a, const Vector2<T> &b);
 
 /** Projects a vector onto another.
  * \param a **[in]**
@@ -91,17 +91,18 @@ real_t cross(const Vector2 &a, const Vector2 &b);
  *
  * \returns the projection of **a** onto **b**
  */
-Vector2 project(const Vector2 &a, const Vector2 &b);
+template <typename T>
+Vector2<T> project(const Vector2<T> &a, const Vector2<T> &b);
 
-class Point3;
-class Vector3 {
+template <typename T> class Point3;
+template <typename T> class Vector3 {
 public:
   Vector3();
-  explicit Vector3(real_t _f);
-  explicit Vector3(real_t _x, real_t _y, real_t _z);
-  explicit Vector3(const real_t *v);
-  explicit Vector3(const Normal &n);
-  explicit Vector3(const Point3 &p);
+  explicit Vector3(T _f);
+  explicit Vector3(T _x, T _y, T _z);
+  explicit Vector3(const T *v);
+  explicit Vector3(const Normal3<T> &n);
+  explicit Vector3(const Point3<T> &p);
   // boolean
   bool operator==(const Vector3 &v);
   bool operator<(const Vector3 &v);
@@ -109,75 +110,89 @@ public:
   bool operator>=(const Vector3 &p) const;
   bool operator<=(const Vector3 &p) const;
   // access
-  real_t operator[](int i) const;
-  real_t &operator[](int i);
-  Vector2 xy();
+  T operator[](int i) const;
+  T &operator[](int i);
+  Vector2<T> xy() const;
   // arithmetic
-  Vector3 &operator=(const real_t &v);
+  Vector3 &operator=(const T &v);
   Vector3 operator+(const Vector3 &v) const;
   Vector3 &operator+=(const Vector3 &v);
   Vector3 operator-(const Vector3 &v) const;
   Vector3 &operator-=(const Vector3 &v);
   Vector3 operator*(const Vector3 &v) const;
-  Vector3 operator*(real_t f) const;
-  Vector3 &operator*=(real_t f);
-  Vector3 operator/(real_t f) const;
-  Vector3 &operator/=(real_t f);
+  Vector3 operator*(T f) const;
+  Vector3 &operator*=(T f);
+  Vector3 operator/(T f) const;
+  Vector3 &operator/=(T f);
   Vector3 &operator/=(const Vector3 &v);
   Vector3 operator-() const;
   // normalization
-  real_t length2() const;
-  real_t length() const;
+  T length2() const;
+  T length() const;
   bool HasNaNs() const;
   friend std::ostream &operator<<(std::ostream &os, const Vector3 &v);
-  real_t x, y, z;
+  T x, y, z;
 };
 
-Vector3 operator*(real_t f, const Vector3 &v);
-real_t dot(const Vector3 &a, const Vector3 &b);
-Vector3 cross(const Vector3 &a, const Vector3 &b);
-real_t triple(const Vector3 &a, const Vector3 &b, const Vector3 &c);
-Vector3 normalize(const Vector3 &v);
+template <typename T> Vector3<T> operator*(T f, const Vector3<T> &v);
+template <typename T> T dot(const Vector3<T> &a, const Vector3<T> &b);
+template <typename T>
+Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b);
+template <typename T>
+T triple(const Vector3<T> &a, const Vector3<T> &b, const Vector3<T> &c);
+template <typename T> Vector3<T> normalize(const Vector3<T> &v);
 /** \brief compute the two orthogonal-tangential vectors from a
  * \param a **[in]** normal
  * \param b **[out]** first tangent
  * \param c **[out]** second tangent
  */
-void tangential(const Vector3 &a, Vector3 &b, Vector3 &c);
-Vector3 cos(const Vector3 &v);
-Vector3 max(const Vector3 &a, const Vector3 &b);
+template <typename T>
+void tangential(const Vector3<T> &a, Vector3<T> &b, Vector3<T> &c);
+template <typename T> Vector3<T> cos(const Vector3<T> &v);
+template <typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b);
+template<typename T>
+Vector3<T> abs(const Vector3<T>&a);
 
-class Vector4 {
+template <typename T> class Vector4 {
 public:
   Vector4();
-  explicit Vector4(real_t _x, real_t _y, real_t _z, real_t _w);
+  explicit Vector4(T _x, T _y, T _z, T _w);
   // access
-  real_t operator[](int i) const;
-  real_t &operator[](int i);
-  Vector2 xy();
-  Vector3 xyz();
+  T operator[](int i) const;
+  T &operator[](int i);
+  Vector2<T> xy();
+  Vector3<T> xyz();
   // arithmetic
   Vector4 operator+(const Vector4 &v) const;
   Vector4 &operator+=(const Vector4 &v);
   Vector4 operator-(const Vector4 &v) const;
   Vector4 &operator-=(const Vector4 &v);
-  Vector4 operator*(real_t f) const;
-  Vector4 &operator*=(real_t f);
-  Vector4 operator/(real_t f) const;
-  Vector4 &operator/=(real_t f);
+  Vector4 operator*(T f) const;
+  Vector4 &operator*=(T f);
+  Vector4 operator/(T f) const;
+  Vector4 &operator/=(T f);
   Vector4 operator-() const;
   // normalization
-  real_t length2() const;
-  real_t length() const;
+  T length2() const;
+  T length() const;
   bool HasNaNs() const;
 
   friend std::ostream &operator<<(std::ostream &os, const Vector4 &v);
-  real_t x, y, z, w;
+  T x, y, z, w;
 };
 
-typedef Vector2 vec2;
-typedef Vector3 vec3;
-typedef Vector4 vec4;
+typedef Vector2<real_t> vec2;
+typedef Vector3<real_t> vec3;
+typedef Vector4<real_t> vec4;
+typedef Vector3<double> vec3d;
+typedef Vector3<float> vec3f;
+typedef Vector2<float> vec2f;
+typedef Vector2<int> ivec2;
+typedef Vector2<uint> uivec2;
+typedef Vector3<int> ivec3;
+typedef Vector3<uint> uivec3;
+typedef Vector4<int> ivec4;
+typedef Vector4<uint> uivec4;
 
 template <typename T = float, size_t D = 3> class Vector {
 public:
@@ -206,8 +221,8 @@ public:
   Vector<T, 2> floatXY(size_t x = 0, size_t y = 1) const;
   Vector<float, 3> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2);
   T max() const;
-  real_t length2() const;
-  real_t length() const;
+  T length2() const;
+  T length() const;
   Vector<T, D> normalized() const;
   Vector<T, 2> right() const;
   Vector<T, 2> left() const;
@@ -225,17 +240,8 @@ public:
 
 #include "vector.inl"
 
-typedef Vector<double, 3> vec3d;
-typedef Vector<float, 2> vec2f;
-typedef Vector<int, 2> ivec2;
-typedef Vector<uint, 2> uivec2;
-typedef Vector<int, 3> ivec3;
-typedef Vector<uint, 3> uivec3;
-typedef Vector<int, 4> ivec4;
-typedef Vector<uint, 4> uivec4;
-
 template <typename T, size_t D>
-inline Vector<T, D> operator*(real_t f, const Vector<T, D> &v) {
+inline Vector<T, D> operator*(T f, const Vector<T, D> &v) {
   return v * f;
 }
 
@@ -243,32 +249,32 @@ inline Vector<T, D> operator*(real_t f, const Vector<T, D> &v) {
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
  */
-Vector<int, 3> ceil(const Vector3 &v);
+template <typename T> Vector<int, 3> ceil(const Vector3<T> &v);
 /* round
  * @v **[in]** vector
  * @return a vector with floor applied to all components
  */
-Vector<int, 3> floor(const Vector3 &v);
+template <typename T> Vector<int, 3> floor(const Vector3<T> &v);
 
-Vector<int, 3> min(Vector<int, 3> a, Vector<int, 3> b);
-Vector<int, 3> max(Vector<int, 3> a, Vector<int, 3> b);
+template <typename T> Vector<int, 3> min(Vector<int, 3> a, Vector<int, 3> b);
+template <typename T> Vector<int, 3> max(Vector<int, 3> a, Vector<int, 3> b);
 
 /* round
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
  */
-Vector<int, 2> ceil(const Vector2 &v);
+template <typename T> Vector<int, 2> ceil(const Vector2<T> &v);
 /* round
  * @v **[in]** vector
  * @return a vector with floor applied to all components
  */
-Vector<int, 2> floor(const Vector2 &v);
+template <typename T> Vector<int, 2> floor(const Vector2<T> &v);
 
 Vector<int, 2> min(Vector<int, 2> a, Vector<int, 2> b);
 Vector<int, 2> max(Vector<int, 2> a, Vector<int, 2> b);
 
 template <typename T, size_t D> T normalize(Vector<T, D> &v) {
-  real_t d = v.length();
+  T d = v.length();
   for (size_t i = 0; i < D; i++)
     v[i] = v[i] / d;
 }

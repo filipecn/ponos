@@ -34,7 +34,7 @@ TMesh<V, F, E, P>::TMesh(const RawMesh &rm) {
   FATAL_ASSERT(rm.primitiveType == GeometricPrimitiveType::TETRAHEDRA);
   // add vertices on the same order as found in rm
   for (size_t v = 0; v < rm.positionDescriptor.count; v++) {
-    vertices.emplace_back(Point3(rm.positions[v * 3 + 0], rm.positions[v * 3 + 1],
+    vertices.emplace_back(point3(rm.positions[v * 3 + 0], rm.positions[v * 3 + 1],
                                  rm.positions[v * 3 + 2]));
     // TODO : read normals
   }
@@ -75,7 +75,7 @@ TMesh<V, F, E, P>::TMesh(const RawMesh &rm) {
   for (size_t t = 0; t < rm.meshDescriptor.count; t++) {
     // get vertices from tetrahedron and build faces
     size_t vsi[4]; // vertices indices
-    Point3 vs[4];  // vertices points
+    point3 vs[4];  // vertices points
     for (size_t v = 0; v < 4; v++) {
       vsi[v] = static_cast<size_t>(rm.indices[t * 4 + v].positionIndex);
       vs[v] = rm.positionElement(t, v);

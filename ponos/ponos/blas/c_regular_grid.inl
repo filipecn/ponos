@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 template <typename T>
 CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const vec3 cellSize,
@@ -41,7 +41,7 @@ CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const vec3 cellSize,
 }
 
 template <typename T>
-CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const BBox &bb) {
+CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const bbox3 &bb) {
   this->dimensions = d;
   this->background = b;
   data = new T **[d[0]];
@@ -52,10 +52,11 @@ CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const BBox &bb) {
       data[i][j] = new T[d[2]];
   this->toWorld.reset();
   vec3 s = vec3(bb.size(0) / (d[0]), bb.size(1) / (d[1]), bb.size(2) / (d[2]));
-  this->toWorld = translate(vec3(bb.pMin) + s * 0.5f) * scale(s[0], s[1], s[2]);
+  this->toWorld =
+      translate(vec3(bb.lower) + s * 0.5f) * scale(s[0], s[1], s[2]);
 
   // this->toWorld.scale(s[0], s[1], s[2]);
-  // this->toWorld.translate(vec3(bb.pMin) + s * 0.5f + vec3(0, 0, 1));
+  // this->toWorld.translate(vec3(bb.lower) + s * 0.5f + vec3(0, 0, 1));
   this->toWorld.computeInverse();
   this->toGrid = inverse(this->toWorld);
 }
@@ -110,7 +111,7 @@ CRegularGrid2D<T>::CRegularGrid2D(uint32_t w, uint32_t h) {
 }
 
 template <typename T> T CRegularGrid2D<T>::sample(float x, float y) const {
-  Point2 gp = this->toGrid(Point2(x, y));
+  point2 gp = this->toGrid(point2(x, y));
   int x0 = static_cast<int>(gp.x);
   int y0 = static_cast<int>(gp.y);
   int x1 = x0 + 1;

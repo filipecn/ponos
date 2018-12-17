@@ -43,7 +43,7 @@ class ScalarGrid2D : public CRegularGrid2D<T>, virtual public ScalarField2D<T> {
 public:
   ScalarGrid2D();
   ScalarGrid2D(uint w, uint h);
-  ScalarGrid2D(uint w, uint h, const BBox2D &b);
+  ScalarGrid2D(uint w, uint h, const bbox2 &b);
   virtual ~ScalarGrid2D() {}
   Vector<T, 2> gradient(int x, int y) const;
   Vector<T, 2> gradient(float x, float y) const override;
@@ -59,7 +59,7 @@ class VectorGrid2D : public CRegularGrid2D<Vector<T, 2>>,
 public:
   VectorGrid2D();
   VectorGrid2D(uint w, uint h);
-  VectorGrid2D(uint w, uint h, const BBox2D &b);
+  VectorGrid2D(uint w, uint h, const bbox2 &b);
   T divergence(int i, int j) const;
   T divergence(float x, float y) const override;
   Vector<T, 2> curl(float x, float y) const override;

@@ -13,7 +13,7 @@ namespace ponos {
 class Polygon : public Shape {
 public:
   Polygon() { this->type = ShapeType::POLYGON; }
-  Polygon(std::vector<Point2> v) : vertices(v) {}
+  Polygon(std::vector<point2> v) : vertices(v) {}
   /*
   Polygon(const Polygon& p) {
     vertices = p.vertices;
@@ -27,12 +27,12 @@ public:
     return *this;
   }*/
 
-  Transform2D transform;
-  std::vector<Point2> vertices;
+  Transform2 transform;
+  std::vector<point2> vertices;
 };
 
-inline BBox2D compute_bbox(const Polygon &po, const Transform2D *t = nullptr) {
-  BBox2D b;
+inline bbox2 compute_bbox(const Polygon &po, const Transform2 *t = nullptr) {
+  bbox2 b;
   for (auto p : po.vertices) {
     if (t != nullptr)
       b = make_union(b, (*t)(p));

@@ -31,7 +31,7 @@ template <typename T> ScalarGrid2D<T>::ScalarGrid2D(uint w, uint h) {
 }
 
 template <typename T>
-ScalarGrid2D<T>::ScalarGrid2D(uint w, uint h, const BBox2D &b) {
+ScalarGrid2D<T>::ScalarGrid2D(uint w, uint h, const bbox2 &b) {
   this->dataPosition = GridDataPosition::CELL_CENTER;
   this->accessMode = GridAccessMode::CLAMP_TO_EDGE;
   this->set(w, h, b);
@@ -50,9 +50,9 @@ Vector<T, 2> ScalarGrid2D<T>::gradient(int i, int j) const {
 
 template <typename T>
 Vector<T, 2> ScalarGrid2D<T>::gradient(float x, float y) const {
-  Point<int, 2> c = (*this).dataCell(Point2(x, y));
+  Point<int, 2> c = (*this).dataCell(point2(x, y));
   int i = c[0], j = c[1];
-  Point2 gp = this->dataGridPosition(Point2(x, y));
+  point2 gp = this->dataGridPosition(point2(x, y));
   return bilerp(gp.x - i, gp.y - j, gradient(i, j), gradient(i + 1, j),
                 gradient(i + 1, j + 1), gradient(i, j + 1));
 }
@@ -64,12 +64,12 @@ template <typename T> T ScalarGrid2D<T>::laplacian(float x, float y) const {
 }
 
 template <typename T> T ScalarGrid2D<T>::sample(float x, float y) const {
-  /*Point<int, 2> c = (*this).dataCell(Point2(x, y));
+  /*Point<int, 2> c = (*this).dataCell(point2(x, y));
   int i = c[0], j = c[1];
-  Point2 gp = this->dataGridPosition(Point2(x, y));
+  point2 gp = this->dataGridPosition(point2(x, y));
   return bilerp(gp.x - i, gp.y - j, (*this)(i, j), (*this)(i + 1, j),
                 (*this)(i + 1, j + 1), (*this)(i, j + 1));
-  */ Point2 gp = this->dataGridPosition(Point2(x, y));
+  */ point2 gp = this->dataGridPosition(point2(x, y));
   int x0 = static_cast<int>(gp.x);
   int y0 = static_cast<int>(gp.y);
   int x1 = x0 + 1;
@@ -96,7 +96,7 @@ template <typename T> VectorGrid2D<T>::VectorGrid2D(uint w, uint h) {
 }
 
 template <typename T>
-VectorGrid2D<T>::VectorGrid2D(uint w, uint h, const BBox2D &b) {
+VectorGrid2D<T>::VectorGrid2D(uint w, uint h, const bbox2 &b) {
   this->dataPosition = GridDataPosition::CELL_CENTER;
   this->accessMode = GridAccessMode::CLAMP_TO_EDGE;
   this->set(w, h, b);

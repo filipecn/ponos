@@ -20,18 +20,18 @@ namespace ponos {
  * \param b **[in]**
  * /return
  */
-bool bbox_bbox_intersection(const BBox2D &a, const BBox2D &b);
+bool bbox_bbox_intersection(const bbox2 &a, const bbox2 &b);
 /** \brief  intersection test
  * \param a **[in]**
  * \param b **[in]**
  * /return
  */
-bool bbox_bbox_intersection(const BBox &a, const BBox &b);
+bool bbox_bbox_intersection(const bbox3 &a, const bbox3 &b);
 /** \brief  intersection test
-* \param a **[in]**
-* \param b **[in]**
-* /return
-*/
+ * \param a **[in]**
+ * \param b **[in]**
+ * /return
+ */
 template <typename T>
 bool interval_interval_intersection(const Interval<T> &a,
                                     const Interval<T> &b) {
@@ -46,7 +46,7 @@ bool interval_interval_intersection(const Interval<T> &a,
  * /return **true** if intersection exists
  */
 bool ray_segment_intersection(const Ray2 &r, const Segment2 &s,
-                              float *t = nullptr);
+                              real_t *t = nullptr);
 
 /** \brief  intersection test
  * \param r **[in]** ray
@@ -55,7 +55,7 @@ bool ray_segment_intersection(const Ray2 &r, const Segment2 &s,
  * /return **true** if intersection exists
  */
 bool ray_segment_intersection(const Ray3 &r, const Segment3 &s,
-                              float *t = nullptr);
+                              real_t *t = nullptr);
 /** \brief  intersection test
  * \param pl **[in]** plane
  * \param l **[in]** line
@@ -65,7 +65,7 @@ bool ray_segment_intersection(const Ray3 &r, const Segment3 &s,
  *
  * /return **true** if intersection exists
  */
-bool plane_line_intersection(const Plane pl, const Line l, Point3 &p);
+bool plane_line_intersection(const Plane pl, const Line l, point3 &p);
 /** \brief  intersection test
  * \param s **[in]** sphere
  * \param l **[in]** line
@@ -78,8 +78,8 @@ bool plane_line_intersection(const Plane pl, const Line l, Point3 &p);
  *
  * /return **true** if intersection exists
  */
-bool sphere_line_intersection(const Sphere s, const Line l, Point3 &p1,
-                              Point3 &p2);
+bool sphere_line_intersection(const Sphere s, const Line l, point3 &p1,
+                              point3 &p2);
 /** \brief  intersection test
  * \param s **[in]** sphere
  * \param r **[in]** ray
@@ -89,7 +89,7 @@ bool sphere_line_intersection(const Sphere s, const Line l, Point3 &p1,
  * /return **true** if intersection exists
  */
 bool sphere_ray_intersection(const Sphere &s, const Ray3 &r,
-                             float *t1 = nullptr, float *t2 = nullptr);
+                             real_t *t1 = nullptr, real_t *t2 = nullptr);
 /** \brief  intersection test
  * \param box **[in]**
  * \param ray **[in]**
@@ -97,7 +97,7 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r,
  * \param hit2 **[out]** second intersection
  * \param normal **[out | optional]** collision normal
  *
- * BBox2D / Ray intersection test.
+ * bbox2D / Ray intersection test.
  *
  * **hit1** and **hit2** are in the ray's parametric coordinate.
  *
@@ -105,8 +105,8 @@ bool sphere_ray_intersection(const Sphere &s, const Ray3 &r,
  *
  * /return **true** if intersectiton exists
  */
-bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit1,
-                           float &hit2, float *normal = nullptr);
+bool bbox_ray_intersection(const bbox2 &box, const Ray2 &ray, real_t &hit1,
+                           real_t &hit2, real_t *normal = nullptr);
 
 /** \brief  intersection test
  * \param box **[in]**
@@ -122,8 +122,8 @@ bool bbox_ray_intersection(const BBox2D &box, const Ray2 &ray, float &hit1,
  *
  * /return **true** if intersectiton exists
  */
-bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1,
-                           float &hit2);
+bool bbox_ray_intersection(const bbox3 &box, const Ray3 &ray, real_t &hit1,
+                           real_t &hit2);
 /** \brief  intersection test
  * \param box **[in]**
  * \param ray **[in]**
@@ -136,11 +136,11 @@ bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1,
  *
  * /return **true** if intersection exists
  */
-bool bbox_ray_intersection(const BBox &box, const Ray3 &ray, float &hit1);
-void triangle_barycentric_coordinates(const Point2 &p, const Point2 &a,
-                                      const Point2 &b, const Point2 &c,
-                                      float &u, float &v, float &w);
-bool triangle_point_intersection(const Point2 &p, const Point2 *vertices);
+bool bbox_ray_intersection(const bbox3 &box, const Ray3 &ray, real_t &hit1);
+void triangle_barycentric_coordinates(const point2 &p, const point2 &a,
+                                      const point2 &b, const point2 &c,
+                                      real_t &u, real_t &v, real_t &w);
+bool triangle_point_intersection(const point2 &p, const point2 *vertices);
 /// BBox / Ray3 intersection test.
 /// **b1** and **b2**, if not null, receive the barycentric coordinates of the
 /// intersection point.
@@ -152,24 +152,25 @@ bool triangle_point_intersection(const Point2 &p, const Point2 *vertices);
 /// \param b1 **[out]** barycentric coordinate
 /// \param b2 **[out]** barycentric coordinate
 /// return **true** if intersection exists
-bool triangle_ray_intersection(const Point3 &p1, const Point3 &p2,
-                               const Point3 &p3, const Ray3 &ray,
-                               float *tHit = nullptr, float *b1 = nullptr,
-                               float *b2 = nullptr);
+bool triangle_ray_intersection(const point3 &p1, const point3 &p2,
+                               const point3 &p3, const Ray3 &ray,
+                               real_t *tHit = nullptr, real_t *b1 = nullptr,
+                               real_t *b2 = nullptr);
 ///
 /// \param p **[in]** source point
 /// \param p1 **[in]** first triangle's vertex
 /// \param p2 **[in]** second triangle's vertex
 /// \param p3 **[in]** third triangle's vertex
 /// \return closest point on triangle **(p1,p2,p3)** to point **p**
-Point3 closest_point_triangle(const Point3& p, const Point3& p1, const Point3& p2, const Point3& p3);
+point3 closest_point_triangle(const point3 &p, const point3 &p1,
+                              const point3 &p2, const point3 &p3);
 /** \brief  closest point
  * \param p **[in]** point
  * \param pl **[in]** plane
  *
  * /return closest point on **pl** from **p**
  */
-Point3 closest_point_plane(const Point3 &p, const Plane &pl);
+point3 closest_point_plane(const point3 &p, const Plane &pl);
 /** \brief
  * \param s **[in]** segment
  * \param p **[in]** point
@@ -181,8 +182,8 @@ Point3 closest_point_plane(const Point3 &p, const Plane &pl);
  * /return closest point to **p** that lies on **s**
  */
 template <typename T>
-T closest_point_segment(const Segment<T> &s, const T &p, float *t = nullptr) {
-  float t_ = dot(p - s.a, s.b - s.a) / (s.b - s.a).length2();
+T closest_point_segment(const Segment<T> &s, const T &p, real_t *t = nullptr) {
+  real_t t_ = dot(p - s.a, s.b - s.a) / (s.b - s.a).length2();
   if (t_ < 0.f)
     t_ = 0.f;
   if (t_ > 1.f)
@@ -199,24 +200,24 @@ T closest_point_segment(const Segment<T> &s, const T &p, float *t = nullptr) {
  *
  * /return closest point on **pl** from **p**
  */
-Point3 closest_point_n_plane(const Point3 &p, const Plane &pl);
+point3 closest_point_n_plane(const point3 &p, const Plane &pl);
 /** \brief  closest point
  * \param p **[in]** point
  * \param b **[in]** bbox
  *
  * /return closest point on **b** from **p**
  */
-Point3 closest_point_bbox(const Point3 &p, const BBox &b);
+point3 closest_point_bbox(const point3 &p, const bbox3 &b);
 /// distance from point to line
 /// \param p **[in]** point
 /// \param l **[in]** line
 /// \return distance from **p** to **l**
-float distance_point_line(const Point3 &p, const Line &l);
+real_t distance_point_line(const point3 &p, const Line &l);
 /// \brief  distance
 /// \param p **[in]** point
 /// \param pl **[in]** plane
 /// \return signed distance of **p** to **pl**
-float distance_point_plane(const Point3 &p, const Plane &pl);
+real_t distance_point_plane(const point3 &p, const Plane &pl);
 /** \brief  distance
  * \param p **[in]** point
  * \param pl **[in]** plane
@@ -225,7 +226,7 @@ float distance_point_plane(const Point3 &p, const Plane &pl);
  *
  * /return signed distance of **p** to **pl**
  */
-float distance_point_n_plane(const Point3 &p, const Plane &pl);
+real_t distance_point_n_plane(const point3 &p, const Plane &pl);
 /** \brief  distance
  * \param p **[in]** point
  * \param s **[in]** segment
@@ -233,23 +234,23 @@ float distance_point_n_plane(const Point3 &p, const Plane &pl);
  * /return the squared distance between **p** and **s**
  */
 template <typename T>
-float distance2_point_segment(const T &p, const Segment<T> &s);
+real_t distance2_point_segment(const T &p, const Segment<T> &s);
 /** \brief  distance
  * \param p **[in]** point
  * \param b **[in]** bbox
  *
  * /return squared distance between **p** and **b**
  */
-float distance2_point_bbox(const Point3 &p, const BBox &b);
+real_t distance2_point_bbox(const point3 &p, const bbox3 &b);
 
-inline BBox2D compute_bbox(const Shape &po, const Transform2D *t = nullptr) {
-  BBox2D b;
+inline bbox2 compute_bbox(const Shape &po, const Transform2 *t = nullptr) {
+  bbox2 b;
   if (po.type == ShapeType::POLYGON)
     b = compute_bbox(static_cast<const Polygon &>(po), t);
   else if (po.type == ShapeType::SPHERE)
     b = compute_bbox(static_cast<const Circle &>(po), t);
   return b;
 }
-} // ponos namespace
+} // namespace ponos
 
 #endif

@@ -76,17 +76,17 @@ void RawMesh::splitIndexData() {
 }
 
 void RawMesh::computeBBox() {
-  bbox = BBox();
+  bbox = bbox3();
   for (size_t i = 0; i < positionDescriptor.count; i++) {
-    ponos::Point3 p;
+    ponos::point3 p;
     for (size_t d = 0; d < positionDescriptor.elementSize; d++)
       p[d] = positions[i * positionDescriptor.elementSize + d];
     bbox = make_union(bbox, p);
   }
 }
 
-Point3 RawMesh::positionElement(size_t e, size_t v) const {
-  return Point3(
+point3 RawMesh::positionElement(size_t e, size_t v) const {
+  return point3(
       positions[indices[e * meshDescriptor.elementSize + v].positionIndex *
                     positionDescriptor.elementSize +
                 0],
@@ -101,11 +101,11 @@ Point3 RawMesh::positionElement(size_t e, size_t v) const {
            : 0.f));
 }
 
-BBox RawMesh::elementBBox(size_t i) const {
-  BBox b;
+bbox3 RawMesh::elementBBox(size_t i) const {
+  bbox3 b;
   for (size_t v = 0; v < meshDescriptor.elementSize; v++)
     b = make_union(b,
-                   Point3(positions[indices[i * meshDescriptor.elementSize + v]
+                   point3(positions[indices[i * meshDescriptor.elementSize + v]
                                             .positionIndex *
                                         positionDescriptor.elementSize +
                                     0],
@@ -147,14 +147,14 @@ void RawMesh::orientFaces(bool ccw) {
   for (size_t e = 0; e < meshDescriptor.count; e++) {
     bool flip = false;
     for (size_t i = 0; i < meshDescriptor.elementSize; i++) {
-      ponos::Point3 a3 = positionElement(e, i);
-      ponos::Point3 b3 =
+      ponos::point3 a3 = positionElement(e, i);
+      ponos::point3 b3 =
           positionElement(e, (i + 1) % meshDescriptor.elementSize);
-      ponos::Point3 c3 =
+      ponos::point3 c3 =
           positionElement(e, (i + 2) % meshDescriptor.elementSize);
-      ponos::Point2 a(a3.x, a3.y);
-      ponos::Point2 b(b3.x, b3.y);
-      ponos::Point2 c(c3.x, c3.y);
+      ponos::point2 a(a3.x, a3.y);
+      ponos::point2 b(b3.x, b3.y);
+      ponos::point2 c(c3.x, c3.y);
       if (ccw && ponos::cross(b - a, c - a) < 0.f)
         flip = true;
     }
@@ -185,17 +185,17 @@ void RawMesh::clear() {
   interleavedData.clear();
 }
 
-void fitToBBox(RawMesh *rm, const BBox2D &bbox) {
+void fitToBBox(RawMesh *rm, const bbox2 &bbox) {
   UNUSED_VARIABLE(bbox);
   float ratio = rm->bbox.size(1) / rm->bbox.size(0);
   if (rm->bbox.size(0) > rm->bbox.size(1))
     rm->apply(
         scale(1.f / rm->bbox.size(0), ratio * (1.f / rm->bbox.size(0)), 0) *
-        translate(Point3() - rm->bbox.pMin));
+        translate(point3() - rm->bbox.lower));
   else
     rm->apply(
         scale((1.f / rm->bbox.size(1)) / ratio, 1.f / rm->bbox.size(1), 0) *
-        translate(Point3() - rm->bbox.pMin));
+        translate(point3() - rm->bbox.lower));
   rm->computeBBox();
 }
 

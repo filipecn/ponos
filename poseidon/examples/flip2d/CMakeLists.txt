@@ -1,12 +1,12 @@
 #link_libraries(${GLFW_LIB} ${VULKAN_LIBRARY})
 
 #link_libraries(poseidon)
-#include_directories("${POSEIDON_SOURCE_DIR}/src")
+#include_directories("${POSEIDON_SOURCE_DIR}/helios")
 #include_directories("${POSEIDON_SOURCE_DIR}/external")
 #link_libraries(ponos)
-#include_directories("${PONOS_SOURCE_DIR}/src")
+#include_directories("${PONOS_SOURCE_DIR}/helios")
 #link_libraries(aergia)
-#include_directories("${AERGIA_SOURCE_DIR}/src")
+#include_directories("${AERGIA_SOURCE_DIR}/helios")
 
 link_libraries(${AERGIA_LIBRARIES})
 include_directories(${AERGIA_INCLUDES})

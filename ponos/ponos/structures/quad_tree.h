@@ -38,7 +38,7 @@ template <typename NodeData> class QuadTree {
 public:
   struct Node {
     friend class QuadTree;
-    Node(const BBox2D &r, Node *p = nullptr) : bbox(r), l(0), parent(p) {
+    Node(const bbox2 &r, Node *p = nullptr) : bbox(r), l(0), parent(p) {
       for (int i = 0; i < 4; i++)
         children[i] = nullptr;
       if (parent)
@@ -50,20 +50,20 @@ public:
     }
     size_t id;
     size_t level() const { return l; }
-    BBox2D region() const { return bbox; }
+    bbox2 region() const { return bbox; }
     NodeData data;
     Node *children[4];
 
   private:
-    BBox2D bbox;
+    bbox2 bbox;
     size_t l;
     Node *parent;
     size_t childNumber;
   };
 
   QuadTree();
-  QuadTree(const BBox2D &region, const std::function<bool(Node &node)> &f);
-  QuadTree(const BBox2D &region, NodeData rootData,
+  QuadTree(const bbox2 &region, const std::function<bool(Node &node)> &f);
+  QuadTree(const bbox2 &region, NodeData rootData,
            const std::function<bool(Node &node)> &f,
            std::function<void(Node &)> sf = nullptr);
   virtual ~QuadTree();
@@ -163,10 +163,10 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
           return;
         if (top) {
           if (top->isLeaf()) {
-            BBox2D r = top->region();
+            bbox2 r = top->region();
             top->data.neighbours.emplace_back(
-                new NodeType(BBox2D(Point2(r.pMin.x, r.pMin.y - r.size(1)),
-                                    Point2(r.pMax.x, r.pMin.y))));
+                new NodeType(bbox2(point2(r.lower.x, r.lower.y - r.size(1)),
+                                    point2(r.upper.x, r.lower.y))));
             top->data.neighbours[top->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             top->data.neighboursPosition.emplace_back(
@@ -177,10 +177,10 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
           }
         } else {
           if (bottom->isLeaf()) {
-            BBox2D r = bottom->region();
+            bbox2 r = bottom->region();
             bottom->data.neighbours.emplace_back(
-                new NodeType(BBox2D(Point2(r.pMin.x, r.pMax.y),
-                                    Point2(r.pMax.x, r.pMax.y + r.size(1)))));
+                new NodeType(bbox2(point2(r.lower.x, r.upper.y),
+                                    point2(r.upper.x, r.upper.y + r.size(1)))));
             bottom->data.neighbours[bottom->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             bottom->data.neighboursPosition.emplace_back(
@@ -199,10 +199,10 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
           return;
         if (left) {
           if (left->isLeaf()) {
-            BBox2D r = left->region();
+            bbox2 r = left->region();
             left->data.neighbours.emplace_back(
-                new NodeType(BBox2D(Point2(r.pMax.x, r.pMin.y),
-                                    Point2(r.pMax.x + r.size(0), r.pMax.y))));
+                new NodeType(bbox2(point2(r.upper.x, r.lower.y),
+                                    point2(r.upper.x + r.size(0), r.upper.y))));
             left->data.neighbours[left->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             left->data.neighboursPosition.emplace_back(
@@ -213,10 +213,10 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
           }
         } else {
           if (right->isLeaf()) {
-            BBox2D r = right->region();
+            bbox2 r = right->region();
             right->data.neighbours.emplace_back(
-                new NodeType(BBox2D(Point2(r.pMin.x - r.size(0), r.pMin.y),
-                                    Point2(r.pMin.x, r.pMax.y))));
+                new NodeType(bbox2(point2(r.lower.x - r.size(0), r.lower.y),
+                                    point2(r.lower.x, r.upper.y))));
             right->data.neighbours[right->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             right->data.neighboursPosition.emplace_back(

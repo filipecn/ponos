@@ -26,14 +26,14 @@ template<typename NodeData>
 Octree<NodeData>::Octree() : root_(nullptr), height_(0), count_(0) {}
 
 template<typename NodeData>
-Octree<NodeData>::Octree(const BBox &region, uint h) : root_(new Node(region)) {
+Octree<NodeData>::Octree(const bbox3 &region, uint h) : root_(new Node(region)) {
   height_ = 0;
   count_ = 0;
   refine(root_, [h](Node &node) { return node.level() < h; }, nullptr);
 }
 
 template<typename NodeData>
-Octree<NodeData>::Octree(const BBox &region,
+Octree<NodeData>::Octree(const bbox3 &region,
                          const std::function<bool(Node & node)> &f)
     : root_(new Node(region, nullptr)) {
   height_ = 0;
@@ -42,7 +42,7 @@ Octree<NodeData>::Octree(const BBox &region,
 }
 
 template<typename NodeData>
-Octree<NodeData>::Octree(const BBox &region, NodeData rootData,
+Octree<NodeData>::Octree(const bbox3 &region, NodeData rootData,
                          const std::function<bool(Node & node)> &f,
                          std::function<void(Node & node)> sf)
     : root_(new Node(region, nullptr)) {

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRY_BBOX_H
 #define PONOS_GEOMETRY_BBOX_H
@@ -32,154 +32,135 @@
 
 namespace ponos {
 
-class BBox2D {
+template <typename T> class BBox2 {
 public:
-  BBox2D();
-  BBox2D(const Point2 &p1, const Point2 &p2);
+  BBox2();
+  explicit BBox2(const Point2<T> &p);
+  BBox2(const Point2<T> &p1, const Point2<T> &p2);
+  static BBox2 unitBox();
+  bool inside(const Point2<T> &p) const;
+  real_t size(int d) const;
+  Vector2<T> extends() const;
+  Point2<T> center() const;
+  Point2<T> centroid() const;
+  int maxExtent() const;
+  const Point2<T> &operator[](int i) const;
+  Point2<T> &operator[](int i);
 
-  static BBox2D unitBox() { return {Point2(), Point2(1, 1)}; }
-
-  bool inside(const Point2 &p) const {
-    return (p.x >= pMin.x && p.x <= pMax.x && p.y >= pMin.y && p.y <= pMax.y);
-  }
-
-  float size(int d) const {
-    d = std::max(0, std::min(1, d));
-    return pMax[d] - pMin[d];
-  }
-
-  Vector2 extends() const { return pMax - pMin; }
-
-  Point2 center() const { return pMin + (pMax - pMin) * .5f; }
-
-  Point2 centroid() const { return pMin * .5f + vec2(pMax * .5f); }
-
-  int maxExtent() const {
-    Vector2 diag = pMax - pMin;
-    if (diag.x > diag.y)
-      return 0;
-    return 1;
-  }
-
-  const Point2 &operator[](int i) const { return (i == 0) ? pMin : pMax; }
-  Point2 &operator[](int i) { return (i == 0) ? pMin : pMax; }
-
-  Point2 pMin, pMax;
+  Point2<T> lower, upper;
 };
 
-inline BBox2D make_union(const BBox2D &b, const Point2 &p) {
-  BBox2D ret = b;
-  ret.pMin.x = std::min(b.pMin.x, p.x);
-  ret.pMin.y = std::min(b.pMin.y, p.y);
-  ret.pMax.x = std::max(b.pMax.x, p.x);
-  ret.pMax.y = std::max(b.pMax.y, p.y);
+typedef BBox2<real_t> bbox2;
+
+template <typename T>
+inline BBox2<T> make_union(const BBox2<T> &b, const Point2<T> &p) {
+  BBox2<T> ret = b;
+  ret.lower.x = std::min(b.lower.x, p.x);
+  ret.lower.y = std::min(b.lower.y, p.y);
+  ret.upper.x = std::max(b.upper.x, p.x);
+  ret.upper.y = std::max(b.upper.y, p.y);
   return ret;
 }
 
-inline BBox2D make_union(const BBox2D &a, const BBox2D &b) {
-  BBox2D ret = make_union(a, b.pMin);
-  return make_union(ret, b.pMax);
+template <typename T>
+inline BBox2<T> make_union(const BBox2<T> &a, const BBox2<T> &b) {
+  BBox2<T> ret = make_union(a, b.lower);
+  return make_union(ret, b.upper);
 }
 
-class BBox {
+/// Axis-aligned region of space.
+/// \tparam T coordinates type
+template <typename T> class BBox3 {
 public:
-  BBox();
-  explicit BBox(const Point3 &p);
+  /// Creates an empty bounding box
+  BBox3();
+  /// Creates a bounding enclosing a single point
+  /// \param p point
+  explicit BBox3(const Point3<T> &p);
   /// Creates a bounding box of 2r side centered at c
   /// \param c center point
   /// \param r radius
-  BBox(const Point3& c, float r);
-  BBox(const Point3 &p1, const Point3 &p2);
-  friend BBox make_union(const BBox &b, const BBox &b1);
-  static BBox unitBox() { return {Point3(), Point3(1, 1, 1)}; }
-  bool overlaps(const BBox &b) const {
-    bool x = (pMax.x >= b.pMin.x) && (pMin.x <= b.pMax.x);
-    bool y = (pMax.y >= b.pMin.y) && (pMin.y <= b.pMax.y);
-    bool z = (pMax.z >= b.pMin.z) && (pMin.z <= b.pMax.z);
-    return (x && y && z);
-  }
-  bool contains(const Point3 &p) const {
-    return (p.x >= pMin.x && p.x <= pMax.x && p.y >= pMin.y && p.y <= pMax.y &&
-        p.z >= pMin.z && p.z <= pMax.z);
-  }
+  BBox3(const Point3<T> &c, real_t r);
+  /// Creates a bounding box enclosing two points
+  /// \param p1 first point
+  /// \param p2 second point
+  BBox3(const Point3<T> &p1, const Point3<T> &p2);
+  /// \param p
+  /// \return true if this bounding box encloses **p**
+  bool contains(const Point3<T> &p) const;
   /// \param b bbox
   /// \return true if bbox is fully inside
-  bool contains(const BBox &b) const {
-    return contains(b.pMin) && contains(b.pMax);
-  }
-  void expand(float delta) {
-    pMin -= Vector3(delta, delta, delta);
-    pMax -= Vector3(delta, delta, delta);
-  }
+  bool contains(const BBox3 &b) const;
+  /// Doesn't consider points on the upper boundary to be inside the bbox
+  /// \param p point
+  /// \return true if contains exclusive
+  bool containsExclusive(const Point3<T> &p) const;
+  /// Pads the bbox in both dimensions
+  /// \param delta expansion factor (lower - delta, upper + delta)
+  void expand(real_t delta);
+  /// \return vector along the diagonal upper - lower
+  Vector3<T> diagonal() const;
+  /// \return index of longest axis
+  int maxExtent() const;
+  /// \param i 0 = lower, 1 = upper
+  /// \return lower or upper point
+  const Point3<T> &operator[](int i) const;
+  /// \param i 0 = lower, 1 = upper
+  /// \return lower or upper point
+  Point3<T> &operator[](int i);
+  /// \param c corner index
+  /// \return corner point
+  Point3<T> corner(int c) const;
   /**
- * y
- * |_ x
- * z
- *   /  2  /  3 /
- *  / 6  /  7  /
- *  ------------
- * |   0 |   1 |
- * | 4   | 5   |
- * ------------
- */
-  std::vector<BBox> splitBy8() const {
-    auto mid = center();
-    std::vector<BBox> children;
-    children.emplace_back(pMin, mid);
-    children.emplace_back(Point3(mid.x, pMin.y, pMin.z), Point3(pMax.x, mid.y, mid.z));
-    children.emplace_back(Point3(pMin.x, mid.y, pMin.z), Point3(mid.x, pMax.y, mid.z));
-    children.emplace_back(Point3(mid.x, mid.y, pMin.z), Point3(pMax.x, pMax.y, mid.z));
-    children.emplace_back(Point3(pMin.x, pMin.y, mid.z), Point3(mid.x, mid.y, pMax.z));
-    children.emplace_back(Point3(mid.x, pMin.y, mid.z), Point3(pMax.x, mid.y, pMax.z));
-    children.emplace_back(Point3(pMin.x, mid.y, mid.z), Point3(mid.x, pMax.y, pMax.z));
-    children.emplace_back(Point3(mid.x, mid.y, mid.z), Point3(pMax.x, pMax.y, pMax.z));
-    return children;
-  }
-  Point3 center() const { return pMin + (pMax - pMin) * .5f; }
-  float size(size_t d) const { return pMax[d] - pMin[d]; }
-  float surfaceArea() const {
-    Vector3 d = pMax - pMin;
-    return 2.f * (d.x * d.y + d.x * d.z + d.y * d.z);
-  }
-  float volume() const {
-    Vector3 d = pMax - pMin;
-    return d.x * d.y * d.z;
-  }
-  int maxExtent() const {
-    Vector3 diag = pMax - pMin;
-    if (diag.x > diag.y && diag.x > diag.z)
-      return 0;
-    else if (diag.y > diag.z)
-      return 1;
-    return 2;
-  }
-  BBox2D xy() const { return BBox2D(pMin.xy(), pMax.xy()); }
-  BBox2D yz() const { return BBox2D(pMin.yz(), pMax.yz()); }
-  BBox2D xz() const { return BBox2D(pMin.xz(), pMax.xz()); }
-  Point3 centroid() const { return pMin * .5f + vec3(pMax * .5f); }
-  const Point3 &operator[](int i) const { return (i == 0) ? pMin : pMax; }
-  Point3 &operator[](int i) { return (i == 0) ? pMin : pMax; }
+   * y
+   * |_ x
+   * z
+   *   /  2  /  3 /
+   *  / 6  /  7  /
+   *  ------------
+   * |   0 |   1 |
+   * | 4   | 5   |
+   * ------------
+   */
+  std::vector<BBox3> splitBy8() const;
+  Point3<T> center() const;
+  T size(size_t d) const;
+  BBox2<T> xy() const;
+  BBox2<T> yz() const;
+  BBox2<T> xz() const;
+  Point3<T> centroid() const;
+  friend BBox3 make_union(const BBox3 &b, const BBox3 &b1);
+  static BBox3 unitBox();
 
-  Point3 pMin, pMax;
+  Point3<T> lower, upper;
 };
 
-inline BBox make_union(const BBox &b, const Point3 &p) {
-  BBox ret = b;
-  ret.pMin.x = std::min(b.pMin.x, p.x);
-  ret.pMin.y = std::min(b.pMin.y, p.y);
-  ret.pMin.z = std::min(b.pMin.z, p.z);
-  ret.pMax.x = std::max(b.pMax.x, p.x);
-  ret.pMax.y = std::max(b.pMax.y, p.y);
-  ret.pMax.z = std::max(b.pMax.z, p.z);
-  return ret;
-}
+typedef BBox3<real_t> bbox3;
 
-inline BBox make_union(const BBox &a, const BBox &b) {
-  BBox ret = make_union(a, b.pMin);
-  return make_union(ret, b.pMax);
-}
+/// Checks if both bounding boxes overlap
+/// \param a first bounding box
+/// \param b second bounding box
+/// \return true if they overlap
+template <typename T> bool overlaps(const BBox3<T> &a, const BBox3<T> &b);
+/// \tparam T coordinates type
+/// \param b bounding box
+/// \param p point
+/// \return a new bounding box that encopasses **b** and **p**
+template <typename T>
+BBox3<T> make_union(const BBox3<T> &b, const Point3<T> &p);
+/// \tparam T coordinates type
+/// \param a bounding box
+/// \param b bounding box
+/// \return a new bounding box that encopasses **a** and **b**
+template <typename T> BBox3<T> make_union(const BBox3<T> &a, const BBox3<T> &b);
+/// \tparam T coordinates type
+/// \param a bounding box
+/// \param b bounding box
+/// \return a new bbox resulting from the intersection of **a** and **b**
+template <typename T> BBox3<T> intersect(const BBox3<T> &a, const BBox3<T> &b);
 
+#include "bbox.inl"
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

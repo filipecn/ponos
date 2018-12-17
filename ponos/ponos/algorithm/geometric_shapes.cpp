@@ -28,7 +28,7 @@
 
 namespace ponos {
 
-RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
+RawMesh *create_icosphere_mesh(const point3 &center, float radius,
                                size_t divisions, bool generateNormals,
                                bool generateUVs) {
   auto *mesh = new RawMesh();
@@ -70,7 +70,7 @@ RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
     // normalize positions
     size_t n = mesh->positions.size() / 3;
     for (size_t i = 0; i < n; i++) {
-      Vector3 v(&mesh->positions[i * 3]);
+      vec3 v(&mesh->positions[i * 3]);
       v = normalize(v);
       mesh->positions[i * 3 + 0] = v.x;
       mesh->positions[i * 3 + 1] = v.y;
@@ -81,9 +81,10 @@ RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
   std::function<size_t(int, int)> midPoint = [&](int a, int b) -> size_t {
     std::pair<int, int> key(std::min(a, b), std::max(a, b));
     size_t n = mesh->positions.size() / 3;
-    if (indicesCache.find(key) != indicesCache.end()) return indicesCache[key];
-    Point3 pa(&mesh->positions[3 * a]);
-    Point3 pb(&mesh->positions[3 * b]);
+    if (indicesCache.find(key) != indicesCache.end())
+      return indicesCache[key];
+    point3 pa(&mesh->positions[3 * a]);
+    point3 pb(&mesh->positions[3 * b]);
     auto pm = pa + (pb - pa) * 0.5f;
     mesh->addPosition({pm.x, pm.y, pm.z});
     return n;
@@ -106,7 +107,7 @@ RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
   // normalize positions
   size_t n = mesh->positions.size() / 3;
   for (size_t i = 0; i < n; i++) {
-    Vector3 v(&mesh->positions[i * 3]);
+    vec3 v(&mesh->positions[i * 3]);
     v = normalize(v);
     mesh->positions[i * 3 + 0] = v.x;
     mesh->positions[i * 3 + 1] = v.y;
@@ -122,9 +123,9 @@ RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
     mesh->normalDescriptor.elementSize = 3;
   }
   if (generateUVs) {
-    std::function<Point2(float, float, float)> parametric =
-        [](float x, float y, float z) -> Point2 {
-      return Point2(std::atan2(y, x), std::acos(z));
+    std::function<point2(float, float, float)> parametric =
+        [](float x, float y, float z) -> point2 {
+      return point2(std::atan2(y, x), std::acos(z));
     };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
@@ -141,15 +142,15 @@ RawMesh *create_icosphere_mesh(const Point3 &center, float radius,
   mesh->meshDescriptor.elementSize = 3;
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 3;
-  mesh->apply(scale(radius, radius, radius) * translate(Vector3(center)));
+  mesh->apply(scale(radius, radius, radius) * translate(vec3(center)));
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
   return mesh;
 }
 
-RawMesh *create_quad_mesh(const Point3 &p1, const Point3 &p2, const Point3 &p3,
-                          const Point3 &p4, bool generateNormals,
+RawMesh *create_quad_mesh(const point3 &p1, const point3 &p2, const point3 &p3,
+                          const point3 &p4, bool generateNormals,
                           bool generateUVs) {
   auto *mesh = new RawMesh();
   mesh->addPosition({p1.x, p1.y, p1.z});
@@ -189,8 +190,8 @@ RawMesh *create_quad_mesh(const Point3 &p1, const Point3 &p2, const Point3 &p3,
   return mesh;
 }
 
-RawMesh *create_quad_wireframe_mesh(const Point3 &p1, const Point3 &p2,
-                                    const Point3 &p3, const Point3 &p4,
+RawMesh *create_quad_wireframe_mesh(const point3 &p1, const point3 &p2,
+                                    const point3 &p3, const point3 &p4,
                                     bool triangleFaces) {
   auto *mesh = new RawMesh();
   mesh->addPosition({p1.x, p1.y, p1.z});
@@ -218,7 +219,7 @@ RawMesh *create_quad_wireframe_mesh(const Point3 &p1, const Point3 &p2,
   return mesh;
 }
 
-RawMeshSPtr icosphere(const Point2 &center, float radius, size_t divisions,
+RawMeshSPtr icosphere(const point2 &center, float radius, size_t divisions,
                       bool generateNormals) {
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   // icosahedron
@@ -235,7 +236,7 @@ RawMeshSPtr icosphere(const Point2 &center, float radius, size_t divisions,
     // normalize positions
     size_t n = mesh->positions.size() / 2;
     for (size_t i = 0; i < n; i++) {
-      Vector2 v(&mesh->positions[i * 2]);
+      vec2 v(&mesh->positions[i * 2]);
       v = normalize(v);
       mesh->positions[i * 2 + 0] = v.x;
       mesh->positions[i * 2 + 1] = v.y;
@@ -245,9 +246,10 @@ RawMeshSPtr icosphere(const Point2 &center, float radius, size_t divisions,
   std::function<size_t(int, int)> midPoint = [&](int a, int b) -> size_t {
     std::pair<int, int> key(std::min(a, b), std::max(a, b));
     size_t n = mesh->positions.size() / 2;
-    if (indicesCache.find(key) != indicesCache.end()) return indicesCache[key];
-    Point2 pa(&mesh->positions[2 * a]);
-    Point2 pb(&mesh->positions[2 * b]);
+    if (indicesCache.find(key) != indicesCache.end())
+      return indicesCache[key];
+    point2 pa(&mesh->positions[2 * a]);
+    point2 pb(&mesh->positions[2 * b]);
     auto pm = pa + (pb - pa) * 0.5f;
     mesh->addPosition({pm.x, pm.y});
     return n;
@@ -265,7 +267,7 @@ RawMeshSPtr icosphere(const Point2 &center, float radius, size_t divisions,
   // normalize positions
   size_t n = mesh->positions.size() / 2;
   for (size_t i = 0; i < n; i++) {
-    Vector2 v(&mesh->positions[i * 2]);
+    vec2 v(&mesh->positions[i * 2]);
     v = normalize(v);
     mesh->positions[i * 2 + 0] = v.x;
     mesh->positions[i * 2 + 1] = v.y;
@@ -286,14 +288,14 @@ RawMeshSPtr icosphere(const Point2 &center, float radius, size_t divisions,
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 2;
   mesh->apply(scale(radius, radius, 0) *
-              translate(Vector3(center.x, center.y, 0)));
+              translate(vec3(center.x, center.y, 0)));
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
   return mesh;
 }
 
-RawMeshSPtr icosphere(const Point3 &center, float radius, size_t divisions,
+RawMeshSPtr icosphere(const point3 &center, float radius, size_t divisions,
                       bool generateNormals, bool generateUVs) {
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   // icosahedron
@@ -334,7 +336,7 @@ RawMeshSPtr icosphere(const Point3 &center, float radius, size_t divisions,
     // normalize positions
     size_t n = mesh->positions.size() / 3;
     for (size_t i = 0; i < n; i++) {
-      Vector3 v(&mesh->positions[i * 3]);
+      vec3 v(&mesh->positions[i * 3]);
       v = normalize(v);
       mesh->positions[i * 3 + 0] = v.x;
       mesh->positions[i * 3 + 1] = v.y;
@@ -345,9 +347,10 @@ RawMeshSPtr icosphere(const Point3 &center, float radius, size_t divisions,
   std::function<size_t(int, int)> midPoint = [&](int a, int b) -> size_t {
     std::pair<int, int> key(std::min(a, b), std::max(a, b));
     size_t n = mesh->positions.size() / 3;
-    if (indicesCache.find(key) != indicesCache.end()) return indicesCache[key];
-    Point3 pa(&mesh->positions[3 * a]);
-    Point3 pb(&mesh->positions[3 * b]);
+    if (indicesCache.find(key) != indicesCache.end())
+      return indicesCache[key];
+    point3 pa(&mesh->positions[3 * a]);
+    point3 pb(&mesh->positions[3 * b]);
     auto pm = pa + (pb - pa) * 0.5f;
     mesh->addPosition({pm.x, pm.y, pm.z});
     return n;
@@ -370,7 +373,7 @@ RawMeshSPtr icosphere(const Point3 &center, float radius, size_t divisions,
   // normalize positions
   size_t n = mesh->positions.size() / 3;
   for (size_t i = 0; i < n; i++) {
-    Vector3 v(&mesh->positions[i * 3]);
+    vec3 v(&mesh->positions[i * 3]);
     v = normalize(v);
     mesh->positions[i * 3 + 0] = v.x;
     mesh->positions[i * 3 + 1] = v.y;
@@ -386,9 +389,9 @@ RawMeshSPtr icosphere(const Point3 &center, float radius, size_t divisions,
     mesh->normalDescriptor.elementSize = 3;
   }
   if (generateUVs) {
-    std::function<Point2(float, float, float)> parametric =
-        [](float x, float y, float z) -> Point2 {
-      return Point2(std::atan2(y, x), std::acos(z));
+    std::function<point2(float, float, float)> parametric =
+        [](float x, float y, float z) -> point2 {
+      return point2(std::atan2(y, x), std::acos(z));
     };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
@@ -405,14 +408,14 @@ RawMeshSPtr icosphere(const Point3 &center, float radius, size_t divisions,
   mesh->meshDescriptor.elementSize = 3;
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 3;
-  mesh->apply(scale(radius, radius, radius) * translate(Vector3(center)));
+  mesh->apply(scale(radius, radius, radius) * translate(vec3(center)));
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
   return mesh;
 }
 
-RawMeshSPtr RawMeshes::segment(const Point2 &a, const Point2 &b) {
+RawMeshSPtr RawMeshes::segment(const point2 &a, const point2 &b) {
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   mesh->addPosition({a.x, a.y});
   mesh->addPosition({b.x, b.y});
@@ -433,7 +436,7 @@ RawMeshSPtr RawMeshes::segment(const Point2 &a, const Point2 &b) {
   return mesh;
 }
 
-RawMeshSPtr RawMeshes::segment(const Point3 &a, const Point3 &b) {
+RawMeshSPtr RawMeshes::segment(const point3 &a, const point3 &b) {
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   mesh->addPosition({a.x, a.y, a.z});
   mesh->addPosition({b.x, b.y, b.z});
@@ -469,16 +472,16 @@ RawMeshSPtr RawMeshes::cube(const ponos::Transform &transform,
   mesh->addPosition({1.f, 0.f, 1.f});
   mesh->addPosition({0.f, 1.f, 1.f});
   mesh->addPosition({1.f, 1.f, 1.f});
-  mesh->addFace({0, 2, 1});  // back
-  mesh->addFace({1, 2, 3});  // back
-  mesh->addFace({4, 5, 6});  // front
-  mesh->addFace({6, 5, 7});  // front
-  mesh->addFace({0, 4, 6});  // left
-  mesh->addFace({0, 6, 2});  // left
-  mesh->addFace({5, 1, 7});  // right
-  mesh->addFace({1, 3, 7});  // right
-  mesh->addFace({0, 1, 5});  // bottom
-  mesh->addFace({0, 5, 4});  // bottom
+  mesh->addFace({0, 2, 1}); // back
+  mesh->addFace({1, 2, 3}); // back
+  mesh->addFace({4, 5, 6}); // front
+  mesh->addFace({6, 5, 7}); // front
+  mesh->addFace({0, 4, 6}); // left
+  mesh->addFace({0, 6, 2}); // left
+  mesh->addFace({5, 1, 7}); // right
+  mesh->addFace({1, 3, 7}); // right
+  mesh->addFace({0, 1, 5}); // bottom
+  mesh->addFace({0, 5, 4}); // bottom
   // fix normal and uvs indices
   for (auto &i : mesh->indices)
     i.normalIndex = i.texcoordIndex = i.positionIndex;
@@ -522,16 +525,16 @@ RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,
   mesh->addPosition({0.f, 1.f, 1.f});
   mesh->addPosition({1.f, 1.f, 1.f});
   if (triangleFaces) {
-    mesh->addFace({0, 2, 2, 1});  // back
-    mesh->addFace({1, 2, 2, 3});  // back
-    mesh->addFace({4, 5, 5, 6});  // front
-    mesh->addFace({6, 5, 5, 7});  // front
-    mesh->addFace({0, 4, 4, 6});  // left
-    mesh->addFace({0, 6, 6, 2});  // left
-    mesh->addFace({5, 1, 1, 7});  // right
-    mesh->addFace({1, 3, 3, 7});  // right
-    mesh->addFace({0, 1, 1, 5});  // bottom
-    mesh->addFace({0, 5, 5, 4});  // bottom
+    mesh->addFace({0, 2, 2, 1}); // back
+    mesh->addFace({1, 2, 2, 3}); // back
+    mesh->addFace({4, 5, 5, 6}); // front
+    mesh->addFace({6, 5, 5, 7}); // front
+    mesh->addFace({0, 4, 4, 6}); // left
+    mesh->addFace({0, 6, 6, 2}); // left
+    mesh->addFace({5, 1, 1, 7}); // right
+    mesh->addFace({1, 3, 3, 7}); // right
+    mesh->addFace({0, 1, 1, 5}); // bottom
+    mesh->addFace({0, 5, 5, 4}); // bottom
   } else {
     mesh->addFace({0, 1});
     mesh->addFace({0, 2});
@@ -561,4 +564,4 @@ RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,
   return mesh;
 }
 
-}  // namespace ponos
+} // namespace ponos

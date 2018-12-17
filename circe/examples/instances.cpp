@@ -56,7 +56,7 @@ int main() {
       float t[16];
       (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
        ponos::translate(ponos::vec3(sampler.sample(
-           ponos::BBox(ponos::Point3(-5, 0, 0), ponos::Point3(5, 5, 5))))))
+           ponos::BBox3(ponos::Point3(-5, 0, 0), ponos::Point3(5, 5, 5))))))
           .matrix()
           .column_major(t);
       for (size_t k = 0; k < 16; k++)

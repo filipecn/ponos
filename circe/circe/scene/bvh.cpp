@@ -54,7 +54,7 @@ BVH::BVHNode *BVH::recursiveBuild(std::vector<BVHElement> &buildData,
                                   std::vector<uint32_t> &orderedElements) {
   (*totalNodes)++;
   BVHNode *node = new BVHNode();
-  ponos::BBox bbox;
+  ponos::BBox3 bbox;
   for (uint32_t i = start; i < end; ++i)
     bbox = ponos::make_union(bbox, buildData[i].bounds);
   // compute all bounds
@@ -69,13 +69,13 @@ BVH::BVHNode *BVH::recursiveBuild(std::vector<BVHElement> &buildData,
     node->initLeaf(firstElementOffset, nElements, bbox);
   } else {
     // compute bound of primitives
-    ponos::BBox centroidBounds;
+    ponos::BBox3 centroidBounds;
     for (uint32_t i = start; i < end; i++)
       centroidBounds = ponos::make_union(centroidBounds, buildData[i].centroid);
     int dim = centroidBounds.maxExtent();
     // partition primitives
     uint32_t mid = (start + end) / 2;
-    if (centroidBounds.pMax[dim] == centroidBounds.pMin[dim]) {
+    if (centroidBounds.upper[dim] == centroidBounds.lower[dim]) {
       node->initInterior(
           dim,
           recursiveBuild(buildData, start, mid, totalNodes, orderedElements),
@@ -155,7 +155,7 @@ int BVH::intersect(const ponos::Ray3 &ray, float *t) {
   return hit;
 }
 
-bool BVH::intersect(const ponos::BBox &bounds, const ponos::Ray3 &ray,
+bool BVH::intersect(const ponos::BBox3 &bounds, const ponos::Ray3 &ray,
                     const ponos::vec3 &invDir,
                     const uint32_t dirIsNeg[3]) const {
   float hit1, hit2;

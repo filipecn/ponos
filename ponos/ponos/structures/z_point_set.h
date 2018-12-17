@@ -96,16 +96,16 @@ public:
           zps_.points_[cur_].zcode < upperBound_;
     }
     /// \return position of the current element in world coordinates
-    Point3 getWorldPosition() {
+    point3 getWorldPosition() {
       FATAL_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
       FATAL_ASSERT(zps_.points_[cur_].id < zps_.positions_.size());
       return zps_.positions_[zps_.points_[cur_].id];
     }
     /// sets a new position to current element
     /// \param p new position value
-    void setPosition(const Point3 &p) {
+    void setPosition(const point3 &p) {
       zps_.positions_[zps_.points_[cur_].id] = p;
-      Point3 gp = zps_.toSet_(p);
+      point3 gp = zps_.toSet_(p);
       zps_.points_[cur_].zcode = computeIndex(gp);
     }
     /// \return id of current element
@@ -149,7 +149,7 @@ public:
       return true;
     })
         : Octree<NodeElement>(), zps_(z) {
-      this->root_ = new Octree<NodeElement>::Node(BBox(Point3(), zps_.resolution_));
+      this->root_ = new Octree<NodeElement>::Node(bbox3(point3(), zps_.resolution_));
       this->count_++;
       this->root_->data.zcode = 0;
       this->refine(this->root_,
@@ -175,8 +175,8 @@ public:
     /// Searches elements inside an given cube in world coordinates
     /// \param bbox search region in world coordinates
     /// \param f callback to process each element found
-    void iteratePoints(const BBox &bbox, const std::function<void(uint)> &f) {
-      BBox gbbox = zps_.toSet_(bbox);
+    void iteratePoints(const bbox3 &bbox, const std::function<void(uint)> &f) {
+      bbox3 gbbox = zps_.toSet_(bbox);
       traverse([&](Octree<NodeElement>::Node &node) -> bool {
         if (gbbox.contains(node.region()) || bbox_bbox_intersection(gbbox, node.region())) {
           uint upperBound = node.data.zcode + (1 << ((zps_.nbits_ - node.level()) * 3));
@@ -222,23 +222,23 @@ public:
   // INTERFACE
 
   uint size() override;
-  uint add(Point3 p) override;
-  void setPosition(uint i, Point3 p) override;
+  uint add(point3 p) override;
+  void setPosition(uint i, point3 p) override;
   void remove(uint i) override;
-  Point3 operator[](uint i) const override;
-  void search(const BBox &b, const std::function<void(uint)> &f) override;
-  void iteratePoints(const std::function<void(uint, Point3)> &f) const override;
+  point3 operator[](uint i) const override;
+  void search(const bbox3 &b, const std::function<void(uint)> &f) override;
+  void iteratePoints(const std::function<void(uint, point3)> &f) const override;
   int intersect(const Ray3& r, float e) override;
   void cast(const Ray3& r, const std::function<void(uint)>& f) override;
 private:
   /// morton code transform
   /// \return morton code of coordinate **p**
-  static uint computeIndex(const Point3 &p);
+  static uint computeIndex(const point3 &p);
   search_tree *tree_;   ///< tree for search operations
-  Point3 resolution_;   ///< maximum coordinates
+  point3 resolution_;   ///< maximum coordinates
   Transform toSet_;     ///< map to underling grid
   std::vector<PointElement> points_; ///< array of point elements
-  std::vector<Point3> positions_;    ///< points positions
+  std::vector<point3> positions_;    ///< points positions
   std::vector<uint> indices_;        ///< map point id -> points_
   uint end_;          ///< current number of active point element
   uint lastId_;       ///< last point element id generated

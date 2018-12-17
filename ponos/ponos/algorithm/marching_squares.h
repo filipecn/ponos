@@ -34,7 +34,7 @@
 namespace ponos {
 
 template <typename T>
-void marchingSquares(const FieldInterface2D<T> *field, const BBox2D &region,
+void marchingSquares(const FieldInterface2D<T> *field, const bbox2 &region,
                      size_t xResolution, size_t yResolution, RawMesh *rm,
                      T error = 1e-8) {
   RegularGrid2D<int> xEdges(xResolution, yResolution + 1, -1);
@@ -47,7 +47,7 @@ void marchingSquares(const FieldInterface2D<T> *field, const BBox2D &region,
   grid.setDimensions(xResolution + 1, yResolution + 1);
   rm->clear();
   grid.forEach([&](T &v, int i, int j) {
-    Point2 wp = grid.dataWorldPosition(i, j);
+    point2 wp = grid.dataWorldPosition(i, j);
     v = field->sample(wp.x, wp.y);
   });
   //  3 _2__ 2
@@ -61,8 +61,8 @@ void marchingSquares(const FieldInterface2D<T> *field, const BBox2D &region,
     m |= (grid(ij + ivec2(1, 1)) < zero) ? 4 : 0;
     m |= (grid(ij + ivec2(0, 1)) < zero) ? 8 : 0;
     cells(ij) = m;
-    Point2 wp[2] = {grid.toWorld(Point2(ij[0], ij[1])),
-                    grid.toWorld(Point2(ij[0] + 1, ij[1] + 1))};
+    point2 wp[2] = {grid.toWorld(point2(ij[0], ij[1])),
+                    grid.toWorld(point2(ij[0] + 1, ij[1] + 1))};
     for (int i = 0; i < 2; i++) {
       if (xEdges(ij + ivec2(0, i)) < 0 &&
           (((m >> (i * 2)) & 1) ^ ((m >> (i * 2 + 1)) & 1))) {

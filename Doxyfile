@@ -1005,7 +1005,7 @@ SOURCE_BROWSER         = NO
 INLINE_SOURCES         = NO
 
 # Setting the STRIP_CODE_COMMENTS tag to YES will instruct doxygen to hide any
-# special comment blocks from generated source code fragments. Normal C, C++ and
+# special comment blocks from generated source code fragments. Normal3 C, C++ and
 # Fortran comments will always remain visible.
 # The default value is: YES.
 
@@ -1210,7 +1210,7 @@ HTML_COLORSTYLE_SAT    = 100
 # gradually make the output lighter, whereas values above 100 make the output
 # darker. The value divided by 100 is the actual gamma applied, so 80 represents
 # a gamma of 0.8, The value 220 represents a gamma of 2.2, and 100 does not
-# change the gamma.
+# change the gammaBound.
 # Minimum value: 40, maximum value: 240, default value: 80.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 

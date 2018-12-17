@@ -51,7 +51,7 @@ public:
     /// Constructor
     /// \param r root's region on space
     /// \param p [opitional] a parent node, if so, the new node becomes its child
-    explicit Node(const BBox &r, Node *p = nullptr) : bbox_(r), level_(0), parent(p) {
+    explicit Node(const bbox3 &r, Node *p = nullptr) : bbox_(r), level_(0), parent(p) {
       for (int i = 0; i < 8; i++)
         children[i] = nullptr;
       if (parent)
@@ -73,13 +73,13 @@ public:
     uint level() const { return level_; }
     /// region in space the node occupies
     /// \return a bounding box represent the node's region
-    BBox region() const { return bbox_; }
+    bbox3 region() const { return bbox_; }
     NodeData data;
     Node *children[8];
 
   private:
     uint id_;         ///< node's unique id on the tree
-    BBox bbox_;       ///< region in space this node occupies
+    bbox3 bbox_;       ///< region in space this node occupies
     uint level_;      ///< level on the tree of this node
     Node *parent;     ///< pointer to parent node
     uint childNumber; ///< which child is this
@@ -89,17 +89,17 @@ public:
   /// Builds full octree
   /// \param region root's region on space
   /// \param height tree's height
-  Octree(const BBox &region, uint height);
+  Octree(const bbox3 &region, uint height);
   /// Constructor
   /// \param region  root's region on space
   /// \param f refinement criteria
-  Octree(const BBox &region, const std::function<bool(Node &node)> &f);
+  Octree(const bbox3 &region, const std::function<bool(Node &node)> &f);
   /// Constructor
   /// \param region root's region on space
   /// \param rootData root's data
   /// \param f refinement criteria
   /// \param sf **[opitional]** called right after children are created (pre-order traversal)
-  Octree(const BBox &region, NodeData rootData,
+  Octree(const bbox3 &region, NodeData rootData,
          const std::function<bool(Node &node)> &f,
          std::function<void(Node &)> sf = nullptr);
   virtual ~Octree();

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_STRUCTURES_RAW_MESH_H
 #define PONOS_STRUCTURES_RAW_MESH_H
@@ -86,11 +86,11 @@ public:
   void addFace(std::initializer_list<int> l);
   /// \param i element index
   /// \returns bbox of element (object space).
-  ponos::BBox elementBBox(size_t i) const;
+  bbox3 elementBBox(size_t i) const;
   /// \param e element index
   /// \param v position index (inside element) [0..**elementSize**]
   /// \return position **v** from element **e**.
-  ponos::Point3 positionElement(size_t e, size_t v) const;
+  point3 positionElement(size_t e, size_t v) const;
   /// Builds a single array with interleaved information for vertex buffer
   /// (vertex | normal | texcoords | ... )
   void buildInterleavedData();
@@ -119,7 +119,7 @@ public:
   std::vector<uint> positionsIndices;
   std::vector<uint> normalsIndices;
   std::vector<uint> texcoordsIndices;
-  BBox bbox; //!< bounding box in object space
+  bbox3 bbox; //!< bounding box in object space
   GeometricPrimitiveType primitiveType;
 };
 
@@ -128,11 +128,11 @@ public:
  * \param bbox **[in]** Bounding box to be fitted
  * The rm must have this Bounding Box computed before passsing to this function.
  */
-void fitToBBox(RawMesh *rm, const BBox2D &bbox);
+void fitToBBox(RawMesh *rm, const bbox2 &bbox);
 
 std::ostream &operator<<(std::ostream &os, RawMesh &rm);
 
 typedef std::shared_ptr<RawMesh> RawMeshSPtr;
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_STRUCTURES_RAW_MESH_H

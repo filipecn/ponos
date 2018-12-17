@@ -80,7 +80,7 @@ void UserCamera2D::update() {
   projection->transform.computeInverse();
 }
 
-void UserCamera2D::fit(const ponos::BBox2D &b, float delta) {
+void UserCamera2D::fit(const ponos::BBox2 &b, float delta) {
   // setPos(ponos::vec2(b.center()));
   // setZoom((b.size(b.maxExtent()) / 2.f) * delta);
   setPosition(ponos::Point3(b.center().x, b.center().y, 1.f));

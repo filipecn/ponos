@@ -9,11 +9,11 @@ int main() {
   circe::loadPLY(
       "/run/media/filipecn/OS/Users/fuiri/Desktop/2d.tar/2d/PLY/circle.ply",
       &rm);
-  std::cout << rm.bbox.pMin << rm.bbox.pMax << std::endl;
+  std::cout << rm.bbox.lower << rm.bbox.upper << std::endl;
   app.init();
   app.addViewport2D(0, 0, 800, 800);
   app.getCamera<circe::UserCamera2D>(0)->fit(
-      ponos::BBox2D(rm.bbox.pMin.xy(), rm.bbox.pMax.xy()), 1.1f);
+      ponos::BBox2(rm.bbox.lower.xy(), rm.bbox.upper.xy()), 1.1f);
   //   app.scene.add(new circe::HEMeshObject(
   //   new ponos::HEMesh2DF(&rm),
   //   new

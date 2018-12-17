@@ -16,16 +16,16 @@ set(SOURCES
 
 #if(NOT WIN32 AND NOT NOOPENVDB)
 #  set(HEADERS ${HEADERS}
-#    src/structures/vdb_grid.h
-#    src/structures/vdb_level_set.h
-#    src/structures/vdb_mac_grid.h
-#		#    src/structures/vdb_particle_grid.h
+#    helios/structures/vdb_grid.h
+#    helios/structures/vdb_level_set.h
+#    helios/structures/vdb_mac_grid.h
+#		#    helios/structures/vdb_particle_grid.h
 #  )
 #  set(SOURCES ${SOURCES}
-#    src/structures/vdb_grid.cpp
-#    src/structures/vdb_level_set.cpp
-#    src/structures/vdb_mac_grid.cpp
-#		#    src/structures/vdb_particle_grid.cpp
+#    helios/structures/vdb_grid.cpp
+#    helios/structures/vdb_level_set.cpp
+#    helios/structures/vdb_mac_grid.cpp
+#		#    helios/structures/vdb_particle_grid.cpp
 #  )
 #endif(NOT WIN32 AND NOT NOOPENVDB)
 

@@ -18,7 +18,7 @@ private:
 
 class LevelSet2D { //: CRegularGrid2D<float> {
 public:
-  LevelSet2D(const ponos::RawMesh *m, const ponos::Transform2D &t);
+  LevelSet2D(const ponos::RawMesh *m, const ponos::Transform2 &t);
   LevelSet2D(const ivec2 &d, const vec2 cellSize = vec2(1.f),
              const vec2 &offset = vec2());
   void setMesh(const RawMesh *mesh);

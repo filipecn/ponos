@@ -69,7 +69,7 @@ ponos::Plane Camera::viewPlane(ponos::Point3 p) const {
     n = ponos::vec3(0, 0, 0);
   else
     n = ponos::normalize(n);
-  return Plane(ponos::Normal(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z)));
+  return Plane(ponos::Normal3(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z)));
 }*/
 
 } // circe namespace

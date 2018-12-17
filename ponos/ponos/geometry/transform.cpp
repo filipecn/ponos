@@ -3,35 +3,35 @@
 
 namespace ponos {
 
-Transform2D::Transform2D(const Matrix3x3 &mat, const Matrix3x3 inv_mat)
+Transform2::Transform2(const mat3 &mat, const mat3 inv_mat)
     : m(mat), m_inv(inv_mat) {}
 
-Transform2D::Transform2D(const BBox2D &bbox) {
-  m.m[0][0] = bbox.pMax[0] - bbox.pMin[0];
-  m.m[1][1] = bbox.pMax[1] - bbox.pMin[1];
-  m.m[0][2] = bbox.pMin[0];
-  m.m[1][2] = bbox.pMin[1];
+Transform2::Transform2(const bbox2 &bbox) {
+  m.m[0][0] = bbox.upper[0] - bbox.lower[0];
+  m.m[1][1] = bbox.upper[1] - bbox.lower[1];
+  m.m[0][2] = bbox.lower[0];
+  m.m[1][2] = bbox.lower[1];
   m_inv = inverse(m);
 }
 
-void Transform2D::reset() { m.setIdentity(); }
+void Transform2::reset() { m.setIdentity(); }
 
-void Transform2D::translate(const Vector2 &d) {
+void Transform2::translate(const vec2 &d) {
   // TODO update inverse and make a better implementarion
   UNUSED_VARIABLE(d);
 }
 
-void Transform2D::scale(float x, float y) {
+void Transform2::scale(real_t x, real_t y) {
   // TODO update inverse and make a better implementarion
   UNUSED_VARIABLE(x);
   UNUSED_VARIABLE(y);
 }
 
-void Transform2D::rotate(float angle) {
-  float sin_a = sinf(TO_RADIANS(angle));
-  float cos_a = cosf(TO_RADIANS(angle));
-  Matrix3x3 M(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
-  Vector2 t = getTranslate();
+void Transform2::rotate(real_t angle) {
+  real_t sin_a = sinf(TO_RADIANS(angle));
+  real_t cos_a = cosf(TO_RADIANS(angle));
+  mat3 M(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
+  vec2 t = getTranslate();
   m.m[0][2] = m.m[1][2] = 0;
   m = m * M;
   m.m[0][2] = t.x;
@@ -40,52 +40,51 @@ void Transform2D::rotate(float angle) {
   m_inv = inverse(m);
 }
 
-Transform2D rotate(float angle) {
-  float sin_a = sinf(TO_RADIANS(angle));
-  float cos_a = cosf(TO_RADIANS(angle));
-  Matrix3x3 m(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
-  return Transform2D(m, transpose(m));
+Transform2 rotate(real_t angle) {
+  real_t sin_a = sinf(TO_RADIANS(angle));
+  real_t cos_a = cosf(TO_RADIANS(angle));
+  mat3 m(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
+  return Transform2(m, transpose(m));
 }
 
-Transform2D translate(const Vector2 &v) {
-  Matrix3x3 m(1.f, 0.f, v.x, 0.f, 1.f, v.y, 0.f, 0.f, 1.f);
-  Matrix3x3 m_inv(1.f, 0.f, -v.x, 0.f, 1.f, -v.y, 0.f, 0.f, 1.f);
-  return Transform2D(m, m_inv);
+Transform2 translate(const vec2 &v) {
+  mat3 m(1.f, 0.f, v.x, 0.f, 1.f, v.y, 0.f, 0.f, 1.f);
+  mat3 m_inv(1.f, 0.f, -v.x, 0.f, 1.f, -v.y, 0.f, 0.f, 1.f);
+  return Transform2(m, m_inv);
 }
 
-Transform2D inverse(const Transform2D &t) { return Transform2D(t.m_inv, t.m); }
+Transform2 inverse(const Transform2 &t) { return Transform2(t.m_inv, t.m); }
 
-Transform::Transform(const Matrix4x4 &mat) : m(mat), m_inv(inverse(mat)) {}
+Transform::Transform(const mat4 &mat) : m(mat), m_inv(inverse(mat)) {}
 
-Transform::Transform(const Matrix4x4 &mat, const Matrix4x4 inv_mat)
+Transform::Transform(const mat4 &mat, const mat4& inv_mat)
     : m(mat), m_inv(inv_mat) {}
 
-Transform::Transform(const float mat[4][4]) {
-  m = Matrix4x4(mat[0][0], mat[0][1], mat[0][2], mat[0][3], mat[1][0],
-                mat[1][1], mat[1][2], mat[1][3], mat[2][0], mat[2][1],
-                mat[2][2], mat[2][3], mat[3][0], mat[3][1], mat[3][2],
-                mat[3][3]);
+Transform::Transform(const real_t mat[4][4]) {
+  m = mat4(mat[0][0], mat[0][1], mat[0][2], mat[0][3], mat[1][0], mat[1][1],
+           mat[1][2], mat[1][3], mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+           mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
   m_inv = inverse(m);
 }
 
-Transform::Transform(const BBox &bbox) {
-  m.m[0][0] = bbox.pMax[0] - bbox.pMin[0];
-  m.m[1][1] = bbox.pMax[1] - bbox.pMin[1];
-  m.m[2][2] = bbox.pMax[2] - bbox.pMin[2];
-  m.m[0][3] = bbox.pMin[0];
-  m.m[1][3] = bbox.pMin[1];
-  m.m[2][3] = bbox.pMin[2];
+Transform::Transform(const bbox3 &bbox) {
+  m.m[0][0] = bbox.upper[0] - bbox.lower[0];
+  m.m[1][1] = bbox.upper[1] - bbox.lower[1];
+  m.m[2][2] = bbox.upper[2] - bbox.lower[2];
+  m.m[0][3] = bbox.lower[0];
+  m.m[1][3] = bbox.lower[1];
+  m.m[2][3] = bbox.lower[2];
   m_inv = inverse(m);
 }
 
 void Transform::reset() { m.setIdentity(); }
 
-void Transform::translate(const Vector3 &d) {
+void Transform::translate(const vec3 &d) {
   // TODO update inverse and make a better implementarion
   UNUSED_VARIABLE(d);
 }
 
-void Transform::scale(float x, float y, float z) {
+void Transform::scale(real_t x, real_t y, real_t z) {
   // TODO update inverse and make a better implementarion
   UNUSED_VARIABLE(x);
   UNUSED_VARIABLE(y);
@@ -93,19 +92,19 @@ void Transform::scale(float x, float y, float z) {
 }
 
 bool Transform::swapsHandedness() const {
-  float det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
-              (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
-              (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
-  return det < 0.f;
+  real_t det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
+               (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
+               (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
+  return det < 0;
 }
 
-Transform2D scale(float x, float y) {
-  Matrix3x3 m(x, 0, 0, 0, y, 0, 0, 0, 1);
-  Matrix3x3 inv(1.f / x, 0, 0, 0, 1.f / y, 0, 0, 0, 1);
-  return Transform2D(m, inv);
+Transform2 scale(real_t x, real_t y) {
+  mat3 m(x, 0, 0, 0, y, 0, 0, 0, 1);
+  mat3 inv(1.f / x, 0, 0, 0, 1.f / y, 0, 0, 0, 1);
+  return Transform2(m, inv);
 }
 
-Transform segmentToSegmentTransform(Point3 a, Point3 b, Point3 c, Point3 d) {
+Transform segmentToSegmentTransform(point3 a, point3 b, point3 c, point3 d) {
   // Consider two bases a b e f and c d g h
   // TODO implement
   return Transform();
@@ -113,50 +112,49 @@ Transform segmentToSegmentTransform(Point3 a, Point3 b, Point3 c, Point3 d) {
 
 Transform inverse(const Transform &t) { return Transform(t.m_inv, t.m); }
 
-Transform translate(const Vector3 &d) {
-  Matrix4x4 m(1.f, 0.f, 0.f, d.x, 0.f, 1.f, 0.f, d.y, 0.f, 0.f, 1.f, d.z, 0.f,
-              0.f, 0.f, 1.f);
-  Matrix4x4 m_inv(1.f, 0.f, 0.f, -d.x, 0.f, 1.f, 0.f, -d.y, 0.f, 0.f, 1.f, -d.z,
-                  0.f, 0.f, 0.f, 1.f);
+Transform translate(const vec3 &d) {
+  mat4 m(1.f, 0.f, 0.f, d.x, 0.f, 1.f, 0.f, d.y, 0.f, 0.f, 1.f, d.z, 0.f, 0.f,
+         0.f, 1.f);
+  mat4 m_inv(1.f, 0.f, 0.f, -d.x, 0.f, 1.f, 0.f, -d.y, 0.f, 0.f, 1.f, -d.z, 0.f,
+             0.f, 0.f, 1.f);
   return Transform(m, m_inv);
 }
 
-Transform scale(float x, float y, float z) {
-  Matrix4x4 m(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
-  Matrix4x4 inv(1.f / x, 0, 0, 0, 0, 1.f / y, 0, 0, 0, 0, 1.f / z, 0, 0, 0, 0,
-                1);
+Transform scale(real_t x, real_t y, real_t z) {
+  mat4 m(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
+  mat4 inv(1.f / x, 0, 0, 0, 0, 1.f / y, 0, 0, 0, 0, 1.f / z, 0, 0, 0, 0, 1);
   return Transform(m, inv);
 }
 
-Transform rotateX(float angle) {
-  float sin_a = sinf(TO_RADIANS(angle));
-  float cos_a = cosf(TO_RADIANS(angle));
-  Matrix4x4 m(1.f, 0.f, 0.f, 0.f, 0.f, cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a,
-              0.f, 0.f, 0.f, 0.f, 1.f);
+Transform rotateX(real_t angle) {
+  real_t sin_a = sinf(TO_RADIANS(angle));
+  real_t cos_a = cosf(TO_RADIANS(angle));
+  mat4 m(1.f, 0.f, 0.f, 0.f, 0.f, cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f,
+         0.f, 0.f, 0.f, 1.f);
   return Transform(m, transpose(m));
 }
 
-Transform rotateY(float angle) {
-  float sin_a = sinf(TO_RADIANS(angle));
-  float cos_a = cosf(TO_RADIANS(angle));
-  Matrix4x4 m(cos_a, 0.f, sin_a, 0.f, 0.f, 1.f, 0.f, 0.f, -sin_a, 0.f, cos_a,
-              0.f, 0.f, 0.f, 0.f, 1.f);
+Transform rotateY(real_t angle) {
+  real_t sin_a = sinf(TO_RADIANS(angle));
+  real_t cos_a = cosf(TO_RADIANS(angle));
+  mat4 m(cos_a, 0.f, sin_a, 0.f, 0.f, 1.f, 0.f, 0.f, -sin_a, 0.f, cos_a, 0.f,
+         0.f, 0.f, 0.f, 1.f);
   return Transform(m, transpose(m));
 }
 
-Transform rotateZ(float angle) {
-  float sin_a = sinf(TO_RADIANS(angle));
-  float cos_a = cosf(TO_RADIANS(angle));
-  Matrix4x4 m(cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 0.f, 1.f,
-              0.f, 0.f, 0.f, 0.f, 1.f);
+Transform rotateZ(real_t angle) {
+  real_t sin_a = sinf(TO_RADIANS(angle));
+  real_t cos_a = cosf(TO_RADIANS(angle));
+  mat4 m(cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f,
+         0.f, 0.f, 0.f, 1.f);
   return Transform(m, transpose(m));
 }
 
-Transform rotate(float angle, const Vector3 &axis) {
-  Vector3 a = normalize(axis);
-  float s = sinf(TO_RADIANS(angle));
-  float c = cosf(TO_RADIANS(angle));
-  float m[4][4];
+Transform rotate(real_t angle, const vec3 &axis) {
+  vec3 a = normalize(axis);
+  real_t s = sinf(TO_RADIANS(angle));
+  real_t c = cosf(TO_RADIANS(angle));
+  real_t m[4][4];
 
   m[0][0] = a.x * a.x + (1.f - a.x * a.x) * c;
   m[0][1] = a.x * a.y * (1.f - c) - a.z * s;
@@ -178,17 +176,17 @@ Transform rotate(float angle, const Vector3 &axis) {
   m[3][2] = 0;
   m[3][3] = 1;
 
-  Matrix4x4 mat(m);
+  mat4 mat(m);
   return Transform(mat, transpose(mat));
 }
 
-Transform frustumTransform(float left, float right, float bottom, float top,
-                           float near, float far) {
-  float tnear = 2.f * near;
-  float lr = right - left;
-  float bt = top - bottom;
-  float nf = far - near;
-  float m[4][4];
+Transform frustumTransform(real_t left, real_t right, real_t bottom, real_t top,
+                           real_t near, real_t far) {
+  real_t tnear = 2.f * near;
+  real_t lr = right - left;
+  real_t bt = top - bottom;
+  real_t nf = far - near;
+  real_t m[4][4];
   m[0][0] = tnear / lr;
   m[0][1] = 0.f;
   m[0][2] = (right + left) / lr;
@@ -209,30 +207,30 @@ Transform frustumTransform(float left, float right, float bottom, float top,
   m[3][2] = -1.f;
   m[3][3] = 0.f;
 
-  Matrix4x4 projection(m);
+  mat4 projection(m);
   return Transform(projection, inverse(projection));
 }
 
-Transform perspective(float fov, float aspect, float zNear, float zFar) {
-  float xmax = zNear * tanf(TO_RADIANS(fov / 2.f));
-  float ymax = xmax / aspect;
+Transform perspective(real_t fov, real_t aspect, real_t zNear, real_t zFar) {
+  real_t xmax = zNear * tanf(TO_RADIANS(fov / 2.f));
+  real_t ymax = xmax / aspect;
   return frustumTransform(-xmax, xmax, -ymax, ymax, zNear, zFar);
 }
 
-Transform perspective(float fov, float n, float f) {
+Transform perspective(real_t fov, real_t n, real_t f) {
   // perform projectiev divide
-  Matrix4x4 persp = Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, f / (f - n),
-                              -f * n / (f - n), 0, 0, 1, 0);
+  mat4 persp = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, f / (f - n), -f * n / (f - n),
+                    0, 0, 1, 0);
   // scale to canonical viewing volume
-  float invTanAng = 1.f / tanf(TO_RADIANS(fov) / 2.f);
+  real_t invTanAng = 1.f / tanf(TO_RADIANS(fov) / 2.f);
   return scale(invTanAng, invTanAng, 1) * Transform(persp);
 }
 
-Transform lookAt(const Point3 &pos, const Point3 &target, const Vector3 &up) {
-  Vector3 dir = normalize(target - pos);
-  Vector3 left = normalize(cross(normalize(up), dir));
-  Vector3 new_up = cross(dir, left);
-  float m[4][4];
+Transform lookAt(const point3 &pos, const point3 &target, const vec3 &up) {
+  vec3 dir = normalize(target - pos);
+  vec3 left = normalize(cross(normalize(up), dir));
+  vec3 new_up = cross(dir, left);
+  real_t m[4][4];
   m[0][0] = left.x;
   m[1][0] = left.y;
   m[2][0] = left.z;
@@ -253,29 +251,29 @@ Transform lookAt(const Point3 &pos, const Point3 &target, const Vector3 &up) {
   m[2][3] = pos.z;
   m[3][3] = 1;
 
-  Matrix4x4 cam_to_world(m);
+  mat4 cam_to_world(m);
   return Transform(inverse(cam_to_world), cam_to_world);
 }
 
-Transform lookAtRH(const Point3 &pos, const Point3 &target, const Vector3 &up) {
-  Vector3 dir = normalize(pos - target);
-  Vector3 left = normalize(cross(normalize(up), dir));
-  Vector3 new_up = cross(dir, left);
-  float m[4][4];
+Transform lookAtRH(const point3 &pos, const point3 &target, const vec3 &up) {
+  vec3 dir = normalize(pos - target);
+  vec3 left = normalize(cross(normalize(up), dir));
+  vec3 new_up = cross(dir, left);
+  real_t m[4][4];
   m[0][0] = left.x;
   m[0][1] = left.y;
   m[0][2] = left.z;
-  m[0][3] = -dot(left, Vector3(pos - Point3()));
+  m[0][3] = -dot(left, vec3(pos - point3()));
 
   m[1][0] = new_up.x;
   m[1][1] = new_up.y;
   m[1][2] = new_up.z;
-  m[1][3] = -dot(new_up, Vector3(pos - Point3()));
+  m[1][3] = -dot(new_up, vec3(pos - point3()));
 
   m[2][0] = dir.x;
   m[2][1] = dir.y;
   m[2][2] = dir.z;
-  m[2][3] = -dot(dir, Vector3(pos - Point3()));
+  m[2][3] = -dot(dir, vec3(pos - point3()));
 
   m[3][0] = 0;
   m[3][1] = 0;
@@ -304,13 +302,13 @@ Transform lookAtRH(const Point3 &pos, const Point3 &target, const Vector3 &up) {
     m[2][2] = dir.z;
     m[3][2] = 0;
   */
-  Matrix4x4 cam_to_world(m);
+  mat4 cam_to_world(m);
   return Transform(cam_to_world, inverse(cam_to_world));
 }
 
-Transform ortho(float left, float right, float bottom, float top, float near,
-                float far) {
-  float m[4][4];
+Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
+                real_t near, real_t far) {
+  real_t m[4][4];
 
   m[0][0] = 2.f / (right - left);
   m[1][0] = 0.f;
@@ -332,13 +330,13 @@ Transform ortho(float left, float right, float bottom, float top, float near,
   m[2][3] = -(far + near) / (far - near);
   m[3][3] = 1.f;
 
-  Matrix4x4 projection(m);
+  mat4 projection(m);
   return Transform(projection, inverse(projection));
 }
 
-Transform orthographic(float znear, float zfar) {
+Transform orthographic(real_t znear, real_t zfar) {
   return scale(1.f, 1.f, 1.f / (zfar - znear)) *
          translate(vec3(0.f, 0.f, -znear));
 }
 
-}  // namespace ponos
+} // namespace ponos

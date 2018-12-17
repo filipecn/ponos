@@ -74,10 +74,10 @@ public:
   /// Samples a bbox region
   /// \param region sampling domain
   /// \return a random point inside **region**
-  Point3 sample(const BBox &region) {
-    return Point3(rngX_->randomFloat() * region.size(0) + region.pMin[0],
-                  rngY_->randomFloat() * region.size(1) + region.pMin[1],
-                  rngZ_->randomFloat() * region.size(2) + region.pMin[2]);
+  point3 sample(const bbox3 &region) {
+    return point3(rngX_->randomFloat() * region.size(0) + region.lower[0],
+                  rngY_->randomFloat() * region.size(1) + region.lower[1],
+                  rngZ_->randomFloat() * region.size(2) + region.lower[2]);
   }
 private:
   std::shared_ptr<RNG> rngX_;

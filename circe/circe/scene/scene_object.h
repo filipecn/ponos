@@ -133,7 +133,7 @@ public:
   ShaderProgramPtr shader() { return shader_; }
   SceneMeshPtr mesh() { return mesh_; }
 
-  // ponos::BBox getBBox() { return this->transform(rawMesh->bbox); }
+  // ponos::BBox3 getBBox() { return this->transform(rawMesh->bbox); }
 
   std::function<void(ShaderProgram *, const CameraInterface *,
                      ponos::Transform)>

@@ -49,7 +49,7 @@ public:
    */
   CRegularGrid(const ivec3 &d, const T &b, const vec3 cellSize = vec3(1.f),
                const vec3 &offset = vec3());
-  CRegularGrid(const ivec3 &d, const T &b, const BBox &bb);
+  CRegularGrid(const ivec3 &d, const T &b, const bbox3 &bb);
 
   ~CRegularGrid();
   /* @inherit */
@@ -85,10 +85,10 @@ public:
   }
   T safeData(int i, int j, int k) const;
   T operator()(const float &x, const float &y, const float &z) const override {
-    Point3 gp = this->toGrid(ponos::Point3(x, y, z));
+    point3 gp = this->toGrid(ponos::point3(x, y, z));
     float p[3] = {gp.x, gp.y, gp.z};
     return trilinearInterpolate<T>(p, data, this->background,
-                                   this->dimensions.v);
+                                   &this->dimensions.x);
   }
   T operator()(const vec3 &i) const override {
     return (*this)(i[0], i[1], i[2]);

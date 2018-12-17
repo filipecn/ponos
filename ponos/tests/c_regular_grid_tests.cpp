@@ -78,11 +78,11 @@ TEST(ScalarGrid2f, DataPosition) {
         GridDataPosition::V_FACE_CENTER, GridDataPosition::U_FACE_CENTER};
     for (auto type : types) {
       grid.dataPosition = type;
-      BBox2D b = grid.cellWBox(Point<int, 2>({5, 5}));
-      ASSERT_NEAR(b.pMin.x, 0.5f, error);
-      ASSERT_NEAR(b.pMin.y, 1.f, error);
-      ASSERT_NEAR(b.pMax.x, 0.6f, error);
-      ASSERT_NEAR(b.pMax.y, 1.2f, error);
+      BBox2 b = grid.cellWBox(Point<int, 2>({5, 5}));
+      ASSERT_NEAR(b.lower.x, 0.5f, error);
+      ASSERT_NEAR(b.lower.y, 1.f, error);
+      ASSERT_NEAR(b.upper.x, 0.6f, error);
+      ASSERT_NEAR(b.upper.y, 1.2f, error);
     }
   }
 }

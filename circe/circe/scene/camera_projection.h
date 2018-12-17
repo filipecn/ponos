@@ -37,25 +37,25 @@ public:
 class OrthographicProjection : public CameraProjection {
 public:
   OrthographicProjection() {
-    _region.pMin.x = _region.pMin.y = this->znear = -1.f;
-    _region.pMax.x = _region.pMax.y = this->zfar = 1.f;
+    _region.lower.x = _region.lower.y = this->znear = -1.f;
+    _region.upper.x = _region.upper.y = this->zfar = 1.f;
   }
   void zoom(float z) { _region = ponos::scale(z, z)(_region); }
   void set(float left, float right, float bottom, float top) {
-    _region.pMin.x = left;
-    _region.pMin.y = bottom;
-    _region.pMax.x = right;
-    _region.pMax.y = top;
+    _region.lower.x = left;
+    _region.lower.y = bottom;
+    _region.upper.x = right;
+    _region.upper.y = top;
     update();
   }
   void update() override {
     this->transform =
-        ponos::ortho(_region.pMin.x, _region.pMax.x, _region.pMin.y,
-                     _region.pMax.y, this->znear, this->zfar);
+        ponos::ortho(_region.lower.x, _region.upper.x, _region.lower.y,
+                     _region.upper.y, this->znear, this->zfar);
   }
 
 private:
-  ponos::BBox2D _region;
+  ponos::BBox2 _region;
 };
 
 } // circe namespace

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRY_PARAMETRIC_SURFACE_H
 #define PONOS_GEOMETRY_PARAMETRIC_SURFACE_H
@@ -35,9 +35,9 @@ class ParametricCurveInterface {
 public:
   ParametricCurveInterface() {}
   virtual ~ParametricCurveInterface() {}
-  virtual Point2 operator()(float t) const = 0;
+  virtual point2 operator()(real_t t) const = 0;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_GEOMETRY_PARAMETRIC_SURFACE_H

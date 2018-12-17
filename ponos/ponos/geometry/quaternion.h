@@ -10,9 +10,9 @@ namespace ponos {
 class Quaternion {
 public:
   Quaternion();
-  Quaternion(Vector3 _v, float _w);
+  Quaternion(vec3 _v, real_t _w);
   Quaternion(const Transform &t);
-  Quaternion(const Matrix4x4 &m);
+  Quaternion(const mat4 &m);
   Quaternion operator+(const Quaternion &q) const {
     return Quaternion(v + q.v, w + q.w);
   }
@@ -29,24 +29,24 @@ public:
     w -= q.w;
     return *this;
   }
-  Quaternion operator/(float d) const { return Quaternion(v / d, w / d); }
-  Quaternion operator*(float d) const { return Quaternion(v * d, w * d); }
+  Quaternion operator/(real_t d) const { return Quaternion(v / d, w / d); }
+  Quaternion operator*(real_t d) const { return Quaternion(v * d, w * d); }
   Quaternion operator*(const Quaternion &q) const {
     return Quaternion(w * q.v + q.w * v + cross(v, q.v), w * q.w - dot(v, q.v));
   }
   bool operator==(const Quaternion &q) { return IS_EQUAL(w, q.w) && v == q.v; }
-  void fromAxisAndAngle(const Vector3 &_v, float angle) {
-    float theta = TO_RADIANS(angle / 2.f);
+  void fromAxisAndAngle(const vec3 &_v, real_t angle) {
+    real_t theta = TO_RADIANS(angle / 2.f);
     v = _v * sinf(theta);
     w = cosf(theta);
   }
-  void fromMatrix(const Matrix4x4 &m) {
+  void fromMatrix(const mat4 &m) {
     // extracted from Shoemake, 1991
     const size_t X = 0;
     const size_t Y = 1;
     const size_t Z = 2;
     const size_t W = 3;
-    float tr, s;
+    real_t tr, s;
     tr = m.m[X][X] + m.m[Y][Y] + m.m[Z][Z];
     if (tr >= 0.f) {
       s = sqrtf(tr + m.m[W][W]);
@@ -84,8 +84,8 @@ public:
     }
   }
 
-  Matrix3x3 toRotationMatrix() const {
-    return Matrix3x3(
+  mat3 toRotationMatrix() const {
+    return mat3(
         1.f - 2.f * (v.y * v.y + v.z * v.z), 2.f * (v.x * v.y - v.z * w),
         2.f * (v.x * v.z + v.y * w), 2.f * (v.x * v.y + v.z * w),
         1.f - 2.f * (v.x * v.x + v.z * v.z), 2.f * (v.y * v.z - v.x * w),
@@ -93,7 +93,7 @@ public:
         1.f - 2.f * (v.x * v.x + v.y * v.y));
   }
   Transform toTransform() const {
-    float m[4][4];
+    real_t m[4][4];
     m[0][0] = 1.f - 2.f * (v.y * v.y + v.z * v.z);
     m[1][0] = 2.f * (v.x * v.y + v.z * w);
     m[2][0] = 2.f * (v.x * v.z - v.y * w);
@@ -123,15 +123,15 @@ public:
     return os;
   }
 
-  Vector3 v;
-  float w;
+  vec3 v;
+  real_t w;
 };
 
 typedef Quaternion quat;
 
-inline Quaternion operator*(float f, const Quaternion &q) { return q * f; }
+inline Quaternion operator*(real_t f, const Quaternion &q) { return q * f; }
 
-inline float dot(const Quaternion &q1, const Quaternion &q2) {
+inline real_t dot(const Quaternion &q1, const Quaternion &q2) {
   return dot(q1.v, q2.v) + q1.w * q2.w;
 }
 
@@ -139,20 +139,20 @@ inline Quaternion normalize(const Quaternion &q) {
   return q / sqrtf(dot(q, q));
 }
 
-inline Quaternion operator*(Vector3 v, const Quaternion &q) {
+inline Quaternion operator*(vec3 v, const Quaternion &q) {
   return Quaternion(v, 0) * q;
 }
 
-inline Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
-  float cosTheta = dot(q1, q2);
+inline Quaternion slerp(real_t t, const Quaternion &q1, const Quaternion &q2) {
+  real_t cosTheta = dot(q1, q2);
   if (cosTheta > .9995f)
     return normalize((1.f - t) * q1 + t * q2);
-  float theta = acosf(clamp(cosTheta, -1.f, 1.f));
-  float thetap = theta * t;
+  real_t theta = acosf(clamp(cosTheta, -1.f, 1.f));
+  real_t thetap = theta * t;
   Quaternion qperp = normalize(q2 - q1 * cosTheta);
   return q1 * cosf(thetap) + qperp * sinf(thetap);
 }
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

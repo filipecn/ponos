@@ -144,10 +144,10 @@ GammaCorrection::GammaCorrection(float g) : gamma(g) {
                    "out vec4 outColor;"
                    "in vec2 texCoord;"
                    "uniform sampler2D tex;"
-                   "uniform float gamma;"
+                   "uniform float gammaBound;"
                    "void main() {"
                    "outColor = texture(tex, texCoord);"
-                   "outColor.rgb = pow(outColor.rgb, vec3(1.0 / gamma));"
+                   "outColor.rgb = pow(outColor.rgb, vec3(1.0 / gammaBound));"
                    "}";
   shader.reset(new ShaderProgram(
       ShaderManager::instance().loadFromTexts(CIRCE_NO_VAO_VS, nullptr, fs)));
@@ -156,7 +156,7 @@ GammaCorrection::GammaCorrection(float g) : gamma(g) {
 void GammaCorrection::apply(const RenderTexture &in, RenderTexture &out) {
   in.bind(GL_TEXTURE0);
   shader->setUniform("tex", 0);
-  shader->setUniform("gamma", gamma);
+  shader->setUniform("gammaBound", gamma);
   out.render([&]() {
     shader->begin();
     glDrawArrays(GL_TRIANGLES, 0, 3);

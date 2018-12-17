@@ -32,117 +32,120 @@
 namespace ponos {
 
 class Circle : public Shape {
- public:
-  Circle() { r = 0.f; }
-  Circle(Point2 center, float radius) : c(center), r(radius) {
+public:
+  Circle() { r = 0; }
+  Circle(point2 center, real_t radius) : c(center), r(radius) {
     this->type = ShapeType::SPHERE;
   }
   virtual ~Circle() {}
 
-  Point2 c;
-  float r;
+  point2 c;
+  real_t r;
 };
 
 class ParametricCircle final : public Circle, public ParametricCurveInterface {
- public:
+public:
   ParametricCircle() { r = 0.f; }
-  ParametricCircle(Point2 center, float radius) : Circle(center, radius) {}
+  ParametricCircle(point2 center, real_t radius) : Circle(center, radius) {}
   /** Compute euclidian coordinates
    * \param t parametric param **[0, 1]**
    * \returns euclidian coordinates
    */
-  Point2 operator()(float t) const override {
-    float angle = t * Constants::two_pi;
+  point2 operator()(real_t t) const override {
+    real_t angle = t * Constants::two_pi;
     return this->c + this->r * vec2(cosf(angle), sinf(angle));
   }
 };
 
 class ImplicitCircle final : public ImplicitCurveInterface {
- public:
+public:
   ImplicitCircle() : r(0.f) {}
 
-  ImplicitCircle(Point2 center, float radius) : c(center), r(radius) {}
+  ImplicitCircle(point2 center, real_t radius) : c(center), r(radius) {}
   ~ImplicitCircle() {}
 
-  Point2 closestPoint(const Point2 &p) const override {
+  point2 closestPoint(const point2 &p) const override {
     return c + r * vec2(this->closestNormal(p));
   }
-  Normal2D closestNormal(const Point2 &p) const override {
-    if (c == p) return Normal2D(1, 0);
+  normal2 closestNormal(const point2 &p) const override {
+    if (c == p)
+      return normal2(1, 0);
     vec2 n = normalize(c - p);
-    return Normal2D(n.x, n.y);
+    return normal2(n.x, n.y);
   }
-  BBox2D boundingBox() const override { return BBox2D(c - r, c + r); }
+  bbox2 boundingBox() const override { return bbox2(c - r, c + r); }
   void closestIntersection(const Ray2 &r,
                            CurveRayIntersection *i) const override {
     UNUSED_VARIABLE(r);
     UNUSED_VARIABLE(i);
   }
-  double signedDistance(const Point2 &p) const override {
+  double signedDistance(const point2 &p) const override {
     return distance(c, p) - r;
   }
 
-  Point2 c;
-  float r;
+  point2 c;
+  real_t r;
 };
 
 class Sphere : public SurfaceInterface {
- public:
+public:
   Sphere() : r(0.f) {}
 
-  Sphere(Point3 center, float radius) : c(center), r(radius) {}
+  Sphere(point3 center, real_t radius) : c(center), r(radius) {}
   virtual ~Sphere() {}
 
-  Point3 closestPoint(const Point3 &p) const override {
+  point3 closestPoint(const point3 &p) const override {
     return c + r * vec3(this->closestNormal(p));
   }
-  Normal closestNormal(const Point3 &p) const override {
-    if (c == p) return Normal(1, 0, 0);
+  normal3 closestNormal(const point3 &p) const override {
+    if (c == p)
+      return normal3(1, 0, 0);
     vec3 n = normalize(c - p);
-    return Normal(n.x, n.y, n.z);
+    return normal3(n.x, n.y, n.z);
   }
-  BBox boundingBox() const override { return BBox(c - r, c + r); }
+  bbox3 boundingBox() const override { return bbox3(c - r, c + r); }
   void closestIntersection(const Ray3 &r,
                            SurfaceRayIntersection *i) const override {
     UNUSED_VARIABLE(r);
     UNUSED_VARIABLE(i);
   }
-  Point3 c;
-  float r;
+  point3 c;
+  real_t r;
 };
 
 class ImplicitSphere final : public ImplicitSurfaceInterface {
- public:
+public:
   ImplicitSphere() : r(0.f) {}
 
-  ImplicitSphere(Point3 center, float radius) : c(center), r(radius) {}
+  ImplicitSphere(point3 center, real_t radius) : c(center), r(radius) {}
   ~ImplicitSphere() {}
 
-  Point3 closestPoint(const Point3 &p) const override {
+  point3 closestPoint(const point3 &p) const override {
     return c + r * vec3(this->closestNormal(p));
   }
-  Normal closestNormal(const Point3 &p) const override {
-    if (c == p) return Normal(1, 0, 0);
+  normal3 closestNormal(const point3 &p) const override {
+    if (c == p)
+      return normal3(1, 0, 0);
     vec3 n = normalize(c - p);
-    return Normal(n.x, n.y, n.z);
+    return normal3(n.x, n.y, n.z);
   }
-  BBox boundingBox() const override { return BBox(c - r, c + r); }
+  bbox3 boundingBox() const override { return bbox3(c - r, c + r); }
   void closestIntersection(const Ray3 &r,
                            SurfaceRayIntersection *i) const override {
     UNUSED_VARIABLE(r);
     UNUSED_VARIABLE(i);
   }
-  double signedDistance(const Point3 &p) const override {
+  double signedDistance(const point3 &p) const override {
     return distance(c, p) - r;
   }
 
-  Point3 c;
-  float r;
+  point3 c;
+  real_t r;
 };
 
-inline BBox2D compute_bbox(const Circle &po, const Transform2D *t = nullptr) {
-  BBox2D b;
-  ponos::Point2 center = po.c;
+inline bbox2 compute_bbox(const Circle &po, const Transform2 *t = nullptr) {
+  bbox2 b;
+  ponos::point2 center = po.c;
   if (t != nullptr) {
     b = make_union(b, (*t)(center + ponos::vec2(po.r, 0)));
     b = make_union(b, (*t)(center + ponos::vec2(-po.r, 0)));
@@ -157,6 +160,6 @@ inline BBox2D compute_bbox(const Circle &po, const Transform2D *t = nullptr) {
   return b;
 }
 
-}  // namespace ponos
+} // namespace ponos
 
 #endif

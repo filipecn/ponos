@@ -6,7 +6,7 @@
 #define NANOGUI_GLAD 1
 
 /*
-    src/example3.cpp -- C++ version of an example application that shows
+    helios/example3.cpp -- C++ version of an example application that shows
     how to use nanogui in an application with an already created and managed
     glfw context.
 

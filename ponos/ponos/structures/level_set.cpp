@@ -9,7 +9,7 @@ void LevelSet::setMesh(const RawMesh *mesh) {
   UNUSED_VARIABLE(mesh);
   setAll(INFINITY);
 }
-LevelSet2D::LevelSet2D(const ponos::RawMesh *m, const ponos::Transform2D &t) {
+LevelSet2D::LevelSet2D(const ponos::RawMesh *m, const ponos::Transform2 &t) {
   UNUSED_VARIABLE(m);
   UNUSED_VARIABLE(t);
 }

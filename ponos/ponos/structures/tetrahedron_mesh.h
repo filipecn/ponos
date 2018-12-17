@@ -45,10 +45,10 @@ template<typename V = float, typename F = float, typename E = float,
 class TMesh {
 public:
   struct Vertex {
-    Vertex(float x, float y, float z) : position(Point3(x, y, z)) {}
-    explicit Vertex(const Point3 &p) : position(p) {}
-    Point3 position; //!< vertex position
-    Normal normal;   //!< vertex normal
+    Vertex(float x, float y, float z) : position(point3(x, y, z)) {}
+    explicit Vertex(const point3 &p) : position(p) {}
+    point3 position; //!< vertex position
+    normal3 normal;   //!< vertex normal
     std::set<size_t> edges; //!< edges connected to this vertex
     V data;          //!< vertex user's data
   };
@@ -70,7 +70,7 @@ public:
                        //!< vertex index)
     int neighbours[3]; //!< neighbours
     F data;            //!< face user's data
-    Normal normal;     //!< face's normal
+    normal3 normal;     //!< face's normal
   };
   struct Face3 {
     explicit Face3(size_t _face) : face(_face) {}

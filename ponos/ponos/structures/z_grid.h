@@ -66,7 +66,7 @@ template <class T> void ZGrid<T>::updateDataStructure() {
 }
 
 template <class T> T CZGrid<T>::sample(float x, float y) const {
-  Point2 gp = this->toGrid(Point2(x, y));
+  point2 gp = this->toGrid(point2(x, y));
   int x0 = static_cast<int>(gp.x);
   int y0 = static_cast<int>(gp.y);
   int x1 = x0 + 1;

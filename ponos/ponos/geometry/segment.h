@@ -20,8 +20,8 @@ public:
   T a, b;
 };
 
-typedef Segment<Point2> Segment2;
-typedef Segment<Point3> Segment3;
+typedef Segment<point2> Segment2;
+typedef Segment<point3> Segment3;
 
 } // ponos namespace
 

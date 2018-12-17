@@ -113,7 +113,7 @@ public:
       n = ponos::vec3(0, 0, 0);
     else
       n = ponos::normalize(n);
-    return {ponos::Normal(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z))};
+    return {ponos::Normal3(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z))};
   }
   /// \return up vector
   virtual ponos::vec3 getUpVector() const { return up; };

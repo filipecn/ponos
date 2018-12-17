@@ -7,7 +7,7 @@ using namespace ponos;
 TEST(StaggeredGrid2f, Access) {
   float error = 1e-8;
   StaggeredGrid2f grid;
-  grid.set(10, 10, BBox2D(Point2(), Point2(1, 1)));
+  grid.set(10, 10, BBox2(Point2(), Point2(1, 1)));
   { // TEST DIMENSIONS
     EXPECT_EQ(grid.p.width, 10u);
     EXPECT_EQ(grid.p.height, 10u);

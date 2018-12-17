@@ -26,16 +26,16 @@ public:
 
 private:
   struct BVHElement {
-    BVHElement(size_t i, const ponos::BBox &b) : ind(i), bounds(b) {
+    BVHElement(size_t i, const ponos::BBox3 &b) : ind(i), bounds(b) {
       centroid = b.centroid();
     }
     size_t ind;
-    ponos::BBox bounds;
+    ponos::BBox3 bounds;
     ponos::Point3 centroid;
   };
   struct BVHNode {
     BVHNode() { children[0] = children[1] = nullptr; }
-    void initLeaf(uint32_t first, uint32_t n, const ponos::BBox &b) {
+    void initLeaf(uint32_t first, uint32_t n, const ponos::BBox3 &b) {
       firstElementOffset = first;
       nElements = n;
       bounds = b;
@@ -47,12 +47,12 @@ private:
       splitAxis = axis;
       nElements = 0;
     }
-    ponos::BBox bounds;
+    ponos::BBox3 bounds;
     BVHNode *children[2];
     uint32_t splitAxis, firstElementOffset, nElements;
   };
   struct LinearBVHNode {
-    ponos::BBox bounds;
+    ponos::BBox3 bounds;
     union {
       uint32_t elementsOffset;
       uint32_t secondChildOffset;
@@ -75,7 +75,7 @@ private:
                           uint32_t end, uint32_t *totalNodes,
                           std::vector<uint32_t> &orderedElements);
   uint32_t flattenBVHTree(BVHNode *node, uint32_t *offset);
-  bool intersect(const ponos::BBox &bounds, const ponos::Ray3 &ray,
+  bool intersect(const ponos::BBox3 &bounds, const ponos::Ray3 &ray,
                  const ponos::vec3 &invDir, const uint32_t dirIsNeg[3]) const;
 };
 

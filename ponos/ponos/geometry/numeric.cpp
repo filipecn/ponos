@@ -29,5 +29,10 @@ namespace ponos {
 
 double Constants::pi = 3.14159265358979323846f;
 double Constants::two_pi = 6.28318530718;
+#ifdef PONOS_DOUBLE
+real_t Constants::real_inf = std::numeric_limits<double>::max();
+#else
+real_t Constants::real_infinity = std::numeric_limits<float>::max();
+#endif
 
 }  // namespace ponos

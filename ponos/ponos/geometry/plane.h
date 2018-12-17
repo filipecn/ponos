@@ -38,12 +38,12 @@ namespace ponos {
 class Plane {
 public:
   /// Default constructor
-  Plane() { offset = 0.f; }
+  Plane() { offset = 0; }
   /** Constructor
    * \param n **[in]** normal
    * \param o **[in]** offset
    */
-  Plane(Normal n, float o) {
+  Plane(normal3 n, real_t o) {
     normal = n;
     offset = o;
   }
@@ -51,20 +51,20 @@ public:
    * \param v
    * \returns projected **v**
    */
-  Vector3 project(const Vector3 &v) { return ponos::project(v, normal); }
+  vec3 project(const vec3 &v) { return ponos::project(v, normal); }
   /** \brief  reflects **v** fron plane
    * \param v
    * \returns reflected **v**
    */
-  Vector3 reflect(const Vector3 &v) { return ponos::reflect(v, normal); }
+  vec3 reflect(const vec3 &v) { return ponos::reflect(v, normal); }
 
   friend std::ostream &operator<<(std::ostream &os, const Plane &p) {
     os << "[Plane] offset " << p.offset << " " << p.normal;
     return os;
   }
 
-  Normal normal;
-  float offset;
+  normal3 normal;
+  real_t offset;
 };
 
 /** Implements the equation normal X = offset.
@@ -77,11 +77,11 @@ public:
    * \param n **[in]** normal
    * \param o **[in]** offset
    */
-  ImplicitPlane2D(Normal2D n, float o) {
+  ImplicitPlane2D(normal2 n, real_t o) {
     normal = n;
     offset = o;
   }
-  ImplicitPlane2D(Point2 p, Normal2D n) {
+  ImplicitPlane2D(point2 p, normal2 n) {
     normal = n;
     offset = dot(vec2(normal), vec2(p));
   }
@@ -89,28 +89,28 @@ public:
    * \param v
    * \returns projected **v**
    */
-  Vector2 project(const Vector2 &v) { return ponos::project(v, normal); }
+  vec2 project(const vec2 &v) { return ponos::project(v, normal); }
   /** \brief  reflects **v** fron plane
    * \param v
    * \returns reflected **v**
    */
-  Vector2 reflect(const Vector2 &v) { return ponos::reflect(v, normal); }
-  Point2 closestPoint(const Point2 &p) const override {
-    float t = (dot(vec2(normal), vec2(p)) - offset) / vec2(normal).length2();
+  vec2 reflect(const vec2 &v) { return ponos::reflect(v, normal); }
+  point2 closestPoint(const point2 &p) const override {
+    real_t t = (dot(vec2(normal), vec2(p)) - offset) / vec2(normal).length2();
     return p - t * vec2(normal);
   }
-  Normal2D closestNormal(const Point2 &p) const override {
+  normal2 closestNormal(const point2 &p) const override {
     if (dot(vec2(normal), vec2(p)) < 0.f)
       return -normal;
     return normal;
   }
-  BBox2D boundingBox() const override { return BBox2D(); }
+  bbox2 boundingBox() const override { return bbox2(); }
   void closestIntersection(const Ray2 &r,
                            CurveRayIntersection *i) const override {
     UNUSED_VARIABLE(r);
     UNUSED_VARIABLE(i);
   }
-  double signedDistance(const Point2 &p) const override {
+  double signedDistance(const point2 &p) const override {
     return (dot(vec2(p), vec2(normal)) - offset) / vec2(normal).length();
   }
 
@@ -119,8 +119,8 @@ public:
     return os;
   }
 
-  Normal2D normal;
-  float offset;
+  normal2 normal;
+  real_t offset;
 };
 
 } // ponos namespace

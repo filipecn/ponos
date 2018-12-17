@@ -28,7 +28,7 @@ BAH::BAHNode *BAH::recursiveBuild(std::vector<BAHElement> &buildData,
                                   std::vector<uint32_t> &orderedElements) {
   (*totalNodes)++;
   BAHNode *node = new BAHNode();
-  ponos::BBox2D bbox;
+  ponos::bbox2 bbox;
   for (uint32_t i = start; i < end; ++i)
     bbox = ponos::make_union(bbox, buildData[i].bounds);
   // compute all bounds
@@ -43,13 +43,13 @@ BAH::BAHNode *BAH::recursiveBuild(std::vector<BAHElement> &buildData,
     node->initLeaf(firstElementOffset, nElements, bbox);
   } else {
     // compute bound of primitives
-    ponos::BBox2D centroidBounds;
+    ponos::bbox2 centroidBounds;
     for (uint32_t i = start; i < end; i++)
       centroidBounds = ponos::make_union(centroidBounds, buildData[i].centroid);
     int dim = centroidBounds.maxExtent();
     // partition primitives
     uint32_t mid = (start + end) / 2;
-    if (centroidBounds.pMax[dim] == centroidBounds.pMin[dim]) {
+    if (centroidBounds.upper[dim] == centroidBounds.lower[dim]) {
       node->initInterior(
           dim,
           recursiveBuild(buildData, start, mid, totalNodes, orderedElements),
@@ -86,7 +86,7 @@ int BAH::intersect(const ponos::Ray2 &ray, float *t) {
   UNUSED_VARIABLE(t);
   if (!nodes.size())
     return false;
-  ponos::Transform2D inv = ponos::inverse(mesh->getTransform());
+  ponos::Transform2 inv = ponos::inverse(mesh->getTransform());
   ponos::Ray2 r = inv(ray);
   int hit = 0;
   ponos::vec2 invDir(1.f / r.d.x, 1.f / r.d.y);
@@ -99,13 +99,15 @@ int BAH::intersect(const ponos::Ray2 &ray, float *t) {
       if (node->nElements > 0) {
         // intersect ray with primitives
         for (uint32_t i = 0; i < node->nElements; i++) {
-          ponos::Point2 v0 =
+          ponos::point2 v0 =
               mesh->getMesh()
-                  ->positionElement(orderedElements[node->elementsOffset + i], 0)
+                  ->positionElement(orderedElements[node->elementsOffset + i],
+                                    0)
                   .xy();
-          ponos::Point2 v1 =
+          ponos::point2 v1 =
               mesh->getMesh()
-                  ->positionElement(orderedElements[node->elementsOffset + i], 1)
+                  ->positionElement(orderedElements[node->elementsOffset + i],
+                                    1)
                   .xy();
           if (ponos::ray_segment_intersection(r, ponos::Segment2(v0, v1)))
             hit++;
@@ -131,7 +133,7 @@ int BAH::intersect(const ponos::Ray2 &ray, float *t) {
   return hit;
 }
 
-bool BAH::intersect(const ponos::BBox2D &bounds, const ponos::Ray2 &ray,
+bool BAH::intersect(const ponos::bbox2 &bounds, const ponos::Ray2 &ray,
                     const ponos::vec2 &invDir,
                     const uint32_t dirIsNeg[2]) const {
   UNUSED_VARIABLE(invDir);
@@ -140,11 +142,11 @@ bool BAH::intersect(const ponos::BBox2D &bounds, const ponos::Ray2 &ray,
   return ponos::bbox_ray_intersection(bounds, ray, hit1, hit2);
 }
 
-bool BAH::isInside(const ponos::Point2 &p) {
+bool BAH::isInside(const ponos::point2 &p) {
   ponos::Ray2 r(p, ponos::vec2(1.2, 1.1));
   ponos::Ray2 r2(p, ponos::vec2(0.2, -1.1));
 
   return intersect(r, nullptr) % 2 && intersect(r2, nullptr) % 2;
 }
 
-} // ponos namespace"
+} // namespace ponos

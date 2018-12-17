@@ -147,13 +147,13 @@ TEST(ZPointSet, SearchTree) {
     //s.update();
     ZPointSet::search_tree tree(s);
     int count = 0;
-    tree.iteratePoints(BBox(Point3(0, 0, 0), Point3(2, 2, 2)), [&](uint id) {
+    tree.iteratePoints(BBox3(Point3(0, 0, 0), Point3(2, 2, 2)), [&](uint id) {
       UNUSED_VARIABLE(id);
       count++;
     });
     EXPECT_EQ(count, 2 * 2 * 2);
     count = 0;
-    tree.iteratePoints(BBox(Point3(1, 0, 0), Point3(2, 2, 2)), [&](uint id) {
+    tree.iteratePoints(BBox3(Point3(1, 0, 0), Point3(2, 2, 2)), [&](uint id) {
       UNUSED_VARIABLE(id);
       count++;
     });
@@ -161,7 +161,7 @@ TEST(ZPointSet, SearchTree) {
   }
   {
     ZPointSet z(4);
-    BBox region(Point3(0, 0, 0), Point3(4, 4, 4));
+    BBox3 region(Point3(0, 0, 0), Point3(4, 4, 4));
     std::vector<Point3> points;
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     for (int i = 0; i < 10000; i++) {
@@ -172,7 +172,7 @@ TEST(ZPointSet, SearchTree) {
     std::set<uint> s;
     ZPointSet::search_tree tree(z);
     tree.traverse([&](const Octree<ZPointSet::NodeElement>::Node &node) {
-      BBox r = node.region();
+      BBox3 r = node.region();
       std::vector<uint> result;
       tree.iteratePoints(r, [&](uint id) { result.emplace_back(id); });
       std::sort(result.begin(), result.end());
@@ -208,7 +208,7 @@ TEST(ZPointSet, SearchTree) {
 TEST(ZPointSet, Search) {
   {
     ZPointSet z(16);
-    BBox region(Point3(0, 0, 0), Point3(16, 16, 16));
+    BBox3 region(Point3(0, 0, 0), Point3(16, 16, 16));
     std::vector<Point3> points;
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     for (int i = 0; i < 1000; i++) {
@@ -218,7 +218,7 @@ TEST(ZPointSet, Search) {
     region.expand(4);
     for (int i = 0; i < 1000; i++) {
       // generate a bounding box
-      BBox r(rng.sample(region), rng.sample(region));
+      BBox3 r(rng.sample(region), rng.sample(region));
       std::vector<uint> result;
       z.search(r, [&](uint id) { result.emplace_back(id); });
       std::sort(result.begin(), result.end());
@@ -234,7 +234,7 @@ TEST(ZPointSet, Search) {
   }
   {
     ZPointSet z(16);
-    BBox region(Point3(0, 0, 0), Point3(16, 16, 16));
+    BBox3 region(Point3(0, 0, 0), Point3(16, 16, 16));
     std::vector<Point3> points;
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     for (int i = 0; i < 1000; i++) {
@@ -245,7 +245,7 @@ TEST(ZPointSet, Search) {
     z.buildAccelerationStructure();
     for (int i = 0; i < 1000; i++) {
       // generate a bounding box
-      BBox r(rng.sample(region), rng.sample(region));
+      BBox3 r(rng.sample(region), rng.sample(region));
       std::vector<uint> result;
       z.search(r, [&](uint id) { result.emplace_back(id); });
       std::sort(result.begin(), result.end());
@@ -261,7 +261,7 @@ TEST(ZPointSet, Search) {
   }
   {
     ZPointSet z(16);
-    BBox region(Point3(0, 0, 0), Point3(16, 16, 16));
+    BBox3 region(Point3(0, 0, 0), Point3(16, 16, 16));
     std::vector<Point3> points;
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     for (int i = 0; i < 16; i++)
@@ -273,7 +273,7 @@ TEST(ZPointSet, Search) {
     region.expand(4);
     for (int i = 0; i < 1000; i++) {
       // generate a bounding box
-      BBox r(rng.sample(region), rng.sample(region));
+      BBox3 r(rng.sample(region), rng.sample(region));
       std::vector<uint> result;
       z.search(r, [&](uint id) { result.emplace_back(id); });
       std::sort(result.begin(), result.end());
@@ -291,7 +291,7 @@ TEST(ZPointSet, Search) {
 
 TEST(ZPointSet, Remove) {
   {
-    BBox region(Point3(0, 0, 0), Point3(16, 16, 16));
+    BBox3 region(Point3(0, 0, 0), Point3(16, 16, 16));
     ZPointSet z(16);
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     std::vector<Point3> points;
@@ -310,7 +310,7 @@ TEST(ZPointSet, Remove) {
   }
   {
     ZPointSet z(16);
-    BBox region(Point3(0, 0, 0), Point3(16, 16, 16));
+    BBox3 region(Point3(0, 0, 0), Point3(16, 16, 16));
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     for (uint j = 0; j < 200; j++)
       z.add(rng.sample(region));
@@ -342,7 +342,7 @@ TEST(ZPointSet, Remove) {
 TEST(ZPointSet, SetPosition) {
   {
     ZPointSet z(16);
-    BBox region(Point3(0, 0, 0), Point3(16, 16, 16));
+    BBox3 region(Point3(0, 0, 0), Point3(16, 16, 16));
     std::vector<Point3> points;
     RNGSampler rng(new HaltonSequence(3), new HaltonSequence(5), new HaltonSequence(7));
     for (int i = 0; i < 1000; i++) {
@@ -352,7 +352,7 @@ TEST(ZPointSet, SetPosition) {
     region.expand(4);
     for (int i = 0; i < 1000; i++) {
       // generate a bounding box
-      BBox r(rng.sample(region), rng.sample(region));
+      BBox3 r(rng.sample(region), rng.sample(region));
       std::vector<uint> result;
       z.search(r, [&](uint id) { result.emplace_back(id); });
       std::sort(result.begin(), result.end());
@@ -374,7 +374,7 @@ TEST(ZPointSet, SetPosition) {
     region.expand(4);
     for (int i = 0; i < 1000; i++) {
       // generate a bounding box
-      BBox r(rng.sample(region), rng.sample(region));
+      BBox3 r(rng.sample(region), rng.sample(region));
       std::vector<uint> result;
       z.search(r, [&](uint id) { result.emplace_back(id); });
       std::sort(result.begin(), result.end());

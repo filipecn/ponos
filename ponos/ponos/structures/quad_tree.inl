@@ -28,7 +28,7 @@ template <typename NodeData> QuadTree<NodeData>::QuadTree() : root(nullptr) {
 }
 
 template <typename NodeData>
-QuadTree<NodeData>::QuadTree(const BBox2D &region,
+QuadTree<NodeData>::QuadTree(const bbox2 &region,
                              const std::function<bool(Node &node)> &f)
     : root(new Node(region, nullptr)) {
   height_ = 0;
@@ -37,7 +37,7 @@ QuadTree<NodeData>::QuadTree(const BBox2D &region,
 }
 
 template <typename NodeData>
-QuadTree<NodeData>::QuadTree(const BBox2D &region, NodeData rootData,
+QuadTree<NodeData>::QuadTree(const bbox2 &region, NodeData rootData,
                              const std::function<bool(Node &node)> &f,
                              std::function<void(Node &)> sf)
     : root(new Node(region, nullptr)) {
@@ -101,16 +101,16 @@ void QuadTree<NodeData>::refine(Node *node,
     return;
   node->id = count++;
   height_ = std::max(height_, node->l);
-  Point2 pmin = node->bbox.pMin;
-  Point2 pmax = node->bbox.pMax;
-  Point2 mid = node->bbox.center();
+  point2 pmin = node->bbox.lower;
+  point2 pmax = node->bbox.upper;
+  point2 mid = node->bbox.center();
   if (f(*node)) {
     node->children[0] =
-        new Node(BBox2D(Point2(pmin.x, mid.y), Point2(mid.x, pmax.y)), node);
-    node->children[1] = new Node(BBox2D(mid, pmax), node);
-    node->children[2] = new Node(BBox2D(pmin, mid), node);
+        new Node(bbox2(point2(pmin.x, mid.y), point2(mid.x, pmax.y)), node);
+    node->children[1] = new Node(bbox2(mid, pmax), node);
+    node->children[2] = new Node(bbox2(pmin, mid), node);
     node->children[3] =
-        new Node(BBox2D(Point2(mid.x, pmin.y), Point2(pmax.x, mid.y)), node);
+        new Node(bbox2(point2(mid.x, pmin.y), point2(pmax.x, mid.y)), node);
     if (sf)
       sf(*node);
     for (int i = 0; i < 4; i++) {

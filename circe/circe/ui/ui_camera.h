@@ -54,7 +54,7 @@ class UserCamera2D : public UserCamera {
 public:
   UserCamera2D();
   void mouseScroll(ponos::Point2 p, ponos::vec2 d) override;
-  void fit(const ponos::BBox2D &b, float delta = 1.f);
+  void fit(const ponos::BBox2 &b, float delta = 1.f);
   void update() override;
 };
 

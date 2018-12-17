@@ -42,7 +42,7 @@ ZPointSet::~ZPointSet() = default;
 
 ZPointSet::ZPointSet(uint maxCoordinates) : ZPointSet() {
   FATAL_ASSERT(isPowerOf2(maxCoordinates));
-  resolution_ = Point3(maxCoordinates, maxCoordinates, maxCoordinates);
+  resolution_ = point3(maxCoordinates, maxCoordinates, maxCoordinates);
   // TODO: solve this
   //auto h = 1.f / maxCoordinates;
   //toSet_ = scale(h, h, h);
@@ -58,7 +58,7 @@ void ZPointSet::update() {
     return;
   if (needZUpdate_) {
     for (uint i = 0; i < end_; i++) {
-      Point3 gp = toSet_(positions_[points_[i].id]);
+      point3 gp = toSet_(positions_[points_[i].id]);
       points_[i].zcode = computeIndex(gp);
       FATAL_ASSERT(points_[i].zcode <= maxZCode_);
     }
@@ -101,7 +101,7 @@ uint ZPointSet::size() {
   return end_;
 }
 
-uint ZPointSet::add(Point3 p) {
+uint ZPointSet::add(point3 p) {
   if (end_ == points_.size()) {
     points_.emplace_back();
     points_[end_].id = lastId_++;
@@ -110,8 +110,8 @@ uint ZPointSet::add(Point3 p) {
     positions_.emplace_back();
   points_[end_].active = true;
   positions_[points_[end_].id] = p;
-  Point3 sp = toSet_(p);
-  FATAL_ASSERT(sp >= Point3() && sp <= resolution_);
+  point3 sp = toSet_(p);
+  FATAL_ASSERT(sp >= point3() && sp <= resolution_);
   points_[end_].zcode = computeIndex(sp);
   FATAL_ASSERT(points_[end_].zcode <= maxZCode_);
   end_++;
@@ -120,7 +120,7 @@ uint ZPointSet::add(Point3 p) {
   return points_[end_ - 1].id;
 }
 
-void ZPointSet::setPosition(uint i, Point3 p) {
+void ZPointSet::setPosition(uint i, point3 p) {
   positions_[i] = p;
   needZUpdate_ = true;
   needUpdate_ = true;
@@ -134,16 +134,16 @@ void ZPointSet::remove(uint i) {
   sizeChanged_ = true;
 }
 
-Point3 ZPointSet::operator[](uint i) const {
+point3 ZPointSet::operator[](uint i) const {
   FATAL_ASSERT(i < positions_.size());
   return positions_[i];
 }
 
-uint ZPointSet::computeIndex(const Point3 &p) {
+uint ZPointSet::computeIndex(const point3 &p) {
   return mortonCode(static_cast<uint32_t>(p.x), static_cast<uint32_t>(p.y), static_cast<uint32_t>(p.z));
 }
 
-void ZPointSet::search(const BBox &b, const std::function<void(uint)> &f) {
+void ZPointSet::search(const bbox3 &b, const std::function<void(uint)> &f) {
   if (!tree_ || needUpdate_ || needZUpdate_)
     update();
   if (tree_) {
@@ -151,10 +151,10 @@ void ZPointSet::search(const BBox &b, const std::function<void(uint)> &f) {
     return;
   }
   // perform an implicit search
-  std::function<void(uint, uint, const BBox &, const BBox &,
+  std::function<void(uint, uint, const bbox3 &, const bbox3 &,
                      const std::function<void(uint)> &)>
-      implictTraverse = [&](uint level, uint zcode, const BBox &region,
-                            const BBox &bbox,
+      implictTraverse = [&](uint level, uint zcode, const bbox3 &region,
+                            const bbox3 &bbox,
                             const std::function<void(uint)> &callBack) {
     if (level >= maxDepth_)
       return;
@@ -172,10 +172,10 @@ void ZPointSet::search(const BBox &b, const std::function<void(uint)> &f) {
       implictTraverse(level + 1, zcode | (i << d), regions[i], bbox, callBack);
 
   };
-  implictTraverse(0, 0, BBox(Point3(), resolution_), b, f);
+  implictTraverse(0, 0, bbox3(point3(), resolution_), b, f);
 }
 
-void ZPointSet::iteratePoints(const std::function<void(uint, Point3)> &f) const {
+void ZPointSet::iteratePoints(const std::function<void(uint, point3)> &f) const {
   for (uint i = 0; i < end_; i++)
     f(points_[i].id, positions_[points_[i].id]);
 }
@@ -184,8 +184,8 @@ int ZPointSet::intersect(const Ray3 &r, float e) {
   float minDistance2 = 1 << 20;
   int closestPoint = -1;
   // perform an implicit search
-  std::function<void(uint, uint, const BBox &)>
-      implictTraverse = [&](uint level, uint zcode, const BBox &region) {
+  std::function<void(uint, uint, const bbox3 &)>
+      implictTraverse = [&](uint level, uint zcode, const bbox3 &region) {
     if (level >= maxDepth_)
       return;
     float hit1 = 0, hit2 = 0;
@@ -208,7 +208,7 @@ int ZPointSet::intersect(const Ray3 &r, float e) {
         implictTraverse(level + 1, zcode | (i << d), regions[i]);
     }
   };
-  implictTraverse(0, 0, BBox(Point3(), resolution_));
+  implictTraverse(0, 0, bbox3(point3(), resolution_));
   return closestPoint;
 }
 

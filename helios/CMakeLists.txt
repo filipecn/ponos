@@ -1,51 +1,52 @@
 project(HELIOS)
 
 set(HEADERS
-	src/accelerators/aggregate.h
-	src/accelerators/grid.h
-	src/cameras/orthographic.h
-	src/cameras/perspective.h
-  src/core/bsdf.h
-  src/core/camera.h
-	src/core/differential_geometry.h
-	src/core/film.h
-	src/core/intersection.h
-	src/core/light.h
-	src/core/material.h
-	src/core/sampler.h
-	src/core/shape.h
-	src/core/spectrum.h
-	src/core/primitive.h
-	src/core/texture.h
-	src/geometry/h_ray.h
-	src/shapes/h_sphere.h
-	src/shapes/triangle_mesh.h
-	src/helios.h
+		#helios/accelerators/aggregate.h
+		#helios/accelerators/grid.h
+		#helios/cameras/orthographic.h
+		#helios/cameras/perspective.h
+		helios/common/e_float.h
+		helios/common/utils.h
+		#helios/core/bsdf.h
+		#helios/core/camera.h
+		#helios/core/differential_geometry.h
+		#helios/core/film.h
+		helios/core/interaction.h
+		#helios/core/intersection.h
+		#helios/core/light.h
+		#helios/core/material.h
+		#helios/core/sampler.h
+		helios/core/shape.h
+		#helios/core/spectrum.h
+		#helios/core/primitive.h
+		#helios/core/texture.h
+		helios/geometry/bounds.h
+		helios/geometry/bounds.inl
+		helios/geometry/h_ray.h
+		helios/shapes/h_sphere.h
+		#helios/shapes/triangle_mesh.h
+		helios/helios.h
 	)
 
 set(SOURCES
-	src/accelerators/grid.cpp
-	src/cameras/orthographic.cpp
-	src/cameras/perspective.cpp
-  src/core/bsdf.cpp
-	src/core/camera.cpp
-	src/core/differential_geometry.cpp
-	src/core/intersection.cpp
-	src/core/shape.cpp
-	src/core/spectrum.cpp
-	src/core/primitive.cpp
-	src/geometry/h_ray.cpp
-	src/shapes/h_sphere.cpp
-	src/shapes/triangle_mesh.cpp
-	)
+		#helios/accelerators/grid.cpp
+		#helios/cameras/orthographic.cpp
+		#helios/cameras/perspective.cpp
+		#helios/core/bsdf.cpp
+		#helios/core/camera.cpp
+		#helios/core/intersection.cpp
+		helios/core/shape.cpp
+		#helios/core/spectrum.cpp
+		#helios/core/primitive.cpp
+		helios/geometry/h_ray.cpp
+		helios/shapes/h_sphere.cpp
+		#helios/shapes/triangle_mesh.cpp
+        helios/core/interaction.cpp
+		helios/common/e_float.cpp helios/geometry/h_transform.h helios/geometry/h_transform.cpp)
 
-link_libraries(ponos)
-include_directories("${PONOS_SOURCE_DIR}/src")
-include_directories("${HELIOS_SOURCE_DIR}/src")
-
-add_library(helios ${SOURCES} ${HEADERS})
+add_library(helios STATIC ${SOURCES} ${HEADERS})
 set_target_properties(helios PROPERTIES
-	OUTPUT_NAME "helios"
-	FOLDER "HELIOS")
-
-target_link_libraries(helios ${helios_LIBRARIES})
+		OUTPUT_NAME "helios"
+		FOLDER "HELIOS")
+target_link_libraries(helios PUBLIC ponos)
+target_include_directories(helios PUBLIC ${PONOS_SOURCE_DIR} ${HELIOS_SOURCE_DIR})

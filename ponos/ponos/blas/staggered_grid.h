@@ -39,12 +39,12 @@ public:
    * \param h height **[in]** (number of cells)
    * \param b bounding box
    */
-  void set(uint w, uint h, const BBox2D &b);
+  void set(uint w, uint h, const bbox2 &b);
   /** Sample velocity from u and v components
    * \param wp **[in]** world position
    * \return velocity vector
    */
-  vec2 sample(const Point2 &wp) const;
+  vec2 sample(const point2 &wp) const;
   GridType u; //!< velocity x component on u faces
   GridType v; //!< velocity y component on v faces
   GridType p; //!< center data

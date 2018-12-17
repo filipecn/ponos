@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_ALGORITHM_SCATTER_H
 #define PONOS_ALGORITHM_SCATTER_H
@@ -51,40 +51,40 @@ inline std::vector<T> scatter(T a, T b, int n, std::function<T(T x)> shape) {
   return v;
 }
 
-inline Transform2D linearSpaceTransform(const BBox2D &b, size_t w, size_t h) {
+inline Transform2 linearSpaceTransform(const bbox2 &b, size_t w, size_t h) {
   vec2 size(w - 1, h - 1);
-  return translate(vec2(b.pMin)) *
+  return translate(vec2(b.lower)) *
          scale(b.size(0) / size.x, b.size(1) / size.y);
 }
 
 template <typename T>
-void grid_scatter(const BBox2D &bbox, size_t w, size_t h,
+void grid_scatter(const bbox2 &bbox, size_t w, size_t h,
                   std::vector<T> &points) {
-  Transform2D t(bbox);
+  Transform2 t(bbox);
   ivec2 ij, D(w - 1, h - 1);
   FOR_INDICES0_E2D(D, ij) {
-    Point2 p = t(Point2(static_cast<float>(ij[0]) / D[0],
+    point2 p = t(point2(static_cast<float>(ij[0]) / D[0],
                         static_cast<float>(ij[1]) / D[1]));
     points.emplace_back(p.x, p.y);
   }
 }
 
-inline void grid_scatter(const BBox2D &bbox, size_t w, size_t h,
-                         const std::function<void(Point2)> &f) {
-  Transform2D t(bbox);
+inline void grid_scatter(const bbox2 &bbox, size_t w, size_t h,
+                         const std::function<void(point2)> &f) {
+  Transform2 t(bbox);
   ivec2 ij, D(w - 1, h - 1);
   FOR_INDICES0_2D(D, ij) {
-    Point2 p = t(Point2(static_cast<float>(ij[0]) / D[0],
+    point2 p = t(point2(static_cast<float>(ij[0]) / D[0],
                         static_cast<float>(ij[1]) / D[1]));
     f(p);
   }
 }
 
-void scatter(const Circle &circle, size_t n, std::vector<Point2> &points);
+void scatter(const Circle &circle, size_t n, std::vector<point2> &points);
 
 void scatter(const ParametricCurveInterface *pcurve, size_t n,
-             std::vector<Point2> &points);
+             std::vector<point2> &points);
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_ALGORITHM_SCATTER_H

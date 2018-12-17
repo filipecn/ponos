@@ -26,7 +26,7 @@
 
 namespace ponos {
 
-void scatter(const Circle &circle, size_t n, std::vector<Point2> &points) {
+void scatter(const Circle &circle, size_t n, std::vector<point2> &points) {
   float step = Constants::two_pi / static_cast<float>(n);
   for (size_t i = 0; i < n; i++) {
     float angle = static_cast<float>(i) * step;
@@ -35,11 +35,11 @@ void scatter(const Circle &circle, size_t n, std::vector<Point2> &points) {
 }
 
 void scatter(const ParametricCurveInterface *pcurve, size_t n,
-             std::vector<Point2> &points) {
+             std::vector<point2> &points) {
   for (size_t i = 0; i < n; i++) {
     points.emplace_back(
         (*pcurve)(static_cast<float>(i) / static_cast<float>(n)));
   }
 }
 
-}  // namespace ponos
+} // namespace ponos

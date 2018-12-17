@@ -95,8 +95,8 @@ public:
    * @return **true** if the grid contains the coordinate **i**
    */
   bool belongs(const ivec3 &i) const { return ivec3() <= i && i < dimensions; }
-  Point3 worldPosition(const ivec3 &ijk) const {
-    return toWorld(Point3(ijk[0], ijk[1], ijk[2]));
+  point3 worldPosition(const ivec3 &ijk) const {
+    return toWorld(point3(ijk[0], ijk[1], ijk[2]));
   }
   // access mode
   CGridAccessMode mode;
@@ -183,7 +183,7 @@ public:
                    std::max(0, std::min(static_cast<int>(height) - 1, j)));
   }
   T dSample(float x, float y, T r) const {
-    ponos::Point<int, 2> gp = this->cell(Point2(x, y));
+    ponos::Point<int, 2> gp = this->cell(point2(x, y));
     if (!this->belongs(gp))
       return r;
     return getData(gp[0], gp[1]);
@@ -196,7 +196,7 @@ public:
   /** Sets grid's transform
    * \param t transformation
    */
-  void setTransform(const Transform2D &t) {
+  void setTransform(const Transform2 &t) {
     toWorld = t;
     toGrid = inverse(t);
   }
@@ -204,7 +204,7 @@ public:
    * \param _offset **[in]** origin
    * \param _cellSize **[in]** grid spacing
    */
-  void setTransform(Vector2 _offset, Vector2 _cellSize) {
+  void setTransform(vec2 _offset, vec2 _cellSize) {
     offset = _offset;
     toWorld = scale(_cellSize.x, _cellSize.y) * translate(offset);
     toWorld.computeInverse();
@@ -229,7 +229,7 @@ public:
    * \param _offset **[in]** origin
    * \param _cellSize **[in]** grid spacing
    */
-  void set(uint32_t w, uint32_t h, Vector2 _offset, Vector2 _cellSize) {
+  void set(uint32_t w, uint32_t h, vec2 _offset, vec2 _cellSize) {
     setTransform(_offset, _cellSize);
     setDimensions(w, h);
   }
@@ -238,10 +238,10 @@ public:
    * \param h height **[in]** (number of cells)
    * \param b bounding box
    */
-  void set(uint32_t w, uint32_t h, const BBox2D &b) {
+  void set(uint32_t w, uint32_t h, const bbox2 &b) {
     setDimensions(w, h);
     vec2 size(w, h);
-    setTransform(translate(vec2(b.pMin)) *
+    setTransform(translate(vec2(b.lower)) *
                  scale(b.size(0) / size.x, b.size(1) / size.y));
   }
   /** data position
@@ -266,19 +266,19 @@ public:
    * \param wp point (world position)
    * \return point representing cell's position (index space)
    */
-  Point<int, 2> cell(Point2 wp) const { return Point<int, 2>(toGrid(wp)); }
+  Point<int, 2> cell(point2 wp) const { return Point<int, 2>(toGrid(wp)); }
   /** Data cell containing point
    * \param wp point (world position)
    * \return point representing cell's position (index space)
    */
-  Point<int, 2> dataCell(Point2 wp) const {
+  Point<int, 2> dataCell(point2 wp) const {
     return Point<int, 2>(toGrid(wp) - dataOffset());
   }
   /** Interior cell containing point
    * \param wp **[in]** point (world position)
    * \return point representing cell's position (index space)
    */
-  Point<int, 2> safeCell(Point2 wp) const {
+  Point<int, 2> safeCell(point2 wp) const {
     Point<int, 2> gp = cell(wp);
     gp[0] = std::min(static_cast<int>(width) - 1,
                      static_cast<int>(std::max(0, gp[0])));
@@ -298,32 +298,32 @@ public:
    * \param wp **[in]** world space
    * \return data grid position
    */
-  Point2 dataGridPosition(const Point2 &wp) const {
+  point2 dataGridPosition(const point2 &wp) const {
     return toGrid(wp) - dataOffset();
   }
   /** Index space to world position of data
    * \param ij **[in]** index
    * \return world position
    */
-  Point2 dataWorldPosition(const ivec2 &ij) const {
-    return toWorld(ponos::Point2(ij[0], ij[1]) + dataOffset());
+  point2 dataWorldPosition(const ivec2 &ij) const {
+    return toWorld(ponos::point2(ij[0], ij[1]) + dataOffset());
   }
   /** Index space to world position of data
    * \param i **[in]** index in x direction
    * \param j **[in]** index in y direction
    * \return world position
    */
-  Point2 dataWorldPosition(int i, int j) const {
-    return toWorld(ponos::Point2(i, j) + dataOffset());
+  point2 dataWorldPosition(int i, int j) const {
+    return toWorld(ponos::point2(i, j) + dataOffset());
   }
   /** Bounding box of cell **c**
    * \param c **[in]** cell (index space)
    * \return bounding box of **c** in world coordinates
    */
-  BBox2D cellWBox(const Point<int, 2> &c) const {
-    Point2 pmin(c[0], c[1]);
-    Point2 pmax(c[0] + 1, c[1] + 1);
-    return BBox2D(toWorld(pmin), toWorld(pmax));
+  bbox2 cellWBox(const Point<int, 2> &c) const {
+    point2 pmin(c[0], c[1]);
+    point2 pmax(c[0] + 1, c[1] + 1);
+    return bbox2(toWorld(pmin), toWorld(pmax));
   }
   /** Get grid spacing
    * \return cell size
@@ -333,15 +333,15 @@ public:
    * \return dimensions
    */
   vec2 cellSize() const {
-    BBox2D b = this->cellWBox(Point<int, 2>({0, 0}));
+    bbox2 b = this->cellWBox(Point<int, 2>({0, 0}));
     return b.extends();
   }
   T border;                      //!< border value
   uint32_t width;                //!< number of cells in x direction
   uint32_t height;               //!< number of cells in y direction
-  Vector2 offset;                //!< grid origin
-  Transform2D toWorld;           //!< grid space to world space transform
-  Transform2D toGrid;            //!< world space to grid space transform
+  vec2 offset;                //!< grid origin
+  Transform2 toWorld;           //!< grid space to world space transform
+  Transform2 toGrid;            //!< world space to grid space transform
   GridDataPosition dataPosition; //!< grid data position type
   GridAccessMode accessMode;     //!< grid access mode
 };
