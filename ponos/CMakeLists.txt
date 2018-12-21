@@ -74,6 +74,8 @@ set(PONOS_PONOS_HEADERS
         ponos/parallel/parallel.h
         ponos/structures/bah.h
         ponos/structures/brep.hpp
+        ponos/structures/bvh.h
+        ponos/structures/bvh.inl
         ponos/structures/grid_interface.h
         ponos/structures/half_edge3.h
         ponos/structures/half_edge.h

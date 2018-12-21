@@ -131,6 +131,9 @@ typedef Normal3<real_t> normal3;
 typedef Normal3<float> normal3f;
 
 template <typename T> Normal3<T> normalize(const Normal3<T> &normal);
+template <typename T> Normal3<T> abs(const Normal3<T> &normal);
+template <typename T>  T dot(const Normal3<T> &n, const Vector3<T>& v);
+template <typename T>  T dot(const Vector3<T>& v, const Normal3<T> &n);
 
 #include "normal.inl"
 

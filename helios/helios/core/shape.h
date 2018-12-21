@@ -28,16 +28,6 @@ public:
   /// Shape bounding box.
   /// \return bounding box of the shapet (in world space)
   bounds3f worldBound() const;
-  /* if is intersectable.
-   *
-   * Indicates if the shape can compute <helios::HRay> intersections.
-   */
-  bool canIntersect() const;
-  /* refine shape.
-   *
-   * Splits shape into a group of new shapes.
-   */
-  void refine(std::vector<std::shared_ptr<Shape>> &refined) const;
   /// \param ray ray to be intersected (in world space).
   /// \param tHit [out] if an intersection is found, **tHit receives the
   /// parametric distance along the ray, between (0, tMax), to the intersection

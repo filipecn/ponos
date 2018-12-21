@@ -1,3 +1,4 @@
+// Created by filipecn on 2018-12-06.
 /*
  * Copyright (c) 2018 FilipeCN
  *
@@ -21,15 +22,16 @@
  * THE SOFTWARE.
  *
  */
-// Created by filipecn on 2018-12-06.
 #ifndef HELIOS_INTERACTION_H
 #define HELIOS_INTERACTION_H
 
+#include <helios/geometry/h_ray.h>
 #include <ponos/geometry/point.h>
 
 namespace helios {
 
 class Shape;
+class Primitive;
 /// Represents local information of interaction of light and elements of the
 /// scene.
 struct Interaction {
@@ -45,6 +47,12 @@ struct Interaction {
               real_t t /*, const MediumInterface& mediumInterface*/);
   /// \return true if interaction with surface (normal != 0)
   bool isSurfaceInteraction() const;
+  /// \param d spawn direction
+  /// \return ray leaving the intersection point
+  HRay spawnRay(const ponos::vec3f &d) const;
+  /// \param p2 destination point
+  /// \return ray leaving the intersection point
+  HRay spawnRayTo(const ponos::point3f &p2) const;
 
   ponos::point3f p;    //!< point of interaction
   real_t time;         //!< time of interaction (ray's parametric coordinate)
@@ -94,6 +102,10 @@ public:
   } shading; //!< represents pertubations on the quantities of the interaction
              //!< (ex: bump mapping)
   const Shape *shape = nullptr;
+  const Primitive *primitive = nullptr;
+  // TODO BSDF* bsdf = nullptr;
+  // TODO BSSRDF *bssrdf = nullptr;
+
 };
 
 } // namespace helios

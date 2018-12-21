@@ -111,6 +111,14 @@ public:
   /// \param c corner index
   /// \return corner point
   Point3<T> corner(int c) const;
+  /// \param p point
+  /// \return position of **p** relative to the corners where lower has offset
+  /// (0,0,0) and upper (1,1,1)
+  Vector3<T> offset(const Point3<T> &p) const;
+  /// \return surface area of the six faces
+  T surfaceArea() const;
+  /// \return volume inside the bounds
+  T volume() const;
   /**
    * y
    * |_ x

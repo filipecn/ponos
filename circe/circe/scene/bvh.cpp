@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <ponos/structures/bvh.h>
 
 namespace circe {
 
@@ -202,3 +203,4 @@ bool BVH::isInside(const ponos::Point3 &p) {
 }
 
 } // circe namespace"
+

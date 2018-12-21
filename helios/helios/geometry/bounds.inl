@@ -8,33 +8,11 @@ template <typename T>
 Bounds3<T>::Bounds3(const ponos::Point3<T> &p1, const ponos::Point3<T> &p2)
     : ponos::BBox3<T>(p1, p2) {}
 
-template <typename T> T Bounds3<T>::surfaceArea() const {
-  ponos::Vector3<T> d = this->upper - this->lower;
-  return 2 * (d.x * d.y + d.x * d.z + d.y * d.z);
-}
-
-template <typename T> T Bounds3<T>::volume() const {
-  ponos::Vector3<T> d = this->upper - this->lower;
-  return d.x * d.y * d.z;
-}
-
 template <typename T>
 ponos::Point3<T> Bounds3<T>::lerp(const ponos::point3f &t) const {
   return ponos::Point3<T>(ponos::lerp(t.x, this->lower.x, this->upper.x),
                           ponos::lerp(t.y, this->lower.y, this->upper.y),
                           ponos::lerp(t.z, this->lower.z, this->upper.z));
-}
-
-template <typename T>
-ponos::Vector3<T> Bounds3<T>::offset(const ponos::Point3<T> &p) const {
-  ponos::Vector3<T> o = p - this->lower;
-  if (this->upper.x > this->lower.x)
-    o.x /= this->upper.x - this->lower.x;
-  if (this->upper.y > this->lower.y)
-    o.y /= this->upper.y - this->lower.y;
-  if (this->upper.z > this->lower.z)
-    o.z /= this->upper.z - this->lower.z;
-  return o;
 }
 
 template <typename T>

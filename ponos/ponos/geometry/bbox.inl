@@ -200,3 +200,24 @@ template <typename T> BBox3<T> intersect(const BBox3<T> &a, const BBox3<T> &b) {
       Point3<T>(std::min(a.lower.x, b.lower.x), std::min(a.lower.x, b.lower.y),
                 std::min(a.lower.z, b.lower.z)));
 }
+
+template <typename T> Vector3<T> BBox3<T>::offset(const Point3<T> &p) const {
+  ponos::Vector3<T> o = p - lower;
+  if (upper.x > lower.x)
+    o.x /= upper.x - lower.x;
+  if (upper.y > lower.y)
+    o.y /= upper.y - lower.y;
+  if (upper.z > lower.z)
+    o.z /= upper.z - lower.z;
+  return o;
+}
+
+template <typename T> T BBox3<T>::surfaceArea() const {
+  Vector3<T> d = upper - lower;
+  return 2 * (d.x * d.y + d.x * d.z + d.y * d.z);
+}
+
+template <typename T> T BBox3<T>::volume() const {
+  Vector3<T> d = upper - lower;
+  return d.x * d.y * d.z;
+}

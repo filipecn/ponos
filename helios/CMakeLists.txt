@@ -18,7 +18,7 @@ set(HEADERS
 		#helios/core/sampler.h
 		helios/core/shape.h
 		#helios/core/spectrum.h
-		#helios/core/primitive.h
+		helios/core/primitive.h
 		#helios/core/texture.h
 		helios/geometry/bounds.h
 		helios/geometry/bounds.inl
@@ -37,12 +37,12 @@ set(SOURCES
 		#helios/core/intersection.cpp
 		helios/core/shape.cpp
 		#helios/core/spectrum.cpp
-		#helios/core/primitive.cpp
+		helios/core/primitive.cpp
 		helios/geometry/h_ray.cpp
 		helios/shapes/h_sphere.cpp
 		#helios/shapes/triangle_mesh.cpp
         helios/core/interaction.cpp
-		helios/common/e_float.cpp helios/geometry/h_transform.h helios/geometry/h_transform.cpp)
+		helios/common/e_float.cpp helios/geometry/h_transform.h helios/geometry/h_transform.cpp helios/common/globals.h helios/common/globals.cpp)
 
 add_library(helios STATIC ${SOURCES} ${HEADERS})
 set_target_properties(helios PROPERTIES

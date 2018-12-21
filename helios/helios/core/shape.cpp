@@ -13,12 +13,6 @@ Shape::Shape(const HTransform *o2w, const HTransform *w2o, bool ro)
 
 bounds3f Shape::worldBound() const { return (*objectToWorld)(objectBound()); }
 
-bool Shape::canIntersect() const { return true; }
-
-void Shape::refine(std::vector<std::shared_ptr<Shape>> &refined) const {
-  LOG << "Unimplemented Shape::refine()";
-}
-
 bool Shape::intersectP(const HRay &ray, bool testAlphaTexture) const {
   real_t tHit = ray.max_t;
   SurfaceInteraction isect;

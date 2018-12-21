@@ -1,85 +1,88 @@
+/*
+ * Copyright (c) 2018 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 #ifndef HELIOS_CORE_PRIMITIVE_H
 #define HELIOS_CORE_PRIMITIVE_H
 
-#include "core/bsdf.h"
-#include "core/differential_geometry.h"
-#include "core/intersection.h"
-#include "core/light.h"
-#include "core/material.h"
-#include "core/shape.h"
-#include "geometry/animated_transform.h"
-#include "geometry/h_ray.h"
-
-#include <ponos.h>
-
-#include <memory>
-#include <vector>
+#include <helios/core/interaction.h>
+#include <helios/core/shape.h>
+#include <helios/geometry/bounds.h>
 
 namespace helios {
 
-	/* Scene element.
-	 * A primitive is a simple scene element which can interact with light
-	 * and compute intersections with other elements.
-	 */
-	class Primitive {
-		public:
-			Primitive()
-				: primitiveId(nextPrimitiveId++) {}
-			virtual ~Primitive() {}
+/// A primitive is a simple scene element which can interact with light
+/// and compute intersections with other elements. Is the bridge between the
+/// geometry and shading.
+class Primitive {
+public:
+  Primitive();
+  virtual ~Primitive();
+  /// \return world space bounds
+  virtual bounds3f worldBound() const = 0;
+  /// Computes intersection of primitive with ray
+  /// \param r ray
+  /// \param si surface interaction object
+  /// \return true if intersection exists
+  virtual bool intersect(const HRay &r, SurfaceInteraction *si) const = 0;
+  /// Predicate to ray - primitive intersection
+  /// \param r ray
+  /// \return true if intersection exits
+  virtual bool intersectP(const HRay &r) const = 0;
+  /// Light emissive primitives contain an area light object
+  /// \return area light object if primitive is light emissive, nullptr
+  /// otherwise
+  // TODO virtual const AreaLight *getAreaLight() const = 0;
+  /// \return primitive's material (nullptr can be returned)
+  // TODO virtual const Material *material() const = 0;
+  /// Initializes representations of light scattering properties of the material
+  /// at the intersection point on the surface
+  /// \param isect intersection information
+  /// \param arena memory manager for scattering functions allocation
+  /// \param mode indicates if the ray is coming from a camera or a light
+  /// source
+  /// \param allowMultipleLobes sets how some BRDFs are represented
+  virtual void computeScatteringFunctions(
+      SurfaceInteraction *isect /*, MemoryArena &arena, TransportMode mode*/,
+      bool allowMultipleLobes) const = 0;
+};
 
-			virtual ponos::BBox worldBound() const = 0;
-			// intersection
-			virtual bool canIntersect() const;
-			/* as
-			 * @r ray to be intersected
-			 * @in intersection
-			 *
-			 * asd
-			 *
-			 * @return true if intersection exists
-			 */
-			virtual bool intersect(const HRay &r, Intersection *in) const = 0;
-			virtual bool intersectP(const HRay &r) const = 0;
-			virtual void refine(std::vector<std::shared_ptr<Primitive> >& refined) const;
-			void fullyRefine(std::vector<std::shared_ptr<Primitive> > &refined) const;
-			// material
-			virtual const AreaLight *getAreaLight() const = 0;
-      //virtual BSDF *getBSDF(const DifferentialGeometry &gd, const ponos::Transform &o2w, ponos::MemoryArena &arena) const = 0;
-			// virtual BSSRDF *getBSSRDF(const DifferentialGeometry &gd, const Transform &o2w, MemoryArena &arena) const = 0;
-			const uint32_t primitiveId;
-			static uint32_t nextPrimitiveId;
-	};
+class GeometricPrimitive : public Primitive {
+public:
+  bounds3f worldBound() const override;
+  bool intersect(const HRay &r, SurfaceInteraction *si) const override;
+  bool intersectP(const HRay &r) const override;
+  void computeScatteringFunctions(
+      SurfaceInteraction *isect /*, MemoryArena &arena, TransportMode mode*/,
+      bool allowMultipleLobes) const override;
 
-	class GeometricPrimitive : public Primitive {
-		public:
-			GeometricPrimitive(const std::shared_ptr<Shape> &s, const std::shared_ptr<Material> &m, AreaLight *a)
-				: shape(s),
-				material(m),
-				areaLight(a) {}
-			// intersection
-			virtual bool canIntersect() const override;
-			bool intersect(const HRay &r, Intersection *isect) const override;
-			// bool intersectP(const HRay &r) const override;
-			// void refine(std::vector<std::shared_ptr<Primitive> >& refined) const override;
+private:
+  std::shared_ptr<Shape> shape_;
+  // TODO std::shared_ptr<Material> material_;
+  // TODO std::shared_ptr<AreaLight> areaLight_;
+  // TODO MediumInterface mediumInterface;
+};
 
-			// TODO page 189
-		private:
-			std::shared_ptr<Shape> shape;
-			std::shared_ptr<Material> material;
-			AreaLight *areaLight;
-	};
-
-	class TransformedPrimitive : public Primitive {
-		public:
-			TransformedPrimitive(std::shared_ptr<Primitive> &_p, const AnimatedTransform &_w2p)
-				: p(_p), w2p(_w2p) {}
-
-			bool intersect(const HRay &r, Intersection *isect) const override;
-		private:
-			std::shared_ptr<Primitive> p;
-			const AnimatedTransform w2p;
-	};
-
-} // helios namespace
+} // namespace helios
 
 #endif

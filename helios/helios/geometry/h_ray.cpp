@@ -1,5 +1,6 @@
 #include "h_ray.h"
 #include <helios/geometry/h_ray.h>
+#include <helios/common/utils.h>
 
 using namespace ponos;
 
@@ -7,11 +8,28 @@ namespace helios {
 
 HRay::HRay() : max_t(ponos::Constants::real_infinity), time(0.f) {}
 
-HRay::HRay(const ponos::point3f &origin, const ponos::vec3f &direction,
-           real_t tMax, real_t time)
+HRay::HRay(const point3f &origin, const vec3f &direction, real_t tMax,
+           real_t time)
     : o(origin), d(direction), max_t(tMax), time(time) /*, medium(medium)*/ {}
 
-ponos::point3f HRay::operator()(real_t t) const { return o + d * t; }
+point3f HRay::operator()(real_t t) const { return o + d * t; }
+
+point3f offsetRayOrigin(const ponos::point3f &p, const ponos::vec3f &pError,
+                        const ponos::normal3f &n, const ponos::vec3f &w) {
+  real_t d = dot(abs(n), pError);
+  vec3f offset = d * vec3f(n);
+  if (dot(w, n))
+    offset = -offset;
+  point3f po = p + offset;
+  // round offset point away from p
+  for(int i = 0; i < 3; i++)
+    if(offset[i] < 0)
+      po[i] = nextFloatUp(po[i]);
+    else if(offset[i] > 0)
+      po[i] = nextFloatDown(po[i]);
+  return po;
+}
+
 /*
 RayDifferential::RayDifferential(const ponos::Point3 &origin,
                                  const ponos::Vector3 &direction, float start,

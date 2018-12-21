@@ -61,7 +61,7 @@ template <typename T> Vector3<T> Normal3<T>::project(const Vector3<T> &v) {
 
 template <typename T>
 void Normal3<T>::tangential(Vector3<T> &a, Vector3<T> &b) {
-//  ponos::tangential(Vector3<T>(x, y, z), a, b);
+  //  ponos::tangential(Vector3<T>(x, y, z), a, b);
 }
 
 template <typename T> Normal3<T> normalize(const Normal3<T> &normal) {
@@ -69,6 +69,10 @@ template <typename T> Normal3<T> normalize(const Normal3<T> &normal) {
   if (d == 0.f)
     return normal;
   return Normal3<T>(normal.x / d, normal.y / d, normal.z / d);
+}
+
+template <typename T> Normal3<T> abs(const Normal3<T> &normal) {
+  return Normal3<T>(std::abs(normal.x), std::abs(normal.y), std::abs(normal.z));
 }
 
 template <typename T>
@@ -79,4 +83,12 @@ Vector3<T> reflect(const Vector3<T> &a, const Normal3<T> &n) {
 template <typename T>
 Vector3<T> project(const Vector3<T> &v, const Normal3<T> &n) {
   return v - dot(v, Vector3<T>(n)) * Vector3<T>(n);
+}
+
+template <typename T> T dot(const Normal3<T> &n, const Vector3<T> &v) {
+  return n.x * v.x + n.y * v.y + n.z * v.z;
+}
+
+template <typename T> T dot(const Vector3<T> &v, const Normal3<T> &n) {
+  return n.x * v.x + n.y * v.y + n.z * v.z;
 }

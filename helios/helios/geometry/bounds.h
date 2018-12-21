@@ -49,18 +49,10 @@ public:
   explicit Bounds3(const ponos::Point3<T> &p);
   Bounds3(const ponos::Point3<T> &p1, const ponos::Point3<T> &p2);
 
-  /// \return surface area of the six faces
-  T surfaceArea() const;
-  /// \return volume inside the bounds
-  T volume() const;
   /// Linearly interpolates between the corners by t
   /// \param t parametric coordinates
   /// \return interpolation weights
   ponos::Point3<T> lerp(const ponos::point3f &t) const;
-  /// \param p point
-  /// \return position of **p** relative to the corners where lower has offset
-  /// (0,0,0) and upper (1,1,1)
-  ponos::Vector3<T> offset(const ponos::Point3<T> &p) const;
   /// Computes the sphere that bounds the bounding box
   /// \param center **[out]** center of the sphere
   /// \param radius **[out]** radius of the sphere

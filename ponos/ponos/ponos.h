@@ -65,6 +65,7 @@
 #include <ponos/spatial/array.h>
 #include <ponos/spatial/spatial_structure_interface.h>
 // #include <ponos/structures/brep.hpp>
+#include <ponos/structures/bvh.h>
 #include <ponos/structures/grid_interface.h>
 #include <ponos/structures/half_edge.h>
 #include <ponos/structures/level_set.h>
