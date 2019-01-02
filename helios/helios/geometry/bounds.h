@@ -62,7 +62,7 @@ public:
   /// \param hit0 **[out | opt]** first hit
   /// \param hit1 **[out | opt]** second hit
   /// \return true if intersection exists
-  bool intersectP(const HRay &ray, real_t *hit0, real_t *hit1) const;
+  bool intersect(const HRay &ray, real_t *hit0, real_t *hit1) const;
   /// Intersects a ray using a precomputed ray direction reciprocal
   /// Note: returns true if ray is entirely inside bounds, even if no
   /// intersection is found.

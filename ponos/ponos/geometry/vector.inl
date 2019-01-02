@@ -128,11 +128,11 @@ Vector3<T>::Vector3(const Normal3<T> &n) : x(n.x), y(n.y), z(n.z) {}
 template <typename T>
 Vector3<T>::Vector3(const Point3<T> &p) : x(p.x), y(p.y), z(p.z) {}
 
-template <typename T> bool Vector3<T>::operator==(const Vector3<T> &v) {
+template <typename T> bool Vector3<T>::operator==(const Vector3<T> &v) const {
   return IS_EQUAL(x, v.x) && IS_EQUAL(y, v.y) && IS_EQUAL(z, v.z);
 }
 
-template <typename T> bool Vector3<T>::operator<(const Vector3<T> &v) {
+template <typename T> bool Vector3<T>::operator<(const Vector3<T> &v) const {
   if (x < v.x)
     return true;
   if (y < v.y)
@@ -140,7 +140,7 @@ template <typename T> bool Vector3<T>::operator<(const Vector3<T> &v) {
   return z < v.z;
 }
 
-template <typename T> bool Vector3<T>::operator>(const Vector3<T> &v) {
+template <typename T> bool Vector3<T>::operator>(const Vector3<T> &v) const {
   if (x > v.x)
     return true;
   if (y > v.y)
@@ -158,7 +158,9 @@ template <typename T> T &Vector3<T>::operator[](int i) {
   return (&x)[i];
 }
 
-template <typename T> Vector2<T> Vector3<T>::xy() const { return Vector2<T>(x, y); }
+template <typename T> Vector2<T> Vector3<T>::xy() const {
+  return Vector2<T>(x, y);
+}
 
 template <typename T> Vector3<T> &Vector3<T>::operator=(const T &v) {
   x = y = z = v;
@@ -274,7 +276,9 @@ template <typename T> T &Vector4<T>::operator[](int i) {
 
 template <typename T> Vector2<T> Vector4<T>::xy() { return Vector2<T>(x, y); }
 
-template <typename T> Vector3<T> Vector4<T>::xyz() { return Vector3<T>(x, y, z); }
+template <typename T> Vector3<T> Vector4<T>::xyz() {
+  return Vector3<T>(x, y, z);
+}
 
 template <typename T>
 Vector4<T> Vector4<T>::operator+(const Vector4<T> &v) const {
@@ -395,7 +399,7 @@ template <typename T> T dot(const Vector3<T> &a, const Vector3<T> &b) {
 template <typename T>
 Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>((a.y * b.z) - (a.z * b.y), (a.z * b.x) - (a.x * b.z),
-                 (a.x * b.y) - (a.y * b.x));
+                    (a.x * b.y) - (a.y * b.x));
 }
 
 template <typename T>
@@ -425,8 +429,7 @@ template <typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z));
 }
 
-template<typename T>
-Vector3 <T> abs(const Vector3 <T> &a) {
+template <typename T> Vector3<T> abs(const Vector3<T> &a) {
   return Vector3<T>(std::abs(a.x), std::abs(a.y), std::abs(a.z));
 }
 

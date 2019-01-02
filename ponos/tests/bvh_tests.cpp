@@ -7,5 +7,11 @@
 
 using namespace ponos;
 
-TEST(ScalarGrid2f, Access) {
+TEST(BVH, Build) {
+  struct O {
+    bbox3 worldBound() { return b; }
+    bbox3 b;
+  };
+  std::vector<std::shared_ptr<O>> objects;
+  BVH<O> bvh(objects, 1, BVHSplitMethod::EqualCounts);
 }

@@ -62,9 +62,10 @@ public:
   /// \param mode indicates if the ray is coming from a camera or a light
   /// source
   /// \param allowMultipleLobes sets how some BRDFs are represented
-  virtual void computeScatteringFunctions(
-      SurfaceInteraction *isect /*, MemoryArena &arena, TransportMode mode*/,
-      bool allowMultipleLobes) const = 0;
+  virtual void
+  computeScatteringFunctions(SurfaceInteraction *isect,
+                             ponos::MemoryArena &arena /*, TransportMode mode*/,
+                             bool allowMultipleLobes) const = 0;
 };
 
 class GeometricPrimitive : public Primitive {
@@ -72,9 +73,10 @@ public:
   bounds3f worldBound() const override;
   bool intersect(const HRay &r, SurfaceInteraction *si) const override;
   bool intersectP(const HRay &r) const override;
-  void computeScatteringFunctions(
-      SurfaceInteraction *isect /*, MemoryArena &arena, TransportMode mode*/,
-      bool allowMultipleLobes) const override;
+  void
+  computeScatteringFunctions(SurfaceInteraction *isect,
+                             ponos::MemoryArena &arena /*, TransportMode mode*/,
+                             bool allowMultipleLobes) const override;
 
 private:
   std::shared_ptr<Shape> shape_;

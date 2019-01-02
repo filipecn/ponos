@@ -144,6 +144,7 @@ public:
 };
 
 typedef BBox3<real_t> bbox3;
+typedef BBox3<float> bbox3f;
 
 /// Checks if both bounding boxes overlap
 /// \param a first bounding box
@@ -156,6 +157,11 @@ template <typename T> bool overlaps(const BBox3<T> &a, const BBox3<T> &b);
 /// \return a new bounding box that encopasses **b** and **p**
 template <typename T>
 BBox3<T> make_union(const BBox3<T> &b, const Point3<T> &p);
+
+inline bbox3 make_union(const bbox3 &a, const bbox3 &b) {
+  bbox3 ret = make_union(a, b.lower);
+  return make_union(ret, b.upper);
+}
 /// \tparam T coordinates type
 /// \param a bounding box
 /// \param b bounding box

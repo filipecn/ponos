@@ -25,7 +25,7 @@ void Bounds3<T>::boundingSphere(ponos::Point3<T> &center,
 }
 
 template <typename T>
-bool Bounds3<T>::intersectP(const HRay &ray, real_t *hit0, real_t *hit1) const {
+bool Bounds3<T>::intersect(const HRay &ray, real_t *hit0, real_t *hit1) const {
   real_t t0 = 0, t1 = ray.max_t;
   for (int i = 0; i < 3; i++) {
     // update interval for vox slab

@@ -104,9 +104,9 @@ public:
   explicit Vector3(const Normal3<T> &n);
   explicit Vector3(const Point3<T> &p);
   // boolean
-  bool operator==(const Vector3 &v);
-  bool operator<(const Vector3 &v);
-  bool operator>(const Vector3 &v);
+  bool operator==(const Vector3 &v) const;
+  bool operator<(const Vector3 &v) const;
+  bool operator>(const Vector3 &v) const;
   bool operator>=(const Vector3 &p) const;
   bool operator<=(const Vector3 &p) const;
   // access
@@ -150,8 +150,7 @@ template <typename T>
 void tangential(const Vector3<T> &a, Vector3<T> &b, Vector3<T> &c);
 template <typename T> Vector3<T> cos(const Vector3<T> &v);
 template <typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b);
-template<typename T>
-Vector3<T> abs(const Vector3<T>&a);
+template <typename T> Vector3<T> abs(const Vector3<T> &a);
 
 template <typename T> class Vector4 {
 public:

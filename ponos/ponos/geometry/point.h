@@ -42,8 +42,8 @@ public:
   explicit Point2(real_t _x, real_t _y);
 
   // access
-  real_t operator[](int i) const;
-  real_t &operator[](int i);
+  T operator[](int i) const;
+  T &operator[](int i);
   bool operator==(const Point2 &p) const;
   Point2 operator+(const Vector2<T> &v) const;
   Point2 operator-(const Vector2<T> &v) const;
@@ -60,7 +60,7 @@ public:
   bool operator<=(const Point2 &p) const;
   bool HasNaNs() const;
   friend std::ostream &operator<<(std::ostream &os, const Point2 &p);
-  real_t x, y;
+  T x, y;
 };
 
 typedef Point2<real_t> point2;
@@ -82,10 +82,11 @@ public:
   explicit Point3(const Point2<T> &p);
   explicit operator Vector3<T>() const { return Vector3<T>(x, y, z); }
   // access
-  real_t operator[](int i) const;
-  real_t &operator[](int i);
+  T operator[](int i) const;
+  T &operator[](int i);
   // arithmetic
   Point3 operator+(const Vector3<T> &v) const;
+  Point3 operator+(const Point3<T> &v) const;
   Point3 operator+(const real_t &f) const;
   Point3 operator-(const real_t &f) const;
   Point3 &operator+=(const Vector3<T> &v);
@@ -109,7 +110,7 @@ public:
   bool HasNaNs() const;
   static uint dimension() { return 3; }
   friend std::ostream &operator<<(std::ostream &os, const Point3 &p);
-  real_t x, y, z;
+  T x, y, z;
 };
 
 typedef Point3<real_t> point3;

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include "z_point_set.h"
 
@@ -44,8 +44,8 @@ ZPointSet::ZPointSet(uint maxCoordinates) : ZPointSet() {
   FATAL_ASSERT(isPowerOf2(maxCoordinates));
   resolution_ = point3(maxCoordinates, maxCoordinates, maxCoordinates);
   // TODO: solve this
-  //auto h = 1.f / maxCoordinates;
-  //toSet_ = scale(h, h, h);
+  // auto h = 1.f / maxCoordinates;
+  // toSet_ = scale(h, h, h);
   maxZCode_ = computeIndex(resolution_);
   int n = maxCoordinates - 1;
   for (nbits_ = 0; n; n >>= 1)
@@ -140,7 +140,9 @@ point3 ZPointSet::operator[](uint i) const {
 }
 
 uint ZPointSet::computeIndex(const point3 &p) {
-  return mortonCode(static_cast<uint32_t>(p.x), static_cast<uint32_t>(p.y), static_cast<uint32_t>(p.z));
+  return encodeMortonCode(static_cast<uint32_t>(p.x),
+                          static_cast<uint32_t>(p.y),
+                          static_cast<uint32_t>(p.z));
 }
 
 void ZPointSet::search(const bbox3 &b, const std::function<void(uint)> &f) {
@@ -156,26 +158,28 @@ void ZPointSet::search(const bbox3 &b, const std::function<void(uint)> &f) {
       implictTraverse = [&](uint level, uint zcode, const bbox3 &region,
                             const bbox3 &bbox,
                             const std::function<void(uint)> &callBack) {
-    if (level >= maxDepth_)
-      return;
-    // check if node is fully contained by bbox or node is leaf, refine otherwise
-    if (bbox.contains(region) || level == maxDepth_ - 1) {
-      if (bbox_bbox_intersection(bbox, region))
-        for (iterator it(*this, zcode, level); it.next(); ++it)
-          if (bbox.contains(it.getWorldPosition()))
-            f(it.getId());
-      return;
-    }
-    uint d = (nbits_ - level - 1) * 3;
-    auto regions = region.splitBy8();
-    for (uint i = 0; i < 8; i++)
-      implictTraverse(level + 1, zcode | (i << d), regions[i], bbox, callBack);
-
-  };
+        if (level >= maxDepth_)
+          return;
+        // check if node is fully contained by bbox or node is leaf, refine
+        // otherwise
+        if (bbox.contains(region) || level == maxDepth_ - 1) {
+          if (bbox_bbox_intersection(bbox, region))
+            for (iterator it(*this, zcode, level); it.next(); ++it)
+              if (bbox.contains(it.getWorldPosition()))
+                f(it.getId());
+          return;
+        }
+        uint d = (nbits_ - level - 1) * 3;
+        auto regions = region.splitBy8();
+        for (uint i = 0; i < 8; i++)
+          implictTraverse(level + 1, zcode | (i << d), regions[i], bbox,
+                          callBack);
+      };
   implictTraverse(0, 0, bbox3(point3(), resolution_), b, f);
 }
 
-void ZPointSet::iteratePoints(const std::function<void(uint, point3)> &f) const {
+void ZPointSet::iteratePoints(
+    const std::function<void(uint, point3)> &f) const {
   for (uint i = 0; i < end_; i++)
     f(points_[i].id, positions_[points_[i].id]);
 }
@@ -184,30 +188,31 @@ int ZPointSet::intersect(const Ray3 &r, float e) {
   float minDistance2 = 1 << 20;
   int closestPoint = -1;
   // perform an implicit search
-  std::function<void(uint, uint, const bbox3 &)>
-      implictTraverse = [&](uint level, uint zcode, const bbox3 &region) {
-    if (level >= maxDepth_)
-      return;
-    float hit1 = 0, hit2 = 0;
-    if (!bbox_ray_intersection(region, r, hit1, hit2))
-      return;
-    // TODO check if hit is < minDistance2 to prune far regions
-    if (level == maxDepth_ - 1) {
-      for (iterator it(*this, zcode, level); it.next(); ++it)
-        if (distance_point_line(it.getWorldPosition(), Line(r.o, r.d)) < e) {
-          float dist = distance2(r.o, it.getWorldPosition());
-          if (dist < minDistance2) {
-            closestPoint = it.getId();
-            minDistance2 = dist;
-          }
+  std::function<void(uint, uint, const bbox3 &)> implictTraverse =
+      [&](uint level, uint zcode, const bbox3 &region) {
+        if (level >= maxDepth_)
+          return;
+        float hit1 = 0, hit2 = 0;
+        if (!bbox_ray_intersection(region, r, hit1, hit2))
+          return;
+        // TODO check if hit is < minDistance2 to prune far regions
+        if (level == maxDepth_ - 1) {
+          for (iterator it(*this, zcode, level); it.next(); ++it)
+            if (distance_point_line(it.getWorldPosition(), Line(r.o, r.d)) <
+                e) {
+              float dist = distance2(r.o, it.getWorldPosition());
+              if (dist < minDistance2) {
+                closestPoint = it.getId();
+                minDistance2 = dist;
+              }
+            }
+        } else {
+          uint d = (nbits_ - level - 1) * 3;
+          auto regions = region.splitBy8();
+          for (uint i = 0; i < 8; i++)
+            implictTraverse(level + 1, zcode | (i << d), regions[i]);
         }
-    } else {
-      uint d = (nbits_ - level - 1) * 3;
-      auto regions = region.splitBy8();
-      for (uint i = 0; i < 8; i++)
-        implictTraverse(level + 1, zcode | (i << d), regions[i]);
-    }
-  };
+      };
   implictTraverse(0, 0, bbox3(point3(), resolution_));
   return closestPoint;
 }
@@ -217,4 +222,4 @@ void ZPointSet::cast(const Ray3 &r, const std::function<void(uint)> &f) {
   UNUSED_VARIABLE(f);
 }
 
-} // ponos namespace
+} // namespace ponos

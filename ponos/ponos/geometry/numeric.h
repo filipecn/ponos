@@ -495,7 +495,7 @@ inline uint32 separateBy1(uint32 n) {
  * \return the morton code of **x** and **y**. The morton code is the
  * combination of the two binary numbers with the bits interleaved.
  */
-inline uint32 mortonCode(uint32 x, uint32 y) {
+inline uint32 encodeMortonCode(uint32 x, uint32 y) {
   return (separateBy1(y) << 1) + separateBy1(x);
 }
 
@@ -514,7 +514,7 @@ inline uint32_t separateBy2(uint32_t n) {
  * \return the morton code of **x**, **y** and **z**. The morton code is the
  * combination of the two binary numbers with the bits interleaved.
  */
-inline uint32_t mortonCode(uint32_t x, uint32_t y, uint32_t z) {
+inline uint32_t encodeMortonCode(uint32_t x, uint32_t y, uint32_t z) {
   return (separateBy2(z) << 2) + (separateBy2(y) << 1) + separateBy2(x);
 }
 

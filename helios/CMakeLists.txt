@@ -1,7 +1,8 @@
 project(HELIOS)
 
 set(HEADERS
-		#helios/accelerators/aggregate.h
+		helios/accelerators/aggregate.h
+		helios/accelerators/h_bvh.h
 		#helios/accelerators/grid.h
 		#helios/cameras/orthographic.h
 		#helios/cameras/perspective.h
@@ -17,18 +18,22 @@ set(HEADERS
 		#helios/core/material.h
 		#helios/core/sampler.h
 		helios/core/shape.h
-		#helios/core/spectrum.h
+		helios/core/spectrum.h
+		helios/core/spectrum.inl
 		helios/core/primitive.h
 		#helios/core/texture.h
 		helios/geometry/bounds.h
 		helios/geometry/bounds.inl
+		helios/geometry/queries.h
 		helios/geometry/h_ray.h
 		helios/shapes/h_sphere.h
-		#helios/shapes/triangle_mesh.h
+		helios/shapes/triangle.h
+		helios/shapes/triangle_mesh.h
 		helios/helios.h
 	)
 
 set(SOURCES
+		helios/accelerators/h_bvh.cpp
 		#helios/accelerators/grid.cpp
 		#helios/cameras/orthographic.cpp
 		#helios/cameras/perspective.cpp
@@ -36,13 +41,17 @@ set(SOURCES
 		#helios/core/camera.cpp
 		#helios/core/intersection.cpp
 		helios/core/shape.cpp
-		#helios/core/spectrum.cpp
+		helios/core/spectrum.cpp
 		helios/core/primitive.cpp
+		helios/geometry/queries.cpp
 		helios/geometry/h_ray.cpp
 		helios/shapes/h_sphere.cpp
-		#helios/shapes/triangle_mesh.cpp
+		helios/shapes/triangle.cpp
+		helios/shapes/triangle_mesh.cpp
         helios/core/interaction.cpp
-		helios/common/e_float.cpp helios/geometry/h_transform.h helios/geometry/h_transform.cpp helios/common/globals.h helios/common/globals.cpp)
+		helios/common/e_float.cpp helios/geometry/h_transform.h 
+		helios/geometry/h_transform.cpp helios/common/globals.h 
+		helios/common/globals.cpp)
 
 add_library(helios STATIC ${SOURCES} ${HEADERS})
 set_target_properties(helios PROPERTIES

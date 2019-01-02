@@ -48,6 +48,7 @@ set(PONOS_PONOS_HEADERS
         ponos/common/random.h
         ponos/common/timer.h
         ponos/geometry/bbox.h
+        ponos/geometry/bbox.inl
         ponos/geometry/ellipse.h
         ponos/geometry/frustum.h
         ponos/geometry/interval.h

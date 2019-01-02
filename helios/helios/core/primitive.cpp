@@ -40,7 +40,8 @@ bool GeometricPrimitive::intersect(const HRay &r,
 }
 
 void GeometricPrimitive::computeScatteringFunctions(
-    SurfaceInteraction *isect, bool allowMultipleLobes) const {
+    SurfaceInteraction *isect, ponos::MemoryArena &arena,
+    bool allowMultipleLobes) const {
   //  if (material)
   //    material->computeScatteringFunctions(isect, arena, mode,
   //                                         allowMultipleLobes);

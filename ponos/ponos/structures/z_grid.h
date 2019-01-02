@@ -18,8 +18,10 @@ public:
 
   void updateDataStructure() override;
 
-  T getData(int i, int j) const override { return data[mortonCode(i, j)]; }
-  T &getData(int i, int j) override { return data[mortonCode(i, j)]; }
+  T getData(int i, int j) const override {
+    return data[encodeMortonCode(i, j)];
+  }
+  T &getData(int i, int j) override { return data[encodeMortonCode(i, j)]; }
 
   void reset(std::function<void(T &t)> f) {
     for (uint32_t i = 0; i < data.size(); ++i)
@@ -84,6 +86,6 @@ template <class T> T CZGrid<T>::sample(float x, float y) const {
   return ponos::bicubicInterpolate<float>(p, gp.x - x0, gp.y - y0);
 }
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

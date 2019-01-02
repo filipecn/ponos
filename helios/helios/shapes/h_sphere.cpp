@@ -81,7 +81,7 @@ bool HSphere::intersect(const HRay &r, real_t *tHit, SurfaceInteraction *isect,
   real_t theta = std::acos(clamp<real_t>(phit.z / radius, -1, 1));
   real_t v = (theta - thetaMin) / (thetaMax - thetaMin);
   // compute HSphere dp/du and dp/dv
-  real_t zradius = std::sqrtf(phit.x * phit.x + phit.y * phit.y);
+  real_t zradius = std::sqrt(phit.x * phit.x + phit.y * phit.y);
   real_t invradius = 1.f / zradius;
   real_t cosphi = phit.x * invradius;
   real_t sinphi = phit.y * invradius;
