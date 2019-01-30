@@ -152,6 +152,7 @@ template <typename T> Vector3<T> cos(const Vector3<T> &v);
 template <typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b);
 template <typename T> Vector3<T> abs(const Vector3<T> &a);
 
+
 template <typename T> class Vector4 {
 public:
   Vector4();

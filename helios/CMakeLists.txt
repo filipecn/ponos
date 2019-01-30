@@ -27,7 +27,6 @@ set(HEADERS
 		helios/geometry/queries.h
 		helios/geometry/h_ray.h
 		helios/shapes/h_sphere.h
-		helios/shapes/triangle.h
 		helios/shapes/triangle_mesh.h
 		helios/helios.h
 	)
@@ -46,7 +45,6 @@ set(SOURCES
 		helios/geometry/queries.cpp
 		helios/geometry/h_ray.cpp
 		helios/shapes/h_sphere.cpp
-		helios/shapes/triangle.cpp
 		helios/shapes/triangle_mesh.cpp
         helios/core/interaction.cpp
 		helios/common/e_float.cpp helios/geometry/h_transform.h 

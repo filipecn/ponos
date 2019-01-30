@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 #ifndef PONOS_GEOMETRY_UTILS_H
 #define PONOS_GEOMETRY_UTILS_H
 
@@ -5,6 +29,39 @@
 #include <ponos/geometry/vector.h>
 
 namespace ponos {
+
+class Geometry {
+public:
+  /// Converts spherical coordinates into Euclidian coordinates represented by a
+  /// vector
+  /// \tparam T data type
+  /// \param sinTheta sine value of sin(theta)
+  /// \param cosTheta cosine value of cos(theta)
+  /// \param phi angle in radians
+  /// \return direction vector of the given spherical coordinates
+  static vec3f sphericalDirection(real_t sinTheta, real_t cosTheta, real_t phi);
+  /// Converts spherical coordinates into Euclidian coordinates represented by a
+  /// vector with respect to a coordinate frame defined by axes **x, y and z**
+  /// \tparam T data type
+  /// \param sinTheta sine value of sin(theta)
+  /// \param cosTheta cosine value of cos(theta)
+  /// \param phi angle in radians
+  /// \param x x axis
+  /// \param y y axis
+  /// \param z z axis
+  /// \return direction vector of the given spherical coordinates
+  static vec3f sphericalDirection(real_t sinTheta, real_t cosTheta, real_t phi,
+                                  const vec3f &x, const vec3f &y,
+                                  const vec3f &z);
+  /// Converts a direction to spherical angle theta
+  /// \param v normalized direction vector
+  /// \return value of theta in radians
+  static real_t sphericalTheta(const vec3f& v);
+  /// Converts a direction to spherical angle phi
+  /// \param v normalized direction vector
+  /// \return value of phi in radians
+  static real_t sphericalPhi(const vec3f& v);
+};
 
 /* local coordinate system
  * @v1  base vector
@@ -91,6 +148,6 @@ inline float sinPhi(const vec3 &w) {
  */
 inline vec3 otherHemisphere(const vec3 &w) { return vec3(w.x, w.y, -w.z); }
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_GEOMETRY_UTILS_H
