@@ -58,42 +58,28 @@ ponos::point3f offsetRayOrigin(const ponos::point3f &p,
                                const ponos::vec3f &pError,
                                const ponos::normal3f &n, const ponos::vec3f &w);
 
-/* Subclass of <helios::Hray>.
- * Has 2 auxiliary rays to help algorithms like antialiasing.
+/* Subclass of HRay.
+ * Carries 2 auxiliary rays that can be used to determine projected areas over
+ * objects being shaded, helping algorithms such as antialiasing.
  */
 class RayDifferential : public HRay {
 public:
-  RayDifferential() { hasDifferentials = false; }
-  /* Constructor.
-   * @origin
-   * @direction
-   * @start parametric coordinate start
-   * @end parametric coordinate end (how far this ray can go)
-   * @t parametric coordinate
-   * @d depth of recursion
+  RayDifferential();
+  /*
+   * \param origin
+   * \param direction
+   * \param end parametric coordinate end (how far this ray can go)
+   * \param t parametric coordinate
+   * \param d depth of recursion
    */
-  explicit RayDifferential(const ponos::point3 &origin,
-                           const ponos::vec3 &direction, float start = 0.f,
-                           float end = INFINITY, float t = 0.f, int d = 0);
-  /* Constructor.
-   * @origin
-   * @direction
-   * @parent
-   * @start parametric coordinate start
-   * @end parametric coordinate end (how far this ray can go)
-   */
-  explicit RayDifferential(const ponos::point3 &origin,
-                           const ponos::vec3 &direction, const HRay &parent,
-                           float start, float end = INFINITY);
-
+  RayDifferential(const ponos::point3f &origin, const ponos::vec3f &direction,
+                  real_t tMax = ponos::Constants::real_infinity,
+                  real_t time = 0.f /*, const Medium* medium = nullptr*/);
   explicit RayDifferential(const HRay &ray) : HRay(ray) {
     hasDifferentials = false;
   }
-
-  /* Updates the differential rays
-   * @s smaple spacing
-   *
-   * Updates the differential rays for a sample spacing <s>.
+  /* Updates the differential rays for a sample spacing <s>.
+   * \param s smaple spacing
    */
   void scaleDifferentials(float s);
   bool hasDifferentials;

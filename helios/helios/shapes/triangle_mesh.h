@@ -1,8 +1,8 @@
 #ifndef HELIOS_SHAPES_TRIANGLE_MESH_H
 #define HELIOS_SHAPES_TRIANGLE_MESH_H
 
-#include "core/shape.h"
-#include "core/texture.h"
+#include <helios/core/shape.h>
+#include <helios/core/texture.h>
 
 #include <ponos.h>
 

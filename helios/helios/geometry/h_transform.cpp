@@ -7,6 +7,11 @@ using namespace ponos;
 
 namespace helios {
 
+HTransform::HTransform(const mat4 &mat, const mat4 &inv_mat) {
+  this->m = mat;
+  this->m_inv = inv_mat;
+}
+
 template <typename T>
 Point3<T> HTransform::operator()(const Point3<T> &p, Vector3<T> *pError) const {
   T x = p.x, y = p.y, z = p.z;
@@ -151,5 +156,7 @@ bounds3f HTransform::operator()(const bounds3f &b) const {
   ret = make_union(ret, M(point3f(b.lower.x, b.upper.y, b.upper.z)));
   return ret;
 }
+
+HTransform inverse(const HTransform &t) { return HTransform(t.m_inv, t.m); }
 
 } // namespace helios

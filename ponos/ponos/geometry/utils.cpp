@@ -43,7 +43,7 @@ vec3f Geometry::sphericalDirection(real_t sinTheta, real_t cosTheta, real_t phi,
 }
 
 real_t Geometry::sphericalTheta(const vec3f &v) {
-  return std::acos(clamp(v.z, -1, 1));
+  return std::acos(clamp(v.z, -1.f, 1.f));
 }
 
 real_t Geometry::sphericalPhi(const vec3f &v) {

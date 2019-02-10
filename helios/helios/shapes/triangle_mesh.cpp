@@ -1,4 +1,4 @@
-#include "shapes/triangle_mesh.h"
+#include "triangle_mesh.h"
 
 #include <cstring>
 

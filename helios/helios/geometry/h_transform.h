@@ -35,11 +35,14 @@ namespace helios {
 
 class HTransform : public ponos::Transform {
 public:
+  HTransform(const ponos::mat4 &mat, const ponos::mat4 &inv_mat);
+  friend HTransform inverse(const HTransform& t);
   /// Applies transform to ray, handling numerical error
   /// \param r ray
   /// \return transformed ray
   inline HRay operator()(const HRay &r) const;
-  HRay operator()(const HRay &r, ponos::vec3f *oError, ponos::vec3f *dError) const;
+  HRay operator()(const HRay &r, ponos::vec3f *oError,
+                  ponos::vec3f *dError) const;
   /// Applies transform to bounds
   /// \param b bounds
   /// \return transformed bounds
@@ -84,6 +87,8 @@ public:
   /// \return surface interactions with members transformed
   SurfaceInteraction operator()(const SurfaceInteraction &si) const;
 };
+
+HTransform inverse(const HTransform &transform);
 
 } // namespace helios
 

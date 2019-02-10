@@ -87,13 +87,7 @@ namespace helios {
 		const float shutterOpen, shutterClose;
 	};
 
-	/* Sample information.
-	 * Stores the values needed for generating camera rays.
-	 */
-	struct CameraSample {
-		float imageX, imageY, time;
-		float lensU, lensV;
-	};
+
 
 	/* Sample implementation.
 	 *

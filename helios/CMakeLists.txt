@@ -4,10 +4,11 @@ set(HEADERS
 		helios/accelerators/aggregate.h
 		helios/accelerators/h_bvh.h
 		#helios/accelerators/grid.h
-		#helios/cameras/orthographic.h
-		#helios/cameras/perspective.h
+		helios/cameras/orthographic_camera.h
+		helios/cameras/perspective_camera.h
 		helios/common/e_float.h
 		helios/common/utils.h
+		helios/common/globals.h 
 		#helios/core/bsdf.h
 		#helios/core/camera.h
 		#helios/core/differential_geometry.h
@@ -26,16 +27,18 @@ set(HEADERS
 		helios/geometry/bounds.inl
 		helios/geometry/queries.h
 		helios/geometry/h_ray.h
+		helios/geometry/h_transform.h 
+		helios/geometry/animated_transform.h
 		helios/shapes/h_sphere.h
-		helios/shapes/triangle_mesh.h
+		# helios/shapes/triangle_mesh.h
 		helios/helios.h
 	)
 
 set(SOURCES
 		helios/accelerators/h_bvh.cpp
 		#helios/accelerators/grid.cpp
-		#helios/cameras/orthographic.cpp
-		#helios/cameras/perspective.cpp
+		helios/cameras/orthographic_camera.cpp
+		helios/cameras/perspective_camera.cpp
 		#helios/core/bsdf.cpp
 		#helios/core/camera.cpp
 		#helios/core/intersection.cpp
@@ -44,11 +47,12 @@ set(SOURCES
 		helios/core/primitive.cpp
 		helios/geometry/queries.cpp
 		helios/geometry/h_ray.cpp
+		helios/geometry/animated_transform.cpp
 		helios/shapes/h_sphere.cpp
-		helios/shapes/triangle_mesh.cpp
+		# helios/shapes/triangle_mesh.cpp
         helios/core/interaction.cpp
-		helios/common/e_float.cpp helios/geometry/h_transform.h 
-		helios/geometry/h_transform.cpp helios/common/globals.h 
+		helios/common/e_float.cpp 
+		helios/geometry/h_transform.cpp 
 		helios/common/globals.cpp)
 
 add_library(helios STATIC ${SOURCES} ${HEADERS})
