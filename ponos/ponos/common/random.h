@@ -2,8 +2,8 @@
 #define PONOS_COMMON_RANDOM_H
 
 #include <ponos/common/defs.h>
-#include <ponos/geometry/numeric.h>
 #include <ponos/geometry/bbox.h>
+#include <ponos/geometry/numeric.h>
 
 namespace ponos {
 
@@ -69,8 +69,8 @@ public:
   /// \param rng random number generator
   explicit RNGSampler(RNG *rngX = new HaltonSequence(3),
                       RNG *rngY = new HaltonSequence(5),
-                      RNG *rngZ = new HaltonSequence(7)) :
-      rngX_(rngX), rngY_(rngY), rngZ_(rngZ) {}
+                      RNG *rngZ = new HaltonSequence(7))
+      : rngX_(rngX), rngY_(rngY), rngZ_(rngZ) {}
   /// Samples a bbox region
   /// \param region sampling domain
   /// \return a random point inside **region**
@@ -79,12 +79,13 @@ public:
                   rngY_->randomFloat() * region.size(1) + region.lower[1],
                   rngZ_->randomFloat() * region.size(2) + region.lower[2]);
   }
+
 private:
   std::shared_ptr<RNG> rngX_;
   std::shared_ptr<RNG> rngY_;
   std::shared_ptr<RNG> rngZ_;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_COMMON_RANDOM_H

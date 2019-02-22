@@ -17,7 +17,7 @@ set(HEADERS
 		#helios/core/intersection.h
 		#helios/core/light.h
 		#helios/core/material.h
-		#helios/core/sampler.h
+		helios/core/sampler.h
 		helios/core/shape.h
 		helios/core/spectrum.h
 		helios/core/spectrum.inl
@@ -29,6 +29,7 @@ set(HEADERS
 		helios/geometry/h_ray.h
 		helios/geometry/h_transform.h 
 		helios/geometry/animated_transform.h
+		helios/samplers/stratified_sampler.h
 		helios/shapes/h_sphere.h
 		# helios/shapes/triangle_mesh.h
 		helios/helios.h
@@ -43,6 +44,7 @@ set(SOURCES
 		#helios/core/camera.cpp
 		#helios/core/intersection.cpp
 		helios/core/shape.cpp
+		helios/core/sampler.cpp
 		helios/core/spectrum.cpp
 		helios/core/primitive.cpp
 		helios/geometry/queries.cpp
@@ -53,7 +55,9 @@ set(SOURCES
         helios/core/interaction.cpp
 		helios/common/e_float.cpp 
 		helios/geometry/h_transform.cpp 
-		helios/common/globals.cpp)
+		helios/common/globals.cpp
+		helios/samplers/stratified_sampler.cpp
+		)
 
 add_library(helios STATIC ${SOURCES} ${HEADERS})
 set_target_properties(helios PROPERTIES

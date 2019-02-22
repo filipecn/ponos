@@ -26,18 +26,10 @@
 #define HELIOS_CORE_CAMERA_H
 
 #include <helios/geometry/animated_transform.h>
+#include <helios/core/sampler.h>
 #include <ponos/geometry/point.h>
 
 namespace helios {
-
-/* Sample information.
- * Stores the values needed for generating camera rays.
- */
-struct CameraSample {
-  ponos::point2f pFilm; //!< point on the film to which the ray carries radiance
-  ponos::point2f pLens; //!< point on the lens the ray passes through
-  real_t time;          //!< time at wich the ray should sample the scene
-};
 
 /* Camera base class.
  * Defines the interface for camera implementations.
