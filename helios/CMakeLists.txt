@@ -22,6 +22,7 @@ set(HEADERS
 		helios/core/spectrum.h
 		helios/core/spectrum.inl
 		helios/core/primitive.h
+		helios/core/reflection.h
 		#helios/core/texture.h
 		helios/geometry/bounds.h
 		helios/geometry/bounds.inl
@@ -47,6 +48,7 @@ set(SOURCES
 		helios/core/sampler.cpp
 		helios/core/spectrum.cpp
 		helios/core/primitive.cpp
+		helios/core/reflection.cpp
 		helios/geometry/queries.cpp
 		helios/geometry/h_ray.cpp
 		helios/geometry/animated_transform.cpp
