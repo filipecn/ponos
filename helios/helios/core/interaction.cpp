@@ -23,8 +23,8 @@
  *
  */
 #include "interaction.h"
-#include <helios/core/interaction.h>
 #include <helios/common/globals.h>
+#include <helios/core/interaction.h>
 
 using namespace ponos;
 
@@ -88,6 +88,14 @@ void SurfaceInteraction::setShadingGeometry(const vec3f &dpdus,
   shading.dpdv = dpdvs;
   shading.dndu = dndus;
   shading.dndv = dndvs;
+}
+
+void SurfaceInteraction::computeScatteringFunctions(const RayDifferential &ray,
+                                                    ponos::MemoryArena &arena,
+                                                    bool allowMultipleLobes,
+                                                    TransportMode mode) {
+  computeDifferentials(ray);
+  primitive->computeScatteringFunctions(this, arena, mode, allowMultipleLobes);
 }
 
 } // namespace helios

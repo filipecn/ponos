@@ -1,34 +1,35 @@
 #ifndef HELIOS_CORE_MATERIAL_H
 #define HELIOS_CORE_MATERIAL_H
 
-#include "core/bsdf.h"
-#include "core/differential_geometry.h"
-#include "core/texture.h"
-
-#include <ponos.h>
-
-#include <memory>
+#include <helios/core/interaction.h>
+#include <ponos/common/memory.h>
 
 namespace helios {
 
-	class Material {
-  	public:
-	 		Material() {}
-			virtual ~Material() {}
-      virtual BSDF* getBSDF(const DifferentialGeometry& dgGeom,
-                            const DifferentialGeometry& dgShading,
-                            ponos::MemoryArena& arena) const = 0;
-      virtual BSDF* getBSSDF(const DifferentialGeometry& dgGeom,
-                             const DifferentialGeometry& dgShading,
-                             ponos::MemoryArena& arena) const {
-                               return nullptr;
-                             }
-      void bump(const std::shared_ptr<Texture<float> > &d,
-                const DifferentialGeometry &dgGeom,
-                const DifferentialGeometry &dgs,
-                DifferentialGeometry *dgBump);
-	};
+/// Material Interface. Base class for Material implementations
+class Material {
+public:
+  Material();
+  virtual ~Material();
+  /// Determines the reflective properties at the point and initializes the
+  /// SurfaceInteraction::bsdf and SurfaceInteraction::bssrdf members
+  /// \param si **[in/out]** surface interaction instance
+  /// \param arena used to allocate memory for BSDFs and BSSRDFs
+  /// \param mode indicates whether the surface intersection was found along a
+  /// path starting from camera or light
+  /// \param allowMultipleLobes indicates whether the material should use BxDFs
+  /// that aggregate multiple types of scattering into a single BxDF
+  virtual void computeScatteringFunctions(SurfaceInteraction *si,
+                                          ponos::MemoryArena &arena,
+                                          TransportMode mode,
+                                          bool allowMultipleLobes) const = 0;
+  /// Computes shading normals based on a displaced function represented by a
+  /// texture (bump mapping).
+  /// \param d displacement field
+  /// \param si surface interaction containing the normals
+  void bump(const std::shared_ptr<Texture<real_t>> &d, SurfaceInteraction *si);
+};
 
-} // helios namespace
+} // namespace helios
 
 #endif

@@ -1,54 +1,81 @@
 #ifndef HELIOS_CORE_BSDF_H
 #define HELIOS_CORE_BSDF_H
 
-#include "core/bxdf.h"
-#include "core/differential_geometry.h"
-#include "core/spectrum.h"
+#include <helios/core/interaction.h>
+#include <helios/core/reflection.h>
 
 #include <ponos.h>
 
 namespace helios {
 
-#define BSDF_ALLOC(arena, Type) new (arena.Alloc(sizeof(Type))) Type
+/// Represents a collection of BRDFs and BTDFs.
+class BSDF {
+public:
+  /// \param si information about the differential geometry of points in the
+  /// surface
+  /// \param eta **[default = 1]** relative index of refraction over the
+  /// boundary
+  BSDF(const SurfaceInteraction &si, real_t eta = 1);
+  /// Adds an BxDF component
+  /// \param b BxDF component raw pointer
+  void add(BxDF *b);
+  /// Computes the number of BxDFs stored that match the set of types
+  /// \param types flag
+  /// \return int number of matches
+  int numComponents(BxDF::Type types = BxDF::BSDF_ALL) const;
+  /// \param v input vector in world space
+  /// \return ponos::vec3 **v** transformed onto shading space
+  ponos::vec3 worldToLocal(const ponos::vec3 &v) const;
+  /// \param v input vector in local space
+  /// \return ponos::vec3 **v** transformed onto world space
+  ponos::vec3 localToWorld(const ponos::vec3 &v) const;
+  /// Evaluates de BSDF for a given pair of directions
+  /// \param woW outgoing direction in world space
+  /// \param wiW incident direction in world space
+  /// \param types types filter
+  /// \return Spectrum total contribution of components
+  Spectrum f(const ponos::vec3 &woW, const ponos::vec3 &wiW,
+             BxDF::Type types) const;
+  /// Computes the accumulated hemispherical-hemispherical reflectance that
+  /// gives the fraction of incident light reflected by the surface when
+  /// incident light is the same from all directions
+  /// \param nSamples
+  /// \param samples1
+  /// \param samples2
+  /// \param flags BxDF type filter
+  /// \return Spectrum
+  Spectrum rho(int nSamples, const ponos::point2 *samples1,
+               const ponos::point2 *samples2,
+               BxDF::Type flags = BxDF::Type::BSDF_ALL) const;
+  /// Computes the accumulated hemispherical-directional reflectance that gives
+  /// the total reflection in a given direction due to constant illumination
+  /// over the hemisphere
+  /// \param wo **[in]** outgoing direction
+  /// \param nSamples number of samples
+  /// \param samples hemisphere sample positions (only needed by some
+  /// algorithms)
+  /// \param flags BxDF type filter
+  /// \return Spectrum the value of the function
+  Spectrum rho(const ponos::vec3 &wo, int nSamples,
+               const ponos::point2 *samples,
+               BxDF::Type flags = BxDF::Type::BSDF_ALL) const;
 
-  /*  collection
-   *  represents a collection of BRDFs and BTDFs.
-   */
-  class BSDF {
-  public:
-    BSDF(const DifferentialGeometry &dg, const ponos::Normal &ngeom, float e);
+  const real_t eta; //!< relative index of refraction over the boundary
+private:
+  /// Made private to force user to use MemoryArena instead of usual new/delete
+  /// methods
+  ~BSDF() = default;
 
-    #define MAX_BxDFS 8
-    void add(BxDF *b) {
-      ASSERT(nBxDFs < MAX_BxDFS);
-      bxdfs[nBxDFs++] = b;
-    }
-    int numComponents() const { return nBxDFs; }
-    int numComponents(BxDFType flags) const;
-    ponos::vec3 worldToLocal(const ponos::vec3 &v) const {
-      return ponos::vec3(ponos::dot(v, sn), ponos::dot(v, tn), ponos::dot(v, ponos::vec3(nn)));
-    }
-    ponos::vec3 localToWorld(const ponos::vec3 &v) const {
-      return ponos::vec3(sn.x * v.x + tn.x * v.y + nn.x * v.z,
-                         sn.y * v.x + tn.y * v.y + nn.y * v.z,
-                         sn.z * v.x + tn.z * v.y + nn.z * v.z);
-    }
-    Spectrum f(const ponos::vec3 &woW, const ponos::vec3 &wiW, BxDFType flags) const;
-    Spectrum rho(ponos::RNG &rng, BxDFType flags = BSDF_ALL, int sqrtSamples = 6) const;
-    Spectrum rho(const ponos::vec3 &wo, ponos::RNG &rng, BxDFType flags = BSDF_ALL, int sqrtSamples = 6) const;
+  const ponos::normal3
+      ns; //!< shading normal (given by bump mapping for example)
+  const ponos::normal3 ng; //!< geometric normal
+  const ponos::vec3 ss;    //!< primary tangent
+  const ponos::vec3 ts;    //!< secundary tangent
+  int nBxDFs = 0;          //!< number of BxDF components
+  static constexpr int maxBxDFs = 8;
+  BxDF *bxdfs[maxBxDFs]; //!< component array
+};
 
-    const DifferentialGeometry dgShading;
-    const float eta;
-
-  private:
-    ~BSDF() {}
-
-    ponos::Normal nn, ng;
-    ponos::vec3 sn, tn;
-    int nBxDFs;
-    BxDF *bxdfs[MAX_BxDFS];
-  };
-
-} // helios namespace
+} // namespace helios
 
 #endif
