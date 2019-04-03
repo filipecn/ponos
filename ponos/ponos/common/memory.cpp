@@ -35,7 +35,7 @@ void *allocAligned(size_t size) {
     ptr = nullptr;
   return ptr;
 #elif defined(__linux)
-  return memalign(CACHE_L1_LINE_SIZE, size);
+  return memalign(PONOS_CACHE_L1_LINE_SIZE, size);
 #endif
   return nullptr;
 }
@@ -55,7 +55,7 @@ MemoryArena::MemoryArena(size_t bs) : blockSize(bs) {}
 MemoryArena::~MemoryArena() {
   freeAligned(currentBlock);
   for (auto &block : usedBlocks)
-    freeAligned(block.second);
+    freeAligned((void *)block.second);
   for (auto &block : availableBlocks)
     freeAligned(block.second);
 }

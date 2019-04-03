@@ -107,8 +107,8 @@ private:
   size_t currentBlockPos = 0;  //!< offset of the first free location
   size_t currentAllocSize = 0; //!< total size of the current block allocation
   uint8_t *currentBlock = nullptr; //!< pointer to the current block of memory
-  std::list<std::pair<size_t, uint8_t>> usedBlocks; //!< fully used blocks
-  std::list<std::pair<size_t, uint8_t>>
+  std::list<std::pair<size_t, uint8_t *>> usedBlocks; //!< fully used blocks
+  std::list<std::pair<size_t, uint8_t *>>
       availableBlocks; //!< allocated but not used blocks
 };
 
