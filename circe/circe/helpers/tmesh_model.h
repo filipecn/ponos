@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_TMESH_MODEL_H
 #define CIRCE_TMESH_MODEL_H
@@ -58,7 +58,7 @@ public:
                    for (size_t i = 0; i < mesh_.vertices.size(); i++)
                        glVertex(mesh_.vertices[i].position);
 
-                   )
+    )
     glColor(edgesColor);
     GL_DRAW_LINES(2.f,
                   for (auto &e
@@ -67,7 +67,7 @@ public:
                     glVertex(mesh_.vertices[e.b].position);
                   }
 
-                  )
+    )
     glColor(facesColor);
     GL_DRAW_TRIANGLES(for (size_t f = 0; f < mesh_.faces.size(); f++) {
       auto v = mesh_.faceVertices(f);
@@ -91,13 +91,13 @@ public:
       vertexCallback;
 
 private:
-  std::vector<ponos::Point3> centroids_;
+  std::vector<ponos::point3> centroids_;
   int selectedVertex_;
   int selectedFace_;
   int selectedEdge_;
   const ponos::TMesh<V, F, E, P> &mesh_;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_TMESH_MODEL_H

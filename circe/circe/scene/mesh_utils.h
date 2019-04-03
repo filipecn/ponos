@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_MESH_UTILS_H
 #define CIRCE_SCENE_MESH_UTILS_H
@@ -46,7 +46,7 @@ ponos::RawMesh *create_wireframe_mesh(const ponos::RawMesh *m);
 /// \param generateNormals include normals
 /// \param genereateUVs include texture coordinates
 /// \return RawMesh representing the icosphere
-ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center, float radius,
+ponos::RawMesh *create_icosphere_mesh(const ponos::point3 &center, float radius,
                                       size_t divisions,
                                       bool generateNormals = false,
                                       bool genereateUVs = false);
@@ -56,10 +56,10 @@ ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center, float radius,
 /// \param generateNormals include normals
 /// \param generateUVs include texture coordinates
 /// \return Raw Mesh smart pointer
-ponos::RawMeshSPtr create_cube_mesh(const ponos::Point3 &center, float size,
+ponos::RawMeshSPtr create_cube_mesh(const ponos::point3 &center, float size,
                                     bool generateNormals = false,
                                     bool generateUVs = false);
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_MESH_UTILS_H

@@ -1,6 +1,6 @@
 project(PONOS)
 
-set(PONOS_PONOS_HEADERS
+set(PONOS_HEADERS
         ponos/ponos.h
         ponos/algorithm/fast_sweep.h
         ponos/algorithm/geometric_shapes.h
@@ -71,6 +71,7 @@ set(PONOS_PONOS_HEADERS
         ponos/geometry/transform.h
         ponos/geometry/utils.h
         ponos/geometry/vector.h
+        ponos/geometry/vector.inl
         ponos/log/debug.h
         ponos/parallel/parallel.h
         ponos/structures/bah.h
@@ -96,7 +97,7 @@ set(PONOS_PONOS_HEADERS
         ponos/structures/z_point_set.h
         )
 
-file(GLOB SOURCES
+file(GLOB PONOS_SOURCES
         ponos/algorithm/*.cpp
         ponos/geometry/*.cpp
         ponos/blas/*.cpp
@@ -105,14 +106,14 @@ file(GLOB SOURCES
         ponos/structures/*.cpp
         )
 
-add_library(ponos STATIC ${SOURCES} ${HEADERS})
+add_library(ponos STATIC ${PONOS_SOURCES} ${PONOS_HEADERS})
 set_target_properties(ponos PROPERTIES
         OUTPUT_NAME "ponos"
         FOLDER "PONOS")
 target_include_directories(ponos PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
-add_library(ponos_shared SHARED ${SOURCES} ${HEADERS})
+add_library(ponos_shared SHARED ${PONOS_SOURCES} ${PONOS_HEADERS})
 target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos_shared ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 

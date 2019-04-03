@@ -172,7 +172,7 @@ void ShaderProgram::setUniform(const char *name, const ponos::vec3 &v) {
   glUniform3fv(loc, 1, &v.x);
 }
 
-void ShaderProgram::setUniform(const char *name, const ponos::Point3 &v) {
+void ShaderProgram::setUniform(const char *name, const ponos::point3 &v) {
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name

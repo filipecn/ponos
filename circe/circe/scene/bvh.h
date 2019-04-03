@@ -22,20 +22,20 @@ public:
   SceneMeshObjectSPtr sceneMesh;
 
   int intersect(const ponos::Ray3 &ray, float *t = nullptr);
-  bool isInside(const ponos::Point3 &p);
+  bool isInside(const ponos::point3 &p);
 
 private:
   struct BVHElement {
-    BVHElement(size_t i, const ponos::BBox3 &b) : ind(i), bounds(b) {
+    BVHElement(size_t i, const ponos::bbox3 &b) : ind(i), bounds(b) {
       centroid = b.centroid();
     }
     size_t ind;
-    ponos::BBox3 bounds;
-    ponos::Point3 centroid;
+    ponos::bbox3 bounds;
+    ponos::point3 centroid;
   };
   struct BVHNode {
     BVHNode() { children[0] = children[1] = nullptr; }
-    void initLeaf(uint32_t first, uint32_t n, const ponos::BBox3 &b) {
+    void initLeaf(uint32_t first, uint32_t n, const ponos::bbox3 &b) {
       firstElementOffset = first;
       nElements = n;
       bounds = b;
@@ -47,12 +47,12 @@ private:
       splitAxis = axis;
       nElements = 0;
     }
-    ponos::BBox3 bounds;
+    ponos::bbox3 bounds;
     BVHNode *children[2];
     uint32_t splitAxis, firstElementOffset, nElements;
   };
   struct LinearBVHNode {
-    ponos::BBox3 bounds;
+    ponos::bbox3 bounds;
     union {
       uint32_t elementsOffset;
       uint32_t secondChildOffset;
@@ -61,8 +61,8 @@ private:
     uint8_t axis;
     uint8_t pad[2];
   };
-  struct ComparePoints {
-    ComparePoints(int d) { dim = d; }
+  struct Comparepoints {
+    Comparepoints(int d) { dim = d; }
     int dim;
     bool operator()(const BVHElement &a, const BVHElement &b) const {
       return a.centroid[dim] < b.centroid[dim];
@@ -75,10 +75,10 @@ private:
                           uint32_t end, uint32_t *totalNodes,
                           std::vector<uint32_t> &orderedElements);
   uint32_t flattenBVHTree(BVHNode *node, uint32_t *offset);
-  bool intersect(const ponos::BBox3 &bounds, const ponos::Ray3 &ray,
+  bool intersect(const ponos::bbox3 &bounds, const ponos::Ray3 &ray,
                  const ponos::vec3 &invDir, const uint32_t dirIsNeg[3]) const;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_MESH_H

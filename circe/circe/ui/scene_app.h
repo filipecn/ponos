@@ -69,8 +69,8 @@ protected:
     }
     activeObjectViewport = -1;
     for (size_t i = 0; i < viewports.size(); i++) {
-      ponos::Point2 p = viewports[i].getMouseNPos();
-      if (p >= ponos::Point2(-1.f, -1.f) && p <= ponos::Point2(1.f, 1.f)) {
+      ponos::point2 p = viewports[i].getMouseNPos();
+      if (p >= ponos::point2(-1.f, -1.f) && p <= ponos::point2(1.f, 1.f)) {
         ponos::Ray3 r = viewports[i].camera->pickRay(p);
         if (selectedObject)
           selectedObject->selected = false;

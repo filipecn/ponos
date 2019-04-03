@@ -59,7 +59,8 @@ public:
   bool operator>=(const Point2 &p) const;
   bool operator<=(const Point2 &p) const;
   bool HasNaNs() const;
-  friend std::ostream &operator<<(std::ostream &os, const Point2 &p);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Point2<TT> &p);
   T x, y;
 };
 
@@ -109,7 +110,8 @@ public:
   ivec3 asIVec3() const;
   bool HasNaNs() const;
   static uint dimension() { return 3; }
-  friend std::ostream &operator<<(std::ostream &os, const Point3 &p);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Point3<TT> &p);
   T x, y, z;
 };
 

@@ -221,7 +221,8 @@ public:
   bool operator!=(const Matrix4x4 &_m) const;
   bool isIdentity();
   static Matrix4x4 mul(const Matrix4x4 &m1, const Matrix4x4 &m2);
-  friend std::ostream &operator<<(std::ostream &os, const Matrix4x4 &m);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Matrix4x4<TT> &m);
   T m[4][4];
 };
 
@@ -245,7 +246,8 @@ public:
   Matrix3x3 operator*(const T &f) const;
   static Matrix3x3 mul(const Matrix3x3 &m1, const Matrix3x3 &m2);
   T determinant();
-  friend std::ostream &operator<<(std::ostream &os, const Matrix3x3 &m);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Matrix3x3<TT> &m);
   T m[3][3];
 };
 
@@ -270,7 +272,8 @@ public:
   Matrix2x2 operator*(const Matrix2x2 &mat);
   Matrix2x2 operator*(const T &f) const;
   static Matrix2x2 mul(const Matrix2x2 &m1, const Matrix2x2 &m2);
-  friend std::ostream &operator<<(std::ostream &os, const Matrix2x2 &m);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Matrix2x2<TT> &m);
   T m[2][2];
 };
 

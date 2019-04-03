@@ -50,34 +50,34 @@ void ViewportDisplay::key(int k, int scancode, int action, int modifiers) {
     keyCallback(k, scancode, action, modifiers);
 }
 
-ponos::Point2 ViewportDisplay::getMouseNPos() {
+ponos::point2 ViewportDisplay::getMouseNPos() {
   int viewport[] = {0, 0, width, height};
-  ponos::Point2 mp =
+  ponos::point2 mp =
       GraphicsDisplay::instance().getMousePos() - ponos::vec2(x, y);
-  return ponos::Point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
+  return ponos::point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
                        (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
 }
 
 bool ViewportDisplay::hasMouseFocus() const {
-  ponos::Point2 mp =
+  ponos::point2 mp =
       GraphicsDisplay::instance().getMousePos() - ponos::vec2(x, y);
   return (mp.x >= 0.f && mp.x <= width && mp.y >= 0.f && mp.y <= height);
 }
 
-ponos::Point3 ViewportDisplay::viewCoordToNormDevCoord(ponos::Point3 p) {
+ponos::point3 ViewportDisplay::viewCoordToNormDevCoord(ponos::point3 p) {
   float v[] = {0, 0, static_cast<float>(width), static_cast<float>(height)};
-  return ponos::Point3((p.x - v[0]) / (v[2] / 2.0) - 1.0,
+  return ponos::point3((p.x - v[0]) / (v[2] / 2.0) - 1.0,
                        (p.y - v[1]) / (v[3] / 2.0) - 1.0, 2 * p.z - 1.0);
 }
 
-ponos::Point3 ViewportDisplay::unProject(const CameraInterface &c,
-                                         ponos::Point3 p) {
+ponos::point3 ViewportDisplay::unProject(const CameraInterface &c,
+                                         ponos::point3 p) {
   return ponos::inverse(c.getTransform()) * p;
 }
 
-ponos::Point3 ViewportDisplay::unProject() {
+ponos::point3 ViewportDisplay::unProject() {
   return ponos::inverse(camera->getTransform()) *
-         ponos::Point3(getMouseNPos().x, getMouseNPos().y, 0.f);
+         ponos::point3(getMouseNPos().x, getMouseNPos().y, 0.f);
 }
 
 } // namespace circe

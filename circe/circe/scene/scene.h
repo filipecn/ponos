@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_SCENE_H
 #define CIRCE_SCENE_SCENE_H
@@ -68,8 +68,8 @@ public:
    */
   SceneObject *intersect(const ponos::Ray3 &ray, float *t = nullptr) {
     ponos::Transform tr = ponos::inverse(transform);
-    ponos::Point3 ta = tr(ray.o);
-    ponos::Point3 tb = tr(ray(1.f));
+    ponos::point3 ta = tr(ray.o);
+    ponos::point3 tb = tr(ray(1.f));
     return s.intersect(ponos::Ray3(ta, tb - ta), t);
   }
 
@@ -87,6 +87,6 @@ private:
   StructureType<SceneObject> s;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_SCENE_H

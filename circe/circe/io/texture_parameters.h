@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_IO_TEXTURE_ATTRIBUTES_H
 #define CIRCE_IO_TEXTURE_ATTRIBUTES_H
@@ -41,15 +41,18 @@ namespace circe {
  *  attributes.height, 0, attributes.format, attributes.type, attributes.data);
  */
 struct TextureAttributes {
-  TextureAttributes() : data(0) {}
-  size_t width;  //!< width of the texture (in texels)
-  size_t height; //!< height of the texture (in texels) or the number of layers
-  size_t depth;  //!< height of the texture (in texels) or the number of layers
-  GLint internalFormat; //!< the color components in the texture (ex: GL_RGBA)
-  GLenum format; //!< format of pixel data (ex: GL_RGBA, GL_RED_INTEGER, ...)
-  GLenum type;   //!< data type of pixel data (ex: GL_UNSIGNED_BYTE, GL_FLOAT)
-  GLenum target; //!< target texture (ex: GL_TEXTURE_3D)
-  GLvoid *data;  //!< specifies a pointer to the image data in memory.
+  size_t width = 0; //!< width of the texture (in texels)
+  size_t height =
+      0; //!< height of the texture (in texels) or the number of layers
+  size_t depth =
+      0; //!< height of the texture (in texels) or the number of layers
+  GLint internalFormat =
+      0; //!< the color components in the texture (ex: GL_RGBA8)
+  GLenum format =
+      0;           //!< format of pixel data (ex: GL_RGBA, GL_RED_INTEGER, ...)
+  GLenum type = 0; //!< data type of pixel data (ex: GL_UNSIGNED_BYTE, GL_FLOAT)
+  GLenum target = 0;      //!< target texture (ex: GL_TEXTURE_3D)
+  GLvoid *data = nullptr; //!< specifies a pointer to the image data in memory.
 };
 
 /** \brief set of texture parameters
@@ -100,6 +103,6 @@ private:
   std::map<GLuint, GLuint> parameters;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_IO_TEXTURE_ATTRIBUTES_H

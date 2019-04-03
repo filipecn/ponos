@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_IO_TEXTURE_H
 #define CIRCE_IO_TEXTURE_H
@@ -49,6 +49,7 @@ public:
   /// \return list of pixels by row major
   std::vector<unsigned char> texels() const;
   ponos::uivec3 size() const;
+  GLuint textureObjectId() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 
 protected:
@@ -57,6 +58,6 @@ protected:
   GLuint textureObject;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_IO_TEXTURE_H

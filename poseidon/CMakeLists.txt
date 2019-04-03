@@ -1,55 +1,28 @@
 project(POSEIDON)
 
-set(HEADERS
-        poseidon/structures/particle_system.h
-        poseidon/structures/particle_system.inl
-        poseidon/math/numerical.h
+enable_language(CUDA)
+
+set(POSEIDON_HEADERS
         poseidon/poseidon.h
-        poseidon/helpers/particle_system_model.h
+        poseidon/simulation/cuda_smoke_injector.h
+        poseidon/solvers/cuda_smoke_solver.h
+        )
+        
+set(POSEIDON_SOURCES
+        poseidon/simulation/cuda_smoke_injector.cu
+        poseidon/solvers/cuda_smoke_solver.cu
         )
 
-set(SOURCES
-        poseidon/structures/particle_system.cpp
-        poseidon/math/numerical.cpp
-        poseidon/helpers/particle_system_model.cpp
-        )
-
-#if(NOT WIN32 AND NOT NOOPENVDB)
-#  set(HEADERS ${HEADERS}
-#    helios/structures/vdb_grid.h
-#    helios/structures/vdb_level_set.h
-#    helios/structures/vdb_mac_grid.h
-#		#    helios/structures/vdb_particle_grid.h
-#  )
-#  set(SOURCES ${SOURCES}
-#    helios/structures/vdb_grid.cpp
-#    helios/structures/vdb_level_set.cpp
-#    helios/structures/vdb_mac_grid.cpp
-#		#    helios/structures/vdb_particle_grid.cpp
-#  )
-#endif(NOT WIN32 AND NOT NOOPENVDB)
-
-link_libraries(${AERGIA_LIBRARIES})
-include_directories(${AERGIA_INCLUDES})
-include_directories(${POSEIDON_INCLUDES})
-link_libraries(${POSEIDON_LIBRARIES})
-
-link_libraries(ponos ${PONOS_LIBRARIES})
-include_directories("${PONOS_SOURCE_DIR}")
-link_libraries(aergia)
-include_directories("${AERGIA_SOURCE_DIR}")
-
-include_directories("${POSEIDON_SOURCE_DIR}")
-
-add_library(poseidon ${SOURCES} ${HEADERS})
+add_library(poseidon ${POSEIDON_SOURCES} ${POSEIDON_HEADERS})
 set_target_properties(poseidon PROPERTIES
+CUDA_STANDARD 11
+LINKER_LANGUAGE CUDA
+CMAKE_CUDA_SEPARABLE_COMPILATION ON
         OUTPUT_NAME "poseidon"
         FOLDER "POSEIDON")
+target_include_directories(poseidon PUBLIC ${PONOS_SOURCE_DIR} ${HERMES_SOURCE_DIR} ${POSEIDON_SOURCE_DIR})
+target_link_libraries(poseidon PUBLIC ponos hermes)
 
-add_subdirectory(examples)
+add_subdirectory(examples/cuda/smoke2d)
 
-if (TESTPOSEIDON)
     #	add_subdirectory(tests)
-endif (TESTPOSEIDON)
-
-add_subdirectory(tests/unit_tests)

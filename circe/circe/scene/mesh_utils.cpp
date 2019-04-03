@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/scene/mesh_utils.h>
 
@@ -32,14 +32,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
   ponos::ivec2 ij;
   // XY
   FOR_INDICES0_2D(d.xy(0, 1), ij) {
-    ponos::Point3 p(ij[0], ij[1], 0.f);
+    ponos::point3 p(ij[0], ij[1], 0.f);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
   FOR_INDICES0_2D(d.xy(0, 1), ij) {
-    ponos::Point3 p(ij[0], ij[1], d[2] - 1);
+    ponos::point3 p(ij[0], ij[1], d[2] - 1);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
@@ -47,14 +47,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
   }
   // YZ
   FOR_INDICES0_2D(d.xy(1, 2), ij) {
-    ponos::Point3 p(0.f, ij[0], ij[1]);
+    ponos::point3 p(0.f, ij[0], ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
   FOR_INDICES0_2D(d.xy(1, 2), ij) {
-    ponos::Point3 p(d[0] - 1, ij[0], ij[1]);
+    ponos::point3 p(d[0] - 1, ij[0], ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
@@ -62,14 +62,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
   }
   // XZ
   FOR_INDICES0_2D(d.xy(0, 2), ij) {
-    ponos::Point3 p(ij[0], 0.f, ij[1]);
+    ponos::point3 p(ij[0], 0.f, ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
   FOR_INDICES0_2D(d.xy(0, 2), ij) {
-    ponos::Point3 p(ij[0], d[1] - 1, ij[1]);
+    ponos::point3 p(ij[0], d[1] - 1, ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
@@ -116,7 +116,7 @@ ponos::RawMesh *create_wireframe_mesh(const ponos::RawMesh *m) {
   return mesh;
 }
 /*
-ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center,
+ponos::RawMesh *create_icosphere_mesh(const ponos::point3 &center,
                                       float radius,
                                       size_t divisions,
                                       bool generateNormals,
@@ -157,13 +157,13 @@ ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center,
   mesh->addFace({8, 6, 7});
   mesh->addFace({9, 8, 1});
   std::map<std::pair<int, int>, size_t> indicesCache;
-  std::function<size_t(int, int)> midPoint = [&](int a, int b) -> size_t {
+  std::function<size_t(int, int)> midpoint = [&](int a, int b) -> size_t {
     std::pair<int, int> key(std::min(a, b), std::max(a, b));
     size_t n = mesh->vertices.size() / 3;
     if (indicesCache.find(key) != indicesCache.end())
       return indicesCache[key];
-    ponos::Point3 pa(&mesh->vertices[3 * a]);
-    ponos::Point3 pb(&mesh->vertices[3 * b]);
+    ponos::point3 pa(&mesh->vertices[3 * a]);
+    ponos::point3 pb(&mesh->vertices[3 * b]);
     auto pm = pa + (pb - pa) * 0.5f;
     mesh->addVertex({pm.x, pm.y, pm.z});
     return n;
@@ -174,9 +174,9 @@ ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center,
       int v0 = mesh->indices[j * 3 + 0].vertexIndex;
       int v1 = mesh->indices[j * 3 + 1].vertexIndex;
       int v2 = mesh->indices[j * 3 + 2].vertexIndex;
-      int a = midPoint(v0, v1);
-      int b = midPoint(v1, v2);
-      int c = midPoint(v2, v0);
+      int a = midpoint(v0, v1);
+      int b = midpoint(v1, v2);
+      int c = midpoint(v2, v0);
       mesh->addFace({v0, a, c});
       mesh->addFace({v1, b, a});
       mesh->addFace({v2, c, b});
@@ -202,9 +202,9 @@ ponos::RawMesh *create_icosphere_mesh(const ponos::Point3 &center,
     mesh->normalDescriptor.elementSize = 3;
   }
   if(generateUVs) {
-    std::function<ponos::Point2(float, float, float)> parametric = [](float x,
-float y, float z) -> ponos::Point2 {
-      return ponos::Point2(std::atan2(y, x), std::acos(z));
+    std::function<ponos::point2(float, float, float)> parametric = [](float x,
+float y, float z) -> ponos::point2 {
+      return ponos::point2(std::atan2(y, x), std::acos(z));
     };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv = parametric(mesh->vertices[i * 3 + 0], mesh->vertices[i * 3 + 1],
@@ -228,4 +228,4 @@ mesh->vertices[i * 3 + 2]);
   return mesh;
 }
 */
-} // circe namespace
+} // namespace circe

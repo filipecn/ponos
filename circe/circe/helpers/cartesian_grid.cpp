@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/helpers/cartesian_grid.h>
 
@@ -84,14 +84,14 @@ void CartesianGrid::draw(const CameraInterface *camera, ponos::Transform t) {
   glLineWidth(4.f);
   glBegin(GL_LINES);
   glColor(xAxisColor);
-  glVertex(transform(ponos::Point3()));
-  glVertex(transform(ponos::Point3(0.5, 0, 0)));
+  glVertex(transform(ponos::point3()));
+  glVertex(transform(ponos::point3(0.5, 0, 0)));
   glColor(yAxisColor);
-  glVertex(transform(ponos::Point3()));
-  glVertex(transform(ponos::Point3(0, 0.5, 0)));
+  glVertex(transform(ponos::point3()));
+  glVertex(transform(ponos::point3(0, 0.5, 0)));
   glColor(zAxisColor);
-  glVertex(transform(ponos::Point3()));
-  glVertex(transform(ponos::Point3(0, 0, 0.5)));
+  glVertex(transform(ponos::point3()));
+  glVertex(transform(ponos::point3(0, 0, 0.5)));
   glEnd();
   glLineWidth(1.f);
 }
@@ -147,4 +147,4 @@ void CartesianGrid::updateBuffers() {
   CHECK_GL_ERRORS;
 }
 
-} // circe namespace
+} // namespace circe

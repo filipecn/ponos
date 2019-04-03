@@ -20,8 +20,8 @@ public:
     ponos::vec3 left = normalize(cross(normalize(camera.getUpVector()), dir));
     ponos::vec3 up = normalize(cross(dir, left));
 
-    ponos::Point3 nbl, nbr, ntl, ntr;
-    ponos::Point3 fbl, fbr, ftl, ftr;
+    ponos::point3 nbl, nbr, ntl, ntr;
+    ponos::point3 fbl, fbr, ftl, ftr;
     float talpha = tanf(dynamic_cast<const PerspectiveProjection *>(
                             camera.getCameraProjection())
                             ->fov /
@@ -75,6 +75,6 @@ public:
   }
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_HELPERS_CAMERA_MODEL_H

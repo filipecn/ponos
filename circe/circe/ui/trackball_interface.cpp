@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
-#include <circe/ui/trackball_interface.h>
 #include <circe/io/user_input.h>
+#include <circe/ui/trackball_interface.h>
 
 namespace circe {
 
@@ -32,26 +32,27 @@ TrackballInterface::~TrackballInterface() = default;
 void TrackballInterface::draw() { modes_[curMode_]->draw(tb); }
 
 void TrackballInterface::buttonRelease(CameraInterface &camera, int button,
-                                       ponos::Point2 p) {
+                                       ponos::point2 p) {
   UNUSED_VARIABLE(button);
   if (curMode_ != Mode::NONE)
     modes_[curMode_]->stop(tb, camera, p);
 }
 
 void TrackballInterface::buttonPress(const CameraInterface &camera, int button,
-                                     ponos::Point2 p) {
+                                     ponos::point2 p) {
   if (buttonMap_.find(button) == buttonMap_.end())
     return;
   curMode_ = buttonMap_[button];
   modes_[curMode_]->start(tb, camera, p);
 }
 
-void TrackballInterface::mouseMove(CameraInterface &camera, ponos::Point2 p) {
+void TrackballInterface::mouseMove(CameraInterface &camera, ponos::point2 p) {
   if (curMode_ != Mode::NONE)
     modes_[curMode_]->update(tb, camera, p, ponos::vec2());
 }
 
-void TrackballInterface::mouseScroll(CameraInterface &camera, ponos::Point2 p, ponos::vec2 d) {
+void TrackballInterface::mouseScroll(CameraInterface &camera, ponos::point2 p,
+                                     ponos::vec2 d) {
   if (buttonMap_.find(MOUSE_SCROLL) != buttonMap_.end()) {
     curMode_ = buttonMap_[MOUSE_SCROLL];
     modes_[curMode_]->update(tb, camera, p, d);
@@ -59,7 +60,9 @@ void TrackballInterface::mouseScroll(CameraInterface &camera, ponos::Point2 p, p
   }
 }
 
-void TrackballInterface::attachTrackMode(int button, TrackballInterface::Mode mode, TrackMode *tm) {
+void TrackballInterface::attachTrackMode(int button,
+                                         TrackballInterface::Mode mode,
+                                         TrackMode *tm) {
   buttonMap_[button] = mode;
   modes_[mode] = tm;
 }
@@ -78,9 +81,9 @@ void TrackballInterface::createDefault3D(TrackballInterface &t) {
 
 bool TrackballInterface::isActive() const {
   auto m = modes_.find(curMode_);
-  if(m != modes_.end())
+  if (m != modes_.end())
     return m->second->isActive();
   return false;
 }
 
-} // circe namespace
+} // namespace circe

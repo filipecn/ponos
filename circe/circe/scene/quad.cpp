@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/scene/quad.h>
 
@@ -78,7 +78,7 @@ Quad::Quad() {
   //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Quad::set(const ponos::Point2 &pm, const ponos::Point2 &pM) {
+void Quad::set(const ponos::point2 &pm, const ponos::point2 &pM) {
   this->mesh_->rawMesh()->interleavedData[0] = pm.x;
   this->mesh_->rawMesh()->interleavedData[1] = pm.y;
   this->mesh_->rawMesh()->interleavedData[4] = pM.x;
@@ -110,4 +110,4 @@ void Quad::draw(const CameraInterface *camera, ponos::Transform transform) {
   //   glBindVertexArray(0);
 }
 
-} // circe nanespace
+} // namespace circe

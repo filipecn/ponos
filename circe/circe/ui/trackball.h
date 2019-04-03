@@ -9,8 +9,8 @@ class Trackball {
 public:
   Trackball() : radius_(5.f) {}
 
-  ponos::Point3 center() const { return center_; }
-  void setCenter(const ponos::Point3 &center) { center_ = center; }
+  ponos::point3 center() const { return center_; }
+  void setCenter(const ponos::point3 &center) { center_ = center; }
   float radius() const { return radius_; }
   void setRadius(float r) { radius_ = r; }
   ponos::Transform transform() const { return transform_ * partialTransform_; }
@@ -27,12 +27,12 @@ public:
   }
 
 private:
-  ponos::Point3 center_;
+  ponos::point3 center_;
   ponos::Transform transform_;
   ponos::Transform partialTransform_;
   float radius_;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_UI_TRACKBALL_H

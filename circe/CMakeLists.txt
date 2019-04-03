@@ -1,6 +1,6 @@
 project(CIRCE)
 
-set(HEADERS
+set(CIRCE_HEADERS
         circe/colors/color.h
         circe/colors/color_palette.h
         circe/graphics/compute_shader.h
@@ -61,7 +61,7 @@ set(HEADERS
         circe/circe.h
         )
 
-set(SOURCES
+set(CIRCE_SOURCES
         circe/graphics/compute_shader.cpp
         circe/graphics/post_effect.cpp
         circe/graphics/shader.cpp
@@ -99,7 +99,7 @@ set(SOURCES
         circe/circe.cpp
         circe/scene/instance_set.cpp circe/scene/instance_set.h)
 
-add_library(circe STATIC ${SOURCES} ${HEADERS})
+add_library(circe STATIC ${CIRCE_SOURCES} ${CIRCE_HEADERS})
 set_target_properties(circe PROPERTIES
         OUTPUT_NAME "circe"
         FOLDER "CIRCE")
@@ -109,7 +109,7 @@ target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PL
 target_link_libraries(circe PUBLIC ponos  ${GLFW_LIBRARIES} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
 # add_dependencies(circe glfw glad)
 
-add_subdirectory(examples)
+# add_subdirectory(examples)
 
 if (WIN32)
 else (WIN32)

@@ -19,12 +19,12 @@ template <typename T> Vector2<T>::Vector2(T *f) {
 }
 
 template <typename T> T Vector2<T>::operator[](size_t i) const {
-  ASSERT(i >= 0 && i <= 1);
+  ASSERT(i <= 1);
   return (&x)[i];
 }
 
 template <typename T> T &Vector2<T>::operator[](size_t i) {
-  ASSERT(i >= 0 && i <= 1);
+  ASSERT(i <= 1);
   return (&x)[i];
 }
 
@@ -158,8 +158,18 @@ template <typename T> T &Vector3<T>::operator[](int i) {
   return (&x)[i];
 }
 
-template <typename T> Vector2<T> Vector3<T>::xy() const {
-  return Vector2<T>(x, y);
+template <typename T> Vector2<T> Vector3<T>::xy(int i, int j) const {
+  T a = x;
+  if (i == 1)
+    a = y;
+  else if (i == 2)
+    a = z;
+  T b = y;
+  if (j == 0)
+    b = x;
+  else if (j == 2)
+    b = z;
+  return Vector2<T>(a, b);
 }
 
 template <typename T> Vector3<T> &Vector3<T>::operator=(const T &v) {

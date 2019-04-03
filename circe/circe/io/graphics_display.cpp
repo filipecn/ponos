@@ -112,21 +112,21 @@ void GraphicsDisplay::getWindowSize(int &w, int &h) {
   h = this->height;
 }
 
-ponos::Point2 GraphicsDisplay::getMousePos() {
+ponos::point2 GraphicsDisplay::getMousePos() {
   double x, y;
   glfwGetCursorPos(this->window, &x, &y);
-  return ponos::Point2(x, this->height - y);
+  return ponos::point2(x, this->height - y);
 }
 
-ponos::Point2 GraphicsDisplay::getMouseNPos() {
+ponos::point2 GraphicsDisplay::getMouseNPos() {
   int viewport[] = {0, 0, width, height};
-  ponos::Point2 mp = getMousePos();
-  return ponos::Point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
+  ponos::point2 mp = getMousePos();
+  return ponos::point2((mp.x - viewport[0]) / viewport[2] * 2.0 - 1.0,
                        (mp.y - viewport[1]) / viewport[3] * 2.0 - 1.0);
 }
 
-ponos::Point3 GraphicsDisplay::normDevCoordToViewCoord(ponos::Point3 p) {
-  ponos::Point3 sp;
+ponos::point3 GraphicsDisplay::normDevCoordToViewCoord(ponos::point3 p) {
+  ponos::point3 sp;
   sp.x = ponos::lerp(ponos::linearStep(p.x, -1.f, 1.f), 0.f,
                      static_cast<float>(width));
   sp.y = ponos::lerp(ponos::linearStep(p.y, -1.f, 1.f), 0.f,
@@ -134,14 +134,14 @@ ponos::Point3 GraphicsDisplay::normDevCoordToViewCoord(ponos::Point3 p) {
   return sp;
 }
 
-ponos::Point3 GraphicsDisplay::viewCoordToNormDevCoord(ponos::Point3 p) {
+ponos::point3 GraphicsDisplay::viewCoordToNormDevCoord(ponos::point3 p) {
   float v[] = {0, 0, static_cast<float>(width), static_cast<float>(height)};
-  return ponos::Point3((p.x - v[0]) / (v[2] / 2.0) - 1.0,
+  return ponos::point3((p.x - v[0]) / (v[2] / 2.0) - 1.0,
                        (p.y - v[1]) / (v[3] / 2.0) - 1.0, 2 * p.z - 1.0);
 }
 
-ponos::Point3 GraphicsDisplay::unProject(const CameraInterface &c,
-                                         ponos::Point3 p) {
+ponos::point3 GraphicsDisplay::unProject(const CameraInterface &c,
+                                         ponos::point3 p) {
   return ponos::inverse(c.getTransform()) * p;
 }
 

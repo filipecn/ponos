@@ -109,12 +109,12 @@ void getGlVersion(int *major, int *minor);
 /* glVertex
  * Same as glVertex3f
  */
-void glVertex(ponos::Point3 v);
+void glVertex(ponos::point3 v);
 
 /* glVertex
  * Same as glVertex2f
  */
-void glVertex(ponos::Point2 v);
+void glVertex(ponos::point2 v);
 
 /* glVertex
  * Same as glVertex2f

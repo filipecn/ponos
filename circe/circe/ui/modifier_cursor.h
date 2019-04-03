@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_UI_MODIFIER_CURSOR_H
 #define CIRCE_UI_MODIFIER_CURSOR_H
@@ -39,18 +39,18 @@ public:
   }
   virtual ~ModifierCursor() {}
 
-  void mouse(CameraInterface &camera, ponos::Point2 p) override {
+  void mouse(CameraInterface &camera, ponos::point2 p) override {
     UNUSED_VARIABLE(camera);
-    ponos::Point3 P = inverse(glGetMVPTransform())(p);
+    ponos::point3 P = inverse(glGetMVPTransform())(p);
     last = position;
-    position = ponos::Point2(P.x, P.y);
+    position = ponos::point2(P.x, P.y);
     static bool first = true;
     if (first)
       last = position, first = false;
     mouseMove();
   }
 
-  void button(CameraInterface &camera, ponos::Point2 p, int button,
+  void button(CameraInterface &camera, ponos::point2 p, int button,
               int action) override {
     UNUSED_VARIABLE(p);
     UNUSED_VARIABLE(camera);
@@ -76,9 +76,9 @@ public:
   }
 
   bool dragging;
-  ponos::Point2 position;
-  ponos::Point2 start;
-  ponos::Point2 last;
+  ponos::point2 position;
+  ponos::point2 start;
+  ponos::point2 last;
 };
 
 class CircleCursor : public ModifierCursor {

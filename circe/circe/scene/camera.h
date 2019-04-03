@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_CAMERA_H
 #define CIRCE_SCENE_CAMERA_H
@@ -41,11 +41,11 @@ public:
   virtual ~CameraInterface() = default;
   /// \param p normalized mouse position
   /// \return camera's ray in world space
-  virtual ponos::Ray3 pickRay(ponos::Point2 p) const {
-    ponos::Point3 O = ponos::inverse(model * view)(
-        ponos::inverse(projection->transform) * ponos::Point3(p.x, p.y, 0.f));
-    ponos::Point3 D = ponos::inverse(model * view)(
-        ponos::inverse(projection->transform) * ponos::Point3(p.x, p.y, 1.f));
+  virtual ponos::Ray3 pickRay(ponos::point2 p) const {
+    ponos::point3 O = ponos::inverse(model * view)(
+        ponos::inverse(projection->transform) * ponos::point3(p.x, p.y, 0.f));
+    ponos::point3 D = ponos::inverse(model * view)(
+        ponos::inverse(projection->transform) * ponos::point3(p.x, p.y, 1.f));
     return ponos::Ray3(O, D - O);
   }
   /// multiplies MVP matrix to OpenGL pipeline
@@ -84,16 +84,16 @@ public:
     return projection->transform;
   }
   /// \return model transform
-  virtual ponos::Matrix3x3 getNormalMatrix() const { return normal; }
+  virtual ponos::Matrix3x3<real_t> getNormalMatrix() const { return normal; }
   virtual ponos::Transform getModelTransform() const { return model; }
   virtual ponos::Transform getViewTransform() const { return view; }
   /// \param p normalized mouse position
   /// \return line object in world space
-  virtual ponos::Line viewLineFromWindow(ponos::Point2 p) const {
-    ponos::Point3 O = ponos::inverse(model * view)(
-        ponos::inverse(projection->transform) * ponos::Point3(p.x, p.y, 0.f));
-    ponos::Point3 D = ponos::inverse(model * view)(
-        ponos::inverse(projection->transform) * ponos::Point3(p.x, p.y, 1.f));
+  virtual ponos::Line viewLineFromWindow(ponos::point2 p) const {
+    ponos::point3 O = ponos::inverse(model * view)(
+        ponos::inverse(projection->transform) * ponos::point3(p.x, p.y, 0.f));
+    ponos::point3 D = ponos::inverse(model * view)(
+        ponos::inverse(projection->transform) * ponos::point3(p.x, p.y, 1.f));
     return {O, D - O};
   }
   /// Applies **t** to camera transform (usually model transformation)
@@ -107,27 +107,27 @@ public:
   }
   /// \param p point in world space
   /// \return plane containing **p**, perpendicular to camera's view axis
-  virtual ponos::Plane viewPlane(ponos::Point3 p) const {
+  virtual ponos::Plane viewPlane(ponos::point3 p) const {
     ponos::vec3 n = pos - p;
     if (fabs(n.length()) < 1e-8)
       n = ponos::vec3(0, 0, 0);
     else
       n = ponos::normalize(n);
-    return {ponos::Normal3(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z))};
+    return {ponos::normal3(n), ponos::dot(n, ponos::vec3(p.x, p.y, p.z))};
   }
   /// \return up vector
   virtual ponos::vec3 getUpVector() const { return up; };
   /// \return eye position
-  virtual ponos::Point3 getPosition() const { return pos; };
+  virtual ponos::point3 getPosition() const { return pos; };
   /// \return  target position
-  virtual ponos::Point3 getTarget() const { return target; }
+  virtual ponos::point3 getTarget() const { return target; }
   /// \param p target position
-  virtual void setTarget(ponos::Point3 p) {
+  virtual void setTarget(ponos::point3 p) {
     target = p;
     update();
   }
   /// \param p eye position
-  virtual void setPosition(ponos::Point3 p) {
+  virtual void setPosition(ponos::point3 p) {
     pos = p;
     update();
   }
@@ -154,15 +154,15 @@ public:
 protected:
   float zoom;
   ponos::vec3 up;
-  ponos::Point3 pos;
-  ponos::Point3 target;
+  ponos::point3 pos;
+  ponos::point3 target;
   ponos::Transform view;
   ponos::Transform model;
-  ponos::Matrix3x3 normal;
+  ponos::Matrix3x3<real_t> normal;
   ponos::Frustum frustum;
   std::shared_ptr<CameraProjection> projection;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_CAMERA_H

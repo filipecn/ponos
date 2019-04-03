@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_HELPERS_SCENE_HANDLE_H
 #define CIRCE_HELPERS_SCENE_HANDLE_H
@@ -36,7 +36,7 @@ public:
   CircleHandle() {
     fillColor = selectedColor = COLOR_BLUE;
     fillColor.a = 0.1f;
-    circle.c = ponos::Point2();
+    circle.c = ponos::point2();
     circle.r = 0.1f;
   }
   void draw() const {
@@ -47,7 +47,7 @@ public:
   }
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
-    return ponos::distance2(circle.c, ponos::Point2(r.o.x, r.o.y)) <=
+    return ponos::distance2(circle.c, ponos::point2(r.o.x, r.o.y)) <=
            SQR(circle.r);
   }
 
@@ -60,6 +60,6 @@ private:
   T *data;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_HELPERS_SCENE_HANDLE_H

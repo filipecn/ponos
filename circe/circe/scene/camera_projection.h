@@ -55,9 +55,9 @@ public:
   }
 
 private:
-  ponos::BBox2 _region;
+  ponos::bbox2 _region;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_CAMERA_PROJECTION_H

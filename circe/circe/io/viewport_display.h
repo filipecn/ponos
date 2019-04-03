@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_IO_VIEWPORT_DISPLAY_H
 #define CIRCE_IO_VIEWPORT_DISPLAY_H
@@ -53,22 +53,22 @@ public:
    * height)** to **(1, 1)**
    * \return normalized mouse coordinates relative to the viewport
    */
-  ponos::Point2 getMouseNPos();
+  ponos::point2 getMouseNPos();
   /// \return true if mouse is inside viewport region
   bool hasMouseFocus() const;
   /* convert
    * \param p **[in]** point (in view space)
    * \return **p** mapped to NDC (**[-1,1]**)
    */
-  ponos::Point3 viewCoordToNormDevCoord(ponos::Point3 p);
+  ponos::point3 viewCoordToNormDevCoord(ponos::point3 p);
   /* convert
    * \param c **[in]** camera
    * \param p **[in]** point (in screen space)
    * \return the unprojected point by the inverse of the camera transform to
    * world space
    */
-  ponos::Point3 unProject(const CameraInterface &c, ponos::Point3 p);
-  ponos::Point3 unProject();
+  ponos::point3 unProject(const CameraInterface &c, ponos::point3 p);
+  ponos::point3 unProject();
 
   void render(const std::function<void(CameraInterface *)> &f = nullptr);
   void mouse(double x, double y);
@@ -90,6 +90,6 @@ public:
   std::shared_ptr<DisplayRenderer> renderer;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_IO_VIEWPORT_DISPLAY_H

@@ -89,7 +89,9 @@ endif (NOT ("${TETGEN_INCLUDE}" STREQUAL "" OR "${TETGEN_LIB}" STREQUAL ""))
 
 set(BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(ponos)
-add_subdirectory(helios)
+add_subdirectory(hermes)
+# add_subdirectory(helios)
+add_subdirectory(poseidon)
 
 if (NOT TRAVIS)
     add_subdirectory(circe)

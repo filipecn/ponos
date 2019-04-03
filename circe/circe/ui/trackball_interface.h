@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_UI_TRACKBALL_INTERFACE_H
 #define CIRCE_UI_TRACKBALL_INTERFACE_H
@@ -50,21 +50,21 @@ public:
   /// \param camera
   /// \param button button code
   /// \param p normalized mouse position
-  void buttonRelease(CameraInterface &camera, int button, ponos::Point2 p);
+  void buttonRelease(CameraInterface &camera, int button, ponos::point2 p);
   /// process mouse button press event
   /// \param camera
   /// \param button button code
   /// \param p normalized mouse position
-  void buttonPress(const CameraInterface &camera, int button, ponos::Point2 p);
+  void buttonPress(const CameraInterface &camera, int button, ponos::point2 p);
   /// process mouse move event
   /// \param camera
   /// \param p normalized mouse position
-  void mouseMove(CameraInterface &camera, ponos::Point2 p);
+  void mouseMove(CameraInterface &camera, ponos::point2 p);
   /// process mouse wheel event
   /// \param camera
   /// \param p normalized mouse position
   /// \param d scroll vector
-  void mouseScroll(CameraInterface &camera, ponos::Point2 p, ponos::vec2 d);
+  void mouseScroll(CameraInterface &camera, ponos::point2 p, ponos::vec2 d);
   /// Attaches a new mode to the interface
   /// \param button button to be mapped to mode
   /// \param mode attached mode
@@ -82,6 +82,6 @@ protected:
   std::map<Mode, TrackMode *> modes_;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_UI_TRACKBALL_INTERFACE_H

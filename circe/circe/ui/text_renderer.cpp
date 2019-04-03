@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/ui/font_manager.h>
 #include <circe/ui/text_renderer.h>
@@ -94,7 +94,7 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   quad_.shader()->end();
 }
 
-void TextRenderer::render(std::string s, const ponos::Point3 &p,
+void TextRenderer::render(std::string s, const ponos::point3 &p,
                           const CameraInterface *camera, GLfloat scale,
                           circe::Color c) {
   atlas.setText(s);
@@ -128,13 +128,13 @@ void TextRenderer::setCamera(const CameraInterface *c) {
   usingCamera_ = true;
 }
 
-TextRenderer &TextRenderer::at(const ponos::Point3 &p) {
+TextRenderer &TextRenderer::at(const ponos::point3 &p) {
   position_ = p;
   return *this;
 }
 
-TextRenderer &TextRenderer::at(const ponos::Point2 &p) {
-  position_ = ponos::Point3(p.x, p.y, 0);
+TextRenderer &TextRenderer::at(const ponos::point2 &p) {
+  position_ = ponos::point3(p.x, p.y, 0);
   return *this;
 }
 
@@ -156,4 +156,4 @@ TextRenderer::TextRenderer(const char *filename) : TextRenderer() {
   atlas.loadFont(filename);
 }
 
-} // circe namespace
+} // namespace circe

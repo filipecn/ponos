@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_HELPERS_HEMESH_MODEL_H
 #define CIRCE_HELPERS_HEMESH_MODEL_H
@@ -58,8 +58,8 @@ public:
     for (unsigned long int k = 0; k < vertices.size(); k++) {
       char label[100];
       sprintf(label, "%lu", k);
-      ponos::Point3 labelPosition = glGetMVPTransform()(
-          ponos::Point3(vertices[k].position[0], vertices[k].position[1], 0));
+      ponos::point3 labelPosition = glGetMVPTransform()(
+          ponos::point3(vertices[k].position[0], vertices[k].position[1], 0));
       //      text->render(label, labelPosition, .5f,
       //                   circe::Color(0.8f, 0.2f, 0.7f, 0.1f));
       //      sprintf(label, " %f", vertices[k].data);
@@ -71,21 +71,21 @@ public:
       // std::cout << "edge " << k << " = " << e.orig
       //	<< " | " << e.dest << std::endl;
       glColor4f(0, 0, 0, 0.5);
-      ponos::Point2 a = vertices[e.orig].position.floatXY();
-      ponos::Point2 b = vertices[e.dest].position.floatXY();
+      ponos::point2 a = vertices[e.orig].position.floatXY();
+      ponos::point2 b = vertices[e.dest].position.floatXY();
       ponos::vec2 v = ponos::normalize(b - a);
       glBegin(GL_LINES);
       circe::glVertex(a);
       circe::glVertex(b);
       glEnd();
       glColor4f(1, 0, 0, 0.3);
-      ponos::Point2 A =
+      ponos::point2 A =
           a + distanceFromEdge * v.left() + distanceFromVertex * v;
-      ponos::Point2 B =
+      ponos::point2 B =
           b + distanceFromEdge * v.left() - distanceFromVertex * v;
-      ponos::Point2 C = A + (B - A) / 2.f;
-      ponos::Point3 labelPositition =
-          glGetMVPTransform()(ponos::Point3(C.x, C.y, 0.f));
+      ponos::point2 C = A + (B - A) / 2.f;
+      ponos::point3 labelPositition =
+          glGetMVPTransform()(ponos::point3(C.x, C.y, 0.f));
       char label[100];
       sprintf(label, "%d", k++);
       //      text->render(label, labelPositition, .3f,
@@ -112,7 +112,7 @@ public:
       glEnd();
     }
     for (unsigned long int i = 0; i < faces.size(); i++) {
-      ponos::Point2 mp(0, 0);
+      ponos::point2 mp(0, 0);
       glColor4f(0, 1, 0, 0);
       glBegin(GL_TRIANGLES);
       mesh->traversePolygonEdges(i, [&mp, &edges, &vertices](int e) {
@@ -122,8 +122,8 @@ public:
       });
       glEnd();
       char label[100];
-      ponos::Point3 labelPosition =
-          glGetMVPTransform()(ponos::Point3(mp[0] / 3.f, mp[1] / 3.f, 0.f));
+      ponos::point3 labelPosition =
+          glGetMVPTransform()(ponos::point3(mp[0] / 3.f, mp[1] / 3.f, 0.f));
       sprintf(label, "%lu", i);
       //      text->render(label, labelPosition, .5f,
       //                   circe::Color(0.8f, 0.5f, 0.2f, 0.2f));
@@ -138,6 +138,6 @@ private:
   const ponos::HEMesh2DF *mesh;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_HELPERS_HEMESH_MODEL_H

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_GRAPHICS_SHADER_H
 #define CIRCE_GRAPHICS_SHADER_H
@@ -80,7 +80,7 @@ public:
   void setUniform(const char *name, const ponos::vec4 &v);
   void setUniform(const char *name, const ponos::vec3 &v);
   void setUniform(const char *name, const ponos::vec2 &v);
-  void setUniform(const char *name, const ponos::Point3 &v);
+  void setUniform(const char *name, const ponos::point3 &v);
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 
@@ -115,6 +115,6 @@ ShaderProgramPtr createShaderProgramPtr(TArg &&... Args) {
   return std::make_shared<ShaderProgram>(std::forward<TArg>(Args)...);
 }
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_GRAPHICS_SHADER_H

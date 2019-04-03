@@ -27,76 +27,76 @@
 
 namespace circe {
 
-void fill_box(const ponos::Point2 &a, const ponos::Point2 &b) {
+void fill_box(const ponos::point2 &a, const ponos::point2 &b) {
   glBegin(GL_QUADS);
-  glVertex(ponos::Point2(a.x, a.y));
-  glVertex(ponos::Point2(b.x, a.y));
-  glVertex(ponos::Point2(b.x, b.y));
-  glVertex(ponos::Point2(a.x, b.y));
+  glVertex(ponos::point2(a.x, a.y));
+  glVertex(ponos::point2(b.x, a.y));
+  glVertex(ponos::point2(b.x, b.y));
+  glVertex(ponos::point2(a.x, b.y));
   glEnd();
 }
 
-void draw_bbox(const ponos::BBox2 &bbox, float *fillColor) {
+void draw_bbox(const ponos::bbox2 &bbox, float *fillColor) {
   glBegin(GL_LINE_LOOP);
-  glVertex(ponos::Point2(bbox.lower.x, bbox.lower.y));
-  glVertex(ponos::Point2(bbox.upper.x, bbox.lower.y));
-  glVertex(ponos::Point2(bbox.upper.x, bbox.upper.y));
-  glVertex(ponos::Point2(bbox.lower.x, bbox.upper.y));
+  glVertex(ponos::point2(bbox.lower.x, bbox.lower.y));
+  glVertex(ponos::point2(bbox.upper.x, bbox.lower.y));
+  glVertex(ponos::point2(bbox.upper.x, bbox.upper.y));
+  glVertex(ponos::point2(bbox.lower.x, bbox.upper.y));
   glEnd();
   if (fillColor) {
     glColor4fv(fillColor);
     glBegin(GL_QUADS);
-    glVertex(ponos::Point2(bbox.lower.x, bbox.lower.y));
-    glVertex(ponos::Point2(bbox.upper.x, bbox.lower.y));
-    glVertex(ponos::Point2(bbox.upper.x, bbox.upper.y));
-    glVertex(ponos::Point2(bbox.lower.x, bbox.upper.y));
+    glVertex(ponos::point2(bbox.lower.x, bbox.lower.y));
+    glVertex(ponos::point2(bbox.upper.x, bbox.lower.y));
+    glVertex(ponos::point2(bbox.upper.x, bbox.upper.y));
+    glVertex(ponos::point2(bbox.lower.x, bbox.upper.y));
     glEnd();
   }
 }
 
-void draw_bbox(const ponos::BBox2 &bbox, const Color &edgeColor,
+void draw_bbox(const ponos::bbox2 &bbox, const Color &edgeColor,
                const Color &fillColor) {
   glColor4fv(edgeColor.asArray());
   glBegin(GL_LINE_LOOP);
-  glVertex(ponos::Point2(bbox.lower.x, bbox.lower.y));
-  glVertex(ponos::Point2(bbox.upper.x, bbox.lower.y));
-  glVertex(ponos::Point2(bbox.upper.x, bbox.upper.y));
-  glVertex(ponos::Point2(bbox.lower.x, bbox.upper.y));
+  glVertex(ponos::point2(bbox.lower.x, bbox.lower.y));
+  glVertex(ponos::point2(bbox.upper.x, bbox.lower.y));
+  glVertex(ponos::point2(bbox.upper.x, bbox.upper.y));
+  glVertex(ponos::point2(bbox.lower.x, bbox.upper.y));
   glEnd();
   glColor4fv(fillColor.asArray());
   glBegin(GL_QUADS);
-  glVertex(ponos::Point2(bbox.lower.x, bbox.lower.y));
-  glVertex(ponos::Point2(bbox.upper.x, bbox.lower.y));
-  glVertex(ponos::Point2(bbox.upper.x, bbox.upper.y));
-  glVertex(ponos::Point2(bbox.lower.x, bbox.upper.y));
+  glVertex(ponos::point2(bbox.lower.x, bbox.lower.y));
+  glVertex(ponos::point2(bbox.upper.x, bbox.lower.y));
+  glVertex(ponos::point2(bbox.upper.x, bbox.upper.y));
+  glVertex(ponos::point2(bbox.lower.x, bbox.upper.y));
   glEnd();
 }
 
-void draw_bbox(const ponos::BBox3 &bbox) {
+void draw_bbox(const ponos::bbox3 &bbox) {
   glBegin(GL_LINE_LOOP);
-  glVertex(ponos::Point3(bbox.lower.x, bbox.lower.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.upper.x, bbox.lower.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.upper.x, bbox.upper.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.lower.x, bbox.upper.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.lower.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.lower.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.upper.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.upper.y, bbox.lower.z));
   glEnd();
   glBegin(GL_LINE_LOOP);
-  glVertex(ponos::Point3(bbox.lower.x, bbox.lower.y, bbox.upper.z));
-  glVertex(ponos::Point3(bbox.upper.x, bbox.lower.y, bbox.upper.z));
-  glVertex(ponos::Point3(bbox.upper.x, bbox.upper.y, bbox.upper.z));
-  glVertex(ponos::Point3(bbox.lower.x, bbox.upper.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.lower.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.lower.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.upper.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.upper.y, bbox.upper.z));
   glEnd();
   glBegin(GL_LINES);
-  glVertex(ponos::Point3(bbox.lower.x, bbox.lower.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.lower.x, bbox.lower.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.lower.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.lower.y, bbox.upper.z));
 
-  glVertex(ponos::Point3(bbox.upper.x, bbox.lower.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.upper.x, bbox.lower.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.lower.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.lower.y, bbox.upper.z));
 
-  glVertex(ponos::Point3(bbox.upper.x, bbox.upper.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.upper.x, bbox.upper.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.upper.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.upper.x, bbox.upper.y, bbox.upper.z));
 
-  glVertex(ponos::Point3(bbox.lower.x, bbox.upper.y, bbox.lower.z));
-  glVertex(ponos::Point3(bbox.lower.x, bbox.upper.y, bbox.upper.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.upper.y, bbox.lower.z));
+  glVertex(ponos::point3(bbox.lower.x, bbox.upper.y, bbox.upper.z));
 
   glEnd();
 }
@@ -137,7 +137,7 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
   const float hStep = ponos::Constants::pi / 20.f;
   glBegin(GL_TRIANGLES);
   // south pole
-  ponos::Point3 pole(0.f, -sphere.r, 0.f);
+  ponos::point3 pole(0.f, -sphere.r, 0.f);
   for (float angle = 0.f; angle < ponos::Constants::two_pi; angle += hStep) {
     float r = sphere.r * sinf(vStep);
     glVertex(sphere.c + ponos::vec3(pole));
@@ -148,7 +148,7 @@ void draw_sphere(ponos::Sphere sphere, const ponos::Transform *transform) {
                              sinf(angle + hStep)));
   }
   // north pole
-  pole = ponos::Point3(0.f, sphere.r, 0.f);
+  pole = ponos::point3(0.f, sphere.r, 0.f);
   for (float angle = 0.f; angle < ponos::Constants::two_pi; angle += hStep) {
     float r = sphere.r * sinf(vStep);
     glVertex(sphere.c + ponos::vec3(pole));
@@ -201,7 +201,7 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2 *t) {
   const ponos::RawMesh *rm = m->getMesh();
   glBegin(GL_LINES);
   for (size_t i = 0; i < rm->meshDescriptor.count; i++) {
-    ponos::Point2 a(
+    ponos::point2 a(
         rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 0]
                               .positionIndex *
                           2 +
@@ -210,7 +210,7 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2 *t) {
                               .positionIndex *
                           2 +
                       1]);
-    ponos::Point2 b(
+    ponos::point2 b(
         rm->positions[rm->indices[i * rm->meshDescriptor.elementSize + 1]
                               .positionIndex *
                           2 +
@@ -232,7 +232,7 @@ void draw_mesh(const ponos::Mesh2D *m, const ponos::Transform2 *t) {
   glLineWidth(1.f);
 }
 
-void draw_vector(const ponos::Point2 &p, const ponos::vec2 &v, float w,
+void draw_vector(const ponos::point2 &p, const ponos::vec2 &v, float w,
                  float h) {
   glBegin(GL_LINES);
   glVertex(p);

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_HELPERS_CARTESIAN_GRID_H
 #define CIRCE_HELPERS_CARTESIAN_GRID_H
@@ -73,6 +73,6 @@ private:
   ponos::RawMesh mesh;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_HELPERS_CARTESIAN_GRID_H

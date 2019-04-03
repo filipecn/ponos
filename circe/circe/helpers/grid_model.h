@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_HELPERS_GRID_MODEL_H
 #define CIRCE_HELPERS_GRID_MODEL_H
@@ -45,24 +45,24 @@ public:
     glColor4fv(gridColor.asArray());
     glBegin(GL_LINES); // XY
     for (size_t x = 0; x <= grid->width; x++) {
-      glVertex(transform(grid->toWorld(ponos::Point2(x, 0))));
-      glVertex(transform(grid->toWorld(ponos::Point2(x, grid->height))));
+      glVertex(transform(grid->toWorld(ponos::point2(x, 0))));
+      glVertex(transform(grid->toWorld(ponos::point2(x, grid->height))));
     }
     for (size_t y = 0; y <= grid->height; y++) {
-      glVertex(transform(grid->toWorld(ponos::Point2(0, y))));
-      glVertex(transform(grid->toWorld(ponos::Point2(grid->width, y))));
+      glVertex(transform(grid->toWorld(ponos::point2(0, y))));
+      glVertex(transform(grid->toWorld(ponos::point2(grid->width, y))));
     }
     glEnd();
     if (f) {
       glColor4fv(dataColor.asArray());
       grid->forEach(
           [&](const typename GridType::DataType &v, size_t i, size_t j) {
-            f((*grid)(i, j), ponos::Point3(grid->dataWorldPosition(i, j)));
+            f((*grid)(i, j), ponos::point3(grid->dataWorldPosition(i, j)));
           });
     }
   }
 
-  std::function<void(const typename GridType::DataType v, ponos::Point3 p)> f;
+  std::function<void(const typename GridType::DataType v, ponos::point3 p)> f;
 
   Color gridColor;
   Color dataColor;
@@ -82,7 +82,7 @@ public:
     this->grid = g;
     scaleFactor = sf;
     mode = Mode::RAW;
-    this->f = [&](const ponos::Vector<T, 2> v, ponos::Point3 p) {
+    this->f = [&](const ponos::Vector<T, 2> v, ponos::point3 p) {
       glColor4fv(this->dataColor.asArray());
       glPointSize(3.f);
       glBegin(GL_POINTS);
@@ -90,11 +90,11 @@ public:
       glEnd();
       switch (mode) {
       case Mode::RAW:
-        draw_vector(ponos::Point2(p.x, p.y),
+        draw_vector(ponos::point2(p.x, p.y),
                     scaleFactor * ponos::vec2(v[0], v[1]));
         break;
       case Mode::EQUAL:
-        draw_vector(ponos::Point2(p.x, p.y),
+        draw_vector(ponos::point2(p.x, p.y),
                     scaleFactor * ponos::normalize(ponos::vec2(v[0], v[1])));
         break;
       }
@@ -127,7 +127,7 @@ public:
                   Color gridColor, Color dataColor) {
     model->gridColor = gridColor;
     model->dataColor = dataColor;
-    model->f = [this, gridColor, dataColor](float v, ponos::Point3 p) {
+    model->f = [this, gridColor, dataColor](float v, ponos::point3 p) {
       glPointSize(4);
       glBegin(GL_POINTS);
       glVertex(p);
@@ -148,6 +148,6 @@ private:
   TextRenderer *text;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_HELPERS_GRID_MODEL_H

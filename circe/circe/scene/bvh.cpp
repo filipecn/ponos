@@ -20,13 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/scene/bvh.h>
 
 #include <algorithm>
-#include <vector>
 #include <ponos/structures/bvh.h>
+#include <vector>
 
 namespace circe {
 
@@ -55,7 +55,7 @@ BVH::BVHNode *BVH::recursiveBuild(std::vector<BVHElement> &buildData,
                                   std::vector<uint32_t> &orderedElements) {
   (*totalNodes)++;
   BVHNode *node = new BVHNode();
-  ponos::BBox3 bbox;
+  ponos::bbox3 bbox;
   for (uint32_t i = start; i < end; ++i)
     bbox = ponos::make_union(bbox, buildData[i].bounds);
   // compute all bounds
@@ -70,7 +70,7 @@ BVH::BVHNode *BVH::recursiveBuild(std::vector<BVHElement> &buildData,
     node->initLeaf(firstElementOffset, nElements, bbox);
   } else {
     // compute bound of primitives
-    ponos::BBox3 centroidBounds;
+    ponos::bbox3 centroidBounds;
     for (uint32_t i = start; i < end; i++)
       centroidBounds = ponos::make_union(centroidBounds, buildData[i].centroid);
     int dim = centroidBounds.maxExtent();
@@ -85,7 +85,7 @@ BVH::BVHNode *BVH::recursiveBuild(std::vector<BVHElement> &buildData,
     }
     // partition into equally sized subsets
     std::nth_element(&buildData[start], &buildData[mid],
-                     &buildData[end - 1] + 1, ComparePoints(dim));
+                     &buildData[end - 1] + 1, Comparepoints(dim));
     node->initInterior(
         dim, recursiveBuild(buildData, start, mid, totalNodes, orderedElements),
         recursiveBuild(buildData, mid, end, totalNodes, orderedElements));
@@ -126,11 +126,11 @@ int BVH::intersect(const ponos::Ray3 &ray, float *t) {
       if (node->nElements > 0) {
         // intersect ray with primitives
         for (uint32_t i = 0; i < node->nElements; i++) {
-          ponos::Point3 v0 = sceneMesh->mesh()->rawMesh()->positionElement(
+          ponos::point3 v0 = sceneMesh->mesh()->rawMesh()->positionElement(
               orderedElements[node->elementsOffset + i], 0);
-          ponos::Point3 v1 = sceneMesh->mesh()->rawMesh()->positionElement(
+          ponos::point3 v1 = sceneMesh->mesh()->rawMesh()->positionElement(
               orderedElements[node->elementsOffset + i], 1);
-          ponos::Point3 v2 = sceneMesh->mesh()->rawMesh()->positionElement(
+          ponos::point3 v2 = sceneMesh->mesh()->rawMesh()->positionElement(
               orderedElements[node->elementsOffset + i], 2);
           if (ponos::triangle_ray_intersection(v0, v1, v2, r))
             hit++;
@@ -156,7 +156,7 @@ int BVH::intersect(const ponos::Ray3 &ray, float *t) {
   return hit;
 }
 
-bool BVH::intersect(const ponos::BBox3 &bounds, const ponos::Ray3 &ray,
+bool BVH::intersect(const ponos::bbox3 &bounds, const ponos::Ray3 &ray,
                     const ponos::vec3 &invDir,
                     const uint32_t dirIsNeg[3]) const {
   float hit1, hit2;
@@ -182,7 +182,7 @@ bool BVH::intersect(const ponos::BBox3 &bounds, const ponos::Ray3 &ray,
   return tmax > 0;
 }
 
-bool BVH::isInside(const ponos::Point3 &p) {
+bool BVH::isInside(const ponos::point3 &p) {
   ponos::Ray3 r(p, ponos::vec3(1.2, 1.1, 0.1));
   ponos::Ray3 r2(p, ponos::vec3(0.2, -1.1, 0.1));
 
@@ -191,9 +191,9 @@ bool BVH::isInside(const ponos::Point3 &p) {
   int hit = 0, hit2 = 0;
   for (size_t i = 0; i < sceneMesh->mesh()->rawMesh()->meshDescriptor.count;
        i++) {
-    ponos::Point3 v0 = sceneMesh->mesh()->rawMesh()->positionElement(i, 0);
-    ponos::Point3 v1 = sceneMesh->mesh()->rawMesh()->positionElement(i, 1);
-    ponos::Point3 v2 = sceneMesh->mesh()->rawMesh()->positionElement(i, 2);
+    ponos::point3 v0 = sceneMesh->mesh()->rawMesh()->positionElement(i, 0);
+    ponos::point3 v1 = sceneMesh->mesh()->rawMesh()->positionElement(i, 1);
+    ponos::point3 v2 = sceneMesh->mesh()->rawMesh()->positionElement(i, 2);
     if (ponos::triangle_ray_intersection(v0, v1, v2, r))
       hit++;
     if (ponos::triangle_ray_intersection(v0, v1, v2, r2))
@@ -202,5 +202,4 @@ bool BVH::isInside(const ponos::Point3 &p) {
   return hit % 2 && hit2 % 2;
 }
 
-} // circe namespace"
-
+} // namespace circe

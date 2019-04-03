@@ -34,6 +34,7 @@
 #include <vector>
 
 namespace ponos {
+
 template <typename T> class Point2;
 template <typename T> class Vector2 {
 public:
@@ -63,7 +64,8 @@ public:
   Vector2 right() const;
   Vector2 left() const;
   bool HasNaNs() const;
-  friend std::ostream &operator<<(std::ostream &os, const Vector2 &v);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Vector2<TT> &v);
   T x, y;
 };
 
@@ -112,7 +114,7 @@ public:
   // access
   T operator[](int i) const;
   T &operator[](int i);
-  Vector2<T> xy() const;
+  Vector2<T> xy(int i = 0, int j = 1) const;
   // arithmetic
   Vector3 &operator=(const T &v);
   Vector3 operator+(const Vector3 &v) const;
@@ -130,7 +132,8 @@ public:
   T length2() const;
   T length() const;
   bool HasNaNs() const;
-  friend std::ostream &operator<<(std::ostream &os, const Vector3 &v);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Vector3<TT> &v);
   T x, y, z;
 };
 
@@ -151,7 +154,6 @@ void tangential(const Vector3<T> &a, Vector3<T> &b, Vector3<T> &c);
 template <typename T> Vector3<T> cos(const Vector3<T> &v);
 template <typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b);
 template <typename T> Vector3<T> abs(const Vector3<T> &a);
-
 
 template <typename T> class Vector4 {
 public:
@@ -176,8 +178,8 @@ public:
   T length2() const;
   T length() const;
   bool HasNaNs() const;
-
-  friend std::ostream &operator<<(std::ostream &os, const Vector4 &v);
+  template <typename TT>
+  friend std::ostream &operator<<(std::ostream &os, const Vector4<TT> &v);
   T x, y, z, w;
 };
 

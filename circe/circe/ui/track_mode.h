@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_UI_TRACK_MODE_H
 #define CIRCE_UI_TRACK_MODE_H
@@ -47,7 +47,7 @@ public:
   /// \param camera active viewport camera
   /// \param p mouse position in normalized window position (NPos)
   virtual void start(Trackball &tb, const CameraInterface &camera,
-                     ponos::Point2 p) {
+                     ponos::point2 p) {
     UNUSED_VARIABLE(camera);
     UNUSED_VARIABLE(tb);
     start_ = p;
@@ -58,13 +58,13 @@ public:
   /// \param camera active viewport camera
   /// \param p mouse position in normalized window position (NPos)
   /// \param d scroll delta
-  virtual void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p,
+  virtual void update(Trackball &tb, CameraInterface &camera, ponos::point2 p,
                       ponos::vec2 d) = 0;
   /// Stops the manipulation (usually after a button release)
   /// \param tb trackball reference
   /// \param camera active viewport camera
   /// \param p mouse position in normalized window position (NPos)
-  virtual void stop(Trackball &tb, CameraInterface &camera, ponos::Point2 p) {
+  virtual void stop(Trackball &tb, CameraInterface &camera, ponos::point2 p) {
     UNUSED_VARIABLE(p);
     UNUSED_VARIABLE(camera);
     dragging_ = false;
@@ -81,17 +81,17 @@ protected:
   /// \param camera active viewport camera
   /// \param p mouse position in normalized window position (NPos)
   /// \return hit position
-  ponos::Point3 hitViewPlane(Trackball &tb, CameraInterface &camera,
-                             ponos::Point2 p) {
+  ponos::point3 hitViewPlane(Trackball &tb, CameraInterface &camera,
+                             ponos::point2 p) {
     ponos::Line l = camera.viewLineFromWindow(p);
     ponos::Plane vp = camera.viewPlane(tb.center());
-    ponos::Point3 hp;
+    ponos::point3 hp;
     ponos::plane_line_intersection(vp, l, hp);
     return hp;
   }
 
   bool dragging_;
-  ponos::Point2 start_;
+  ponos::point2 start_;
 };
 
 /// Applies a scale
@@ -99,7 +99,7 @@ class ScaleMode : public TrackMode {
 public:
   ScaleMode() : TrackMode() {}
   ~ScaleMode() override = default;
-  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p,
+  void update(Trackball &tb, CameraInterface &camera, ponos::point2 p,
               ponos::vec2 d) override {
     if (d == ponos::vec2())
       return;
@@ -117,15 +117,15 @@ public:
   PanMode() : TrackMode() {}
   ~PanMode() override = default;
 
-  void draw(Trackball tb) { UNUSED_VARIABLE(tb); }
+  void draw(const Trackball &tb) override { UNUSED_VARIABLE(tb); }
 
-  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p,
+  void update(Trackball &tb, CameraInterface &camera, ponos::point2 p,
               ponos::vec2 d) override {
     UNUSED_VARIABLE(d);
     if (!dragging_)
       return;
-    ponos::Point3 a = hitViewPlane(tb, camera, start_);
-    ponos::Point3 b = hitViewPlane(tb, camera, p);
+    ponos::point3 a = hitViewPlane(tb, camera, start_);
+    ponos::point3 b = hitViewPlane(tb, camera, p);
     // it is -(b - a), because moving the mouse up should move the camera down
     // (so the image goes up)
     tb.accumulatePartialTransform(ponos::translate(a - b));
@@ -139,13 +139,13 @@ public:
   ZMode() : TrackMode() {}
   ~ZMode() override = default;
 
-  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p,
+  void update(Trackball &tb, CameraInterface &camera, ponos::point2 p,
               ponos::vec2 d) override {
     UNUSED_VARIABLE(d);
     if (!dragging_)
       return;
-    ponos::Point3 a = hitViewPlane(tb, camera, start_);
-    ponos::Point3 b = hitViewPlane(tb, camera, p);
+    ponos::point3 a = hitViewPlane(tb, camera, start_);
+    ponos::point3 b = hitViewPlane(tb, camera, p);
     ponos::vec3 dir =
         ponos::normalize(camera.getTarget() - camera.getPosition());
     if (p.y - start_.y < 0.f)
@@ -166,13 +166,13 @@ public:
     glColor4f(0, 0, 0, 0.5);
     draw_sphere(s);
   }
-  void update(Trackball &tb, CameraInterface &camera, ponos::Point2 p,
+  void update(Trackball &tb, CameraInterface &camera, ponos::point2 p,
               ponos::vec2 d) override {
     UNUSED_VARIABLE(d);
     if (!dragging_ || p == start_)
       return;
-    ponos::Point3 a = hitSpherePlane(tb, camera, start_);
-    ponos::Point3 b = hitSpherePlane(tb, camera, p);
+    ponos::point3 a = hitSpherePlane(tb, camera, start_);
+    ponos::point3 b = hitSpherePlane(tb, camera, p);
     ponos::vec3 axis =
         ponos::normalize(ponos::cross((a - tb.center()), (b - tb.center())));
     float phi = ponos::distance(a, b) / tb.radius();
@@ -181,17 +181,17 @@ public:
   }
 
 private:
-  ponos::Point3 hitSpherePlane(Trackball &tb, CameraInterface &camera,
-                               ponos::Point2 p) {
+  ponos::point3 hitSpherePlane(Trackball &tb, CameraInterface &camera,
+                               ponos::point2 p) {
     ponos::Line l = camera.viewLineFromWindow(p);
     ponos::Plane vp = camera.viewPlane(tb.center());
 
     ponos::Sphere s(tb.center(), tb.radius());
 
-    ponos::Point3 hp;
+    ponos::point3 hp;
     ponos::plane_line_intersection(vp, l, hp);
 
-    ponos::Point3 hs, hs1, hs2;
+    ponos::point3 hs, hs1, hs2;
     bool resSp = sphere_line_intersection(s, l, hs1, hs2);
     if (resSp) {
       if (ponos::distance(camera.getPosition(), hs1) <
@@ -201,7 +201,7 @@ private:
         hs = hs2;
       return hs;
     }
-    ponos::Point3 hh;
+    ponos::point3 hh;
     bool resHp = hitHyper(tb, camera.getPosition(), vp, hp, hh);
     if ((!resSp && !resHp))
       return l.closestPoint(tb.center());
@@ -217,8 +217,8 @@ private:
     else
       return hh;
   }
-  bool hitHyper(Trackball tb, ponos::Point3 viewpoint, ponos::Plane vp,
-                ponos::Point3 hitplane, ponos::Point3 &hit) {
+  bool hitHyper(Trackball tb, ponos::point3 viewpoint, ponos::Plane vp,
+                ponos::point3 hitplane, ponos::point3 &hit) {
     float hitplaney = ponos::distance(tb.center(), hitplane);
     float viewpointx = ponos::distance(tb.center(), viewpoint);
 
@@ -241,6 +241,6 @@ private:
   }
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_UI_TRACK_MODE_H

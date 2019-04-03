@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include "image_texture.h"
 
@@ -78,6 +78,7 @@ ImageTexture ImageTexture::checkBoard(size_t w, size_t h) {
       else
         tex.setTexel((column % 2) ? COLOR_WHITE : COLOR_BLACK, i, j);
     }
+  CHECK_GL_ERRORS;
   tex.update();
   return tex;
 }
@@ -139,4 +140,4 @@ std::ostream &operator<<(std::ostream &out, ImageTexture &it) {
   return out;
 }
 
-} // circe namespace
+} // namespace circe

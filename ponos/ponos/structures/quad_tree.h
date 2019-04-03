@@ -67,7 +67,7 @@ public:
            const std::function<bool(Node &node)> &f,
            std::function<void(Node &)> sf = nullptr);
   virtual ~QuadTree();
-  size_t height() const { return height; }
+  size_t height() const { return height_; }
   size_t nodeCount() const { return count; }
   void traverse(const std::function<bool(Node &node)> &f);
   void traverse(const std::function<bool(const Node &node)> &f) const;
@@ -166,7 +166,7 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
             bbox2 r = top->region();
             top->data.neighbours.emplace_back(
                 new NodeType(bbox2(point2(r.lower.x, r.lower.y - r.size(1)),
-                                    point2(r.upper.x, r.lower.y))));
+                                   point2(r.upper.x, r.lower.y))));
             top->data.neighbours[top->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             top->data.neighboursPosition.emplace_back(
@@ -180,7 +180,7 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
             bbox2 r = bottom->region();
             bottom->data.neighbours.emplace_back(
                 new NodeType(bbox2(point2(r.lower.x, r.upper.y),
-                                    point2(r.upper.x, r.upper.y + r.size(1)))));
+                                   point2(r.upper.x, r.upper.y + r.size(1)))));
             bottom->data.neighbours[bottom->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             bottom->data.neighboursPosition.emplace_back(
@@ -202,7 +202,7 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
             bbox2 r = left->region();
             left->data.neighbours.emplace_back(
                 new NodeType(bbox2(point2(r.upper.x, r.lower.y),
-                                    point2(r.upper.x + r.size(0), r.upper.y))));
+                                   point2(r.upper.x + r.size(0), r.upper.y))));
             left->data.neighbours[left->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             left->data.neighboursPosition.emplace_back(
@@ -216,7 +216,7 @@ void buildLeafPhantomNeighbours(QuadTree<NodeData> *tree) {
             bbox2 r = right->region();
             right->data.neighbours.emplace_back(
                 new NodeType(bbox2(point2(r.lower.x - r.size(0), r.lower.y),
-                                    point2(r.lower.x, r.upper.y))));
+                                   point2(r.lower.x, r.upper.y))));
             right->data.neighbours[right->data.neighbours.size() - 1]
                 ->data.isPhantom = true;
             right->data.neighboursPosition.emplace_back(

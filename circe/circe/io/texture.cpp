@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/io/texture.h>
 #include <circe/utils/open_gl.h>
@@ -75,6 +75,8 @@ ponos::uivec3 Texture::size() const {
   return ponos::uivec3(attributes.width, attributes.height, attributes.depth);
 }
 
+GLuint Texture::textureObjectId() const { return textureObject; }
+
 std::ostream &operator<<(std::ostream &out, Texture &pt) {
   auto width = static_cast<int>(pt.attributes.width);
   auto height = static_cast<int>(pt.attributes.height);
@@ -123,4 +125,4 @@ std::vector<unsigned char> Texture::texels() const {
   return data;
 }
 
-} // circe namespace
+} // namespace circe

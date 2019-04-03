@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_UI_CAMERA_H
 #define CIRCE_UI_CAMERA_H
@@ -39,22 +39,22 @@ public:
   /// \param action event type
   /// \param button button code
   /// \param p normalized mouse position
-  void mouseButton(int action, int button, ponos::Point2 p);
+  void mouseButton(int action, int button, ponos::point2 p);
   /// process mouse move event
   /// \param p normalized mouse position
-  void mouseMove(ponos::Point2 p);
+  void mouseMove(ponos::point2 p);
   /// process mouse wheel event
   /// \param p normalized mouse position
   /// \param d scroll vector
-  virtual void mouseScroll(ponos::Point2 p, ponos::vec2 d);
+  virtual void mouseScroll(ponos::point2 p, ponos::vec2 d);
   TrackballInterface trackball;
 };
 
 class UserCamera2D : public UserCamera {
 public:
   UserCamera2D();
-  void mouseScroll(ponos::Point2 p, ponos::vec2 d) override;
-  void fit(const ponos::BBox2 &b, float delta = 1.f);
+  void mouseScroll(ponos::point2 p, ponos::vec2 d) override;
+  void fit(const ponos::bbox2 &b, float delta = 1.f);
   void update() override;
 };
 
@@ -66,6 +66,6 @@ public:
   void update() override;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_UI_CAMERA_H

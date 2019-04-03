@@ -22,7 +22,7 @@ public:
     glBegin(GL_LINES);
     ponos::ivec3 ijk;
     FOR_INDICES0_3D(grid.dimensions, ijk) {
-      ponos::Point3 p = grid.toWorld(ponos::Point3(ijk[0], ijk[1], ijk[2]));
+      ponos::point3 p = grid.toWorld(ponos::point3(ijk[0], ijk[1], ijk[2]));
       glVertex(p);
       glVertex(p + grid(ijk));
     }
@@ -31,7 +31,7 @@ public:
     glPointSize(1);
     glBegin(GL_POINTS);
     FOR_INDICES0_3D(grid.dimensions, ijk) {
-      ponos::Point3 p = grid.toWorld(ponos::Point3(ijk[0], ijk[1], ijk[2]));
+      ponos::point3 p = grid.toWorld(ponos::point3(ijk[0], ijk[1], ijk[2]));
       glVertex(p);
     }
     glEnd();
@@ -40,18 +40,18 @@ public:
     glBegin(GL_LINES);
     ponos::ivec2 ij;
     FOR_INDICES0_E2D(grid.dimensions.xy(0, 1), ij) {
-      glVertex(grid.toWorld(ponos::Point3(ij[0] - 0.5f, ij[1] - 0.5f, -0.5f)));
-      glVertex(grid.toWorld(ponos::Point3(ij[0] - 0.5f, ij[1] - 0.5f,
+      glVertex(grid.toWorld(ponos::point3(ij[0] - 0.5f, ij[1] - 0.5f, -0.5f)));
+      glVertex(grid.toWorld(ponos::point3(ij[0] - 0.5f, ij[1] - 0.5f,
                                           grid.dimensions[2] - 1 + 0.5f)));
     }
     FOR_INDICES0_E2D(grid.dimensions.xy(0, 2), ij) {
-      glVertex(grid.toWorld(ponos::Point3(ij[0] - 0.5f, -0.5f, ij[1] - 0.5f)));
-      glVertex(grid.toWorld(ponos::Point3(
+      glVertex(grid.toWorld(ponos::point3(ij[0] - 0.5f, -0.5f, ij[1] - 0.5f)));
+      glVertex(grid.toWorld(ponos::point3(
           ij[0] - 0.5f, grid.dimensions[1] - 1 + 0.5f, ij[1] - 0.5f)));
     }
     FOR_INDICES0_E2D(grid.dimensions.xy(1, 2), ij) {
-      glVertex(grid.toWorld(ponos::Point3(-0.5f, ij[0] - 0.5f, ij[1] - 0.5f)));
-      glVertex(grid.toWorld(ponos::Point3(grid.dimensions[0] - 1 + 0.5f,
+      glVertex(grid.toWorld(ponos::point3(-0.5f, ij[0] - 0.5f, ij[1] - 0.5f)));
+      glVertex(grid.toWorld(ponos::point3(grid.dimensions[0] - 1 + 0.5f,
                                           ij[0] - 0.5f, ij[1] - 0.5f)));
     }
     glEnd();
@@ -60,6 +60,6 @@ public:
   ponos::CGridInterface<ponos::vec3> &grid;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif

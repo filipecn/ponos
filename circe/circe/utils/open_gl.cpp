@@ -216,9 +216,9 @@ void getGlVersion(int *major, int *minor) {
   }
 }
 
-void glVertex(ponos::Point3 v) { glVertex3f(v.x, v.y, v.z); }
+void glVertex(ponos::point3 v) { glVertex3f(v.x, v.y, v.z); }
 
-void glVertex(ponos::Point2 v) { glVertex2f(v.x, v.y); }
+void glVertex(ponos::point2 v) { glVertex2f(v.x, v.y); }
 
 void glVertex(ponos::vec2 v) { glVertex2f(v.x, v.y); }
 
@@ -239,7 +239,7 @@ ponos::Transform glGetProjectionTransform() {
   exit(-1);
   float m[16];
   glGetFloatv(GL_PROJECTION_MATRIX, m);
-  return ponos::Transform(ponos::Matrix4x4(m, true));
+  return ponos::Transform(ponos::mat4(m, true));
 }
 
 ponos::Transform glGetModelviewTransform() {
@@ -247,7 +247,7 @@ ponos::Transform glGetModelviewTransform() {
   exit(-1);
   float m[16];
   glGetFloatv(GL_MODELVIEW_MATRIX, m);
-  return ponos::Transform(ponos::Matrix4x4(m, true));
+  return ponos::Transform(ponos::mat4(m, true));
 }
 
 ponos::Transform glGetMVPTransform() {
@@ -257,4 +257,4 @@ ponos::Transform glGetMVPTransform() {
   return glGetModelviewTransform() * glGetProjectionTransform();
 }
 
-} // circe namespace
+} // namespace circe

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_QUAD_H
 #define CIRCE_SCENE_QUAD_H
@@ -39,9 +39,9 @@ public:
    * \param pm minimun extreme
    * \param pM maximum extreme
    */
-  void set(const ponos::Point2 &pm, const ponos::Point2 &pM);
+  void set(const ponos::point2 &pm, const ponos::point2 &pM);
   void draw(const CameraInterface *camera, ponos::Transform transform) override;
 };
 
-} // circe namespace
+} // namespace circe
 #endif // CIRCE_SCENE_QUAD_H

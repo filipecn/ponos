@@ -137,7 +137,8 @@ public:
   BBox2<T> yz() const;
   BBox2<T> xz() const;
   Point3<T> centroid() const;
-  friend BBox3 make_union(const BBox3 &b, const BBox3 &b1);
+  template <typename TT>
+  friend BBox3 make_union(const BBox3 &b, const BBox3<T> &b1);
   static BBox3 unitBox();
 
   Point3<T> lower, upper;

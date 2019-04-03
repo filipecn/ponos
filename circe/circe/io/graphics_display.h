@@ -60,28 +60,28 @@ public:
   /* get
    * \returns mouse position (screen space)
    */
-  ponos::Point2 getMousePos();
+  ponos::point2 getMousePos();
   /* get
    * \returns mouse position (NDC **[-1, 1]**)
    */
-  ponos::Point2 getMouseNPos();
+  ponos::point2 getMouseNPos();
   /** \brief convert
    * \param p **[in]** point (in norm dev coordinates)
    * \returns **p** mapped to view coordinates
    */
-  ponos::Point3 normDevCoordToViewCoord(ponos::Point3 p);
+  ponos::point3 normDevCoordToViewCoord(ponos::point3 p);
   /* convert
    * \param p **[in]** point (in view space)
    * \returns **p** mapped to NDC (**[-1,1]**)
    */
-  ponos::Point3 viewCoordToNormDevCoord(ponos::Point3 p);
+  ponos::point3 viewCoordToNormDevCoord(ponos::point3 p);
   /* convert
    * \param c **[in]** camera
    * \param p **[in]** point (in screen space)
    * \returns the unprojected point by the inverse of the camera transform to
    * world space
    */
-  ponos::Point3 unProject(const CameraInterface &c, ponos::Point3 p);
+  ponos::point3 unProject(const CameraInterface &c, ponos::point3 p);
   /* main loop
    * Starts the application, opens the window and enters in the main loop.
    */

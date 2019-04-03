@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_UI_TEXT_RENDERER_H
 #define CIRCE_UI_TEXT_RENDERER_H
@@ -58,16 +58,16 @@ public:
   /// \param p pixel position (in world coordinates)
   /// \param scale
   /// \param c color
-  void render(std::string s, const ponos::Point3 &p,
+  void render(std::string s, const ponos::point3 &p,
               const CameraInterface *camera, GLfloat scale, circe::Color c);
   /// \param c camera pointer
   void setCamera(const CameraInterface *c);
   /// \param p position (world coordinates)
   /// \return text renderer reference
-  TextRenderer &at(const ponos::Point3 &p);
+  TextRenderer &at(const ponos::point3 &p);
   /// \param p position (screen coordinates)
   /// \return text renderer reference
-  TextRenderer &at(const ponos::Point2 &p);
+  TextRenderer &at(const ponos::point2 &p);
   /// \param s scale
   /// \return text renderer reference
   TextRenderer &withScale(float s);
@@ -98,7 +98,7 @@ private:
   bool usingCamera_ = false;
   bool usingDynamicScale_ = false;
   bool usingDynamicColor_ = false;
-  ponos::Point3 position_;
+  ponos::point3 position_;
   float dynamicScale_ = 1.f;
   Color dynamicColor_;
   const CameraInterface *camera_ = nullptr; //!< reference camera
@@ -106,6 +106,6 @@ private:
   FontAtlas atlas;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_UI_TEXT_H
