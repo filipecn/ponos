@@ -25,6 +25,7 @@
 #ifndef HELIOS_INTERACTION_H
 #define HELIOS_INTERACTION_H
 
+#include <helios/core/bsdf.h>
 #include <helios/geometry/h_ray.h>
 #include <ponos/geometry/point.h>
 
@@ -89,6 +90,17 @@ public:
                           const ponos::normal3f &dndus,
                           const ponos::normal3f &dndvs,
                           bool orientationIsAuthoritative);
+  ///
+  /// \param ray
+  /// \param arena used to allocate memory for BSDFs and BSSRDFs
+  /// \param allowMultipleLobes indicates whether the material should use BxDFs
+  /// that aggregate multiple types of scattering into a single BxDF
+  /// \param mode indicates whether the surface intersection was found along a
+  /// path starting from camera or light
+  void computeScatteringFunctions(const RayDifferential &ray,
+                                  ponos::MemoryArena &arena,
+                                  bool allowMultipleLobes, TransportMode mode);
+
   ponos::point2f
       uv; //!< parametric coordinated of the surface at **Interaction::p**
   ponos::vec3f dpdu;    //!< partial derivative of u at p
@@ -103,9 +115,8 @@ public:
              //!< (ex: bump mapping)
   const Shape *shape = nullptr;
   const Primitive *primitive = nullptr;
-  // TODO BSDF* bsdf = nullptr;
-  // TODO BSSRDF *bssrdf = nullptr;
-
+  BSDF *bsdf = nullptr;
+  BSSRDF *bssrdf = nullptr;
 };
 
 } // namespace helios

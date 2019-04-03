@@ -1,23 +1,30 @@
-#include "materials/matte.h"
+#include <helios/materials/matte.h>
 
 namespace helios {
 
-    BSDF* MatteMaterial::getBSDF(const DifferentialGeometry& dgGeom,
-                                 const DifferentialGeometry& dgShading,
-                                 ponos::MemoryArena& arena) const {
-      // Allocate BSDF
-      DifferentialGeometry dgs;
-      if(bumpMap)
-        bump(bumpMap, dgGeom, dgShading, &dgs);
-      else dgs = dgShading;
-      BSDF *bsdf = BSDF_ALLOC(arena, BSDF)(dgs, dgGeom.nn);
-      // Evaluate
-      Spectrum r = kd_->evaluate(dgs).clamp();
-      float sig = ponos::clamp(sigma->evaluate(dgs), 0.f, 90.f);
-      if(sig == 0.)
-        bsdf->add(BSDF_ALLOC(arena, Lambertian)(r));
-      else
-        bsdf->add(BSDF_ALLOC(arena, OrenNayar)(r, sig));
-      return bsdf;
-    }
-} // helios namespace
+MatteMaterial::MatteMaterial(const std::shared_ptr<Texture<Spectrum>> &kd,
+                             const std::shared_ptr<Texture<real_t>> &sigma,
+                             const std::shared_ptr<Texture<real_t>> &bumpMap)
+    Kd(kd),
+    sigma(sigma), bumpMap(bumpMap) {}
+
+void MatteMaterial::computeScatteringFunctions(SurfaceInteraction *si,
+                                               ponos::MemoryArena &arena,
+                                               TransportMode mode,
+                                               bool allowMultipleLobes) const {
+  // perform bump mapping if present
+  if (bumpMap)
+    bump(bumpMap, si);
+  // evaluate textures for material and allocate BRDF
+  si->bsdf = ARENA_ALLOC(arena, BSDF)(*si);
+  Spectrum r = Kd->evaluate(*si).clamp();
+  real_t sig = ponos::clamp(sigma->evaluate(*si), 0, 90);
+  if (!r.isBlack()) {
+    if (sig == 0)
+      si->bsdf->add(ARENA_ALLOC(arena, LambertianReflection)(r));
+    else
+      si->bsdf->add(ARENA_ALLOC(arena, OrenNayar)(r, sig));
+  }
+}
+
+} // namespace helios

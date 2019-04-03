@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 #ifndef PONOS_MEMORY_H
 #define PONOS_MEMORY_H
 
@@ -8,6 +32,7 @@
 #ifdef __linux__
 #include <malloc.h>
 #endif
+#include <list>
 #include <vector>
 
 namespace ponos {
@@ -29,107 +54,62 @@ private:
   size_t i;
 };
 
-#ifndef CACHE_L1_LINE_SIZE
-#define CACHE_L1_LINE_SIZE 64
+#ifndef PONOS_CACHE_L1_LINE_SIZE
+#define PONOS_CACHE_L1_LINE_SIZE 64
 #endif
 
+/// Convenient wrapper for calling alloca
 #define ALLOCA(TYPE, COUNT) (TYPE *)alloca((COUNT) * sizeof(TYPE))
 
-/** \brief Allocates cache-aligned memory blocks of **size** bytes.
- * \param size bytes
- * \returns pointer to allocated region.
- */
-inline void *allocAligned(uint32 size) {
-#ifdef _WIN32
-  return _aligned_malloc(CACHE_L1_LINE_SIZE, size);
-#endif
-#ifdef __linux
-  return memalign(CACHE_L1_LINE_SIZE, size);
-#endif
-  return nullptr;
-}
-
-/** \brief Allocates cache-aligned **count** objects.
- * \param count number of objects.
- * \returns pointer to allocated region.
- */
+/// Allocates cache-aligned memory blocks of **size** bytes.
+/// \param size bytes
+/// \returns pointer to allocated region.
+void *allocAligned(size_t size);
+/// Frees aligned memory
+/// \param ptr raw pointer
+void freeAligned(void *ptr);
+/// \brief Allocates cache-aligned **count** objects.
+/// \param count number of objects.
+/// \returns pointer to allocated region.
 template <typename T> T *allocAligned(uint32 count) {
   return static_cast<T *>(allocAligned(count * sizeof(T)));
 }
 
-inline void freeAligned(void *ptr) { free(ptr); }
-
-/** \brief arena-based allocation
- *
- * MemoryArena allocates a large contiguous region of memory and manages
- * objects of different size in this region. Does not support freeing of
- * individual blocks.
- */
+/// MemoryArena allocates a large contiguous region of memory and manages
+/// objects of different size in this region. Does not support freeing of
+/// individual blocks.
 class MemoryArena {
 public:
-  /** \brief Constructor.
-   * \param bs **[in]** amount of bytes per region to be allocated
-   * (**blockSize**).
-   */
-  MemoryArena(uint32 bs = 32768) {
-    blockSize = bs;
-    curBlockPos = 0;
-    currentBlock = allocAligned<char>(blockSize);
-  }
-  virtual ~MemoryArena() {}
-
-  /** \brief allocation
-   * \param sz **[in]** block size to be allocated.
-   * \returns pointer to the allocated area. If there is not enough space.. //
-   * TODO
-   * Allocates **sz** bytes.
-   */
-  void *alloc(uint32 sz) {
-    // round up to minimum machine alignment
-    sz = ((sz + 15) & (~15));
-    if (curBlockPos + sz > blockSize) {
-      // get new block of memory for MemoryArena
-      usedBlocks.emplace_back(currentBlock);
-      if (availableBlocks.size() && sz <= blockSize) {
-        currentBlock = availableBlocks.back();
-        availableBlocks.pop_back();
-      } else
-        currentBlock = allocAligned<char>(std::max(sz, blockSize));
-      curBlockPos = 0;
-    }
-    void *ret = currentBlock + curBlockPos;
-    curBlockPos += sz;
-    return ret;
-  }
-
-  /** \brief allocation
-   * \param count **[in]** number of objects
-   * alloc allocates space for **count** objects.
-   * \returns pointer of the first object in the list.
-   */
-  template <typename T> T *alloc(uint32 count = 1) {
+  /// \param bs **[default = 256kB]** size of chunks allocated by MemoryArena
+  MemoryArena(size_t bs = 262144);
+  virtual ~MemoryArena();
+  /// Allocates **sz** bytes
+  /// \param sz number of bytes to be allocated
+  /// \return void*
+  void *alloc(size_t sz);
+  /// Allocates memory for **count** objects of type **T**
+  /// \tparam T object type
+  /// \param count number of objects
+  /// \param runConstructor true to run constructor of objects
+  /// \return T* pointer to the first object in array
+  template <typename T> T *alloc(size_t count = 1, bool runConstructor = true) {
     T *ret = static_cast<T *>(alloc(count * sizeof(T)));
-    for (uint32 i = 0; i < count; i++)
-      new (&ret[i]) T();
+    if (runConstructor)
+      for (uint32 i = 0; i < count; i++)
+        new (&ret[i]) T();
     return ret;
   }
-
-  /** free
-   *
-   * frees all allocated memory
-   */
-  void freeAll() {
-    curBlockPos = 0;
-    while (usedBlocks.size()) {
-      availableBlocks.emplace_back(usedBlocks.back());
-      usedBlocks.pop_back();
-    }
-  }
+  /// frees all allocated memory
+  void freeAll();
 
 private:
-  uint32 curBlockPos, blockSize;
-  char *currentBlock;
-  std::vector<char *> usedBlocks, availableBlocks;
+  const size_t blockSize;      //!< size of chunks allocated by MemoryArena
+  size_t currentBlockPos = 0;  //!< offset of the first free location
+  size_t currentAllocSize = 0; //!< total size of the current block allocation
+  uint8_t *currentBlock = nullptr; //!< pointer to the current block of memory
+  std::list<std::pair<size_t, uint8_t>> usedBlocks; //!< fully used blocks
+  std::list<std::pair<size_t, uint8_t>>
+      availableBlocks; //!< allocated but not used blocks
 };
 
 /** \brief blocked 2D arrays
@@ -196,6 +176,6 @@ private:
   uint32 uRes, vRes, uBlocks;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

@@ -1,36 +1,40 @@
-#include "core/material.h"
+#include <helios/core/material.h>
 
 namespace helios {
 
-  void Material::bump(const std::shared_ptr<Texture<float> > &d,
-    const DifferentialGeometry &dgGeom,
-    const DifferentialGeometry &dgs,
-    DifferentialGeometry *dgBump) {
-      // compute offset
-      DifferentialGeometry dgEval = dgs;
-      float du = .5f * (fabsf(dgs.dudx) + fabsf(dgs.dudy));
-      if(du == 0.f) du = .01f;
-      dgEval.p = dgs.p + du * dgs.dpdu;
-      dgEval.u = dgs.u + du;
-      dgEval.nn = ponos::normalize((ponos::Normal)ponos::cross(dgs.dpdu, dgs.dpdv) + du * dgs.dndu);
-      float uDisplace = d->evaluate(dgEval);
+void Material::bump(const std::shared_ptr<Texture<real_t>> &d,
+                    SurfaceInteraction *si) {
+  // compute offset positions and evaluate displacement texture
+  SurfaceInteraction siEval = *si;
+  // shift siEval du in the u direction
+  real_t du = .5f * (std::abs(si->dudx) + std::abs(si->dudy));
+  if (du == 0)
+    du = .01f;
+  siEval.p = si->p + du * si->shading.dpdu;
+  siEval.uv = si->uv + ponos::vec2(du, 0.f);
+  siEval.n = ponos::normalize(
+      (ponos::normal3)ponos::cross(si->shading.dpdu, si->shading.dpdv) +
+      du * si->dndu);
+  real_t uDisplace = d->evaluate(siEval);
+  // shift siEval dv in the v direction
+  real_t dv = .5f * (std::abs(si->dvdx) + std::abs(si->dvdy));
+  if (dv == 0)
+    dv = .01f;
+  siEval.p = si->p + dv * si->shading.dpdu;
+  siEval.uv = si->uv + ponos::vec2(dv, 0.f);
+  siEval.n = ponos::normalize(
+      (ponos::normal3)ponos::cross(si->shading.dpdu, si->shading.dpdv) +
+      dv * si->dndv);
+  real_t vDisplace = d->evaluate(siEval);
+  real_t displace = d->evaluate(*si);
+  // compute bump-mapped differential geometry
+  ponos::vec3 dpdu = si->shading.dpdu +
+                     (uDisplace - displace) / du * ponos::vec3(si->shading.n) +
+                     displace * ponos::vec3(si->shading.dndu);
+  ponos::vec3 dpdv = si->shading.dpdv +
+                     (vDisplace - displace) / dv * ponos::vec3(si->shading.n) +
+                     displace * ponos::vec3(si->shading.dndv);
+  si->setShadingGeometry(dpdu, dpdv, si->shading.dndu, si->shading.dndv, false);
+}
 
-      float dv = .5f * (fabsf(dgs.dvdx) + fabsf(dgs.dvdy));
-      if(dv == 0.f) dv = .01f;
-      dgEval.p = dgs.p + dv * dgs.dpdv;
-      dgEval.u = dgs.u;
-      dgEval.v = dgs.v + dv;
-      dgEval.nn = ponos::normalize((ponos::Normal)ponos::cross(dgs.dpdu, dgs.dpdv) + dv * dgs.dndv);
-      float vDisplace = d->evaluate(dgEval);
-      float displace = d->evaluate(dgs);
-      // compute bump-mapped...
-      *dgBump = dgs;
-      dgBump->dpdu = dgs.dpdu + (uDisplace - displace) / du * ponos::vec3(dgs.nn) + displace * ponos::vec3(dgs.dndu);
-      dgBump->dpdv = dgs.dpdv + (vDisplace - displace) / dv * ponos::vec3(dgs.nn) + displace * ponos::vec3(dgs.dndv);
-      dgBump->nn = ponos::Normal(ponos::normalize(ponos::cross(dgBump->dpdu, dgBump->dpdv)));
-      if(dgs.shape->reverseOrientation ^ dgs.shape->transformSwapsHandedness)
-        dgBump->nn *- -1.f;
-      // orient shading
-      dgBump->nn = faceForward(dgBump->nn, dgGeom.nn);
-    }
-} // helios namespace
+} // namespace helios
