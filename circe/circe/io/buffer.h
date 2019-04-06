@@ -104,7 +104,7 @@ struct BufferDescriptor {
    * \param _name attribute name (used in shader programs)
    * \param _size number of components
    * \param _offset attribute data offset (in bytes)
-   * \param type attribute data type
+   * \param type attribute data type (GL_FLOAT)
    */
   void addAttribute(const std::string &_name, size_t _size, uint _offset,
                     GLenum _type) {
@@ -303,6 +303,17 @@ public:
   explicit Buffer(const BufferDescriptor &bd, GLuint id = 0)
       : BufferInterface(bd, id) {}
   ~Buffer() override { glDeleteBuffers(1, &this->bufferId); }
+  void resize(int size) {
+    this->bufferDescriptor.elementCount = size;
+    if (!this->bufferId)
+      return;
+    glBindBuffer(this->bufferDescriptor.type, this->bufferId);
+    glBufferData(this->bufferDescriptor.type,
+                 this->bufferDescriptor.elementCount *
+                     this->bufferDescriptor.elementSize * sizeof(T),
+                 nullptr, this->bufferDescriptor.use);
+    CHECK_GL_ERRORS;
+  }
   /** \brief set
    * \param d **[in]** data pointer
    * \param bd **[in]** buffer description

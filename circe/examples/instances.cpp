@@ -8,16 +8,16 @@ int main() {
   size_t n = 400;
   // generate base mesh
   ponos::RawMeshSPtr sphereMesh(
-      ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 0, false, false));
+      ponos::create_icosphere_mesh(ponos::point3(), 1.f, 0, false, false));
   ponos::RawMeshSPtr quadMesh(ponos::create_quad_mesh(
-      ponos::Point3(0, 0, 0), ponos::Point3(1, 0, 0), ponos::Point3(1, 1, 0),
-      ponos::Point3(0, 1, 0), false, false));
+      ponos::point3(0, 0, 0), ponos::point3(1, 0, 0), ponos::point3(1, 1, 0),
+      ponos::point3(0, 1, 0), false, false));
   ponos::RawMeshSPtr wquadMesh(ponos::create_quad_wireframe_mesh(
-      ponos::Point3(0, 0, 0), ponos::Point3(1, 0, 0), ponos::Point3(1, 1, 0),
-      ponos::Point3(0, 1, 0)));
+      ponos::point3(0, 0, 0), ponos::point3(1, 0, 0), ponos::point3(1, 1, 0),
+      ponos::point3(0, 1, 0)));
   // ponos::RawMeshSPtr circleMesh(ponos::RawMeshes::icosphere());
   ponos::RawMeshSPtr segmentMesh(
-      ponos::RawMeshes::segment(ponos::Point2(1, 0)));
+      ponos::RawMeshes::segment(ponos::point2(1, 0)));
   ponos::RawMeshSPtr cube = ponos::RawMeshes::cube();
   // circe::SceneMesh qm(*wquadMesh.get());
   circe::SceneMesh qm(segmentMesh);
@@ -56,7 +56,7 @@ int main() {
       float t[16];
       (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
        ponos::translate(ponos::vec3(sampler.sample(
-           ponos::BBox3(ponos::Point3(-5, 0, 0), ponos::Point3(5, 5, 5))))))
+           ponos::bbox3(ponos::point3(-5, 0, 0), ponos::point3(5, 5, 5))))))
           .matrix()
           .column_major(t);
       for (size_t k = 0; k < 16; k++)

@@ -38,6 +38,7 @@ class GridSmokeSolver2 {
 public:
   GridSmokeSolver2() = default;
   ~GridSmokeSolver2();
+  void init();
   ///
   ///
   /// \param res

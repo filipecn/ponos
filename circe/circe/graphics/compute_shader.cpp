@@ -5,7 +5,6 @@
 namespace circe {
 
 ComputeShader::ComputeShader(const char *source) {
-  this->running = false;
   this->programId = static_cast<GLuint>(std::max(
       0, ShaderManager::instance().loadFromText(source, GL_COMPUTE_SHADER)));
   { // query up the workgroups
@@ -72,4 +71,4 @@ void ComputeShader::setTexture(const TextureAttributes &a,
 }
 void ComputeShader::setGroupSize(const ponos::uivec3 gs) { groupSize = gs; }
 
-} // circe namespace
+} // namespace circe

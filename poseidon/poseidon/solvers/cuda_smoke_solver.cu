@@ -63,10 +63,9 @@ __global__ void __advectDensity(float *d, hermes::cuda::Grid2Info dInfo,
     hermes::cuda::point2f up = uInfo.toField(wp);
     hermes::cuda::point2f vp = vInfo.toField(wp);
     hermes::cuda::vec2f vel(tex2D(uTex2, up.x, up.y), tex2D(vTex2, vp.x, vp.y));
-    vel.x = 0;
-    vel.y = 0;
-    hermes::cuda::point2f pos = dInfo.toField(wp /* - vel * dt*/);
+    hermes::cuda::point2f pos = dInfo.toField(wp - vel * dt);
     d[index] = tex2D(densityTex2, pos.x, pos.y);
+    // d[index] = tex2D(densityTex2, x, y);
   }
 }
 
@@ -99,8 +98,9 @@ void GridSmokeSolver2::setOrigin(const ponos::point2f &o) {
   divergence.setOrigin(p);
 }
 
+void GridSmokeSolver2::init() { setupTextures(); }
+
 void GridSmokeSolver2::step(float dt) {
-  setupTextures();
   // advectVelocities(dt);
   advectDensity(dt);
 }
@@ -153,6 +153,7 @@ void GridSmokeSolver2::advectDensity(float dt) {
   __advectDensity<<<td.gridSize, td.blockSize>>>(
       density.texture().deviceData(), density.info(), velocity.u().info(),
       velocity.v().info(), dt);
+  density.texture().updateTextureMemory();
 }
 
 } // namespace cuda

@@ -84,8 +84,6 @@ public:
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 
-  bool running = false;
-
   friend std::ostream &operator<<(std::ostream &o, ShaderProgram shader) {
     o << "SHADER (programId " << shader.programId << ")\n";
     o << "vertex attributes:\n";

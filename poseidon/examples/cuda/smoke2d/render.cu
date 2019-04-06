@@ -29,9 +29,9 @@ __global__ void __renderDensity(unsigned int *out, int w, int h) {
 void renderDensity(unsigned int w, unsigned int h,
                    const hermes::cuda::Texture<float> &in, unsigned int *out) {
   auto td = hermes::ThreadArrayDistributionInfo(w, h);
-  densityTex2.addressMode[0] = cudaAddressModeBorder;
-  densityTex2.addressMode[1] = cudaAddressModeBorder;
-  densityTex2.filterMode = cudaFilterModeLinear;
+  // densityTex2.addressMode[0] = cudaAddressModeBorder;
+  // densityTex2.addressMode[1] = cudaAddressModeBorder;
+  // densityTex2.filterMode = cudaFilterModeLinear;
   densityTex2.normalized = 1;
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
   using namespace hermes::cuda;

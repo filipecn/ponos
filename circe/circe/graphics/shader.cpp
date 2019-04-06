@@ -54,7 +54,6 @@ ShaderProgram &ShaderProgram::operator=(const ShaderProgram &other) {
 ShaderProgram::ShaderProgram(int id) {
   FATAL_ASSERT(id >= 0);
   programId = static_cast<GLuint>(id);
-  running = false;
 }
 
 ShaderProgram::ShaderProgram(const char *vs, const char *gs, const char *fs)
@@ -66,7 +65,6 @@ ShaderProgram::ShaderProgram(std::initializer_list<const char *> files)
 }
 
 bool ShaderProgram::loadFromFiles(std::initializer_list<const char *> files) {
-  running = false;
   int program = ShaderManager::instance().loadFromFiles(files);
   if (program < 0)
     return false;
@@ -75,11 +73,8 @@ bool ShaderProgram::loadFromFiles(std::initializer_list<const char *> files) {
 }
 
 bool ShaderProgram::begin() {
-  if (running)
-    return true;
   if (!ShaderManager::instance().useShader(programId))
     return false;
-  running = true;
   return true;
 }
 
@@ -104,10 +99,7 @@ int ShaderProgram::locateAttribute(const std::string &name) const {
   //  return glGetAttribLocation(programId, name.c_str());
 }
 
-void ShaderProgram::end() {
-  glUseProgram(0);
-  running = false;
-}
+void ShaderProgram::end() { glUseProgram(0); }
 
 void ShaderProgram::addVertexAttribute(const char *name, GLint location) {
   //  vertexAttributes.insert(name);
@@ -119,8 +111,6 @@ void ShaderProgram::addUniform(const std::string &name, GLint location) {
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::Transform &t) {
-  if (!running)
-    begin();
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name
@@ -131,8 +121,6 @@ void ShaderProgram::setUniform(const char *name, const ponos::Transform &t) {
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::mat4 &m) {
-  if (!running)
-    begin();
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name
@@ -183,7 +171,6 @@ void ShaderProgram::setUniform(const char *name, const ponos::point3 &v) {
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {
-  bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name
@@ -191,12 +178,9 @@ void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {
     return;
   }
   glUniform2fv(loc, 1, &v.x);
-  if (wasNotRunning)
-    end();
 }
 
 void ShaderProgram::setUniform(const char *name, int i) {
-  bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name
@@ -204,12 +188,9 @@ void ShaderProgram::setUniform(const char *name, int i) {
     return;
   }
   glUniform1i(loc, i);
-  if (wasNotRunning)
-    end();
 }
 
 void ShaderProgram::setUniform(const char *name, float f) {
-  bool wasNotRunning = !running;
   GLint loc = getUniLoc(name);
   if (loc == -1) {
     std::cerr << "Attribute " << name
@@ -217,8 +198,6 @@ void ShaderProgram::setUniform(const char *name, float f) {
     return;
   }
   glUniform1f(loc, f);
-  if (wasNotRunning)
-    end();
 }
 GLint ShaderProgram::getUniLoc(const GLchar *name) {
   //  if (!ShaderManager::instance().useShader(programId))
