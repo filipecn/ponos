@@ -278,6 +278,7 @@ public:
         static_cast<GLuint>(location), va.size, va.type, GL_FALSE,
         bufferDescriptor.elementSize * sizeof(float), (void *)(va.offset));
   }
+  GLuint id() const { return bufferId; }
   /// locates and register buffer attributes in shader program
   /// \param s shader
   /// \param d **[optional]** attribute divisor (default = 0)
