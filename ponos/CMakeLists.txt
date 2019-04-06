@@ -118,7 +118,7 @@ target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos_shared ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
 # add_subdirectory(examples)
-add_subdirectory(tests)
+# add_subdirectory(tests)
 
 if (WIN32)
     SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
