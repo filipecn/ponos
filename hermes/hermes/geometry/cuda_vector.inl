@@ -288,3 +288,27 @@ __host__ std::ostream &operator<<(std::ostream &os, const Vector3<T> &v) {
   os << "[vector3]" << v.x << " " << v.y << " " << v.z << std::endl;
   return os;
 }
+
+template <typename T>
+__host__ __device__ T dot(const Vector3<T> &a, const Vector3<T> &b) {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+template <typename T>
+__host__ __device__ Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b) {
+  return Vector3<T>((a.y * b.z) - (a.z * b.y), (a.z * b.x) - (a.x * b.z),
+                    (a.x * b.y) - (a.y * b.x));
+}
+
+template <typename T>
+__host__ __device__ T triple(const Vector3<T> &a, const Vector3<T> &b,
+                             const Vector3<T> &c) {
+  return dot(a, cross(b, c));
+}
+
+template <typename T>
+__host__ __device__ Vector3<T> normalize(const Vector3<T> &v) {
+  if (v.length2() == 0.f)
+    return v;
+  return v / v.length();
+}

@@ -147,50 +147,6 @@ template <typename T>
 __host__ __device__ Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b);
 template <typename T> __host__ __device__ Vector3<T> abs(const Vector3<T> &a);
 
-// template <typename T, int D> class Vector {
-// public:
-//   __host__ __device__ Vector();
-//   __host__ __device__ Vector(std::initializer_list<T> values);
-//   __host__ __device__ Vector(const T &t);
-//   __host__ __device__ Vector(const T &x, const T &y);
-//   __host__ __device__ Vector(const T &x, const T &y, const T &z);
-//   __host__ __device__ T operator[](int i) const;
-//   __host__ __device__ T &operator[](int i);
-//   __host__ __device__ bool operator==(const Vector<T, D> &_v) const;
-//   __host__ __device__ bool operator!=(const Vector<T, D> &_v) const;
-//   __host__ __device__ bool operator<=(const Vector<T, D> &_v) const;
-//   __host__ __device__ bool operator<(const Vector<T, D> &_v) const;
-//   __host__ __device__ bool operator>=(const Vector<T, D> &_v) const;
-//   __host__ __device__ bool operator>(const Vector<T, D> &_v) const;
-//   __host__ __device__ Vector<T, D> operator-(const Vector<T, D> &_v) const;
-//   __host__ __device__ Vector<T, D> operator+(const Vector<T, D> &_v) const;
-//   __host__ __device__ Vector<T, D> operator*(const Vector<T, D> &_v) const;
-//   __host__ __device__ Vector<T, D> operator/(const Vector<T, D> &_v) const;
-//   __host__ __device__ Vector<T, D> operator/=(T f);
-//   __host__ __device__ Vector<T, D> operator-=(const Vector<T, D> &_v);
-//   __host__ __device__ Vector<T, 2> operator/(T f) const;
-//   __host__ __device__ Vector<T, 2> xy(size_t x = 0, size_t y = 1) const;
-//   __host__ __device__ Vector<T, 2> floatXY(size_t x = 0, size_t y = 1) const;
-//   __host__ __device__ Vector<float, 3> floatXYZ(size_t x = 0, size_t y = 1,
-//                                                 size_t z = 2);
-//   __host__ __device__ T max() const;
-//   __host__ __device__ T length2() const;
-//   __host__ __device__ T length() const;
-//   __host__ __device__ Vector<T, D> normalized() const;
-//   __host__ __device__ Vector<T, 2> right() const;
-//   __host__ __device__ Vector<T, 2> left() const;
-//   friend std::ostream &operator<<(std::ostream &os, const Vector &v) {
-//     os << "Vector[<" << D << ">]";
-//     for (size_t i = 0; i < v.size; i++)
-//       os << v[i] << " ";
-//     os << std::endl;
-//     return os;
-//   }
-
-//   int size;
-//   T v[D];
-// };
-
 typedef Vector2<double> vec2d;
 typedef Vector3<double> vec3d;
 typedef Vector3<float> vec3;
@@ -201,12 +157,6 @@ typedef Vector2<int> vec2i;
 typedef Vector2<uint> vec2u;
 typedef Vector3<int> vec3i;
 typedef Vector3<uint> vec3u;
-// typedef Vector<unsigned int, 2> Vector2u;
-// typedef Vector<unsigned int, 3> Vector3u;
-// typedef Vector<float, 2> Vector2f;
-// typedef Vector<float, 3> Vector3f;
-// typedef Vector<double, 2> Vector2d;
-// typedef Vector<double, 3> Vector3d;
 
 #include "cuda_vector.inl"
 
