@@ -35,6 +35,8 @@ enum class AddressMode { /*REPEAT,*/ CLAMP_TO_EDGE,
 
 enum class FilterMode { LINEAR, POINT };
 
+namespace cuda {
+
 class Constants {
 public:
   static double pi;     // = 3.14159265358979323846f;
@@ -53,6 +55,8 @@ public:
     return fabs(a - b) < 1e-8;
   }
 };
+
+} // namespace cuda
 
 } // namespace hermes
 

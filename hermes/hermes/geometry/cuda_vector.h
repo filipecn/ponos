@@ -26,6 +26,7 @@
 #define HERMES_GEOMETRY_CUDA_VECTOR_H
 
 #include <cuda_runtime.h>
+#include <hermes/common/defs.h>
 #include <iostream>
 
 namespace hermes {

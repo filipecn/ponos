@@ -46,7 +46,7 @@ private:
   std::vector<FilmTablePixel> pixels; //!< redered pixels
 };
 
-/// Dictates how the incident light is acctually transformed into colors in an
+/// Dictates how the incident light is actually transformed into colors in an
 /// image.
 class Film {
 public:
