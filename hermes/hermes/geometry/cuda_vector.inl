@@ -283,10 +283,6 @@ template <typename T> __host__ __device__ T Vector3<T>::length() const {
   return sqrtf(length2());
 }
 
-template <typename T> __host__ __device__ bool Vector3<T>::HasNaNs() const {
-  return std::isnan(x) || std::isnan(y) || std::isnan(z);
-}
-
 template <typename T>
 __host__ std::ostream &operator<<(std::ostream &os, const Vector3<T> &v) {
   os << "[vector3]" << v.x << " " << v.y << " " << v.z << std::endl;

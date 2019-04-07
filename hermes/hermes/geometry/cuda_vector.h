@@ -59,7 +59,6 @@ public:
   __host__ __device__ T length() const;
   __host__ __device__ Vector2 right() const;
   __host__ __device__ Vector2 left() const;
-  __host__ bool HasNaNs() const;
   template <typename TT>
   friend std::ostream &operator<<(std::ostream &os, const Vector2<TT> &v);
   T x, y;
@@ -119,7 +118,6 @@ public:
   // normalization
   __host__ __device__ T length2() const;
   __host__ __device__ T length() const;
-  __host__ __device__ bool HasNaNs() const;
   template <typename TT>
   friend std::ostream &operator<<(std::ostream &os, const Vector3<TT> &v);
   T x, y, z;

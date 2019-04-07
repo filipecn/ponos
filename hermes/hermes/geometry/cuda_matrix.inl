@@ -8,24 +8,6 @@ __host__ __device__ Matrix4x4<T>::Matrix4x4(bool isIdentity) {
 }
 
 template <typename T>
-__host__ __device__ Matrix4x4<T>::Matrix4x4(std::initializer_list<T> values,
-                                            bool columnMajor) {
-  size_t l = 0, c = 0;
-  for (auto v : values) {
-    m[l][c] = v;
-    if (columnMajor) {
-      l++;
-      if (l >= 4)
-        l = 0, c++;
-    } else {
-      c++;
-      if (c >= 4)
-        c = 0, l++;
-    }
-  }
-}
-
-template <typename T>
 __host__ __device__ Matrix4x4<T>::Matrix4x4(const T mat[16], bool columnMajor) {
   size_t k = 0;
   if (columnMajor)
@@ -373,7 +355,7 @@ __host__ __device__ void decompose(const Matrix4x4<T> &m, Matrix4x4<T> &r,
     for (int i = 0; i < 3; i++) {
       T n = fabsf(r.m[i][0] - Rnext.m[i][0]) +
             fabsf(r.m[i][1] - Rnext.m[i][1]) + fabsf(r.m[i][2] - Rnext.m[i][2]);
-      norm = std::max(norm, n);
+      norm = fmaxf(norm, n);
     }
   } while (++count < 100 && norm > .0001f);
   // compute scale S using rotation and original matrix
@@ -460,7 +442,7 @@ __host__ __device__ Matrix3x3<T> inverse(const Matrix3x3<T> &m) {
       m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[1][0] * m.m[2][1] * m.m[0][2] +
       m.m[2][0] * m.m[0][1] * m.m[1][2] - m.m[0][0] * m.m[2][1] * m.m[1][2] -
       m.m[2][0] * m.m[1][1] * m.m[0][2] - m.m[1][0] * m.m[0][1] * m.m[2][2];
-  if (std::fabs(det) < 1e-8)
+  if (fabs(det) < 1e-8)
     return r;
   r.m[0][0] = (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1]) / det;
   r.m[0][1] = (m.m[0][2] * m.m[2][1] - m.m[0][1] * m.m[2][2]) / det;
