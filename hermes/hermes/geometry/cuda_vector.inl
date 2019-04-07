@@ -66,14 +66,14 @@ __host__ __device__ Vector2<T> &Vector2<T>::operator*=(T f) {
 
 template <typename T>
 __host__ __device__ Vector2<T> Vector2<T>::operator/(T f) const {
-  CHECK_FLOAT_EQUAL(f, 0.f);
+  Check::isEqual(f, 0.f);
   T inv = 1.f / f;
   return Vector2(x * inv, y * inv);
 }
 
 template <typename T>
 __host__ __device__ Vector2<T> &Vector2<T>::operator/=(T f) {
-  CHECK_FLOAT_EQUAL(f, 0.f);
+  Check::isEqual(f, 0.f);
   T inv = 1.f / f;
   x *= inv;
   y *= inv;
@@ -237,14 +237,14 @@ __host__ __device__ Vector3<T> &Vector3<T>::operator*=(T f) {
 
 template <typename T>
 __host__ __device__ Vector3<T> Vector3<T>::operator/(T f) const {
-  CHECK_FLOAT_EQUAL(f, 0.f);
+  Check::isEqual(f, 0.f);
   T inv = 1.f / f;
   return Vector3(x * inv, y * inv, z * inv);
 }
 
 template <typename T>
 __host__ __device__ Vector3<T> &Vector3<T>::operator/=(T f) {
-  CHECK_FLOAT_EQUAL(f, 0.f);
+  Check::isEqual(f, 0.f);
   T inv = 1.f / f;
   x *= inv;
   y *= inv;
