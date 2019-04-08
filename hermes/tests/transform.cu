@@ -4,6 +4,10 @@
 using namespace hermes::cuda;
 
 TEST(Transform, operators) {
+  point3 a, b;
+  vec3 v;
+  v = (a - b) / 2.f;
+
   {
     auto t = scale(2.f, 10.f, -3.f);
     vec3f v(1.f);

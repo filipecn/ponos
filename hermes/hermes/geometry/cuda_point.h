@@ -76,46 +76,54 @@ __host__ __device__ T distance2(const Point2<T> &a, const Point2<T> &b);
 
 template <typename T> class Point3 {
 public:
-  __host__ __device__ Point3();
-  __host__ __device__ explicit Point3(T _x, T _y, T _z);
-  __host__ __device__ explicit Point3(const Vector3<T> &v);
-  __host__ __device__ explicit Point3(const T *v);
-  __host__ __device__ explicit Point3(T v);
-  __host__ __device__ explicit Point3(const Point2<T> &p);
-  __host__ __device__ explicit operator Vector3<T>() const {
-    return Vector3<T>(x, y, z);
-  }
+  __host__ __device__ Point3() {}
+  __host__ __device__ Point3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
+  __host__ __device__ Point3(const Vector3<T> &v) : x(v.x), y(v.y), z(v.z) {}
+  __host__ __device__ Point3(const Point2<T> &p) : x(p.x), y(p.y), z(0) {}
+  __host__ __device__ Point3(const T *v) : x(v[0]), y(v[1]), z(v[2]) {}
+  __host__ __device__ Point3(T v) : x(v), y(v), z(v) {}
   // access
-  __host__ __device__ T operator[](int i) const;
-  __host__ __device__ T &operator[](int i);
+  __host__ __device__ T operator[](int i) const { return (&x)[i]; }
+  __host__ __device__ T &operator[](int i) { return (&x)[i]; }
+  __host__ __device__ Point2<T> xy() const { return Point2<T>(x, y); }
+  __host__ __device__ Point2<T> yz() const { return Point2<T>(y, z); }
+  __host__ __device__ Point2<T> xz() const { return Point2<T>(x, z); }
+  __host__ __device__ T u() const { return x; }
+  __host__ __device__ T v() const { return y; }
+  __host__ __device__ T s() const { return z; }
   // arithmetic
-  __host__ __device__ Point3 operator+(const Vector3<T> &v) const;
-  __host__ __device__ Point3 operator+(const Point3<T> &v) const;
-  __host__ __device__ Point3 operator+(const T &f) const;
-  __host__ __device__ Point3 operator-(const T &f) const;
-  __host__ __device__ Point3 &operator+=(const Vector3<T> &v);
-  __host__ __device__ Vector3<T> operator-(const Point3 &p) const;
-  __host__ __device__ Point3 operator-(const Vector3<T> &v) const;
-  __host__ __device__ Point3 &operator-=(const Vector3<T> &v);
-  __host__ __device__ bool operator==(const Point3 &p) const;
-  __host__ __device__ bool operator>=(const Point3 &p) const;
-  __host__ __device__ bool operator<=(const Point3 &p) const;
-  __host__ __device__ Point3 operator*(T d) const;
-  __host__ __device__ Point3 operator/(T d) const;
-  __host__ __device__ Point3 &operator/=(T d);
-  __host__ __device__ Point3 &operator*=(T d);
+  __host__ __device__ Point3<T> operator+() const { return *this; }
+  __host__ __device__ Point3<T> operator-() const {
+    return Point3<T>(-x, -y, -z);
+  }
+  __host__ __device__ Point3<T> &operator+=(const Vector3<T> &v) {
+    x += v.x;
+    y += v.y;
+    z += v.z;
+    return *this;
+  }
+  __host__ __device__ Point3<T> &operator*=(T d) {
+    x *= d;
+    y *= d;
+    z *= d;
+    return *this;
+  }
+  __host__ __device__ Point3<T> &operator-=(const Vector3<T> &v) {
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+    return *this;
+  }
+  __host__ __device__ Point3<T> &operator/=(T d) {
+    x /= d;
+    y /= d;
+    z /= d;
+    return *this;
+  }
   // boolean
-  __host__ __device__ bool operator==(const Point3 &p);
-  __host__ __device__ Point2<T> xy() const;
-  __host__ __device__ Point2<T> yz() const;
-  __host__ __device__ Point2<T> xz() const;
-  __host__ __device__ Vector3<T> asVector3() const;
-  __host__ __device__ vec3i asIVec3() const;
-  bool HasNaNs() const;
-  static uint dimension() { return 3; }
   template <typename TT>
   friend std::ostream &operator<<(std::ostream &os, const Point3<TT> &p);
-  T x, y, z;
+  T x = 0, y = 0, z = 0;
 };
 
 typedef Point3<float> point3;
@@ -125,9 +133,73 @@ typedef Point3<float> point3f;
 typedef Point3<float> point3d;
 
 template <typename T>
-__host__ __device__ T distance(const Point3<T> &a, const Point3<T> &b);
+__host__ __device__ Point3<T> operator+(T f, const Point3<T> &p) {
+  return Point3<T>(p.x + f, p.y + f, p.z + f);
+}
 template <typename T>
-__host__ __device__ T distance2(const Point3<T> &a, const Point3<T> &b);
+__host__ __device__ Point3<T> operator-(T f, const Point3<T> &p) {
+  return Point3<T>(p.x - f, p.y - f, p.z - f);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator*(T d, const Point3<T> &p) {
+  return Point3<T>(p.x * d, p.y * d, p.z * d);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator+(const Point3<T> &p, T f) {
+  return Point3<T>(p.x + f, p.y + f, p.z + f);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator-(const Point3<T> &p, T f) {
+  return Point3<T>(p.x - f, p.y - f, p.z - f);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator*(const Point3<T> &p, T d) {
+  return Point3<T>(p.x * d, p.y * d, p.z * d);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator/(const Point3<T> &p, T d) {
+  return Point3<T>(p.x / d, p.y / d, p.z / d);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator+(const Point3<T> &p,
+                                        const Vector3<T> &v) {
+  return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator-(const Point3<T> &p,
+                                        const Vector3<T> &v) {
+  return Point3<T>(p.x - v.x, p.y - v.y, p.z - v.z);
+}
+template <typename T>
+__host__ __device__ Point3<T> operator+(const Point3<T> &p,
+                                        const Point3<T> &v) {
+  return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
+}
+template <typename T>
+__host__ __device__ Vector3<T> operator-(const Point3<T> &q,
+                                         const Point3<T> &p) {
+  return Vector3<T>(q.x - p.x, q.y - p.y, q.z - p.z);
+}
+template <typename T>
+__host__ __device__ bool operator==(const Point3<T> &p, const Point3<T> &q) {
+  return Check::isEqual(p.x, q.x) && Check::isEqual(p.y, q.y) &&
+         Check::isEqual(p.z, q.z);
+}
+template <typename T>
+__host__ __device__ bool operator>=(const Point3<T> &q, const Point3<T> &p) {
+  return q.x >= p.x && q.y >= p.y && q.z >= p.z;
+}
+template <typename T>
+__host__ __device__ bool operator<=(const Point3<T> &q, const Point3<T> &p) {
+  return q.x <= p.x && q.y <= p.y && q.z <= p.z;
+}
+
+template <typename T> T distance(const Point3<T> &a, const Point3<T> &b) {
+  return (a - b).length();
+}
+template <typename T> T distance2(const Point3<T> &a, const Point3<T> &b) {
+  return (a - b).length2();
+}
 
 #include "cuda_point.inl"
 
