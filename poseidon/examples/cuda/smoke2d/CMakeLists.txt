@@ -1,5 +1,5 @@
 enable_language("CUDA")
-add_executable(cuSmoke2d main.cpp
+add_executable(cuSmoke2d main.cu
 render.h
 render.cu
 )

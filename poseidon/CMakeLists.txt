@@ -4,6 +4,8 @@ enable_language(CUDA)
 
 set(POSEIDON_HEADERS
         poseidon/poseidon.h
+        poseidon/simulation/cuda_collider.h
+        poseidon/simulation/cuda_scene.h
         poseidon/simulation/cuda_smoke_injector.h
         poseidon/solvers/cuda_smoke_solver.h
         )

@@ -8,8 +8,8 @@ __host__ __device__ BBox2<T>::BBox2(const Point2<T> &p) : lower(p), upper(p) {}
 
 template <typename T>
 __host__ __device__ BBox2<T>::BBox2(const Point2<T> &p1, const Point2<T> &p2) {
-  lower = Point2<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y));
-  upper = Point2<T>(std::max(p1.x, p2.x), std::max(p1.y, p2.y));
+  lower = Point2<T>(fminf(p1.x, p2.x), fminf(p1.y, p2.y));
+  upper = Point2<T>(fmaxf(p1.x, p2.x), fmaxf(p1.y, p2.y));
 }
 
 template <typename T> __host__ __device__ BBox2<T> BBox2<T>::unitBox() {
@@ -22,7 +22,7 @@ __host__ __device__ bool BBox2<T>::inside(const Point2<T> &p) const {
 }
 
 template <typename T> __host__ __device__ T BBox2<T>::size(int d) const {
-  d = std::max(0, std::min(1, d));
+  d = fmaxf(0, fminf(1, d));
   return upper[d] - lower[d];
 }
 
@@ -65,10 +65,8 @@ __host__ __device__ BBox3<T>::BBox3(const Point3<T> &p) : lower(p), upper(p) {}
 
 template <typename T>
 __host__ __device__ BBox3<T>::BBox3(const Point3<T> &p1, const Point3<T> &p2) {
-  lower = Point3<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y),
-                    std::min(p1.z, p2.z));
-  upper = Point3<T>(std::max(p1.x, p2.x), std::max(p1.y, p2.y),
-                    std::max(p1.z, p2.z));
+  lower = Point3<T>(fminf(p1.x, p2.x), fminf(p1.y, p2.y), fminf(p1.z, p2.z));
+  upper = Point3<T>(fmaxf(p1.x, p2.x), fmaxf(p1.y, p2.y), fmaxf(p1.z, p2.z));
 }
 
 template <typename T>
@@ -208,10 +206,10 @@ __host__ __device__ bool overlaps(const BBox3<T> &a, const BBox3<T> &b) {
 template <typename T>
 __host__ __device__ BBox3<T> intersect(const BBox3<T> &a, const BBox3<T> &b) {
   return BBox3<T>(
-      Point3<T>(std::max(a.lower.x, b.lower.x), std::max(a.lower.x, b.lower.y),
-                std::max(a.lower.z, b.lower.z)),
-      Point3<T>(std::min(a.lower.x, b.lower.x), std::min(a.lower.x, b.lower.y),
-                std::min(a.lower.z, b.lower.z)));
+      Point3<T>(fmaxf(a.lower.x, b.lower.x), fmaxf(a.lower.x, b.lower.y),
+                fmaxf(a.lower.z, b.lower.z)),
+      Point3<T>(fminf(a.lower.x, b.lower.x), fminf(a.lower.x, b.lower.y),
+                fminf(a.lower.z, b.lower.z)));
 }
 
 template <typename T>

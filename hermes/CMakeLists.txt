@@ -4,6 +4,7 @@ set(HERMES_HEADERS
         hermes/hermes.h
         hermes/common/cuda.h
         hermes/common/cuda_parallel.h
+        hermes/common/cuda_random.h
         hermes/common/defs.h
         hermes/geometry/cuda_bbox.h
         hermes/geometry/cuda_bbox.inl

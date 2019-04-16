@@ -7,6 +7,10 @@
 void renderDensity(unsigned int w, unsigned int h,
                    const hermes::cuda::Texture<float> &in, unsigned int *out);
 
+void renderSolids(unsigned int w, unsigned int h,
+                  const hermes::cuda::Texture<unsigned char> &in,
+                  unsigned int *out);
+
 class CudaOpenGLInterop {
 public:
   CudaOpenGLInterop(unsigned int w, unsigned int h) : width(w), height(h) {

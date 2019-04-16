@@ -27,6 +27,7 @@
 
 #include <hermes/hermes.h>
 #include <ponos/geometry/point.h>
+#include <poseidon/simulation/cuda_scene.h>
 
 namespace poseidon {
 
@@ -40,7 +41,6 @@ public:
   ~GridSmokeSolver2();
   void init();
   ///
-  ///
   /// \param res
   void setResolution(const ponos::uivec2 &res);
   /// Sets cell size
@@ -52,23 +52,40 @@ public:
   /// Advances one simulation step
   /// \param dt time step
   void step(float dt);
-
+  /// Raster collider bodies and velocities into grid simulations
+  /// \param colliders
+  /// \param n number of colliders
+  void rasterColliders(const Scene2<float> &scene);
+  /// \return hermes::cuda::StaggeredGridTexture2&
   hermes::cuda::StaggeredGridTexture2 &velocityData();
   /// \return const hermes::cuda::GridTexture2<float>& density data reference
   const hermes::cuda::GridTexture2<float> &densityData() const;
   /// \return hermes::cuda::GridTexture2<float>& density data reference
   hermes::cuda::GridTexture2<float> &densityData();
+  /// \return const hermes::cuda::GridTexture2<char>&
+  const hermes::cuda::GridTexture2<unsigned char> &solidData() const;
+  /// \return  hermes::cuda::GridTexture2<char>
+  hermes::cuda::GridTexture2<unsigned char> &solidData();
+  /// \return hermes::cuda::StaggeredGridTexture2&
+  const hermes::cuda::StaggeredGridTexture2 &solidVelocityData() const;
 
 protected:
   void setupTextures();
+  void addGravity(float dt);
   void advectVelocities(float dt);
   void advectDensity(float dt);
+  void computeDivergence();
+  void computePressure();
+  void projectionStep(float dt);
 
-  hermes::cuda::StaggeredGridTexture2 velocity;
+  Scene2<float> scene;
+  hermes::cuda::StaggeredGridTexture2 velocity, solidVelocity;
   hermes::cuda::GridTexture2<float> density;
   hermes::cuda::GridTexture2<float> pressure;
   hermes::cuda::GridTexture2<float> divergence;
+  hermes::cuda::GridTexture2<unsigned char> solid;
   hermes::cuda::vec2u resolution;
+  float dx = 1;
 };
 
 } // namespace cuda

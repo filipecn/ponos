@@ -3,6 +3,7 @@
 #include <hermes/hermes.h>
 
 texture<float, cudaTextureType2D> densityTex2;
+texture<unsigned char, cudaTextureType2D> solidTex2;
 
 __device__ float clamp(float x, float a, float b) { return max(a, min(b, x)); }
 
@@ -26,6 +27,18 @@ __global__ void __renderDensity(unsigned int *out, int w, int h) {
   }
 }
 
+__global__ void __renderSolids(unsigned int *out, int w, int h) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  if (x < w && y < h) {
+    unsigned char solid = tex2D(solidTex2, x / float(w), y / float(h)) * 255;
+    if (solid > 0) {
+      uchar4 c4 = make_uchar4(solid, 100, 0, 255);
+      out[y * w + x] = rgbToInt(c4.x, c4.y, c4.z, c4.w);
+    }
+  }
+}
+
 void renderDensity(unsigned int w, unsigned int h,
                    const hermes::cuda::Texture<float> &in, unsigned int *out) {
   auto td = hermes::ThreadArrayDistributionInfo(w, h);
@@ -39,4 +52,17 @@ void renderDensity(unsigned int w, unsigned int h,
       cudaBindTextureToArray(densityTex2, in.textureArray(), channelDesc));
   __renderDensity<<<td.gridSize, td.blockSize>>>(out, w, h);
   cudaUnbindTexture(densityTex2);
+}
+
+void renderSolids(unsigned int w, unsigned int h,
+                  const hermes::cuda::Texture<unsigned char> &in,
+                  unsigned int *out) {
+  auto td = hermes::ThreadArrayDistributionInfo(w, h);
+  solidTex2.normalized = 1;
+  solidTex2.filterMode = cudaFilterModePoint;
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
+  using namespace hermes::cuda;
+  CUDA_CHECK(cudaBindTextureToArray(solidTex2, in.textureArray(), channelDesc));
+  __renderSolids<<<td.gridSize, td.blockSize>>>(out, w, h);
+  cudaUnbindTexture(solidTex2);
 }

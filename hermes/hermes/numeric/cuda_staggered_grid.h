@@ -70,6 +70,8 @@ public:
   }
   float *uDeviceData() { return uGrid.texture().deviceData(); }
   float *vDeviceData() { return vGrid.texture().deviceData(); }
+  const float *uDeviceData() const { return uGrid.texture().deviceData(); }
+  const float *vDeviceData() const { return vGrid.texture().deviceData(); }
   const GridTexture2<float> &u() const { return uGrid; }
   const GridTexture2<float> &v() const { return vGrid; }
   GridTexture2<float> &u() { return uGrid; }
