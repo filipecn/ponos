@@ -107,9 +107,7 @@ template <typename T> __host__ __device__ Vector2<T> Vector2<T>::left() const {
 }
 
 template <typename T>
-__host__ __device__ std::ostream &operator<<(std::ostream &os,
-                                             const Vector2<T> &v) {
+__host__ std::ostream &operator<<(std::ostream &os, const Vector2<T> &v) {
   os << "[vector2]" << v.x << " " << v.y << std::endl;
   return os;
 }
-

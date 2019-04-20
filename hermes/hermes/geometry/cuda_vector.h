@@ -237,6 +237,12 @@ __host__ __device__ Vector3<T> normalize(const Vector3<T> &v) {
     return v;
   return v / v.length();
 }
+
+template <typename T>
+__host__ __device__ Vector3<T> reflect(const Vector3<T> &v,
+                                       const Vector3<T> &n) {
+  return v - 2 * dot(v, n) * n;
+}
 /// Compute the two orthogonal-tangential vectors from a
 /// \param a **[in]** normal
 /// \param b **[out]** first tangent
