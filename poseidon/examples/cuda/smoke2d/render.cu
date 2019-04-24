@@ -2,6 +2,7 @@
 #include <cuda_runtime.h>
 #include <hermes/hermes.h>
 
+texture<float, cudaTextureType2D> scalarTex2;
 texture<float, cudaTextureType2D> densityTex2;
 texture<unsigned char, cudaTextureType2D> solidTex2;
 
@@ -37,6 +38,35 @@ __global__ void __renderSolids(unsigned int *out, int w, int h) {
       out[y * w + x] = rgbToInt(c4.x, c4.y, c4.z, c4.w);
     }
   }
+}
+
+__global__ void __renderScalarGradient(unsigned int *out, int w, int h,
+                                       hermes::cuda::Color a,
+                                       hermes::cuda::Color b, float minValue,
+                                       float maxValue) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  if (x < w && y < h) {
+    // tex2D(scalarTex2, x / float(w), y / float(h)) * 100, 0, 0, 255);
+    auto c = hermes::cuda::mixsRGB(a, b, x / float(w));
+    c = hermes::cuda::toRGB(c);
+    out[y * w + x] = rgbToInt(c.r, c.g, c.b, 255);
+  }
+}
+
+void renderScalarGradient(unsigned int w, unsigned int h,
+                          const hermes::cuda::Texture<float> &in,
+                          unsigned int *out, float minValue, float maxValue,
+                          hermes::cuda::Color a, hermes::cuda::Color b) {
+  auto td = hermes::ThreadArrayDistributionInfo(w, h);
+  scalarTex2.normalized = 1;
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  using namespace hermes::cuda;
+  CUDA_CHECK(
+      cudaBindTextureToArray(scalarTex2, in.textureArray(), channelDesc));
+  __renderScalarGradient<<<td.gridSize, td.blockSize>>>(out, w, h, a, b,
+                                                        minValue, maxValue);
+  cudaUnbindTexture(scalarTex2);
 }
 
 void renderDensity(unsigned int w, unsigned int h,

@@ -34,7 +34,21 @@ public:
     return false;
   }
   __host__ __device__ T distance(const hermes::cuda::Point2<T> &p,
-                                 hermes::cuda::Point2<T> *s) override {}
+                                 hermes::cuda::Point2<T> *s) override {
+    T mdist = hermes::cuda::Constants::greatest<T>();
+    bool negative = false;
+    hermes::cuda::Point2<T> cp;
+    for (int i = 0; i < n; i++) {
+      T dist = list[i]->distance(p, &cp);
+      if (abs(dist) < mdist) {
+        mdist = abs(dist);
+        negative = dist < 0;
+        *s = cp;
+      }
+    }
+    return (negative ? -1 : 1) * mdist;
+  }
+  __host__ __device__ int size() const { return n; }
 
 private:
   Collider2<T> **list;
@@ -51,7 +65,9 @@ public:
     return hermes::cuda::distance2(c, p) <= r * r;
   }
   __host__ __device__ T distance(const hermes::cuda::Point2<T> &p,
-                                 hermes::cuda::Point2<T> *s) override {}
+                                 hermes::cuda::Point2<T> *s) override {
+    return hermes::cuda::distance(c, p) - r;
+  }
 
 private:
   hermes::cuda::Point2<T> c;
@@ -67,7 +83,9 @@ public:
     return box.inside(p);
   }
   __host__ __device__ T distance(const hermes::cuda::Point2<T> &p,
-                                 hermes::cuda::Point2<T> *s) override {}
+                                 hermes::cuda::Point2<T> *s) override {
+    return 0;
+  }
 
 private:
   hermes::cuda::BBox2<T> box;

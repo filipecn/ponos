@@ -53,9 +53,7 @@ public:
   /// \param dt time step
   void step(float dt);
   /// Raster collider bodies and velocities into grid simulations
-  /// \param colliders
-  /// \param n number of colliders
-  void rasterColliders(const Scene2<float> &scene);
+  void rasterColliders();
   /// \return hermes::cuda::StaggeredGridTexture2&
   hermes::cuda::StaggeredGridTexture2 &velocityData();
   /// \return const hermes::cuda::GridTexture2<float>& density data reference
@@ -68,6 +66,10 @@ public:
   hermes::cuda::GridTexture2<unsigned char> &solidData();
   /// \return hermes::cuda::StaggeredGridTexture2&
   const hermes::cuda::StaggeredGridTexture2 &solidVelocityData() const;
+  /// \return hermes::cuda::StaggeredGridTexture2&
+  hermes::cuda::StaggeredGridTexture2 &solidVelocityData();
+
+  Scene2<float> scene;
 
 protected:
   void setupTextures();
@@ -78,7 +80,6 @@ protected:
   void computePressure();
   void projectionStep(float dt);
 
-  Scene2<float> scene;
   hermes::cuda::StaggeredGridTexture2 velocity, solidVelocity;
   hermes::cuda::GridTexture2<float> density;
   hermes::cuda::GridTexture2<float> pressure;

@@ -1,8 +1,11 @@
+#include <hermes/colors/cuda_color.h>
+#include <hermes/colors/cuda_color_palette.h>
 #include <hermes/common/cuda.h>
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/common/cuda_random.h>
 #include <hermes/common/defs.h>
 #include <hermes/geometry/cuda_matrix.h>
+#include <hermes/geometry/cuda_numeric.h>
 #include <hermes/geometry/cuda_point.h>
 #include <hermes/geometry/cuda_transform.h>
 #include <hermes/geometry/cuda_vector.h>

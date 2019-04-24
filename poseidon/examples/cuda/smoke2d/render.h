@@ -4,6 +4,11 @@
 #include <hermes/common/cuda.h>
 #include <hermes/hermes.h>
 
+void renderScalarGradient(unsigned int w, unsigned int h,
+                          const hermes::cuda::Texture<float> &in,
+                          unsigned int *out, float minValue, float maxValue,
+                          hermes::cuda::Color a, hermes::cuda::Color b);
+
 void renderDensity(unsigned int w, unsigned int h,
                    const hermes::cuda::Texture<float> &in, unsigned int *out);
 

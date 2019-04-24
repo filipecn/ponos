@@ -2,6 +2,8 @@ project(HERMES CUDA)
 
 set(HERMES_HEADERS
         hermes/hermes.h
+        hermes/colors/cuda_color.h
+        hermes/colors/cuda_color_palette.h
         hermes/common/cuda.h
         hermes/common/cuda_parallel.h
         hermes/common/cuda_random.h
@@ -9,6 +11,7 @@ set(HERMES_HEADERS
         hermes/geometry/cuda_bbox.h
         hermes/geometry/cuda_bbox.inl
         hermes/geometry/cuda_matrix.h
+        hermes/geometry/cuda_numeric.h
         hermes/geometry/cuda_transform.h
         hermes/geometry/cuda_transform.inl
         hermes/geometry/cuda_vector.h
