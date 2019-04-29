@@ -27,6 +27,7 @@
 
 #include <hermes/common/cuda.h>
 #include <hermes/storage/cuda_texture_kernels.h>
+#include <iomanip>
 #include <type_traits>
 #include <vector>
 
@@ -129,9 +130,9 @@ std::ostream &operator<<(std::ostream &os, const Texture<T> &tex) {
     os << "l " << y << ": ";
     for (int x = 0; x < tex.width(); x++)
       if (std::is_same<T, char>::value || std::is_same<T, unsigned char>::value)
-        os << (int)data[y * tex.width() + x] << " ";
+        os << (int)data[y * tex.width() + x] << "\t";
       else
-        os << data[y * tex.width() + x] << " ";
+        os << std::setprecision(6) << data[y * tex.width() + x] << "\t";
     os << std::endl;
   }
   return os;

@@ -25,6 +25,8 @@
 #ifndef HERMES_COMMON_PARALLEL_H
 #define HERMES_COMMON_PARALLEL_H
 
+#include <hermes/geometry/cuda_vector.h>
+
 namespace hermes {
 
 #define GPU_BLOCK_SIZE 1024
@@ -38,6 +40,11 @@ struct ThreadArrayDistributionInfo {
     blockSize = dim3(16, 16);
     gridSize = dim3((w + blockSize.x - 1) / blockSize.x,
                     (h + blockSize.y - 1) / blockSize.y);
+  }
+  ThreadArrayDistributionInfo(cuda::vec2u resolution) {
+    blockSize = dim3(16, 16);
+    gridSize = dim3((resolution.x + blockSize.x - 1) / blockSize.x,
+                    (resolution.y + blockSize.y - 1) / blockSize.y);
   }
   dim3 gridSize;
   dim3 blockSize;

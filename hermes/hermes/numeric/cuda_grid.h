@@ -66,6 +66,7 @@ public:
     dx = d;
     updateTransform();
   }
+  T minValue() {}
   /// \return Info grid info to be passed to kernels
   Grid2Info info() const {
     return {texGrid.toFieldTransform(), texGrid.toWorldTransform(),
@@ -91,8 +92,10 @@ public:
 
 private:
   void updateTransform() {
-    texGrid.setTransform(translate(vec2f(origin[0], origin[1])) *
-                         scale(dx, dx));
+    texGrid.setTransform(scale(dx, dx) *
+                         translate(vec2f(origin[0], origin[1])));
+    //  *
+    //  scale(dx, dx));
   }
   point2f origin;
   float dx = 1.f;

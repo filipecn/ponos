@@ -47,8 +47,9 @@ __global__ void __renderScalarGradient(unsigned int *out, int w, int h,
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   if (x < w && y < h) {
-    // tex2D(scalarTex2, x / float(w), y / float(h)) * 100, 0, 0, 255);
-    auto c = hermes::cuda::mixsRGB(a, b, x / float(w));
+    auto v = tex2D(scalarTex2, x / float(w), y / float(h));
+    auto t = (v - minValue) / (maxValue - minValue);
+    auto c = hermes::cuda::mixsRGB(a, b, t);
     c = hermes::cuda::toRGB(c);
     out[y * w + x] = rgbToInt(c.r, c.g, c.b, 255);
   }

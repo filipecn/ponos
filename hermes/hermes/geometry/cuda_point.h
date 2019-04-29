@@ -37,7 +37,7 @@ public:
   __host__ __device__ Point2();
   __host__ __device__ Point2(T f);
   __host__ __device__ explicit Point2(const T *v);
-  __host__ __device__ explicit Point2(T _x, T _y);
+  __host__ __device__ Point2(T _x, T _y);
   // access
   __host__ __device__ T operator[](int i) const;
   __host__ __device__ T &operator[](int i);
@@ -73,6 +73,9 @@ template <typename T>
 __host__ __device__ T distance(const Point2<T> &a, const Point2<T> &b);
 template <typename T>
 __host__ __device__ T distance2(const Point2<T> &a, const Point2<T> &b);
+template <typename T> __host__ __device__ Point2<T> floor(const Point2<T> &a) {
+  return {static_cast<int>(a.x), static_cast<int>(a.y)};
+}
 
 template <typename T> class Point3 {
 public:

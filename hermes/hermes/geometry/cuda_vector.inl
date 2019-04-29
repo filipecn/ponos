@@ -90,6 +90,11 @@ __host__ __device__ bool Vector2<T>::operator==(const Vector2<T> &v) {
   return Check::isEqual(x, v.x) && Check::isEqual(y, v.y);
 }
 
+template <typename T>
+__host__ __device__ bool Vector2<T>::operator!=(const Vector2<T> &v) {
+  return !(Check::isEqual(x, v.x) && Check::isEqual(y, v.y));
+}
+
 template <typename T> __host__ __device__ T Vector2<T>::length2() const {
   return x * x + y * y;
 }

@@ -55,6 +55,7 @@ public:
   __host__ __device__ Vector2 &operator/=(T f);
   __host__ __device__ Vector2 operator-() const;
   __host__ __device__ bool operator==(const Vector2 &v);
+  __host__ __device__ bool operator!=(const Vector2 &v);
   // normalization
   __host__ __device__ T length2() const;
   __host__ __device__ T length() const;

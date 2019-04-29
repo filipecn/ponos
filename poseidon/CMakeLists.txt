@@ -5,14 +5,18 @@ enable_language(CUDA)
 set(POSEIDON_HEADERS
         poseidon/poseidon.h
         poseidon/simulation/cuda_collider.h
+        poseidon/simulation/cuda_integrator.h
         poseidon/simulation/cuda_scene.h
         poseidon/simulation/cuda_smoke_injector.h
         poseidon/solvers/cuda_smoke_solver.h
+        poseidon/solvers/cuda_smoke_solver_kernels.h
         )
         
 set(POSEIDON_SOURCES
+        poseidon/simulation/cuda_maccormack_integrator.cu
+        poseidon/simulation/cuda_semi_lagrangian_integrator.cu
         poseidon/simulation/cuda_smoke_injector.cu
-        poseidon/solvers/cuda_smoke_solver.cu
+        poseidon/solvers/cuda_smoke_solver_kernels.cu
         )
 
 add_library(poseidon ${POSEIDON_SOURCES} ${POSEIDON_HEADERS})
