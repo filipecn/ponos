@@ -22,8 +22,8 @@ __global__ void __renderDensity(unsigned int *out, int w, int h) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   if (x < w && y < h) {
-    uchar4 c4 = make_uchar4(
-        tex2D(densityTex2, x / float(w), y / float(h)) * 100, 0, 0, 255);
+    auto value = tex2D(densityTex2, x / float(w), y / float(h)) * 255;
+    uchar4 c4 = make_uchar4(value, value, value, 255);
     out[y * w + x] = rgbToInt(c4.x, c4.y, c4.z, c4.w);
   }
 }

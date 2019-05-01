@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_LOG_DEBUG_H
 #define PONOS_LOG_DEBUG_H
@@ -28,6 +28,8 @@
 #include <cmath>
 #include <iostream>
 #include <ponos/common/defs.h>
+#include <sstream>
+
 
 #ifndef UNUSED_VARIABLE
 #define UNUSED_VARIABLE(x) ((void)x)
@@ -111,6 +113,22 @@
 #endif
 
 namespace ponos {
+
+// Condition to stop processing
+inline void concatenate(std::ostringstream &s) {}
+
+template <typename H, typename... T>
+void concatenate(std::ostringstream &s, H p, T... t) {
+  s << p;
+  concatenate(s, t...);
+}
+
+template <class... Args> std::string concat(const Args &... args) {
+  std::ostringstream s;
+  concatenate(s, args...);
+  return s.str();
+}
+
 inline void printBits(uint32 n) {
   for (int i = 31; i >= 0; i--)
     if ((1 << i) & n)
@@ -118,6 +136,6 @@ inline void printBits(uint32 n) {
     else
       std::cout << '0';
 }
-}
+} // namespace ponos
 
 #endif

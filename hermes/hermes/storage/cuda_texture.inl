@@ -51,6 +51,12 @@ template <typename T> void Texture<T>::clear() {
     cudaFreeArray(texArray);
 }
 
+template <typename T> void Texture<T>::copy(const Texture<T> &other) {
+  if (w == other.w && h == other.h)
+    CUDA_CHECK(cudaMemcpy(d_data, other.d_data, w * h * sizeof(T),
+                          cudaMemcpyDeviceToDevice));
+}
+
 template <typename T> void fill(Texture<T> &texture, T value) {
   fillTexture(texture.deviceData(), value, texture.width(), texture.height());
   texture.updateTextureMemory();

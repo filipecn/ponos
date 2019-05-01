@@ -13,7 +13,7 @@ __global__ void __injectCircle(float *out,
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   if (x < w && y < h) {
-    out[y * w + x] = 0;
+    // out[y * w + x] = 0;
     auto cp = toWorld(hermes::cuda::point2f(x, y));
     if ((cp - center).length2() <= radius2)
       out[y * w + x] = 1;

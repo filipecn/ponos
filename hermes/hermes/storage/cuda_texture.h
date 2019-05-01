@@ -111,6 +111,7 @@ public:
   const T *deviceData() const;
   /// Copies data from global memory (read/write) to texture memory (read only)
   void updateTextureMemory();
+  void copy(const Texture<T> &other);
 
 private:
   void init();

@@ -73,6 +73,11 @@ public:
             vec2u(texGrid.texture().width(), texGrid.texture().height()),
             origin, dx};
   }
+  void copy(const GridTexture2 &other) {
+    origin = other.origin;
+    dx = other.dx;
+    texGrid.texture().copy(other.texGrid.texture());
+  }
   ///
   /// \return Texture<T>&
   Texture<T> &texture() { return texGrid.texture(); }

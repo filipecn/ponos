@@ -115,7 +115,6 @@ std::vector<unsigned char> Texture::texels() const {
   auto height = static_cast<int>(attributes.height);
 
   std::vector<unsigned char> data(4 * width * height, 0);
-  //  memset(data, 0, 4 * width * height * sizeof(unsigned char));
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(attributes.target, textureObject);

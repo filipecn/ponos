@@ -39,6 +39,7 @@ namespace cuda {
 /// \param forceField
 /// \param solidVelocity
 void bindTextures(const hermes::cuda::StaggeredGridTexture2 &velocity,
+                  const hermes::cuda::StaggeredGridTexture2 &velocityCopy,
                   const hermes::cuda::GridTexture2<float> &density,
                   const hermes::cuda::GridTexture2<float> &divergence,
                   const hermes::cuda::GridTexture2<float> &pressure,
@@ -72,6 +73,8 @@ void computePressure(const hermes::cuda::GridTexture2<float> &divergence,
                      const hermes::cuda::GridTexture2<unsigned char> &solid,
                      hermes::cuda::GridTexture2<float> &pressure, float dt,
                      int iterations = 100);
+void diffuse(hermes::cuda::StaggeredGridTexture2 &velocity, float k, float dt,
+             int iterations = 100);
 ///
 /// \param pressure
 /// \param solid

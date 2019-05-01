@@ -73,7 +73,11 @@ __host__ __device__ Vector2<T> operator/(T f, const Vector2<T> &v);
 template <typename T>
 __host__ __device__ T dot(const Vector2<T> &a, const Vector2<T> &b);
 template <typename T>
-__host__ __device__ Vector2<T> normalize(const Vector2<T> &v);
+__host__ __device__ Vector2<T> normalize(const Vector2<T> &v) {
+  if (v.length2() == 0.f)
+    return v;
+  return v / v.length();
+}
 template <typename T>
 __host__ __device__ Vector2<T> orthonormal(const Vector2<T> &v,
                                            bool first = true);

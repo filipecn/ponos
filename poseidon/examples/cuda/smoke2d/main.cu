@@ -1,9 +1,10 @@
 #include "render.h"
 #include <circe/circe.h>
+#include <lodepng.h>
 #include <poseidon/poseidon.h>
 
-#define WIDTH 128
-#define HEIGHT 128
+#define WIDTH 256
+#define HEIGHT 256
 
 __global__ void __applyForce(float *f, hermes::cuda::Grid2Info fInfo,
                              hermes::cuda::point2f p, float r, float v) {
@@ -40,17 +41,20 @@ void applyForce(hermes::cuda::StaggeredGridTexture2 &forceField,
 int main() {
   // SIM
   poseidon::cuda::GridSmokeSolver2 solver;
+  solver.addScalarField();
   solver.setUIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setVIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setResolution(ponos::uivec2(WIDTH, HEIGHT));
   solver.setDx(1.0 / WIDTH);
   solver.init();
-  poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f, 0.2f),
-                                                   .1f, solver.densityData());
-  solver.densityData().texture().updateTextureMemory();
+  // poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f,
+  // 0.2f),
+  //                                                  .1f,
+  //                                                  solver.scalarField(0));
+  solver.scalarField(0).texture().updateTextureMemory();
   applyForce(solver.forceFieldData(), hermes::cuda::point2f(0.5, 0.2), 0.1,
-             hermes::cuda::vec2f(0, -100));
+             hermes::cuda::vec2f(0, 200));
   // VIS
   circe::SceneApp<> app(WIDTH, HEIGHT, "", false);
   app.addViewport2D(0, 0, WIDTH, HEIGHT);
@@ -58,19 +62,32 @@ int main() {
   circe::ScreenQuad screen;
   screen.shader->begin();
   screen.shader->setUniform("tex", 0);
+  int frame = 0;
   app.renderCallback = [&]() {
     solver.step(0.001);
-    solver.densityData().texture().updateTextureMemory();
-    renderDensity(WIDTH, HEIGHT, solver.densityData().texture(),
+    poseidon::cuda::GridSmokeInjector2::injectCircle(
+        ponos::point2f(0.5f, 0.2f), .01f, solver.scalarField(0));
+    solver.scalarField(0).texture().updateTextureMemory();
+    renderDensity(WIDTH, HEIGHT, solver.scalarField(0).texture(),
                   cgl.bufferPointer());
-    // renderScalarGradient(
-    //     WIDTH, HEIGHT, solver.pressureData().texture(), cgl.bufferPointer(),
-    //     0, 70000, hermes::cuda::Color::blue(), hermes::cuda::Color::red());
+    // renderScalarGradient(WIDTH, HEIGHT, solver.pressureData().texture(),
+    //                      cgl.bufferPointer(), 0, 5,
+    //                      hermes::cuda::Color::blue(),
+    //                      hermes::cuda::Color::red());
     renderSolids(WIDTH, HEIGHT, solver.solidData().texture(),
                  cgl.bufferPointer());
     cgl.sendToTexture();
     cgl.bindTexture(GL_TEXTURE0);
     screen.render();
+    // size_t w = 0, h = 0;
+    // std::vector<unsigned char> data;
+    // app.viewports[0].renderer->currentPixels(data, w, h);
+    // unsigned error = lodepng::encode(ponos::concat("frame", frame++, ".png"),
+    //                                  &data[0], static_cast<unsigned int>(w),
+    //                                  static_cast<unsigned int>(h));
+    // if (error)
+    //   std::cout << "encoder error " << error << ": "
+    //             << lodepng_error_text(error) << std::endl;
   };
   app.keyCallback = [&](int key, int scancode, int action, int modifiers) {
     if (action == GLFW_RELEASE) {
@@ -78,6 +95,26 @@ int main() {
         app.exit();
       if (key == GLFW_KEY_SPACE)
         solver.step(0.001);
+    }
+  };
+  bool activeForce = false;
+  ponos::point2f forcePoint;
+  app.buttonCallback = [&](int button, int action, int mods) {
+    if (action == GLFW_PRESS) {
+      activeForce = true;
+      forcePoint = app.viewports[0].getMouseNPos() / 2.f + ponos::vec2f(0.5f);
+    } else
+      activeForce = false;
+  };
+  app.mouseCallback = [&](double x, double y) {
+    if (activeForce) {
+      auto mousePoint =
+          app.viewports[0].getMouseNPos() / 2.f + ponos::vec2f(0.5f);
+      hermes::cuda::point2f start(forcePoint.x, forcePoint.y);
+      hermes::cuda::point2f end(mousePoint.x, mousePoint.y);
+      applyForce(solver.forceFieldData(), start, 0.1,
+                 hermes::cuda::normalize(end - start) * 1000);
+      forcePoint = mousePoint;
     }
   };
   app.run();

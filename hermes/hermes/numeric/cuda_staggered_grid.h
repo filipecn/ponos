@@ -68,6 +68,10 @@ public:
     uGrid.setDx(d);
     vGrid.setDx(d);
   }
+  void copy(const StaggeredGridTexture2 &other) {
+    uGrid.copy(other.uGrid);
+    vGrid.copy(other.vGrid);
+  }
   float *uDeviceData() { return uGrid.texture().deviceData(); }
   float *vDeviceData() { return vGrid.texture().deviceData(); }
   const float *uDeviceData() const { return uGrid.texture().deviceData(); }

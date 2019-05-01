@@ -38,22 +38,22 @@ namespace cuda {
 __global__ void __setupScene(poseidon::cuda::Collider2<float> **solids,
                              poseidon::cuda::Collider2<float> **scene) {
   if (threadIdx.x == 0 && blockIdx.x == 0) {
-    solids[0] = new poseidon::cuda::SphereCollider2<float>(
-        hermes::cuda::point2(0.f, 0.f), 0.1f);
     float d = 1.0 / 64;
     // floor
-    solids[1] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+    solids[0] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
         hermes::cuda::point2(0.f, 0.f), hermes::cuda::point2(1.f, d)));
     // ceil
-    solids[2] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+    solids[1] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
         hermes::cuda::point2(0.f, 1.f - d), hermes::cuda::point2(1.f, 1.f)));
     // left
-    solids[3] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+    solids[2] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
         hermes::cuda::point2(0.f, 0.f), hermes::cuda::point2(d, 1.f)));
     // right
-    solids[4] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+    solids[3] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
         hermes::cuda::point2(1.f - d, 0.f), hermes::cuda::point2(1.f, 1.f)));
-    *scene = new poseidon::cuda::Collider2Set<float>(solids, 5);
+    solids[4] = new poseidon::cuda::SphereCollider2<float>(
+        hermes::cuda::point2(0.5f, 0.5f), 0.1f);
+    *scene = new poseidon::cuda::Collider2Set<float>(solids, 4);
   }
 }
 
@@ -102,8 +102,8 @@ public:
   }
   void init() {
     setupTextures();
-    bindTextures(velocity, density, divergence, pressure, solid, forceField,
-                 solidVelocity);
+    bindTextures(velocity, velocityCopy, scalarFields[0], divergence, pressure,
+                 solid, forceField, solidVelocity);
     using namespace hermes::cuda;
     CUDA_CHECK(cudaMalloc(&scene.list, 5 * sizeof(Collider2<float> *)));
     CUDA_CHECK(cudaMalloc(&scene.colliders, sizeof(Collider2<float> *)));
@@ -113,13 +113,16 @@ public:
   void setResolution(const ponos::uivec2 &res) {
     resolution = hermes::cuda::vec2u(res.x, res.y);
     velocity.resize(resolution);
-    density.resize(resolution);
+    velocityCopy.resize(resolution);
+    for (auto &f : scalarFields)
+      f.resize(resolution);
     pressure.resize(resolution);
     divergence.resize(resolution);
     solid.resize(resolution);
     solidVelocity.resize(resolution);
     forceField.resize(resolution);
-    integrator->set(density.info());
+    if (scalarFields.size())
+      integrator->set(scalarFields[0].info());
     uIntegrator->set(velocity.u().info());
     vIntegrator->set(velocity.v().info());
   }
@@ -128,13 +131,16 @@ public:
   void setDx(float _dx) {
     dx = _dx;
     velocity.setDx(dx);
-    density.setDx(dx);
+    velocityCopy.setDx(dx);
+    for (auto &f : scalarFields)
+      f.setDx(dx);
     pressure.setDx(dx);
     divergence.setDx(dx);
     solid.setDx(dx);
     solidVelocity.setDx(dx);
     forceField.setDx(dx);
-    integrator->set(density.info());
+    if (scalarFields.size())
+      integrator->set(scalarFields[0].info());
     uIntegrator->set(velocity.u().info());
     vIntegrator->set(velocity.v().info());
   }
@@ -143,15 +149,22 @@ public:
   void setOrigin(const ponos::point2f &o) {
     hermes::cuda::point2f p(o.x, o.y);
     velocity.setOrigin(p);
-    density.setOrigin(p);
+    velocityCopy.setOrigin(p);
+    for (auto &f : scalarFields)
+      f.setOrigin(p);
     pressure.setOrigin(p);
     divergence.setOrigin(p);
     solid.setOrigin(p);
     solidVelocity.setOrigin(p);
     forceField.setOrigin(p);
-    integrator->set(density.info());
+    if (scalarFields.size())
+      integrator->set(scalarFields[0].info());
     uIntegrator->set(velocity.u().info());
     vIntegrator->set(velocity.v().info());
+  }
+  size_t addScalarField() {
+    scalarFields.emplace_back();
+    return scalarFields.size() - 1;
   }
   /// Advances one simulation step
   /// \param dt time step
@@ -165,23 +178,21 @@ public:
     CUDA_CHECK(cudaDeviceSynchronize());
     velocity.u().texture().updateTextureMemory();
     velocity.v().texture().updateTextureMemory();
-    integrator->advect(velocity, solid, density, density, dt);
+    for (size_t i = 0; i < scalarFields.size(); i++)
+      integrator->advect(velocity, solid, scalarFields[i], scalarFields[i], dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     applyForceField(velocity, forceField, dt);
+    velocityCopy.copy(velocity);
+    velocityCopy.u().texture().updateTextureMemory();
+    velocityCopy.v().texture().updateTextureMemory();
+    diffuse(velocity, 1., dt);
     CUDA_CHECK(cudaDeviceSynchronize());
-    // std::cerr << "u:\n" << velocity.u().texture() << std::endl;
-    // std::cerr << "f:\n" << forceField.v().texture() << std::endl;
     computeDivergence(velocity, solid, divergence);
     CUDA_CHECK(cudaDeviceSynchronize());
-    // std::cerr << "d:\n" << divergence.texture() << std::endl;
-    hermes::cuda::fill(pressure.texture(), 0.0f);
     computePressure(divergence, solid, pressure, dt, 128);
     CUDA_CHECK(cudaDeviceSynchronize());
-    // std::cerr << "p:\n" << pressure.texture() << std::endl;
     projectionStep(pressure, solid, velocity, dt);
     CUDA_CHECK(cudaDeviceSynchronize());
-    // std::cerr << "v:\n" << velocity.v().texture() << std::endl;
-    // reset force field
     // hermes::cuda::fill(forceField.u().texture(), 0.0f);
     // hermes::cuda::fill(forceField.v().texture(), 0.0f);
   }
@@ -202,12 +213,12 @@ public:
   const hermes::cuda::GridTexture2<float> &pressureData() const {
     return pressure;
   }
-  /// \return const hermes::cuda::GridTexture2<float>& density data reference
-  const hermes::cuda::GridTexture2<float> &densityData() const {
-    return density;
+  const hermes::cuda::GridTexture2<float> &scalarField(size_t i) const {
+    return scalarFields[i];
   }
-  /// \return hermes::cuda::GridTexture2<float>& density data reference
-  hermes::cuda::GridTexture2<float> &densityData() { return density; }
+  hermes::cuda::GridTexture2<float> &scalarField(size_t i) {
+    return scalarFields[i];
+  }
   /// \return const hermes::cuda::GridTexture2<char>&
   const hermes::cuda::GridTexture2<unsigned char> &solidData() const {
     return solid;
@@ -235,13 +246,13 @@ protected:
   std::shared_ptr<Integrator2> vIntegrator;
   std::shared_ptr<Integrator2> uIntegrator;
   std::shared_ptr<Integrator2> integrator;
-  hermes::cuda::StaggeredGridTexture2 velocity;
+  hermes::cuda::StaggeredGridTexture2 velocity, velocityCopy;
   hermes::cuda::StaggeredGridTexture2 solidVelocity;
   hermes::cuda::StaggeredGridTexture2 forceField;
   hermes::cuda::GridTexture2<float> pressure;
   hermes::cuda::GridTexture2<float> divergence;
   hermes::cuda::GridTexture2<unsigned char> solid;
-  hermes::cuda::GridTexture2<float> density;
+  std::vector<hermes::cuda::GridTexture2<float>> scalarFields;
   hermes::cuda::vec2u resolution;
   float dx = 1;
 };
