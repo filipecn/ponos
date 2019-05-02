@@ -49,6 +49,9 @@ public:
     toWorld = toWorldTransform;
     toField = inverse(toWorldTransform);
   }
+  vec2u resolution() const {
+    return vec2u(texture_.width(), texture_.height());
+  }
   /// \param size texture resolution
   void resize(const vec2u &size) { texture_.resize(size[0], size[1]); }
   /// \return Texture<T>& reference to texture object

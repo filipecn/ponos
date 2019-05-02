@@ -25,6 +25,7 @@
 #ifndef POSEIDON_SOLVERS_CUDA_SMOKE_SOLVER_KERNELS_H
 #define POSEIDON_SOLVERS_CUDA_SMOKE_SOLVER_KERNELS_H
 
+#include <cufft.h>
 #include <hermes/hermes.h>
 
 namespace poseidon {
@@ -38,14 +39,14 @@ namespace cuda {
 /// \param solid
 /// \param forceField
 /// \param solidVelocity
-void bindTextures(const hermes::cuda::StaggeredGridTexture2 &velocity,
-                  const hermes::cuda::StaggeredGridTexture2 &velocityCopy,
+void bindTextures(const hermes::cuda::VectorGridTexture2 &velocity,
+                  const hermes::cuda::VectorGridTexture2 &velocityCopy,
                   const hermes::cuda::GridTexture2<float> &density,
                   const hermes::cuda::GridTexture2<float> &divergence,
                   const hermes::cuda::GridTexture2<float> &pressure,
                   const hermes::cuda::GridTexture2<unsigned char> &solid,
-                  const hermes::cuda::StaggeredGridTexture2 &forceField,
-                  const hermes::cuda::StaggeredGridTexture2 &solidVelocity);
+                  const hermes::cuda::VectorGridTexture2 &forceField,
+                  const hermes::cuda::VectorGridTexture2 &solidVelocity);
 ///
 void unbindTextures();
 ///
@@ -54,14 +55,17 @@ void setupTextures();
 /// \param velocity
 /// \param forceField
 /// \param dt
-void applyForceField(hermes::cuda::StaggeredGridTexture2 &velocity,
-                     const hermes::cuda::StaggeredGridTexture2 &forceField,
+void applyForceField(hermes::cuda::VectorGridTexture2 &velocity,
+                     const hermes::cuda::VectorGridTexture2 &forceField,
                      float dt);
 ///
 /// \param velocity
 /// \param solid
 /// \param divergence
 void computeDivergence(const hermes::cuda::StaggeredGridTexture2 &velocity,
+                       const hermes::cuda::GridTexture2<unsigned char> &solid,
+                       hermes::cuda::GridTexture2<float> &divergence);
+void computeDivergence(const hermes::cuda::VectorGridTexture2 &velocity,
                        const hermes::cuda::GridTexture2<unsigned char> &solid,
                        hermes::cuda::GridTexture2<float> &divergence);
 ///
@@ -73,7 +77,7 @@ void computePressure(const hermes::cuda::GridTexture2<float> &divergence,
                      const hermes::cuda::GridTexture2<unsigned char> &solid,
                      hermes::cuda::GridTexture2<float> &pressure, float dt,
                      int iterations = 100);
-void diffuse(hermes::cuda::StaggeredGridTexture2 &velocity, float k, float dt,
+void diffuse(hermes::cuda::VectorGridTexture2 &velocity, float k, float dt,
              int iterations = 100);
 ///
 /// \param pressure
@@ -83,6 +87,15 @@ void diffuse(hermes::cuda::StaggeredGridTexture2 &velocity, float k, float dt,
 void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
                     const hermes::cuda::GridTexture2<unsigned char> &solid,
                     hermes::cuda::StaggeredGridTexture2 &velocity, float dt);
+void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
+                    const hermes::cuda::GridTexture2<unsigned char> &solid,
+                    hermes::cuda::VectorGridTexture2 &velocity, float dt);
+
+void diffuseFFT(hermes::cuda::vec2u resolution, cufftComplex *d_frequenciesU,
+                cufftComplex *d_frequenciesV, float k, float dt);
+
+void projectFFT(hermes::cuda::vec2u resolution, cufftComplex *d_frequenciesU,
+                cufftComplex *d_frequenciesV);
 
 } // namespace cuda
 

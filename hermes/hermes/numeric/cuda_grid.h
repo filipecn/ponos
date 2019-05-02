@@ -54,6 +54,7 @@ public:
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
   void resize(vec2u res) { texGrid.resize(res); }
+  vec2u resolution() const { return texGrid.resolution(); }
   /// Changes grid origin position
   /// \param o in world space
   void setOrigin(const point2f &o) {
@@ -99,8 +100,6 @@ private:
   void updateTransform() {
     texGrid.setTransform(scale(dx, dx) *
                          translate(vec2f(origin[0], origin[1])));
-    //  *
-    //  scale(dx, dx));
   }
   point2f origin;
   float dx = 1.f;

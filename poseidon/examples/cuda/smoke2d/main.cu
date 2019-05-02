@@ -3,8 +3,8 @@
 #include <lodepng.h>
 #include <poseidon/poseidon.h>
 
-#define WIDTH 256
-#define HEIGHT 256
+#define WIDTH 128
+#define HEIGHT 128
 
 __global__ void __applyForce(float *f, hermes::cuda::Grid2Info fInfo,
                              hermes::cuda::point2f p, float r, float v) {
@@ -18,7 +18,7 @@ __global__ void __applyForce(float *f, hermes::cuda::Grid2Info fInfo,
   }
 }
 
-void applyForce(hermes::cuda::StaggeredGridTexture2 &forceField,
+void applyForce(hermes::cuda::VectorGridTexture2 &forceField,
                 hermes::cuda::point2f p, float radius, hermes::cuda::vec2f v) {
   {
     auto info = forceField.u().info();
@@ -40,7 +40,7 @@ void applyForce(hermes::cuda::StaggeredGridTexture2 &forceField,
 
 int main() {
   // SIM
-  poseidon::cuda::GridSmokeSolver2 solver;
+  poseidon::cuda::GridSmokeSolver2<hermes::cuda::VectorGridTexture2> solver;
   solver.addScalarField();
   solver.setUIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setVIntegrator(new poseidon::cuda::MacCormackIntegrator2());
@@ -48,13 +48,11 @@ int main() {
   solver.setResolution(ponos::uivec2(WIDTH, HEIGHT));
   solver.setDx(1.0 / WIDTH);
   solver.init();
-  // poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f,
-  // 0.2f),
-  //                                                  .1f,
-  //                                                  solver.scalarField(0));
+  poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f, 0.2f),
+                                                   .1f, solver.scalarField(0));
   solver.scalarField(0).texture().updateTextureMemory();
   applyForce(solver.forceFieldData(), hermes::cuda::point2f(0.5, 0.2), 0.1,
-             hermes::cuda::vec2f(0, 200));
+             hermes::cuda::vec2f(0, -100));
   // VIS
   circe::SceneApp<> app(WIDTH, HEIGHT, "", false);
   app.addViewport2D(0, 0, WIDTH, HEIGHT);
@@ -65,8 +63,8 @@ int main() {
   int frame = 0;
   app.renderCallback = [&]() {
     solver.step(0.001);
-    poseidon::cuda::GridSmokeInjector2::injectCircle(
-        ponos::point2f(0.5f, 0.2f), .01f, solver.scalarField(0));
+    // poseidon::cuda::GridSmokeInjector2::injectCircle(
+    //     ponos::point2f(0.5f, 0.2f), .01f, solver.scalarField(0));
     solver.scalarField(0).texture().updateTextureMemory();
     renderDensity(WIDTH, HEIGHT, solver.scalarField(0).texture(),
                   cgl.bufferPointer());

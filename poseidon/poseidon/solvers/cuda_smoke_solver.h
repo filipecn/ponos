@@ -25,7 +25,6 @@
 #ifndef POSEIDON_SOLVERS_CUDA_SMOKE_SOLVER_H
 #define POSEIDON_SOLVERS_CUDA_SMOKE_SOLVER_H
 
-#include <hermes/hermes.h>
 #include <ponos/geometry/point.h>
 #include <poseidon/simulation/cuda_integrator.h>
 #include <poseidon/simulation/cuda_scene.h>
@@ -79,9 +78,22 @@ __global__ void __rasterColliders(Collider2<float> *const *colliders,
   }
 }
 
+__global__ void __normalizeIFFT(float *g_data, int width, int height, float N) {
+
+  // index = x * height + y
+
+  unsigned int xIndex = blockDim.x * blockIdx.x + threadIdx.x;
+
+  unsigned int yIndex = blockDim.y * blockIdx.y + threadIdx.y;
+
+  int index = yIndex * width + xIndex;
+
+  g_data[index] = g_data[index] / N;
+}
+
 /// Eulerian grid based solver for smoke simulations. Stores its data in fast
 /// device texture memory.
-class GridSmokeSolver2 {
+template <typename GridType> class GridSmokeSolver2 {
 public:
   GridSmokeSolver2() = default;
   ~GridSmokeSolver2() {
@@ -107,6 +119,35 @@ public:
     using namespace hermes::cuda;
     CUDA_CHECK(cudaMalloc(&scene.list, 5 * sizeof(Collider2<float> *)));
     CUDA_CHECK(cudaMalloc(&scene.colliders, sizeof(Collider2<float> *)));
+    // create fft plans
+    auto uRes = velocity.u().resolution();
+    auto vRes = velocity.v().resolution();
+    if (cufftPlan2d(&forwardPlanU, uRes.x, uRes.y, CUFFT_R2C) !=
+        CUFFT_SUCCESS) {
+      std::cerr << "CUFFT Error: Failed to create plan\n";
+      exit(-1);
+    }
+    if (cufftPlan2d(&inversePlanU, uRes.x, uRes.y, CUFFT_C2R) !=
+        CUFFT_SUCCESS) {
+      std::cerr << "CUFFT Error: Failed to create plan\n";
+      exit(-1);
+    }
+    if (cufftPlan2d(&forwardPlanV, vRes.x, vRes.y, CUFFT_R2C) !=
+        CUFFT_SUCCESS) {
+      std::cerr << "CUFFT Error: Failed to create plan\n";
+      exit(-1);
+    }
+    if (cufftPlan2d(&inversePlanV, vRes.x, vRes.y, CUFFT_C2R) !=
+        CUFFT_SUCCESS) {
+      std::cerr << "CUFFT Error: Failed to create plan\n";
+      exit(-1);
+    }
+    // allocate device memory for frequency space
+    CUDA_CHECK(cudaMalloc((void **)&d_frequenciesU,
+                          sizeof(cufftComplex) * uRes.x * (uRes.y / 2 + 1)));
+    CUDA_CHECK(
+        cudaMalloc((void **)&d_frequenciesV,
+                   sizeof(cufftComplex) * vRes.x * ((vRes.y + 1) / 2 + 1)));
   }
   ///
   /// \param res
@@ -182,10 +223,10 @@ public:
       integrator->advect(velocity, solid, scalarFields[i], scalarFields[i], dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     applyForceField(velocity, forceField, dt);
-    velocityCopy.copy(velocity);
-    velocityCopy.u().texture().updateTextureMemory();
-    velocityCopy.v().texture().updateTextureMemory();
-    diffuse(velocity, 1., dt);
+    // velocityCopy.copy(velocity);
+    // velocityCopy.u().texture().updateTextureMemory();
+    // velocityCopy.v().texture().updateTextureMemory();
+    // diffuse(velocity, 0.4, dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     computeDivergence(velocity, solid, divergence);
     CUDA_CHECK(cudaDeviceSynchronize());
@@ -193,8 +234,29 @@ public:
     CUDA_CHECK(cudaDeviceSynchronize());
     projectionStep(pressure, solid, velocity, dt);
     CUDA_CHECK(cudaDeviceSynchronize());
-    // hermes::cuda::fill(forceField.u().texture(), 0.0f);
-    // hermes::cuda::fill(forceField.v().texture(), 0.0f);
+    hermes::cuda::fill(forceField.u().texture(), 0.0f);
+    hermes::cuda::fill(forceField.v().texture(), 0.0f);
+  }
+  /// Advances one simulation step folllowing original Stan method
+  /// \param dt time step
+  void stepFFT(float dt) {
+    using namespace hermes::cuda;
+    rasterColliders();
+    applyForceField(velocity, forceField, dt);
+    CUDA_CHECK(cudaDeviceSynchronize());
+    uIntegrator->advect(velocity, solid, velocity.u(), velocity.u(), dt);
+    CUDA_CHECK(cudaDeviceSynchronize());
+    vIntegrator->advect(velocity, solid, velocity.v(), velocity.v(), dt);
+    CUDA_CHECK(cudaDeviceSynchronize());
+    velocity.u().texture().updateTextureMemory();
+    velocity.v().texture().updateTextureMemory();
+    for (size_t i = 0; i < scalarFields.size(); i++)
+      integrator->advect(velocity, solid, scalarFields[i], scalarFields[i], dt);
+    CUDA_CHECK(cudaDeviceSynchronize());
+    applyFFT();
+    diffuseFFT(resolution, d_frequenciesU, d_frequenciesV, 0.01, dt);
+    projectFFT(resolution, d_frequenciesU, d_frequenciesV);
+    applyiFFT();
   }
   /// Raster collider bodies and velocities into grid simulations
   void rasterColliders() {
@@ -208,7 +270,7 @@ public:
     solidVelocity.v().texture().updateTextureMemory();
   }
   /// \return hermes::cuda::StaggeredGridTexture2&
-  hermes::cuda::StaggeredGridTexture2 &velocityData() { return velocity; }
+  GridType &velocityData() { return velocity; }
   /// \return const hermes::cuda::GridTexture2<float>& density data reference
   const hermes::cuda::GridTexture2<float> &pressureData() const {
     return pressure;
@@ -226,35 +288,81 @@ public:
   /// \return  hermes::cuda::GridTexture2<char>
   hermes::cuda::GridTexture2<unsigned char> &solidData() { return solid; }
   /// \return hermes::cuda::StaggeredGridTexture2&
-  const hermes::cuda::StaggeredGridTexture2 &solidVelocityData() const {
-    return solidVelocity;
-  }
+  const GridType &solidVelocityData() const { return solidVelocity; }
   /// \return hermes::cuda::StaggeredGridTexture2&
-  hermes::cuda::StaggeredGridTexture2 &solidVelocityData() {
-    return solidVelocity;
-  }
+  GridType &solidVelocityData() { return solidVelocity; }
   /// \return hermes::cuda::StaggeredGridTexture2&
-  const hermes::cuda::StaggeredGridTexture2 &forceFieldData() const {
-    return forceField;
-  }
+  const GridType &forceFieldData() const { return forceField; }
   /// \return hermes::cuda::StaggeredGridTexture2&
-  hermes::cuda::StaggeredGridTexture2 &forceFieldData() { return forceField; }
+  GridType &forceFieldData() { return forceField; }
 
   Scene2<float> scene;
 
 protected:
+  void applyFFT() {
+    using namespace hermes::cuda;
+    if (cufftExecR2C(forwardPlanU, velocity.uDeviceData(), d_frequenciesU) !=
+        CUFFT_SUCCESS) {
+      fprintf(stderr, "CUFFT Error: Unable to execute plan\n");
+      exit(-1);
+    }
+    CUDA_CHECK(cudaDeviceSynchronize());
+    if (cufftExecR2C(forwardPlanV, velocity.vDeviceData(), d_frequenciesV) !=
+        CUFFT_SUCCESS) {
+      fprintf(stderr, "CUFFT Error: Unable to execute plan\n");
+      exit(-1);
+    }
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
+
+  void applyiFFT() {
+    using namespace hermes::cuda;
+    if (cufftExecC2R(inversePlanU, d_frequenciesU, velocity.uDeviceData()) !=
+        CUFFT_SUCCESS) {
+      fprintf(stderr, "CUFFT Error: Unable to execute plan\n");
+      exit(-1);
+    }
+    CUDA_CHECK(cudaDeviceSynchronize());
+    {
+      dim3 grid((resolution.x + 1) / 16, resolution.y / 16, 1);
+      dim3 threads(16, 16, 1);
+      __normalizeIFFT<<<grid, threads>>>(velocity.uDeviceData(),
+                                         resolution.x + 1, resolution.y,
+                                         (resolution.x + 1) * resolution.y);
+    }
+    CUDA_CHECK(cudaDeviceSynchronize());
+    if (cufftExecC2R(inversePlanV, d_frequenciesV, velocity.vDeviceData()) !=
+        CUFFT_SUCCESS) {
+      fprintf(stderr, "CUFFT Error: Unable to execute plan\n");
+      exit(-1);
+    }
+    CUDA_CHECK(cudaDeviceSynchronize());
+    {
+      dim3 grid(resolution.x / 16, (resolution.y + 1) / 16, 1);
+      dim3 threads(16, 16, 1);
+      __normalizeIFFT<<<grid, threads>>>(velocity.vDeviceData(), resolution.x,
+                                         resolution.y + 1,
+                                         resolution.x * (resolution.y + 1));
+    }
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
+
   std::shared_ptr<Integrator2> vIntegrator;
   std::shared_ptr<Integrator2> uIntegrator;
   std::shared_ptr<Integrator2> integrator;
-  hermes::cuda::StaggeredGridTexture2 velocity, velocityCopy;
-  hermes::cuda::StaggeredGridTexture2 solidVelocity;
-  hermes::cuda::StaggeredGridTexture2 forceField;
+  GridType velocity, velocityCopy;
+  GridType solidVelocity;
+  GridType forceField;
   hermes::cuda::GridTexture2<float> pressure;
   hermes::cuda::GridTexture2<float> divergence;
   hermes::cuda::GridTexture2<unsigned char> solid;
   std::vector<hermes::cuda::GridTexture2<float>> scalarFields;
   hermes::cuda::vec2u resolution;
   float dx = 1;
+  // fft
+  cufftComplex *d_frequenciesU, *d_frequenciesV;
+  cufftHandle forwardPlanU, inversePlanU;
+  cufftHandle forwardPlanV, inversePlanV;
 };
 
 } // namespace cuda

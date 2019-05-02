@@ -25,7 +25,7 @@
 #ifndef POSEIDON_SIMULATION_CUDA_INTEGRATOR_H
 #define POSEIDON_SIMULATION_CUDA_INTEGRATOR_H
 
-#include <hermes/numeric/cuda_staggered_grid.h>
+#include <hermes/numeric/cuda_vector_field.h>
 
 namespace poseidon {
 
@@ -34,7 +34,7 @@ namespace cuda {
 class Integrator2 {
 public:
   virtual void set(hermes::cuda::Grid2Info info) {}
-  virtual void advect(const hermes::cuda::StaggeredGridTexture2 &velocity,
+  virtual void advect(const hermes::cuda::VectorGridTexture2 &velocity,
                       const hermes::cuda::GridTexture2<unsigned char> &solid,
                       const hermes::cuda::GridTexture2<float> &phi,
                       hermes::cuda::GridTexture2<float> &phiOut, float dt) = 0;
@@ -43,7 +43,7 @@ public:
 class SemiLagrangianIntegrator2 : public Integrator2 {
 public:
   SemiLagrangianIntegrator2();
-  void advect(const hermes::cuda::StaggeredGridTexture2 &velocity,
+  void advect(const hermes::cuda::VectorGridTexture2 &velocity,
               const hermes::cuda::GridTexture2<unsigned char> &solid,
               const hermes::cuda::GridTexture2<float> &phi,
               hermes::cuda::GridTexture2<float> &phiOut, float dt) override;
@@ -53,7 +53,7 @@ class MacCormackIntegrator2 : public Integrator2 {
 public:
   MacCormackIntegrator2();
   void set(hermes::cuda::Grid2Info info);
-  void advect(const hermes::cuda::StaggeredGridTexture2 &velocity,
+  void advect(const hermes::cuda::VectorGridTexture2 &velocity,
               const hermes::cuda::GridTexture2<unsigned char> &solid,
               const hermes::cuda::GridTexture2<float> &phi,
               hermes::cuda::GridTexture2<float> &phiOut, float dt) override;

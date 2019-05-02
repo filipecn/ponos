@@ -22,55 +22,73 @@
  *
  */
 
-#ifndef HERMES_NUMERIC_CUDA_STAGGERED_GRID_H
-#define HERMES_NUMERIC_CUDA_STAGGERED_GRID_H
+#ifndef HERMES_NUMERIC_CUDA_VECTOR_GRID_H
+#define HERMES_NUMERIC_CUDA_VECTOR_GRID_H
 
-#include <hermes/numeric/cuda_vector_field.h>
+#include <hermes/numeric/cuda_grid.h>
 
 namespace hermes {
 
 namespace cuda {
 
-/// Represents a staggered grid with texture grid
-/// The origin of each staggered grid follows the scheme:
-///    ----------
-///   |         |
-///   u    o    |
-///   |         |
-///   -----v----
-class StaggeredGridTexture2 : public VectorGridTexture2 {
+class VectorGridTexture2 {
 public:
-  StaggeredGridTexture2() {
-    uGrid.setOrigin(point2f(-0.5f, 0.0f));
-    vGrid.setOrigin(point2f(0.0f, -0.5f));
+  VectorGridTexture2() {
+    uGrid.setOrigin(point2f(0, 0));
+    vGrid.setOrigin(point2f(0, 0));
   }
   /// \param resolution in number of cells
   /// \param origin (0,0) corner position
   /// \param dx cell size
-  StaggeredGridTexture2(vec2u resolution, point2f origin, float dx) {
-    uGrid.resize(resolution + vec2u(1, 0));
-    uGrid.setOrigin(origin + vec2f(-0.5f, 0.f));
+  VectorGridTexture2(vec2u resolution, point2f origin, float dx) {
+    uGrid.resize(resolution);
+    uGrid.setOrigin(origin);
     uGrid.setDx(dx);
-    vGrid.resize(resolution + vec2u(0, 1));
-    vGrid.setOrigin(origin + vec2f(0.f, -0.5f));
+    vGrid.resize(resolution);
+    vGrid.setOrigin(origin);
     vGrid.setDx(dx);
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  void resize(vec2u res) override {
-    uGrid.resize(res + vec2u(1, 0));
-    vGrid.resize(res + vec2u(0, 1));
+  virtual void resize(vec2u res) {
+    uGrid.resize(res);
+    vGrid.resize(res);
   }
   /// Changes grid origin position
   /// \param o in world space
-  void setOrigin(const point2f &o) override {
-    uGrid.setOrigin(o + vec2f(-0.5f, 0.f));
-    vGrid.setOrigin(o + vec2f(0.f, -0.5f));
+  virtual void setOrigin(const point2f &o) {
+    uGrid.setOrigin(o);
+    vGrid.setOrigin(o);
   }
+  /// Changes grid cell size
+  /// \param d new size
+  virtual void setDx(float d) {
+    uGrid.setDx(d);
+    vGrid.setDx(d);
+  }
+  virtual void copy(const VectorGridTexture2 &other) {
+    uGrid.copy(other.uGrid);
+    vGrid.copy(other.vGrid);
+  }
+  virtual float *uDeviceData() { return uGrid.texture().deviceData(); }
+  virtual float *vDeviceData() { return vGrid.texture().deviceData(); }
+  virtual const float *uDeviceData() const {
+    return uGrid.texture().deviceData();
+  }
+  virtual const float *vDeviceData() const {
+    return vGrid.texture().deviceData();
+  }
+  virtual const GridTexture2<float> &u() const { return uGrid; }
+  virtual const GridTexture2<float> &v() const { return vGrid; }
+  virtual GridTexture2<float> &u() { return uGrid; }
+  virtual GridTexture2<float> &v() { return vGrid; }
+
+protected:
+  GridTexture2<float> uGrid, vGrid;
 };
 
 } // namespace cuda
 
 } // namespace hermes
 
-#endif // HERMES_STRUCTURES_CUDA_STAGGERED_GRID_H
+#endif // HERMES_STRUCTURES_CUDA_VECTOR_GRID_H

@@ -99,7 +99,7 @@ void MacCormackIntegrator2::set(hermes::cuda::Grid2Info info) {
 }
 
 void MacCormackIntegrator2::advect(
-    const hermes::cuda::StaggeredGridTexture2 &velocity,
+    const hermes::cuda::VectorGridTexture2 &velocity,
     const hermes::cuda::GridTexture2<unsigned char> &solid,
     const hermes::cuda::GridTexture2<float> &phi,
     hermes::cuda::GridTexture2<float> &phiOut, float dt) {

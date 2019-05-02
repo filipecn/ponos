@@ -59,30 +59,9 @@ __global__ void __applyForceFieldV(float *v, hermes::cuda::Grid2Info vInfo,
   }
 }
 
-__global__ void __advectDensity(float *d, hermes::cuda::Grid2Info dInfo,
-                                hermes::cuda::Grid2Info uInfo,
-                                hermes::cuda::Grid2Info vInfo, float dt) {
-  int x = blockIdx.x * blockDim.x + threadIdx.x;
-  int y = blockIdx.y * blockDim.y + threadIdx.y;
-  int index = y * dInfo.resolution.x + x;
-  if (x < dInfo.resolution.x && y < dInfo.resolution.y) {
-    unsigned char solid = tex2D(solidTex2, x + 0.5, y + 0.5);
-    if (solid) {
-      d[index] = 0;
-      return;
-    }
-    hermes::cuda::point2f wp = dInfo.toWorld(hermes::cuda::point2f(x, y));
-    hermes::cuda::point2f up = uInfo.toField(wp) + hermes::cuda::vec2(0.5);
-    hermes::cuda::point2f vp = vInfo.toField(wp) + hermes::cuda::vec2(0.5);
-    hermes::cuda::vec2f vel(tex2D(uTex2, up.x, up.y), tex2D(vTex2, vp.x, vp.y));
-    hermes::cuda::point2f pos =
-        dInfo.toField(wp - vel * dt) + hermes::cuda::vec2(0.5);
-    d[index] = tex2D(densityTex2, pos.x, pos.y);
-  }
-}
-
-__global__ void __computeDivergence(float *d, hermes::cuda::Grid2Info dInfo,
-                                    float invdx) {
+__global__ void __computeDivergenceStaggered(float *d,
+                                             hermes::cuda::Grid2Info dInfo,
+                                             float invdx) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   int index = y * dInfo.resolution.x + x;
@@ -106,6 +85,34 @@ __global__ void __computeDivergence(float *d, hermes::cuda::Grid2Info dInfo,
     if (st)
       t = tex2D(vSolidTex2, xc, yc + 1);
     d[index] = invdx * (t - b + r - l);
+  }
+}
+
+__global__ void __computeDivergence(float *d, hermes::cuda::Grid2Info dInfo,
+                                    float invdx) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int index = y * dInfo.resolution.x + x;
+  if (x < dInfo.resolution.x && y < dInfo.resolution.y) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    float l = tex2D(uTex2, xc - 1, yc);
+    float r = tex2D(uTex2, xc + 1, yc);
+    float b = tex2D(vTex2, xc, yc - 1);
+    float t = tex2D(vTex2, xc, yc + 1);
+    unsigned char sl = tex2D(solidTex2, xc - 1, yc);
+    unsigned char sr = tex2D(solidTex2, xc + 1, yc);
+    unsigned char sb = tex2D(solidTex2, xc, yc - 1);
+    unsigned char st = tex2D(solidTex2, xc, yc + 1);
+    if (sl)
+      l = tex2D(uSolidTex2, xc - 1, yc);
+    if (sr)
+      r = tex2D(uSolidTex2, xc + 1, yc);
+    if (sb)
+      b = tex2D(vSolidTex2, xc, yc - 1);
+    if (st)
+      t = tex2D(vSolidTex2, xc, yc + 1);
+    d[index] = invdx * 0.5 * (t - b + r - l);
   }
 }
 
@@ -199,6 +206,36 @@ __global__ void __diffuseV(float *v, hermes::cuda::Grid2Info vInfo, float k,
   }
 }
 
+__global__ void __diffuse(float *v, hermes::cuda::Grid2Info vInfo, float k,
+                          float dt) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int index = y * vInfo.resolution.x + x;
+  if (x < vInfo.resolution.x && y < vInfo.resolution.y) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    float l = tex2D(vTex2, xc - 1, yc);
+    float r = tex2D(vTex2, xc + 1, yc);
+    float b = tex2D(vTex2, xc, yc - 1);
+    float t = tex2D(vTex2, xc, yc + 1);
+    float rhs = tex2D(vCopyTex2, xc, yc);
+    unsigned char sl = tex2D(solidTex2, xc - 1, yc);
+    unsigned char sr = tex2D(solidTex2, xc + 1, yc);
+    unsigned char sb = tex2D(solidTex2, xc, yc - 1);
+    unsigned char st = tex2D(solidTex2, xc, yc + 1);
+    if (sl)
+      l = tex2D(uSolidTex2, xc - 1, yc);
+    if (sr)
+      r = tex2D(uSolidTex2, xc + 1, yc);
+    if (sb)
+      b = tex2D(uSolidTex2, xc, yc - 1);
+    if (st)
+      t = tex2D(uSolidTex2, xc, yc + 1);
+    float scale = dt * k / (vInfo.dx * vInfo.dx);
+    v[index] = (scale * (l + r + t + b) + rhs) / (1 + 4 * scale);
+  }
+}
+
 __global__ void __projectionStepU(float *u, hermes::cuda::Grid2Info uInfo,
                                   float scale) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -239,6 +276,52 @@ __global__ void __projectionStepV(float *v, hermes::cuda::Grid2Info vInfo,
   }
 }
 
+__global__ void __projectionStep(float *u, float *v,
+                                 hermes::cuda::Grid2Info info, float scale) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int index = y * info.resolution.x + x;
+  if (x < info.resolution.x && y < info.resolution.y) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    if (tex2D(solidTex2, xc, yc - 1))
+      v[index] = tex2D(vSolidTex2, xc, yc - 1);
+    else if (tex2D(solidTex2, xc, yc + 1))
+      v[index] = tex2D(vSolidTex2, xc, yc + 1);
+    else {
+      float b = tex2D(pressureTex2, xc, yc - 1);
+      float t = tex2D(pressureTex2, xc, yc + 1);
+      v[index] -= scale * 0.5 * (t - b);
+    }
+    if (tex2D(solidTex2, xc - 1, yc))
+      u[index] = tex2D(vSolidTex2, xc - 1, yc);
+    else if (tex2D(solidTex2, xc + 1, yc))
+      u[index] = tex2D(vSolidTex2, xc + 1, yc);
+    else {
+      float l = tex2D(pressureTex2, xc - 1, yc);
+      float r = tex2D(pressureTex2, xc + 1, yc);
+      u[index] -= scale * 0.5 * (r - l);
+    }
+  }
+}
+
+__global__ void __diffuseFFT(cufftComplex *w, float k, float dt) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  // int index = j * vInfo.resolution.x + i;
+  // w[index].x /= (1.f + k * dt * (i * i + j * j));
+  // w[index].y /= (1.f + k * dt * (i * i + j * j));
+}
+
+__global__ void __projectFFT(cufftComplex *w) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  // int index = j * vInfo.resolution.x + i;
+  // wConjReal = w[index].x;
+  // wConjImg = -w[index].y;
+  // w[index].x -= (i * wConjReal + j * wConjImg) / (i * i + j * j);
+}
+
 void unbindTextures() {
   cudaUnbindTexture(vTex2);
   cudaUnbindTexture(uTex2);
@@ -252,14 +335,14 @@ void unbindTextures() {
   cudaUnbindTexture(vForceTex2);
 }
 
-void bindTextures(const hermes::cuda::StaggeredGridTexture2 &velocity,
-                  const hermes::cuda::StaggeredGridTexture2 &velocityCopy,
+void bindTextures(const hermes::cuda::VectorGridTexture2 &velocity,
+                  const hermes::cuda::VectorGridTexture2 &velocityCopy,
                   const hermes::cuda::GridTexture2<float> &density,
                   const hermes::cuda::GridTexture2<float> &divergence,
                   const hermes::cuda::GridTexture2<float> &pressure,
                   const hermes::cuda::GridTexture2<unsigned char> &solid,
-                  const hermes::cuda::StaggeredGridTexture2 &forceField,
-                  const hermes::cuda::StaggeredGridTexture2 &solidVelocity) {
+                  const hermes::cuda::VectorGridTexture2 &forceField,
+                  const hermes::cuda::VectorGridTexture2 &solidVelocity) {
   using namespace hermes::cuda;
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
   CUDA_CHECK(cudaBindTextureToArray(
@@ -318,8 +401,8 @@ void setupTextures() {
   solidTex2.normalized = 0;
 }
 
-void applyForceField(hermes::cuda::StaggeredGridTexture2 &velocity,
-                     const hermes::cuda::StaggeredGridTexture2 &forceField,
+void applyForceField(hermes::cuda::VectorGridTexture2 &velocity,
+                     const hermes::cuda::VectorGridTexture2 &forceField,
                      float dt) {
   {
     auto info = velocity.v().info();
@@ -338,6 +421,17 @@ void applyForceField(hermes::cuda::StaggeredGridTexture2 &velocity,
 }
 
 void computeDivergence(const hermes::cuda::StaggeredGridTexture2 &velocity,
+                       const hermes::cuda::GridTexture2<unsigned char> &solid,
+                       hermes::cuda::GridTexture2<float> &divergence) {
+  auto info = divergence.info();
+  float invdx = 1.0 / info.dx;
+  hermes::ThreadArrayDistributionInfo td(info.resolution);
+  __computeDivergenceStaggered<<<td.gridSize, td.blockSize>>>(
+      divergence.texture().deviceData(), divergence.info(), invdx);
+  divergence.texture().updateTextureMemory();
+}
+
+void computeDivergence(const hermes::cuda::VectorGridTexture2 &velocity,
                        const hermes::cuda::GridTexture2<unsigned char> &solid,
                        hermes::cuda::GridTexture2<float> &divergence) {
   auto info = divergence.info();
@@ -363,6 +457,30 @@ void computePressure(const hermes::cuda::GridTexture2<float> &divergence,
     CUDA_CHECK(cudaDeviceSynchronize());
   }
   pressure.texture().updateTextureMemory();
+}
+
+void diffuse(hermes::cuda::VectorGridTexture2 &velocity, float k, float dt,
+             int iterations) {
+  {
+    auto info = velocity.u().info();
+    hermes::ThreadArrayDistributionInfo td(info.resolution);
+    for (int i = 0; i < iterations; i++) {
+      velocity.u().texture().updateTextureMemory();
+      __diffuse<<<td.gridSize, td.blockSize>>>(velocity.uDeviceData(), info, k,
+                                               dt);
+    }
+  }
+  {
+    auto info = velocity.v().info();
+    hermes::ThreadArrayDistributionInfo td(info.resolution);
+    for (int i = 0; i < iterations; i++) {
+      velocity.v().texture().updateTextureMemory();
+      __diffuse<<<td.gridSize, td.blockSize>>>(velocity.vDeviceData(), info, k,
+                                               dt);
+    }
+  }
+  velocity.u().texture().updateTextureMemory();
+  velocity.v().texture().updateTextureMemory();
 }
 
 void diffuse(hermes::cuda::StaggeredGridTexture2 &velocity, float k, float dt,
@@ -410,6 +528,44 @@ void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
   }
   velocity.u().texture().updateTextureMemory();
   velocity.v().texture().updateTextureMemory();
+}
+
+void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
+                    const hermes::cuda::GridTexture2<unsigned char> &solid,
+                    hermes::cuda::VectorGridTexture2 &velocity, float dt) {
+  auto info = velocity.v().info();
+  float invdx = 1.0 / info.dx;
+  float scale = dt * invdx;
+  hermes::ThreadArrayDistributionInfo td(info.resolution);
+  __projectionStep<<<td.gridSize, td.blockSize>>>(velocity.uDeviceData(),
+                                                  velocity.vDeviceData(),
+                                                  velocity.v().info(), scale);
+  velocity.u().texture().updateTextureMemory();
+  velocity.v().texture().updateTextureMemory();
+}
+
+void diffuseFFT(hermes::cuda::vec2u resolution, cufftComplex *d_frequenciesU,
+                cufftComplex *d_frequenciesV, float k, float dt) {
+  {
+    hermes::ThreadArrayDistributionInfo td((resolution.x + 1) * resolution.y);
+    __diffuseFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesU, k, dt);
+  }
+  {
+    hermes::ThreadArrayDistributionInfo td(resolution.x * (resolution.y + 1));
+    __diffuseFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesV, k, dt);
+  }
+}
+
+void projectFFT(hermes::cuda::vec2u resolution, cufftComplex *d_frequenciesU,
+                cufftComplex *d_frequenciesV) {
+  {
+    hermes::ThreadArrayDistributionInfo td((resolution.x + 1) * resolution.y);
+    __projectFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesU);
+  }
+  {
+    hermes::ThreadArrayDistributionInfo td(resolution.x * (resolution.y + 1));
+    __projectFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesV);
+  }
 }
 
 } // namespace cuda
