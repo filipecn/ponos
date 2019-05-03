@@ -305,21 +305,64 @@ __global__ void __projectionStep(float *u, float *v,
   }
 }
 
-__global__ void __diffuseFFT(cufftComplex *w, float k, float dt) {
+__global__ void __diffuseFFT(cufftComplex *wu, cufftComplex *wv, int nx, int ny,
+                             float k, float dt) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
-  // int index = j * vInfo.resolution.x + i;
-  // w[index].x /= (1.f + k * dt * (i * i + j * j));
-  // w[index].y /= (1.f + k * dt * (i * i + j * j));
+  int index = j * (ny / 2 + 1) + i;
+  wu[index].x /= (1.f + k * dt * (i * i + j * j));
+  wv[index].x /= (1.f + k * dt * (i * i + j * j));
 }
 
-__global__ void __projectFFT(cufftComplex *w) {
+__device__ __host__ inline cufftComplex add(cufftComplex a, cufftComplex b) {
+  cufftComplex c;
+  c.x = a.x + b.x;
+  c.y = a.y + b.y;
+  return c;
+}
+
+__device__ __host__ inline cufftComplex sub(cufftComplex a, cufftComplex b) {
+  cufftComplex c;
+  c.x = a.x - b.x;
+  c.y = a.y - b.y;
+  return c;
+}
+
+__device__ __host__ inline cufftComplex mul(cufftComplex a, cufftComplex b) {
+  cufftComplex c;
+  c.x = a.x * b.x - a.y * b.y;
+  c.y = a.x * b.y + a.y * b.x;
+  return c;
+}
+
+__device__ __host__ inline cufftComplex conj(cufftComplex a) {
+  cufftComplex c;
+  c.x = a.x;
+  c.y = -a.y;
+  return c;
+}
+
+__device__ __host__ inline cufftComplex muls(cufftComplex a, float s) {
+  cufftComplex c;
+  c.x = a.x * s;
+  c.y = a.y * s;
+  return c;
+}
+
+__global__ void __projectFFT(cufftComplex *wu, cufftComplex *wv, int nx,
+                             int ny) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
-  // int index = j * vInfo.resolution.x + i;
-  // wConjReal = w[index].x;
-  // wConjImg = -w[index].y;
-  // w[index].x -= (i * wConjReal + j * wConjImg) / (i * i + j * j);
+  int index = j * (ny / 2 + 1) + i;
+  cufftComplex I, J;
+  I.x = i;
+  I.y = 0;
+  J.x = j;
+  J.y = 0;
+  // [ir + 0img, jr + 0img] [wu.xr + wu.yimg, wv.xr + wv.yr]
+  cufftComplex dotKW = add(mul(I, conj(wu[index])), mul(J, conj(wv[index])));
+  wu[index] = sub(wu[index], muls(mul(dotKW, I), 1.f / (i * i + j * j)));
+  wv[index] = sub(wv[index], muls(mul(dotKW, J), 1.f / (i * i + j * j)));
 }
 
 void unbindTextures() {
@@ -546,26 +589,16 @@ void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
 
 void diffuseFFT(hermes::cuda::vec2u resolution, cufftComplex *d_frequenciesU,
                 cufftComplex *d_frequenciesV, float k, float dt) {
-  {
-    hermes::ThreadArrayDistributionInfo td((resolution.x + 1) * resolution.y);
-    __diffuseFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesU, k, dt);
-  }
-  {
-    hermes::ThreadArrayDistributionInfo td(resolution.x * (resolution.y + 1));
-    __diffuseFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesV, k, dt);
-  }
+  hermes::ThreadArrayDistributionInfo td(resolution.x, resolution.y / 2 + 1);
+  __diffuseFFT<<<td.gridSize, td.blockSize>>>(
+      d_frequenciesU, d_frequenciesV, resolution.x, resolution.y, k, dt);
 }
 
 void projectFFT(hermes::cuda::vec2u resolution, cufftComplex *d_frequenciesU,
                 cufftComplex *d_frequenciesV) {
-  {
-    hermes::ThreadArrayDistributionInfo td((resolution.x + 1) * resolution.y);
-    __projectFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesU);
-  }
-  {
-    hermes::ThreadArrayDistributionInfo td(resolution.x * (resolution.y + 1));
-    __projectFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesV);
-  }
+  hermes::ThreadArrayDistributionInfo td(resolution.x, resolution.y / 2 + 1);
+  __projectFFT<<<td.gridSize, td.blockSize>>>(d_frequenciesU, d_frequenciesV,
+                                              resolution.x, resolution.y);
 }
 
 } // namespace cuda

@@ -241,7 +241,6 @@ public:
   /// \param dt time step
   void stepFFT(float dt) {
     using namespace hermes::cuda;
-    rasterColliders();
     applyForceField(velocity, forceField, dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     uIntegrator->advect(velocity, solid, velocity.u(), velocity.u(), dt);
@@ -324,11 +323,11 @@ protected:
     }
     CUDA_CHECK(cudaDeviceSynchronize());
     {
-      dim3 grid((resolution.x + 1) / 16, resolution.y / 16, 1);
+      dim3 grid(resolution.x / 16, resolution.y / 16, 1);
       dim3 threads(16, 16, 1);
-      __normalizeIFFT<<<grid, threads>>>(velocity.uDeviceData(),
-                                         resolution.x + 1, resolution.y,
-                                         (resolution.x + 1) * resolution.y);
+      __normalizeIFFT<<<grid, threads>>>(velocity.uDeviceData(), resolution.x,
+                                         resolution.y,
+                                         resolution.x * resolution.y);
     }
     CUDA_CHECK(cudaDeviceSynchronize());
     if (cufftExecC2R(inversePlanV, d_frequenciesV, velocity.vDeviceData()) !=
@@ -338,11 +337,11 @@ protected:
     }
     CUDA_CHECK(cudaDeviceSynchronize());
     {
-      dim3 grid(resolution.x / 16, (resolution.y + 1) / 16, 1);
+      dim3 grid(resolution.x / 16, resolution.y / 16, 1);
       dim3 threads(16, 16, 1);
       __normalizeIFFT<<<grid, threads>>>(velocity.vDeviceData(), resolution.x,
-                                         resolution.y + 1,
-                                         resolution.x * (resolution.y + 1));
+                                         resolution.y,
+                                         resolution.x * resolution.y);
     }
     CUDA_CHECK(cudaDeviceSynchronize());
   }

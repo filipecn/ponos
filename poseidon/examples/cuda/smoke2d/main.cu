@@ -62,7 +62,7 @@ int main() {
   screen.shader->setUniform("tex", 0);
   int frame = 0;
   app.renderCallback = [&]() {
-    solver.step(0.001);
+    // solver.stepFFT(0.001);
     // poseidon::cuda::GridSmokeInjector2::injectCircle(
     //     ponos::point2f(0.5f, 0.2f), .01f, solver.scalarField(0));
     solver.scalarField(0).texture().updateTextureMemory();
@@ -92,7 +92,7 @@ int main() {
       if (key == GLFW_KEY_Q)
         app.exit();
       if (key == GLFW_KEY_SPACE)
-        solver.step(0.001);
+        solver.stepFFT(0.001);
     }
   };
   bool activeForce = false;
