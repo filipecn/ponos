@@ -3,8 +3,8 @@
 #include <lodepng.h>
 #include <poseidon/poseidon.h>
 
-#define WIDTH 128
-#define HEIGHT 128
+#define WIDTH 256
+#define HEIGHT 256
 
 __global__ void __applyForce(float *f, hermes::cuda::Grid2Info fInfo,
                              hermes::cuda::point2f p, float r, float v) {
@@ -50,9 +50,11 @@ int main() {
   solver.init();
   poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f, 0.2f),
                                                    .1f, solver.scalarField(0));
+  poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f, 0.7f),
+                                                   .1f, solver.scalarField(0));
   solver.scalarField(0).texture().updateTextureMemory();
-  applyForce(solver.forceFieldData(), hermes::cuda::point2f(0.5, 0.2), 0.1,
-             hermes::cuda::vec2f(0, -100));
+  // applyForce(solver.forceFieldData(), hermes::cuda::point2f(0.5, 0.2), 0.1,
+  //            hermes::cuda::vec2f(0, -100));
   // VIS
   circe::SceneApp<> app(WIDTH, HEIGHT, "", false);
   app.addViewport2D(0, 0, WIDTH, HEIGHT);
@@ -62,7 +64,7 @@ int main() {
   screen.shader->setUniform("tex", 0);
   int frame = 0;
   app.renderCallback = [&]() {
-    // solver.stepFFT(0.001);
+    solver.stepFFT(0.001);
     // poseidon::cuda::GridSmokeInjector2::injectCircle(
     //     ponos::point2f(0.5f, 0.2f), .01f, solver.scalarField(0));
     solver.scalarField(0).texture().updateTextureMemory();
@@ -91,8 +93,10 @@ int main() {
     if (action == GLFW_RELEASE) {
       if (key == GLFW_KEY_Q)
         app.exit();
-      if (key == GLFW_KEY_SPACE)
+      if (key == GLFW_KEY_SPACE) {
         solver.stepFFT(0.001);
+        // std::cerr << solver.velocityData().u().texture() << std::endl;
+      }
     }
   };
   bool activeForce = false;

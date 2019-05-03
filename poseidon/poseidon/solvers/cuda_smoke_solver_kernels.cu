@@ -306,12 +306,20 @@ __global__ void __projectionStep(float *u, float *v,
 }
 
 __global__ void __diffuseFFT(cufftComplex *wu, cufftComplex *wv, int nx, int ny,
-                             float k, float dt) {
+                             float viscosity, float dt) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
-  int index = j * (ny / 2 + 1) + i;
-  wu[index].x /= (1.f + k * dt * (i * i + j * j));
-  wv[index].x /= (1.f + k * dt * (i * i + j * j));
+  if (j > ny / 2 || i >= nx)
+    return;
+  int index = i * (ny / 2 + 1) + j;
+  cufftComplex k;
+  k.x = j;
+  k.y = (i <= nx / 2) ? i : i - nx;
+  float kk = k.x * k.x + k.y * k.y;
+  wu[index].x /= (1.f + viscosity * dt * kk);
+  wu[index].y /= (1.f + viscosity * dt * kk);
+  wv[index].x /= (1.f + viscosity * dt * kk);
+  wv[index].y /= (1.f + viscosity * dt * kk);
 }
 
 __device__ __host__ inline cufftComplex add(cufftComplex a, cufftComplex b) {
@@ -351,18 +359,30 @@ __device__ __host__ inline cufftComplex muls(cufftComplex a, float s) {
 
 __global__ void __projectFFT(cufftComplex *wu, cufftComplex *wv, int nx,
                              int ny) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int j = blockIdx.y * blockDim.y + threadIdx.y;
-  int index = j * (ny / 2 + 1) + i;
-  cufftComplex I, J;
-  I.x = i;
-  I.y = 0;
-  J.x = j;
-  J.y = 0;
+  int i = blockIdx.x * blockDim.x + threadIdx.x; // 0 ~ nx - 1
+  int j = blockIdx.y * blockDim.y + threadIdx.y; // 0 ~ ny / 2
+  if (j > ny / 2 || i >= nx)
+    return;
+  int index = i * (ny / 2 + 1) + j;
+  cufftComplex k;
+  k.x = j;
+  k.y = (i <= nx / 2) ? i : i - nx;
+  float kk = k.x * k.x + k.y * k.y;
+  if (i == 0 && j == 0)
+    return;
+  wu[index].x -= k.x * k.x * wu[index].x / kk + k.y * k.x * wv[index].x / kk;
+  wu[index].y -= k.x * k.x * wu[index].y / kk + k.y * k.x * wv[index].y / kk;
+  wv[index].x -= k.x * k.y * wu[index].x / kk + k.y * k.y * wv[index].x / kk;
+  wv[index].y -= k.x * k.y * wu[index].y / kk + k.y * k.y * wv[index].y / kk;
+  // cufftComplex I, J;
+  // I.x = i;
+  // I.y = 0;
+  // J.x = j;
+  // J.y = 0;
   // [ir + 0img, jr + 0img] [wu.xr + wu.yimg, wv.xr + wv.yr]
-  cufftComplex dotKW = add(mul(I, conj(wu[index])), mul(J, conj(wv[index])));
-  wu[index] = sub(wu[index], muls(mul(dotKW, I), 1.f / (i * i + j * j)));
-  wv[index] = sub(wv[index], muls(mul(dotKW, J), 1.f / (i * i + j * j)));
+  // cufftComplex dotKW = add(mul(I, conj(wu[index])), mul(J, conj(wv[index])));
+  // wu[index] = sub(wu[index], muls(mul(dotKW, I), 1.f / (i * i + j * j)));
+  // wv[index] = sub(wv[index], muls(mul(dotKW, J), 1.f / (i * i + j * j)));
 }
 
 void unbindTextures() {

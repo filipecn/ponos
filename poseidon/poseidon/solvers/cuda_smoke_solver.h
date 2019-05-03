@@ -145,9 +145,8 @@ public:
     // allocate device memory for frequency space
     CUDA_CHECK(cudaMalloc((void **)&d_frequenciesU,
                           sizeof(cufftComplex) * uRes.x * (uRes.y / 2 + 1)));
-    CUDA_CHECK(
-        cudaMalloc((void **)&d_frequenciesV,
-                   sizeof(cufftComplex) * vRes.x * ((vRes.y + 1) / 2 + 1)));
+    CUDA_CHECK(cudaMalloc((void **)&d_frequenciesV,
+                          sizeof(cufftComplex) * vRes.x * (vRes.y / 2 + 1)));
   }
   ///
   /// \param res
@@ -211,8 +210,8 @@ public:
   /// \param dt time step
   void step(float dt) {
     using namespace hermes::cuda;
-    rasterColliders();
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // rasterColliders();
+    // CUDA_CHECK(cudaDeviceSynchronize());
     uIntegrator->advect(velocity, solid, velocity.u(), velocity.u(), dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     vIntegrator->advect(velocity, solid, velocity.v(), velocity.v(), dt);
@@ -234,14 +233,16 @@ public:
     CUDA_CHECK(cudaDeviceSynchronize());
     projectionStep(pressure, solid, velocity, dt);
     CUDA_CHECK(cudaDeviceSynchronize());
-    hermes::cuda::fill(forceField.u().texture(), 0.0f);
-    hermes::cuda::fill(forceField.v().texture(), 0.0f);
+    // hermes::cuda::fill(forceField.u().texture(), 0.0f);
+    // hermes::cuda::fill(forceField.v().texture(), 0.0f);
   }
   /// Advances one simulation step folllowing original Stan method
   /// \param dt time step
   void stepFFT(float dt) {
     using namespace hermes::cuda;
     applyForceField(velocity, forceField, dt);
+    hermes::cuda::fill(forceField.u().texture(), 0.0f);
+    hermes::cuda::fill(forceField.v().texture(), 0.0f);
     CUDA_CHECK(cudaDeviceSynchronize());
     uIntegrator->advect(velocity, solid, velocity.u(), velocity.u(), dt);
     CUDA_CHECK(cudaDeviceSynchronize());
@@ -253,7 +254,7 @@ public:
       integrator->advect(velocity, solid, scalarFields[i], scalarFields[i], dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     applyFFT();
-    diffuseFFT(resolution, d_frequenciesU, d_frequenciesV, 0.01, dt);
+    diffuseFFT(resolution, d_frequenciesU, d_frequenciesV, 1.0, dt);
     projectFFT(resolution, d_frequenciesU, d_frequenciesV);
     applyiFFT();
   }
@@ -344,6 +345,8 @@ protected:
                                          resolution.x * resolution.y);
     }
     CUDA_CHECK(cudaDeviceSynchronize());
+    velocity.u().texture().updateTextureMemory();
+    velocity.v().texture().updateTextureMemory();
   }
 
   std::shared_ptr<Integrator2> vIntegrator;
