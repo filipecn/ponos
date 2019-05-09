@@ -69,13 +69,13 @@ int main() {
     //     ponos::point2f(0.5f, 0.2f), .01f, solver.scalarField(0));
     solver.scalarField(0).texture().updateTextureMemory();
     renderDensity(WIDTH, HEIGHT, solver.scalarField(0).texture(),
-                  cgl.bufferPointer());
+                  cgl.bufferPointer<unsigned int>());
     // renderScalarGradient(WIDTH, HEIGHT, solver.pressureData().texture(),
     //                      cgl.bufferPointer(), 0, 5,
     //                      hermes::cuda::Color::blue(),
     //                      hermes::cuda::Color::red());
     renderSolids(WIDTH, HEIGHT, solver.solidData().texture(),
-                 cgl.bufferPointer());
+                 cgl.bufferPointer<unsigned int>());
     cgl.sendToTexture();
     cgl.bindTexture(GL_TEXTURE0);
     screen.render();

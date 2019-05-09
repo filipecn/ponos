@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/io/render_texture.h>
 #include <circe/utils/open_gl.h>
@@ -60,7 +60,7 @@ void RenderTexture::render(std::function<void()> f) {
   glViewport(0, 0, static_cast<GLsizei>(attributes.width),
              static_cast<GLsizei>(attributes.height));
   framebuffer->enable();
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   f();
   framebuffer->disable();
@@ -98,4 +98,4 @@ std::ostream &operator<<(std::ostream &out, RenderTexture &pt) {
   return out;
 }
 
-} // circe namespace
+} // namespace circe

@@ -34,6 +34,7 @@
 #include <circe/scene/scene_mesh.h>
 #include <circe/scene/scene_object.h>
 #include <circe/scene/triangle_mesh.h>
+#include <circe/scene/volume_box.h>
 #include <circe/scene/wireframe_mesh.h>
 #include <circe/ui/app.h>
 #include <circe/ui/interactive_object_interface.h>
@@ -45,6 +46,7 @@
 #include <circe/ui/trackball_interface.h>
 #include <circe/utils/open_gl.h>
 #include <circe/utils/win32_utils.h>
+
 
 namespace circe {
 

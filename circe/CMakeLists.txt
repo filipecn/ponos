@@ -44,6 +44,7 @@ set(CIRCE_HEADERS
         circe/scene/scene_mesh.h
         circe/scene/scene_object.h
         circe/scene/triangle_mesh.h
+        circe/scene/volume_box.h
         circe/scene/wireframe_mesh.h
         circe/ui/app.h
         circe/ui/interactive_object_interface.h
@@ -88,6 +89,7 @@ set(CIRCE_SOURCES
         circe/scene/quad.cpp
         circe/scene/scene_mesh.cpp
         circe/scene/triangle_mesh.cpp
+        circe/scene/volume_box.cpp
         circe/scene/wireframe_mesh.cpp
         circe/ui/app.cpp
         # circe/ui/nanogui_screen.cpp
@@ -109,7 +111,7 @@ target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PL
 target_link_libraries(circe PUBLIC ponos  ${GLFW_LIBRARIES} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
 # add_dependencies(circe glfw glad)
 
-# add_subdirectory(examples)
+add_subdirectory(examples)
 
 if (WIN32)
 else (WIN32)

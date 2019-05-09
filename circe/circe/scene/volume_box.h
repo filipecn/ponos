@@ -22,40 +22,28 @@
  *
  */
 
-#ifndef HERMES_COMMON_PARALLEL_H
-#define HERMES_COMMON_PARALLEL_H
+#ifndef CIRCE_SCENE_VOLUME_BOX_H
+#define CIRCE_SCENE_VOLUME_BOX_H
 
-#include <hermes/geometry/cuda_vector.h>
+#include <circe/io/texture.h>
+#include <circe/scene/scene_object.h>
 
-namespace hermes {
+namespace circe {
 
-#define GPU_BLOCK_SIZE 1024
+class VolumeBox : public SceneMeshObject {
+public:
+  VolumeBox(size_t w, size_t h, size_t d, float *data = nullptr);
+  ~VolumeBox();
+  void draw(const CameraInterface *camera, ponos::Transform t) override;
+  const Texture &texture() const;
+  Texture &texture();
 
-struct ThreadArrayDistributionInfo {
-  ThreadArrayDistributionInfo(unsigned int n) {
-    blockSize.x = GPU_BLOCK_SIZE;
-    gridSize.x = n / blockSize.x + 1;
-  }
-  ThreadArrayDistributionInfo(unsigned int w, unsigned int h) {
-    blockSize = dim3(16, 16);
-    gridSize = dim3((w + blockSize.x - 1) / blockSize.x,
-                    (h + blockSize.y - 1) / blockSize.y);
-  }
-  ThreadArrayDistributionInfo(cuda::vec2u resolution) {
-    blockSize = dim3(16, 16);
-    gridSize = dim3((resolution.x + blockSize.x - 1) / blockSize.x,
-                    (resolution.y + blockSize.y - 1) / blockSize.y);
-  }
-  ThreadArrayDistributionInfo(unsigned int w, unsigned int h, unsigned int d) {
-    blockSize = dim3(8, 8, 8);
-    gridSize = dim3((w + blockSize.x - 1) / blockSize.x,
-                    (h + blockSize.y - 1) / blockSize.y,
-                    (d + blockSize.z - 1) / blockSize.z);
-  }
-  dim3 gridSize;
-  dim3 blockSize;
+private:
+  VolumeBox();
+  void render(GLenum cullFace);
+  Texture densityTexture;
 };
 
-} // namespace hermes
+} // namespace circe
 
 #endif

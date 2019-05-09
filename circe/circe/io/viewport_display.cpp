@@ -23,8 +23,8 @@ void ViewportDisplay::render(const std::function<void(CameraInterface *)> &f) {
   glViewport(x, y, width, height);
   glScissor(x, y, width, height);
   glEnable(GL_SCISSOR_TEST);
-  gd.clearScreen(0.f, 1.f, 1.f, 0.f);
-  //  glEnable(GL_DEPTH_TEST);
+  gd.clearScreen(1.f, 1.f, 1.f, 0.f);
+  // glEnable(GL_DEPTH_TEST);
   renderer->render();
   glDisable(GL_SCISSOR_TEST);
 }

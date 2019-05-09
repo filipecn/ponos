@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_TRIANGLE_MESH
 #define CIRCE_SCENE_TRIANGLE_MESH
@@ -36,12 +36,12 @@ namespace circe {
 class TriangleMesh : public SceneMeshObject {
 public:
   TriangleMesh(const std::string &filename);
-  TriangleMesh(ponos::RawMesh *m);
+  TriangleMesh(ponos::RawMeshSPtr m);
   virtual ~TriangleMesh() {}
   /* @inherit */
   void draw(const CameraInterface *camera, ponos::Transform transform) override;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_TRIANGLE_MESH

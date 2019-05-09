@@ -254,7 +254,7 @@ public:
       integrator->advect(velocity, solid, scalarFields[i], scalarFields[i], dt);
     CUDA_CHECK(cudaDeviceSynchronize());
     applyFFT();
-    diffuseFFT(resolution, d_frequenciesU, d_frequenciesV, 1.0, dt);
+    diffuseFFT(resolution, d_frequenciesU, d_frequenciesV, 0.001, dt);
     projectFFT(resolution, d_frequenciesU, d_frequenciesV);
     applyiFFT();
   }

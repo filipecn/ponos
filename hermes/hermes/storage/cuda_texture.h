@@ -26,6 +26,7 @@
 #define HERMES_STORAGE_TEXTURE_H
 
 #include <hermes/common/cuda.h>
+#include <hermes/storage/cuda_storage_utils.h>
 #include <hermes/storage/cuda_texture_kernels.h>
 #include <iomanip>
 #include <type_traits>
@@ -139,13 +140,88 @@ std::ostream &operator<<(std::ostream &os, const Texture<T> &tex) {
   return os;
 }
 
-#include "cuda_texture.inl"
-
 /// Set all texture textel values
 /// \tparam T data type
 /// \param texture
 /// \param value
 template <typename T> void fill(Texture<T> &texture, T value);
+
+/// 3D Texture data
+/// \tparam T
+template <typename T> class Texture3 {
+public:
+  Texture3() = default;
+  virtual ~Texture3();
+  /// \param w texture width (in texels)
+  /// \param h texture height (in texels)
+  /// \param d texture depth (in texels)
+  /// \param texDesc texture parameters
+  /// \param fromDevice **[optional]** initial data location
+  /// \param data **[optional]** initial data
+  Texture3(int w, int h, int d, bool fromDevice = false, T *data = nullptr);
+  /// Clear texture memory and allocates a new one with new size
+  /// \param newWidth new texture width (in texels)
+  /// \param newHeight new texture height (in texels)
+  /// \param newDepth new texture depth (in texels)
+  void resize(int newWidth, int newHeight, int newDepth);
+  /// \return unsigned int texture width (in texels)
+  unsigned int width() const;
+  /// \return unsigned int texture height (in texels)
+  unsigned int height() const;
+  /// \return unsigned int texture depth (in texels)
+  unsigned int depth() const;
+  /// \return const cudaArray* texture memory pointer
+  const cudaArray *textureArray() const;
+  /// \return T* device's global memory data
+  T *deviceData();
+  cudaPitchedPtr pitchedData();
+  ///
+  size_t pitch() const;
+  /// \return const T* device's global memory data
+  const T *deviceData() const;
+  /// Copies data from global memory (read/write) to texture memory (read only)
+  void updateTextureMemory();
+  void copy(const Texture3<T> &other);
+
+private:
+  void init();
+  void clear();
+
+  cudaExtent size;
+  cudaPitchedPtr d_data;
+  cudaArray *texArray = nullptr;
+};
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, Texture3<T> &tex) {
+  std::vector<T> data(tex.width() * tex.height() * tex.depth());
+  copyPitchedToLinear(tex.pitchedData(), data.data(), cudaMemcpyDeviceToHost,
+                      tex.depth());
+  for (int z = 0; z < tex.depth(); z++)
+    for (int y = tex.height() - 1; y >= 0; y--) {
+      os << "l[" << y << "] d[" << z << "]: ";
+      for (int x = 0; x < tex.width(); x++)
+        if (std::is_same<T, char>::value ||
+            std::is_same<T, unsigned char>::value)
+          os << (int)data[z * tex.width() * tex.height() + y * tex.width() + x]
+             << "\t";
+        else
+          os << std::setprecision(6)
+             << data[z * tex.width() * tex.height() + y * tex.width() + x]
+             << "\t";
+      os << std::endl;
+    }
+  return os;
+}
+
+/// Set all texture textel values
+/// \tparam T data type
+/// \param texture
+/// \param value
+template <typename T> void fill(Texture3<T> &texture, T value);
+
+#include "cuda_texture.inl"
+#include "cuda_texture3.inl"
 
 } // namespace cuda
 

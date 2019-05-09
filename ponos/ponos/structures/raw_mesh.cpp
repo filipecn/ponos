@@ -239,6 +239,13 @@ std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
          << ")";
     os << std::endl;
   }
+  os << "indices (dim = " << rm.meshDescriptor.elementSize
+     << ", count = " << rm.meshDescriptor.count << ")\n";
+  for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
+    for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)
+      os << rm.positionsIndices[i * rm.meshDescriptor.elementSize + j] << " ";
+    os << std::endl;
+  }
   os << "interleaved description (dim = "
      << rm.interleavedDescriptor.elementSize
      << ", count_ = " << rm.interleavedDescriptor.count << ")\n";

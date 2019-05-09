@@ -77,6 +77,8 @@ ponos::uivec3 Texture::size() const {
 
 GLuint Texture::textureObjectId() const { return textureObject; }
 
+GLenum Texture::target() const { return parameters.target; }
+
 std::ostream &operator<<(std::ostream &out, Texture &pt) {
   auto width = static_cast<int>(pt.attributes.width);
   auto height = static_cast<int>(pt.attributes.height);

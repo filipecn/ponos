@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include "scene_mesh.h"
 
@@ -68,8 +68,8 @@ circe::SceneMesh::SceneMesh(ponos::RawMeshSPtr rm) : mesh_(rm) {
   glBindVertexArray(VAO);
   vertexBuffer_.set(&vertexData_[0], ver);
   indexBuffer_.set(&indexData_[0], ind);
-  //  vertexBuffer_.set(&mesh_.interleavedData[0], ver);
-  //  indexBuffer_.set(&mesh_.positionsIndices[0], ind);
+  // vertexBuffer_.set(&mesh_->interleavedData[0], ver);
+  // indexBuffer_.set(&mesh_->positionsIndices[0], ind);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
   CHECK_GL_ERRORS;

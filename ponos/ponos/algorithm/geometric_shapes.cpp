@@ -482,6 +482,8 @@ RawMeshSPtr RawMeshes::cube(const ponos::Transform &transform,
   mesh->addFace({1, 3, 7}); // right
   mesh->addFace({0, 1, 5}); // bottom
   mesh->addFace({0, 5, 4}); // bottom
+  mesh->addFace({2, 7, 3}); // top
+  mesh->addFace({2, 6, 7}); // top
   // fix normal and uvs indices
   for (auto &i : mesh->indices)
     i.normalIndex = i.texcoordIndex = i.positionIndex;
@@ -494,8 +496,16 @@ RawMeshSPtr RawMeshes::cube(const ponos::Transform &transform,
     std::cerr << LOG_LOCATION << "Normals are not being generated yet\n";
   }
   if (generateUVs) {
-    // TODO
-    std::cerr << LOG_LOCATION << "UVs are not being generated yet\n";
+    mesh->addUV({0, 0, 0}); // 0
+    mesh->addUV({1, 0, 0}); // 1
+    mesh->addUV({0, 1, 0}); // 2
+    mesh->addUV({1, 1, 0}); // 3
+    mesh->addUV({0, 0, 1}); // 4
+    mesh->addUV({1, 0, 1}); // 5
+    mesh->addUV({0, 1, 1}); // 6
+    mesh->addUV({1, 1, 1}); // 7
+    mesh->texcoordDescriptor.count = vertexCount;
+    mesh->texcoordDescriptor.elementSize = 3;
   }
   // describe mesh
   mesh->primitiveType = GeometricPrimitiveType::TRIANGLES;

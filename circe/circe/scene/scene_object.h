@@ -69,7 +69,6 @@ public:
 class SceneMeshObject : public SceneObject {
 public:
   SceneMeshObject() {}
-
   SceneMeshObject(const std::string &filename) {
     ponos::RawMeshSPtr rawMesh(new ponos::RawMesh());
     loadOBJ(filename, rawMesh.get());
@@ -78,13 +77,11 @@ public:
     rawMesh->buildInterleavedData();
     mesh_ = createSceneMeshPtr(rawMesh);
   }
-
   SceneMeshObject(const std::string &filename, ShaderProgramPtr s)
       : SceneMeshObject(filename) {
     shader_ = s;
   }
-
-  SceneMeshObject(ponos::RawMesh *m,
+  SceneMeshObject(ponos::RawMeshSPtr m,
                   std::function<void(ShaderProgram *, const CameraInterface *,
                                      ponos::Transform)>
                       f =
@@ -94,17 +91,13 @@ public:
                             UNUSED_VARIABLE(camera);
                             UNUSED_VARIABLE(t);
                           },
-                  ShaderProgram *s = nullptr) {
+                  ShaderProgramPtr s = nullptr) {
     this->visible = true;
-    shader_.reset(s);
+    shader_ = s;
     drawCallback = f;
-    // if (shader)
-    //  for (auto att : this->vb->bufferDescriptor.attributes)
-    //    shader->addVertexAttribute(att.first.c_str());
+    mesh_ = createSceneMeshPtr(m);
   }
-
   virtual ~SceneMeshObject() {}
-
   void draw(const CameraInterface *camera, ponos::Transform t) override {
     if (!visible)
       return;
@@ -114,9 +107,6 @@ public:
       shader_->begin();
     } else {
       glEnableVertexAttribArray(0);
-      // glVertexAttribPointer(
-      // 0, vb->bufferDescriptor.elementSize, GL_FLOAT, GL_FALSE,
-      // 0 /*sizeof(float) * vb->bufferDescriptor.elementSize*/, 0);
     }
     if (drawCallback)
       drawCallback(shader_.get(), camera, transform * t);
@@ -128,54 +118,15 @@ public:
     if (shader_)
       shader_->end();
   }
-
   void setShader(ShaderProgramPtr shader) { shader_ = shader; }
   ShaderProgramPtr shader() { return shader_; }
   SceneMeshPtr mesh() { return mesh_; }
-
-  // ponos::BBox3 getBBox() { return this->transform(rawMesh->bbox); }
 
   std::function<void(ShaderProgram *, const CameraInterface *,
                      ponos::Transform)>
       drawCallback;
 
 protected:
-  /*virtual void setupVertexBuffer(GLuint _elementType = GL_TRIANGLES,
-                                 GLuint _type = GL_ARRAY_BUFFER,
-                                 GLuint _use = GL_STATIC_DRAW) {
-    UNUSED_VARIABLE(_elementType);
-    UNUSED_VARIABLE(_type);
-    UNUSED_VARIABLE(_use);
-    BufferDescriptor dataDescriptor(rawMesh->interleavedDescriptor.elementSize,
-                                    rawMesh->interleavedDescriptor.count);
-    dataDescriptor.addAttribute(std::string("position"),
-                                rawMesh->positionDescriptor.elementSize, 0,
-                                GL_FLOAT);
-    size_t offset = rawMesh->positionDescriptor.elementSize;
-    if (rawMesh->normalDescriptor.count) {
-      dataDescriptor.addAttribute(std::string("normal"),
-                                  rawMesh->normalDescriptor.elementSize,
-                                  offset * sizeof(float), GL_FLOAT);
-      offset += rawMesh->normalDescriptor.elementSize;
-    }
-    if (rawMesh->texcoordDescriptor.count) {
-      dataDescriptor.addAttribute(std::string("texcoord"),
-                                  rawMesh->texcoordDescriptor.elementSize,
-                                  offset * sizeof(float), GL_FLOAT);
-      offset += rawMesh->texcoordDescriptor.elementSize;
-    }
-    vb.reset(new VertexBuffer(&rawMesh->interleavedData[0], dataDescriptor));
-  }
-
-  virtual void setupIndexBuffer() {
-    BufferDescriptor indexDescriptor = create_index_buffer_descriptor(
-        1, rawMesh->positionsIndices.size(), rawMesh->primitiveType);
-    ib.reset(new IndexBuffer(&rawMesh->positionsIndices[0], indexDescriptor));
-  }
-
-  std::shared_ptr<VertexBuffer> vb;
-  std::shared_ptr<IndexBuffer> ib;
-*/
   SceneMeshPtr mesh_;
   ShaderProgramPtr shader_;
 };

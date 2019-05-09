@@ -50,6 +50,7 @@ public:
   std::vector<unsigned char> texels() const;
   ponos::uivec3 size() const;
   GLuint textureObjectId() const;
+  GLenum target() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 
 protected:

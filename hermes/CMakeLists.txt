@@ -28,6 +28,7 @@ set(HERMES_HEADERS
         hermes/storage/cuda_texture.h
         hermes/storage/cuda_texture.inl
         hermes/storage/cuda_texture_kernels.h
+        hermes/storage/cuda_storage_utils.h
         )
         
 set(HERMES_SOURCES

@@ -32,8 +32,10 @@ namespace hermes {
 
 namespace cuda {
 
-/// Set all texture textel values
 void fillTexture(float *data, float value, unsigned int w, unsigned int h);
+void fillTexture(cudaPitchedPtr data, float value, unsigned int w,
+                 unsigned int h, unsigned int d);
+void copyToArray3D(cudaPitchedPtr data, cudaArray *array, cudaExtent size);
 
 } // namespace cuda
 
