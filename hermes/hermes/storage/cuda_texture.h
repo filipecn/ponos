@@ -179,6 +179,10 @@ public:
   size_t pitch() const;
   /// \return const T* device's global memory data
   const T *deviceData() const;
+  /// allocates texture memory on device
+  void allocateTextureMemory();
+  /// free texture memory on device
+  void releaseTextureMemory();
   /// Copies data from global memory (read/write) to texture memory (read only)
   void updateTextureMemory();
   void copy(const Texture3<T> &other);
@@ -195,8 +199,10 @@ private:
 template <typename T>
 std::ostream &operator<<(std::ostream &os, Texture3<T> &tex) {
   std::vector<T> data(tex.width() * tex.height() * tex.depth());
-  copyPitchedToLinear(tex.pitchedData(), data.data(), cudaMemcpyDeviceToHost,
+  copyPitchedToLinear(data.data(), tex.pitchedData(), cudaMemcpyDeviceToHost,
                       tex.depth());
+  std::cerr << "3D Texture (" << tex.width() << " x " << tex.height() << " x "
+            << tex.depth() << ")\n";
   for (int z = 0; z < tex.depth(); z++)
     for (int y = tex.height() - 1; y >= 0; y--) {
       os << "l[" << y << "] d[" << z << "]: ";

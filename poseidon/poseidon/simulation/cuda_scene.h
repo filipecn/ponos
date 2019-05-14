@@ -13,6 +13,12 @@ public:
   Collider2<T> **list = nullptr;
 };
 
+template <typename T> class Scene3 {
+public:
+  Collider3<T> **colliders = nullptr;
+  Collider3<T> **list = nullptr;
+};
+
 } // namespace cuda
 
 } // namespace poseidon

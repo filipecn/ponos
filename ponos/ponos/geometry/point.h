@@ -80,6 +80,7 @@ public:
   explicit Point3(real_t _x, real_t _y, real_t _z);
   explicit Point3(const Vector3<T> &v);
   explicit Point3(const real_t *v);
+  explicit Point3(real_t v);
   explicit Point3(const Point2<T> &p);
   explicit operator Vector3<T>() const { return Vector3<T>(x, y, z); }
   // access

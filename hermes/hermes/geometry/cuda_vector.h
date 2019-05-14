@@ -218,6 +218,11 @@ __host__ __device__ bool operator==(const Vector3<T> &u, const Vector3<T> &v) {
   return Check::isEqual(u.x, v.x) && Check::isEqual(u.y, v.y) &&
          Check::isEqual(u.z, v.z);
 }
+template <typename T>
+__host__ __device__ bool operator!=(const Vector3<T> &u, const Vector3<T> &v) {
+  return !Check::isEqual(u.x, v.x) || !Check::isEqual(u.y, v.y) ||
+         !Check::isEqual(u.z, v.z);
+}
 // algebra
 template <typename T>
 __host__ __device__ T dot(const Vector3<T> &a, const Vector3<T> &b) {

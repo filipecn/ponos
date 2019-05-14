@@ -98,6 +98,8 @@ std::ostream &operator<<(std::ostream &os, const Point2<T> &p) {
 
 template <typename T> Point3<T>::Point3() { x = y = z = 0.0f; }
 
+template <typename T> Point3<T>::Point3(real_t v) { x = y = z = v; }
+
 template <typename T>
 Point3<T>::Point3(real_t _x, real_t _y, real_t _z) : x(_x), y(_y), z(_z) {
   ASSERT(!HasNaNs());

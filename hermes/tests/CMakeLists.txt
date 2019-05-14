@@ -1,6 +1,7 @@
 enable_language("CUDA")
 
-add_executable(hermes_tests main.cpp 
+add_executable(hermes_tests 
+main.cpp 
 #particle_system.cu 
 #array.cu
 utils.h
@@ -9,6 +10,7 @@ transform.cu
 texture.cu
 field.cu
 grids.cu
+memory.cu
 )
 
 target_link_libraries(hermes_tests gtest pthread hermes )

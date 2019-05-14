@@ -27,15 +27,13 @@
 
 namespace hermes {
 
-enum class AddressMode { /*REPEAT,*/ CLAMP_TO_EDGE,
-                         BORDER,
-                         WRAP,
-                         MIRROR,
-                         NONE };
+enum class AddressMode { REPEAT, CLAMP_TO_EDGE, BORDER, WRAP, MIRROR, NONE };
 
 enum class FilterMode { LINEAR, POINT };
 
 namespace cuda {
+
+enum class MemoryLocation { DEVICE, HOST };
 
 class Constants {
 public:

@@ -203,6 +203,9 @@ template <typename T> T distance(const Point3<T> &a, const Point3<T> &b) {
 template <typename T> T distance2(const Point3<T> &a, const Point3<T> &b) {
   return (a - b).length2();
 }
+template <typename T> __host__ __device__ Point3<T> floor(const Point3<T> &a) {
+  return {static_cast<int>(a.x), static_cast<int>(a.y), static_cast<int>(a.z)};
+}
 
 #include "cuda_point.inl"
 

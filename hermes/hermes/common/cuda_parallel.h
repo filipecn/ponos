@@ -46,6 +46,12 @@ struct ThreadArrayDistributionInfo {
     gridSize = dim3((resolution.x + blockSize.x - 1) / blockSize.x,
                     (resolution.y + blockSize.y - 1) / blockSize.y);
   }
+  ThreadArrayDistributionInfo(cuda::vec3u resolution) {
+    blockSize = dim3(16, 16);
+    gridSize = dim3((resolution.x + blockSize.x - 1) / blockSize.x,
+                    (resolution.y + blockSize.y - 1) / blockSize.y,
+                    (resolution.z + blockSize.z - 1) / blockSize.z);
+  }
   ThreadArrayDistributionInfo(unsigned int w, unsigned int h, unsigned int d) {
     blockSize = dim3(8, 8, 8);
     gridSize = dim3((w + blockSize.x - 1) / blockSize.x,

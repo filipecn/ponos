@@ -69,6 +69,50 @@ public:
   }
 };
 
+/// Represents a staggered grid with regular grid
+/// The origin of each staggered grid follows the scheme:
+///    ----------
+///   |         |
+///   u    o    |
+///   |  w      |
+///   -----v----
+template <MemoryLocation L> class StaggeredGrid3 : public VectorGrid3<L> {
+public:
+  StaggeredGrid3() {
+    this->uGrid.setOrigin(point3f(-0.5f, 0.0f, 0.0f));
+    this->vGrid.setOrigin(point3f(0.0f, -0.5f, 0.0f));
+    this->wGrid.setOrigin(point3f(0.0f, 0.0f, -0.5f));
+  }
+  /// \param resolution in number of cells
+  /// \param origin (0,0) corner position
+  /// \param dx cell size
+  StaggeredGrid3(vec3u resolution, point3f origin, const vec3f &spacing) {
+    this->uGrid.resize(resolution + vec3u(1, 0, 0));
+    this->uGrid.setOrigin(origin + vec3f(-0.5f, 0.f, 0.f));
+    this->uGrid.setSpacing(spacing);
+    this->vGrid.resize(resolution + vec3u(0, 1, 0));
+    this->vGrid.setOrigin(origin + vec3f(0.f, -0.5f, 0.f));
+    this->vGrid.setSpacing(spacing);
+    this->wGrid.resize(resolution + vec3u(0, 0, 1));
+    this->wGrid.setOrigin(origin + vec3f(0.f, 0.f, -0.5f));
+    this->wGrid.setSpacing(spacing);
+  }
+  /// Changes grid resolution
+  /// \param res new resolution (in number of cells)
+  void resize(vec3u res) override {
+    this->uGrid.resize(res + vec3u(1, 0, 0));
+    this->vGrid.resize(res + vec3u(0, 1, 0));
+    this->wGrid.resize(res + vec3u(0, 0, 1));
+  }
+  /// Changes grid origin position
+  /// \param o in world space
+  void setOrigin(const point3f &o) override {
+    this->uGrid.setOrigin(o + vec3f(-0.5f, 0.f, 0.f));
+    this->vGrid.setOrigin(o + vec3f(0.f, -0.5f, 0.f));
+    this->wGrid.setOrigin(o + vec3f(0.f, 0.f, -0.5f));
+  }
+};
+
 } // namespace cuda
 
 } // namespace hermes

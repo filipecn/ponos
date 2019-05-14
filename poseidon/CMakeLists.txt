@@ -13,8 +13,10 @@ set(POSEIDON_HEADERS
         )
         
 set(POSEIDON_SOURCES
-        poseidon/simulation/cuda_maccormack_integrator.cu
-        poseidon/simulation/cuda_semi_lagrangian_integrator.cu
+        poseidon/simulation/cuda_maccormack_integrator3.cu
+        poseidon/simulation/cuda_maccormack_integrator2.cu
+        poseidon/simulation/cuda_semi_lagrangian_integrator3.cu
+        poseidon/simulation/cuda_semi_lagrangian_integrator2.cu
         poseidon/simulation/cuda_smoke_injector.cu
         poseidon/solvers/cuda_smoke_solver_kernels.cu
         )

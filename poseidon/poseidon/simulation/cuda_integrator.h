@@ -25,6 +25,7 @@
 #ifndef POSEIDON_SIMULATION_CUDA_INTEGRATOR_H
 #define POSEIDON_SIMULATION_CUDA_INTEGRATOR_H
 
+#include <hermes/common/defs.h>
 #include <hermes/numeric/cuda_vector_field.h>
 
 namespace poseidon {
@@ -40,6 +41,17 @@ public:
                       hermes::cuda::GridTexture2<float> &phiOut, float dt) = 0;
 };
 
+class Integrator3 {
+public:
+  virtual void set(hermes::cuda::RegularGrid3Info info) {}
+  virtual void
+  advect(const hermes::cuda::VectorGrid3D &velocity,
+         const hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
+                                          unsigned char> &solid,
+         const hermes::cuda::RegularGrid3Df &phi,
+         hermes::cuda::RegularGrid3Df &phiOut, float dt) = 0;
+};
+
 class SemiLagrangianIntegrator2 : public Integrator2 {
 public:
   SemiLagrangianIntegrator2();
@@ -47,6 +59,17 @@ public:
               const hermes::cuda::GridTexture2<unsigned char> &solid,
               const hermes::cuda::GridTexture2<float> &phi,
               hermes::cuda::GridTexture2<float> &phiOut, float dt) override;
+};
+
+class SemiLagrangianIntegrator3 : public Integrator3 {
+public:
+  SemiLagrangianIntegrator3();
+  void
+  advect(const hermes::cuda::VectorGrid3D &velocity,
+         const hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
+                                          unsigned char> &solid,
+         const hermes::cuda::RegularGrid3Df &phi,
+         hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
 };
 
 class MacCormackIntegrator2 : public Integrator2 {
@@ -61,6 +84,22 @@ public:
 private:
   SemiLagrangianIntegrator2 integrator;
   hermes::cuda::GridTexture2<float> phiNHat, phiN1Hat;
+};
+
+class MacCormackIntegrator3 : public Integrator3 {
+public:
+  MacCormackIntegrator3();
+  void set(hermes::cuda::RegularGrid3Info info);
+  void
+  advect(const hermes::cuda::VectorGrid3D &velocity,
+         const hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
+                                          unsigned char> &solid,
+         const hermes::cuda::RegularGrid3Df &phi,
+         hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
+
+private:
+  SemiLagrangianIntegrator3 integrator;
+  hermes::cuda::RegularGrid3Df phiNHat, phiN1Hat;
 };
 
 } // namespace cuda

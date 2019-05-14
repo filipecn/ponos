@@ -53,6 +53,10 @@ public:
                                  cudaMemcpyDeviceToDevice));
     CUDA_CHECK(cudaGraphicsUnmapResources(1, &cudaResource, 0));
   }
+  void copyFrom(cudaPitchedPtr d_data) {
+    hermes::cuda::copyPitchedToLinear<T>(d_data, d_buffer,
+                                         cudaMemcpyDeviceToDevice, size[2]);
+  }
 
   void bind(GLenum t) {
     glActiveTexture(t);

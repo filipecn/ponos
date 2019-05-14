@@ -25,6 +25,7 @@
 #ifndef POSEIDON_SOLVERS_CUDA_SMOKE_SOLVER_H
 #define POSEIDON_SOLVERS_CUDA_SMOKE_SOLVER_H
 
+#include <hermes/storage/cuda_storage_utils.h>
 #include <ponos/geometry/point.h>
 #include <poseidon/simulation/cuda_integrator.h>
 #include <poseidon/simulation/cuda_scene.h>
@@ -56,7 +57,34 @@ __global__ void __setupScene(poseidon::cuda::Collider2<float> **solids,
   }
 }
 
+__global__ void __setupScene(poseidon::cuda::Collider3<float> **solids,
+                             poseidon::cuda::Collider3<float> **scene) {
+  if (threadIdx.x == 0 && blockIdx.x == 0) {
+    float d = 1.0 / 64;
+    // floor
+    solids[0] = new poseidon::cuda::BoxCollider3<float>(hermes::cuda::bbox3(
+        hermes::cuda::point3(0.f), hermes::cuda::point3(1.f, d, 1.f)));
+    // ceil
+    solids[1] = new poseidon::cuda::BoxCollider3<float>(hermes::cuda::bbox3(
+        hermes::cuda::point3(0.f, 1.f - d, 0.f), hermes::cuda::point3(1.f)));
+    // left
+    solids[2] = new poseidon::cuda::BoxCollider3<float>(hermes::cuda::bbox3(
+        hermes::cuda::point3(0.f), hermes::cuda::point3(d, 1.f, 1.f)));
+    // right
+    solids[3] = new poseidon::cuda::BoxCollider3<float>(
+        hermes::cuda::bbox3(hermes::cuda::point3(1.f - d, 0.f, 1.f - d),
+                            hermes::cuda::point3(1.f)));
+    *scene = new poseidon::cuda::Collider3Set<float>(solids, 4);
+  }
+}
+
 __global__ void __freeScene(poseidon::cuda::Collider2<float> **solids) {
+  if (threadIdx.x == 0 && blockIdx.x == 0)
+    for (int i = 0; i < 5; ++i)
+      delete solids[i];
+}
+
+__global__ void __freeScene(poseidon::cuda::Collider3<float> **solids) {
   if (threadIdx.x == 0 && blockIdx.x == 0)
     for (int i = 0; i < 5; ++i)
       delete solids[i];
@@ -78,6 +106,28 @@ __global__ void __rasterColliders(Collider2<float> *const *colliders,
   }
 }
 
+__global__ void __rasterColliders(Collider3<float> *const *colliders,
+                                  cudaPitchedPtr solids, cudaPitchedPtr u,
+                                  cudaPitchedPtr v, cudaPitchedPtr w,
+                                  hermes::cuda::Grid3Info sInfo) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (x < sInfo.resolution.x && y < sInfo.resolution.y &&
+      z < sInfo.resolution.z) {
+    using namespace hermes::cuda;
+    if ((*colliders)->intersect(sInfo.toWorld(hermes::cuda::point3(x, y, z))))
+      pitchedIndexRef<unsigned int>(solids, x, y, z) = 1;
+    else
+      pitchedIndexRef<unsigned int>(solids, x, y, z) = 0;
+    pitchedIndexRef<float>(u, x, y, z) =
+        pitchedIndexRef<float>(u, x + 1, y, z) = 0;
+    pitchedIndexRef<float>(v, x, y, z) =
+        pitchedIndexRef<float>(v, x, y + 1, z) = 0;
+    pitchedIndexRef<float>(w, x, y, z) =
+        pitchedIndexRef<float>(w, x, y, z + 1) = 0;
+  }
+}
 __global__ void __normalizeIFFT(float *g_data, int width, int height, float N) {
 
   // index = x * height + y
@@ -365,6 +415,159 @@ protected:
   cufftComplex *d_frequenciesU, *d_frequenciesV;
   cufftHandle forwardPlanU, inversePlanU;
   cufftHandle forwardPlanV, inversePlanV;
+};
+
+/// Eulerian grid based solver for smoke simulations. Stores its data in fast
+/// device texture memory.
+template <typename GridType> class GridSmokeSolver3 {
+public:
+  GridSmokeSolver3() = default;
+  ~GridSmokeSolver3() {
+    unbindTextures();
+    __freeScene<<<1, 1>>>(scene.list);
+    using namespace hermes::cuda;
+    CUDA_CHECK(cudaFree(scene.list));
+    CUDA_CHECK(cudaFree(scene.colliders));
+  }
+  void setUIntegrator(Integrator3 *integrator) {
+    uIntegrator_.reset(integrator);
+  }
+  void setVIntegrator(Integrator3 *integrator) {
+    vIntegrator_.reset(integrator);
+  }
+  void setWIntegrator(Integrator3 *integrator) {
+    wIntegrator_.reset(integrator);
+  }
+  void setIntegrator(Integrator3 *_integrator) {
+    integrator_.reset(_integrator);
+  }
+  void init() {
+    // setupTextures();
+    // bindTextures(velocity, velocityCopy, scalarFields[0], divergence,
+    // pressure,
+    //              solid, forceField, solidVelocity);
+    using namespace hermes::cuda;
+    CUDA_CHECK(cudaMalloc(&scene.list, 5 * sizeof(Collider3<float> *)));
+    CUDA_CHECK(cudaMalloc(&scene.colliders, sizeof(Collider3<float> *)));
+  }
+  ///
+  /// \param res
+  void setResolution(const ponos::uivec3 &res) {
+    resolution_ = hermes::cuda::vec3u(res.x, res.y, res.z);
+    velocity_.resize(resolution_);
+    for (auto &f : scalarFields_)
+      f.resize(resolution_);
+    pressure_.resize(resolution_);
+    divergence_.resize(resolution_);
+    solid_.resize(resolution_);
+    solidVelocity_.resize(resolution_);
+    forceField_.resize(resolution_);
+    if (scalarFields_.size())
+      integrator_->set(scalarFields_[0].info());
+    uIntegrator_->set(velocity_.u().info());
+    vIntegrator_->set(velocity_.v().info());
+    wIntegrator_->set(velocity_.w().info());
+  }
+  /// Sets cell size
+  /// \param _dx scale
+  void setSpacing(const ponos::vec3f &s) {
+    spacing_ = hermes::cuda::vec3f(s.x, s.y, s.z);
+    velocity_.setSpacing(spacing_);
+    for (auto &f : scalarFields_)
+      f.setSpacing(spacing_);
+    pressure_.setSpacing(spacing_);
+    divergence_.setSpacing(spacing_);
+    solid_.setSpacing(spacing_);
+    solidVelocity_.setSpacing(spacing_);
+    forceField_.setSpacing(spacing_);
+    if (scalarFields_.size())
+      integrator_->set(scalarFields_[0].info());
+    uIntegrator_->set(velocity_.u().info());
+    vIntegrator_->set(velocity_.v().info());
+    wIntegrator_->set(velocity_.w().info());
+  }
+  /// Sets lower left corner position
+  /// \param o offset
+  void setOrigin(const ponos::point3f &o) {
+    hermes::cuda::point3f p(o.x, o.y, o.z);
+    velocity_.setOrigin(p);
+    for (auto &f : scalarFields_)
+      f.setOrigin(p);
+    pressure_.setOrigin(p);
+    divergence_.setOrigin(p);
+    solid_.setOrigin(p);
+    solidVelocity_.setOrigin(p);
+    forceField_.setOrigin(p);
+    if (scalarFields_.size())
+      integrator_->set(scalarFields_[0].info());
+    uIntegrator_->set(velocity_.u().info());
+    vIntegrator_->set(velocity_.v().info());
+    wIntegrator_->set(velocity_.w().info());
+  }
+  size_t addScalarField() {
+    scalarFields_.emplace_back();
+    return scalarFields_.size() - 1;
+  }
+  /// Advances one simulation step
+  /// \param dt time step
+  void step(float dt) {
+    using namespace hermes::cuda;
+    // rasterColliders();
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // uIntegrator->advect(velocity, solid, velocity.u(), velocity.u(), dt);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // vIntegrator->advect(velocity, solid, velocity.v(), velocity.v(), dt);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // wIntegrator->advect(velocity, solid, velocity.w(), velocity.w(), dt);
+    // velocity.u().texture().updateTextureMemory();
+    // velocity.v().texture().updateTextureMemory();
+    // velocity.w().texture().updateTextureMemory();
+    // for (size_t i = 0; i < scalarFields.size(); i++)
+    //   integrator->advect(velocity, solid, scalarFields[i], scalarFields[i],
+    //   dt);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // applyForceField(velocity, forceField, dt);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // computeDivergence(velocity, solid, divergence);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // computePressure(divergence, solid, pressure, dt, 128);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // projectionStep(pressure, solid, velocity, dt);
+    // CUDA_CHECK(cudaDeviceSynchronize());
+    // hermes::cuda::fill(forceField.u().texture(), 0.0f);
+    // hermes::cuda::fill(forceField.v().texture(), 0.0f);
+  }
+  /// Raster collider bodies and velocities into grid simulations
+  void rasterColliders() {
+    // __setupScene<<<1, 1>>>(scene.list, scene.colliders);
+    // hermes::ThreadArrayDistributionInfo td(resolution);
+    // __rasterColliders<<<td.gridSize, td.blockSize>>>(
+    //     scene.colliders, solid.texture().deviceData(),
+    //     solidVelocity.uDeviceData(), solidVelocity.vDeviceData(),
+    //     solid.info());
+    // solid.texture().updateTextureMemory();
+    // solidVelocity.u().texture().updateTextureMemory();
+    // solidVelocity.v().texture().updateTextureMemory();
+  }
+
+  Scene3<float> scene;
+
+private:
+  std::shared_ptr<Integrator3> wIntegrator_;
+  std::shared_ptr<Integrator3> vIntegrator_;
+  std::shared_ptr<Integrator3> uIntegrator_;
+  std::shared_ptr<Integrator3> integrator_;
+  GridType velocity_;
+  GridType solidVelocity_;
+  GridType forceField_;
+  hermes::cuda::RegularGrid3Df pressure_;
+  hermes::cuda::RegularGrid3Df divergence_;
+  hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
+                             unsigned char>
+      solid_;
+  std::vector<hermes::cuda::RegularGrid3Df> scalarFields_;
+  hermes::cuda::vec3u resolution_;
+  hermes::cuda::vec3f spacing_;
 };
 
 } // namespace cuda

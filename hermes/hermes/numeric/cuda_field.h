@@ -69,6 +69,40 @@ private:
   Texture<T> texture_;
 };
 
+template <typename T> class FieldTexture3 {
+public:
+  FieldTexture3() = default;
+  /// \param toField world to field transform
+  /// \param size texture resolution
+  FieldTexture3(const Transform<float> toField, const vec3u &size)
+      : toField(toField), toWorld(inverse(toField)) {
+    texture_.resize(size[0], size[1], size[2]);
+  }
+  /// \param toFieldTransform world to field transform
+  void setTransform(const Transform<float> toWorldTransform) {
+    toWorld = toWorldTransform;
+    toField = inverse(toWorldTransform);
+  }
+  vec3u resolution() const {
+    return vec3u(texture_.width(), texture_.height(), texture_.depth());
+  }
+  /// \param size texture resolution
+  void resize(const vec3u &size) { texture_.resize(size[0], size[1], size[2]); }
+  /// \return Texture<T>& reference to texture object
+  Texture3<T> &texture() { return texture_; }
+  /// \return const Texture<T>& const reference to texture object
+  const Texture3<T> &texture() const { return texture_; }
+  /// \return const Transform<float, D>& world to field transform
+  const Transform<float> &toFieldTransform() const { return toField; }
+  /// \return const Transform<float, D>& field to world transform
+  const Transform<float> &toWorldTransform() const { return toWorld; }
+
+private:
+  Transform<float> toField;
+  Transform<float> toWorld;
+  Texture3<T> texture_;
+};
+
 } // namespace cuda
 
 } // namespace hermes

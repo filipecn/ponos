@@ -4,7 +4,7 @@ Texture3<T>::Texture3(int w, int h, int d, bool fromDevice, T *data) {
   init();
   if (data) {
     copyLinearToPitched(
-        data, d_data,
+        d_data, data,
         (fromDevice) ? cudaMemcpyDeviceToDevice : cudaMemcpyHostToDevice, d);
   }
 }
@@ -49,6 +49,18 @@ template <typename T> cudaPitchedPtr Texture3<T>::pitchedData() {
 
 template <typename T> size_t Texture3<T>::pitch() const { return d_data.pitch; }
 
+template <typename T> void Texture3<T>::allocateTextureMemory() {
+  releaseTextureMemory();
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
+  CUDA_CHECK(cudaMalloc3DArray(&texArray, &channelDesc, size));
+}
+
+template <typename T> void Texture3<T>::releaseTextureMemory() {
+  if (texArray)
+    cudaFreeArray(texArray);
+  texArray = nullptr;
+}
+
 template <typename T> void Texture3<T>::updateTextureMemory() {
   if (d_data.ptr && texArray) {
     cudaMemcpy3DParms copyParams = {0};
@@ -61,11 +73,9 @@ template <typename T> void Texture3<T>::updateTextureMemory() {
 }
 
 template <typename T> void Texture3<T>::init() {
-  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
   cudaExtent extent =
       make_cudaExtent(size.width * sizeof(T), size.height, size.depth);
   CUDA_CHECK(cudaMalloc3D(&d_data, extent));
-  CUDA_CHECK(cudaMalloc3DArray(&texArray, &channelDesc, size));
 }
 
 template <typename T> void Texture3<T>::clear() {
@@ -78,20 +88,22 @@ template <typename T> void Texture3<T>::clear() {
 template <typename T> void Texture3<T>::copy(const Texture3<T> &other) {
   if (size.width == other.size.width && size.height == other.size.height &&
       size.depth == other.size.depth) {
-    cudaMemcpy3DParms p = {0};
-    p.srcPtr.ptr = other.d_data.ptr;
-    p.srcPtr.pitch = size.height * sizeof(T);
-    p.srcPtr.xsize = size.width;
-    p.srcPtr.ysize = size.height;
-    p.dstPtr.ptr = d_data.ptr;
-    p.dstPtr.pitch = d_data.pitch;
-    p.dstPtr.xsize = size.width;
-    p.dstPtr.ysize = size.height;
-    p.extent.width = size.height * sizeof(T);
-    p.extent.height = size.height;
-    p.extent.depth = size.depth;
-    p.kind = cudaMemcpyDeviceToDevice;
-    CUDA_CHECK(cudaMemcpy3D(&p));
+    copyPitchedToPitched<T>(d_data, other.d_data, cudaMemcpyDeviceToDevice,
+                            size.depth);
+    // cudaMemcpy3DParms p = {0};
+    // p.srcPtr.ptr = other.d_data.ptr;
+    // p.srcPtr.pitch = size.height * sizeof(T);
+    // p.srcPtr.xsize = size.width;
+    // p.srcPtr.ysize = size.height;
+    // p.dstPtr.ptr = d_data.ptr;
+    // p.dstPtr.pitch = d_data.pitch;
+    // p.dstPtr.xsize = size.width;
+    // p.dstPtr.ysize = size.height;
+    // p.extent.width = size.height * sizeof(T);
+    // p.extent.height = size.height;
+    // p.extent.depth = size.depth;
+    // p.kind = cudaMemcpyDeviceToDevice;
+    // CUDA_CHECK(cudaMemcpy3D(&p));
   }
 }
 

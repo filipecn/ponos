@@ -87,6 +87,132 @@ protected:
   GridTexture2<float> uGrid, vGrid;
 };
 
+class VectorGridTexture3 {
+public:
+  VectorGridTexture3() {
+    uGrid.setOrigin(point3f(0.0f));
+    vGrid.setOrigin(point3f(0.0f));
+    wGrid.setOrigin(point3f(0.0f));
+  }
+  /// \param resolution in number of cells
+  /// \param origin (0,0,0) corner position
+  /// \param dx cell size
+  VectorGridTexture3(vec3u resolution, point3f origin, float dx) {
+    uGrid.resize(resolution);
+    uGrid.setOrigin(origin);
+    uGrid.setDx(dx);
+    vGrid.resize(resolution);
+    vGrid.setOrigin(origin);
+    vGrid.setDx(dx);
+    wGrid.resize(resolution);
+    wGrid.setOrigin(origin);
+    wGrid.setDx(dx);
+  }
+  /// Changes grid resolution
+  /// \param res new resolution (in number of cells)
+  virtual void resize(vec3u res) {
+    uGrid.resize(res);
+    vGrid.resize(res);
+    wGrid.resize(res);
+  }
+  /// Changes grid origin position
+  /// \param o in world space
+  virtual void setOrigin(const point3f &o) {
+    uGrid.setOrigin(o);
+    vGrid.setOrigin(o);
+    wGrid.setOrigin(o);
+  }
+  /// Changes grid cell size
+  /// \param d new size
+  virtual void setDx(float d) {
+    uGrid.setDx(d);
+    vGrid.setDx(d);
+    wGrid.setDx(d);
+  }
+  virtual void copy(const VectorGridTexture3 &other) {
+    uGrid.copy(other.uGrid);
+    vGrid.copy(other.vGrid);
+    wGrid.copy(other.wGrid);
+  }
+  virtual float *uDeviceData() { return uGrid.texture().deviceData(); }
+  virtual float *vDeviceData() { return vGrid.texture().deviceData(); }
+  virtual float *wDeviceData() { return wGrid.texture().deviceData(); }
+  virtual const float *uDeviceData() const {
+    return uGrid.texture().deviceData();
+  }
+  virtual const float *vDeviceData() const {
+    return vGrid.texture().deviceData();
+  }
+  virtual const float *wDeviceData() const {
+    return wGrid.texture().deviceData();
+  }
+  virtual const GridTexture3<float> &u() const { return uGrid; }
+  virtual const GridTexture3<float> &v() const { return vGrid; }
+  virtual const GridTexture3<float> &w() const { return wGrid; }
+  virtual GridTexture3<float> &u() { return uGrid; }
+  virtual GridTexture3<float> &v() { return vGrid; }
+  virtual GridTexture3<float> &w() { return wGrid; }
+
+protected:
+  GridTexture3<float> uGrid, vGrid, wGrid;
+};
+
+template <MemoryLocation L> class VectorGrid3 {
+public:
+  VectorGrid3() {
+    uGrid.setOrigin(point3f(0.0f));
+    vGrid.setOrigin(point3f(0.0f));
+    wGrid.setOrigin(point3f(0.0f));
+  }
+  /// \param resolution in number of cells
+  /// \param origin (0,0,0) corner position
+  /// \param spacing cell size
+  VectorGrid3(vec3u resolution, point3f origin, vec3f spacing) {
+    uGrid.resize(resolution);
+    uGrid.setOrigin(origin);
+    uGrid.setSpacing(spacing);
+    vGrid.resize(resolution);
+    vGrid.setOrigin(origin);
+    vGrid.setSpacing(spacing);
+    wGrid.resize(resolution);
+    wGrid.setOrigin(origin);
+    wGrid.setSpacing(spacing);
+  }
+  /// Changes grid resolution
+  /// \param res new resolution (in number of cells)
+  virtual void resize(vec3u res) {
+    uGrid.resize(res);
+    vGrid.resize(res);
+    wGrid.resize(res);
+  }
+  /// Changes grid origin position
+  /// \param o in world space
+  virtual void setOrigin(const point3f &o) {
+    uGrid.setOrigin(o);
+    vGrid.setOrigin(o);
+    wGrid.setOrigin(o);
+  }
+  /// Changes grid cell size
+  /// \param d new size
+  virtual void setSpacing(const vec3f &spacing) {
+    uGrid.setSpacing(spacing);
+    vGrid.setSpacing(spacing);
+    wGrid.setSpacing(spacing);
+  }
+  virtual const RegularGrid3<L, float> &u() const { return uGrid; }
+  virtual const RegularGrid3<L, float> &v() const { return vGrid; }
+  virtual const RegularGrid3<L, float> &w() const { return wGrid; }
+  virtual RegularGrid3<L, float> &u() { return uGrid; }
+  virtual RegularGrid3<L, float> &v() { return vGrid; }
+  virtual RegularGrid3<L, float> &w() { return wGrid; }
+
+protected:
+  RegularGrid3<L, float> uGrid, vGrid, wGrid;
+};
+
+using VectorGrid3D = VectorGrid3<MemoryLocation::DEVICE>;
+using VectorGrid3H = VectorGrid3<MemoryLocation::HOST>;
+
 } // namespace cuda
 
 } // namespace hermes
