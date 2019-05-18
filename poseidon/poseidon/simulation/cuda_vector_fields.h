@@ -5,7 +5,7 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
+ * iM the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
@@ -22,37 +22,22 @@
  *
  */
 
-#ifndef HERMES_STORAGE_CUDA_ARRAY_H
-#define HERMES_STORAGE_CUDA_ARRAY_H
+#ifndef POSEIDON_SIMULATION_CUDA_VECTOR_FIELDS_H
+#define POSEIDON_SIMULATION_CUDA_VECTOR_FIELDS_H
 
-#include <hermes/common/cuda.h>
+#include <hermes/hermes.h>
 
-namespace hermes {
+namespace poseidon {
 
 namespace cuda {
 
-template <typename T> class Array3 {
-public:
-  Array3(hermes::cuda::vec3u size) : size_(size) { allocate(); }
-  ~Array3() {
-    if (array_)
-      cudaFreeArray(array_);
-  }
-  hermes::cuda::vec3u size() const { return size_; }
-  void allocate() {
-    cudaExtent extent = make_cudaExtent(size_.x, size_.y, size_.z);
-    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
-    CUDA_CHECK(cudaMalloc3DArray(&array_, &channelDesc, extent));
-  }
-  cudaArray *data() { return array_; }
+__host__ __device__ hermes::cuda::vec3f
+enrightDeformationField(hermes::cuda::point3f p);
 
-private:
-  hermes::cuda::vec3u size_;
-  cudaArray *array_ = nullptr;
-};
+void applyEnrightDeformationField(hermes::cuda::StaggeredGrid3D &grid);
 
 } // namespace cuda
 
-} // namespace hermes
+} // namespace poseidon
 
-#endif // HERMES_STRUCTURES_CUDA_ARRAY_H
+#endif

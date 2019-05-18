@@ -26,6 +26,7 @@
 #define HERMES_NUMERIC_CUDA_STAGGERED_GRID_H
 
 #include <hermes/numeric/cuda_vector_field.h>
+#include <hermes/storage/cuda_storage_utils.h>
 
 namespace hermes {
 
@@ -83,23 +84,27 @@ public:
     this->vGrid.setOrigin(point3f(0.0f, -0.5f, 0.0f));
     this->wGrid.setOrigin(point3f(0.0f, 0.0f, -0.5f));
   }
-  /// \param resolution in number of cells
-  /// \param origin (0,0) corner position
-  /// \param dx cell size
-  StaggeredGrid3(vec3u resolution, point3f origin, const vec3f &spacing) {
-    this->uGrid.resize(resolution + vec3u(1, 0, 0));
-    this->uGrid.setOrigin(origin + vec3f(-0.5f, 0.f, 0.f));
-    this->uGrid.setSpacing(spacing);
-    this->vGrid.resize(resolution + vec3u(0, 1, 0));
-    this->vGrid.setOrigin(origin + vec3f(0.f, -0.5f, 0.f));
-    this->vGrid.setSpacing(spacing);
-    this->wGrid.resize(resolution + vec3u(0, 0, 1));
-    this->wGrid.setOrigin(origin + vec3f(0.f, 0.f, -0.5f));
-    this->wGrid.setSpacing(spacing);
+  /// \param res resolution in number of cells
+  /// \param o origin (0,0) corner position
+  /// \param s cell size
+  StaggeredGrid3(vec3u res, point3f o, const vec3f &s) {
+    this->origin_ = o;
+    this->resolution_ = res;
+    this->spacing = s;
+    this->uGrid.resize(res + vec3u(1, 0, 0));
+    this->uGrid.setOrigin(o + vec3f(-0.5f, 0.f, 0.f));
+    this->uGrid.setSpacing(s);
+    this->vGrid.resize(res + vec3u(0, 1, 0));
+    this->vGrid.setOrigin(o + vec3f(0.f, -0.5f, 0.f));
+    this->vGrid.setSpacing(s);
+    this->wGrid.resize(res + vec3u(0, 0, 1));
+    this->wGrid.setOrigin(o + vec3f(0.f, 0.f, -0.5f));
+    this->wGrid.setSpacing(s);
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
   void resize(vec3u res) override {
+    this->resolution_ = res;
     this->uGrid.resize(res + vec3u(1, 0, 0));
     this->vGrid.resize(res + vec3u(0, 1, 0));
     this->wGrid.resize(res + vec3u(0, 0, 1));
@@ -107,11 +112,25 @@ public:
   /// Changes grid origin position
   /// \param o in world space
   void setOrigin(const point3f &o) override {
+    this->origin_ = o;
     this->uGrid.setOrigin(o + vec3f(-0.5f, 0.f, 0.f));
     this->vGrid.setOrigin(o + vec3f(0.f, -0.5f, 0.f));
     this->wGrid.setOrigin(o + vec3f(0.f, 0.f, -0.5f));
   }
+  /// Copy data from other staggered grid
+  /// other reference from other field
+  template <MemoryLocation LL> void copy(StaggeredGrid3<LL> &other) {
+    if (other.resolution() != this->resolution())
+      resize(other.resolution());
+    setOrigin(other.origin());
+    this->setSpacing(other.spacing());
+    memcpy(this->uGrid.data(), other.uGrid.data());
+    memcpy(this->vGrid.data(), other.vGrid.data());
+    memcpy(this->wGrid.data(), other.wGrid.data());
+  }
 };
+
+using StaggeredGrid3D = StaggeredGrid3<MemoryLocation::DEVICE>;
 
 } // namespace cuda
 

@@ -59,6 +59,21 @@ void Texture::set(const TextureAttributes &a, const TextureParameters &p) {
   glBindTexture(attributes.target, 0);
 }
 
+void Texture::setTexels(unsigned char *texels) {
+  attributes.data = texels;
+  glBindTexture(parameters.target, textureObject);
+  if (attributes.target == GL_TEXTURE_3D)
+    glTexImage3D(GL_TEXTURE_3D, 0, attributes.internalFormat, attributes.width,
+                 attributes.height, attributes.depth, 0, attributes.format,
+                 attributes.type, attributes.data);
+  else
+    glTexImage2D(GL_TEXTURE_2D, 0, attributes.internalFormat, attributes.width,
+                 attributes.height, 0, attributes.format, attributes.type,
+                 attributes.data);
+  CHECK_GL_ERRORS;
+  glBindTexture(attributes.target, 0);
+}
+
 void Texture::bind(GLenum t) const {
   glActiveTexture(t);
   glBindTexture(attributes.target, textureObject);

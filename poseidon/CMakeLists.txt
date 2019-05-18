@@ -4,21 +4,29 @@ enable_language(CUDA)
 
 set(POSEIDON_HEADERS
         poseidon/poseidon.h
+        poseidon/math/cuda_fd.h
+        poseidon/math/cuda_pcg.h
         poseidon/simulation/cuda_collider.h
         poseidon/simulation/cuda_integrator.h
         poseidon/simulation/cuda_scene.h
         poseidon/simulation/cuda_smoke_injector.h
+        poseidon/simulation/cuda_vector_fields.h
         poseidon/solvers/cuda_smoke_solver.h
         poseidon/solvers/cuda_smoke_solver_kernels.h
+        poseidon/solvers/cuda_smoke_solver3_kernels.h
         )
         
 set(POSEIDON_SOURCES
+        poseidon/math/cuda_fd.cu
+        poseidon/math/cuda_pcg.cu
         poseidon/simulation/cuda_maccormack_integrator3.cu
         poseidon/simulation/cuda_maccormack_integrator2.cu
         poseidon/simulation/cuda_semi_lagrangian_integrator3.cu
         poseidon/simulation/cuda_semi_lagrangian_integrator2.cu
         poseidon/simulation/cuda_smoke_injector.cu
+        poseidon/simulation/cuda_vector_fields.cu
         poseidon/solvers/cuda_smoke_solver_kernels.cu
+        poseidon/solvers/cuda_smoke_solver3_kernels.cu
         )
 
 add_library(poseidon ${POSEIDON_SOURCES} ${POSEIDON_HEADERS})
@@ -33,4 +41,4 @@ target_link_libraries(poseidon PUBLIC ponos hermes)
 
 add_subdirectory(examples/cuda/smoke2d)
 
-    #	add_subdirectory(tests)
+add_subdirectory(tests/unit_tests)

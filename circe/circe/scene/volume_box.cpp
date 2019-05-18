@@ -127,6 +127,7 @@ VolumeBox::VolumeBox(size_t w, size_t h, size_t d, float *data) : VolumeBox() {
   tp[GL_TEXTURE_WRAP_S] = GL_CLAMP_TO_BORDER;
   tp[GL_TEXTURE_WRAP_T] = GL_CLAMP_TO_BORDER;
   tp[GL_TEXTURE_WRAP_R] = GL_CLAMP_TO_BORDER;
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   densityTexture.set(ta, tp);
 }
 
@@ -142,9 +143,9 @@ void VolumeBox::draw(const CameraInterface *camera, ponos::Transform t) {
       ponos::transpose(camera->getProjectionTransform().matrix()));
   shader_->setUniform("cameraPosition", camera->getPosition());
   shader_->setUniform("g_densityTex", 0);
-  shader_->setUniform("g_lightPos", ponos::vec3(0, 0, 0));
-  shader_->setUniform("g_lightIntensity", ponos::vec3(1, 1, 0));
-  shader_->setUniform("g_absorption", 0.5f);
+  shader_->setUniform("g_lightPos", lightPos);
+  shader_->setUniform("g_lightIntensity", lightIntensity);
+  shader_->setUniform("g_absorption", absortion);
   mesh_->bind();
   mesh_->vertexBuffer()->locateAttributes(*shader_.get());
   render(GL_BACK);
@@ -155,6 +156,10 @@ void VolumeBox::draw(const CameraInterface *camera, ponos::Transform t) {
 const Texture &VolumeBox::texture() const { return densityTexture; }
 
 Texture &VolumeBox::texture() { return densityTexture; }
+
+void VolumeBox::update(float *data) {
+  densityTexture.setTexels(reinterpret_cast<unsigned char *>(data));
+}
 
 void VolumeBox::render(GLenum cullFace) {
   glEnable(GL_DEPTH_TEST);

@@ -9,6 +9,7 @@
 #include <hermes/geometry/cuda_point.h>
 #include <hermes/geometry/cuda_transform.h>
 #include <hermes/geometry/cuda_vector.h>
+#include <hermes/numeric/cuda_blas.h>
 #include <hermes/numeric/cuda_field.h>
 #include <hermes/numeric/cuda_grid.h>
 #include <hermes/numeric/cuda_staggered_grid.h>

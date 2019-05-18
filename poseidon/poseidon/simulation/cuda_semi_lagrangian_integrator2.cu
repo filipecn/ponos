@@ -67,9 +67,9 @@ SemiLagrangianIntegrator2::SemiLagrangianIntegrator2() {
 }
 
 void SemiLagrangianIntegrator2::advect(
-    const hermes::cuda::VectorGridTexture2 &velocity,
-    const hermes::cuda::GridTexture2<unsigned char> &solid,
-    const hermes::cuda::GridTexture2<float> &phi,
+    hermes::cuda::VectorGridTexture2 &velocity,
+    hermes::cuda::GridTexture2<unsigned char> &solid,
+    hermes::cuda::GridTexture2<float> &phi,
     hermes::cuda::GridTexture2<float> &phiOut, float dt) {
   using namespace hermes::cuda;
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();

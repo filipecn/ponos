@@ -15,7 +15,7 @@ TEST(StaggeredGridTexture, transform) {
 TEST(RegularGrid, access) {
   { // PITCHED MEMORY
     vec3u res(128);
-    RegularGrid3DPf grid(res);
+    RegularGrid3Df grid(res);
     fill3(grid.data().accessor(), 1.f);
     // // RegularGrid3HLf h_grid(vec3u(8));
     // // memcpy(h_grid.data(), grid.data());

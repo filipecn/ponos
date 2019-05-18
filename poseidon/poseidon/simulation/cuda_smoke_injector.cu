@@ -29,6 +29,7 @@ __global__ void __injectSphere(hermes::cuda::RegularGrid3Accessor<float> acc,
   if (x < acc.resolution().x && y < acc.resolution().y &&
       z < acc.resolution().z) {
     auto cp = acc.worldPosition(x, y, z);
+    acc(x, y, z) = 0;
     if ((cp - center).length2() <= radius2)
       acc(x, y, z) = 1;
   }

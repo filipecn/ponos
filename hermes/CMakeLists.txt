@@ -21,6 +21,7 @@ set(HERMES_HEADERS
         hermes/numeric/cuda_field.h
         hermes/numeric/cuda_vector_field.h
         hermes/numeric/cuda_grid.h
+        hermes/numeric/cuda_grid_kernels.h
         hermes/numeric/cuda_staggered_grid.h
         hermes/parallel/cuda_reduce.h
         hermes/storage/cuda_array.h

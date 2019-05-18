@@ -4,6 +4,22 @@
 #include <hermes/common/cuda.h>
 #include <hermes/hermes.h>
 
+surface<void, cudaSurfaceType3D> surfaceWrite;
+
+template <typename T>
+__global__ void __writeTexture(T *data, hermes::cuda::vec3u size) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+
+  if (x >= size.x || y >= size.y || z >= size.z)
+    return;
+
+  // T element = data[z * size.x * size.y + y * size.y + x];
+  T element = 1;
+  surf3Dwrite(element, surfaceWrite, x * sizeof(T), y, z);
+}
+
 void renderScalarGradient(unsigned int w, unsigned int h,
                           const hermes::cuda::Texture<float> &in,
                           unsigned int *out, float minValue, float maxValue,
@@ -33,28 +49,47 @@ public:
     // Register this texture with CUDA
     CUDA_CHECK(cudaGraphicsGLRegisterImage(
         &cudaResource, textureObjectId, texture.target(),
-        cudaGraphicsRegisterFlagsWriteDiscard));
+        cudaGraphicsRegisterFlagsSurfaceLoadStore));
     using namespace circe;
     CHECK_GL_ERRORS;
   }
   ~CudaGLTextureInterop() {
     if (d_buffer && freeBufferOnDestroy)
       cudaFree(d_buffer);
+    using namespace hermes::cuda;
+    CUDA_CHECK(cudaGraphicsUnregisterResource(cudaResource));
   }
   void sendToTexture() {
+    glBindTexture(GL_TEXTURE_3D, 0);
     using namespace hermes::cuda;
     // Map buffer objects to get CUDA device pointers
     cudaArray *texture_ptr;
     CUDA_CHECK(cudaGraphicsMapResources(1, &cudaResource, 0));
     CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&texture_ptr, cudaResource,
                                                      0, 0));
-    CUDA_CHECK(cudaMemcpyToArray(texture_ptr, 0, 0, d_buffer,
-                                 size.x * size.y * size.z * sizeof(T),
-                                 cudaMemcpyDeviceToDevice));
+    if (target == GL_TEXTURE_3D) {
+      CUDA_CHECK(cudaBindSurfaceToArray(surfaceWrite, texture_ptr));
+      hermes::cuda::vec3u res(size.x, size.y, size.z);
+      hermes::ThreadArrayDistributionInfo td(res);
+      __writeTexture<T><<<td.gridSize, td.blockSize>>>(d_buffer, res);
+      // cudaExtent extent = make_cudaExtent(size.x * sizeof(T), size.y,
+      // size.z); cudaMemcpy3DParms copyParams = {0}; copyParams.srcPtr.ptr =
+      // d_buffer; copyParams.srcPtr.pitch = size.x * sizeof(T);
+      // copyParams.srcPtr.xsize = size.x;
+      // copyParams.srcPtr.ysize = size.y;
+      // copyParams.dstArray = texture_ptr;
+      // copyParams.extent = extent;
+      // copyParams.kind = cudaMemcpyDeviceToDevice;
+      // CUDA_CHECK(cudaMemcpy3D(&copyParams));
+    } else {
+      CUDA_CHECK(cudaMemcpyToArray(texture_ptr, 0, 0, d_buffer,
+                                   size.x * size.y * size.z * sizeof(T),
+                                   cudaMemcpyDeviceToDevice));
+    }
     CUDA_CHECK(cudaGraphicsUnmapResources(1, &cudaResource, 0));
   }
   void copyFrom(cudaPitchedPtr d_data) {
-    hermes::cuda::copyPitchedToLinear<T>(d_data, d_buffer,
+    hermes::cuda::copyPitchedToLinear<T>(d_buffer, d_data,
                                          cudaMemcpyDeviceToDevice, size[2]);
   }
 

@@ -37,6 +37,11 @@ public:
   void draw(const CameraInterface *camera, ponos::Transform t) override;
   const Texture &texture() const;
   Texture &texture();
+  void update(float *data);
+
+  float absortion = 1.f;
+  ponos::vec3 lightIntensity = ponos::vec3(1);
+  ponos::vec3 lightPos = ponos::vec3();
 
 private:
   VolumeBox();

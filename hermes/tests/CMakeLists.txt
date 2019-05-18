@@ -11,6 +11,7 @@ texture.cu
 field.cu
 grids.cu
 memory.cu
+blas.cu
 )
 
 target_link_libraries(hermes_tests gtest pthread hermes )

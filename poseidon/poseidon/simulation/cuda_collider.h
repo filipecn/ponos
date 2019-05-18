@@ -1,6 +1,8 @@
 #ifndef POSEIDON_SIMULATION_CUDA_COLLIDER_H
 #define POSEIDON_SIMULATION_CUDA_COLLIDER_H
 
+#include <hermes/geometry/cuda_bbox.h>
+
 namespace poseidon {
 
 namespace cuda {

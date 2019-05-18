@@ -37,8 +37,8 @@ enum class MemoryLocation { DEVICE, HOST };
 
 class Constants {
 public:
-  static double pi;     // = 3.14159265358979323846f;
-  static double two_pi; // = 6.28318530718
+  __host__ __device__ static double pi() { return 3.14159265358979323846; }
+  __host__ __device__ static double two_pi() { return 6.28318530718; }
   template <typename T> __host__ __device__ static T lowest() {
     return 0xfff0000000000000;
   }
@@ -50,7 +50,7 @@ public:
 class Check {
 public:
   template <typename T> __host__ __device__ static bool isEqual(T a, T b) {
-    return fabs(a - b) < 1e-8;
+    return fabsf(a - b) < 1e-8;
   }
 };
 

@@ -45,6 +45,7 @@ public:
   /// writing it from shaders
   /// \param t texture unit  (ex: GL_TEXTURE0)
   virtual void bindImage(GLenum t) const;
+  void setTexels(unsigned char *texels);
   /// retrieve texture pixel data
   /// \return list of pixels by row major
   std::vector<unsigned char> texels() const;

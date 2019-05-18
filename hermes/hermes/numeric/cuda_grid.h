@@ -55,14 +55,26 @@ struct RegularGrid3Info {
   vec3f spacing;
 };
 
+/// Accessor for arrays stored on the device.
+/// Indices are accessed as: i * width * height + j * height + k
+/// \tparam T data type
 template <typename T> class RegularGrid3Accessor {
 public:
+  /// \param data raw pointer to device data
+  /// \param addressMode **[default = AccessMode::NONE]** accessMode defines how
+  /// outside of bounds is treated
+  /// \param border * * [default = T()]** border
   RegularGrid3Accessor(const RegularGrid3Info &info,
                        MemoryBlock3Accessor<T> data,
                        AddressMode addressMode = AddressMode::CLAMP_TO_EDGE,
                        T border = T(0))
       : info_(info), data_(data), address_mode_(addressMode), border_(border) {}
   __host__ __device__ vec3u resolution() const { return data_.size(); }
+  /// \param i size[0] index
+  /// \param j size[1] index
+  /// \param k size[2] index
+  /// \return T& reference to data (a dummy variable is return in the case of an
+  /// out of bounds index)
   __host__ __device__ T &operator()(int i, int j, int k) {
     switch (address_mode_) {
     case AddressMode::REPEAT:
@@ -91,6 +103,11 @@ public:
     }
     return data_(i, j, k);
   }
+  /// \param i size[0] index
+  /// \param j size[1] index
+  /// \param k size[2] index
+  /// \return const T& reference to data (a dummy variable is return in the case
+  /// of an out of bounds index)
   __host__ __device__ const T &operator()(int i, int j, int k) const {
     switch (address_mode_) {
     case AddressMode::REPEAT:
@@ -120,13 +137,21 @@ public:
   __host__ __device__ point3f worldPosition(int i, int j, int k) {
     return info_.toWorld(point3f(i, j, k));
   }
+  __host__ __device__ point3f gridPosition(const point3f &wp) {
+    return info_.toGrid(wp);
+  }
+  ///
+  __host__ __device__ bool isIndexStored(int i, int j, int k) {
+    return i >= 0 && i < data_.size().x && j >= 0 && j < data_.size().y &&
+           k >= 0 && k < data_.size().z;
+  }
 
 private:
   RegularGrid3Info info_;
   MemoryBlock3Accessor<T> data_;
-  AddressMode address_mode_;
-  T border_;
-  T dummy_;
+  AddressMode address_mode_; //!< defines how out of bounds data is treated
+  T border_;                 //!< border value
+  T dummy_;                  //!< used as out of bounds reference variable
 };
 
 /// Represents a regular grid that can be used in numeric calculations
@@ -146,6 +171,8 @@ public:
     data_.allocate();
   }
   vec3u resolution() const { return info_.resolution; }
+  vec3f spacing() const { return info_.spacing; }
+  point3f origin() const { return info_.origin; }
   /// Changes grid origin position
   /// \param o in world space
   void setOrigin(const point3f &o) {
@@ -181,7 +208,38 @@ private:
 };
 
 using RegularGrid3Df = RegularGrid3<MemoryLocation::DEVICE, float>;
+using RegularGrid3Duc = RegularGrid3<MemoryLocation::DEVICE, unsigned char>;
 using RegularGrid3Hf = RegularGrid3<MemoryLocation::HOST, float>;
+using RegularGrid3Huc = RegularGrid3<MemoryLocation::HOST, unsigned char>;
+
+template <MemoryLocation L, typename T>
+void fill3(RegularGrid3<L, T> &grid, const bbox3f &region, T value,
+           bool overwrite = false);
+
+template <typename T>
+__global__ void __fill3(RegularGrid3Accessor<T> acc, bbox3f region, T value,
+                        bool overwrite) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (acc.isIndexStored(x, y, z)) {
+    auto wp = acc.worldPosition(x, y, z);
+    if (region.contains(wp)) {
+      if (overwrite)
+        acc(x, y, z) = value;
+      else
+        acc(x, y, z) += value;
+    }
+  }
+}
+
+template <typename T>
+void fill3(RegularGrid3<MemoryLocation::DEVICE, T> &grid, const bbox3f &region,
+           T value, bool overwrite = false) {
+  ThreadArrayDistributionInfo td(grid.resolution());
+  __fill3<<<td.gridSize, td.blockSize>>>(grid.accessor(), region, value,
+                                         overwrite);
+}
 
 /// Represents a texture field with position offset and scale
 template <typename T> class GridTexture2 {

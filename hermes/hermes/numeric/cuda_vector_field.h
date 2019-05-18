@@ -164,23 +164,28 @@ public:
     vGrid.setOrigin(point3f(0.0f));
     wGrid.setOrigin(point3f(0.0f));
   }
-  /// \param resolution in number of cells
-  /// \param origin (0,0,0) corner position
-  /// \param spacing cell size
-  VectorGrid3(vec3u resolution, point3f origin, vec3f spacing) {
-    uGrid.resize(resolution);
-    uGrid.setOrigin(origin);
-    uGrid.setSpacing(spacing);
-    vGrid.resize(resolution);
-    vGrid.setOrigin(origin);
-    vGrid.setSpacing(spacing);
-    wGrid.resize(resolution);
-    wGrid.setOrigin(origin);
-    wGrid.setSpacing(spacing);
+  /// \param res resolution in number of cells
+  /// \param o origin (0,0,0) corner position
+  /// \param s spacing cell size
+  VectorGrid3(vec3u res, point3f o, vec3f s)
+      : resolution_(res), origin_(o), spacing_(s) {
+    uGrid.resize(res);
+    uGrid.setOrigin(o);
+    uGrid.setSpacing(s);
+    vGrid.resize(res);
+    vGrid.setOrigin(o);
+    vGrid.setSpacing(s);
+    wGrid.resize(res);
+    wGrid.setOrigin(o);
+    wGrid.setSpacing(s);
   }
+  virtual vec3u resolution() const { return resolution_; }
+  virtual vec3f spacing() const { return spacing_; }
+  virtual point3f origin() const { return origin_; }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
   virtual void resize(vec3u res) {
+    resolution_ = res;
     uGrid.resize(res);
     vGrid.resize(res);
     wGrid.resize(res);
@@ -188,16 +193,18 @@ public:
   /// Changes grid origin position
   /// \param o in world space
   virtual void setOrigin(const point3f &o) {
+    origin_ = o;
     uGrid.setOrigin(o);
     vGrid.setOrigin(o);
     wGrid.setOrigin(o);
   }
   /// Changes grid cell size
   /// \param d new size
-  virtual void setSpacing(const vec3f &spacing) {
-    uGrid.setSpacing(spacing);
-    vGrid.setSpacing(spacing);
-    wGrid.setSpacing(spacing);
+  virtual void setSpacing(const vec3f &s) {
+    spacing_ = s;
+    uGrid.setSpacing(s);
+    vGrid.setSpacing(s);
+    wGrid.setSpacing(s);
   }
   virtual const RegularGrid3<L, float> &u() const { return uGrid; }
   virtual const RegularGrid3<L, float> &v() const { return vGrid; }
@@ -207,6 +214,9 @@ public:
   virtual RegularGrid3<L, float> &w() { return wGrid; }
 
 protected:
+  vec3u resolution_;
+  point3f origin_;
+  vec3f spacing_;
   RegularGrid3<L, float> uGrid, vGrid, wGrid;
 };
 

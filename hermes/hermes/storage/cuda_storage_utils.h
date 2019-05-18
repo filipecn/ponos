@@ -29,6 +29,7 @@
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/common/defs.h>
 #include <hermes/geometry/cuda_vector.h>
+#include <hermes/storage/cuda_array.h>
 #include <iomanip>
 
 namespace hermes {
@@ -129,6 +130,90 @@ void copyLinearToPitched(cudaPitchedPtr pitchedMemory, T *linearMemory,
   CUDA_CHECK(cudaMemcpy3D(&p));
 }
 
+template <typename T>
+void copyPitchedToArray(cudaArray *dst, cudaPitchedPtr src, cudaMemcpyKind kind,
+                        size_t depth) {
+  cudaMemcpy3DParms copyParams = {0};
+  int width = src.xsize / sizeof(T);
+  cudaExtent extent = make_cudaExtent(width, src.ysize, depth);
+  copyParams.srcPtr = src;
+  copyParams.dstArray = dst;
+  copyParams.extent = extent;
+  copyParams.kind = kind;
+  CUDA_CHECK(cudaMemcpy3D(&copyParams));
+}
+
+template <typename T> class MemoryBlock1Accessor {
+public:
+  MemoryBlock1Accessor(T *data, size_t size) : size_(size), data_(data) {}
+  __host__ __device__ size_t size() const { return size_; }
+  __host__ __device__ T &operator[](size_t i) { return data_[i]; }
+  __host__ __device__ const T &operator[](size_t i) const { return data_[i]; }
+  __host__ __device__ bool isIndexValid(int i) const {
+    return i >= 0 && i < (int)size_;
+  }
+
+protected:
+  size_t size_;
+  T *data_ = nullptr;
+};
+
+template <MemoryLocation L, typename T> class MemoryBlock1 {};
+
+template <typename T> class MemoryBlock1<MemoryLocation::DEVICE, T> {
+public:
+  MemoryBlock1(size_t size = 0) : size_(size) {}
+  void resize(size_t size) { size_ = size; }
+  ~MemoryBlock1() {
+    if (data_)
+      cudaFree(data_);
+  }
+  MemoryLocation location() const { return MemoryLocation::DEVICE; }
+  size_t size() const { return size_; }
+  void allocate() {
+    if (data_)
+      cudaFree(data_);
+    CUDA_CHECK(cudaMalloc(&data_, size_ * sizeof(T)));
+  }
+  size_t memorySize() { return size_ * sizeof(T); }
+  T *ptr() { return data_; }
+  const T *ptr() const { return data_; }
+  MemoryBlock1Accessor<T> accessor() {
+    return MemoryBlock1Accessor<T>(data_, size_);
+  }
+
+private:
+  size_t size_;
+  T *data_ = nullptr;
+};
+
+template <typename T> class MemoryBlock1<MemoryLocation::HOST, T> {
+public:
+  MemoryBlock1(size_t size = 0) : size_(size) {}
+  void resize(size_t size) { size_ = size; }
+  ~MemoryBlock1() {
+    if (data_)
+      delete[] data_;
+  }
+  MemoryLocation location() const { return MemoryLocation::HOST; }
+  size_t size() const { return size_; }
+  void allocate() {
+    if (data_)
+      delete[] data_;
+    data_ = new T[size_];
+  }
+  size_t memorySize() { return size_ * sizeof(T); }
+  T *ptr() { return data_; }
+  const T *ptr() const { return data_; }
+  MemoryBlock1Accessor<T> accessor() {
+    return MemoryBlock1Accessor<T>(data_, size_);
+  }
+
+private:
+  size_t size_;
+  T *data_ = nullptr;
+};
+
 template <typename T> class MemoryBlock3Accessor {
 public:
   MemoryBlock3Accessor(T *data, const vec3u &size, size_t pitch)
@@ -142,6 +227,10 @@ public:
     return (T &)(*((char *)data_ + k * (pitch_ * size_.y) + j * pitch_ +
                    i * sizeof(T)));
   }
+  __host__ __device__ bool isIndexValid(int i, int j, int k) const {
+    return i >= 0 && i < (int)size_.x && j >= 0 && j < (int)size_.y && k >= 0 &&
+           k < (int)size_.z;
+  }
 
 protected:
   vec3u size_;
@@ -149,21 +238,7 @@ protected:
   size_t pitch_ = 0;
 };
 
-template <MemoryLocation L, typename T> class MemoryBlock3 {
-  // public:
-  //   MemoryBlock3(const vec3u &size = vec3u()) : size_(size) {}
-  //   MemoryLocation location() const { return L; }
-  //   void resize(const vec3u &size) { size_ = size; }
-  //   size_t dataTypeSize() { return sizeof(T); };
-  //   virtual __host__ __device__ const vec3u &size() const { return size_; }
-  //   virtual void allocate() = 0;
-  //   virtual size_t memorySize() = 0;
-  //   virtual T *ptr() = 0;
-  //   virtual const T *ptr() const = 0;
-
-  // protected:
-  //   vec3u size_;
-};
+template <MemoryLocation L, typename T> class MemoryBlock3 {};
 
 template <typename T> class MemoryBlock3<MemoryLocation::DEVICE, T> {
 public:
@@ -244,24 +319,13 @@ private:
   T *data_ = nullptr;
 };
 
-template <typename T>
-std::ostream &operator<<(std::ostream &os,
-                         MemoryBlock3<MemoryLocation::HOST, T> &data) {
-  std::cerr << "3d MemoryBlock (" << data.size().x << " x " << data.size().y
-            << " x " << data.size().z << ")\n";
-  auto acc = data.accessor();
-  for (int z = 0; z < data.size().z; z++)
-    for (int y = data.size().y - 1; y >= 0; y--) {
-      os << "l[" << y << "] d[" << z << "]: ";
-      for (int x = 0; x < data.size().z; x++)
-        if (std::is_same<T, char>::value ||
-            std::is_same<T, unsigned char>::value)
-          os << (int)acc(x, y, z) << "\t";
-        else
-          os << std::setprecision(6) << acc(x, y, z) << "\t";
-      os << std::endl;
-    }
-  return os;
+template <MemoryLocation A, MemoryLocation B, typename T>
+bool memcpy(MemoryBlock1<A, T> &dst, MemoryBlock1<B, T> &src) {
+  if (dst.size() != src.size())
+    return false;
+  auto kind = copyDirection(src.location(), dst.location());
+  CUDA_CHECK(cudaMemcpy(dst.ptr(), src.ptr(), src.size() * sizeof(T), kind));
+  return true;
 }
 
 template <MemoryLocation A, MemoryLocation B, typename T>
@@ -272,6 +336,73 @@ bool memcpy(MemoryBlock3<A, T> &dst, MemoryBlock3<B, T> &src) {
   copyPitchedToPitched<T>(dst.pitchedData(), src.pitchedData(), kind,
                           dst.size().z);
   return true;
+}
+
+template <MemoryLocation L, typename T>
+bool memcpy(Array3<T> &dst, MemoryBlock3<L, T> &src) {
+  if (dst.size() != src.size())
+    return false;
+  auto kind = copyDirection(src.location(), MemoryLocation::DEVICE);
+  copyPitchedToArray<T>(dst.data(), src.pitchedData(), kind, dst.size().z);
+  return true;
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os,
+                         MemoryBlock1<MemoryLocation::HOST, T> &data) {
+  std::cerr << "1d MemoryBlock (" << data.size() << ")\n";
+  auto acc = data.accessor();
+  for (int x = 0; x < data.size(); x++) {
+    os << "x[" << x << "]:\t";
+    if (std::is_same<T, char>::value || std::is_same<T, unsigned char>::value)
+      os << (int)acc[x] << "\t";
+    else
+      os << std::setprecision(6) << acc[x] << "\t";
+    os << std::endl;
+  }
+  return os;
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os,
+                         MemoryBlock1<MemoryLocation::DEVICE, T> &data) {
+  MemoryBlock1<MemoryLocation::HOST, T> host(data.size());
+  host.allocate();
+  memcpy(host, data);
+  os << host << std::endl;
+  return os;
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os,
+                         MemoryBlock3<MemoryLocation::HOST, T> &data) {
+  std::cerr << "3d MemoryBlock (" << data.size().x << " x " << data.size().y
+            << " x " << data.size().z << ")\n";
+  auto acc = data.accessor();
+  for (int z = 0; z < data.size().z; z++) {
+    for (int y = data.size().y - 1; y >= 0; y--) {
+      os << "y[" << y << "] z[" << z << "]:\t";
+      for (int x = 0; x < data.size().x; x++)
+        if (std::is_same<T, char>::value ||
+            std::is_same<T, unsigned char>::value)
+          os << (int)acc(x, y, z) << "\t";
+        else
+          os << std::setprecision(6) << acc(x, y, z) << "\t";
+      os << std::endl;
+    }
+    os << "==================================================\n";
+  }
+  return os;
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os,
+                         MemoryBlock3<MemoryLocation::DEVICE, T> &data) {
+  MemoryBlock3<MemoryLocation::HOST, T> host(data.size());
+  host.allocate();
+  memcpy(host, data);
+  os << host << std::endl;
+  return os;
 }
 
 template <typename T>
@@ -288,6 +419,28 @@ template <typename T> void fill3(MemoryBlock3Accessor<T> data, T value) {
   ThreadArrayDistributionInfo td(data.size());
   __fill3<T><<<td.gridSize, td.blockSize>>>(data, value);
 }
+
+template <typename T>
+__global__ void __fill1(MemoryBlock1Accessor<T> data, T value) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  auto size = data.size();
+  if (i < size)
+    data[i] = value;
+}
+
+template <typename T> void fill1(MemoryBlock1Accessor<T> data, T value) {
+  ThreadArrayDistributionInfo td(data.size());
+  __fill1<T><<<td.gridSize, td.blockSize>>>(data, value);
+}
+
+using MemoryBlock1Df = MemoryBlock1<MemoryLocation::DEVICE, float>;
+using MemoryBlock1Hf = MemoryBlock1<MemoryLocation::HOST, float>;
+using MemoryBlock3Df = MemoryBlock3<MemoryLocation::DEVICE, float>;
+using MemoryBlock3Hf = MemoryBlock3<MemoryLocation::HOST, float>;
+using MemoryBlock3Di = MemoryBlock3<MemoryLocation::DEVICE, int>;
+using MemoryBlock3Hi = MemoryBlock3<MemoryLocation::HOST, int>;
+using MemoryBlock3Duc = MemoryBlock3<MemoryLocation::DEVICE, unsigned char>;
+using MemoryBlock3Huc = MemoryBlock3<MemoryLocation::HOST, unsigned char>;
 
 } // namespace cuda
 } // namespace hermes
