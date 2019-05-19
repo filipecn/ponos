@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
   hermes::cuda::RegularGrid3Hf volumeData(res);
   app.renderCallback = [&]() {
-    // solver.step(0.01);
+    solver.step(0.01);
     hermes::cuda::memcpy(volumeData.data(), solver.scalarField(0).data());
     cube.update(volumeData.data().ptr());
   };

@@ -160,9 +160,33 @@ protected:
 
 template <MemoryLocation L, typename T> class MemoryBlock1 {};
 
+template <typename T>
+__global__ void __fill1(MemoryBlock1Accessor<T> data, T value) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  auto size = data.size();
+  if (i < size)
+    data[i] = value;
+}
+
+template <typename T> void fill1(MemoryBlock1Accessor<T> data, T value) {
+  ThreadArrayDistributionInfo td(data.size());
+  __fill1<T><<<td.gridSize, td.blockSize>>>(data, value);
+}
+
+template <MemoryLocation L, typename T>
+void fill1(MemoryBlock1<L, T> data, T value) {
+  ThreadArrayDistributionInfo td(data.size());
+  __fill1<T><<<td.gridSize, td.blockSize>>>(data.accessor(), value);
+}
+
 template <typename T> class MemoryBlock1<MemoryLocation::DEVICE, T> {
 public:
   MemoryBlock1(size_t size = 0) : size_(size) {}
+  MemoryBlock1(size_t size, const T &value) : size_(size) {
+    allocate();
+    ThreadArrayDistributionInfo td(size);
+    __fill1<T><<<td.gridSize, td.blockSize>>>(this->accessor(), value);
+  }
   void resize(size_t size) { size_ = size; }
   ~MemoryBlock1() {
     if (data_)
@@ -190,6 +214,10 @@ private:
 template <typename T> class MemoryBlock1<MemoryLocation::HOST, T> {
 public:
   MemoryBlock1(size_t size = 0) : size_(size) {}
+  MemoryBlock1(size_t size, const T &value) : size_(size) {
+    allocate();
+    // TODO: init
+  }
   void resize(size_t size) { size_ = size; }
   ~MemoryBlock1() {
     if (data_)
@@ -420,21 +448,10 @@ template <typename T> void fill3(MemoryBlock3Accessor<T> data, T value) {
   __fill3<T><<<td.gridSize, td.blockSize>>>(data, value);
 }
 
-template <typename T>
-__global__ void __fill1(MemoryBlock1Accessor<T> data, T value) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  auto size = data.size();
-  if (i < size)
-    data[i] = value;
-}
-
-template <typename T> void fill1(MemoryBlock1Accessor<T> data, T value) {
-  ThreadArrayDistributionInfo td(data.size());
-  __fill1<T><<<td.gridSize, td.blockSize>>>(data, value);
-}
-
 using MemoryBlock1Df = MemoryBlock1<MemoryLocation::DEVICE, float>;
 using MemoryBlock1Hf = MemoryBlock1<MemoryLocation::HOST, float>;
+using MemoryBlock1Di = MemoryBlock1<MemoryLocation::DEVICE, int>;
+using MemoryBlock1Hi = MemoryBlock1<MemoryLocation::HOST, int>;
 using MemoryBlock3Df = MemoryBlock3<MemoryLocation::DEVICE, float>;
 using MemoryBlock3Hf = MemoryBlock3<MemoryLocation::HOST, float>;
 using MemoryBlock3Di = MemoryBlock3<MemoryLocation::DEVICE, int>;

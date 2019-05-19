@@ -22,6 +22,7 @@
  *
  */
 
+#include <poseidon/math/cuda_pcg.h>
 #include <poseidon/solvers/cuda_smoke_solver3_kernels.h>
 
 namespace poseidon {
@@ -42,47 +43,6 @@ texture<float, cudaTextureType3D> forceTex3;
 texture<float, cudaTextureType3D> temperatureTex3;
 
 using namespace hermes::cuda;
-/*
-__global__ void __projectionStepU(float *u, hermes::cuda::Grid2Info uInfo,
-                                  float scale) {
-  int x = blockIdx.x * blockDim.x + threadIdx.x;
-  int y = blockIdx.y * blockDim.y + threadIdx.y;
-  int index = y * uInfo.resolution.x + x;
-  if (x < uInfo.resolution.x && y < uInfo.resolution.y) {
-    float xc = x + 0.5;
-    float yc = y + 0.5;
-    if (tex2D(solidTex2, xc - 1, yc))
-      u[index] = tex2D(uSolidTex2, xc - 1, yc);
-    else if (tex2D(solidTex2, xc, yc))
-      u[index] = tex2D(uSolidTex2, xc, yc);
-    else {
-      float l = tex2D(pressureTex2, xc - 1, yc);
-      float r = tex2D(pressureTex2, xc, yc);
-      u[index] -= scale * (r - l);
-    }
-  }
-}
-
-__global__ void __projectionStepV(float *v, hermes::cuda::Grid2Info vInfo,
-                                  float scale) {
-  int x = blockIdx.x * blockDim.x + threadIdx.x;
-  int y = blockIdx.y * blockDim.y + threadIdx.y;
-  int index = y * vInfo.resolution.x + x;
-  if (x < vInfo.resolution.x && y < vInfo.resolution.y) {
-    float xc = x + 0.5;
-    float yc = y + 0.5;
-    if (tex2D(solidTex2, xc, yc - 1))
-      v[index] = tex2D(vSolidTex2, xc, yc - 1);
-    else if (tex2D(solidTex2, xc, yc))
-      v[index] = tex2D(vSolidTex2, xc, yc);
-    else {
-      float b = tex2D(pressureTex2, xc, yc - 1);
-      float t = tex2D(pressureTex2, xc, yc);
-      v[index] -= scale * (t - b);
-    }
-  }
-}
-*/
 
 __global__ void __injectTemperature(RegularGrid3Accessor<float> t,
                                     RegularGrid3Accessor<float> tTarget,
@@ -225,17 +185,17 @@ __global__ void __computeDivergence(RegularGrid3Accessor<float> divergence,
     unsigned char sback = tex3D(solidTex3, xc, yc, zc - 1);
     unsigned char sfront = tex3D(solidTex3, xc, yc, zc + 1);
     if (sleft)
-      left = tex3D(uSolidTex3, xc, yc, zc);
+      left = 0; // tex3D(uSolidTex3, xc, yc, zc);
     if (sright)
-      right = tex3D(uSolidTex3, xc + 1, yc, zc);
+      right = 0; // tex3D(uSolidTex3, xc + 1, yc, zc);
     if (sbottom)
-      bottom = tex3D(vSolidTex3, xc, yc, zc);
+      bottom = 0; // tex3D(vSolidTex3, xc, yc, zc);
     if (stop)
-      top = tex3D(vSolidTex3, xc, yc + 1, zc);
+      top = 0; // tex3D(vSolidTex3, xc, yc + 1, zc);
     if (sback)
-      back = tex3D(wSolidTex3, xc, yc, zc);
+      back = 0; // tex3D(wSolidTex3, xc, yc, zc);
     if (sfront)
-      front = tex3D(wSolidTex3, xc, yc, zc + 1);
+      front = 0; // tex3D(wSolidTex3, xc, yc, zc + 1);
     divergence(x, y, z) =
         dot(invdx, vec3f(right - left, top - bottom, front - back));
   }
@@ -246,11 +206,29 @@ void computeDivergence(
     StaggeredGrid3D &velocity,
     RegularGrid3<MemoryLocation::DEVICE, unsigned char> &solid,
     RegularGrid3Df &divergence) {
+  Array3<float> uArray(velocity.u().resolution());
+  Array3<float> vArray(velocity.v().resolution());
+  Array3<float> wArray(velocity.w().resolution());
+  Array3<unsigned char> sArray(solid.resolution());
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  CUDA_CHECK(cudaBindTextureToArray(uTex3, uArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(vTex3, vArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(wTex3, wArray.data(), channelDesc));
+  channelDesc = cudaCreateChannelDesc<unsigned char>();
+  CUDA_CHECK(cudaBindTextureToArray(solidTex3, sArray.data(), channelDesc));
+  memcpy(uArray, velocity.u().data());
+  memcpy(vArray, velocity.v().data());
+  memcpy(wArray, velocity.w().data());
+  memcpy(sArray, solid.data());
   auto info = divergence.info();
   vec3f inv(1.f / divergence.spacing().x);
   hermes::ThreadArrayDistributionInfo td(divergence.resolution());
   __computeDivergence<<<td.gridSize, td.blockSize>>>(divergence.accessor(),
                                                      inv);
+  cudaUnbindTexture(uTex3);
+  cudaUnbindTexture(vTex3);
+  cudaUnbindTexture(wTex3);
+  cudaUnbindTexture(solidTex3);
 }
 
 __global__ void __fillPressureMatrix(MemoryBlock3Accessor<FDMatrix3Entry> A,
@@ -311,10 +289,22 @@ __global__ void __buildRHS(MemoryBlock3Accessor<int> indices,
   }
 }
 
+__global__ void __1To3(MemoryBlock3Accessor<int> indices,
+                       MemoryBlock1Accessor<float> v,
+                       MemoryBlock3Accessor<float> m) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  int k = blockIdx.z * blockDim.z + threadIdx.z;
+  if (indices.isIndexValid(i, j, k)) {
+    if (indices(i, j, k) >= 0)
+      m(i, j, k) = v[indices(i, j, k)];
+  }
+}
+
 template <>
 size_t setupPressureSystem(RegularGrid3Df &divergence, RegularGrid3Duc &solid,
                            FDMatrix3D &pressureMatrix, float dt,
-                           hermes::cuda::MemoryBlock1Df &rhs) {
+                           MemoryBlock1Df &rhs) {
   // fill matrix
   float scale = dt / (divergence.spacing().x * divergence.spacing().x);
   hermes::ThreadArrayDistributionInfo td(divergence.resolution());
@@ -349,51 +339,115 @@ size_t setupPressureSystem(RegularGrid3Df &divergence, RegularGrid3Duc &solid,
 
 template <>
 void solvePressureSystem(
-    FDMatrix3D &pressureMatrix, RegularGrid3Df &divergence,
-    RegularGrid3Df &pressure,
+    FDMatrix3D &A, RegularGrid3Df &divergence, RegularGrid3Df &pressure,
     RegularGrid3<MemoryLocation::DEVICE, unsigned char> &solid, float dt) {
-
   // setup system
+  MemoryBlock1Df rhs;
+  setupPressureSystem(divergence, solid, A, dt, rhs);
   // apply incomplete Cholesky preconditioner
   // solve system
+  MemoryBlock1Df x(rhs.size(), 0.f);
+  float residual;
+  pcg(x, A, rhs, 100, &residual);
   // store pressure values
+  hermes::ThreadArrayDistributionInfo td(pressure.resolution());
+  __1To3<<<td.gridSize, td.blockSize>>>(A.indexDataAccessor(), x.accessor(),
+                                        pressure.data().accessor());
 }
 
-/*
-void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
-                    const hermes::cuda::GridTexture2<unsigned char>
-&solid, hermes::cuda::StaggeredGridTexture2 &velocity, float dt) {
+__global__ void __projectionStepU(RegularGrid3Accessor<float> u, float scale) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (u.isIndexStored(x, y, z)) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    float zc = z + 0.5;
+    if (tex3D(solidTex3, xc - 1, yc, zc))
+      u(x, y, z) = 0; // tex3D(uSolidTex3, xc - 1, yc, zc);
+    else if (tex3D(solidTex3, xc, yc, zc))
+      u(x, y, z) = 0; // tex3D(uSolidTex3, xc, yc, zc);
+    else {
+      float l = tex3D(pressureTex3, xc - 1, yc, zc);
+      float r = tex3D(pressureTex3, xc, yc, zc);
+      u(x, y, z) -= scale * (r - l);
+    }
+  }
+}
+
+__global__ void __projectionStepV(RegularGrid3Accessor<float> v, float scale) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (v.isIndexStored(x, y, z)) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    float zc = z + 0.5;
+    if (tex3D(solidTex3, xc, yc - 1, zc))
+      v(x, y, z) = 0; // tex3D(vSolidTex3, xc, yc - 1, zc);
+    else if (tex3D(solidTex3, xc, yc, zc))
+      v(x, y, z) = 0; // tex3D(vSolidTex3, xc, yc, zc);
+    else {
+      float b = tex3D(pressureTex3, xc, yc - 1, zc);
+      float t = tex3D(pressureTex3, xc, yc, zc);
+      v(x, y, z) -= scale * (t - b);
+    }
+  }
+}
+
+__global__ void __projectionStepW(RegularGrid3Accessor<float> w, float scale) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (w.isIndexStored(x, y, z)) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    float zc = z + 0.5;
+    if (tex3D(solidTex3, xc, yc, zc - 1))
+      w(x, y, z) = 0; // tex3D(wSolidTex3, xc, yc, zc - 1);
+    else if (tex3D(solidTex3, xc, yc, zc))
+      w(x, y, z) = 0; // tex3D(wSolidTex3, xc, yc, zc);
+    else {
+      float b = tex3D(pressureTex3, xc, yc, zc - 1);
+      float f = tex3D(pressureTex3, xc, yc, zc);
+      w(x, y, z) -= scale * (f - b);
+    }
+  }
+}
+
+template <>
+void projectionStep(RegularGrid3Df &pressure, RegularGrid3Duc &solid,
+                    StaggeredGrid3D &velocity, float dt) {
+  Array3<float> pArray(pressure.resolution());
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  CUDA_CHECK(cudaBindTextureToArray(pressureTex3, pArray.data(), channelDesc));
+  memcpy(pArray, pressure.data());
   {
     auto info = velocity.u().info();
-    float invdx = 1.0 / info.dx;
+    float invdx = 1.0 / info.spacing.x;
     float scale = dt * invdx;
     hermes::ThreadArrayDistributionInfo td(info.resolution);
-    __projectionStepU<<<td.gridSize, td.blockSize>>>(
-        velocity.uDeviceData(), velocity.u().info(), scale);
+    __projectionStepU<<<td.gridSize, td.blockSize>>>(velocity.u().accessor(),
+                                                     scale);
   }
   {
     auto info = velocity.v().info();
-    float invdx = 1.0 / info.dx;
+    float invdx = 1.0 / info.spacing.y;
     float scale = dt * invdx;
     hermes::ThreadArrayDistributionInfo td(info.resolution);
-    __projectionStepV<<<td.gridSize, td.blockSize>>>(
-        velocity.vDeviceData(), velocity.v().info(), scale);
+    __projectionStepV<<<td.gridSize, td.blockSize>>>(velocity.v().accessor(),
+                                                     scale);
   }
-  velocity.u().texture().updateTextureMemory();
-  velocity.v().texture().updateTextureMemory();
+  {
+    auto info = velocity.w().info();
+    float invdx = 1.0 / info.spacing.z;
+    float scale = dt * invdx;
+    hermes::ThreadArrayDistributionInfo td(info.resolution);
+    __projectionStepU<<<td.gridSize, td.blockSize>>>(velocity.w().accessor(),
+                                                     scale);
+  }
+  cudaUnbindTexture(pressureTex3);
 }
-
-void projectionStep(const hermes::cuda::GridTexture2<float> &pressure,
-                    const hermes::cuda::GridTexture2<unsigned char>
-&solid, hermes::cuda::VectorGridTexture2 &velocity, float dt) { auto info
-= velocity.v().info(); float invdx = 1.0 / info.dx; float scale = dt *
-invdx; hermes::ThreadArrayDistributionInfo td(info.resolution);
-  __projectionStep<<<td.gridSize, td.blockSize>>>(velocity.uDeviceData(),
-                                                  velocity.vDeviceData(),
-                                                  velocity.v().info(),
-scale); velocity.u().texture().updateTextureMemory();
-  velocity.v().texture().updateTextureMemory();
-}*/
 
 } // namespace cuda
 

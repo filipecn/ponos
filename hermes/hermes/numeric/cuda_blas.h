@@ -99,16 +99,24 @@ template <typename T> void sub(T *a, T *b, T *c, size_t n) {
 }
 
 // r = dot(a,b)
-inline float dot(MemoryBlock1Df &a, MemoryBlock1Df &b, MemoryBlock1Df &m) {
+template <typename T>
+T dot(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
+      MemoryBlock1<MemoryLocation::DEVICE, T> &b,
+      MemoryBlock1<MemoryLocation::DEVICE, T> &w) {
   return dot(a.ptr(), b.ptr(), a.size());
 }
 // r = a * x + y
-inline void axpy(float a, MemoryBlock1Df &x, MemoryBlock1Df &y,
-                 MemoryBlock1Df &r) {
+template <typename T>
+void axpy(T a, MemoryBlock1<MemoryLocation::DEVICE, T> &x,
+          MemoryBlock1<MemoryLocation::DEVICE, T> &y,
+          MemoryBlock1<MemoryLocation::DEVICE, T> &r) {
   axpy(a, x.ptr(), y.ptr(), r.ptr(), x.size());
 }
 // r = a - b
-inline void sub(MemoryBlock1Df &a, MemoryBlock1Df &b, MemoryBlock1Df &r) {
+template <typename T>
+void sub(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
+         MemoryBlock1<MemoryLocation::DEVICE, T> &b,
+         MemoryBlock1<MemoryLocation::DEVICE, T> &r) {
   sub(a.ptr(), b.ptr(), r.ptr(), a.size());
 }
 

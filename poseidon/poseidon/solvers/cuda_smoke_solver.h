@@ -525,7 +525,6 @@ public:
   /// Advances one simulation step
   /// \param dt time step
   void step(float dt) {
-    using namespace hermes::cuda;
     // rasterColliders();
     // copy velocity fields for velocity advection
     velocityCopy_.copy(velocity_);
@@ -545,11 +544,7 @@ public:
     injectTemperature(scalarFields_[1], scene.target_temperature, dt);
     computeDivergence(velocity_, solid_, divergence_);
     solvePressureSystem(pressureMatrix_, divergence_, pressure_, solid_, dt);
-    // CUDA_CHECK(cudaDeviceSynchronize());
-    // projectionStep(pressure, solid, velocity, dt);
-    // CUDA_CHECK(cudaDeviceSynchronize());
-    // hermes::cuda::fill(forceField.u().texture(), 0.0f);
-    // hermes::cuda::fill(forceField.v().texture(), 0.0f);
+    projectionStep(pressure_, solid_, velocity_, dt);
   }
   /// Raster collider bodies and velocities into grid simulations
   void rasterColliders() {

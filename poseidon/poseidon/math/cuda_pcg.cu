@@ -34,36 +34,30 @@ using namespace hermes::cuda;
 void pcg(MemoryBlock1Df &x, FDMatrix3D &A, MemoryBlock1Df &b,
          size_t maxNumberOfIterations, float *lastResidual) {
   MemoryBlock1Df m;
-  MemoryBlock1Df r(b.size());
-  r.allocate();
-  MemoryBlock1Df d(b.size());
-  d.allocate();
-  MemoryBlock1Df q(b.size());
-  q.allocate();
-  fill1(q.accessor(), 0.f);
-  MemoryBlock1Df s(b.size());
-  s.allocate();
-  fill1(s.accessor(), 0.f);
+  MemoryBlock1Df r(b.size(), 0);
+  MemoryBlock1Df d(b.size(), 0);
+  MemoryBlock1Df q(b.size(), 0);
+  MemoryBlock1Df s(b.size(), 0);
   // r = b - A * x
   mul(A, x, r);
   sub(b, r, r);
   // d = r
   memcpy(d, r);
   // sigma = r '* r
-  double sigma = dot(r, r, m);
-  double tolerance = 1e-6;
-  uint it = 0;
+  float sigma = dot(r, r, m);
+  float tolerance = 1e-6;
+  size_t it = 0;
   while (it < maxNumberOfIterations) {
     // q = Ad
     mul(A, d, q);
     // alpha = sigma / (d '* Ad)
-    double alpha = sigma / dot(d, q, m);
+    float alpha = sigma / dot(d, q, m);
     // x = alpha * d + x
     axpy(alpha, d, x, x);
     // r = r - alpha * Ad
     axpy(-alpha, q, r, r);
     // sigmaNew = r '* r
-    double sigmaNew = dot(r, r, m);
+    float sigmaNew = dot(r, r, m);
     if (sigmaNew < tolerance * tolerance)
       break;
     // d = r + (sigmaNew / sigma) * d

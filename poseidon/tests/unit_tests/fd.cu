@@ -130,3 +130,40 @@ TEST(FDMatrix3, mul) {
   mul(d_A, d_x, d_b);
   std::cerr << d_b << std::endl;
 }
+
+TEST(PCG, fdMatrix) {
+  // 4 1 2 0 3 0 0 0       x       3
+  // 1 4 0 2 0 3 0 0       x       3
+  // 2 0 4 1 0 0 3 0       x       3
+  // 0 2 1 4 0 0 0 3   x   x   =   3
+  // 3 0 0 0 4 1 2 0       x       3
+  // 0 3 0 0 1 4 0 2       x       3
+  // 0 0 3 0 2 0 4 1       x       3
+  // 0 0 0 3 0 2 1 4       x       3
+  vec3u size(2);
+  FDMatrix3H h_A(size);
+  auto haAcc = h_A.accessor();
+  auto iAcc = h_A.indexDataAccessor();
+  int index = 0;
+  for (int k = 0; k < size.z; k++)
+    for (int j = 0; j < size.y; j++)
+      for (int i = 0; i < size.x; i++)
+        iAcc(i, j, k) = index++;
+  for (int k = 0; k < size.z; k++)
+    for (int j = 0; j < size.y; j++)
+      for (int i = 0; i < size.x; i++) {
+        haAcc(i, j, k, i - 1, j, k) = 1;
+        haAcc(i, j, k, i, j - 1, k) = 2;
+        haAcc(i, j, k, i, j, k - 1) = 3;
+        haAcc(i, j, k, i, j, k) = 4;
+        haAcc(i, j, k, i + 1, j, k) = 5;
+        haAcc(i, j, k, i, j + 1, k) = 6;
+        haAcc(i, j, k, i, j, k + 1) = 7;
+      }
+  MemoryBlock1Df d_x(h_A.size(), 0), d_b(h_A.size(), 3);
+  FDMatrix3D d_A(size);
+  d_A.copy(h_A);
+  float residual = 0;
+  pcg(d_x, d_A, d_b, 100, &residual);
+  std::cerr << d_x << std::endl;
+}
