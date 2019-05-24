@@ -432,9 +432,9 @@ protected:
 class GridSmokeSolver3 {
 public:
   GridSmokeSolver3() {
-    uIntegrator_.reset(new MacCormackIntegrator3());
-    vIntegrator_.reset(new MacCormackIntegrator3());
-    wIntegrator_.reset(new MacCormackIntegrator3());
+    uIntegrator_.reset(new SemiLagrangianIntegrator3());
+    vIntegrator_.reset(new SemiLagrangianIntegrator3());
+    wIntegrator_.reset(new SemiLagrangianIntegrator3());
     integrator_.reset(new SemiLagrangianIntegrator3());
     addScalarField(); // 0 density
     addScalarField(); // 1 temperature
@@ -547,43 +547,40 @@ public:
   /// \param dt time step
   void step(float dt) {
     // rasterColliders();
-    // copy velocity fields for velocity advection
-    // velocityCopy_.copy(velocity_);
-    // uIntegrator_->advect(velocityCopy_, solid_, velocity_.u(), velocity_.u(),
-    //                      dt);
-    // vIntegrator_->advect(velocityCopy_, solid_, velocity_.v(), velocity_.v(),
-    //                      dt);
-    // wIntegrator_->advect(velocityCopy_, solid_, velocity_.w(), velocity_.w(),
-    //                      dt);
-    velocity_[dst].copy(velocity_[src]);
-    for (size_t i = 0; i < 1 /*scalarFields_[src].size()*/; i++)
+    uIntegrator_->advect(velocity_[src], solid_, velocity_[src].u(),
+                         velocity_[dst].u(), dt);
+    vIntegrator_->advect(velocity_[src], solid_, velocity_[src].v(),
+                         velocity_[dst].v(), dt);
+    wIntegrator_->advect(velocity_[src], solid_, velocity_[src].w(),
+                         velocity_[dst].w(), dt);
+    for (size_t i = 0; i < scalarFields_[src].size(); i++)
       integrator_->advect(velocity_[dst], solid_, scalarFields_[src][i],
                           scalarFields_[dst][i], dt);
     src = src ? 0 : 1;
     dst = dst ? 0 : 1;
-    return;
+    hermes::cuda::fill3(forceField_.u().data().accessor(), 0.f);
+    hermes::cuda::fill3(forceField_.v().data().accessor(), 0.f);
+    hermes::cuda::fill3(forceField_.w().data().accessor(), 0.f);
     // std::cerr << "AFTESR ADV\n" << scalarFields_[0].data() << std::endl;
     // std::cerr << scalarFields_[1].data() << std::endl;
     // std::cerr << "VELOCITY Vv\n" << velocity_.v().data() << std::endl;
     // std::cerr << "VELOCITY U uu\n" << velocity_.u().data() << std::endl;
     // std::cerr << "VELOCITY Wwww\n" << velocity_.w().data() << std::endl;
-    // computeBuoyancyForceField(forceField_, scalarFields_[0],
-    // scalarFields_[1],
-    //                           273, 10.0, 0.0);
-    // applyForceField(velocity_, forceField_, dt);
-    // computeVorticityConfinementForceField(velocity_, solid_, vorticityField_,
-    //                                       forceField_, 0.f, dt);
-    // applyForceField(velocity_, forceField_, dt);
+    addBuoyancyForce(forceField_, scalarFields_[src][0], scalarFields_[src][1],
+                     273, 10.0f, 0.0f);
+    addVorticityConfinementForce(forceField_, velocity_[src], solid_,
+                                 vorticityField_, 0.f, dt);
+    applyForceField(velocity_[src], forceField_, dt);
     // std::cerr << velocity_.v().data() << std::endl;
     // injectSmoke(scalarFields_[0], scene_.smoke_source, dt);
     // injectTemperature(scalarFields_[1], scene_.target_temperature, dt);
     // std::cerr << "VELOCITY V\n" << velocity_.v().data() << std::endl;
-    // computeDivergence(velocity_, solid_, divergence_);
-    // solvePressureSystem(pressureMatrix_, divergence_, pressure_, solid_, dt);
+    computeDivergence(velocity_[src], solid_, divergence_);
+    solvePressureSystem(pressureMatrix_, divergence_, pressure_, solid_, dt);
     // std::cerr << pressure_.data() << std::endl;
     // std::cerr << pressureMatrix_.indexData() << std::endl;
     // std::cerr << divergence_.data() << std::endl;
-    // projectionStep(pressure_, solid_, velocity_, dt);
+    projectionStep(pressure_, solid_, velocity_[src], dt);
     // computeDivergence(velocity_, solid_, divergence_);
     // std::cerr << "div \n" << divergence_.data() << std::endl;
     // std::cerr << "VELOCITY V\n" << velocity_.v().data() << std::endl;

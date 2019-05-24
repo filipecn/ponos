@@ -177,9 +177,15 @@ public:
   __host__ __device__ vec3f operator()(point3f wp) {
     return vec3f(u_(wp), v_(wp), w_(wp));
   }
-  __host__ __device__ RegularGrid3Accessor<float> &u() { return u_; }
-  __host__ __device__ RegularGrid3Accessor<float> &v() { return v_; }
-  __host__ __device__ RegularGrid3Accessor<float> &w() { return w_; }
+  __host__ __device__ float &u(int i, int j, int k) { return u_(i, j, k); }
+  __host__ __device__ float &v(int i, int j, int k) { return v_(i, j, k); }
+  __host__ __device__ float &w(int i, int j, int k) { return w_(i, j, k); }
+  __host__ __device__ float u(int i, int j, int k) const { return u_(i, j, k); }
+  __host__ __device__ float v(int i, int j, int k) const { return v_(i, j, k); }
+  __host__ __device__ float w(int i, int j, int k) const { return w_(i, j, k); }
+  __host__ __device__ RegularGrid3Accessor<float> &uAccessor() { return u_; }
+  __host__ __device__ RegularGrid3Accessor<float> &vAccessor() { return v_; }
+  __host__ __device__ RegularGrid3Accessor<float> &wAccessor() { return w_; }
 
   const vec3u resolution;
   const vec3f spacing;

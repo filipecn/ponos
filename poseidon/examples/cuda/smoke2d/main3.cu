@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   solver.setResolution(resolution);
   solver.init();
   // solver.rasterColliders();
-  poseidon::cuda::applyEnrightDeformationField(solver.velocity());
+  // poseidon::cuda::applyEnrightDeformationField(solver.velocity());
   // hermes::cuda::fill3(solver.velocity().w(), hermes::cuda::bbox3f::unitBox(),
   //                     1.f);
   // hermes::cuda::fill3(solver.velocity().v(), hermes::cuda::bbox3f::unitBox(),
@@ -109,8 +109,7 @@ int main(int argc, char **argv) {
 
   hermes::cuda::RegularGrid3Hf volumeData(res);
   app.renderCallback = [&]() {
-    solver.step(0.001);
-    // exit(-1);
+    solver.step(0.01);
     hermes::cuda::memcpy(volumeData.data(), solver.scalarField(0).data());
     // hermes::cuda::memcpy(volumeData.data(), sampledData.data());
     cube.update(volumeData.data().ptr());
