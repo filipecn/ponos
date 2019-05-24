@@ -31,6 +31,8 @@ enum class AddressMode { REPEAT, CLAMP_TO_EDGE, BORDER, WRAP, MIRROR, NONE };
 
 enum class FilterMode { LINEAR, POINT };
 
+enum class InterpolationMode { LINEAR, MONOTONIC_CUBIC };
+
 namespace cuda {
 
 enum class MemoryLocation { DEVICE, HOST };

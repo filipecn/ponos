@@ -432,16 +432,18 @@ protected:
 class GridSmokeSolver3 {
 public:
   GridSmokeSolver3() {
-    uIntegrator_.reset(new SemiLagrangianIntegrator3());
-    vIntegrator_.reset(new SemiLagrangianIntegrator3());
-    wIntegrator_.reset(new SemiLagrangianIntegrator3());
+    uIntegrator_.reset(new MacCormackIntegrator3());
+    vIntegrator_.reset(new MacCormackIntegrator3());
+    wIntegrator_.reset(new MacCormackIntegrator3());
     integrator_.reset(new SemiLagrangianIntegrator3());
+    addScalarField(); // 0 density
+    addScalarField(); // 1 temperature
   }
   ~GridSmokeSolver3() {
-    __freeScene<<<1, 1>>>(scene.list);
+    __freeScene<<<1, 1>>>(scene_.list);
     using namespace hermes::cuda;
-    CUDA_CHECK(cudaFree(scene.list));
-    CUDA_CHECK(cudaFree(scene.colliders));
+    CUDA_CHECK(cudaFree(scene_.list));
+    CUDA_CHECK(cudaFree(scene_.colliders));
   }
   void setUIntegrator(Integrator3 *integrator) {
     uIntegrator_.reset(integrator);
@@ -457,132 +459,170 @@ public:
   }
   void init() {
     using namespace hermes::cuda;
-    CUDA_CHECK(cudaMalloc(&scene.list, 6 * sizeof(Collider3<float> *)));
-    CUDA_CHECK(cudaMalloc(&scene.colliders, sizeof(Collider3<float> *)));
+    CUDA_CHECK(cudaMalloc(&scene_.list, 6 * sizeof(Collider3<float> *)));
+    CUDA_CHECK(cudaMalloc(&scene_.colliders, sizeof(Collider3<float> *)));
+    hermes::cuda::fill3(scene_.target_temperature.data().accessor(), 273.f);
+    hermes::cuda::fill3(scene_.smoke_source.data().accessor(),
+                        (unsigned char)0);
+    for (size_t i = 0; i < 2; i++) {
+      hermes::cuda::fill3(velocity_[i].u().data().accessor(), 0.f);
+      hermes::cuda::fill3(velocity_[i].v().data().accessor(), 0.f);
+      hermes::cuda::fill3(velocity_[i].w().data().accessor(), 0.f);
+      hermes::cuda::fill3(scalarFields_[i][0].data().accessor(), 0.f);
+      hermes::cuda::fill3(scalarFields_[i][1].data().accessor(), 273.f);
+    }
+    hermes::cuda::fill3(vorticityField_.u().data().accessor(), 0.f);
+    hermes::cuda::fill3(vorticityField_.v().data().accessor(), 0.f);
+    hermes::cuda::fill3(vorticityField_.w().data().accessor(), 0.f);
   }
   ///
   /// \param res
   void setResolution(const ponos::uivec3 &res) {
     resolution_ = hermes::cuda::vec3u(res.x, res.y, res.z);
-    velocity_.resize(resolution_);
-    velocityCopy_.resize(resolution_);
-    for (auto &f : scalarFields_)
-      f.resize(resolution_);
+    for (size_t i = 0; i < 2; i++) {
+      velocity_[i].resize(resolution_);
+      for (auto &f : scalarFields_[i])
+        f.resize(resolution_);
+    }
+    vorticityField_.resize(resolution_);
     pressure_.resize(resolution_);
     divergence_.resize(resolution_);
     solid_.resize(resolution_);
     solidVelocity_.resize(resolution_);
     forceField_.resize(resolution_);
-    if (scalarFields_.size())
-      integrator_->set(scalarFields_[0].info());
-    uIntegrator_->set(velocity_.u().info());
-    vIntegrator_->set(velocity_.v().info());
-    wIntegrator_->set(velocity_.w().info());
+    integrator_->set(scalarFields_[0][0].info());
+    uIntegrator_->set(velocity_[0].u().info());
+    vIntegrator_->set(velocity_[0].v().info());
+    wIntegrator_->set(velocity_[0].w().info());
     pressureMatrix_.resize(resolution_);
+    scene_.resize(resolution_);
   }
   /// Sets cell size
   /// \param _dx scale
   void setSpacing(const ponos::vec3f &s) {
     spacing_ = hermes::cuda::vec3f(s.x, s.y, s.z);
-    velocity_.setSpacing(spacing_);
-    velocityCopy_.setSpacing(spacing_);
-    for (auto &f : scalarFields_)
-      f.setSpacing(spacing_);
+    for (size_t i = 0; i < 2; i++) {
+      velocity_[i].setSpacing(spacing_);
+      for (auto &f : scalarFields_[i])
+        f.setSpacing(spacing_);
+    }
+    vorticityField_.setSpacing(spacing_);
     pressure_.setSpacing(spacing_);
     divergence_.setSpacing(spacing_);
     solid_.setSpacing(spacing_);
     solidVelocity_.setSpacing(spacing_);
     forceField_.setSpacing(spacing_);
-    if (scalarFields_.size())
-      integrator_->set(scalarFields_[0].info());
-    uIntegrator_->set(velocity_.u().info());
-    vIntegrator_->set(velocity_.v().info());
-    wIntegrator_->set(velocity_.w().info());
+    integrator_->set(scalarFields_[0][0].info());
+    uIntegrator_->set(velocity_[0].u().info());
+    vIntegrator_->set(velocity_[0].v().info());
+    wIntegrator_->set(velocity_[0].w().info());
+    scene_.setSpacing(spacing_);
   }
   /// Sets lower left corner position
   /// \param o offset
   void setOrigin(const ponos::point3f &o) {
     hermes::cuda::point3f p(o.x, o.y, o.z);
-    velocity_.setOrigin(p);
-    velocityCopy_.setOrigin(p);
-    for (auto &f : scalarFields_)
-      f.setOrigin(p);
+    for (size_t i = 0; i < 2; i++) {
+      velocity_[i].setOrigin(p);
+      for (auto &f : scalarFields_[i])
+        f.setOrigin(p);
+    }
+    vorticityField_.setOrigin(p);
     pressure_.setOrigin(p);
     divergence_.setOrigin(p);
     solid_.setOrigin(p);
     solidVelocity_.setOrigin(p);
     forceField_.setOrigin(p);
-    if (scalarFields_.size())
-      integrator_->set(scalarFields_[0].info());
-    uIntegrator_->set(velocity_.u().info());
-    vIntegrator_->set(velocity_.v().info());
-    wIntegrator_->set(velocity_.w().info());
+    integrator_->set(scalarFields_[0][0].info());
+    uIntegrator_->set(velocity_[0].u().info());
+    vIntegrator_->set(velocity_[0].v().info());
+    wIntegrator_->set(velocity_[0].w().info());
   }
   size_t addScalarField() {
-    scalarFields_.emplace_back();
-    return scalarFields_.size() - 1;
+    scalarFields_[src].emplace_back();
+    scalarFields_[dst].emplace_back();
+    return scalarFields_[src].size() - 1;
   }
   /// Advances one simulation step
   /// \param dt time step
   void step(float dt) {
     // rasterColliders();
     // copy velocity fields for velocity advection
-    velocityCopy_.copy(velocity_);
-    uIntegrator_->advect(velocityCopy_, solid_, velocity_.u(), velocity_.u(),
-                         dt);
-    vIntegrator_->advect(velocityCopy_, solid_, velocity_.v(), velocity_.v(),
-                         dt);
-    wIntegrator_->advect(velocityCopy_, solid_, velocity_.w(), velocity_.w(),
-                         dt);
-    for (size_t i = 0; i < scalarFields_.size(); i++)
-      integrator_->advect(velocity_, solid_, scalarFields_[i], scalarFields_[i],
-                          dt);
-    // applyForceField(velocity, forceField, dt);
-    applyBuoyancyForceField(velocity_, scalarFields_[0], scalarFields_[1], 273,
-                            20.0, 0.0, dt);
-    injectSmoke(scalarFields_[0], scene.smoke_source, dt);
-    injectTemperature(scalarFields_[1], scene.target_temperature, dt);
-    computeDivergence(velocity_, solid_, divergence_);
-    solvePressureSystem(pressureMatrix_, divergence_, pressure_, solid_, dt);
-    projectionStep(pressure_, solid_, velocity_, dt);
+    // velocityCopy_.copy(velocity_);
+    // uIntegrator_->advect(velocityCopy_, solid_, velocity_.u(), velocity_.u(),
+    //                      dt);
+    // vIntegrator_->advect(velocityCopy_, solid_, velocity_.v(), velocity_.v(),
+    //                      dt);
+    // wIntegrator_->advect(velocityCopy_, solid_, velocity_.w(), velocity_.w(),
+    //                      dt);
+    velocity_[dst].copy(velocity_[src]);
+    for (size_t i = 0; i < 1 /*scalarFields_[src].size()*/; i++)
+      integrator_->advect(velocity_[dst], solid_, scalarFields_[src][i],
+                          scalarFields_[dst][i], dt);
+    src = src ? 0 : 1;
+    dst = dst ? 0 : 1;
+    return;
+    // std::cerr << "AFTESR ADV\n" << scalarFields_[0].data() << std::endl;
+    // std::cerr << scalarFields_[1].data() << std::endl;
+    // std::cerr << "VELOCITY Vv\n" << velocity_.v().data() << std::endl;
+    // std::cerr << "VELOCITY U uu\n" << velocity_.u().data() << std::endl;
+    // std::cerr << "VELOCITY Wwww\n" << velocity_.w().data() << std::endl;
+    // computeBuoyancyForceField(forceField_, scalarFields_[0],
+    // scalarFields_[1],
+    //                           273, 10.0, 0.0);
+    // applyForceField(velocity_, forceField_, dt);
+    // computeVorticityConfinementForceField(velocity_, solid_, vorticityField_,
+    //                                       forceField_, 0.f, dt);
+    // applyForceField(velocity_, forceField_, dt);
+    // std::cerr << velocity_.v().data() << std::endl;
+    // injectSmoke(scalarFields_[0], scene_.smoke_source, dt);
+    // injectTemperature(scalarFields_[1], scene_.target_temperature, dt);
+    // std::cerr << "VELOCITY V\n" << velocity_.v().data() << std::endl;
+    // computeDivergence(velocity_, solid_, divergence_);
+    // solvePressureSystem(pressureMatrix_, divergence_, pressure_, solid_, dt);
+    // std::cerr << pressure_.data() << std::endl;
+    // std::cerr << pressureMatrix_.indexData() << std::endl;
+    // std::cerr << divergence_.data() << std::endl;
+    // projectionStep(pressure_, solid_, velocity_, dt);
+    // computeDivergence(velocity_, solid_, divergence_);
+    // std::cerr << "div \n" << divergence_.data() << std::endl;
+    // std::cerr << "VELOCITY V\n" << velocity_.v().data() << std::endl;
+    // std::cerr << "VELOCITY U\n" << velocity_.u().data() << std::endl;
+    // std::cerr << "VELOCITY_W\n" << velocity_.w().data() << std::endl;
   }
   /// Raster collider bodies and velocities into grid simulations
   void rasterColliders() {
-    __setupScene<<<1, 1>>>(scene.list, scene.colliders, resolution_.x);
+    __setupScene<<<1, 1>>>(scene_.list, scene_.colliders, resolution_.x);
     hermes::ThreadArrayDistributionInfo td(resolution_);
     __rasterColliders<<<td.gridSize, td.blockSize>>>(
-        scene.colliders, solid_.accessor(), solidVelocity_.u().accessor(),
+        scene_.colliders, solid_.accessor(), solidVelocity_.u().accessor(),
         solidVelocity_.v().accessor(), solidVelocity_.w().accessor());
   }
+  Scene3<float> &scene() { return scene_; }
   hermes::cuda::RegularGrid3Df &scalarField(size_t i) {
-    return scalarFields_[i];
+    return scalarFields_[src][i];
   }
-  hermes::cuda::StaggeredGrid3D &velocity() { return velocity_; }
-  hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                             unsigned char> &
-  solid() {
-    return solid_;
-  }
-
-  Scene3<float> scene;
+  hermes::cuda::StaggeredGrid3D &velocity() { return velocity_[src]; }
+  hermes::cuda::RegularGrid3Duc &solid() { return solid_; }
 
 private:
+  Scene3<float> scene_;
   std::shared_ptr<Integrator3> wIntegrator_;
   std::shared_ptr<Integrator3> vIntegrator_;
   std::shared_ptr<Integrator3> uIntegrator_;
   std::shared_ptr<Integrator3> integrator_;
   poseidon::cuda::FDMatrix3D pressureMatrix_;
-  hermes::cuda::StaggeredGrid3D velocity_, velocityCopy_;
+  hermes::cuda::StaggeredGrid3D velocity_[2];
   hermes::cuda::StaggeredGrid3D solidVelocity_;
-  hermes::cuda::VectorGrid3D forceField_;
+  hermes::cuda::VectorGrid3D forceField_, vorticityField_;
   hermes::cuda::RegularGrid3Df pressure_;
   hermes::cuda::RegularGrid3Df divergence_;
-  hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                             unsigned char>
-      solid_;
-  std::vector<hermes::cuda::RegularGrid3Df> scalarFields_;
+  hermes::cuda::RegularGrid3Duc solid_;
+  std::vector<hermes::cuda::RegularGrid3Df> scalarFields_[2];
   hermes::cuda::vec3u resolution_;
   hermes::cuda::vec3f spacing_;
+  size_t src = 0;
+  size_t dst = 1;
 };
 
 } // namespace cuda

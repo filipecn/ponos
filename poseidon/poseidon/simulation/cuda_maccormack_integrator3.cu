@@ -28,6 +28,8 @@ namespace poseidon {
 
 namespace cuda {
 
+using namespace hermes::cuda;
+
 texture<float, cudaTextureType3D> uTex3;
 texture<float, cudaTextureType3D> vTex3;
 texture<float, cudaTextureType3D> wTex3;
@@ -36,11 +38,9 @@ texture<float, cudaTextureType3D> phiNHatTex3;
 texture<float, cudaTextureType3D> phiN1HatTex3;
 texture<unsigned char, cudaTextureType3D> solidTex3;
 
-__global__ void __computePhiN1(hermes::cuda::RegularGrid3Accessor<float> phi,
-                               hermes::cuda::RegularGrid3Info uInfo,
-                               hermes::cuda::RegularGrid3Info vInfo,
-                               hermes::cuda::RegularGrid3Info wInfo, float dt) {
-  using namespace hermes::cuda;
+__global__ void __computePhiN1_t(RegularGrid3Accessor<float> phi,
+                                 RegularGrid3Info uInfo, RegularGrid3Info vInfo,
+                                 RegularGrid3Info wInfo, float dt) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   int z = blockIdx.z * blockDim.z + threadIdx.z;
@@ -94,6 +94,56 @@ __global__ void __computePhiN1(hermes::cuda::RegularGrid3Accessor<float> phi,
   }
 }
 
+__global__ void __computePhiN1(StaggeredGrid3Accessor vel,
+                               RegularGrid3Accessor<unsigned char> solid,
+                               RegularGrid3Accessor<float> phiNHat,
+                               RegularGrid3Accessor<float> phiN1Hat,
+                               RegularGrid3Accessor<float> in,
+                               RegularGrid3Accessor<float> out, float dt) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  int k = blockIdx.z * blockDim.z + threadIdx.z;
+  if (in.isIndexStored(i, j, k)) {
+    if (solid(i, j, k)) {
+      out(i, j, k) = 0;
+      return;
+    }
+    vec3f v = vel(i, j, k);
+    point3f p = in.worldPosition(i, j, k);
+    point3f npos = in.gridPosition(p - v * dt);
+    point3i pos(npos.x, npos.y, npos.z);
+    float nodeValues[8];
+    nodeValues[0] = in(pos.x, pos.y, pos.z);
+    nodeValues[1] = in(pos.x + 1, pos.y, pos.z);
+    nodeValues[2] = in(pos.x + 1, pos.y + 1, pos.z);
+    nodeValues[3] = in(pos.x, pos.y + 1, pos.z);
+    nodeValues[4] = in(pos.x, pos.y, pos.z + 1);
+    nodeValues[5] = in(pos.x + 1, pos.y, pos.z + 1);
+    nodeValues[6] = in(pos.x + 1, pos.y + 1, pos.z + 1);
+    nodeValues[7] = in(pos.x, pos.y + 1, pos.z + 1);
+    float phiMin =
+        min(nodeValues[7],
+            min(nodeValues[6],
+                min(nodeValues[5],
+                    min(nodeValues[4],
+                        min(nodeValues[3],
+                            min(nodeValues[2],
+                                min(nodeValues[0], nodeValues[1])))))));
+    float phiMax =
+        max(nodeValues[7],
+            max(nodeValues[6],
+                max(nodeValues[5],
+                    max(nodeValues[4],
+                        max(nodeValues[3],
+                            max(nodeValues[2],
+                                max(nodeValues[0], nodeValues[1])))))));
+
+    out(i, j, k) = phiN1Hat(npos.x, npos.y, npos.z) +
+                   0.5 * (in(i, j, k) - phiNHat(i, j, k));
+    out(i, j, k) = max(min(out(i, j, k), phiMax), phiMin);
+  }
+}
+
 MacCormackIntegrator3::MacCormackIntegrator3() {
   uTex3.filterMode = cudaFilterModeLinear;
   uTex3.normalized = 0;
@@ -123,22 +173,34 @@ void MacCormackIntegrator3::set(hermes::cuda::RegularGrid3Info info) {
   integrator.set(info);
 }
 
-void MacCormackIntegrator3::advect(
-    hermes::cuda::VectorGrid3D &velocity,
-    hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                               unsigned char> &solid,
-    hermes::cuda::RegularGrid3Df &phi, hermes::cuda::RegularGrid3Df &phiOut,
-    float dt) {
-  using namespace hermes::cuda;
+void MacCormackIntegrator3::advect(StaggeredGrid3D &velocity,
+                                   RegularGrid3Duc &solid, RegularGrid3Df &phi,
+                                   RegularGrid3Df &phiOut, float dt) {
 
   // phi^_n+1 = A(phi_n)
   integrator.advect(velocity, solid, phi, phiN1Hat, dt);
+  // phi^_n = Ar(phi^_n+1)
+  integrator.advect(velocity, solid, phiN1Hat, phiNHat, -dt);
+  // phi_n+1 = phi^_n+1 + 0.5 * (phi_n - phi^_n)
+  hermes::ThreadArrayDistributionInfo td(phi.resolution());
+  __computePhiN1<<<td.gridSize, td.blockSize>>>(
+      velocity.accessor(), solid.accessor(), phiNHat.accessor(),
+      phiN1Hat.accessor(), phi.accessor(), phiOut.accessor(), dt);
+}
+
+void MacCormackIntegrator3::advect_t(VectorGrid3D &velocity,
+                                     RegularGrid3Duc &solid,
+                                     RegularGrid3Df &phi,
+                                     RegularGrid3Df &phiOut, float dt) {
+
+  // phi^_n+1 = A(phi_n)
+  integrator.advect_t(velocity, solid, phi, phiN1Hat, dt);
   Array3<float> phiN1HatArray(phiN1Hat.resolution());
   memcpy(phiN1HatArray, phiN1Hat.data());
   CUDA_CHECK(cudaDeviceSynchronize());
 
   // phi^_n = Ar(phi^_n+1)
-  integrator.advect(velocity, solid, phiN1Hat, phiNHat, -dt);
+  integrator.advect_t(velocity, solid, phiN1Hat, phiNHat, -dt);
   Array3<float> phiNHatArray(phiNHat.resolution());
   memcpy(phiNHatArray, phiNHat.data());
   CUDA_CHECK(cudaDeviceSynchronize());
@@ -167,7 +229,7 @@ void MacCormackIntegrator3::advect(
 
   // phi_n+1 = phi^_n+1 + 0.5 * (phi_n - phi^_n)
   hermes::ThreadArrayDistributionInfo td(phi.resolution());
-  __computePhiN1<<<td.gridSize, td.blockSize>>>(
+  __computePhiN1_t<<<td.gridSize, td.blockSize>>>(
       phiOut.accessor(), velocity.u().info(), velocity.v().info(),
       velocity.w().info(), dt);
   CUDA_CHECK(cudaDeviceSynchronize());

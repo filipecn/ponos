@@ -22,27 +22,35 @@
  *
  */
 
-#ifndef POEIDON_MATH_CUDA_PCG_H
-#define POEIDON_MATH_CUDA_PCG_H
+#include <hermes/numeric/cuda_vector_field.h>
 
-#include <poseidon/math/cuda_fd.h>
-
-namespace poseidon {
+namespace hermes {
 
 namespace cuda {
 
-void mic0(hermes::cuda::MemoryBlock1Hd &precon, FDMatrix3H &A, double tal,
-          double sigma);
-// z = Mr
-void applyMIC0(FDMatrix3H &h_A, hermes::cuda::MemoryBlock1Hd &precon,
-               hermes::cuda::MemoryBlock1Hd &r,
-               hermes::cuda::MemoryBlock1Hd &z);
+// __global__ void __fill3(VectorGrid3Accessor acc, bbox3f region, vec3f value,
+//                         bool overwrite) {
+//   int x = blockIdx.x * blockDim.x + threadIdx.x;
+//   int y = blockIdx.y * blockDim.y + threadIdx.y;
+//   int z = blockIdx.z * blockDim.z + threadIdx.z;
+//   if (acc.isIndexStored(x, y, z)) {
+//     auto wp = acc.worldPosition(x, y, z);
+//     if (region.contains(wp)) {
+//       if (overwrite)
+//         acc(x, y, z) = value;
+//       else
+//         acc(x, y, z) += value;
+//     }
+//   }
+// }
 
-void pcg(hermes::cuda::MemoryBlock1Dd &x, FDMatrix3D &A,
-         hermes::cuda::MemoryBlock1Dd &rhs, size_t m, float tol);
+// template <>
+// void fill3(VectorGrid3D &grid, const bbox3f &region, vec3f value,
+//            bool overwrite) {
+//   ThreadArrayDistributionInfo td(grid.resolution());
+//   __fill3<<<td.gridSize, td.blockSize>>>(grid.accessor(), region, value,
+//                                          overwrite);
+// }
 
 } // namespace cuda
-
-} // namespace poseidon
-
-#endif
+} // namespace hermes

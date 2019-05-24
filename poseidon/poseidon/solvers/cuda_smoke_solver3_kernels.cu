@@ -29,9 +29,9 @@ namespace poseidon {
 
 namespace cuda {
 
-texture<float, cudaTextureType3D> uTex3, uCopyTex3;
-texture<float, cudaTextureType3D> vTex3, vCopyTex3;
-texture<float, cudaTextureType3D> wTex3, wCopyTex3;
+texture<float, cudaTextureType3D> uTex3, uCopyTex3, wuTex3;
+texture<float, cudaTextureType3D> vTex3, vCopyTex3, wvTex3;
+texture<float, cudaTextureType3D> wTex3, wCopyTex3, wwTex3;
 texture<float, cudaTextureType3D> densityTex3;
 texture<float, cudaTextureType3D> pressureTex3;
 texture<float, cudaTextureType3D> divergenceTex3;
@@ -95,6 +95,7 @@ __global__ void __applyForceField(RegularGrid3Accessor<float> velocity,
   if (velocity.isIndexStored(x, y, z)) {
     auto wp = velocity.worldPosition(x, y, z);
     auto p = force.gridPosition(wp) + vec3f(0.5f);
+    // printf("%f ", tex3D(forceTex3, p.x, p.y, p.z));
     velocity(x, y, z) += dt * tex3D(forceTex3, p.x, p.y, p.z);
   }
 }
@@ -102,6 +103,8 @@ __global__ void __applyForceField(RegularGrid3Accessor<float> velocity,
 template <>
 void applyForceField(StaggeredGrid3D &velocity, VectorGrid3D &forceField,
                      float dt) {
+  forceTex3.filterMode = cudaFilterModeLinear;
+  forceTex3.normalized = 0;
   Array3<float> forceArray(forceField.u().resolution());
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
   CUDA_CHECK(cudaBindTextureToArray(forceTex3, forceArray.data(), channelDesc));
@@ -126,27 +129,35 @@ void applyForceField(StaggeredGrid3D &velocity, VectorGrid3D &forceField,
   cudaUnbindTexture(forceTex3);
 }
 
-__global__ void
-__applyBuoyancyForceField(RegularGrid3Accessor<float> velocity,
-                          RegularGrid3Accessor<float> temperature, float tamb,
-                          float alpha, float beta, float dt) {
+__global__ void __applyBuoyancyForceField(
+    RegularGrid3Accessor<float> fu, RegularGrid3Accessor<float> fv,
+    RegularGrid3Accessor<float> fw, RegularGrid3Accessor<float> density,
+    RegularGrid3Accessor<float> temperature, float tamb, float alpha,
+    float beta) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   int z = blockIdx.z * blockDim.z + threadIdx.z;
-  if (velocity.isIndexStored(x, y, z)) {
-    auto wp = velocity.worldPosition(x, y, z);
+  if (fu.isIndexStored(x, y, z)) {
+    auto wp = fu.worldPosition(x, y, z);
     auto p = temperature.gridPosition(wp) + vec3f(0.5f);
-    velocity(x, y, z) +=
-        dt * (-alpha * tex3D(densityTex3, p.x, p.y, p.z) +
-              beta * (tex3D(temperatureTex3, p.x, p.y, p.z) - tamb));
+    // printf("%f %f %f (%f %f %f)= %f %f\n", wp.x, wp.y, wp.z, p.x, p.y, p.z,
+    //        density(x, y, z), temperature(x, y, z));
+    fu(x, y, z) = fw(x, y, z) = 0.f;
+    fv(x, y, z) += -alpha * tex3D(densityTex3, p.x, p.y, p.z) +
+                   beta * (tex3D(temperatureTex3, p.x, p.y, p.z) - tamb);
   }
 }
 
 template <>
-void applyBuoyancyForceField(StaggeredGrid3D &velocity, RegularGrid3Df &density,
-                             RegularGrid3Df &temperature,
-                             float ambientTemperature, float alpha, float beta,
-                             float dt) {
+void computeBuoyancyForceField(VectorGrid3D &forceField,
+                               RegularGrid3Df &density,
+                               RegularGrid3Df &temperature,
+                               float ambientTemperature, float alpha,
+                               float beta) {
+  temperatureTex3.filterMode = cudaFilterModeLinear;
+  temperatureTex3.normalized = 0;
+  densityTex3.filterMode = cudaFilterModeLinear;
+  densityTex3.normalized = 0;
   Array3<float> tArray(temperature.resolution());
   Array3<float> dArray(density.resolution());
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
@@ -155,12 +166,216 @@ void applyBuoyancyForceField(StaggeredGrid3D &velocity, RegularGrid3Df &density,
   CUDA_CHECK(cudaBindTextureToArray(densityTex3, dArray.data(), channelDesc));
   memcpy(tArray, temperature.data());
   memcpy(dArray, density.data());
-  hermes::ThreadArrayDistributionInfo td(velocity.v().resolution());
+  hermes::ThreadArrayDistributionInfo td(forceField.resolution());
   __applyBuoyancyForceField<<<td.gridSize, td.blockSize>>>(
-      velocity.v().accessor(), temperature.accessor(), ambientTemperature,
-      alpha, beta, dt);
+      forceField.u().accessor(), forceField.v().accessor(),
+      forceField.w().accessor(), density.accessor(), temperature.accessor(),
+      ambientTemperature, alpha, beta);
   cudaUnbindTexture(temperatureTex3);
   cudaUnbindTexture(densityTex3);
+}
+
+__device__ float u_ijk(float i, float j, float k) {
+  return (tex3D(uTex3, i + 1, j, k) - tex3D(uTex3, i, j, k)) / 2.f;
+}
+__device__ float v_ijk(float i, float j, float k) {
+  return (tex3D(vTex3, i, j + 1, k) - tex3D(vTex3, i, j, k)) / 2.f;
+}
+__device__ float w_ijk(float i, float j, float k) {
+  return (tex3D(wTex3, i, j, k + 1) - tex3D(wTex3, i, j, k)) / 2.f;
+}
+
+__global__ void __computeVorticity(RegularGrid3Accessor<float> wu,
+                                   RegularGrid3Accessor<float> wv,
+                                   RegularGrid3Accessor<float> ww) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (wu.isIndexStored(x, y, z)) {
+    float i = x + 0.5;
+    float j = y + 0.5;
+    float k = z + 0.5;
+    float inv = 1.f / (2.f * wu.spacing().x);
+    wu(x, y, z) = (w_ijk(i, j + 1, k) - w_ijk(i, j - 1, k) -
+                   v_ijk(i, j, k + 1) + v_ijk(i, j, k - 1)) *
+                  inv;
+    inv = 1.f / (2.f * wu.spacing().y);
+    wv(x, y, z) = (u_ijk(i, j, k + 1) - u_ijk(i, j, k - 1) -
+                   w_ijk(i + 1, j, k) + w_ijk(i - 1, j, k)) *
+                  inv;
+    inv = 1.f / (2.f * wu.spacing().z);
+    ww(x, y, z) = (v_ijk(i + 1, j, k) - v_ijk(i - 1, j, k) -
+                   u_ijk(i, j + 1, k) + u_ijk(i, j - 1, k)) *
+                  inv;
+  }
+}
+
+template <>
+void computeVorticity(StaggeredGrid3D &velocity, RegularGrid3Duc &solid,
+                      VectorGrid3D &vorticityField) {
+  uTex3.filterMode = cudaFilterModePoint;
+  uTex3.normalized = 0;
+  vTex3.filterMode = cudaFilterModePoint;
+  vTex3.normalized = 0;
+  wTex3.filterMode = cudaFilterModePoint;
+  wTex3.normalized = 0;
+  solidTex3.filterMode = cudaFilterModePoint;
+  solidTex3.normalized = 0;
+  Array3<float> uArray(velocity.u().resolution());
+  Array3<float> vArray(velocity.v().resolution());
+  Array3<float> wArray(velocity.w().resolution());
+  Array3<unsigned char> sArray(solid.resolution());
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  CUDA_CHECK(cudaBindTextureToArray(uTex3, uArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(vTex3, vArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(wTex3, wArray.data(), channelDesc));
+  channelDesc = cudaCreateChannelDesc<unsigned char>();
+  CUDA_CHECK(cudaBindTextureToArray(solidTex3, sArray.data(), channelDesc));
+  memcpy(uArray, velocity.u().data());
+  memcpy(vArray, velocity.v().data());
+  memcpy(wArray, velocity.w().data());
+  memcpy(sArray, solid.data());
+  hermes::ThreadArrayDistributionInfo td(vorticityField.resolution());
+  __computeVorticity<<<td.gridSize, td.blockSize>>>(
+      vorticityField.u().accessor(), vorticityField.v().accessor(),
+      vorticityField.w().accessor());
+  cudaUnbindTexture(uTex3);
+  cudaUnbindTexture(vTex3);
+  cudaUnbindTexture(wTex3);
+  cudaUnbindTexture(solidTex3);
+}
+
+__global__ void __computeVorticityNorm(RegularGrid3Accessor<float> n) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (n.isIndexStored(x, y, z)) {
+    float xc = x + 0.5;
+    float yc = y + 0.5;
+    float zc = z + 0.5;
+    if (tex3D(solidTex3, xc, yc, zc)) {
+      n(x, y, z) = 0.f;
+      return;
+    }
+    vec3f w(tex3D(wuTex3, xc, yc, zc), tex3D(wvTex3, xc, yc, zc),
+            tex3D(wwTex3, xc, yc, zc));
+    // n(x, y, z) = w.length();
+  }
+}
+
+void computeVorticityNorm(RegularGrid3Duc &solid, VectorGrid3D &vorticityField,
+                          RegularGrid3Df &wNorm) {
+  wuTex3.filterMode = cudaFilterModePoint;
+  wuTex3.normalized = 0;
+  wvTex3.filterMode = cudaFilterModePoint;
+  wvTex3.normalized = 0;
+  wwTex3.filterMode = cudaFilterModePoint;
+  wwTex3.normalized = 0;
+  solidTex3.filterMode = cudaFilterModePoint;
+  solidTex3.normalized = 0;
+  Array3<float> wuArray(vorticityField.u().resolution());
+  Array3<float> wvArray(vorticityField.v().resolution());
+  Array3<float> wwArray(vorticityField.w().resolution());
+  Array3<unsigned char> sArray(solid.resolution());
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  CUDA_CHECK(cudaBindTextureToArray(wuTex3, wuArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(wvTex3, wvArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(wwTex3, wwArray.data(), channelDesc));
+  channelDesc = cudaCreateChannelDesc<unsigned char>();
+  CUDA_CHECK(cudaBindTextureToArray(solidTex3, sArray.data(), channelDesc));
+  memcpy(wuArray, vorticityField.u().data());
+  memcpy(wvArray, vorticityField.v().data());
+  memcpy(wwArray, vorticityField.w().data());
+  memcpy(sArray, solid.data());
+  hermes::ThreadArrayDistributionInfo td(vorticityField.resolution());
+  __computeVorticityNorm<<<td.gridSize, td.blockSize>>>(wNorm.accessor());
+  cudaUnbindTexture(wuTex3);
+  cudaUnbindTexture(wvTex3);
+  cudaUnbindTexture(wwTex3);
+  cudaUnbindTexture(solidTex3);
+}
+
+__global__ void __computeVorticityComfinementForce(
+    RegularGrid3Accessor<float> fu, RegularGrid3Accessor<float> fv,
+    RegularGrid3Accessor<float> fw, RegularGrid3Accessor<float> wNorm,
+    float eta) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  int k = blockIdx.z * blockDim.z + threadIdx.z;
+  if (wNorm.isIndexStored(i, j, k)) {
+    float xc = i + 0.5;
+    float yc = j + 0.5;
+    float zc = k + 0.5;
+    if (tex3D(solidTex3, xc, yc, zc)) {
+      fu(i, j, k) = 0.f;
+      fv(i, j, k) = 0.f;
+      fw(i, j, k) = 0.f;
+      return;
+    }
+    // wNorm gradient
+    vec3f inv(1.f / (2 * wNorm.spacing().x), 1.f / (2 * wNorm.spacing().y),
+              1.f / (2 * wNorm.spacing().z));
+    vec3f g((wNorm(i + 1, j, k) - wNorm(i - 1, j, k)) * inv.x,
+            (wNorm(i, j + 1, k) - wNorm(i, j - 1, k)) * inv.y,
+            (wNorm(i, j, k + 1) - wNorm(i, j, k - 1)) * inv.z);
+    // normalized
+    vec3f N = g / (float)(g.length() + 1e-20 * wNorm.spacing().x);
+    vec3f w(tex3D(wuTex3, xc, yc, zc), tex3D(wvTex3, xc, yc, zc),
+            tex3D(wwTex3, xc, yc, zc));
+    vec3f force = cross(N, w);
+    fu(i, j, k) = eta * wNorm.spacing().x * force.x;
+    fu(i, j, k) = eta * wNorm.spacing().y * force.y;
+    fu(i, j, k) = eta * wNorm.spacing().z * force.z;
+  }
+}
+
+template <>
+void computeVorticityConfinementForceField(StaggeredGrid3D &velocity,
+                                           RegularGrid3Duc &solid,
+                                           VectorGrid3D &vorticityField,
+                                           VectorGrid3D &forceField, float eta,
+                                           float dt) {
+  computeVorticity(velocity, solid, vorticityField);
+  // std::cerr << "VORTICITY U\n";
+  // std::cerr << vorticityField.u().data() << std::endl;
+  // std::cerr << "VORTICITY V\n";
+  // std::cerr << vorticityField.v().data() << std::endl;
+  // std::cerr << "VORTICITY W\n";
+  // std::cerr << vorticityField.w().data() << std::endl;
+  RegularGrid3Df wNorm(solid.resolution());
+  computeVorticityNorm(solid, vorticityField, wNorm);
+  // compute force
+  RegularGrid3Df confForce(solid.resolution());
+  wuTex3.filterMode = cudaFilterModePoint;
+  wuTex3.normalized = 0;
+  wvTex3.filterMode = cudaFilterModePoint;
+  wvTex3.normalized = 0;
+  wwTex3.filterMode = cudaFilterModePoint;
+  wwTex3.normalized = 0;
+  solidTex3.filterMode = cudaFilterModePoint;
+  solidTex3.normalized = 0;
+  Array3<float> wuArray(vorticityField.u().resolution());
+  Array3<float> wvArray(vorticityField.v().resolution());
+  Array3<float> wwArray(vorticityField.w().resolution());
+  Array3<unsigned char> sArray(solid.resolution());
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  CUDA_CHECK(cudaBindTextureToArray(wuTex3, wuArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(wvTex3, wvArray.data(), channelDesc));
+  CUDA_CHECK(cudaBindTextureToArray(wwTex3, wwArray.data(), channelDesc));
+  channelDesc = cudaCreateChannelDesc<unsigned char>();
+  CUDA_CHECK(cudaBindTextureToArray(solidTex3, sArray.data(), channelDesc));
+  memcpy(wuArray, vorticityField.u().data());
+  memcpy(wvArray, vorticityField.v().data());
+  memcpy(wwArray, vorticityField.w().data());
+  memcpy(sArray, solid.data());
+  hermes::ThreadArrayDistributionInfo td(vorticityField.resolution());
+  __computeVorticityComfinementForce<<<td.gridSize, td.blockSize>>>(
+      forceField.u().accessor(), forceField.v().accessor(),
+      forceField.w().accessor(), wNorm.accessor(), eta);
+  cudaUnbindTexture(wuTex3);
+  cudaUnbindTexture(wvTex3);
+  cudaUnbindTexture(wwTex3);
+  cudaUnbindTexture(solidTex3);
 }
 
 __global__ void __computeDivergence(RegularGrid3Accessor<float> divergence,
@@ -206,6 +421,14 @@ void computeDivergence(
     StaggeredGrid3D &velocity,
     RegularGrid3<MemoryLocation::DEVICE, unsigned char> &solid,
     RegularGrid3Df &divergence) {
+  uTex3.filterMode = cudaFilterModePoint;
+  uTex3.normalized = 0;
+  vTex3.filterMode = cudaFilterModePoint;
+  vTex3.normalized = 0;
+  wTex3.filterMode = cudaFilterModePoint;
+  wTex3.normalized = 0;
+  solidTex3.filterMode = cudaFilterModePoint;
+  solidTex3.normalized = 0;
   Array3<float> uArray(velocity.u().resolution());
   Array3<float> vArray(velocity.v().resolution());
   Array3<float> wArray(velocity.w().resolution());
@@ -221,7 +444,7 @@ void computeDivergence(
   memcpy(wArray, velocity.w().data());
   memcpy(sArray, solid.data());
   auto info = divergence.info();
-  vec3f inv(1.f / divergence.spacing().x);
+  vec3f inv(-1.f / divergence.spacing().x);
   hermes::ThreadArrayDistributionInfo td(divergence.resolution());
   __computeDivergence<<<td.gridSize, td.blockSize>>>(divergence.accessor(),
                                                      inv);
@@ -279,7 +502,7 @@ __global__ void __fillPressureMatrix(MemoryBlock3Accessor<FDMatrix3Entry> A,
 
 __global__ void __buildRHS(MemoryBlock3Accessor<int> indices,
                            RegularGrid3Accessor<float> divergence,
-                           MemoryBlock1Accessor<float> rhs) {
+                           MemoryBlock1Accessor<double> rhs) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   int k = blockIdx.z * blockDim.z + threadIdx.z;
@@ -290,7 +513,7 @@ __global__ void __buildRHS(MemoryBlock3Accessor<int> indices,
 }
 
 __global__ void __1To3(MemoryBlock3Accessor<int> indices,
-                       MemoryBlock1Accessor<float> v,
+                       MemoryBlock1Accessor<double> v,
                        MemoryBlock3Accessor<float> m) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -304,7 +527,7 @@ __global__ void __1To3(MemoryBlock3Accessor<int> indices,
 template <>
 size_t setupPressureSystem(RegularGrid3Df &divergence, RegularGrid3Duc &solid,
                            FDMatrix3D &pressureMatrix, float dt,
-                           MemoryBlock1Df &rhs) {
+                           MemoryBlock1Dd &rhs) {
   // fill matrix
   float scale = dt / (divergence.spacing().x * divergence.spacing().x);
   hermes::ThreadArrayDistributionInfo td(divergence.resolution());
@@ -342,17 +565,39 @@ void solvePressureSystem(
     FDMatrix3D &A, RegularGrid3Df &divergence, RegularGrid3Df &pressure,
     RegularGrid3<MemoryLocation::DEVICE, unsigned char> &solid, float dt) {
   // setup system
-  MemoryBlock1Df rhs;
+  MemoryBlock1Dd rhs;
   setupPressureSystem(divergence, solid, A, dt, rhs);
   // apply incomplete Cholesky preconditioner
   // solve system
-  MemoryBlock1Df x(rhs.size(), 0.f);
-  float residual;
-  pcg(x, A, rhs, 100, &residual);
+  MemoryBlock1Dd x(rhs.size(), 0.f);
+  // FDMatrix3H H(A.gridSize());
+  // H.copy(A);
+  // auto acc = H.accessor();
+  // std::cerr << acc << "rhs\n" << rhs << std::endl;
+  std::cerr << "solve\n";
+  pcg(x, A, rhs, rhs.size(), 1e-6);
+  // std::cerr << residual << "\n" << x << std::endl;
   // store pressure values
+  MemoryBlock1Dd sol(rhs.size(), 0);
+  mul(A, x, sol);
+  sub(sol, rhs, sol);
+  std::cerr << "test solution " << std::endl;
+  if (infnorm(sol, sol) > 1e-6)
+    std::cerr << "WRONG PCG!\n";
+  // std::cerr << sol << std::endl;
   hermes::ThreadArrayDistributionInfo td(pressure.resolution());
   __1To3<<<td.gridSize, td.blockSize>>>(A.indexDataAccessor(), x.accessor(),
                                         pressure.data().accessor());
+  // std::cerr << pressure.data() << std::endl;
+  // MemoryBlock1Hd h_sol(rhs.size(), 0);
+  // memcpy(h_sol, sol);
+  // auto hsol = h_sol.accessor();
+  // MemoryBlock1Hd h_rhs(rhs.size(), 0);
+  // memcpy(h_rhs, rhs);
+  // auto hrhs = h_rhs.accessor();
+  // for (int i = 0; i < rhs.size(); i++)
+  //   if (fabs(hrhs[i] - hsol[i]) > 1e-6)
+  //     std::cerr << "WRONG PCG!\n";
 }
 
 __global__ void __projectionStepU(RegularGrid3Accessor<float> u, float scale) {
@@ -418,10 +663,18 @@ __global__ void __projectionStepW(RegularGrid3Accessor<float> w, float scale) {
 template <>
 void projectionStep(RegularGrid3Df &pressure, RegularGrid3Duc &solid,
                     StaggeredGrid3D &velocity, float dt) {
+  pressureTex3.filterMode = cudaFilterModePoint;
+  pressureTex3.normalized = 0;
+  solidTex3.filterMode = cudaFilterModePoint;
+  solidTex3.normalized = 0;
   Array3<float> pArray(pressure.resolution());
+  Array3<unsigned char> sArray(solid.resolution());
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
   CUDA_CHECK(cudaBindTextureToArray(pressureTex3, pArray.data(), channelDesc));
+  channelDesc = cudaCreateChannelDesc<unsigned char>();
+  CUDA_CHECK(cudaBindTextureToArray(solidTex3, sArray.data(), channelDesc));
   memcpy(pArray, pressure.data());
+  memcpy(sArray, solid.data());
   {
     auto info = velocity.u().info();
     float invdx = 1.0 / info.spacing.x;
@@ -443,10 +696,11 @@ void projectionStep(RegularGrid3Df &pressure, RegularGrid3Duc &solid,
     float invdx = 1.0 / info.spacing.z;
     float scale = dt * invdx;
     hermes::ThreadArrayDistributionInfo td(info.resolution);
-    __projectionStepU<<<td.gridSize, td.blockSize>>>(velocity.w().accessor(),
+    __projectionStepW<<<td.gridSize, td.blockSize>>>(velocity.w().accessor(),
                                                      scale);
   }
   cudaUnbindTexture(pressureTex3);
+  cudaUnbindTexture(solidTex3);
 }
 
 } // namespace cuda

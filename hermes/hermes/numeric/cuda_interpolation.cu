@@ -22,27 +22,12 @@
  *
  */
 
-#ifndef POEIDON_MATH_CUDA_PCG_H
-#define POEIDON_MATH_CUDA_PCG_H
+#include <hermes/geometry/cuda_numeric.h>
+#include <hermes/numeric/cuda_grid.h>
+#include <hermes/numeric/cuda_interpolation.h>
 
-#include <poseidon/math/cuda_fd.h>
+namespace hermes {
 
-namespace poseidon {
+namespace cuda {} // namespace cuda
 
-namespace cuda {
-
-void mic0(hermes::cuda::MemoryBlock1Hd &precon, FDMatrix3H &A, double tal,
-          double sigma);
-// z = Mr
-void applyMIC0(FDMatrix3H &h_A, hermes::cuda::MemoryBlock1Hd &precon,
-               hermes::cuda::MemoryBlock1Hd &r,
-               hermes::cuda::MemoryBlock1Hd &z);
-
-void pcg(hermes::cuda::MemoryBlock1Dd &x, FDMatrix3D &A,
-         hermes::cuda::MemoryBlock1Dd &rhs, size_t m, float tol);
-
-} // namespace cuda
-
-} // namespace poseidon
-
-#endif
+} // namespace hermes

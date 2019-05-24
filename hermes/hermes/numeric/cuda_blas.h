@@ -46,28 +46,53 @@ template <typename T> __global__ void __sub(T *a, T *b, T *c, size_t n) {
 
 template <typename T>
 __global__ void __dot(const T *a, const T *b, T *c, size_t n) {
-  __shared__ float chache[256];
+  __shared__ float cache[256];
 
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
-  int chacheindex = threadIdx.x;
+  int cacheindex = threadIdx.x;
 
   T temp = 0;
   while (tid < n) {
     temp += a[tid] * b[tid];
     tid += blockDim.x * gridDim.x;
   }
-  chache[chacheindex] = temp;
+  cache[cacheindex] = temp;
   __syncthreads();
 
   int i = blockDim.x / 2;
   while (i != 0) {
-    if (chacheindex < i)
-      chache[chacheindex] += chache[chacheindex + i];
+    if (cacheindex < i)
+      cache[cacheindex] += cache[cacheindex + i];
     __syncthreads();
     i /= 2;
   }
-  if (chacheindex == 0)
-    c[blockIdx.x] = chache[0];
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
+}
+
+template <typename T> __global__ void __infNorm(const T *a, T *c, size_t n) {
+  __shared__ float cache[256];
+
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  int cacheindex = threadIdx.x;
+
+  T temp = 0;
+  while (tid < n) {
+    temp = fmaxf(temp, fabsf(a[tid]));
+    tid += blockDim.x * gridDim.x;
+  }
+  cache[cacheindex] = temp;
+  __syncthreads();
+
+  int i = blockDim.x / 2;
+  while (i != 0) {
+    if (cacheindex < i)
+      cache[cacheindex] = fmaxf(cache[cacheindex], cache[cacheindex + i]);
+    __syncthreads();
+    i /= 2;
+  }
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
 }
 
 // Calculates r = a*x + y
@@ -92,6 +117,23 @@ template <typename T> T dot(const T *a, const T *b, size_t n) {
   delete[] c;
   return sum;
 }
+// Calculate infinity norm max |a[i]|
+template <typename T> T infnorm(const T *a, size_t n) {
+  size_t blockSize = (n + 256 - 1) / 256;
+  if (blockSize > 32)
+    blockSize = 32;
+  T *c = new T[blockSize];
+  T *d_c;
+  cudaMalloc((void **)&d_c, blockSize * sizeof(T));
+  __infNorm<<<blockSize, 256>>>(a, d_c, n);
+  cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
+  T norm = 0;
+  for (int i = 0; i < blockSize; i++)
+    norm = fmax(norm, c[i]);
+  cudaFree(d_c);
+  delete[] c;
+  return norm;
+}
 // c = a - b
 template <typename T> void sub(T *a, T *b, T *c, size_t n) {
   ThreadArrayDistributionInfo td(n);
@@ -104,6 +146,12 @@ T dot(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
       MemoryBlock1<MemoryLocation::DEVICE, T> &b,
       MemoryBlock1<MemoryLocation::DEVICE, T> &w) {
   return dot(a.ptr(), b.ptr(), a.size());
+}
+// r = max |a[i]|
+template <typename T>
+T infnorm(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
+          MemoryBlock1<MemoryLocation::DEVICE, T> &w) {
+  return infnorm(a.ptr(), a.size());
 }
 // r = a * x + y
 template <typename T>

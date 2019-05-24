@@ -31,6 +31,10 @@ namespace hermes {
 
 namespace cuda {
 
+template <typename T> inline __host__ __device__ int sign(T a) {
+  return a >= 0 ? 1 : -1;
+}
+
 /// \param t **[in]** parametric coordinate
 /// \param a **[in]** lower bound **0**
 /// \param b **[in]** upper bound **1**

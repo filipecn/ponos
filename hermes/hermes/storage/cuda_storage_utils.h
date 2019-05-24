@@ -448,6 +448,8 @@ template <typename T> void fill3(MemoryBlock3Accessor<T> data, T value) {
   __fill3<T><<<td.gridSize, td.blockSize>>>(data, value);
 }
 
+using MemoryBlock1Dd = MemoryBlock1<MemoryLocation::DEVICE, double>;
+using MemoryBlock1Hd = MemoryBlock1<MemoryLocation::HOST, double>;
 using MemoryBlock1Df = MemoryBlock1<MemoryLocation::DEVICE, float>;
 using MemoryBlock1Hf = MemoryBlock1<MemoryLocation::HOST, float>;
 using MemoryBlock1Di = MemoryBlock1<MemoryLocation::DEVICE, int>;

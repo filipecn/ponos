@@ -18,10 +18,16 @@ template <typename T> class Scene3 {
 public:
   Collider3<T> **colliders = nullptr;
   Collider3<T> **list = nullptr;
+  void resize(hermes::cuda::vec3u size) {
+    target_temperature.resize(size);
+    smoke_source.resize(size);
+  }
+  void setSpacing(hermes::cuda::vec3f spacing) {
+    target_temperature.setSpacing(spacing);
+    smoke_source.setSpacing(spacing);
+  }
   hermes::cuda::RegularGrid3Df target_temperature;
-  hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                             unsigned char>
-      smoke_source;
+  hermes::cuda::RegularGrid3Duc smoke_source;
 };
 
 } // namespace cuda

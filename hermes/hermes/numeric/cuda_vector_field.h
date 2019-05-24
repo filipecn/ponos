@@ -157,12 +157,42 @@ protected:
   GridTexture3<float> uGrid, vGrid, wGrid;
 };
 
+// Accessor for arrays stored on the device.
+// Indices are accessed as: i * width * height + j * height + k
+// \tparam T data type
+class VectorGrid3Accessor {
+public:
+  /// \param data raw pointer to device data
+  /// \param addressMode **[default = AccessMode::NONE]** accessMode defines how
+  /// outside of bounds is treated
+  /// \param border * * [default = T()]** border
+  VectorGrid3Accessor(const vec3u &resolution, const vec3f &spacing,
+                      RegularGrid3Accessor<float> u,
+                      RegularGrid3Accessor<float> v,
+                      RegularGrid3Accessor<float> w)
+      : resolution(resolution), spacing(spacing), u_(u), v_(v), w_(w) {}
+  virtual __host__ __device__ vec3f operator()(int i, int j, int k) {
+    return 0.5f * vec3f(u_(i, j, k), v_(i, j, k), w_(i, j, k));
+  }
+  __host__ __device__ vec3f operator()(point3f wp) {
+    return vec3f(u_(wp), v_(wp), w_(wp));
+  }
+  __host__ __device__ RegularGrid3Accessor<float> &u() { return u_; }
+  __host__ __device__ RegularGrid3Accessor<float> &v() { return v_; }
+  __host__ __device__ RegularGrid3Accessor<float> &w() { return w_; }
+
+  const vec3u resolution;
+  const vec3f spacing;
+
+protected:
+  RegularGrid3Accessor<float> u_, v_, w_;
+};
+
 template <MemoryLocation L> class VectorGrid3 {
 public:
   VectorGrid3() {
-    uGrid.setOrigin(point3f(0.0f));
-    vGrid.setOrigin(point3f(0.0f));
-    wGrid.setOrigin(point3f(0.0f));
+    setSpacing(vec3f(1.f));
+    setOrigin(point3f(0.f));
   }
   /// \param res resolution in number of cells
   /// \param o origin (0,0,0) corner position
@@ -179,9 +209,9 @@ public:
     wGrid.setOrigin(o);
     wGrid.setSpacing(s);
   }
-  virtual vec3u resolution() const { return resolution_; }
-  virtual vec3f spacing() const { return spacing_; }
-  virtual point3f origin() const { return origin_; }
+  vec3u resolution() const { return resolution_; }
+  vec3f spacing() const { return spacing_; }
+  point3f origin() const { return origin_; }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
   virtual void resize(vec3u res) {
@@ -206,12 +236,27 @@ public:
     vGrid.setSpacing(s);
     wGrid.setSpacing(s);
   }
-  virtual const RegularGrid3<L, float> &u() const { return uGrid; }
-  virtual const RegularGrid3<L, float> &v() const { return vGrid; }
-  virtual const RegularGrid3<L, float> &w() const { return wGrid; }
-  virtual RegularGrid3<L, float> &u() { return uGrid; }
-  virtual RegularGrid3<L, float> &v() { return vGrid; }
-  virtual RegularGrid3<L, float> &w() { return wGrid; }
+  const RegularGrid3<L, float> &u() const { return uGrid; }
+  const RegularGrid3<L, float> &v() const { return vGrid; }
+  const RegularGrid3<L, float> &w() const { return wGrid; }
+  RegularGrid3<L, float> &u() { return uGrid; }
+  RegularGrid3<L, float> &v() { return vGrid; }
+  RegularGrid3<L, float> &w() { return wGrid; }
+  VectorGrid3Accessor accessor() {
+    return VectorGrid3Accessor(resolution_, spacing_, uGrid.accessor(),
+                               vGrid.accessor(), wGrid.accessor());
+  }
+  /// Copy data from other staggered grid
+  /// other reference from other field
+  template <MemoryLocation LL> void copy(VectorGrid3<LL> &other) {
+    if (other.resolution() != resolution())
+      resize(other.resolution());
+    setOrigin(other.origin());
+    setSpacing(other.spacing());
+    memcpy(uGrid.data(), other.uGrid.data());
+    memcpy(vGrid.data(), other.vGrid.data());
+    memcpy(wGrid.data(), other.wGrid.data());
+  }
 
 protected:
   vec3u resolution_;
@@ -219,6 +264,10 @@ protected:
   vec3f spacing_;
   RegularGrid3<L, float> uGrid, vGrid, wGrid;
 };
+
+// template <MemoryLocation L>
+// void fill3(VectorGrid3<L> &grid, const bbox3f &region, vec3f value,
+//            bool overwrite = false);
 
 using VectorGrid3D = VectorGrid3<MemoryLocation::DEVICE>;
 using VectorGrid3H = VectorGrid3<MemoryLocation::HOST>;

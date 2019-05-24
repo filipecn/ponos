@@ -30,8 +30,9 @@ namespace cuda {
 
 using namespace hermes::cuda;
 
-__global__ void __mul(FDMatrix3Accessor A, MemoryBlock1Accessor<float> x,
-                      MemoryBlock1Accessor<float> b) {
+template <typename T>
+__global__ void __mul(FDMatrix3Accessor A, MemoryBlock1Accessor<T> x,
+                      MemoryBlock1Accessor<T> b) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   int k = blockIdx.z * blockDim.z + threadIdx.z;
@@ -41,15 +42,33 @@ __global__ void __mul(FDMatrix3Accessor A, MemoryBlock1Accessor<float> x,
   if (index < 0)
     return;
   b[index] = A(i, j, k, i, j, k) * x[index];
-  b[index] += A(i, j, k, i - 1, j, k) * x[index];
-  b[index] += A(i, j, k, i + 1, j, k) * x[index];
-  b[index] += A(i, j, k, i, j - 1, k) * x[index];
-  b[index] += A(i, j, k, i, j + 1, k) * x[index];
-  b[index] += A(i, j, k, i, j, k - 1) * x[index];
-  b[index] += A(i, j, k, i, j, k + 1) * x[index];
+  int idx = A.elementIndex(i - 1, j, k);
+  if (idx >= 0)
+    b[index] += A(i, j, k, i - 1, j, k) * x[idx];
+  idx = A.elementIndex(i + 1, j, k);
+  if (idx >= 0)
+    b[index] += A(i, j, k, i + 1, j, k) * x[idx];
+  idx = A.elementIndex(i, j - 1, k);
+  if (idx >= 0)
+    b[index] += A(i, j, k, i, j - 1, k) * x[idx];
+  idx = A.elementIndex(i, j + 1, k);
+  if (idx >= 0)
+    b[index] += A(i, j, k, i, j + 1, k) * x[idx];
+  idx = A.elementIndex(i, j, k - 1);
+  if (idx >= 0)
+    b[index] += A(i, j, k, i, j, k - 1) * x[idx];
+  idx = A.elementIndex(i, j, k + 1);
+  if (idx >= 0)
+    b[index] += A(i, j, k, i, j, k + 1) * x[idx];
 }
 
 template <> void mul(FDMatrix3D &A, MemoryBlock1Df &x, MemoryBlock1Df &b) {
+  hermes::ThreadArrayDistributionInfo td(A.gridSize());
+  __mul<<<td.gridSize, td.blockSize>>>(A.accessor(), x.accessor(),
+                                       b.accessor());
+}
+
+template <> void mul(FDMatrix3D &A, MemoryBlock1Dd &x, MemoryBlock1Dd &b) {
   hermes::ThreadArrayDistributionInfo td(A.gridSize());
   __mul<<<td.gridSize, td.blockSize>>>(A.accessor(), x.accessor(),
                                        b.accessor());

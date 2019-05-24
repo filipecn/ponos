@@ -197,9 +197,9 @@ operator<<(std::ostream &os,
   return os;
 }
 
-template <hermes::cuda::MemoryLocation L>
-void mul(FDMatrix3<L> &A, hermes::cuda::MemoryBlock1<L, float> &x,
-         hermes::cuda::MemoryBlock1<L, float> &b);
+template <hermes::cuda::MemoryLocation L, typename T>
+void mul(FDMatrix3<L> &A, hermes::cuda::MemoryBlock1<L, T> &x,
+         hermes::cuda::MemoryBlock1<L, T> &b);
 
 using FDMatrix3D = FDMatrix3<hermes::cuda::MemoryLocation::DEVICE>;
 using FDMatrix3H = FDMatrix3<hermes::cuda::MemoryLocation::HOST>;

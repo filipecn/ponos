@@ -112,19 +112,29 @@ TEST(FDMatrix3, mul) {
         haAcc(i, j, k, i, j + 1, k) = 6;
         haAcc(i, j, k, i, j, k + 1) = 7;
       }
+  MemoryBlock1Hf h_x(h_A.size(), 0);
+  auto hxAcc = h_x.accessor();
+  for (int i = 0; i < h_x.size(); i++)
+    hxAcc[i] = i;
+  int idx = 0;
+  float ans[8] = {17, 25, 29, 37, 33, 41, 45, 53};
   for (int k = 0; k < size.z; k++)
     for (int j = 0; j < size.y; j++)
-      for (int i = 0; i < size.x; i++)
-        EXPECT_EQ(
-            10, haAcc(i, j, k, i - 1, j, k) + haAcc(i, j, k, i, j - 1, k) +
-                    haAcc(i, j, k, i, j, k - 1) + haAcc(i, j, k, i, j, k) +
-                    haAcc(i, j, k, i + 1, j, k) + haAcc(i, j, k, i, j + 1, k) +
-                    haAcc(i, j, k, i, j, k + 1));
+      for (int i = 0; i < size.x; i++) {
+        EXPECT_EQ(ans[idx],
+                  iAcc(i - 1, j, k) * haAcc(i, j, k, i - 1, j, k) +
+                      iAcc(i, j - 1, k) * haAcc(i, j, k, i, j - 1, k) +
+                      iAcc(i, j, k - 1) * haAcc(i, j, k, i, j, k - 1) +
+                      iAcc(i, j, k) * haAcc(i, j, k, i, j, k) +
+                      iAcc(i + 1, j, k) * haAcc(i, j, k, i + 1, j, k) +
+                      iAcc(i, j + 1, k) * haAcc(i, j, k, i, j + 1, k) +
+                      iAcc(i, j, k + 1) * haAcc(i, j, k, i, j, k + 1));
+        idx++;
+      }
   std::cerr << haAcc << std::endl;
-  MemoryBlock1Df d_x(h_A.size()), d_b(h_A.size());
-  d_x.allocate();
-  d_b.allocate();
-  fill1(d_x.accessor(), 1.f);
+  MemoryBlock1Df d_x(h_A.size(), 1.f), d_b(h_A.size(), 0.f);
+  memcpy(d_x, h_x);
+  std::cerr << d_x << std::endl;
   FDMatrix3D d_A(size);
   d_A.copy(h_A);
   mul(d_A, d_x, d_b);
@@ -132,14 +142,14 @@ TEST(FDMatrix3, mul) {
 }
 
 TEST(PCG, fdMatrix) {
-  // 4 1 2 0 3 0 0 0       x       3
-  // 1 4 0 2 0 3 0 0       x       3
+  // 4 1 2 0 3 0 0 0       x       1
+  // 1 4 0 2 0 3 0 0       x       2
   // 2 0 4 1 0 0 3 0       x       3
-  // 0 2 1 4 0 0 0 3   x   x   =   3
-  // 3 0 0 0 4 1 2 0       x       3
-  // 0 3 0 0 1 4 0 2       x       3
-  // 0 0 3 0 2 0 4 1       x       3
-  // 0 0 0 3 0 2 1 4       x       3
+  // 0 2 1 4 0 0 0 3   x   x   =   4
+  // 3 0 0 0 4 1 2 0       x       5
+  // 0 3 0 0 1 4 0 2       x       6
+  // 0 0 3 0 2 0 4 1       x       7
+  // 0 0 0 3 0 2 1 4       x       8
   vec3u size(2);
   FDMatrix3H h_A(size);
   auto haAcc = h_A.accessor();
@@ -160,10 +170,14 @@ TEST(PCG, fdMatrix) {
         haAcc(i, j, k, i, j + 1, k) = 6;
         haAcc(i, j, k, i, j, k + 1) = 7;
       }
-  MemoryBlock1Df d_x(h_A.size(), 0), d_b(h_A.size(), 3);
+  MemoryBlock1Hd h_b(h_A.size(), 0);
+  auto acc = h_b.accessor();
+  for (int i = 0; i < h_b.size(); i++)
+    acc[i] = 1; // i + 1;
+  MemoryBlock1Dd d_x(h_A.size(), 0), d_b(h_A.size(), 0);
+  memcpy(d_b, h_b);
   FDMatrix3D d_A(size);
   d_A.copy(h_A);
-  float residual = 0;
-  pcg(d_x, d_A, d_b, 100, &residual);
+  pcg(d_x, d_A, d_b, 100, 1e-4);
   std::cerr << d_x << std::endl;
 }

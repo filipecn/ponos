@@ -61,3 +61,13 @@ TEST(Blas, axpy) {
       EXPECT_EQ(acc[i], 16.f);
   }
 }
+
+TEST(Blas, infnorm) {
+  MemoryBlock1Hf x(1000, 0.f);
+  auto acc = x.accessor();
+  for (int i = 0; i < 1000; i++)
+    acc[i] = i - 500;
+  MemoryBlock1Df d_x(1000, 0.f), w;
+  memcpy(d_x, x);
+  EXPECT_EQ((int)infnorm(d_x, w), 500);
+}

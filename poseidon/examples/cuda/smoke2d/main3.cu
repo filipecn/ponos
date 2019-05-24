@@ -15,48 +15,74 @@ __solidDensity(hermes::cuda::RegularGrid3Accessor<float> density,
   }
 }
 
+__global__ void __sampleField(hermes::cuda::RegularGrid3Accessor<float> field,
+                              hermes::cuda::RegularGrid3Accessor<float> out) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  int z = blockIdx.z * blockDim.z + threadIdx.z;
+  if (out.isIndexStored(x, y, z)) {
+    out(x, y, z) = field(field.worldPosition(x, y, z));
+  }
+}
+
 int main(int argc, char **argv) {
-  int resSize = 256;
+  int resSize = 128;
   if (argc > 1)
     sscanf(argv[1], "%d", &resSize);
   // sim
   ponos::uivec3 resolution(resSize);
   hermes::cuda::vec3u res(resSize);
   poseidon::cuda::GridSmokeSolver3 solver;
-  solver.addScalarField(); // 0 density
-  solver.addScalarField(); // 1 temperature
-  solver.setSpacing(ponos::vec3f(1.f / res.x, 1.f / res.z, 1.f / res.z));
+  solver.setSpacing(ponos::vec3f(1.f / res.x, 1.f / res.y, 1.f / res.z));
   solver.setResolution(resolution);
-  // poseidon::cuda::applyEnrightDeformationField(solver.velocity());
-  hermes::cuda::fill3(solver.scalarField(0).data().accessor(), 0.f);
-  hermes::cuda::fill3(solver.scalarField(1).data().accessor(), 273.f);
-  solver.scene.target_temperature.resize(res);
-  solver.scene.target_temperature.setSpacing(
-      hermes::cuda::vec3f(1.f / res.x, 1.f / res.z, 1.f / res.z));
-  solver.scene.smoke_source.resize(res);
-  solver.scene.smoke_source.setSpacing(
-      hermes::cuda::vec3f(1.f / res.x, 1.f / res.z, 1.f / res.z));
-  hermes::cuda::fill3(solver.velocity().u().data().accessor(), 0.f);
-  hermes::cuda::fill3(solver.velocity().v().data().accessor(), 0.f);
-  hermes::cuda::fill3(solver.velocity().w().data().accessor(), 0.f);
-  hermes::cuda::fill3(solver.scene.target_temperature.data().accessor(), 273.f);
-  hermes::cuda::fill3(solver.scene.target_temperature,
-                      hermes::cuda::bbox3f(hermes::cuda::point3f(0.f),
-                                           hermes::cuda::point3f(1.f)),
-                      300.f, true);
-  hermes::cuda::fill3(solver.scene.smoke_source.data().accessor(),
-                      (unsigned char)0);
-  hermes::cuda::fill3(
-      solver.scene.smoke_source,
-      hermes::cuda::bbox3f(hermes::cuda::point3f(0.2f, 0.1f, 0.2f),
-                           hermes::cuda::point3f(0.6f, 0.5f, 0.6f)),
-      (unsigned char)1, true);
-  // std::cerr << solver.scene.target_temperature.data() << std::endl;
-  // std::cerr << solver.scene.smoke_source.data() << std::endl;
   solver.init();
-  solver.rasterColliders();
-  // poseidon::cuda::GridSmokeInjector3::injectSphere(ponos::point3f(0.35f),
-  // .15f, solver.scalarField(0));
+  // solver.rasterColliders();
+  poseidon::cuda::applyEnrightDeformationField(solver.velocity());
+  // hermes::cuda::fill3(solver.velocity().w(), hermes::cuda::bbox3f::unitBox(),
+  //                     1.f);
+  // hermes::cuda::fill3(solver.velocity().v(), hermes::cuda::bbox3f::unitBox(),
+  //                     -1.f);
+  // hermes::cuda::fill3(solver.velocity().w(), hermes::cuda::bbox3f::unitBox(),
+  //                     -1.f);
+  auto size = res;
+  {
+    // hermes::cuda::RegularGrid3Hf h_density(res);
+    // auto hsAcc = h_density.accessor();
+    // for (int k = 0; k < size.z; k++)
+    //   for (int j = 0; j < size.y; j++)
+    //     for (int i = 0; i < size.x; i++)
+    //       if (i >= 14 && i <= 16 && j >= 14 && j <= 16 && k >= 14 && k <= 16)
+    //         hsAcc(i, j, k) = 1.f;
+    //       else
+    //         hsAcc(i, j, k) = 0.f;
+    // memcpy(solver.scalarField(0).data(), h_density.data());
+    // std::cerr << solver.scalarField(0).data() << std::endl;
+  }
+  hermes::cuda::RegularGrid3Huc h_solid(size);
+  auto hsAcc = h_solid.accessor();
+  for (int k = 0; k < size.z; k++)
+    for (int j = 0; j < size.y; j++)
+      for (int i = 0; i < size.x; i++)
+        if (i > 0 && i < size.x - 1 && j > 0 && j < size.y - 1 && k > 0 &&
+            k < size.z - 1)
+          hsAcc(i, j, k) = 0;
+        else
+          hsAcc(i, j, k) = 1;
+  hermes::cuda::memcpy(solver.solid().data(), h_solid.data());
+
+  // hermes::cuda::fill3(
+  //     solver.scene().smoke_source,
+  //     hermes::cuda::bbox3f(hermes::cuda::point3f(0.2f, 0.1f, 0.2f),
+  //                          hermes::cuda::point3f(0.6f, 0.5f, 0.6f)),
+  //     (unsigned char)1, true);
+  poseidon::cuda::GridSmokeInjector3::injectSphere(ponos::point3f(0.35f), .15f,
+                                                   solver.scalarField(0));
+  hermes::cuda::RegularGrid3Df sampledData(res);
+  { // sample density
+    // hermes::ThreadArrayDistributionInfo td(res);
+    // __sampleField<<<td.gridSize, td.blockSize>>>(
+    //     solver.scalarField(0).accessor(), sampledData.accessor());
+  }
   // app
   circe::SceneApp<> app(WIDTH, HEIGHT);
   // scene
@@ -83,8 +109,10 @@ int main(int argc, char **argv) {
 
   hermes::cuda::RegularGrid3Hf volumeData(res);
   app.renderCallback = [&]() {
-    solver.step(0.01);
+    solver.step(0.001);
+    // exit(-1);
     hermes::cuda::memcpy(volumeData.data(), solver.scalarField(0).data());
+    // hermes::cuda::memcpy(volumeData.data(), sampledData.data());
     cube.update(volumeData.data().ptr());
   };
   app.keyCallback = [&](int key, int scancode, int action, int modifiers) {

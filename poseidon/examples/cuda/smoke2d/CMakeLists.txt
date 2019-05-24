@@ -4,6 +4,7 @@ set(UTILS_SRCS render.h render.cu)
 add_executable(cuSmoke2d main.cu ${UTILS_SRCS})
 set_target_properties(cuSmoke2d PROPERTIES
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
+CUDA_RESOLVE_DEVICE_SYMBOLS ON
 CUDA_STANDARD 11
 )
 target_include_directories(cuSmoke2d PUBLIC 
@@ -15,6 +16,7 @@ target_link_libraries(cuSmoke2d PRIVATE hermes poseidon ponos circe lodepng cuff
 add_executable(cuSmoke3d main3.cu ${UTILS_SRCS})
 set_target_properties(cuSmoke3d PROPERTIES
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
+CUDA_RESOLVE_DEVICE_SYMBOLS ON
 CUDA_STANDARD 11
 )
 target_include_directories(cuSmoke3d PUBLIC 

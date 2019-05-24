@@ -7,6 +7,7 @@ main.cpp
 utils.h
 utils.cu
 transform.cu
+numeric.cu
 texture.cu
 field.cu
 grids.cu
@@ -17,6 +18,7 @@ blas.cu
 target_link_libraries(hermes_tests gtest pthread hermes )
 set_target_properties(hermes PROPERTIES
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
+CUDA_RESOLVE_DEVICE_SYMBOLS ON
 CUDA_STANDARD 11
 )
 target_include_directories(hermes_tests PUBLIC ${HERMES_SOURCE_DIR})

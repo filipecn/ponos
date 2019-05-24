@@ -26,6 +26,7 @@
 #define HERMES_NUMERIC_CUDA_GRID_H
 
 #include <hermes/numeric/cuda_field.h>
+#include <hermes/numeric/cuda_interpolation.h>
 
 namespace hermes {
 
@@ -70,6 +71,7 @@ public:
                        T border = T(0))
       : info_(info), data_(data), address_mode_(addressMode), border_(border) {}
   __host__ __device__ vec3u resolution() const { return data_.size(); }
+  __host__ __device__ vec3f spacing() const { return info_.spacing; }
   /// \param i size[0] index
   /// \param j size[1] index
   /// \param k size[2] index
@@ -154,6 +156,124 @@ private:
   T dummy_;                  //!< used as out of bounds reference variable
 };
 
+template <> class RegularGrid3Accessor<float> {
+public:
+  /// \param data raw pointer to device data
+  /// \param addressMode **[default = AccessMode::NONE]** accessMode defines how
+  /// outside of bounds is treated
+  /// \param border * * [default = T()]** border
+  RegularGrid3Accessor(const RegularGrid3Info &info,
+                       MemoryBlock3Accessor<float> data,
+                       AddressMode addressMode = AddressMode::CLAMP_TO_EDGE,
+                       float border = 0.f)
+      : info_(info), data_(data), address_mode_(addressMode), border_(border) {}
+  __host__ __device__ vec3u resolution() const { return data_.size(); }
+  __host__ __device__ vec3f spacing() const { return info_.spacing; }
+  /// \param i size[0] index
+  /// \param j size[1] index
+  /// \param k size[2] index
+  /// \return T& reference to data (a dummy variable is return in the case of an
+  /// out of bounds index)
+  __host__ __device__ float &operator()(int i, int j, int k) {
+    switch (address_mode_) {
+    case AddressMode::REPEAT:
+      i = (i < 0) ? data_.size().x - 1 - i : i % data_.size().x;
+      j = (j < 0) ? data_.size().y - 1 - j : j % data_.size().y;
+      k = (k < 0) ? data_.size().z - 1 - k : k % data_.size().z;
+      break;
+    case AddressMode::CLAMP_TO_EDGE:
+      i = fmaxf(0, fminf(i, data_.size().x - 1));
+      j = fmaxf(0, fminf(j, data_.size().y - 1));
+      k = fmaxf(0, fminf(k, data_.size().z - 1));
+      break;
+    case AddressMode::BORDER:
+      if (i < 0 || i >= data_.size().x || j < 0 || j >= data_.size().y ||
+          k < 0 || k >= data_.size().z) {
+        dummy_ = border_;
+        return dummy_;
+      }
+      break;
+    case AddressMode::WRAP:
+      break;
+    case AddressMode::MIRROR:
+      break;
+    default:
+      break;
+    }
+    return data_(i, j, k);
+  }
+  // sample
+  __host__ __device__ float operator()(const point3f &wp) {
+    auto gp = info_.toGrid(wp);
+    int i = gp.x;
+    int j = gp.y;
+    int k = gp.z;
+    // if (i == 15 && j == 15 && k == 13)
+    //   printf("gp %f %f %f\n", gp.x, gp.y, gp.z);
+    // std::cerr << "GP " << gp;
+    // std::cerr << "ijk " << i << " " << j << " " << k << std::endl;
+    float f[4][4][4];
+    for (int dk = -1, K = 0; dk <= 2; dk++, K++)
+      for (int dj = -1, J = 0; dj <= 2; dj++, J++)
+        for (int di = -1, I = 0; di <= 2; di++, I++) {
+          f[K][J][I] = (*this)(i + di, j + dj, k + dk);
+          // if (i == 15 && j == 15 && k == 13) {
+          //   printf("%d %d %d = %f\n", i + di, j + dj, k + dk, f[K][J][I]);
+          // }
+        }
+    return monotonicCubicInterpolate(f, gp);
+  }
+  /// \param i size[0] index
+  /// \param j size[1] index
+  /// \param k size[2] index
+  /// \return const T& reference to data (a dummy variable is return in the case
+  /// of an out of bounds index)
+  __host__ __device__ const float &operator()(int i, int j, int k) const {
+    switch (address_mode_) {
+    case AddressMode::REPEAT:
+      i = (i < 0) ? data_.size().x - 1 - i : i % data_.size().x;
+      j = (j < 0) ? data_.size().y - 1 - j : j % data_.size().y;
+      k = (k < 0) ? data_.size().z - 1 - k : k % data_.size().z;
+      break;
+    case AddressMode::CLAMP_TO_EDGE:
+      i = fmaxf(0, fminf(i, data_.size().x - 1));
+      j = fmaxf(0, fminf(j, data_.size().y - 1));
+      k = fmaxf(0, fminf(k, data_.size().z - 1));
+      break;
+    case AddressMode::BORDER:
+      if (i < 0 || i >= data_.size().x || j < 0 || j >= data_.size().y ||
+          k < 0 || k >= data_.size().z)
+        return border_;
+      break;
+    case AddressMode::WRAP:
+      break;
+    case AddressMode::MIRROR:
+      break;
+    default:
+      break;
+    }
+    return data_(i, j, k);
+  }
+  __host__ __device__ point3f worldPosition(int i, int j, int k) {
+    return info_.toWorld(point3f(i, j, k));
+  }
+  __host__ __device__ point3f gridPosition(const point3f &wp) {
+    return info_.toGrid(wp);
+  }
+  ///
+  __host__ __device__ bool isIndexStored(int i, int j, int k) {
+    return i >= 0 && i < data_.size().x && j >= 0 && j < data_.size().y &&
+           k >= 0 && k < data_.size().z;
+  }
+
+private:
+  RegularGrid3Info info_;
+  MemoryBlock3Accessor<float> data_;
+  AddressMode address_mode_; //!< defines how out of bounds data is treated
+  float border_;             //!< border value
+  float dummy_;              //!< used as out of bounds reference variable
+};
+
 /// Represents a regular grid that can be used in numeric calculations
 template <MemoryLocation L, typename T> class RegularGrid3 {
 public:
@@ -209,8 +329,10 @@ private:
 
 using RegularGrid3Df = RegularGrid3<MemoryLocation::DEVICE, float>;
 using RegularGrid3Duc = RegularGrid3<MemoryLocation::DEVICE, unsigned char>;
+using RegularGrid3Di = RegularGrid3<MemoryLocation::DEVICE, int>;
 using RegularGrid3Hf = RegularGrid3<MemoryLocation::HOST, float>;
 using RegularGrid3Huc = RegularGrid3<MemoryLocation::HOST, unsigned char>;
+using RegularGrid3Hi = RegularGrid3<MemoryLocation::HOST, int>;
 
 template <MemoryLocation L, typename T>
 void fill3(RegularGrid3<L, T> &grid, const bbox3f &region, T value,

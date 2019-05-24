@@ -70,6 +70,20 @@ public:
   }
 };
 
+class StaggeredGrid3Accessor : public VectorGrid3Accessor {
+public:
+  StaggeredGrid3Accessor(const vec3u &resolution, const vec3f &spacing,
+                         RegularGrid3Accessor<float> u,
+                         RegularGrid3Accessor<float> v,
+                         RegularGrid3Accessor<float> w)
+      : VectorGrid3Accessor(resolution, spacing, u, v, w) {}
+  __host__ __device__ vec3f operator()(int i, int j, int k) override {
+    return 0.5f * vec3f(this->u_(i + 1, j, k) + this->u_(i, j, k),
+                        this->v_(i, j + 1, k) + this->v_(i, j, k),
+                        this->w_(i, j, k + 1) + this->w_(i, j, k));
+  }
+};
+
 /// Represents a staggered grid with regular grid
 /// The origin of each staggered grid follows the scheme:
 ///    ----------
@@ -80,9 +94,8 @@ public:
 template <MemoryLocation L> class StaggeredGrid3 : public VectorGrid3<L> {
 public:
   StaggeredGrid3() {
-    this->uGrid.setOrigin(point3f(-0.5f, 0.0f, 0.0f));
-    this->vGrid.setOrigin(point3f(0.0f, -0.5f, 0.0f));
-    this->wGrid.setOrigin(point3f(0.0f, 0.0f, -0.5f));
+    setSpacing(vec3f(1.f));
+    setOrigin(point3f(0.f));
   }
   /// \param res resolution in number of cells
   /// \param o origin (0,0) corner position
@@ -90,16 +103,25 @@ public:
   StaggeredGrid3(vec3u res, point3f o, const vec3f &s) {
     this->origin_ = o;
     this->resolution_ = res;
-    this->spacing = s;
+    this->spacing_ = s;
     this->uGrid.resize(res + vec3u(1, 0, 0));
-    this->uGrid.setOrigin(o + vec3f(-0.5f, 0.f, 0.f));
+    this->uGrid.setOrigin(o + s.x * vec3f(-0.5f, 0.f, 0.f));
     this->uGrid.setSpacing(s);
     this->vGrid.resize(res + vec3u(0, 1, 0));
-    this->vGrid.setOrigin(o + vec3f(0.f, -0.5f, 0.f));
+    this->vGrid.setOrigin(o + s.y * vec3f(0.f, -0.5f, 0.f));
     this->vGrid.setSpacing(s);
     this->wGrid.resize(res + vec3u(0, 0, 1));
-    this->wGrid.setOrigin(o + vec3f(0.f, 0.f, -0.5f));
+    this->wGrid.setOrigin(o + s.z * vec3f(0.f, 0.f, -0.5f));
     this->wGrid.setSpacing(s);
+  }
+  /// Changes grid cell size
+  /// \param d new size
+  void setSpacing(const vec3f &s) override {
+    this->spacing_ = s;
+    this->uGrid.setSpacing(s);
+    this->vGrid.setSpacing(s);
+    this->wGrid.setSpacing(s);
+    setOrigin(this->origin_);
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
@@ -113,24 +135,19 @@ public:
   /// \param o in world space
   void setOrigin(const point3f &o) override {
     this->origin_ = o;
-    this->uGrid.setOrigin(o + vec3f(-0.5f, 0.f, 0.f));
-    this->vGrid.setOrigin(o + vec3f(0.f, -0.5f, 0.f));
-    this->wGrid.setOrigin(o + vec3f(0.f, 0.f, -0.5f));
+    this->uGrid.setOrigin(o + this->spacing_.x * vec3f(-0.5f, 0.f, 0.f));
+    this->vGrid.setOrigin(o + this->spacing_.y * vec3f(0.f, -0.5f, 0.f));
+    this->wGrid.setOrigin(o + this->spacing_.z * vec3f(0.f, 0.f, -0.5f));
   }
-  /// Copy data from other staggered grid
-  /// other reference from other field
-  template <MemoryLocation LL> void copy(StaggeredGrid3<LL> &other) {
-    if (other.resolution() != this->resolution())
-      resize(other.resolution());
-    setOrigin(other.origin());
-    this->setSpacing(other.spacing());
-    memcpy(this->uGrid.data(), other.uGrid.data());
-    memcpy(this->vGrid.data(), other.vGrid.data());
-    memcpy(this->wGrid.data(), other.wGrid.data());
+  StaggeredGrid3Accessor accessor() {
+    return StaggeredGrid3Accessor(
+        this->resolution_, this->spacing_, this->uGrid.accessor(),
+        this->vGrid.accessor(), this->wGrid.accessor());
   }
 };
 
 using StaggeredGrid3D = StaggeredGrid3<MemoryLocation::DEVICE>;
+using StaggeredGrid3H = StaggeredGrid3<MemoryLocation::HOST>;
 
 } // namespace cuda
 

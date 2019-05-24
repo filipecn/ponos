@@ -26,7 +26,7 @@
 #define POSEIDON_SIMULATION_CUDA_INTEGRATOR_H
 
 #include <hermes/common/defs.h>
-#include <hermes/numeric/cuda_vector_field.h>
+#include <hermes/numeric/cuda_staggered_grid.h>
 
 namespace poseidon {
 
@@ -44,12 +44,14 @@ public:
 class Integrator3 {
 public:
   virtual void set(hermes::cuda::RegularGrid3Info info) {}
-  virtual void
-  advect(hermes::cuda::VectorGrid3D &velocity,
-         hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                                    unsigned char> &solid,
-         hermes::cuda::RegularGrid3Df &phi,
-         hermes::cuda::RegularGrid3Df &phiOut, float dt) = 0;
+  virtual void advect(hermes::cuda::StaggeredGrid3D &velocity,
+                      hermes::cuda::RegularGrid3Duc &solid,
+                      hermes::cuda::RegularGrid3Df &phi,
+                      hermes::cuda::RegularGrid3Df &phiOut, float dt) = 0;
+  virtual void advect_t(hermes::cuda::VectorGrid3D &velocity,
+                        hermes::cuda::RegularGrid3Duc &solid,
+                        hermes::cuda::RegularGrid3Df &phi,
+                        hermes::cuda::RegularGrid3Df &phiOut, float dt) = 0;
 };
 
 class SemiLagrangianIntegrator2 : public Integrator2 {
@@ -64,11 +66,14 @@ public:
 class SemiLagrangianIntegrator3 : public Integrator3 {
 public:
   SemiLagrangianIntegrator3();
-  void advect(hermes::cuda::VectorGrid3D &velocity,
-              hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                                         unsigned char> &solid,
+  void advect(hermes::cuda::StaggeredGrid3D &velocity,
+              hermes::cuda::RegularGrid3Duc &solid,
               hermes::cuda::RegularGrid3Df &phi,
               hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
+  void advect_t(hermes::cuda::VectorGrid3D &velocity,
+                hermes::cuda::RegularGrid3Duc &solid,
+                hermes::cuda::RegularGrid3Df &phi,
+                hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
 };
 
 class MacCormackIntegrator2 : public Integrator2 {
@@ -89,11 +94,14 @@ class MacCormackIntegrator3 : public Integrator3 {
 public:
   MacCormackIntegrator3();
   void set(hermes::cuda::RegularGrid3Info info);
-  void advect(hermes::cuda::VectorGrid3D &velocity,
-              hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
-                                         unsigned char> &solid,
+  void advect(hermes::cuda::StaggeredGrid3D &velocity,
+              hermes::cuda::RegularGrid3Duc &solid,
               hermes::cuda::RegularGrid3Df &phi,
               hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
+  void advect_t(hermes::cuda::VectorGrid3D &velocity,
+                hermes::cuda::RegularGrid3Duc &solid,
+                hermes::cuda::RegularGrid3Df &phi,
+                hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
 
 private:
   SemiLagrangianIntegrator3 integrator;
