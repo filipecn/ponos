@@ -63,7 +63,7 @@ VolumeBox::VolumeBox() {
       "vec3 Lo = vec3(0.0);"
       "for (int i=0; i < numSamples; ++i) {"
       // sample density
-      "    float density = texture(g_densityTex, pos).x;\n"
+      "    float density = texture(g_densityTex, pos).x;"
       "     if(pos.x < 0.0 || pos.y < 0.0 || pos.z < 0.0 || pos.x > 1.0 || "
       "pos.y > 1.0 || pos.z > 1.0) density = 0.;"
       // skip empty space
@@ -79,7 +79,7 @@ VolumeBox::VolumeBox() {
       "        float Tl = 1.0;  "
       "        vec3 lpos = pos + lightDir;"
       "        for (int s=0; s < numLightSamples; ++s) {"
-      "            float ld = texture(g_densityTex, lpos).x;\n"
+      "            float ld = texture(g_densityTex, lpos).x;"
       "     if(lpos.x < 0.0 || lpos.y < 0.0 || lpos.z < 0.0 || lpos.x > 1.0 || "
       "lpos.y > 1.0 || lpos.z > 1.0) ld = 0.;"
       "            Tl *= 1.0-g_absorption*lscale*ld;"
@@ -93,8 +93,7 @@ VolumeBox::VolumeBox() {
       "    pos += eyeDir;"
       "}"
       "fragColor.xyz = Lo;"
-      "fragColor.w = 1.0 - T;\n"
-      //  "fragColor = vec4(tex.x,tex.y,tex.z,0.4);"
+      "fragColor.w = 1.0 - T;"
       "}";
   shader_ = circe::createShaderProgramPtr(vs, nullptr, fs);
   shader_->addVertexAttribute("position", 0);

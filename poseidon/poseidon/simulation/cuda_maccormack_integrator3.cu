@@ -110,7 +110,8 @@ __global__ void __computePhiN1(StaggeredGrid3Accessor vel,
     }
     vec3f v = vel(i, j, k);
     point3f p = in.worldPosition(i, j, k);
-    point3f npos = in.gridPosition(p - v * dt);
+    point3f wp = p - v * dt;
+    point3f npos = in.gridPosition(wp);
     point3i pos(npos.x, npos.y, npos.z);
     float nodeValues[8];
     nodeValues[0] = in(pos.x, pos.y, pos.z);
@@ -138,8 +139,7 @@ __global__ void __computePhiN1(StaggeredGrid3Accessor vel,
                             max(nodeValues[2],
                                 max(nodeValues[0], nodeValues[1])))))));
 
-    out(i, j, k) = phiN1Hat(npos.x, npos.y, npos.z) +
-                   0.5 * (in(i, j, k) - phiNHat(i, j, k));
+    out(i, j, k) = phiN1Hat(wp) + 0.5 * (in(i, j, k) - phiNHat(i, j, k));
     out(i, j, k) = max(min(out(i, j, k), phiMax), phiMin);
   }
 }

@@ -47,7 +47,7 @@ __global__ void __advect_t(RegularGrid3Accessor<float> phi,
   int z = blockIdx.z * blockDim.z + threadIdx.z;
   if (phi.isIndexStored(x, y, z)) {
     if (solid(x, y, z)) {
-      phi(x, y, z) = 0;
+      // phi(x, y, z) = 0;
       return;
     }
     point3f p = phi.worldPosition(x, y, z);
@@ -76,6 +76,7 @@ __global__ void __advect(StaggeredGrid3Accessor vel,
     point3f p = in.worldPosition(i, j, k);
     vec3f v = vel(i, j, k);
     point3f pos = p - v * dt;
+    // TODO: clip on solid walls
     out(i, j, k) = in(pos);
   }
 }

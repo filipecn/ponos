@@ -180,8 +180,10 @@ void pcg(MemoryBlock1Dd &x, FDMatrix3D &A, MemoryBlock1Dd &b,
     axpy(-alpha, z, r, r);
     // std::cerr << "r norm test\n";
     // std::cerr << r << std::endl;
-    if (infnorm(r, m) <= tolerance)
-      break;
+    if (infnorm(r, m) <= tolerance) {
+      std::cerr << "PCG RUN with " << it << " iterations.\n";
+      return;
+    }
     // z = M * r
     memcpy(z, r);
     // memcpy(h_r, r);
@@ -198,7 +200,10 @@ void pcg(MemoryBlock1Dd &x, FDMatrix3D &A, MemoryBlock1Dd &b,
     sigma = sigmaNew;
     ++it;
   }
-  std::cerr << "PCG RUN with " << it << " iterations.\n";
+  auto acc = h_A.accessor();
+  std::cerr << "BAD PCG!\n" << acc << std::endl;
+  std::cerr << b << std::endl;
+  exit(-1);
 }
 
 } // namespace cuda

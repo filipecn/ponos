@@ -48,9 +48,11 @@ void applyForceField_t(hermes::cuda::StaggeredGrid3<L> &velocity,
                        hermes::cuda::VectorGrid3<L> &forceField, float dt);
 template <hermes::cuda::MemoryLocation L>
 void applyForceField(hermes::cuda::StaggeredGrid3<L> &velocity,
+                     hermes::cuda::RegularGrid3<L, unsigned char> &solid,
                      hermes::cuda::VectorGrid3<L> &forceField, float dt);
 template <hermes::cuda::MemoryLocation L>
 void addBuoyancyForce(hermes::cuda::VectorGrid3<L> &forceField,
+                      hermes::cuda::RegularGrid3<L, unsigned char> &solid,
                       hermes::cuda::RegularGrid3<L, float> &density,
                       hermes::cuda::RegularGrid3<L, float> &temperature,
                       float ambientTemperature, float alpha, float beta);
@@ -61,10 +63,6 @@ void computeBuoyancyForceField_t(
     hermes::cuda::RegularGrid3<L, float> &temperature, float ambientTemperature,
     float alpha, float beta);
 
-template <hermes::cuda::MemoryLocation L>
-void computeVorticity(hermes::cuda::StaggeredGrid3<L> &velocity,
-                      hermes::cuda::RegularGrid3<L, unsigned char> &solid,
-                      hermes::cuda::VectorGrid3<L> &vorticityField);
 template <hermes::cuda::MemoryLocation L>
 void computeVorticity_t(hermes::cuda::StaggeredGrid3<L> &velocity,
                         hermes::cuda::RegularGrid3<L, unsigned char> &solid,

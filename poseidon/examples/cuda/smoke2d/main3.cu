@@ -1,8 +1,19 @@
 #include "render.h"
+#include <lodepng.h>
 #include <poseidon/poseidon.h>
 
 #define WIDTH 800
 #define HEIGHT 800
+
+inline void flipImage(std::vector<unsigned char> &data, size_t w, size_t h) {
+  for (uint x = 0; x < w; x++)
+    for (uint y = 0; y < h / 2; y++)
+      for (uint k = 0; k < 4; k++) {
+        unsigned char tmp = data[4 * w * (h - 1 - y) + 4 * x + k];
+        data[4 * w * (h - 1 - y) + 4 * x + k] = data[4 * w * y + 4 * x + k];
+        data[4 * w * y + 4 * x + k] = tmp;
+      }
+}
 
 __global__ void
 __solidDensity(hermes::cuda::RegularGrid3Accessor<float> density,
@@ -12,16 +23,6 @@ __solidDensity(hermes::cuda::RegularGrid3Accessor<float> density,
   int z = blockIdx.z * blockDim.z + threadIdx.z;
   if (solid.isIndexStored(x, y, z)) {
     density(x, y, z) = (float)solid(x, y, z);
-  }
-}
-
-__global__ void __sampleField(hermes::cuda::RegularGrid3Accessor<float> field,
-                              hermes::cuda::RegularGrid3Accessor<float> out) {
-  int x = blockIdx.x * blockDim.x + threadIdx.x;
-  int y = blockIdx.y * blockDim.y + threadIdx.y;
-  int z = blockIdx.z * blockDim.z + threadIdx.z;
-  if (out.isIndexStored(x, y, z)) {
-    out(x, y, z) = field(field.worldPosition(x, y, z));
   }
 }
 
@@ -38,32 +39,13 @@ int main(int argc, char **argv) {
   solver.init();
   // solver.rasterColliders();
   // poseidon::cuda::applyEnrightDeformationField(solver.velocity());
-  // hermes::cuda::fill3(solver.velocity().w(), hermes::cuda::bbox3f::unitBox(),
-  //                     1.f);
-  // hermes::cuda::fill3(solver.velocity().v(), hermes::cuda::bbox3f::unitBox(),
-  //                     -1.f);
-  // hermes::cuda::fill3(solver.velocity().w(), hermes::cuda::bbox3f::unitBox(),
-  //                     -1.f);
   auto size = res;
-  {
-    // hermes::cuda::RegularGrid3Hf h_density(res);
-    // auto hsAcc = h_density.accessor();
-    // for (int k = 0; k < size.z; k++)
-    //   for (int j = 0; j < size.y; j++)
-    //     for (int i = 0; i < size.x; i++)
-    //       if (i >= 14 && i <= 16 && j >= 14 && j <= 16 && k >= 14 && k <= 16)
-    //         hsAcc(i, j, k) = 1.f;
-    //       else
-    //         hsAcc(i, j, k) = 0.f;
-    // memcpy(solver.scalarField(0).data(), h_density.data());
-    // std::cerr << solver.scalarField(0).data() << std::endl;
-  }
   hermes::cuda::RegularGrid3Huc h_solid(size);
   auto hsAcc = h_solid.accessor();
   for (int k = 0; k < size.z; k++)
     for (int j = 0; j < size.y; j++)
       for (int i = 0; i < size.x; i++)
-        if (i > 0 && i < size.x - 1 && j > 0 && j < size.y - 1 && k > 0 &&
+        if (i > 0 && i < size.x - 1 && j > 0 /*&& j < size.y - 1*/ && k > 0 &&
             k < size.z - 1)
           hsAcc(i, j, k) = 0;
         else
@@ -72,46 +54,59 @@ int main(int argc, char **argv) {
 
   // hermes::cuda::fill3(
   //     solver.scene().smoke_source,
-  //     hermes::cuda::bbox3f(hermes::cuda::point3f(0.2f, 0.1f, 0.2f),
-  //                          hermes::cuda::point3f(0.6f, 0.5f, 0.6f)),
-  //     (unsigned char)1, true);
-  poseidon::cuda::GridSmokeInjector3::injectSphere(ponos::point3f(0.35f), .15f,
-                                                   solver.scalarField(0));
-  hermes::cuda::RegularGrid3Df sampledData(res);
-  { // sample density
-    // hermes::ThreadArrayDistributionInfo td(res);
-    // __sampleField<<<td.gridSize, td.blockSize>>>(
-    //     solver.scalarField(0).accessor(), sampledData.accessor());
-  }
+  //     hermes::cuda::bbox3f(hermes::cuda::point3f(0.45f, 0.1f, 0.45f),
+  //                          hermes::cuda::point3f(0.55f, 0.3f, 0.55f)),
+  //     (unsigned char)1);
+  // hermes::cuda::fill3(
+  //     // solver.scene().target_temperature,
+  //     solver.scalarField(1),
+  //     hermes::cuda::bbox3f(hermes::cuda::point3f(0.4f, 0.1f, 0.4f),
+  //                          hermes::cuda::point3f(0.6f, 0.15f, 0.6f)),
+  //     350.f);
+  poseidon::cuda::GridSmokeInjector3::injectSphere(
+      ponos::point3f(0.5f, 0.65f, 0.5f), .08f, solver.scalarField(0));
   // app
   circe::SceneApp<> app(WIDTH, HEIGHT);
+  app.getCamera<>(0)->setPosition(ponos::point3f(2, 0.7, 2));
   // scene
-  hermes::cuda::RegularGrid3Hf solidDensity(res);
-  { // solid data for rendering
-    hermes::cuda::RegularGrid3Df solidData(res);
-    hermes::ThreadArrayDistributionInfo td(res);
-    __solidDensity<<<td.gridSize, td.blockSize>>>(solidData.accessor(),
-                                                  solver.solid().accessor());
-    hermes::cuda::memcpy(solidDensity.data(), solidData.data());
-  }
-  circe::VolumeBox solid(res.x, res.y, res.z, solidDensity.data().ptr());
-  solid.absortion = 4.f;
+  // hermes::cuda::RegularGrid3Hf solidDensity(res);
+  // { // solid data for rendering
+  //   hermes::cuda::RegularGrid3Df solidData(res);
+  //   hermes::ThreadArrayDistributionInfo td(res);
+  //   __solidDensity<<<td.gridSize, td.blockSize>>>(solidData.accessor(),
+  //                                                 solver.solid().accessor());
+  //   hermes::cuda::memcpy(solidDensity.data(), solidData.data());
+  // }
+  // circe::VolumeBox solid(res.x, res.y, res.z, solidDensity.data().ptr());
+  // solid.absortion = 4.f;
   circe::VolumeBox cube(res.x, res.y, res.z);
-  cube.absortion = 4.f;
-  // solver.step(0.01);
-  // solver.step(0.01);
-  // return;
+  cube.absortion = 10.f;
+  cube.lightIntensity = ponos::vec3f(20.f, 20.f, 20.f);
+  cube.lightPos = ponos::vec3f(2, 0.7, 2);
   // cuda interop
   // CudaGLTextureInterop<float> cgl(cube.texture());
   // cgl.copyFrom(solver.scalarField(0).data().pitchedData());
   // cgl.sendToTexture();
   // cube.update(volumeData.data().ptr());
-
   hermes::cuda::RegularGrid3Hf volumeData(res);
+  int frame = 0;
+  app.viewports[0].renderEndCallback = [&]() {
+    std::vector<unsigned char> image;
+    size_t w, h;
+    app.viewports[0].renderer->currentPixels(image, w, h);
+    flipImage(image, w, h);
+    char filename[20];
+    sprintf(filename, "%d.png", frame++);
+    unsigned error =
+        lodepng::encode(filename, &image[0], static_cast<unsigned int>(w),
+                        static_cast<unsigned int>(h));
+    if (error)
+      std::cout << "encoder error " << error << ": "
+                << lodepng_error_text(error) << std::endl;
+  };
   app.renderCallback = [&]() {
     solver.step(0.01);
     hermes::cuda::memcpy(volumeData.data(), solver.scalarField(0).data());
-    // hermes::cuda::memcpy(volumeData.data(), sampledData.data());
     cube.update(volumeData.data().ptr());
   };
   app.keyCallback = [&](int key, int scancode, int action, int modifiers) {
@@ -123,9 +118,9 @@ int main(int argc, char **argv) {
     }
   };
   circe::CartesianGrid grid(5);
-  app.scene.add(&grid);
+  // app.scene.add(&grid);
   app.scene.add(&cube);
-  app.scene.add(&solid);
+  // app.scene.add(&solid);
   app.run();
   return 0;
 }

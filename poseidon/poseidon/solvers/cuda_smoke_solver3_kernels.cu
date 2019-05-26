@@ -72,7 +72,7 @@ __global__ void __injectSmoke(RegularGrid3Accessor<float> s,
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   int z = blockIdx.z * blockDim.z + threadIdx.z;
   if (s.isIndexStored(x, y, z)) {
-    s(x, y, z) += dt * source(x, y, z);
+    s(x, y, z) += dt * source(x, y, z) * 0.5;
     s(x, y, z) = fminf(1.f, s(x, y, z));
   }
 }
@@ -131,33 +131,39 @@ void applyForceField_t(StaggeredGrid3D &velocity, VectorGrid3D &forceField,
 }
 
 __global__ void __applyForceField(RegularGrid3Accessor<float> velocity,
+                                  RegularGrid3Accessor<unsigned char> solid,
                                   RegularGrid3Accessor<float> force, float dt,
                                   vec3u d) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   int k = blockIdx.z * blockDim.z + threadIdx.z;
-  if (velocity.isIndexStored(i, j, k))
+  if (velocity.isIndexStored(i, j, k) && !solid(i, j, k) &&
+      !solid(i - d.x, j - d.y, k - d.z)) {
     velocity(i, j, k) +=
         dt * (force(i - d.x, j - d.y, k - d.z) + force(i, j, k)) * 0.5f;
+  }
 }
 
 template <>
-void applyForceField(StaggeredGrid3D &velocity, VectorGrid3D &forceField,
-                     float dt) {
+void applyForceField(StaggeredGrid3D &velocity, RegularGrid3Duc &solid,
+                     VectorGrid3D &forceField, float dt) {
   {
     hermes::ThreadArrayDistributionInfo td(velocity.u().resolution());
     __applyForceField<<<td.gridSize, td.blockSize>>>(
-        velocity.u().accessor(), forceField.u().accessor(), dt, vec3u(1, 0, 0));
+        velocity.u().accessor(), solid.accessor(), forceField.u().accessor(),
+        dt, vec3u(1, 0, 0));
   }
   {
     hermes::ThreadArrayDistributionInfo td(velocity.v().resolution());
     __applyForceField<<<td.gridSize, td.blockSize>>>(
-        velocity.v().accessor(), forceField.v().accessor(), dt, vec3u(0, 1, 0));
+        velocity.v().accessor(), solid.accessor(), forceField.v().accessor(),
+        dt, vec3u(0, 1, 0));
   }
   {
     hermes::ThreadArrayDistributionInfo td(velocity.w().resolution());
     __applyForceField<<<td.gridSize, td.blockSize>>>(
-        velocity.w().accessor(), forceField.w().accessor(), dt, vec3u(0, 0, 1));
+        velocity.w().accessor(), solid.accessor(), forceField.w().accessor(),
+        dt, vec3u(0, 0, 1));
   }
 }
 
@@ -208,25 +214,26 @@ void computeBuoyancyForceField_t(VectorGrid3D &forceField,
 }
 
 __global__ void __addBuoyancyForce(VectorGrid3Accessor f,
+                                   RegularGrid3Accessor<unsigned char> solid,
                                    RegularGrid3Accessor<float> density,
                                    RegularGrid3Accessor<float> temperature,
                                    float tamb, float alpha, float beta) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   int k = blockIdx.z * blockDim.z + threadIdx.z;
-  if (f.vAccessor().isIndexStored(i, j, k))
-    f.v(i, j, k) +=
-        -alpha * density(i, j, k) + beta * (temperature(i, j, k) - tamb);
+  if (f.vAccessor().isIndexStored(i, j, k) && !solid(i, j, k))
+    f.v(i, j, k) += 9.81 * (-alpha * density(i, j, k) +
+                            beta * (temperature(i, j, k) - tamb));
 }
 
 template <>
-void addBuoyancyForce(VectorGrid3D &forceField, RegularGrid3Df &density,
-                      RegularGrid3Df &temperature, float ambientTemperature,
-                      float alpha, float beta) {
+void addBuoyancyForce(VectorGrid3D &forceField, RegularGrid3Duc &solid,
+                      RegularGrid3Df &density, RegularGrid3Df &temperature,
+                      float ambientTemperature, float alpha, float beta) {
   hermes::ThreadArrayDistributionInfo td(forceField.resolution());
   __addBuoyancyForce<<<td.gridSize, td.blockSize>>>(
-      forceField.accessor(), density.accessor(), temperature.accessor(),
-      ambientTemperature, alpha, beta);
+      forceField.accessor(), solid.accessor(), density.accessor(),
+      temperature.accessor(), ambientTemperature, alpha, beta);
 }
 
 __device__ float u_ijk(float i, float j, float k) {
@@ -453,13 +460,6 @@ __global__ void __computeVorticity(VectorGrid3Accessor vor,
                      inv;
   }
 }
-template <>
-void computeVorticity(StaggeredGrid3D &velocity, RegularGrid3Duc &solid,
-                      VectorGrid3D &vorticityField) {
-  hermes::ThreadArrayDistributionInfo td(vorticityField.resolution());
-  __computeVorticity<<<td.gridSize, td.blockSize>>>(vorticityField.accessor(),
-                                                    velocity.accessor());
-}
 
 __global__ void
 __computeVorticityNorm(RegularGrid3Accessor<float> n,
@@ -499,7 +499,8 @@ __global__ void __computeVorticityComfinementForce(
             (wNorm(i, j + 1, k) - wNorm(i, j - 1, k)) * inv.y,
             (wNorm(i, j, k + 1) - wNorm(i, j, k - 1)) * inv.z);
     // normalized
-    vec3f N = g / (float)(g.length() + 1e-20 * wNorm.spacing().x);
+    vec3f N =
+        g / (float)(g.length() + 1e-20 * (1.f / (wNorm.spacing().x * 0.01)));
     vec3f w = vor(i, j, k);
     vec3f force = cross(N, w);
     f.u(i, j, k) += eta * wNorm.spacing().x * force.x;
@@ -514,8 +515,13 @@ void addVorticityConfinementForce(VectorGrid3D &forceField,
                                   RegularGrid3Duc &solid,
                                   VectorGrid3D &vorticityField, float eta,
                                   float dt) {
-  computeVorticity(velocity, solid, vorticityField);
+  {
+    hermes::ThreadArrayDistributionInfo td(vorticityField.resolution());
+    __computeVorticity<<<td.gridSize, td.blockSize>>>(vorticityField.accessor(),
+                                                      velocity.accessor());
+  }
   RegularGrid3Df wNorm(solid.resolution());
+  wNorm.setSpacing(vorticityField.spacing());
   {
     hermes::ThreadArrayDistributionInfo td(vorticityField.resolution());
     __computeVorticityNorm<<<td.gridSize, td.blockSize>>>(
@@ -674,7 +680,8 @@ __global__ void __fillPressureMatrix(MemoryBlock3Accessor<FDMatrix3Entry> A,
         A(i, j, k).x = -scale;
       } // else // EMPTY
       //   A(i, j, k).diag += scale;
-    }
+    } else
+      A(i, j, k).diag += scale;
     // bottom - top
     if (solid.isIndexStored(i, j - 1, k) && !solid(i, j - 1, k))
       A(i, j, k).diag += scale;
@@ -684,7 +691,8 @@ __global__ void __fillPressureMatrix(MemoryBlock3Accessor<FDMatrix3Entry> A,
         A(i, j, k).y = -scale;
       } // else // EMPTY
       //   A(i, j, k).diag += scale;
-    }
+    } else
+      A(i, j, k).diag += scale;
     // back - front
     if (solid.isIndexStored(i, j, k - 1) && !solid(i, j, k - 1))
       A(i, j, k).diag += scale;
@@ -694,7 +702,8 @@ __global__ void __fillPressureMatrix(MemoryBlock3Accessor<FDMatrix3Entry> A,
         A(i, j, k).z = -scale;
       } //  else // EMPTY
         //   A(i, j, k).diag += scale;
-    }
+    } else
+      A(i, j, k).diag += scale;
   }
 }
 
@@ -759,9 +768,9 @@ size_t setupPressureSystem(RegularGrid3Df &divergence, RegularGrid3Duc &solid,
 }
 
 template <>
-void solvePressureSystem(
-    FDMatrix3D &A, RegularGrid3Df &divergence, RegularGrid3Df &pressure,
-    RegularGrid3<MemoryLocation::DEVICE, unsigned char> &solid, float dt) {
+void solvePressureSystem(FDMatrix3D &A, RegularGrid3Df &divergence,
+                         RegularGrid3Df &pressure, RegularGrid3Duc &solid,
+                         float dt) {
   // setup system
   MemoryBlock1Dd rhs;
   setupPressureSystem(divergence, solid, A, dt, rhs);
@@ -773,29 +782,18 @@ void solvePressureSystem(
   // auto acc = H.accessor();
   // std::cerr << acc << "rhs\n" << rhs << std::endl;
   std::cerr << "solve\n";
-  pcg(x, A, rhs, rhs.size(), 1e-6);
+  pcg(x, A, rhs, rhs.size(), 1e-8);
   // std::cerr << residual << "\n" << x << std::endl;
   // store pressure values
   MemoryBlock1Dd sol(rhs.size(), 0);
   mul(A, x, sol);
   sub(sol, rhs, sol);
-  std::cerr << "test solution " << std::endl;
   if (infnorm(sol, sol) > 1e-6)
     std::cerr << "WRONG PCG!\n";
   // std::cerr << sol << std::endl;
   hermes::ThreadArrayDistributionInfo td(pressure.resolution());
   __1To3<<<td.gridSize, td.blockSize>>>(A.indexDataAccessor(), x.accessor(),
                                         pressure.data().accessor());
-  // std::cerr << pressure.data() << std::endl;
-  // MemoryBlock1Hd h_sol(rhs.size(), 0);
-  // memcpy(h_sol, sol);
-  // auto hsol = h_sol.accessor();
-  // MemoryBlock1Hd h_rhs(rhs.size(), 0);
-  // memcpy(h_rhs, rhs);
-  // auto hrhs = h_rhs.accessor();
-  // for (int i = 0; i < rhs.size(); i++)
-  //   if (fabs(hrhs[i] - hsol[i]) > 1e-6)
-  //     std::cerr << "WRONG PCG!\n";
 }
 
 __global__ void __projectionStepU(RegularGrid3Accessor<float> u, float scale) {

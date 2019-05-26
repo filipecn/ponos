@@ -27,6 +27,8 @@ void ViewportDisplay::render(const std::function<void(CameraInterface *)> &f) {
   // glEnable(GL_DEPTH_TEST);
   renderer->render();
   glDisable(GL_SCISSOR_TEST);
+  if (renderEndCallback)
+    renderEndCallback();
 }
 
 void ViewportDisplay::mouse(double x, double y) {

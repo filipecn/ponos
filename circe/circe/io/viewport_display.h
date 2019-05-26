@@ -82,6 +82,7 @@ public:
   std::function<void(double, double)> mouseCallback;
   std::function<void(double, double)> scrollCallback;
   std::function<void(int, int, int, int)> keyCallback;
+  std::function<void()> renderEndCallback;
 
   // viewport
   int x, y, width, height;

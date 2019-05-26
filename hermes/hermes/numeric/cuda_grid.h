@@ -340,27 +340,27 @@ void fill3(RegularGrid3<L, T> &grid, const bbox3f &region, T value,
 
 template <typename T>
 __global__ void __fill3(RegularGrid3Accessor<T> acc, bbox3f region, T value,
-                        bool overwrite) {
+                        bool increment) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   int z = blockIdx.z * blockDim.z + threadIdx.z;
   if (acc.isIndexStored(x, y, z)) {
     auto wp = acc.worldPosition(x, y, z);
     if (region.contains(wp)) {
-      if (overwrite)
-        acc(x, y, z) = value;
-      else
+      if (increment)
         acc(x, y, z) += value;
+      else
+        acc(x, y, z) = value;
     }
   }
 }
 
 template <typename T>
 void fill3(RegularGrid3<MemoryLocation::DEVICE, T> &grid, const bbox3f &region,
-           T value, bool overwrite = false) {
+           T value, bool increment = false) {
   ThreadArrayDistributionInfo td(grid.resolution());
   __fill3<<<td.gridSize, td.blockSize>>>(grid.accessor(), region, value,
-                                         overwrite);
+                                         increment);
 }
 
 /// Represents a texture field with position offset and scale
