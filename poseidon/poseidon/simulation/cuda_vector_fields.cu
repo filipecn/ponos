@@ -28,6 +28,33 @@ namespace poseidon {
 
 namespace cuda {
 
+__host__ __device__ hermes::cuda::vec2f
+zalesakDeformationField(hermes::cuda::point2f p) {
+  float pi_2 = hermes::cuda::Constants::pi() * 0.5f;
+  return hermes::cuda::vec2f(-pi_2 * (0.5f - p.y), -pi_2 * (p.x - 0.5f));
+}
+
+__global__ void
+__zalesakComponent(hermes::cuda::RegularGrid2Accessor<float> acc,
+                   size_t component) {
+  using namespace hermes::cuda;
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  if (acc.isIndexStored(x, y))
+    acc(x, y) = zalesakDeformationField(acc.worldPosition(x, y))[component];
+}
+
+void applyZalesakDeformationField(hermes::cuda::StaggeredGrid2D &grid) {
+  {
+    hermes::ThreadArrayDistributionInfo td(grid.u().resolution());
+    __zalesakComponent<<<td.gridSize, td.blockSize>>>(grid.u().accessor(), 0);
+  }
+  {
+    hermes::ThreadArrayDistributionInfo td(grid.v().resolution());
+    __zalesakComponent<<<td.gridSize, td.blockSize>>>(grid.v().accessor(), 1);
+  }
+}
+
 __host__ __device__ hermes::cuda::vec3f
 enrightDeformationField(hermes::cuda::point3f p) {
   float pix = hermes::cuda::Constants::pi() * p.x;

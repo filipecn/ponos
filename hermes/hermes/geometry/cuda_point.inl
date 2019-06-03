@@ -3,9 +3,6 @@ template <typename T> __host__ __device__ Point2<T>::Point2() { x = y = 0.f; }
 template <typename T> __host__ __device__ Point2<T>::Point2(T f) { x = y = f; }
 
 template <typename T>
-__host__ __device__ Point2<T>::Point2(const T *v) : x(v[0]), y(v[1]) {}
-
-template <typename T>
 __host__ __device__ Point2<T>::Point2(T _x, T _y) : x(_x), y(_y) {}
 
 template <typename T> __host__ __device__ T Point2<T>::operator[](int i) const {
@@ -78,10 +75,16 @@ __host__ __device__ Point2<T> &Point2<T>::operator/=(T d) {
 }
 
 template <typename T>
-__host__ __device__ bool Point2<T>::operator<(const Point2 &p) const {
-  if (x >= p.x || y >= p.y)
+__host__ __device__ bool Point2<T>::operator<(const Point2 &right) const {
+  if (x < right.x)
+    return true;
+  else if (x > right.x)
     return false;
-  return true;
+  if (y < right.y)
+    return true;
+  else if (y > right.y)
+    return false;
+  return false;
 }
 
 template <typename T>

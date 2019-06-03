@@ -16,8 +16,11 @@ public:
   /// \param center circle's center (world coordinates)
   /// \param radius circle's radius (world coordinates)
   /// \param field field reference
+  // TODO: DEPRECATED
   static void injectCircle(const ponos::point2f &center, float radius,
                            hermes::cuda::GridTexture2<float> &field);
+  static void injectCircle(const ponos::point2f &center, float radius,
+                           hermes::cuda::RegularGrid2Df &field);
 };
 
 /// Injects different patterns of quantities (ex: smoke concentration,

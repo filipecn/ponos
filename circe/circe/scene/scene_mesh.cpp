@@ -23,47 +23,14 @@
  *
  */
 
-#include "scene_mesh.h"
+#include <circe/scene/scene_mesh.h>
 
-circe::SceneMesh::SceneMesh(ponos::RawMeshSPtr rm) : mesh_(rm) {
-  /*{ // convert mesh to buffers
-    // position index | norm index | texcoord index -> index
-    typedef std::pair<std::pair<int, int>, int> MapKey;
-    std::map<MapKey, size_t> m;
-    size_t newIndex = 0;
-    for (auto &i : rm.indices) {
-      auto key = MapKey(std::pair<int, int>(i.positionIndex, i.normalIndex),
-                        i.texcoordIndex);
-      auto it = m.find(key);
-      auto index = newIndex;
-      if (it == m.end()) {
-        // add data
-        if (rm.positionDescriptor.count)
-          for (size_t v = 0; v < rm.positionDescriptor.elementSize; v++)
-            vertexData_.emplace_back(
-                rm.positions[i.positionIndex *
-                                 rm.positionDescriptor.elementSize +
-                             v]);
-        if (rm.normalDescriptor.count)
-          for (size_t n = 0; n < rm.normalDescriptor.elementSize; n++)
-            vertexData_.emplace_back(
-                rm.normals[i.normalIndex * rm.normalDescriptor.elementSize +
-                           n]);
-        if (rm.texcoordDescriptor.count)
-          for (size_t t = 0; t < rm.texcoordDescriptor.elementSize; t++)
-            vertexData_.emplace_back(
-                rm.texcoords[i.texcoordIndex *
-                                 rm.texcoordDescriptor.elementSize +
-                             t]);
-        m[key] = newIndex++;
-      } else
-        index = it->second;
-      indexData_.emplace_back(index);
-    }
-  }*/
-  circe::setup_buffer_data_from_mesh(*rm.get(), vertexData_, indexData_);
-  circe::BufferDescriptor ver, ind;
-  circe::create_buffer_description_from_mesh(*mesh_.get(), ver, ind);
+namespace circe {
+
+SceneMesh::SceneMesh(ponos::RawMeshSPtr rm) : mesh_(rm) {
+  setup_buffer_data_from_mesh(*rm.get(), vertexData_, indexData_);
+  BufferDescriptor ver, ind;
+  create_buffer_description_from_mesh(*mesh_.get(), ver, ind);
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
   vertexBuffer_.set(&vertexData_[0], ver);
@@ -75,23 +42,73 @@ circe::SceneMesh::SceneMesh(ponos::RawMeshSPtr rm) : mesh_(rm) {
   CHECK_GL_ERRORS;
 }
 
-void circe::SceneMesh::bind() {
+void SceneMesh::bind() {
   glBindVertexArray(VAO);
   vertexBuffer_.bind();
   indexBuffer_.bind();
 }
 
-const circe::VertexBuffer *circe::SceneMesh::vertexBuffer() const {
-  return &vertexBuffer_;
-}
+const VertexBuffer *SceneMesh::vertexBuffer() const { return &vertexBuffer_; }
 
-const circe::IndexBuffer *circe::SceneMesh::indexBuffer() const {
-  return &indexBuffer_;
-}
+const IndexBuffer *SceneMesh::indexBuffer() const { return &indexBuffer_; }
 
-ponos::RawMeshSPtr circe::SceneMesh::rawMesh() { return mesh_; }
+ponos::RawMeshSPtr SceneMesh::rawMesh() { return mesh_; }
 
-void circe::SceneMesh::unbind() {
+void SceneMesh::unbind() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
+
+SceneDynamicMesh::SceneDynamicMesh() {
+  glGenVertexArrays(1, &VAO_);
+  glBindVertexArray(VAO_);
+}
+
+SceneDynamicMesh::~SceneDynamicMesh() {}
+
+SceneDynamicMesh::SceneDynamicMesh(const BufferDescriptor &vertex_buffer_desc,
+                                   const BufferDescriptor &index_buffer_desc)
+    : SceneDynamicMesh() {
+  setDescription(vertex_buffer_desc, index_buffer_desc);
+}
+
+void SceneDynamicMesh::update(float *vertex_buffer_data, size_t vertex_count,
+                              uint *index_buffer_data,
+                              size_t mesh_element_count) {
+  vertex_buffer_descriptor_.elementCount = vertex_count;
+  index_buffer_descriptor_.elementCount = mesh_element_count;
+  glBindVertexArray(VAO_);
+  vertex_buffer_.set(vertex_buffer_data, vertex_buffer_descriptor_);
+  index_buffer_.set(index_buffer_data, index_buffer_descriptor_);
+  CHECK_GL_ERRORS;
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
+
+void SceneDynamicMesh::setDescription(
+    const BufferDescriptor &vertex_buffer_descriptor,
+    const BufferDescriptor &index_buffer_descriptor) {
+  vertex_buffer_descriptor_ = vertex_buffer_descriptor;
+  index_buffer_descriptor_ = index_buffer_descriptor;
+}
+
+void SceneDynamicMesh::bind() {
+  glBindVertexArray(VAO_);
+  vertex_buffer_.bind();
+  index_buffer_.bind();
+}
+
+const VertexBuffer *SceneDynamicMesh::vertexBuffer() const {
+  return &vertex_buffer_;
+}
+
+const IndexBuffer *SceneDynamicMesh::indexBuffer() const {
+  return &index_buffer_;
+}
+
+void SceneDynamicMesh::unbind() {
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
+
+} // namespace circe

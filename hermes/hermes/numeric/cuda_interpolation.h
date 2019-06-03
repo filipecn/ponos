@@ -43,17 +43,20 @@ inline __host__ __device__ float monotonicCubicInterpolate(float fkm1, float fk,
     dk = dkp1 = 0.0;
   else {
     if (sign(dk) != sign(Dk))
-      dk = 0;
-    // dk *= -1;
+      // dk = 0;
+      dk *= -1;
     if (sign(dkp1) != sign(Dk))
-      dkp1 = 0;
-    // dkp1 *= -1;
+      // dkp1 = 0;
+      dkp1 *= -1;
   }
   double a0 = fk;
   double a1 = dk;
   double a2 = 3 * Dk - 2 * dk - dkp1;
   double a3 = dk + dkp1 - 2 * Dk;
-  return a3 * tmtk * tmtk * tmtk + a2 * tmtk * tmtk + a1 * tmtk + a0;
+  float ans = a3 * tmtk * tmtk * tmtk + a2 * tmtk * tmtk + a1 * tmtk + a0;
+  float m = fminf(fkm1, fminf(fk, fminf(fkp1, fkp2)));
+  float M = fmaxf(fkm1, fmaxf(fk, fmaxf(fkp1, fkp2)));
+  return fminf(M, fmaxf(m, ans));
 }
 
 inline __host__ __device__ float monotonicCubicInterpolate(float f[4][4][4],
@@ -69,6 +72,15 @@ inline __host__ __device__ float monotonicCubicInterpolate(float f[4][4][4],
   for (int d = 0; d < 4; d++)
     vv[d] = monotonicCubicInterpolate(v[d][0], v[d][1], v[d][2], v[d][3], t.z);
   return monotonicCubicInterpolate(vv[0], vv[1], vv[2], vv[3], t.y);
+}
+
+inline __host__ __device__ float monotonicCubicInterpolate(float f[4][4],
+                                                           const point2f &gp) {
+  point2f t = gp - vec2f((int)gp.x, (int)gp.y);
+  float v[4];
+  for (int d = 0; d < 4; d++)
+    v[d] = monotonicCubicInterpolate(f[d][0], f[d][1], f[d][2], f[d][3], t.x);
+  return monotonicCubicInterpolate(v[0], v[1], v[2], v[3], t.y);
 }
 
 } // namespace cuda

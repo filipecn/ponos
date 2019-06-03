@@ -34,7 +34,7 @@ Quad::Quad() {
   rawMesh->positionDescriptor.count = 4;
   rawMesh->texcoordDescriptor.elementSize = 2;
   rawMesh->texcoordDescriptor.count = 4;
-  rawMesh->positions = std::vector<float>({-1, -1, 1, -1, 1, 1, -1, 1});
+  rawMesh->positions = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
   rawMesh->texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
   rawMesh->indices.resize(6);
   rawMesh->indices[0].positionIndex = rawMesh->indices[0].texcoordIndex = 0;
@@ -48,34 +48,28 @@ Quad::Quad() {
   const char *fs = "#version 440 core\n"
                    "in vec2 texCoord;"
                    "out vec4 outColor;"
-                   "layout (location = 1) uniform sampler2D tex;"
+                   "layout (location = 5) uniform sampler2D tex;"
                    "void main(){"
-                   " outColor = vec4(1,0,0,1);}";
-  const char *vs = "#version 440 core\n"
-                   "layout (location = 0) in vec2 position;"
-                   "layout (location = 1) in vec2 texcoord;"
-                   "layout (location = 0) uniform mat4 mvp;"
-                   "out vec2 texCoord;"
-                   "void main() {"
-                   " texCoord = texcoord;"
-                   "gl_Position = mvp * vec4(position, 0, 1);}";
+                   " outColor = texture(tex, texCoord);}";
+  const char *vs =
+      "#version 440 core\n"
+      "layout (location = 0) in vec2 position;"
+      "layout (location = 1) in vec2 texcoord;"
+      "layout (location = 2) uniform mat4 model;"
+      "layout (location = 3) uniform mat4 view;"
+      "layout (location = 4) uniform mat4 projection;"
+      "out vec2 texCoord;"
+      "void main() {"
+      " texCoord = texcoord;"
+      "gl_Position = projection * view * model * vec4(position, 0.0, 1.0);}";
   shader_.reset(new ShaderProgram(vs, nullptr, fs));
   shader_->addVertexAttribute("position", 0);
   shader_->addVertexAttribute("texcoord", 1);
-  shader_->addUniform("mvp", 0);
-  //   glGenVertexArrays(1, &VAO);
-  //   glBindVertexArray(VAO);
+  shader_->addUniform("model", 2);
+  shader_->addUniform("view", 3);
+  shader_->addUniform("projection", 4);
+  shader_->addUniform("tex", 5);
   this->mesh_ = createSceneMeshPtr(rawMesh);
-  //   BufferDescriptor vd, id;
-  //   create_buffer_description_from_mesh(*this->rawMesh, vd, id);
-  //   vb.reset(new VertexBuffer(&this->rawMesh->interleavedData[0], vd));
-  //   ib.reset(new IndexBuffer(&this->rawMesh->positionsIndices[0], id));
-  //   vb->locateAttributes(*shader.get());
-  //  shader->registerVertexAttributes(vb.get());
-  //   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  //   glBindVertexArray(0);
-  //   CHECK_GL_ERRORS;
-  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void Quad::set(const ponos::point2 &pm, const ponos::point2 &pM) {
@@ -92,18 +86,20 @@ void Quad::set(const ponos::point2 &pm, const ponos::point2 &pM) {
   //   glBindVertexArray(0);
 }
 
-void Quad::draw(const CameraInterface *camera, ponos::Transform transform) {
+void Quad::draw(const CameraInterface *camera, ponos::Transform t) {
   //   glBindVertexArray(VAO);
   this->mesh_->bind();
+  mesh_->vertexBuffer()->locateAttributes(*shader_.get());
   shader_->begin();
-  shader_->setUniform("mvp",
-                      ponos::transpose((camera->getProjectionTransform() *
-                                        camera->getViewTransform() *
-                                        camera->getModelTransform())
-                                           .matrix()));
+  shader_->setUniform("model", ponos::transpose(t.matrix()));
+  shader_->setUniform("view",
+                      ponos::transpose(camera->getViewTransform().matrix()));
+  shader_->setUniform(
+      "projection",
+      ponos::transpose(camera->getProjectionTransform().matrix()));
   glDrawElements(GL_TRIANGLES,
-                 mesh_->indexBuffer()->bufferDescriptor.elementSize *
-                     mesh_->indexBuffer()->bufferDescriptor.elementCount,
+                 mesh_->indexBuffer()->bufferDescriptor.elementCount *
+                     mesh_->indexBuffer()->bufferDescriptor.elementSize,
                  GL_UNSIGNED_INT, 0);
   CHECK_GL_ERRORS;
   shader_->end();

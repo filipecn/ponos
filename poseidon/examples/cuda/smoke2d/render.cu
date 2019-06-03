@@ -85,6 +85,19 @@ void renderDensity(unsigned int w, unsigned int h,
   cudaUnbindTexture(densityTex2);
 }
 
+void renderDensity(hermes::cuda::RegularGrid2Df &in, unsigned int *out) {
+  hermes::cuda::Array2<float> pArray(in.resolution());
+  hermes::cuda::memcpy(pArray, in.data());
+  auto td = hermes::ThreadArrayDistributionInfo(in.resolution());
+  densityTex2.normalized = 1;
+  cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+  using namespace hermes::cuda;
+  CUDA_CHECK(cudaBindTextureToArray(densityTex2, pArray.data(), channelDesc));
+  __renderDensity<<<td.gridSize, td.blockSize>>>(out, in.resolution().x,
+                                                 in.resolution().y);
+  cudaUnbindTexture(densityTex2);
+}
+
 void renderSolids(unsigned int w, unsigned int h,
                   const hermes::cuda::Texture<unsigned char> &in,
                   unsigned int *out) {

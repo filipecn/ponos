@@ -165,6 +165,12 @@ create_index_buffer_descriptor(size_t elementSize, size_t elementCount,
                           GL_ELEMENT_ARRAY_BUFFER);
 }
 
+/// \brief Set the up buffer data from mesh object
+/// Interleaves vertex, normal and uv data into a single buffer (vertexData)
+/// handling the indices (duplicating data if needed)
+/// \param rm
+/// \param vertexData
+/// \param indexData
 inline void setup_buffer_data_from_mesh(const ponos::RawMesh &rm,
                                         std::vector<float> &vertexData,
                                         std::vector<uint> &indexData) {
@@ -207,7 +213,8 @@ inline void setup_buffer_data_from_mesh(const ponos::RawMesh &rm,
 /// \param i **[out]** index buffer description
 inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
                                                 BufferDescriptor &v,
-                                                BufferDescriptor &i) {
+                                                BufferDescriptor &i,
+                                                GLuint use = GL_STATIC_DRAW) {
   GLuint type = GL_TRIANGLES;
   switch (m.primitiveType) {
   case ponos::GeometricPrimitiveType::TRIANGLES:
@@ -235,12 +242,12 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
   i.elementCount = m.meshDescriptor.count;
   i.elementSize = m.meshDescriptor.elementSize;
   i.type = GL_ELEMENT_ARRAY_BUFFER;
-  i.use = GL_STATIC_DRAW;
+  i.use = use;
   i.dataType = GL_UNSIGNED_INT;
   v.elementCount = m.interleavedDescriptor.count;
   v.elementSize = m.interleavedDescriptor.elementSize;
   v.type = GL_ARRAY_BUFFER;
-  v.use = GL_STATIC_DRAW;
+  v.use = use;
   v.dataType = GL_FLOAT;
   v.addAttribute(std::string("position"), m.positionDescriptor.elementSize, 0,
                  GL_FLOAT);
@@ -292,15 +299,13 @@ template <typename T> class Buffer : public BufferInterface {
 public:
   typedef T BufferDataType;
   Buffer() {}
-  /** \brief Constructor
-   * \param d **[in]** data pointer
-   * \param bd **[in]** buffer description
-   */
+  /// \brief Constructor
+  /// \param d **[in]** data pointer
+  /// \param bd **[in]** buffer description
   Buffer(const T *d, const BufferDescriptor &bd) : Buffer() { set(d, bd); }
-  /** \brief Constructor
-   * \param id **[in]** an existent buffer
-   * \param bd **[in]** buffer description
-   */
+  ///  \brief Constructor
+  /// \param id **[in]** an existent buffer
+  /// \param bd **[in]** buffer description
   explicit Buffer(const BufferDescriptor &bd, GLuint id = 0)
       : BufferInterface(bd, id) {}
   ~Buffer() override { glDeleteBuffers(1, &this->bufferId); }
@@ -315,11 +320,10 @@ public:
                  nullptr, this->bufferDescriptor.use);
     CHECK_GL_ERRORS;
   }
-  /** \brief set
-   * \param d **[in]** data pointer
-   * \param bd **[in]** buffer description
-   * The buffer remains bound
-   */
+  /// \brief set
+  /// \param d **[in]** data pointer
+  /// \param bd **[in]** buffer description
+  /// The buffer remains bound
   void set(const T *d, const BufferDescriptor &bd) {
     data = d;
     this->bufferDescriptor = bd;
@@ -333,9 +337,7 @@ public:
                  data, this->bufferDescriptor.use);
     CHECK_GL_ERRORS;
   }
-  /** \brief set
-   * \param d **[in]** data pointer
-   */
+  /// \param d **[in]** data pointer
   void set(const T *d) {
     data = d;
     if (this->bufferId == 0) {
@@ -355,8 +357,8 @@ private:
   const T *data;
 };
 
-typedef Buffer<float> VertexBuffer;
-typedef Buffer<uint> IndexBuffer;
+using VertexBuffer = Buffer<float>;
+using IndexBuffer = Buffer<uint>;
 
 } // namespace circe
 

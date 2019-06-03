@@ -38,15 +38,14 @@ int main(int argc, char **argv) {
   solver.setResolution(resolution);
   solver.init();
   // solver.rasterColliders();
-  // poseidon::cuda::applyEnrightDeformationField(solver.velocity());
+  poseidon::cuda::applyEnrightDeformationField(solver.velocity());
   auto size = res;
   hermes::cuda::RegularGrid3Huc h_solid(size);
   auto hsAcc = h_solid.accessor();
   for (int k = 0; k < size.z; k++)
     for (int j = 0; j < size.y; j++)
       for (int i = 0; i < size.x; i++)
-        if (i > 0 && i < size.x - 1 && j > 0 /*&& j < size.y - 1*/ && k > 0 &&
-            k < size.z - 1)
+        if (i > 0 && i < size.x - 1 && j > 0 && k > 0 && k < size.z - 1)
           hsAcc(i, j, k) = 0;
         else
           hsAcc(i, j, k) = 1;
@@ -64,7 +63,7 @@ int main(int argc, char **argv) {
   //                          hermes::cuda::point3f(0.6f, 0.15f, 0.6f)),
   //     350.f);
   poseidon::cuda::GridSmokeInjector3::injectSphere(
-      ponos::point3f(0.5f, 0.65f, 0.5f), .08f, solver.scalarField(0));
+      ponos::point3f(0.35f, 0.35f, 0.35f), .15f, solver.scalarField(0));
   // app
   circe::SceneApp<> app(WIDTH, HEIGHT);
   app.getCamera<>(0)->setPosition(ponos::point3f(2, 0.7, 2));
@@ -91,6 +90,7 @@ int main(int argc, char **argv) {
   hermes::cuda::RegularGrid3Hf volumeData(res);
   int frame = 0;
   app.viewports[0].renderEndCallback = [&]() {
+    return;
     std::vector<unsigned char> image;
     size_t w, h;
     app.viewports[0].renderer->currentPixels(image, w, h);

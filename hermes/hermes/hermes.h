@@ -1,3 +1,4 @@
+#include <hermes/algorithms/cuda_marching_cubes.h>
 #include <hermes/colors/cuda_color.h>
 #include <hermes/colors/cuda_color_palette.h>
 #include <hermes/common/cuda.h>

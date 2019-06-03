@@ -21,6 +21,18 @@ __global__ void __injectCircle(float *out,
   }
 }
 
+__global__ void __injectCircle(hermes::cuda::RegularGrid2Accessor<float> acc,
+                               hermes::cuda::point2f center, float radius2) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  if (acc.isIndexStored(x, y)) {
+    auto cp = acc.worldPosition(x, y);
+    acc(x, y) = 0;
+    if ((cp - center).length2() <= radius2)
+      acc(x, y) = 1;
+  }
+}
+
 __global__ void __injectSphere(hermes::cuda::RegularGrid3Accessor<float> acc,
                                hermes::cuda::point3f center, float radius2) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -44,6 +56,15 @@ void GridSmokeInjector2::injectCircle(
       field.texture().deviceData(), field.toWorldTransform(),
       hermes::cuda::point2f(center.x, center.y), radius * radius,
       field.texture().width(), field.texture().height());
+}
+
+void GridSmokeInjector2::injectCircle(const ponos::point2f &center,
+                                      float radius,
+                                      hermes::cuda::RegularGrid2Df &field) {
+  auto td = hermes::ThreadArrayDistributionInfo(field.resolution());
+  __injectCircle<<<td.gridSize, td.blockSize>>>(
+      field.accessor(), hermes::cuda::point2f(center.x, center.y),
+      radius * radius);
 }
 
 void GridSmokeInjector3::injectSphere(const ponos::point3f &center,

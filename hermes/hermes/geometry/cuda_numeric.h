@@ -26,6 +26,7 @@
 #define HERMES_GEOMETRY_CUDA_NUMERIC_H
 
 #include <hermes/common/cuda.h>
+#include <hermes/geometry/cuda_point.h>
 
 namespace hermes {
 
@@ -149,6 +150,43 @@ inline float smooth(float a, float b) { return fmaxf(0.f, 1.f - a / (b * b)); }
 /// \return float
 inline float sharpen(const float &r2, const float &h) {
   return fmaxf(h * h / fmaxf(r2, static_cast<float>(1.0e-5)) - 1.0f, 0.0f);
+}
+
+__device__ __host__ inline unsigned int separateBitsBy1(unsigned int n) {
+  n = (n ^ (n << 8)) & 0x00ff00ff;
+  n = (n ^ (n << 4)) & 0x0f0f0f0f;
+  n = (n ^ (n << 2)) & 0x33333333;
+  n = (n ^ (n << 1)) & 0x55555555;
+  return n;
+}
+
+__device__ __host__ inline unsigned int separateBitsBy2(unsigned int n) {
+  n = (n ^ (n << 16)) & 0xff0000ff;
+  n = (n ^ (n << 8)) & 0x0300f00f;
+  n = (n ^ (n << 4)) & 0x030c30c3;
+  n = (n ^ (n << 2)) & 0x09249249;
+  return n;
+}
+
+__device__ __host__ inline unsigned int
+interleaveBits(unsigned int x, unsigned int y, unsigned int z) {
+  return (separateBitsBy2(z) << 2) + (separateBitsBy2(y) << 1) +
+         separateBitsBy2(x);
+}
+
+__device__ __host__ inline unsigned int interleaveBits(unsigned int x,
+                                                       unsigned int y) {
+  return (separateBitsBy1(y) << 1) + separateBitsBy1(x);
+}
+
+template <typename T>
+__device__ __host__ unsigned int mortonCode(const Point3<T> &v) {
+  return interleaveBits(v[0], v[1], v[2]);
+}
+
+template <typename T>
+__device__ __host__ unsigned int mortonCode(const Point2<T> &v) {
+  return interleaveBits(v[0], v[1]);
 }
 
 } // namespace cuda

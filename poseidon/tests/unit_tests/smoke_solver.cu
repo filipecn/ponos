@@ -5,6 +5,103 @@
 using namespace hermes::cuda;
 using namespace poseidon::cuda;
 
+TEST(SmokeSolver2, Divergence) {
+  // y
+  // |
+  //  ---x
+  //  S F F F S  -  9 10 11  -
+  //  S F F F S  -  6  7  8  -
+  //  S F F F S  -  3  4  5  -
+  //  S F F F S  -  0  1  2  -
+  //  S S S S S  -  -  -  -  -
+  // velocity field
+  //              (j+1)*10 + i
+  //  i*10 + j       i,j         (i+1)*10 + j
+  //              j*10 + i
+  vec2u size(5);
+  StaggeredGrid2H velocity;
+  velocity.resize(size);
+  for (auto e : velocity.u().accessor())
+    e.value = e.i() * 10 + e.j();
+  for (auto e : velocity.v().accessor())
+    e.value = e.j() * 10 + e.i();
+  RegularGrid2Huc h_solid(size);
+  auto hsAcc = h_solid.accessor();
+  int divIndex = 0;
+  for (int j = 0; j < size.y; j++)
+    for (int i = 0; i < size.x; i++)
+      if (i > 0 && i < size.x - 1 && j > 0)
+        hsAcc(i, j) = 0;
+      else
+        hsAcc(i, j) = 1;
+  RegularGrid2Duc d_solid(size);
+  memcpy(d_solid.data(), h_solid.data());
+  // std::cerr << d_solid.data() << std::endl;
+  StaggeredGrid2D d_velocity;
+  StaggeredGrid2D d_svel;
+  d_svel.resize(size);
+  fill2(d_svel.u().data().accessor(), 0.f);
+  fill2(d_svel.v().data().accessor(), 0.f);
+  d_velocity.resize(size);
+  d_velocity.copy(velocity);
+  // std::cerr << d_velocity.u().data() << std::endl;
+  // std::cerr << d_velocity.v().data() << std::endl;
+  RegularGrid2Df d_div(size);
+  d_div.setSpacing(vec2f(0.01f));
+  computeDivergence(d_velocity, d_solid, d_svel, d_div);
+  std::cerr << d_div.data() << std::endl;
+}
+
+TEST(SmokeSolver2, PressureSystem) {
+  // y
+  // |
+  //  ---x
+  //  S F F F S  -  9 10 11  -
+  //  S F F F S  -  6  7  8  -
+  //  S F F F S  -  3  4  5  -
+  //  S F F F S  -  0  1  2  -
+  //  S S S S S  -  -  -  -  -
+  float diag[12] = {2, 3, 2, 3, 4, 3, 3, 4, 3, 3, 4, 3};
+  vec2u size(5);
+  RegularGrid2Huc h_solid(size);
+  auto hsAcc = h_solid.accessor();
+  int divIndex = 0;
+  for (int j = 0; j < size.y; j++)
+    for (int i = 0; i < size.x; i++)
+      if (i > 0 && i < size.x - 1 && j > 0)
+        hsAcc(i, j) = 0;
+      else
+        hsAcc(i, j) = 1;
+  RegularGrid2Duc d_solid(size);
+  memcpy(d_solid.data(), h_solid.data());
+  RegularGrid2Df d_div(size);
+  d_div.setSpacing(vec2f(0.01f));
+  FDMatrix2D d_A(size);
+  MemoryBlock1Dd d_rhs;
+  size_t systemSize = setupPressureSystem(d_div, d_solid, d_A, 0.001, d_rhs);
+  MemoryBlock1Hd h_rhs(d_rhs.size());
+  h_rhs.allocate();
+  memcpy(h_rhs, d_rhs);
+  FDMatrix2H h_A(size);
+  h_A.copy(d_A);
+  auto A = h_A.accessor();
+  for (int j = 0; j < size.y; j++)
+    for (int i = 0; i < size.x; i++)
+      if (A.elementIndex(i, j) >= 0) {
+        EXPECT_EQ(A(i, j, i, j),
+                  diag[A.elementIndex(i, j)] * (0.001f / (0.01f * 0.01f)));
+        if (A.elementIndex(i + 1, j) >= 0)
+          EXPECT_EQ(A(i, j, i + 1, j), -(0.001f / (0.01f * 0.01f)));
+        if (A.elementIndex(i, j + 1) >= 0)
+          EXPECT_EQ(A(i, j, i, j + 1), -(0.001f / (0.01f * 0.01f)));
+        if (A.elementIndex(i - 1, j) >= 0)
+          EXPECT_EQ(A(i, j, i - 1, j), -(0.001f / (0.01f * 0.01f)));
+        if (A.elementIndex(i, j - 1) >= 0)
+          EXPECT_EQ(A(i, j, i, j - 1), -(0.001f / (0.01f * 0.01f)));
+      }
+  // std::cerr << h_A << std::endl;
+}
+
 TEST(SmokeSolver3, PressureSystem) {
   // y
   // |
@@ -64,6 +161,7 @@ TEST(SmokeSolver3, PressureSystem) {
 }
 
 TEST(SmokeSolver3, pressureSystem) {
+  return;
   // y
   // |
   //  ---x
@@ -152,6 +250,7 @@ TEST(SmokeSolver3, pressureSystem) {
 }
 
 TEST(SmokeSolver3, step) {
+  return;
   // y
   // |
   //  ---x

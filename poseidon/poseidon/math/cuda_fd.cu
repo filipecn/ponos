@@ -31,6 +31,43 @@ namespace cuda {
 using namespace hermes::cuda;
 
 template <typename T>
+__global__ void __mul(FDMatrix2Accessor A, MemoryBlock1Accessor<T> x,
+                      MemoryBlock1Accessor<T> b) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  if (!A.isIndexStored(i, j, i, j))
+    return;
+  int index = A.elementIndex(i, j);
+  if (index < 0)
+    return;
+  b[index] = A(i, j, i, j) * x[index];
+  int idx = A.elementIndex(i - 1, j);
+  if (idx >= 0)
+    b[index] += A(i, j, i - 1, j) * x[idx];
+  idx = A.elementIndex(i + 1, j);
+  if (idx >= 0)
+    b[index] += A(i, j, i + 1, j) * x[idx];
+  idx = A.elementIndex(i, j - 1);
+  if (idx >= 0)
+    b[index] += A(i, j, i, j - 1) * x[idx];
+  idx = A.elementIndex(i, j + 1);
+  if (idx >= 0)
+    b[index] += A(i, j, i, j + 1) * x[idx];
+}
+
+template <> void mul(FDMatrix2D &A, MemoryBlock1Df &x, MemoryBlock1Df &b) {
+  hermes::ThreadArrayDistributionInfo td(A.gridSize());
+  __mul<<<td.gridSize, td.blockSize>>>(A.accessor(), x.accessor(),
+                                       b.accessor());
+}
+
+template <> void mul(FDMatrix2D &A, MemoryBlock1Dd &x, MemoryBlock1Dd &b) {
+  hermes::ThreadArrayDistributionInfo td(A.gridSize());
+  __mul<<<td.gridSize, td.blockSize>>>(A.accessor(), x.accessor(),
+                                       b.accessor());
+}
+
+template <typename T>
 __global__ void __mul(FDMatrix3Accessor A, MemoryBlock1Accessor<T> x,
                       MemoryBlock1Accessor<T> b) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;

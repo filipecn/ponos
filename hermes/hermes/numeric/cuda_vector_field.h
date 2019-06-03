@@ -31,6 +31,7 @@ namespace hermes {
 
 namespace cuda {
 
+// TODO: DEPRECATED
 class VectorGridTexture2 {
 public:
   VectorGridTexture2() {
@@ -86,7 +87,7 @@ public:
 protected:
   GridTexture2<float> uGrid, vGrid;
 };
-
+// TODO: DEPRECATED
 class VectorGridTexture3 {
 public:
   VectorGridTexture3() {
@@ -157,6 +158,112 @@ protected:
   GridTexture3<float> uGrid, vGrid, wGrid;
 };
 
+// Accessor for arrays stored on the device.
+// \tparam T data type
+class VectorGrid2Accessor {
+public:
+  /// \param data raw pointer to device data
+  /// \param addressMode **[default = AccessMode::NONE]** accessMode defines how
+  /// outside of bounds is treated
+  /// \param border * * [default = T()]** border
+  VectorGrid2Accessor(const vec2u &resolution, const vec2f &spacing,
+                      RegularGrid2Accessor<float> u,
+                      RegularGrid2Accessor<float> v)
+      : resolution(resolution), spacing(spacing), u_(u), v_(v) {}
+  virtual __host__ __device__ vec2f operator()(int i, int j) {
+    return 0.5f * vec2f(u_(i, j), v_(i, j));
+  }
+  __host__ __device__ vec2f operator()(point2f wp) {
+    return vec2f(u_(wp), v_(wp));
+  }
+  __host__ __device__ float &u(int i, int j) { return u_(i, j); }
+  __host__ __device__ float &v(int i, int j) { return v_(i, j); }
+  __host__ __device__ float u(int i, int j) const { return u_(i, j); }
+  __host__ __device__ float v(int i, int j) const { return v_(i, j); }
+  __host__ __device__ RegularGrid2Accessor<float> &uAccessor() { return u_; }
+  __host__ __device__ RegularGrid2Accessor<float> &vAccessor() { return v_; }
+
+  const vec2u resolution;
+  const vec2f spacing;
+
+protected:
+  RegularGrid2Accessor<float> u_, v_;
+};
+
+template <MemoryLocation L> class VectorGrid2 {
+public:
+  VectorGrid2() {
+    setSpacing(vec2f(1.f));
+    setOrigin(point2f(0.f));
+  }
+  /// \param res resolution in number of cells
+  /// \param o origin (0,0,0) corner position
+  /// \param s spacing cell size
+  VectorGrid2(vec2u res, point2f o, vec2f s)
+      : resolution_(res), origin_(o), spacing_(s) {
+    uGrid.resize(res);
+    uGrid.setOrigin(o);
+    uGrid.setSpacing(s);
+    vGrid.resize(res);
+    vGrid.setOrigin(o);
+    vGrid.setSpacing(s);
+  }
+  vec2u resolution() const { return resolution_; }
+  vec2f spacing() const { return spacing_; }
+  point2f origin() const { return origin_; }
+  /// Changes grid resolution
+  /// \param res new resolution (in number of cells)
+  virtual void resize(vec2u res) {
+    resolution_ = res;
+    uGrid.resize(res);
+    vGrid.resize(res);
+  }
+  /// Changes grid origin position
+  /// \param o in world space
+  virtual void setOrigin(const point2f &o) {
+    origin_ = o;
+    uGrid.setOrigin(o);
+    vGrid.setOrigin(o);
+  }
+  /// Changes grid cell size
+  /// \param d new size
+  virtual void setSpacing(const vec2f &s) {
+    spacing_ = s;
+    uGrid.setSpacing(s);
+    vGrid.setSpacing(s);
+  }
+  const RegularGrid2<L, float> &u() const { return uGrid; }
+  const RegularGrid2<L, float> &v() const { return vGrid; }
+  RegularGrid2<L, float> &u() { return uGrid; }
+  RegularGrid2<L, float> &v() { return vGrid; }
+  VectorGrid2Accessor accessor() {
+    return VectorGrid2Accessor(resolution_, spacing_, uGrid.accessor(),
+                               vGrid.accessor());
+  }
+  /// Copy data from other staggered grid
+  /// other reference from other field
+  template <MemoryLocation LL> void copy(VectorGrid2<LL> &other) {
+    if (other.resolution() != resolution())
+      resize(other.resolution());
+    setOrigin(other.origin());
+    setSpacing(other.spacing());
+    memcpy(uGrid.data(), other.u().data());
+    memcpy(vGrid.data(), other.v().data());
+  }
+
+protected:
+  vec2u resolution_;
+  point2f origin_;
+  vec2f spacing_;
+  RegularGrid2<L, float> uGrid, vGrid;
+};
+
+// template <MemoryLocation L>
+// void fill3(VectorGrid3<L> &grid, const bbox3f &region, vec3f value,
+//            bool overwrite = false);
+
+using VectorGrid2D = VectorGrid2<MemoryLocation::DEVICE>;
+using VectorGrid2H = VectorGrid2<MemoryLocation::HOST>;
 // Accessor for arrays stored on the device.
 // Indices are accessed as: i * width * height + j * height + k
 // \tparam T data type

@@ -31,7 +31,7 @@
 namespace hermes {
 
 namespace cuda {
-
+// TODO: DEPRECATED
 /// Represents a staggered grid with texture grid
 /// The origin of each staggered grid follows the scheme:
 ///    ----------
@@ -69,6 +69,77 @@ public:
     vGrid.setOrigin(o + vec2f(0.f, -0.5f));
   }
 };
+
+class StaggeredGrid2Accessor : public VectorGrid2Accessor {
+public:
+  StaggeredGrid2Accessor(const vec2u &resolution, const vec2f &spacing,
+                         RegularGrid2Accessor<float> u,
+                         RegularGrid2Accessor<float> v)
+      : VectorGrid2Accessor(resolution, spacing, u, v) {}
+  __host__ __device__ vec2f operator()(int i, int j) override {
+    return 0.5f * vec2f(this->u_(i + 1, j) + this->u_(i, j),
+                        this->v_(i, j + 1) + this->v_(i, j));
+  }
+};
+
+/// Represents a staggered grid with regular grid
+/// The origin of each staggered grid follows the scheme:
+///    ----------
+///   |         |
+///   u    o    |
+///   |  w      |
+///   -----v----
+template <MemoryLocation L> class StaggeredGrid2 : public VectorGrid2<L> {
+public:
+  StaggeredGrid2() {
+    setSpacing(vec2f(1.f));
+    setOrigin(point2f(0.f));
+  }
+  /// \param res resolution in number of cells
+  /// \param o origin (0,0) corner position
+  /// \param s cell size
+  StaggeredGrid2(vec2u res, point2f o, const vec2f &s) {
+    this->origin_ = o;
+    this->resolution_ = res;
+    this->spacing_ = s;
+    this->uGrid.resize(res + vec2u(1, 0));
+    this->uGrid.setOrigin(o + s.x * vec2f(-0.5f, 0.f));
+    this->uGrid.setSpacing(s);
+    this->vGrid.resize(res + vec2u(0, 1));
+    this->vGrid.setOrigin(o + s.y * vec2f(0.f, -0.5f));
+    this->vGrid.setSpacing(s);
+  }
+  /// Changes grid cell size
+  /// \param d new size
+  void setSpacing(const vec2f &s) override {
+    this->spacing_ = s;
+    this->uGrid.setSpacing(s);
+    this->vGrid.setSpacing(s);
+    setOrigin(this->origin_);
+  }
+  /// Changes grid resolution
+  /// \param res new resolution (in number of cells)
+  void resize(vec2u res) override {
+    this->resolution_ = res;
+    this->uGrid.resize(res + vec2u(1, 0));
+    this->vGrid.resize(res + vec2u(0, 1));
+  }
+  /// Changes grid origin position
+  /// \param o in world space
+  void setOrigin(const point2f &o) override {
+    this->origin_ = o;
+    this->uGrid.setOrigin(o + this->spacing_.x * vec2f(-0.5f, 0.f));
+    this->vGrid.setOrigin(o + this->spacing_.y * vec2f(0.f, -0.5f));
+  }
+  StaggeredGrid2Accessor accessor() {
+    return StaggeredGrid2Accessor(this->resolution_, this->spacing_,
+                                  this->uGrid.accessor(),
+                                  this->vGrid.accessor());
+  }
+};
+
+using StaggeredGrid2D = StaggeredGrid2<MemoryLocation::DEVICE>;
+using StaggeredGrid2H = StaggeredGrid2<MemoryLocation::HOST>;
 
 class StaggeredGrid3Accessor : public VectorGrid3Accessor {
 public:

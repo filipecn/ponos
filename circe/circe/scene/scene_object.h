@@ -35,11 +35,10 @@
 
 namespace circe {
 
-/** \brief interface
- * The Scene Object Interface represents an drawable object that can be
- * intersected
- * by a ray.
- */
+///  \brief interface
+/// The Scene Object Interface represents an drawable object that can be
+/// intersected
+/// by a ray.
 class SceneObject : public InteractiveObjectInterface {
 public:
   SceneObject() : visible(true) {}
@@ -120,14 +119,50 @@ public:
   }
   void setShader(ShaderProgramPtr shader) { shader_ = shader; }
   ShaderProgramPtr shader() { return shader_; }
-  SceneMeshPtr mesh() { return mesh_; }
+  SceneMeshSPtr mesh() { return mesh_; }
 
   std::function<void(ShaderProgram *, const CameraInterface *,
                      ponos::Transform)>
       drawCallback;
 
 protected:
-  SceneMeshPtr mesh_;
+  SceneMeshSPtr mesh_;
+  ShaderProgramPtr shader_;
+};
+
+/// \brief
+class SceneDynamicMeshObject : public SceneObject {
+public:
+  SceneDynamicMeshObject() {}
+  SceneDynamicMesh &mesh() { return mesh_; }
+  void draw(const CameraInterface *camera, ponos::Transform t) override {
+    if (!visible)
+      return;
+    mesh_.bind();
+    if (shader_) {
+      mesh_.vertexBuffer()->locateAttributes(*shader_.get());
+      shader_->begin();
+    } else
+      glEnableVertexAttribArray(0);
+    if (draw_callback)
+      draw_callback(shader_.get(), camera, transform * t);
+    glDrawElements(mesh_.indexBuffer()->bufferDescriptor.elementType,
+                   mesh_.indexBuffer()->bufferDescriptor.elementCount *
+                       mesh_.indexBuffer()->bufferDescriptor.elementSize,
+                   GL_UNSIGNED_INT, 0);
+    mesh_.unbind();
+    if (shader_)
+      shader_->end();
+    CHECK_GL_ERRORS;
+  }
+  void setShader(ShaderProgramPtr shader) { shader_ = shader; }
+
+  std::function<void(ShaderProgram *, const CameraInterface *,
+                     ponos::Transform)>
+      draw_callback;
+
+protected:
+  SceneDynamicMesh mesh_;
   ShaderProgramPtr shader_;
 };
 

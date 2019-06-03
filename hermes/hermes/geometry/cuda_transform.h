@@ -267,6 +267,9 @@ __host__ __device__ Transform<T> orthographic(T znear, T zfar);
 
 #include "cuda_transform.inl"
 
+using Transform2f = Transform2<float>;
+using Transform3f = Transform<float>;
+
 } // namespace cuda
 
 } // namespace hermes

@@ -5,7 +5,7 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
+ * iM the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
@@ -22,20 +22,8 @@
  *
  */
 
-#ifndef HERMES_STORAGE_ARRAY_KERNELS_H
-#define HERMES_STORAGE_ARRAY_KERNELS_H
+#include <poseidon/solvers/cuda_practical_liquids_solver2.h>
 
-#include <cuda_runtime.h>
-
-namespace hermes {
-
-// template <typename T>
-// __global__ void __fillArray(T *data, unsigned int n, T value) {
-//   unsigned int index = blockDim.x * blockIdx.x + threadIdx.x;
-//   if (index < n)
-//     data[index] = value;
-// }
-
-} // namespace hermes
-
-#endif // HERMES_STORAGE_ARRAY_KERNELS_H
+namespace poseidon {
+namespace cuda {}
+} // namespace poseidon

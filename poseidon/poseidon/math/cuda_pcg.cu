@@ -31,6 +31,79 @@ namespace cuda {
 
 using namespace hermes::cuda;
 
+void pcg(MemoryBlock1Dd &x, FDMatrix2D &A, MemoryBlock1Dd &b,
+         size_t maxNumberOfIterations, float tolerance) {
+  // cpu memory
+  MemoryBlock1Hd h_r(b.size(), 0);
+  MemoryBlock1Hd h_z(b.size(), 0);
+  MemoryBlock1Hd precon(b.size(), 0);
+  // FDMatrix2H h_A(A.gridSize());
+  // h_A.copy(A);
+  // mic0(precon, h_A, 0.97, 0.25);
+  // device memory
+  MemoryBlock1Dd m;
+  MemoryBlock1Dd r(b.size(), 0); // residual
+  MemoryBlock1Dd z(b.size(), 0); // auxiliar
+  MemoryBlock1Dd s(b.size(), 0); // search
+  std::cerr << "max " << maxNumberOfIterations << std::endl;
+  // r = b - A * x
+  mul(A, x, r);
+  sub(b, r, r);
+  if (infnorm(r, m) <= tolerance)
+    return;
+  // z = M * r
+  memcpy(z, r);
+  // memcpy(h_r, r);
+  // memcpy(h_z, z);
+  // applyMIC0(h_A, precon, h_r, h_z);
+  // memcpy(z, h_z);
+  // s = z
+  memcpy(s, z);
+  // sigma = z '* r
+  double sigma = dot(z, r, m);
+  // std::cerr << "sigma = " << sigma << std::endl;
+  size_t it = 0;
+  // std::cerr << "S " << s << std::endl;
+  while (it < maxNumberOfIterations) {
+    // z = As
+    mul(A, s, z);
+    // std::cerr << "Z " << z << std::endl;
+    // std::cerr << "S " << s << std::endl;
+    // alpha = sigma / (z '* s)
+    double alpha = sigma / dot(z, s, m);
+    // std::cerr << "alpha " << alpha << std::endl;
+    // x = alpha * s + x
+    axpy(alpha, s, x, x);
+    // r = r - alpha * z
+    axpy(-alpha, z, r, r);
+    // std::cerr << "r norm test\n";
+    // std::cerr << r << std::endl;
+    if (infnorm(r, m) <= tolerance) {
+      std::cerr << "PCG RUN with " << it << " iterations.\n";
+      return;
+    }
+    // z = M * r
+    memcpy(z, r);
+    // memcpy(h_r, r);
+    // memcpy(h_z, z);
+    // applyMIC0(h_A, precon, h_r, h_z);
+    // memcpy(z, h_z);
+    // sigmaNew = z '* r
+    double sigmaNew = dot(z, r, m);
+    // std::cerr << "sigmaNew " << sigmaNew << std::endl;
+    // if (sigmaNew < tolerance * tolerance)
+    //   break;
+    // s = z + (sigmaNew / sigma) * s
+    axpy(sigmaNew / sigma, s, z, s);
+    sigma = sigmaNew;
+    ++it;
+  }
+  // auto acc = h_A.accessor();
+  // std::cerr << "BAD PCG!\n" << acc << std::endl;
+  // std::cerr << b << std::endl;
+  exit(-1);
+}
+
 void mic0(MemoryBlock1Hd &precon, FDMatrix3H &h_A, double tal, double sigma) {
 #define SQR(A) ((A) * (A))
   auto A = h_A.accessor();

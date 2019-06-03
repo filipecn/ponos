@@ -71,8 +71,12 @@ inline __host__ __device__ Color tonRGB(const Color &rgb) {
 /// \param nRGB [0..1]
 /// \return Color [0..255]
 inline __host__ __device__ Color toRGB(const Color &nRGB) {
-  return {(int)(255.9999f * nRGB.r), (int)(255.9999f * nRGB.g),
-          (int)(255.9999f * nRGB.b), (int)(255.9999f * nRGB.a)};
+  int r = 255.9999f * nRGB.r;
+  int g = 255.9999f * nRGB.g;
+  int b = 255.9999f * nRGB.b;
+  int a = 255.9999f * nRGB.a;
+  return {static_cast<float>(r), static_cast<float>(g), static_cast<float>(b),
+          static_cast<float>(a)};
 }
 /// \param nRGB linear color [0..1]
 /// \return Color in sRGB space [0..1]

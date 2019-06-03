@@ -5,6 +5,7 @@ main.cpp
 #particle_system.cu 
 #array.cu
 utils.h
+algorithms.cu
 utils.cu
 transform.cu
 numeric.cu

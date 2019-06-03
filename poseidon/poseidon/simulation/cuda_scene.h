@@ -12,6 +12,16 @@ template <typename T> class Scene2 {
 public:
   Collider2<T> **colliders = nullptr;
   Collider2<T> **list = nullptr;
+  void resize(hermes::cuda::vec2u size) {
+    target_temperature.resize(size);
+    smoke_source.resize(size);
+  }
+  void setSpacing(hermes::cuda::vec2f spacing) {
+    target_temperature.setSpacing(spacing);
+    smoke_source.setSpacing(spacing);
+  }
+  hermes::cuda::RegularGrid2Df target_temperature;
+  hermes::cuda::RegularGrid2Duc smoke_source;
 };
 
 template <typename T> class Scene3 {

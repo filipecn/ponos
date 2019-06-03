@@ -27,6 +27,7 @@ void renderScalarGradient(unsigned int w, unsigned int h,
 
 void renderDensity(unsigned int w, unsigned int h,
                    const hermes::cuda::Texture<float> &in, unsigned int *out);
+void renderDensity(hermes::cuda::RegularGrid2Df &in, unsigned int *out);
 
 void renderSolids(unsigned int w, unsigned int h,
                   const hermes::cuda::Texture<unsigned char> &in,

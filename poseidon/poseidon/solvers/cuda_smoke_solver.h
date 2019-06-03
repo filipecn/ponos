@@ -31,6 +31,7 @@
 #include <poseidon/math/cuda_fd.h>
 #include <poseidon/simulation/cuda_integrator.h>
 #include <poseidon/simulation/cuda_scene.h>
+#include <poseidon/solvers/cuda_smoke_solver2_steps.h>
 #include <poseidon/solvers/cuda_smoke_solver3_kernels.h>
 #include <poseidon/solvers/cuda_smoke_solver_kernels.h>
 
@@ -56,6 +57,27 @@ inline __global__ void __setupScene(poseidon::cuda::Collider2<float> **solids,
         hermes::cuda::point2(1.f - d, 0.f), hermes::cuda::point2(1.f, 1.f)));
     solids[4] = new poseidon::cuda::SphereCollider2<float>(
         hermes::cuda::point2(0.5f, 0.5f), 0.1f);
+    *scene = new poseidon::cuda::Collider2Set<float>(solids, 4);
+  }
+}
+
+inline __global__ void __setupScene(poseidon::cuda::Collider2<float> **solids,
+                                    poseidon::cuda::Collider2<float> **scene,
+                                    int res) {
+  if (threadIdx.x == 0 && blockIdx.x == 0) {
+    float d = 1.0 / res;
+    // floor
+    solids[0] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+        hermes::cuda::point2(0.f), hermes::cuda::point2(1.f, d)));
+    // ceil
+    solids[1] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+        hermes::cuda::point2(0.f, 1.f - d), hermes::cuda::point2(1.f)));
+    // left
+    solids[2] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+        hermes::cuda::point2(0.f), hermes::cuda::point2(d, 1.f)));
+    // right
+    solids[2] = new poseidon::cuda::BoxCollider2<float>(hermes::cuda::bbox2(
+        hermes::cuda::point2(1.f - d, 0.f), hermes::cuda::point2(1.f)));
     *scene = new poseidon::cuda::Collider2Set<float>(solids, 4);
   }
 }
@@ -117,6 +139,24 @@ inline __global__ void __rasterColliders(Collider2<float> *const *colliders,
 }
 
 inline __global__ void
+__rasterColliders(Collider2<float> *const *colliders,
+                  hermes::cuda::RegularGrid2Accessor<unsigned char> solid,
+                  hermes::cuda::RegularGrid2Accessor<float> u,
+                  hermes::cuda::RegularGrid2Accessor<float> v) {
+  int x = blockIdx.x * blockDim.x + threadIdx.x;
+  int y = blockIdx.y * blockDim.y + threadIdx.y;
+  if (solid.isIndexStored(x, y)) {
+    using namespace hermes::cuda;
+    if ((*colliders)->intersect(solid.worldPosition(x, y)))
+      solid(x, y) = 1;
+    else
+      solid(x, y) = 0;
+    u(x, y) = u(x + 1, y) = 0;
+    v(x, y) = v(x, y + 1) = 0;
+  }
+}
+
+inline __global__ void
 __rasterColliders(Collider3<float> *const *colliders,
                   hermes::cuda::RegularGrid3Accessor<unsigned char> solid,
                   hermes::cuda::RegularGrid3Accessor<float> u,
@@ -153,10 +193,10 @@ inline __global__ void __normalizeIFFT(float *g_data, int width, int height,
 
 /// Eulerian grid based solver for smoke simulations. Stores its data in fast
 /// device texture memory.
-template <typename GridType> class GridSmokeSolver2 {
+template <typename GridType> class GridSmokeSolver2_t {
 public:
-  GridSmokeSolver2() = default;
-  ~GridSmokeSolver2() {
+  GridSmokeSolver2_t() = default;
+  ~GridSmokeSolver2_t() {
     unbindTextures();
     __freeScene<<<1, 1>>>(scene.list);
     using namespace hermes::cuda;
@@ -429,6 +469,183 @@ protected:
 
 /// Eulerian grid based solver for smoke simulations. Stores its data in fast
 /// device texture memory.
+class GridSmokeSolver2 {
+public:
+  GridSmokeSolver2() {
+    uIntegrator_.reset(new MacCormackIntegrator2());
+    vIntegrator_.reset(new MacCormackIntegrator2());
+    integrator_.reset(new MacCormackIntegrator2());
+    addScalarField(); // 0 density
+    addScalarField(); // 1 temperature
+  }
+  ~GridSmokeSolver2() {
+    __freeScene<<<1, 1>>>(scene_.list);
+    using namespace hermes::cuda;
+    CUDA_CHECK(cudaFree(scene_.list));
+    CUDA_CHECK(cudaFree(scene_.colliders));
+  }
+  void setUIntegrator(Integrator2 *integrator) {
+    uIntegrator_.reset(integrator);
+  }
+  void setVIntegrator(Integrator2 *integrator) {
+    vIntegrator_.reset(integrator);
+  }
+  void setIntegrator(Integrator2 *integrator) { integrator_.reset(integrator); }
+  void init() {
+    using namespace hermes::cuda;
+    CUDA_CHECK(cudaMalloc(&scene_.list, 6 * sizeof(Collider2<float> *)));
+    CUDA_CHECK(cudaMalloc(&scene_.colliders, sizeof(Collider2<float> *)));
+    hermes::cuda::fill2(scene_.target_temperature.data().accessor(), 273.f);
+    hermes::cuda::fill2(scene_.smoke_source.data().accessor(),
+                        (unsigned char)0);
+    for (size_t i = 0; i < 2; i++) {
+      hermes::cuda::fill2(velocity_[i].u().data().accessor(), 0.f);
+      hermes::cuda::fill2(velocity_[i].v().data().accessor(), 0.f);
+      hermes::cuda::fill2(scalarFields_[i][0].data().accessor(), 0.f);
+      hermes::cuda::fill2(scalarFields_[i][1].data().accessor(), 273.f);
+    }
+    hermes::cuda::fill2(solidScalarFields_[0].data().accessor(), 0.f);
+    hermes::cuda::fill2(solidScalarFields_[1].data().accessor(), 273.f);
+    hermes::cuda::fill2(vorticityField_.u().data().accessor(), 0.f);
+    hermes::cuda::fill2(vorticityField_.v().data().accessor(), 0.f);
+  }
+  ///
+  /// \param res
+  void setResolution(const ponos::uivec2 &res) {
+    resolution_ = hermes::cuda::vec2u(res.x, res.y);
+    for (size_t i = 0; i < 2; i++) {
+      velocity_[i].resize(resolution_);
+      for (auto &f : scalarFields_[i])
+        f.resize(resolution_);
+    }
+    for (auto &f : solidScalarFields_)
+      f.resize(resolution_);
+    vorticityField_.resize(resolution_);
+    pressure_.resize(resolution_);
+    divergence_.resize(resolution_);
+    solid_.resize(resolution_);
+    solidVelocity_.resize(resolution_);
+    forceField_.resize(resolution_);
+    integrator_->set(scalarFields_[0][0].info());
+    uIntegrator_->set(velocity_[0].u().info());
+    vIntegrator_->set(velocity_[0].v().info());
+    pressureMatrix_.resize(resolution_);
+    scene_.resize(resolution_);
+  }
+  /// Sets cell size
+  /// \param _dx scale
+  void setSpacing(const ponos::vec2f &s) {
+    spacing_ = hermes::cuda::vec2f(s.x, s.y);
+    for (size_t i = 0; i < 2; i++) {
+      velocity_[i].setSpacing(spacing_);
+      for (auto &f : scalarFields_[i])
+        f.setSpacing(spacing_);
+    }
+    for (auto &f : solidScalarFields_)
+      f.setSpacing(spacing_);
+    vorticityField_.setSpacing(spacing_);
+    pressure_.setSpacing(spacing_);
+    divergence_.setSpacing(spacing_);
+    solid_.setSpacing(spacing_);
+    solidVelocity_.setSpacing(spacing_);
+    forceField_.setSpacing(spacing_);
+    integrator_->set(scalarFields_[0][0].info());
+    uIntegrator_->set(velocity_[0].u().info());
+    vIntegrator_->set(velocity_[0].v().info());
+    scene_.setSpacing(spacing_);
+  }
+  /// Sets lower left corner position
+  /// \param o offset
+  void setOrigin(const ponos::point2f &o) {
+    hermes::cuda::point2f p(o.x, o.y);
+    for (size_t i = 0; i < 2; i++) {
+      velocity_[i].setOrigin(p);
+      for (auto &f : scalarFields_[i])
+        f.setOrigin(p);
+    }
+    for (auto &f : solidScalarFields_)
+      f.setOrigin(p);
+    vorticityField_.setOrigin(p);
+    pressure_.setOrigin(p);
+    divergence_.setOrigin(p);
+    solid_.setOrigin(p);
+    solidVelocity_.setOrigin(p);
+    forceField_.setOrigin(p);
+    integrator_->set(scalarFields_[0][0].info());
+    uIntegrator_->set(velocity_[0].u().info());
+    vIntegrator_->set(velocity_[0].v().info());
+  }
+  size_t addScalarField() {
+    scalarFields_[src].emplace_back();
+    scalarFields_[dst].emplace_back();
+    solidScalarFields_.emplace_back();
+    solidScalarFields_.emplace_back();
+    return scalarFields_[src].size() - 1;
+  }
+  /// Advances one simulation step
+  /// \param dt time step
+  void step(float dt) {
+    // rasterColliders();
+    // uIntegrator_->advect(velocity_[src], solid_, solidVelocity_.u(),
+    //                      velocity_[src].u(), velocity_[dst].u(), dt);
+    // vIntegrator_->advect(velocity_[src], solid_, solidVelocity_.v(),
+    //                      velocity_[src].v(), velocity_[dst].v(), dt);
+    velocity_[dst].copy(velocity_[src]);
+    for (size_t i = 0; i < scalarFields_[src].size(); i++)
+      integrator_->advect(velocity_[dst], solid_, solidScalarFields_[i],
+                          scalarFields_[src][i], scalarFields_[dst][i], dt);
+    src = src ? 0 : 1;
+    dst = dst ? 0 : 1;
+    hermes::cuda::fill2(forceField_.u().data().accessor(), 0.f);
+    hermes::cuda::fill2(forceField_.v().data().accessor(), 0.f);
+    addBuoyancyForce(forceField_, solid_, scalarFields_[src][0],
+                     scalarFields_[src][1], 273, 1.0f, 0.0f);
+    // addVorticityConfinementForce(forceField_, velocity_[src],
+    // solid_,vorticityField_, 2.f, dt);
+    // applyForceField(velocity_[src], solid_, forceField_, dt);
+    // injectSmoke(scalarFields_[src][0], scene_.smoke_source, dt);
+    // injectTemperature(scalarFields_[src][1], scene_.target_temperature, dt);
+    computeDivergence(velocity_[src], solid_, solidVelocity_, divergence_);
+    solvePressureSystem(pressureMatrix_, divergence_, pressure_, solid_, dt);
+    projectionStep_t(pressure_, solid_, velocity_[src], dt);
+  }
+  /// Raster collider bodies and velocities into grid simulations
+  void rasterColliders() {
+    __setupScene<<<1, 1>>>(scene_.list, scene_.colliders, resolution_.x);
+    hermes::ThreadArrayDistributionInfo td(resolution_);
+    __rasterColliders<<<td.gridSize, td.blockSize>>>(
+        scene_.colliders, solid_.accessor(), solidVelocity_.u().accessor(),
+        solidVelocity_.v().accessor());
+  }
+  Scene2<float> &scene() { return scene_; }
+  hermes::cuda::RegularGrid2Df &scalarField(size_t i) {
+    return scalarFields_[src][i];
+  }
+  hermes::cuda::StaggeredGrid2D &velocity() { return velocity_[src]; }
+  hermes::cuda::RegularGrid2Duc &solid() { return solid_; }
+  hermes::cuda::RegularGrid2Df &divergence() { return divergence_; }
+
+private:
+  Scene2<float> scene_;
+  std::shared_ptr<Integrator2> vIntegrator_;
+  std::shared_ptr<Integrator2> uIntegrator_;
+  std::shared_ptr<Integrator2> integrator_;
+  poseidon::cuda::FDMatrix2D pressureMatrix_;
+  hermes::cuda::StaggeredGrid2D velocity_[2];
+  hermes::cuda::StaggeredGrid2D solidVelocity_;
+  hermes::cuda::VectorGrid2D forceField_, vorticityField_;
+  hermes::cuda::RegularGrid2Df pressure_;
+  hermes::cuda::RegularGrid2Df divergence_;
+  hermes::cuda::RegularGrid2Duc solid_;
+  std::vector<hermes::cuda::RegularGrid2Df> scalarFields_[2];
+  std::vector<hermes::cuda::RegularGrid2Df> solidScalarFields_;
+  hermes::cuda::vec2u resolution_;
+  hermes::cuda::vec2f spacing_;
+  size_t src = 0;
+  size_t dst = 1;
+};
+/// Eulerian grid based solver for smoke simulations. Stores its data in fast
+/// device texture memory.
 class GridSmokeSolver3 {
 public:
   GridSmokeSolver3() {
@@ -547,24 +764,26 @@ public:
   /// \param dt time step
   void step(float dt) {
     // rasterColliders();
-    uIntegrator_->advect(velocity_[src], solid_, velocity_[src].u(),
-                         velocity_[dst].u(), dt);
-    vIntegrator_->advect(velocity_[src], solid_, velocity_[src].v(),
-                         velocity_[dst].v(), dt);
-    wIntegrator_->advect(velocity_[src], solid_, velocity_[src].w(),
-                         velocity_[dst].w(), dt);
+    // uIntegrator_->advect(velocity_[src], solid_, velocity_[src].u(),
+    //                      velocity_[dst].u(), dt);
+    // vIntegrator_->advect(velocity_[src], solid_, velocity_[src].v(),
+    //                      velocity_[dst].v(), dt);
+    // wIntegrator_->advect(velocity_[src], solid_, velocity_[src].w(),
+    //                      velocity_[dst].w(), dt);
+    velocity_[dst].copy(velocity_[src]);
     for (size_t i = 0; i < scalarFields_[src].size(); i++)
       integrator_->advect(velocity_[dst], solid_, scalarFields_[src][i],
                           scalarFields_[dst][i], dt);
     src = src ? 0 : 1;
     dst = dst ? 0 : 1;
+    return;
     hermes::cuda::fill3(forceField_.u().data().accessor(), 0.f);
     hermes::cuda::fill3(forceField_.v().data().accessor(), 0.f);
     hermes::cuda::fill3(forceField_.w().data().accessor(), 0.f);
     addBuoyancyForce(forceField_, solid_, scalarFields_[src][0],
                      scalarFields_[src][1], 273, 1.0f, 0.04f);
     addVorticityConfinementForce(forceField_, velocity_[src], solid_,
-                                 vorticityField_, 0.5f, dt);
+                                 vorticityField_, 2.f, dt);
     applyForceField(velocity_[src], solid_, forceField_, dt);
     injectSmoke(scalarFields_[src][0], scene_.smoke_source, dt);
     injectTemperature(scalarFields_[src][1], scene_.target_temperature, dt);

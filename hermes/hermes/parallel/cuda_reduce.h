@@ -27,6 +27,7 @@
 
 #include <hermes/common/cuda.h>
 #include <hermes/common/defs.h>
+#include <hermes/storage/cuda_storage_utils.h>
 
 namespace hermes {
 
@@ -130,6 +131,144 @@ template <typename T> T reduceAdd(const T *data, unsigned int n) {
   T h_r = 0;
   // __reduceAdd<blockSize, T><<<gridSize, blockSize>>>(data, r, n);
   return h_r;
+}
+
+template <typename T>
+__global__ void __min(MemoryBlock2Accessor<T> data, T *c) {
+  __shared__ float cache[256];
+
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  int cacheindex = threadIdx.x;
+  int n = data.size().x * data.size().y;
+
+  T temp = 1 << 20;
+  while (tid < n) {
+    int i = tid / data.size().x;
+    int j = tid % data.size().x;
+    temp = fminf(temp, data(i, j));
+    tid += blockDim.x * gridDim.x;
+  }
+  cache[cacheindex] = temp;
+  __syncthreads();
+
+  int i = blockDim.x / 2;
+  while (i != 0) {
+    if (cacheindex < i)
+      cache[cacheindex] = fminf(cache[cacheindex], cache[cacheindex + i]);
+    __syncthreads();
+    i /= 2;
+  }
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
+}
+
+template <typename T> T min(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+  size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
+  if (blockSize > 32)
+    blockSize = 32;
+  T *c = new T[blockSize];
+  T *d_c;
+  cudaMalloc((void **)&d_c, blockSize * sizeof(T));
+  __min<<<blockSize, 256>>>(data.accessor(), d_c);
+  cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
+  T norm = 0;
+  for (int i = 0; i < blockSize; i++)
+    norm = fmin(norm, c[i]);
+  cudaFree(d_c);
+  delete[] c;
+  return norm;
+}
+
+template <typename T>
+__global__ void __max(MemoryBlock2Accessor<T> data, T *c) {
+  __shared__ float cache[256];
+
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  int cacheindex = threadIdx.x;
+  int n = data.size().x * data.size().y;
+
+  T temp = -1 << 20;
+  while (tid < n) {
+    int i = tid / data.size().x;
+    int j = tid % data.size().x;
+    temp = fmaxf(temp, data(i, j));
+    tid += blockDim.x * gridDim.x;
+  }
+  cache[cacheindex] = temp;
+  __syncthreads();
+
+  int i = blockDim.x / 2;
+  while (i != 0) {
+    if (cacheindex < i)
+      cache[cacheindex] = fmaxf(cache[cacheindex], cache[cacheindex + i]);
+    __syncthreads();
+    i /= 2;
+  }
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
+}
+
+template <typename T> T max(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+  size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
+  if (blockSize > 32)
+    blockSize = 32;
+  T *c = new T[blockSize];
+  T *d_c;
+  cudaMalloc((void **)&d_c, blockSize * sizeof(T));
+  __max<<<blockSize, 256>>>(data.accessor(), d_c);
+  cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
+  T norm = 0;
+  for (int i = 0; i < blockSize; i++)
+    norm = fmax(norm, c[i]);
+  cudaFree(d_c);
+  delete[] c;
+  return norm;
+}
+
+template <typename T>
+__global__ void __max_abs(MemoryBlock2Accessor<T> data, T *c) {
+  __shared__ float cache[256];
+
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  int cacheindex = threadIdx.x;
+  int n = data.size().x * data.size().y;
+
+  T temp = -1 << 20;
+  while (tid < n) {
+    int i = tid / data.size().x;
+    int j = tid % data.size().x;
+    temp = fmaxf(temp, fabsf(data(i, j)));
+    tid += blockDim.x * gridDim.x;
+  }
+  cache[cacheindex] = temp;
+  __syncthreads();
+
+  int i = blockDim.x / 2;
+  while (i != 0) {
+    if (cacheindex < i)
+      cache[cacheindex] = fmaxf(cache[cacheindex], cache[cacheindex + i]);
+    __syncthreads();
+    i /= 2;
+  }
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
+}
+
+template <typename T> T maxAbs(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+  size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
+  if (blockSize > 32)
+    blockSize = 32;
+  T *c = new T[blockSize];
+  T *d_c;
+  cudaMalloc((void **)&d_c, blockSize * sizeof(T));
+  __max_abs<<<blockSize, 256>>>(data.accessor(), d_c);
+  cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
+  T norm = 0;
+  for (int i = 0; i < blockSize; i++)
+    norm = fmax(norm, c[i]);
+  cudaFree(d_c);
+  delete[] c;
+  return norm;
 }
 
 } // namespace cuda

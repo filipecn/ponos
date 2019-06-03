@@ -36,7 +36,6 @@ public:
   typedef T ScalarType;
   __host__ __device__ Point2();
   __host__ __device__ Point2(T f);
-  __host__ __device__ explicit Point2(const T *v);
   __host__ __device__ Point2(T _x, T _y);
   // access
   __host__ __device__ T operator[](int i) const;
@@ -195,6 +194,23 @@ __host__ __device__ bool operator>=(const Point3<T> &q, const Point3<T> &p) {
 template <typename T>
 __host__ __device__ bool operator<=(const Point3<T> &q, const Point3<T> &p) {
   return q.x <= p.x && q.y <= p.y && q.z <= p.z;
+}
+template <typename T>
+__host__ __device__ bool operator<(const Point3<T> &left,
+                                   const Point3<T> &right) {
+  if (left.x < right.x)
+    return true;
+  else if (left.x > right.x)
+    return false;
+  if (left.y < right.y)
+    return true;
+  else if (left.y > right.y)
+    return false;
+  if (left.z < right.z)
+    return true;
+  else if (left.z > right.z)
+    return false;
+  return false;
 }
 
 template <typename T> T distance(const Point3<T> &a, const Point3<T> &b) {

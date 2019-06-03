@@ -40,7 +40,7 @@ void applyForce(hermes::cuda::VectorGridTexture2 &forceField,
 
 int main() {
   // SIM
-  poseidon::cuda::GridSmokeSolver2<hermes::cuda::VectorGridTexture2> solver;
+  poseidon::cuda::GridSmokeSolver2_t<hermes::cuda::VectorGridTexture2> solver;
   solver.addScalarField();
   solver.setUIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setVIntegrator(new poseidon::cuda::MacCormackIntegrator2());
@@ -115,7 +115,7 @@ int main() {
       hermes::cuda::point2f start(forcePoint.x, forcePoint.y);
       hermes::cuda::point2f end(mousePoint.x, mousePoint.y);
       applyForce(solver.forceFieldData(), start, 0.1,
-                 hermes::cuda::normalize(end - start) * 1000);
+                 hermes::cuda::normalize(end - start) * 1000.f);
       forcePoint = mousePoint;
     }
   };

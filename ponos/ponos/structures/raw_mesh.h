@@ -45,13 +45,11 @@ enum class GeometricPrimitiveType {
   CUSTOM
 };
 
-/** \brief mesh structure
- *
- * Stores the elements of the mesh in simple arrays. This class
- * is the one that actually stores the geometry, then other
- * objects in the system can just use its reference avoiding
- * duplicating data.
- */
+///  \brief mesh structure
+/// Stores the elements of the mesh in simple arrays. This class
+/// is the one that actually stores the geometry, then other
+/// objects in the system can just use its reference avoiding
+/// duplicating data.
 class RawMesh {
 public:
   RawMesh() {
@@ -123,11 +121,10 @@ public:
   GeometricPrimitiveType primitiveType;
 };
 
-/** Reshapes the raw mesh to fit into a BBox.
- * \param rm **[in/out]** Raw Mesh that will soffer the transformation
- * \param bbox **[in]** Bounding box to be fitted
- * The rm must have this Bounding Box computed before passsing to this function.
- */
+///  Reshapes the raw mesh to fit into a BBox.
+/// \param rm **[in/out]** Raw Mesh that will soffer the transformation. Note:
+/// Must have this Bounding Box computed before passsing to this function.
+/// \param bbox **[in]** Bounding box to be fitted
 void fitToBBox(RawMesh *rm, const bbox2 &bbox);
 
 std::ostream &operator<<(std::ostream &os, RawMesh &rm);

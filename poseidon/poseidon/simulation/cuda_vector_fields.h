@@ -34,7 +34,12 @@ namespace cuda {
 __host__ __device__ hermes::cuda::vec3f
 enrightDeformationField(hermes::cuda::point3f p);
 
+__host__ __device__ hermes::cuda::vec2f
+zalesakDeformationField(hermes::cuda::point2f p);
+
 void applyEnrightDeformationField(hermes::cuda::StaggeredGrid3D &grid);
+
+void applyZalesakDeformationField(hermes::cuda::StaggeredGrid2D &grid);
 
 } // namespace cuda
 

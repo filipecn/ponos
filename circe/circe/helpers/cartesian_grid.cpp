@@ -60,11 +60,13 @@ CartesianGrid::CartesianGrid(int dx, int dy, int dz) {
   planes[1].high = dy;
   planes[2].low = -dz;
   planes[2].high = dz;
+  updateBuffers();
 }
 
 void CartesianGrid::setDimension(size_t d, int a, int b) {
   planes[d].low = a;
   planes[d].high = b;
+  updateBuffers();
 }
 
 void CartesianGrid::draw(const CameraInterface *camera, ponos::Transform t) {

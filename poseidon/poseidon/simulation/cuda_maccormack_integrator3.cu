@@ -139,7 +139,7 @@ __global__ void __computePhiN1(StaggeredGrid3Accessor vel,
                             max(nodeValues[2],
                                 max(nodeValues[0], nodeValues[1])))))));
 
-    out(i, j, k) = phiN1Hat(wp) + 0.5 * (in(i, j, k) - phiNHat(i, j, k));
+    out(i, j, k) = phiN1Hat(i, j, k) + 0.5 * (in(i, j, k) - phiNHat(i, j, k));
     out(i, j, k) = max(min(out(i, j, k), phiMax), phiMin);
   }
 }

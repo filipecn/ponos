@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_FONT_TEXTURE_H
 #define CIRCE_FONT_TEXTURE_H
@@ -62,7 +62,7 @@ public:
   void setText(std::string text);
   void render();
   ponos::RawMeshSPtr rawMesh;
-  SceneMeshPtr mesh;
+  SceneMeshSPtr mesh;
   Texture texture;
 };
 
@@ -92,6 +92,6 @@ private:
   std::map<GLchar, Character> characters;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_FONT_TEXTURE_H

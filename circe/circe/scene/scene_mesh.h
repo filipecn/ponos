@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_SCENE_MESH_H
 #define CIRCE_SCENE_MESH_H
@@ -30,7 +30,7 @@
 
 namespace circe {
 
-/// Set of buffers created that represent a raw mesh for rendering.
+/// Set of buffers that represent a raw mesh for rendering.
 class SceneMesh {
 public:
   /// \param rm raw mesh
@@ -53,12 +53,54 @@ protected:
   IndexBuffer indexBuffer_;
 };
 
-typedef std::shared_ptr<SceneMesh> SceneMeshPtr;
+/// Set of buffers created that represent a raw mesh for rendering. The mesh
+/// data can be updated.
+class SceneDynamicMesh {
+public:
+  /// \brief Construct a new Scene Dynamic Mesh object
+  SceneDynamicMesh();
+  /// \brief Construct a new Scene Dynamic Mesh object
+  /// \param vertex_buffer_desc **[in]**
+  /// \param index_buffer_desc **[in]**
+  SceneDynamicMesh(const BufferDescriptor &vertex_buffer_desc,
+                   const BufferDescriptor &index_buffer_desc);
+  /// \brief Destroy the Scene Dynamic Mesh object
+  ~SceneDynamicMesh();
+  /// Binds buffers
+  void bind();
+  /// Unbinds buffers
+  void unbind();
+  /// \return vertex buffer pointer
+  const VertexBuffer *vertexBuffer() const;
+  /// \return index buffer pointer
+  const IndexBuffer *indexBuffer() const;
+  void updateBuffers();
+  /// \param vertex_buffer_data **[in]**
+  /// \param vertex_count **[in]**
+  /// \param index_buffer_data **[in]**
+  /// \param mesh_element_count **[in]**
+  void update(float *vertex_buffer_data, size_t vertex_count,
+              uint *index_buffer_data, size_t mesh_element_count);
+  /// \brief set descriptions
+  /// \param vertex_buffer_desc **[in]**
+  /// \param index_buffer_desc **[in]**
+  void setDescription(const BufferDescriptor &vertex_buffer_desc,
+                      const BufferDescriptor &index_buffer_desc);
 
-template <typename... TArg> SceneMeshPtr createSceneMeshPtr(TArg &&... Args) {
+private:
+  GLuint VAO_;
+  VertexBuffer vertex_buffer_;
+  IndexBuffer index_buffer_;
+  BufferDescriptor vertex_buffer_descriptor_;
+  BufferDescriptor index_buffer_descriptor_;
+};
+
+using SceneMeshSPtr = std::shared_ptr<SceneMesh>;
+
+template <typename... TArg> SceneMeshSPtr createSceneMeshPtr(TArg &&... Args) {
   return std::make_shared<SceneMesh>(std::forward<TArg>(Args)...);
 }
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_SCENE_MESH_H

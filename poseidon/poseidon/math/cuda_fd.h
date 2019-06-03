@@ -31,6 +31,98 @@ namespace poseidon {
 
 namespace cuda {
 
+struct FDMatrix2Entry {
+  float diag, x, y;
+};
+
+class FDMatrix2Accessor {
+public:
+  FDMatrix2Accessor(hermes::cuda::MemoryBlock2Accessor<FDMatrix2Entry> A,
+                    hermes::cuda::MemoryBlock2Accessor<int> indices)
+      : A_(A), indices_(indices) {}
+  __host__ __device__ hermes::cuda::vec2u gridSize() const { return A_.size(); }
+  __host__ __device__ size_t size() const { return A_.size().x * A_.size().y; }
+  __host__ __device__ bool isIndexStored(int li, int lj, int ci, int cj) {
+    if (!A_.isIndexValid(li, lj))
+      return false;
+    if (indices_(li, lj) < 0)
+      return false;
+    if ((int)fabsf(li - ci) + (int)fabsf(lj - cj) > 1)
+      return false;
+    if (!indices_.isIndexValid(ci, cj))
+      return false;
+    if (indices_(ci, cj) < 0)
+      return false;
+    return true;
+  }
+  __host__ __device__ float &operator()(int li, int lj, int ci, int cj) {
+    dummy = 0.f;
+    if (!indices_.isIndexValid(ci, cj))
+      return dummy;
+    if (indices_(ci, cj) < 0)
+      return dummy;
+    if (li == ci && lj == cj && A_.isIndexValid(li, lj) &&
+        indices_(li, lj) >= 0)
+      return A_(li, lj).diag;
+    if (ci == li + 1 && cj == lj && A_.isIndexValid(li, lj) &&
+        indices_(li, lj) >= 0)
+      return A_(li, lj).x;
+    if (ci + 1 == li && cj == lj && A_.isIndexValid(ci, cj) &&
+        indices_(ci, cj) >= 0)
+      return A_(ci, cj).x;
+    if (ci == li && cj == lj + 1 && A_.isIndexValid(li, lj) &&
+        indices_(li, lj) >= 0)
+      return A_(li, lj).y;
+    if (ci == li && cj + 1 == lj && A_.isIndexValid(ci, cj) &&
+        indices_(ci, cj) >= 0)
+      return A_(ci, cj).y;
+    return dummy;
+  }
+  __host__ __device__ int elementIndex(int i, int j) const {
+    if (!indices_.isIndexValid(i, j))
+      return -1;
+    return indices_(i, j);
+  }
+
+private:
+  float dummy;
+  hermes::cuda::MemoryBlock2Accessor<FDMatrix2Entry> A_;
+  hermes::cuda::MemoryBlock2Accessor<int> indices_;
+};
+
+template <hermes::cuda::MemoryLocation L> class FDMatrix2 {
+public:
+  FDMatrix2() = default;
+  FDMatrix2(const hermes::cuda::vec2u &size) { resize(size); }
+  void resize(const hermes::cuda::vec2u &size) {
+    data_.resize(size);
+    data_.allocate();
+    indices_.resize(size);
+    indices_.allocate();
+  }
+  hermes::cuda::vec2u gridSize() const { return data_.size(); }
+  size_t size() const { return data_.size().x * data_.size().y; }
+  hermes::cuda::MemoryBlock2<L, FDMatrix2Entry> &data() { return data_; }
+  hermes::cuda::MemoryBlock2Accessor<FDMatrix2Entry> dataAccessor() {
+    return data_.accessor();
+  }
+  hermes::cuda::MemoryBlock2<L, int> &indexData() { return indices_; }
+  hermes::cuda::MemoryBlock2Accessor<int> indexDataAccessor() {
+    return indices_.accessor();
+  }
+  template <hermes::cuda::MemoryLocation LL> void copy(FDMatrix2<LL> &other) {
+    hermes::cuda::memcpy(data_, other.data());
+    hermes::cuda::memcpy(indices_, other.indexData());
+  }
+  FDMatrix2Accessor accessor() {
+    return FDMatrix2Accessor(data_.accessor(), indices_.accessor());
+  }
+
+private:
+  hermes::cuda::MemoryBlock2<L, FDMatrix2Entry> data_;
+  hermes::cuda::MemoryBlock2<L, int> indices_;
+};
+
 struct FDMatrix3Entry {
   float diag, x, y, z;
 };
@@ -50,7 +142,7 @@ public:
       return false;
     if (indices_(li, lj, lk) < 0)
       return false;
-    if ((int)fabsf(li - li) + (int)fabsf(lj - cj) + (int)(fabsf(lk - ck)) > 1)
+    if ((int)fabsf(li - ci) + (int)fabsf(lj - cj) + (int)(fabsf(lk - ck)) > 1)
       return false;
     if (!indices_.isIndexValid(ci, cj, ck))
       return false;
@@ -135,18 +227,68 @@ private:
   hermes::cuda::MemoryBlock3<L, int> indices_;
 };
 
+inline std::ostream &operator<<(std::ostream &os, FDMatrix2Accessor &A) {
+  std::cerr << "FDMatrix2 (" << A.gridSize().x << " x " << A.gridSize().y
+            << ") = (" << A.size() << " x " << A.size() << ")\n";
+  for (int y = 0; y < A.gridSize().y; y++)
+    for (int x = 0; x < A.gridSize().x; x++) {
+      if (A.elementIndex(x, y) < 0)
+        continue;
+      for (int cy = 0; cy < A.gridSize().y; cy++)
+        for (int cx = 0; cx < A.gridSize().x; cx++)
+          if (A.elementIndex(cx, cy) >= 0)
+            os << A(x, y, cx, cy) << " ";
+      os << std::endl;
+    }
+  return os;
+}
+
+inline std::ostream &
+operator<<(std::ostream &os, FDMatrix2<hermes::cuda::MemoryLocation::HOST> &A) {
+  std::cerr << "FDMatrix2 (" << A.gridSize().x << " x " << A.gridSize().y
+            << ") = (" << A.size() << " x " << A.size() << ")\n";
+  auto acc = A.dataAccessor();
+  auto iAcc = A.indexDataAccessor();
+  for (int y = 0; y < A.gridSize().y; y++)
+    for (int x = 0; x < A.gridSize().x; x++)
+      if (iAcc(x, y) >= 0) {
+        os << "l[" << iAcc(x, y) << "]\t";
+        if (iAcc.isIndexValid(x, y - 1) && iAcc(x, y - 1) >= 0)
+          os << "(c" << iAcc(x, y - 1) << ", " << acc(x, y - 1).y << ") ";
+        if (iAcc.isIndexValid(x - 1, y) && iAcc(x - 1, y) >= 0)
+          os << "(c" << iAcc(x - 1, y) << ", " << acc(x - 1, y).x << ") ";
+        os << "(c" << iAcc(x, y) << ", " << acc(x, y).diag << ") ";
+        if (iAcc.isIndexValid(x + 1, y) && iAcc(x + 1, y) >= 0)
+          os << "(c" << iAcc(x + 1, y) << ", " << acc(x, y).x << ") ";
+        if (iAcc.isIndexValid(x, y + 1) && iAcc(x, y + 1) >= 0)
+          os << "(c" << iAcc(x, y + 1) << ", " << acc(x, y).y << ") ";
+        os << std::endl;
+      }
+  return os;
+}
+
+inline std::ostream &
+operator<<(std::ostream &os,
+           FDMatrix2<hermes::cuda::MemoryLocation::DEVICE> &A) {
+  FDMatrix2<hermes::cuda::MemoryLocation::HOST> host;
+  host.resize(A.gridSize());
+  host.copy(A);
+  os << host << std::endl;
+  return os;
+}
+
 inline std::ostream &operator<<(std::ostream &os, FDMatrix3Accessor &A) {
   std::cerr << "FDMatrix3 (" << A.gridSize().x << " x " << A.gridSize().y
             << " x " << A.gridSize().z << ") = (" << A.size() << " x "
             << A.size() << ")\n";
   for (int z = 0; z < A.gridSize().z; z++)
     for (int y = 0; y < A.gridSize().y; y++)
-      for (int x = 0; x < A.gridSize().z; x++) {
+      for (int x = 0; x < A.gridSize().x; x++) {
         if (A.elementIndex(x, y, z) < 0)
           continue;
         for (int cz = 0; cz < A.gridSize().z; cz++)
           for (int cy = 0; cy < A.gridSize().y; cy++)
-            for (int cx = 0; cx < A.gridSize().z; cx++)
+            for (int cx = 0; cx < A.gridSize().x; cx++)
               if (A.elementIndex(cx, cy, cz) >= 0)
                 os << A(x, y, z, cx, cy, cz) << " ";
         os << std::endl;
@@ -163,7 +305,7 @@ operator<<(std::ostream &os, FDMatrix3<hermes::cuda::MemoryLocation::HOST> &A) {
   auto iAcc = A.indexDataAccessor();
   for (int z = 0; z < A.gridSize().z; z++)
     for (int y = 0; y < A.gridSize().y; y++)
-      for (int x = 0; x < A.gridSize().z; x++)
+      for (int x = 0; x < A.gridSize().x; x++)
         if (iAcc(x, y, z) >= 0) {
           os << "l[" << iAcc(x, y, z) << "]\t";
           if (iAcc.isIndexValid(x, y, z - 1) && iAcc(x, y, z - 1) >= 0)
@@ -198,9 +340,14 @@ operator<<(std::ostream &os,
 }
 
 template <hermes::cuda::MemoryLocation L, typename T>
+void mul(FDMatrix2<L> &A, hermes::cuda::MemoryBlock1<L, T> &x,
+         hermes::cuda::MemoryBlock1<L, T> &b);
+template <hermes::cuda::MemoryLocation L, typename T>
 void mul(FDMatrix3<L> &A, hermes::cuda::MemoryBlock1<L, T> &x,
          hermes::cuda::MemoryBlock1<L, T> &b);
 
+using FDMatrix2D = FDMatrix2<hermes::cuda::MemoryLocation::DEVICE>;
+using FDMatrix2H = FDMatrix2<hermes::cuda::MemoryLocation::HOST>;
 using FDMatrix3D = FDMatrix3<hermes::cuda::MemoryLocation::DEVICE>;
 using FDMatrix3H = FDMatrix3<hermes::cuda::MemoryLocation::HOST>;
 

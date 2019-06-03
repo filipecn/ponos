@@ -35,10 +35,21 @@ namespace cuda {
 class Integrator2 {
 public:
   virtual void set(hermes::cuda::Grid2Info info) {}
+  virtual void set(hermes::cuda::RegularGrid2Info info) {}
+  // TODO: DEPRECATED
   virtual void advect(hermes::cuda::VectorGridTexture2 &velocity,
                       hermes::cuda::GridTexture2<unsigned char> &solid,
                       hermes::cuda::GridTexture2<float> &phi,
                       hermes::cuda::GridTexture2<float> &phiOut, float dt) = 0;
+  virtual void advect(hermes::cuda::StaggeredGrid2D &velocity,
+                      hermes::cuda::RegularGrid2Duc &solid,
+                      hermes::cuda::RegularGrid2Df &solidPhi,
+                      hermes::cuda::RegularGrid2Df &phi,
+                      hermes::cuda::RegularGrid2Df &phiOut, float dt) = 0;
+  virtual void advect_t(hermes::cuda::VectorGrid2D &velocity,
+                        hermes::cuda::RegularGrid2Duc &solid,
+                        hermes::cuda::RegularGrid2Df &phi,
+                        hermes::cuda::RegularGrid2Df &phiOut, float dt) = 0;
 };
 
 class Integrator3 {
@@ -57,10 +68,20 @@ public:
 class SemiLagrangianIntegrator2 : public Integrator2 {
 public:
   SemiLagrangianIntegrator2();
+  // TODO: DEPRECATED
   void advect(hermes::cuda::VectorGridTexture2 &velocity,
               hermes::cuda::GridTexture2<unsigned char> &solid,
               hermes::cuda::GridTexture2<float> &phi,
               hermes::cuda::GridTexture2<float> &phiOut, float dt) override;
+  void advect(hermes::cuda::StaggeredGrid2D &velocity,
+              hermes::cuda::RegularGrid2Duc &solid,
+              hermes::cuda::RegularGrid2Df &solidPhi,
+              hermes::cuda::RegularGrid2Df &phi,
+              hermes::cuda::RegularGrid2Df &phiOut, float dt) override;
+  void advect_t(hermes::cuda::VectorGrid2D &velocity,
+                hermes::cuda::RegularGrid2Duc &solid,
+                hermes::cuda::RegularGrid2Df &phi,
+                hermes::cuda::RegularGrid2Df &phiOut, float dt) override;
 };
 
 class SemiLagrangianIntegrator3 : public Integrator3 {
@@ -80,14 +101,26 @@ class MacCormackIntegrator2 : public Integrator2 {
 public:
   MacCormackIntegrator2();
   void set(hermes::cuda::Grid2Info info);
+  void set(hermes::cuda::RegularGrid2Info info);
+  // TODO: DEPRECATED
   void advect(hermes::cuda::VectorGridTexture2 &velocity,
               hermes::cuda::GridTexture2<unsigned char> &solid,
               hermes::cuda::GridTexture2<float> &phi,
               hermes::cuda::GridTexture2<float> &phiOut, float dt) override;
+  void advect(hermes::cuda::StaggeredGrid2D &velocity,
+              hermes::cuda::RegularGrid2Duc &solid,
+              hermes::cuda::RegularGrid2Df &solidPhi,
+              hermes::cuda::RegularGrid2Df &phi,
+              hermes::cuda::RegularGrid2Df &phiOut, float dt) override;
+  void advect_t(hermes::cuda::VectorGrid2D &velocity,
+                hermes::cuda::RegularGrid2Duc &solid,
+                hermes::cuda::RegularGrid2Df &phi,
+                hermes::cuda::RegularGrid2Df &phiOut, float dt) override;
 
 private:
   SemiLagrangianIntegrator2 integrator;
-  hermes::cuda::GridTexture2<float> phiNHat, phiN1Hat;
+  hermes::cuda::GridTexture2<float> phiNHat_t, phiN1Hat_t;
+  hermes::cuda::RegularGrid2Df phiNHat, phiN1Hat;
 };
 
 class MacCormackIntegrator3 : public Integrator3 {
@@ -106,6 +139,22 @@ public:
 private:
   SemiLagrangianIntegrator3 integrator;
   hermes::cuda::RegularGrid3Df phiNHat, phiN1Hat;
+};
+
+/// Implements Hamilton-Jacobi essentially nonoscillatory (ENO) polynomial
+/// interpolation for advecting fields. The polynomial is also constructed based
+/// on upwind differencing.
+class ENOIntegrator2 {
+public:
+  void set(hermes::cuda::RegularGrid2Info info);
+  void advect(hermes::cuda::StaggeredGrid2D &velocity,
+              hermes::cuda::RegularGrid2Duc &solid,
+              hermes::cuda::RegularGrid2Df &solidPhi,
+              hermes::cuda::RegularGrid2Df &phi,
+              hermes::cuda::RegularGrid2Df &phiOut, float dt);
+
+private:
+  size_t order = 3;
 };
 
 } // namespace cuda
