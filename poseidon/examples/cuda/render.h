@@ -90,11 +90,11 @@ public:
     shader->addUniform("projection", 3);
     shader->addUniform("color", 4);
     m_.setShader(shader);
-    m_.draw_callback = [](circe::ShaderProgram *s,
-                          const circe::CameraInterface *camera,
-                          ponos::Transform t) {
+    m_.draw_callback = [&](circe::ShaderProgram *s,
+                           const circe::CameraInterface *camera,
+                           ponos::Transform t) {
       s->begin();
-      s->setUniform("color", ponos::vec4(1, 1, 1, 1));
+      s->setUniform("color", color);
       s->setUniform("model", ponos::transpose(t.matrix()));
       s->setUniform("view",
                     ponos::transpose(camera->getViewTransform().matrix()));
@@ -102,7 +102,7 @@ public:
           "projection",
           ponos::transpose(camera->getProjectionTransform().matrix()));
     };
-    cgl.set(ls_.grid().resolution().x, ls_.grid().resolution().y);
+    // cgl.set(ls_.grid().resolution().x, ls_.grid().resolution().y);
   }
   void update() {
     ls_.isoline(vertices_, indices_);
@@ -121,16 +121,18 @@ public:
                      &rm_.positionsIndices[0], rm_.meshDescriptor.count);
   }
   void draw(const circe::CameraInterface *camera, ponos::Transform t) override {
-    renderDistances(ls_.grid(), cgl.bufferPointer<unsigned int>(),
-                    hermes::cuda::Color(1, 0, 0, 1),
-                    hermes::cuda::Color(1, 0, 1, 1));
-    glEnable(GL_DEPTH_TEST);
-    cgl.sendToTexture();
-    cgl.bindTexture(GL_TEXTURE0);
-    dist_.draw(camera, t);
-    glDisable(GL_DEPTH_TEST);
+    // renderDistances(ls_.grid(), cgl.bufferPointer<unsigned int>(),
+    //                 hermes::cuda::Color(1, 0, 0, 1),
+    //                 hermes::cuda::Color(1, 0, 1, 1));
+    // glEnable(GL_DEPTH_TEST);
+    // cgl.sendToTexture();
+    // cgl.bindTexture(GL_TEXTURE0);
+    // dist_.draw(camera, t);
+    // glDisable(GL_DEPTH_TEST);
     m_.draw(camera, t);
   }
+
+  circe::Color color = circe::Color::White();
 
 private:
   // data
@@ -218,3 +220,68 @@ using LevelSet2ModelD = Levelset2Model<hermes::cuda::MemoryLocation::DEVICE>;
 using LevelSet2ModelH = Levelset2Model<hermes::cuda::MemoryLocation::HOST>;
 using LevelSet3ModelD = Levelset3Model<hermes::cuda::MemoryLocation::DEVICE>;
 using LevelSet3ModelH = Levelset3Model<hermes::cuda::MemoryLocation::HOST>;
+
+template <hermes::cuda::MemoryLocation L>
+class ParticleSystem2Model : public circe::SceneObject {
+public:
+  ParticleSystem2Model(poseidon::cuda::ParticleSystem2<L> &ps)
+      : particles_(ps) {
+    circe::BufferDescriptor vertex_desc =
+        circe::create_vertex_buffer_descriptor(2, 0, GL_POINTS);
+    vertex_desc.addAttribute(std::string("position"), 2, 0, GL_FLOAT);
+    circe::BufferDescriptor index_desc = circe::create_index_buffer_descriptor(
+        2, 0, ponos::GeometricPrimitiveType::POINTS);
+    m_.mesh().setDescription(vertex_desc, index_desc);
+    update();
+    auto vs = std::string(SHADERS_PATH) + "/particle2.vert";
+    auto fs = std::string(SHADERS_PATH) + "/particle2.frag";
+    shader = circe::createShaderProgramPtr(
+        circe::ShaderManager::instance().loadFromFiles(
+            {vs.c_str(), fs.c_str()}));
+    shader->addVertexAttribute("position", 0);
+    shader->addUniform("model", 1);
+    shader->addUniform("view", 2);
+    shader->addUniform("projection", 3);
+    shader->addUniform("color", 4);
+    m_.setShader(shader);
+    m_.draw_callback = [](circe::ShaderProgram *s,
+                          const circe::CameraInterface *camera,
+                          ponos::Transform t) {
+      s->begin();
+      s->setUniform("color", ponos::vec4(1, 1, 1, 1));
+      s->setUniform("model", ponos::transpose(t.matrix()));
+      s->setUniform("view",
+                    ponos::transpose(camera->getViewTransform().matrix()));
+      s->setUniform(
+          "projection",
+          ponos::transpose(camera->getProjectionTransform().matrix()));
+    };
+  }
+  void update() {
+    if (!indices_.size())
+      // TODO: clean current buffer
+      return;
+    // TODO: use cuda opengl interop to avoid memory transference
+    rm_.primitiveType = ponos::GeometricPrimitiveType::POINTS;
+    rm_.meshDescriptor.count = indices_.size() / 1;
+    rm_.meshDescriptor.elementSize = 1;
+    rm_.positionDescriptor.count = vertices_.size() / 2;
+    rm_.positionDescriptor.elementSize = 2;
+    hermes::cuda::memcpy(rm_.positions, vertices_);
+    hermes::cuda::memcpy(rm_.positionsIndices, indices_);
+    m_.mesh().update(&rm_.positions[0], rm_.positionDescriptor.count,
+                     &rm_.positionsIndices[0], rm_.meshDescriptor.count);
+  }
+  void draw(const circe::CameraInterface *camera, ponos::Transform t) override {
+  }
+
+private:
+  // data
+  poseidon::cuda::ParticleSystem2<L> &particles_;
+  hermes::cuda::MemoryBlock1Df vertices_;
+  hermes::cuda::MemoryBlock1Du indices_;
+  // vis
+  ponos::RawMesh rm_;
+  circe::SceneDynamicMeshObject m_;
+  circe::ShaderProgramPtr shader;
+};

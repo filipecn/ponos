@@ -41,8 +41,8 @@ void applyMIC0(FDMatrix3H &h_A, hermes::cuda::MemoryBlock1Hd &precon,
 void pcg(hermes::cuda::MemoryBlock1Dd &x, FDMatrix3D &A,
          hermes::cuda::MemoryBlock1Dd &rhs, size_t m, float tol);
 
-void pcg(hermes::cuda::MemoryBlock1Dd &x, FDMatrix2D &A,
-         hermes::cuda::MemoryBlock1Dd &rhs, size_t m, float tol);
+int pcg(hermes::cuda::MemoryBlock1Dd &x, FDMatrix2D &A,
+        hermes::cuda::MemoryBlock1Dd &rhs, size_t m, float tol);
 
 } // namespace cuda
 

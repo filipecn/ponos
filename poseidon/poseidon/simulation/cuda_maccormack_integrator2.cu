@@ -292,6 +292,53 @@ void MacCormackIntegrator2::advect_t(VectorGrid2D &velocity,
   cudaUnbindTexture(phiN1HatTex2);
 }
 
+__global__ void __computePhiN1(StaggeredGrid2Accessor vel,
+                               RegularGrid2Accessor<float> phiNHat,
+                               RegularGrid2Accessor<float> phiN1Hat,
+                               RegularGrid2Accessor<float> in,
+                               RegularGrid2Accessor<float> out, float dt) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  if (in.isIndexStored(i, j)) {
+    // if (solid(i, j)) {
+    //   out(i, j) = solidPhi(i, j);
+    //   return;
+    // }
+    vec2f v = vel(i, j);
+    point2f p = in.worldPosition(i, j);
+    point2f wp = p - v * dt;
+    point2f npos = in.gridPosition(wp);
+    point2i pos(npos.x, npos.y);
+    float nodeValues[4];
+    nodeValues[0] = in(pos.x, pos.y);
+    nodeValues[1] = in(pos.x + 1, pos.y);
+    nodeValues[2] = in(pos.x + 1, pos.y + 1);
+    nodeValues[3] = in(pos.x, pos.y + 1);
+    float phiMin = min(nodeValues[3],
+                       min(nodeValues[2], min(nodeValues[1], nodeValues[0])));
+    float phiMax = max(nodeValues[3],
+                       max(nodeValues[2], max(nodeValues[1], nodeValues[0])));
+
+    out(i, j) = phiN1Hat(i, j) + 0.5 * (in(i, j) - phiNHat(i, j));
+    out(i, j) = max(min(out(i, j), phiMax), phiMin);
+  }
+}
+
+void MacCormackIntegrator2::advect(StaggeredGrid2D &velocity,
+                                   RegularGrid2Dm &material,
+                                   RegularGrid2Df &phi, RegularGrid2Df &phiOut,
+                                   float dt) {
+  // phi^_n+1 = A(phi_n)
+  integrator.advect(velocity, material, phi, phiN1Hat, dt);
+  // phi^_n = Ar(phi^_n+1)
+  integrator.advect(velocity, material, phiN1Hat, phiNHat, -dt);
+  // phi_n+1 = phi^_n+1 + 0.5 * (phi_n - phi^_n)
+  hermes::ThreadArrayDistributionInfo td(phi.resolution());
+  __computePhiN1<<<td.gridSize, td.blockSize>>>(
+      velocity.accessor(), phiNHat.accessor(), phiN1Hat.accessor(),
+      phi.accessor(), phiOut.accessor(), dt);
+}
+
 } // namespace cuda
 
 } // namespace poseidon

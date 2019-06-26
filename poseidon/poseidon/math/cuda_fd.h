@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef HERMES_NUMERIC_CUDA_FD_H
-#define HERMES_NUMERIC_CUDA_FD_H
+#ifndef POSEIDON_NUMERIC_CUDA_FD_H
+#define POSEIDON_NUMERIC_CUDA_FD_H
 
 #include <hermes/storage/cuda_storage_utils.h>
 

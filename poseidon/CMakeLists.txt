@@ -7,6 +7,7 @@ set(POSEIDON_HEADERS
         poseidon/math/cuda_fd.h
         poseidon/math/cuda_pcg.h
         poseidon/simulation/cuda_collider.h
+        poseidon/simulation/cuda_defs.h
         poseidon/simulation/cuda_integrator.h
         poseidon/simulation/cuda_level_set.h
         poseidon/simulation/cuda_particle_system2.h
@@ -31,7 +32,6 @@ set(POSEIDON_SOURCES
         poseidon/simulation/cuda_semi_lagrangian_integrator2.cu
         poseidon/simulation/cuda_smoke_injector.cu
         poseidon/simulation/cuda_vector_fields.cu
-        poseidon/solvers/cuda_practical_liquids_solver2.cpp
         poseidon/solvers/cuda_practical_liquids_solver2.cu
         poseidon/solvers/cuda_smoke_solver2_steps.cu
         poseidon/solvers/cuda_smoke_solver_kernels.cu

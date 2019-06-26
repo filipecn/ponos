@@ -17,7 +17,7 @@ template <typename T> __host__ __device__ BBox2<T> BBox2<T>::unitBox() {
 }
 
 template <typename T>
-__host__ __device__ bool BBox2<T>::inside(const Point2<T> &p) const {
+__host__ __device__ bool BBox2<T>::contains(const Point2<T> &p) const {
   return (p.x >= lower.x && p.x <= upper.x && p.y >= lower.y && p.y <= upper.y);
 }
 

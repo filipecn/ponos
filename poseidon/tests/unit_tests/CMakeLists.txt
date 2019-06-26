@@ -5,6 +5,7 @@ main.cpp
 fd.cu
 smoke_solver.cu
 particle_system.cu
+level_set.cu
 )
 
 target_link_libraries(poseidon_tests gtest pthread poseidon hermes )

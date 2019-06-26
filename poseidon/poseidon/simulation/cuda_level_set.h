@@ -50,7 +50,7 @@ public:
     return acc_(i, j);
   }
   __host__ __device__ hermes::cuda::vec2f gradient(int i, int j) const {
-    return gradientAt(acc_, i, j, 2);
+    return gradientAt(acc_, i, j, 1);
   }
   __host__ __device__ hermes::cuda::point2f worldPosition(int i, int j) {
     return acc_.worldPosition(i, j);
@@ -71,6 +71,7 @@ private:
 /// \tparam L memory location
 template <hermes::cuda::MemoryLocation L> class LevelSet2 {
 public:
+  LevelSet2() {}
   /// \brief Construct a new Level Set 2 object
   /// \param resolution regular grid resolution
   /// \param spacing point spacing
@@ -94,6 +95,7 @@ public:
   }
   /// \param spacing cell size
   void setSpacing(hermes::cuda::vec2f spacing) { grid_.setSpacing(spacing); }
+  void setOrigin(hermes::cuda::point2f origin) { grid_.setOrigin(origin); }
   /// \return LevelSet2Accessor accessor for level set data
   LevelSet2Accessor accessor() { return LevelSet2Accessor(grid_.accessor()); }
   /// \return hermes::cuda::RegularGrid2<L, float>& grid data reference

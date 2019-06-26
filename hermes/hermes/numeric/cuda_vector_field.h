@@ -171,9 +171,9 @@ public:
                       RegularGrid2Accessor<float> v)
       : resolution(resolution), spacing(spacing), u_(u), v_(v) {}
   virtual __host__ __device__ vec2f operator()(int i, int j) {
-    return 0.5f * vec2f(u_(i, j), v_(i, j));
+    return vec2f(u_(i, j), v_(i, j));
   }
-  __host__ __device__ vec2f operator()(point2f wp) {
+  virtual __host__ __device__ vec2f operator()(point2f wp) {
     return vec2f(u_(wp), v_(wp));
   }
   __host__ __device__ float &u(int i, int j) { return u_(i, j); }
@@ -279,7 +279,7 @@ public:
                       RegularGrid3Accessor<float> w)
       : resolution(resolution), spacing(spacing), u_(u), v_(v), w_(w) {}
   virtual __host__ __device__ vec3f operator()(int i, int j, int k) {
-    return 0.5f * vec3f(u_(i, j, k), v_(i, j, k), w_(i, j, k));
+    return vec3f(u_(i, j, k), v_(i, j, k), w_(i, j, k));
   }
   __host__ __device__ vec3f operator()(point3f wp) {
     return vec3f(u_(wp), v_(wp), w_(wp));

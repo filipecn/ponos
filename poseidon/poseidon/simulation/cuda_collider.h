@@ -151,7 +151,7 @@ public:
       : box(box) {}
   __host__ __device__ bool
   intersect(const hermes::cuda::Point2<T> &p) const override {
-    return box.inside(p);
+    return box.contains(p);
   }
   __host__ __device__ T distance(const hermes::cuda::Point2<T> &p,
                                  hermes::cuda::Point2<T> *s) override {

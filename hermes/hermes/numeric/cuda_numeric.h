@@ -43,6 +43,8 @@ namespace cuda {
 inline __host__ __device__ float
 D1_plus_half(const hermes::cuda::RegularGrid2Accessor<float> &phi, int i, int j,
              size_t dim) {
+  // printf("D1ph %d %d %f  %d %d %f\n", i + (0 | !dim), j + (1 & dim),
+  //  phi(i + (0 | !dim), j + (1 & dim)), i, j, phi(i, j));
   return (phi(i + (0 | !dim), j + (1 & dim)) - phi(i, j)) / phi.spacing()[dim];
 }
 /// Computes first order accurate backward difference approximation for first
@@ -107,25 +109,28 @@ gradientAt(const hermes::cuda::RegularGrid2Accessor<float> &phi, int i, int j,
            const hermes::cuda::vec2f &v = hermes::cuda::vec2f()) {
   using namespace hermes::cuda;
   vec2f dphi;
+  // printf("gradient at %d, %d\n", i, j);
   // compute each phi derivative
   for (size_t dim = 0; dim < 2; dim++) {
     // construct approximation polynom for phi first derivative
     // Dphi = dq1 + dq2 + dq3
     // compute starting index k based on upwind
     vec2i k(i, j);
-    k[dim] = v[dim] < 0 ? k[dim] - 1 : k[dim];
+    k[dim] = v[dim] > 0 ? k[dim] - 1 : k[dim];
+    // printf("for dim %d : k is %d %d\n", dim, k.x, k.y);
     // dq1 = D1_plus_half
     float dq1 = D1_plus_half(phi, k.x, k.y, dim);
+    // printf("= %f\n", dq1);
     dphi[dim] = dq1;
     if (accuracy_order < 2)
       continue;
     // compare |D2| and |D2_plus_one| to avoid big variations
-    float D2k = D2(phi, i, j, dim);
+    float D2k = D2(phi, k.x, k.y, dim);
     float D2k_plus_one = D2(phi, k.x + (0 | !dim), k.y + (1 & dim), dim);
     vec2i k_star = k;
     float c = D2k_plus_one;
     if (fabsf(D2k) <= fabsf(D2k_plus_one)) {
-      k[dim] -= 1;
+      k_star[dim] -= 1;
       c = D2k;
     }
     // dq2 = c(2(i-k)-1)dx

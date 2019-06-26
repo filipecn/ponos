@@ -5,7 +5,7 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
+ * iM the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
@@ -22,44 +22,35 @@
  *
  */
 
-#ifndef HERMES_COMMON_DEFS_H
-#define HERMES_COMMON_DEFS_H
+#ifndef POSEIDON_SIMULATION_CUDA_DEFS_H
+#define POSEIDON_SIMULATION_CUDA_DEFS_H
 
-namespace hermes {
+#include <hermes/numeric/cuda_grid.h>
 
-enum class AddressMode { REPEAT, CLAMP_TO_EDGE, BORDER, WRAP, MIRROR, NONE };
-
-enum class FilterMode { LINEAR, POINT };
-
-enum class InterpolationMode { LINEAR, MONOTONIC_CUBIC };
+namespace poseidon {
 
 namespace cuda {
 
-enum class MemoryLocation { DEVICE, HOST };
+enum class MaterialType { FLUID = 0, AIR, SOLID };
 
-class Constants {
-public:
-  __host__ __device__ static double pi() { return 3.14159265358979323846; }
-  __host__ __device__ static double two_pi() { return 6.28318530718; }
-  template <typename T> __host__ __device__ static T lowest() {
-    return 0xfff0000000000000;
-  }
-  template <typename T> __host__ __device__ static T greatest() {
-    return 0x7ff0000000000000;
-  }
-  __host__ __device__ static int lowest_int() { return -2147483647; }
-  __host__ __device__ static int greatest_int() { return 2147483647; }
-};
+inline std::ostream &operator<<(std::ostream &os, MaterialType m) {
+  if (m == MaterialType::FLUID)
+    os << 'F';
+  else if (m == MaterialType::AIR)
+    os << 'A';
+  else
+    os << 'S';
+  return os;
+}
 
-class Check {
-public:
-  template <typename T> __host__ __device__ static bool isEqual(T a, T b) {
-    return fabsf(a - b) < 1e-8;
-  }
-};
-
+using RegularGrid2Dm =
+    hermes::cuda::RegularGrid2<hermes::cuda::MemoryLocation::DEVICE,
+                               MaterialType>;
+using RegularGrid2Hm =
+    hermes::cuda::RegularGrid2<hermes::cuda::MemoryLocation::HOST,
+                               MaterialType>;
 } // namespace cuda
 
-} // namespace hermes
+} // namespace poseidon
 
 #endif

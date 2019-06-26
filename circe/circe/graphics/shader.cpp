@@ -180,6 +180,16 @@ void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {
   glUniform2fv(loc, 1, &v.x);
 }
 
+void ShaderProgram::setUniform(const char *name, const Color &c) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform4fv(loc, 1, &c.r);
+}
+
 void ShaderProgram::setUniform(const char *name, int i) {
   GLint loc = getUniLoc(name);
   if (loc == -1) {

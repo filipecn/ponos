@@ -668,13 +668,17 @@ std::ostream &operator<<(std::ostream &os,
   std::cerr << "2d MemoryBlock (" << data.size().x << " x " << data.size().y
             << ")\n";
   auto acc = data.accessor();
+  os << "x[" << -1 << "]:\t";
+  for (int x = 0; x < data.size().x; x++)
+    os << std::setw(10) << x << " ";
+  os << std::endl;
   for (int y = data.size().y - 1; y >= 0; y--) {
     os << "y[" << y << "]:\t";
     for (int x = 0; x < data.size().x; x++)
       if (std::is_same<T, char>::value || std::is_same<T, unsigned char>::value)
         os << (int)acc(x, y) << "\t";
       else
-        os << std::setprecision(6) << acc(x, y) << "\t";
+        os << std::setprecision(6) << std::setw(10) << acc(x, y) << " ";
     os << std::endl;
   }
   return os;
@@ -729,9 +733,17 @@ __global__ void __fill2(MemoryBlock2Accessor<T> data, T value) {
     data(x, y) = value;
 }
 
-template <typename T> void fill2(MemoryBlock2Accessor<T> data, T value) {
+template <MemoryLocation L, typename T>
+void fill2(MemoryBlock2<L, T> &data, T value);
+template <typename T>
+void fill2(MemoryBlock2<MemoryLocation::DEVICE, T> &data, T value) {
   ThreadArrayDistributionInfo td(data.size());
-  __fill2<T><<<td.gridSize, td.blockSize>>>(data, value);
+  __fill2<T><<<td.gridSize, td.blockSize>>>(data.accessor(), value);
+}
+template <typename T>
+void fill2(MemoryBlock2<MemoryLocation::HOST, T> &data, T value) {
+  for (auto e : data.accessor())
+    e.value = value;
 }
 
 template <typename T>

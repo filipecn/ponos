@@ -80,6 +80,9 @@ public:
     return 0.5f * vec2f(this->u_(i + 1, j) + this->u_(i, j),
                         this->v_(i, j + 1) + this->v_(i, j));
   }
+  __host__ __device__ vec2f operator()(point2f wp) override {
+    return vec2f(this->u_(wp), this->v_(wp));
+  }
 };
 
 /// Represents a staggered grid with regular grid

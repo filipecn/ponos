@@ -46,6 +46,7 @@ public:
   static Color Green(float alpha = 1.f) { return {0.f, 1.f, 0.f, alpha}; }
   static Color Blue(float alpha = 1.f) { return {0.f, 0.f, 1.f, alpha}; }
   static Color Purple(float alpha = 1.f) { return {1.f, 0.f, 1.f, alpha}; }
+  static Color Yellow(float alpha = 1.f) { return {1.f, 1.f, 0.f, alpha}; }
   float r, g, b, a;
 };
 

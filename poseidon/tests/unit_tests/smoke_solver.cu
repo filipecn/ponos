@@ -40,8 +40,8 @@ TEST(SmokeSolver2, Divergence) {
   StaggeredGrid2D d_velocity;
   StaggeredGrid2D d_svel;
   d_svel.resize(size);
-  fill2(d_svel.u().data().accessor(), 0.f);
-  fill2(d_svel.v().data().accessor(), 0.f);
+  fill2(d_svel.u().data(), 0.f);
+  fill2(d_svel.v().data(), 0.f);
   d_velocity.resize(size);
   d_velocity.copy(velocity);
   // std::cerr << d_velocity.u().data() << std::endl;

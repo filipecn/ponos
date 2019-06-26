@@ -495,19 +495,18 @@ public:
     using namespace hermes::cuda;
     CUDA_CHECK(cudaMalloc(&scene_.list, 6 * sizeof(Collider2<float> *)));
     CUDA_CHECK(cudaMalloc(&scene_.colliders, sizeof(Collider2<float> *)));
-    hermes::cuda::fill2(scene_.target_temperature.data().accessor(), 273.f);
-    hermes::cuda::fill2(scene_.smoke_source.data().accessor(),
-                        (unsigned char)0);
+    hermes::cuda::fill2(scene_.target_temperature.data(), 273.f);
+    hermes::cuda::fill2(scene_.smoke_source.data(), (unsigned char)0);
     for (size_t i = 0; i < 2; i++) {
-      hermes::cuda::fill2(velocity_[i].u().data().accessor(), 0.f);
-      hermes::cuda::fill2(velocity_[i].v().data().accessor(), 0.f);
-      hermes::cuda::fill2(scalarFields_[i][0].data().accessor(), 0.f);
-      hermes::cuda::fill2(scalarFields_[i][1].data().accessor(), 273.f);
+      hermes::cuda::fill2(velocity_[i].u().data(), 0.f);
+      hermes::cuda::fill2(velocity_[i].v().data(), 0.f);
+      hermes::cuda::fill2(scalarFields_[i][0].data(), 0.f);
+      hermes::cuda::fill2(scalarFields_[i][1].data(), 273.f);
     }
-    hermes::cuda::fill2(solidScalarFields_[0].data().accessor(), 0.f);
-    hermes::cuda::fill2(solidScalarFields_[1].data().accessor(), 273.f);
-    hermes::cuda::fill2(vorticityField_.u().data().accessor(), 0.f);
-    hermes::cuda::fill2(vorticityField_.v().data().accessor(), 0.f);
+    hermes::cuda::fill2(solidScalarFields_[0].data(), 0.f);
+    hermes::cuda::fill2(solidScalarFields_[1].data(), 273.f);
+    hermes::cuda::fill2(vorticityField_.u().data(), 0.f);
+    hermes::cuda::fill2(vorticityField_.v().data(), 0.f);
   }
   ///
   /// \param res
@@ -596,8 +595,8 @@ public:
                           scalarFields_[src][i], scalarFields_[dst][i], dt);
     src = src ? 0 : 1;
     dst = dst ? 0 : 1;
-    hermes::cuda::fill2(forceField_.u().data().accessor(), 0.f);
-    hermes::cuda::fill2(forceField_.v().data().accessor(), 0.f);
+    hermes::cuda::fill2(forceField_.u().data(), 0.f);
+    hermes::cuda::fill2(forceField_.v().data(), 0.f);
     addBuoyancyForce(forceField_, solid_, scalarFields_[src][0],
                      scalarFields_[src][1], 273, 1.0f, 0.0f);
     // addVorticityConfinementForce(forceField_, velocity_[src],

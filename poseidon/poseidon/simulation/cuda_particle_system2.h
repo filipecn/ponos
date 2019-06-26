@@ -30,6 +30,7 @@
 #include <hermes/numeric/cuda_numeric.h>
 #include <thrust/binary_search.h>
 #include <thrust/device_vector.h>
+#include <thrust/host_vector.h>
 
 namespace poseidon {
 
@@ -65,7 +66,6 @@ public:
     return *this;
   }
   __host__ __device__ Element operator*() {
-    printf("%d ", i);
     return Element(positions_[i], i, codes_[i], active_[i]);
   }
   __host__ __device__ bool operator!=(const ParticleSystem2Iterator &other) {
@@ -263,11 +263,11 @@ public:
 
 private:
   // properties
-  std::vector<thrust::device_vector<float>> h_scalar_properties_;
+  std::vector<thrust::host_vector<float>> h_scalar_properties_;
   // data
-  thrust::device_vector<int> h_zcodes_;
-  thrust::device_vector<char> h_active_;
-  thrust::device_vector<hermes::cuda::point2f> h_positions_;
+  thrust::host_vector<int> h_zcodes_;
+  thrust::host_vector<char> h_active_;
+  thrust::host_vector<hermes::cuda::point2f> h_positions_;
   hermes::cuda::Transform2f to_grid_; //!< map to underling grid
   size_t grid_resolution_ = 16;       //!< grid resolution for zcodes
   size_t active_count_ = 0;           //!< active particles count

@@ -25,6 +25,7 @@
 #ifndef CIRCE_GRAPHICS_SHADER_H
 #define CIRCE_GRAPHICS_SHADER_H
 
+#include <circe/colors/color.h>
 #include <circe/graphics/shader_manager.h>
 #include <circe/io/buffer.h>
 
@@ -81,6 +82,7 @@ public:
   void setUniform(const char *name, const ponos::vec3 &v);
   void setUniform(const char *name, const ponos::vec2 &v);
   void setUniform(const char *name, const ponos::point3 &v);
+  void setUniform(const char *name, const Color &c);
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 

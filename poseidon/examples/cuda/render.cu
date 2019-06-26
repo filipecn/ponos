@@ -31,8 +31,6 @@ __global__ void __renderScalarGradient(RegularGrid2Accessor<float> in,
 
 void renderDistances(RegularGrid2Df &in, unsigned int *out, Color a, Color b) {
   using namespace hermes::cuda;
-  std::cerr << "distances range:\t" << min(in) << " " << max(in) << " -> "
-            << maxAbs(in.data()) << std::endl;
   auto td = hermes::ThreadArrayDistributionInfo(in.resolution());
   __renderScalarGradient<<<td.gridSize, td.blockSize>>>(in.accessor(), out, a,
                                                         b, 0.f, 1.f);

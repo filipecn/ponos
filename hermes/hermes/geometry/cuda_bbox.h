@@ -40,7 +40,7 @@ public:
   __host__ __device__ explicit BBox2(const Point2<T> &p);
   __host__ __device__ BBox2(const Point2<T> &p1, const Point2<T> &p2);
   __host__ __device__ static BBox2 unitBox();
-  __host__ __device__ bool inside(const Point2<T> &p) const;
+  __host__ __device__ bool contains(const Point2<T> &p) const;
   __host__ __device__ T size(int d) const;
   __host__ __device__ Vector2<T> extends() const;
   __host__ __device__ Point2<T> center() const;
@@ -149,9 +149,10 @@ public:
   Point3<T> lower, upper;
 };
 
-typedef BBox3<float> bbox3;
-typedef BBox3<float> bbox3f;
-
+using bbox2 = BBox2<float>;
+using bbox2f = BBox2<float>;
+using bbox3 = BBox3<float>;
+using bbox3f = BBox3<float>;
 /// Checks if both bounding boxes overlap
 /// \param a first bounding box
 /// \param b second bounding box

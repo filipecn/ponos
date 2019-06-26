@@ -31,8 +31,8 @@ namespace cuda {
 
 using namespace hermes::cuda;
 
-void pcg(MemoryBlock1Dd &x, FDMatrix2D &A, MemoryBlock1Dd &b,
-         size_t maxNumberOfIterations, float tolerance) {
+int pcg(MemoryBlock1Dd &x, FDMatrix2D &A, MemoryBlock1Dd &b,
+        size_t maxNumberOfIterations, float tolerance) {
   // cpu memory
   MemoryBlock1Hd h_r(b.size(), 0);
   MemoryBlock1Hd h_z(b.size(), 0);
@@ -50,7 +50,7 @@ void pcg(MemoryBlock1Dd &x, FDMatrix2D &A, MemoryBlock1Dd &b,
   mul(A, x, r);
   sub(b, r, r);
   if (infnorm(r, m) <= tolerance)
-    return;
+    return 0;
   // z = M * r
   memcpy(z, r);
   // memcpy(h_r, r);
@@ -78,10 +78,8 @@ void pcg(MemoryBlock1Dd &x, FDMatrix2D &A, MemoryBlock1Dd &b,
     axpy(-alpha, z, r, r);
     // std::cerr << "r norm test\n";
     // std::cerr << r << std::endl;
-    if (infnorm(r, m) <= tolerance) {
-      std::cerr << "PCG RUN with " << it << " iterations.\n";
-      return;
-    }
+    if (infnorm(r, m) <= tolerance)
+      return it;
     // z = M * r
     memcpy(z, r);
     // memcpy(h_r, r);
@@ -101,7 +99,7 @@ void pcg(MemoryBlock1Dd &x, FDMatrix2D &A, MemoryBlock1Dd &b,
   // auto acc = h_A.accessor();
   // std::cerr << "BAD PCG!\n" << acc << std::endl;
   // std::cerr << b << std::endl;
-  exit(-1);
+  return -1;
 }
 
 void mic0(MemoryBlock1Hd &precon, FDMatrix3H &h_A, double tal, double sigma) {

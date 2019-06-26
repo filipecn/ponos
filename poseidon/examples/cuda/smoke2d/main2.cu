@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
   // else
   //   e.value = 1;
   hermes::cuda::memcpy(solver.solid().data(), h_solid.data());
-  applyZalesakDeformationField(solver.velocity());
+  // applyZalesakDeformationField(solver.velocity());
 
   // hermes::cuda::fill3(
   //     solver.scene().smoke_source,

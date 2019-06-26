@@ -27,6 +27,7 @@
 
 #include <hermes/common/defs.h>
 #include <hermes/numeric/cuda_staggered_grid.h>
+#include <poseidon/simulation/cuda_defs.h>
 
 namespace poseidon {
 
@@ -50,6 +51,10 @@ public:
                         hermes::cuda::RegularGrid2Duc &solid,
                         hermes::cuda::RegularGrid2Df &phi,
                         hermes::cuda::RegularGrid2Df &phiOut, float dt) = 0;
+  virtual void advect(hermes::cuda::StaggeredGrid2D &velocity,
+                      RegularGrid2Dm &material,
+                      hermes::cuda::RegularGrid2Df &in,
+                      hermes::cuda::RegularGrid2Df &out, float dt) {}
 };
 
 class Integrator3 {
@@ -82,6 +87,9 @@ public:
                 hermes::cuda::RegularGrid2Duc &solid,
                 hermes::cuda::RegularGrid2Df &phi,
                 hermes::cuda::RegularGrid2Df &phiOut, float dt) override;
+  void advect(hermes::cuda::StaggeredGrid2D &velocity, RegularGrid2Dm &material,
+              hermes::cuda::RegularGrid2Df &in,
+              hermes::cuda::RegularGrid2Df &out, float dt) override;
 };
 
 class SemiLagrangianIntegrator3 : public Integrator3 {
@@ -116,6 +124,9 @@ public:
                 hermes::cuda::RegularGrid2Duc &solid,
                 hermes::cuda::RegularGrid2Df &phi,
                 hermes::cuda::RegularGrid2Df &phiOut, float dt) override;
+  void advect(hermes::cuda::StaggeredGrid2D &velocity, RegularGrid2Dm &material,
+              hermes::cuda::RegularGrid2Df &in,
+              hermes::cuda::RegularGrid2Df &out, float dt) override;
 
 private:
   SemiLagrangianIntegrator2 integrator;
@@ -152,6 +163,9 @@ public:
               hermes::cuda::RegularGrid2Df &solidPhi,
               hermes::cuda::RegularGrid2Df &phi,
               hermes::cuda::RegularGrid2Df &phiOut, float dt);
+  void advect(hermes::cuda::StaggeredGrid2D &velocity, RegularGrid2Dm &material,
+              hermes::cuda::RegularGrid2Df &in,
+              hermes::cuda::RegularGrid2Df &out, float dt);
 
 private:
   size_t order = 3;

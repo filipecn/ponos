@@ -165,7 +165,7 @@ ParticleSystem2<MemoryLocation::HOST>::~ParticleSystem2() {}
 
 int ParticleSystem2<MemoryLocation::HOST>::addScalarProperty() {
   int idx = h_scalar_properties_.size();
-  h_scalar_properties_.push_back(thrust::device_vector<float>());
+  h_scalar_properties_.push_back(thrust::host_vector<float>());
   return idx;
 }
 
@@ -199,18 +199,18 @@ void ParticleSystem2<MemoryLocation::HOST>::update(int removedCount) {
     return;
   {
     thrust::counting_iterator<int> iter(0);
-    thrust::device_vector<int> indices(h_active_.size());
+    thrust::host_vector<int> indices(h_active_.size());
     thrust::copy(iter, iter + indices.size(), indices.begin());
     // --- First, sort the keys and indices by the keys
     thrust::sort_by_key(h_active_.begin(), h_active_.end(), indices.begin(),
                         thrust::greater<char>());
     // Now reorder the ID arrays using the sorted indices
-    thrust::device_vector<point2f> tmp(h_positions_);
+    thrust::host_vector<point2f> tmp(h_positions_);
     thrust::gather(indices.begin(), indices.end(), tmp.begin(),
                    h_positions_.begin());
     // reorder particle properties
     for (size_t i = 0; i < h_scalar_properties_.size(); i++) {
-      thrust::device_vector<float> aux(h_scalar_properties_[i]);
+      thrust::host_vector<float> aux(h_scalar_properties_[i]);
       thrust::gather(indices.begin(), indices.end(), aux.begin(),
                      h_scalar_properties_[i].begin());
     }
@@ -222,17 +222,17 @@ void ParticleSystem2<MemoryLocation::HOST>::update(int removedCount) {
   }
   { // sort based on morton code
     thrust::counting_iterator<int> iter(0);
-    thrust::device_vector<int> indices(active_count_);
+    thrust::host_vector<int> indices(active_count_);
     thrust::copy(iter, iter + indices.size(), indices.begin());
     // First, sort the keys and indices by the keys
     thrust::sort_by_key(h_zcodes_.begin(), h_zcodes_.end(), indices.begin());
     // Now reorder the ID arrays using the sorted indices
-    thrust::device_vector<point2f> tmp(h_positions_);
+    thrust::host_vector<point2f> tmp(h_positions_);
     thrust::gather(indices.begin(), indices.end(), tmp.begin(),
                    h_positions_.begin());
     // reorder particle properties
     for (size_t i = 0; i < h_scalar_properties_.size(); i++) {
-      thrust::device_vector<float> aux(h_scalar_properties_[i]);
+      thrust::host_vector<float> aux(h_scalar_properties_[i]);
       thrust::gather(indices.begin(), indices.end(), aux.begin(),
                      h_scalar_properties_[i].begin());
     }
