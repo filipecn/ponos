@@ -707,7 +707,7 @@ std::ostream &operator<<(std::ostream &os,
             std::is_same<T, unsigned char>::value)
           os << (int)acc(x, y, z) << "\t";
         else
-          os << std::setprecision(6) << acc(x, y, z) << "\t";
+          os << std::setprecision(6) << std::setw(10) << acc(x, y, z) << "\t";
       os << std::endl;
     }
     os << "==================================================\n";
@@ -759,6 +759,16 @@ __global__ void __fill3(MemoryBlock3Accessor<T> data, T value) {
 template <typename T> void fill3(MemoryBlock3Accessor<T> data, T value) {
   ThreadArrayDistributionInfo td(data.size());
   __fill3<T><<<td.gridSize, td.blockSize>>>(data, value);
+}
+template <typename T>
+void fill3(MemoryBlock3<MemoryLocation::DEVICE, T> &data, T value) {
+  ThreadArrayDistributionInfo td(data.size());
+  __fill3<T><<<td.gridSize, td.blockSize>>>(data.accessor(), value);
+}
+template <typename T>
+void fill3(MemoryBlock3<MemoryLocation::HOST, T> &data, T value) {
+  for (auto e : data.accessor())
+    e.value = value;
 }
 
 using MemoryBlock1Dd = MemoryBlock1<MemoryLocation::DEVICE, double>;

@@ -33,6 +33,51 @@ namespace poseidon {
 
 namespace cuda {
 
+class SDF {
+public:
+  static __device__ float box(const hermes::cuda::bbox2f &box,
+                              const hermes::cuda::point2f &p) {
+    if (box.contains(p))
+      return fmaxf(box.lower.x - p.x,
+                   fmaxf(p.x - box.upper.x,
+                         fmaxf(box.lower.y - p.y, p.y - box.upper.y)));
+    hermes::cuda::point2f c = p;
+    if (p.x < box.lower.x)
+      c.x = box.lower.x;
+    else if (p.x > box.upper.x)
+      c.x = box.upper.x;
+    if (p.y < box.lower.y)
+      c.y = box.lower.y;
+    else if (p.y > box.upper.y)
+      c.y = box.upper.y;
+    return distance(c, p);
+  }
+  static __device__ float box(const hermes::cuda::bbox3f &box,
+                              const hermes::cuda::point3f &p) {
+    if (box.contains(p))
+      return fmaxf(
+          box.lower.x - p.x,
+          fmaxf(p.x - box.upper.x,
+                fmaxf(box.lower.y - p.y,
+                      fmaxf(p.y - box.upper.y,
+                            fmaxf(box.lower.z - p.z, p.z - box.upper.z)))));
+    hermes::cuda::point3f c = p;
+    if (p.x < box.lower.x)
+      c.x = box.lower.x;
+    else if (p.x > box.upper.x)
+      c.x = box.upper.x;
+    if (p.y < box.lower.y)
+      c.y = box.lower.y;
+    else if (p.y > box.upper.y)
+      c.y = box.upper.y;
+    if (p.z < box.lower.z)
+      c.z = box.lower.z;
+    else if (p.z > box.upper.z)
+      c.z = box.upper.z;
+    return distance(c, p);
+  }
+};
+
 /// Auxiliar class to access the level set properties
 class LevelSet2Accessor {
 public:
@@ -154,6 +199,7 @@ private:
 /// \tparam L memory location
 template <hermes::cuda::MemoryLocation L> class LevelSet3 {
 public:
+  LevelSet3() {}
   /// \brief Construct a new Level Set 3 object
   /// \param resolution regular grid resolution
   /// \param spacing point spacing
@@ -177,6 +223,7 @@ public:
   }
   /// \param spacing cell size
   void setSpacing(hermes::cuda::vec3f spacing) { grid_.setSpacing(spacing); }
+  void setOrigin(hermes::cuda::point3f origin) { grid_.setOrigin(origin); }
   /// \return LevelSet3Accessor accessor for level set data
   LevelSet3Accessor accessor() { return LevelSet3Accessor(grid_.accessor()); }
   /// \return hermes::cuda::RegularGrid3<L, float>& grid data reference

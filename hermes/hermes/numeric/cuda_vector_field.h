@@ -281,7 +281,7 @@ public:
   virtual __host__ __device__ vec3f operator()(int i, int j, int k) {
     return vec3f(u_(i, j, k), v_(i, j, k), w_(i, j, k));
   }
-  __host__ __device__ vec3f operator()(point3f wp) {
+  virtual __host__ __device__ vec3f operator()(point3f wp) {
     return vec3f(u_(wp), v_(wp), w_(wp));
   }
   __host__ __device__ float &u(int i, int j, int k) { return u_(i, j, k); }
@@ -366,9 +366,9 @@ public:
       resize(other.resolution());
     setOrigin(other.origin());
     setSpacing(other.spacing());
-    memcpy(uGrid.data(), other.uGrid.data());
-    memcpy(vGrid.data(), other.vGrid.data());
-    memcpy(wGrid.data(), other.wGrid.data());
+    memcpy(uGrid.data(), other.u().data());
+    memcpy(vGrid.data(), other.v().data());
+    memcpy(wGrid.data(), other.w().data());
   }
 
 protected:

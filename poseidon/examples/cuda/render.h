@@ -189,6 +189,7 @@ public:
     if (!indices_.size())
       // TODO: clean current buffer
       return;
+
     // TODO: use cuda opengl interop to avoid memory transference
     rm_.primitiveType = ponos::GeometricPrimitiveType::TRIANGLES;
     rm_.meshDescriptor.count = indices_.size() / 3;

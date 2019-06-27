@@ -271,6 +271,54 @@ template <typename T> T maxAbs(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
   return norm;
 }
 
+template <typename T>
+__global__ void __max_abs(MemoryBlock3Accessor<T> data, T *c) {
+  __shared__ float cache[256];
+
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  int cacheindex = threadIdx.x;
+  int n = data.size().x * data.size().y * data.size().z;
+
+  T temp = -1 << 20;
+  while (tid < n) {
+    int k = tid / (data.size().x * data.size().y);
+    int j = (tid % (data.size().x * data.size().y)) / data.size().x;
+    int i = tid % data.size().x;
+    temp = fmaxf(temp, fabsf(data(i, j, k)));
+    tid += blockDim.x * gridDim.x;
+  }
+  cache[cacheindex] = temp;
+  __syncthreads();
+
+  int i = blockDim.x / 2;
+  while (i != 0) {
+    if (cacheindex < i)
+      cache[cacheindex] = fmaxf(cache[cacheindex], cache[cacheindex + i]);
+    __syncthreads();
+    i /= 2;
+  }
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
+}
+
+template <typename T> T maxAbs(MemoryBlock3<MemoryLocation::DEVICE, T> &data) {
+  size_t blockSize =
+      (data.size().x * data.size().y * data.size().z + 256 - 1) / 256;
+  if (blockSize > 32)
+    blockSize = 32;
+  T *c = new T[blockSize];
+  T *d_c;
+  cudaMalloc((void **)&d_c, blockSize * sizeof(T));
+  __max_abs<<<blockSize, 256>>>(data.accessor(), d_c);
+  cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
+  T norm = 0;
+  for (int i = 0; i < blockSize; i++)
+    norm = fmax(norm, c[i]);
+  cudaFree(d_c);
+  delete[] c;
+  return norm;
+}
+
 } // namespace cuda
 
 } // namespace hermes

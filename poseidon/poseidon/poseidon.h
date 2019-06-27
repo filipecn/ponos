@@ -7,4 +7,5 @@
 #include <poseidon/simulation/cuda_smoke_injector.h>
 #include <poseidon/simulation/cuda_vector_fields.h>
 #include <poseidon/solvers/cuda_practical_liquids_solver2.h>
+#include <poseidon/solvers/cuda_practical_liquids_solver3.h>
 #include <poseidon/solvers/cuda_smoke_solver.h>

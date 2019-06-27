@@ -136,6 +136,31 @@ void SemiLagrangianIntegrator3::advect_t(VectorGrid3D &velocity,
   cudaUnbindTexture(phiTex3);
 }
 
+__global__ void __advect3(StaggeredGrid3Accessor vel,
+                          RegularGrid3Accessor<float> in,
+                          RegularGrid3Accessor<float> out, float dt) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  int k = blockIdx.z * blockDim.z + threadIdx.z;
+  if (in.isIndexStored(i, j, k)) {
+    point3f p = in.worldPosition(i, j, k);
+    vec3f v = vel(p);
+    point3f pos = p - v * dt;
+    // TODO: clip on solid walls
+    out(i, j, k) = in(pos);
+  }
+}
+
+void SemiLagrangianIntegrator3::advect(hermes::cuda::StaggeredGrid3D &velocity,
+                                       RegularGrid3Dm &material,
+                                       hermes::cuda::RegularGrid3Df &in,
+                                       hermes::cuda::RegularGrid3Df &out,
+                                       float dt) {
+  hermes::ThreadArrayDistributionInfo td(in.resolution());
+  __advect3<<<td.gridSize, td.blockSize>>>(velocity.accessor(), in.accessor(),
+                                           out.accessor(), dt);
+}
+
 } // namespace cuda
 
 } // namespace poseidon

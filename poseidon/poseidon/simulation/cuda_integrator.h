@@ -68,6 +68,10 @@ public:
                         hermes::cuda::RegularGrid3Duc &solid,
                         hermes::cuda::RegularGrid3Df &phi,
                         hermes::cuda::RegularGrid3Df &phiOut, float dt) = 0;
+  virtual void advect(hermes::cuda::StaggeredGrid3D &velocity,
+                      RegularGrid3Dm &material,
+                      hermes::cuda::RegularGrid3Df &in,
+                      hermes::cuda::RegularGrid3Df &out, float dt) {}
 };
 
 class SemiLagrangianIntegrator2 : public Integrator2 {
@@ -103,6 +107,9 @@ public:
                 hermes::cuda::RegularGrid3Duc &solid,
                 hermes::cuda::RegularGrid3Df &phi,
                 hermes::cuda::RegularGrid3Df &phiOut, float dt) override;
+  void advect(hermes::cuda::StaggeredGrid3D &velocity, RegularGrid3Dm &material,
+              hermes::cuda::RegularGrid3Df &in,
+              hermes::cuda::RegularGrid3Df &out, float dt) override;
 };
 
 class MacCormackIntegrator2 : public Integrator2 {
@@ -170,7 +177,24 @@ public:
 private:
   size_t order = 3;
 };
+/// Implements Hamilton-Jacobi essentially nonoscillatory (ENO) polynomial
+/// interpolation for advecting fields. The polynomial is also constructed based
+/// on upwind differencing.
+class ENOIntegrator3 {
+public:
+  void set(hermes::cuda::RegularGrid3Info info);
+  void advect(hermes::cuda::StaggeredGrid3D &velocity,
+              hermes::cuda::RegularGrid3Duc &solid,
+              hermes::cuda::RegularGrid3Df &solidPhi,
+              hermes::cuda::RegularGrid3Df &phi,
+              hermes::cuda::RegularGrid3Df &phiOut, float dt);
+  void advect(hermes::cuda::StaggeredGrid3D &velocity, RegularGrid3Dm &material,
+              hermes::cuda::RegularGrid3Df &in,
+              hermes::cuda::RegularGrid3Df &out, float dt);
 
+private:
+  size_t order = 3;
+};
 } // namespace cuda
 
 } // namespace poseidon

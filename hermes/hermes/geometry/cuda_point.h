@@ -213,10 +213,12 @@ __host__ __device__ bool operator<(const Point3<T> &left,
   return false;
 }
 
-template <typename T> T distance(const Point3<T> &a, const Point3<T> &b) {
+template <typename T>
+T __host__ __device__ distance(const Point3<T> &a, const Point3<T> &b) {
   return (a - b).length();
 }
-template <typename T> T distance2(const Point3<T> &a, const Point3<T> &b) {
+template <typename T>
+T __host__ __device__ distance2(const Point3<T> &a, const Point3<T> &b) {
   return (a - b).length2();
 }
 template <typename T> __host__ __device__ Point3<T> floor(const Point3<T> &a) {

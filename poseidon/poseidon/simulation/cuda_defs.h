@@ -49,6 +49,12 @@ using RegularGrid2Dm =
 using RegularGrid2Hm =
     hermes::cuda::RegularGrid2<hermes::cuda::MemoryLocation::HOST,
                                MaterialType>;
+using RegularGrid3Dm =
+    hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::DEVICE,
+                               MaterialType>;
+using RegularGrid3Hm =
+    hermes::cuda::RegularGrid3<hermes::cuda::MemoryLocation::HOST,
+                               MaterialType>;
 } // namespace cuda
 
 } // namespace poseidon

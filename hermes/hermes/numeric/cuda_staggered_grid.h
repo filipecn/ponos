@@ -156,6 +156,9 @@ public:
                         this->v_(i, j + 1, k) + this->v_(i, j, k),
                         this->w_(i, j, k + 1) + this->w_(i, j, k));
   }
+  __host__ __device__ vec3f operator()(point3f wp) override {
+    return vec3f(this->u_(wp), this->v_(wp), this->w_(wp));
+  }
 };
 
 /// Represents a staggered grid with regular grid
