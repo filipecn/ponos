@@ -233,8 +233,10 @@ public:
   /// \param isovalue **[in | default = 0]**
   void isosurface(hermes::cuda::MemoryBlock1<L, float> &vertices,
                   hermes::cuda::MemoryBlock1<L, unsigned int> &indices,
-                  float isovalue = 0.f) {
-    hermes::cuda::MarchingCubes::extractSurface(grid_, vertices, indices, 0.f);
+                  float isovalue = 0.f,
+                  hermes::cuda::MemoryBlock1<L, float> *normals = nullptr) {
+    hermes::cuda::MarchingCubes::extractSurface(grid_, vertices, indices,
+                                                isovalue, normals);
   }
 
 private:

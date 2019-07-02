@@ -5,7 +5,7 @@ using namespace hermes::cuda;
 using namespace poseidon::cuda;
 
 int main() {
-  vec3u res(100);
+  vec3u res(50);
   circe::SceneApp<> app(800, 800, "");
   LevelSet3H ls(res, vec3f(1.f / res.x));
   for (auto e : ls.grid().accessor())

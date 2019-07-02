@@ -54,7 +54,8 @@ public:
   template <MemoryLocation L>
   static void
   extractSurface(RegularGrid3<L, float> &f, MemoryBlock1<L, float> &vertices,
-                 MemoryBlock1<L, unsigned int> &indices, float isovalue = 0.f);
+                 MemoryBlock1<L, unsigned int> &indices, float isovalue = 0.f,
+                 MemoryBlock1<L, float> *normals = nullptr);
 };
 
 } // namespace cuda

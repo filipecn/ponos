@@ -265,10 +265,10 @@ __constant__ int tri_table[256][16] = {
     {2, 3, 11, 0, 1, 8, 1, 7, 8, 1, 5, 7, -1, -1, -1, -1},            // 58
     {11, 2, 1, 11, 1, 7, 7, 1, 5, -1, -1, -1, -1, -1, -1, -1},        // 59
     {9, 5, 8, 8, 5, 7, 10, 1, 3, 10, 3, 11, -1, -1, -1, -1},          // 60
-    {5, 7, 0, 5, 0, 9, 7, 11, 0, 1, 0, 10, 11, 10, 0, -1},
-    {11, 10, 0, 11, 0, 3, 10, 5, 0, 8, 0, 7, 5, 7, 0, -1},
-    {11, 10, 5, 7, 11, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    {10, 6, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    {5, 7, 0, 5, 0, 9, 7, 11, 0, 1, 0, 10, 11, 10, 0, -1},            // 61
+    {11, 10, 0, 11, 0, 3, 10, 5, 0, 8, 0, 7, 5, 7, 0, -1},            // 62
+    {11, 10, 5, 7, 11, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},    // 63
+    {10, 6, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},   // 64
     {0, 8, 3, 5, 10, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     {9, 0, 1, 5, 10, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     {1, 8, 3, 1, 9, 8, 5, 10, 6, -1, -1, -1, -1, -1, -1, -1},
@@ -579,9 +579,34 @@ __generateVertices(MemoryBlock1Accessor<float> vertices,
   }
 }
 
+__global__ void __generateNormals(MemoryBlock1Accessor<float> vertices,
+                                  MemoryBlock1Accessor<float> normals) {
+
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  if (tid < vertices.size() / 9) {
+    vec3f v[3];
+    for (int i = 0; i < 3; ++i) {
+      v[i].x = vertices[tid * 9 + i * 3 + 0];
+      v[i].y = vertices[tid * 9 + i * 3 + 1];
+      v[i].z = vertices[tid * 9 + i * 3 + 2];
+    }
+    vec3f n = cross(v[1] - v[0], v[2] - v[0]);
+    if (n.length2() != 0)
+      n = normalize(n);
+    // else
+    //   n.x = 1.f;
+    for (int i = 0; i < 3; i++) {
+      normals[tid * 9 + i * 3 + 0] = 0;//n.x;
+      normals[tid * 9 + i * 3 + 1] = 0;//n.y;
+      normals[tid * 9 + i * 3 + 2] = 1;//n.z;
+    }
+  }
+}
+
 template <>
 void MarchingCubes::extractSurface(RegularGrid3Df &f, MemoryBlock1Df &vertices,
-                                   MemoryBlock1Du &indices, float isovalue) {
+                                   MemoryBlock1Du &indices, float isovalue,
+                                   MemoryBlock1Df *normals) {
   // classify cubes
   vec3u size = f.resolution() - vec3u(1);
   MemoryBlock3Duc cube_type(size);
@@ -612,6 +637,16 @@ void MarchingCubes::extractSurface(RegularGrid3Df &f, MemoryBlock1Df &vertices,
   __generateVertices<<<td.gridSize, td.blockSize>>>(
       vertices.accessor(), indices.accessor(), f.accessor(),
       d_index_offset.accessor(), cube_type.accessor(), isovalue);
+  std::cerr << vertices << std::endl;
+  std::cerr << std::endl;
+  if (normals) {
+    normals->resize(count * 3 * 3);
+    normals->allocate();
+    ThreadArrayDistributionInfo ntd(count);
+    __generateNormals<<<ntd.gridSize, ntd.blockSize>>>(vertices.accessor(),
+                                                       normals->accessor());
+    std::cerr << *normals << std::endl;
+  }
 }
 
 } // namespace cuda

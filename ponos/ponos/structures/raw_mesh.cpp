@@ -225,19 +225,21 @@ std::ostream &operator<<(std::ostream &os, RawMesh &rm) {
       os << rm.texcoords[i * rm.texcoordDescriptor.elementSize + j] << " ";
     os << std::endl;
   }
-  os << "mesh description (dim = " << rm.meshDescriptor.elementSize
-     << ", count_ = " << rm.meshDescriptor.count << ")\n";
-  for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
-    os << "m" << i << " = ";
-    for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)
-      os << "("
-         << rm.indices[i * rm.meshDescriptor.elementSize + j].positionIndex
-         << ", "
-         << rm.indices[i * rm.meshDescriptor.elementSize + j].normalIndex
-         << ", "
-         << rm.indices[i * rm.meshDescriptor.elementSize + j].texcoordIndex
-         << ")";
-    os << std::endl;
+  if (rm.indices.size()) {
+    os << "mesh description (dim = " << rm.meshDescriptor.elementSize
+       << ", count_ = " << rm.meshDescriptor.count << ")\n";
+    for (size_t i = 0; i < rm.meshDescriptor.count; i++) {
+      os << "m" << i << " = ";
+      for (size_t j = 0; j < rm.meshDescriptor.elementSize; j++)
+        os << "("
+           << rm.indices[i * rm.meshDescriptor.elementSize + j].positionIndex
+           << ", "
+           << rm.indices[i * rm.meshDescriptor.elementSize + j].normalIndex
+           << ", "
+           << rm.indices[i * rm.meshDescriptor.elementSize + j].texcoordIndex
+           << ")";
+      os << std::endl;
+    }
   }
   os << "indices (dim = " << rm.meshDescriptor.elementSize
      << ", count = " << rm.meshDescriptor.count << ")\n";

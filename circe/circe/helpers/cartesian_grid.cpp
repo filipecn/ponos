@@ -72,33 +72,19 @@ void CartesianGrid::setDimension(size_t d, int a, int b) {
 void CartesianGrid::draw(const CameraInterface *camera, ponos::Transform t) {
   glBindVertexArray(VAO_grid_);
   gridShader_->begin();
-  gridShader_->setUniform("mvp",
-                          ponos::transpose((camera->getProjectionTransform() *
-                                            camera->getViewTransform() *
-                                            camera->getModelTransform())
-                                               .matrix()));
+  gridShader_->setUniform(
+      "mvp", ponos::transpose((camera->getProjectionTransform() *
+                               camera->getViewTransform() *
+                               camera->getModelTransform() * this->transform)
+                                  .matrix()));
   glDrawArrays(GL_LINES, 0, mesh.positions.size());
   CHECK_GL_ERRORS;
   gridShader_->end();
   glBindVertexArray(0);
-  return;
-  // axis
-  glLineWidth(4.f);
-  glBegin(GL_LINES);
-  glColor(xAxisColor);
-  glVertex(transform(ponos::point3()));
-  glVertex(transform(ponos::point3(0.5, 0, 0)));
-  glColor(yAxisColor);
-  glVertex(transform(ponos::point3()));
-  glVertex(transform(ponos::point3(0, 0.5, 0)));
-  glColor(zAxisColor);
-  glVertex(transform(ponos::point3()));
-  glVertex(transform(ponos::point3(0, 0, 0.5)));
-  glEnd();
-  glLineWidth(1.f);
 }
 
 void CartesianGrid::updateBuffers() {
+  mesh.clear();
   mesh.meshDescriptor.elementSize = 2;
   mesh.meshDescriptor.count = 0;
   for (int x = planes[0].low; x <= planes[0].high; x++) {

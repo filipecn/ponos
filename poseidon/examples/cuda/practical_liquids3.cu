@@ -25,11 +25,18 @@ int main() {
   pls.setSpacing(s);
   // walls
   int wall_thick = 3;
-  pls.rasterSolid(bbox3f(point2f(-1), point3f(wall_thick * s.x, 1.f, 1.f)),
+  pls.rasterSolid(bbox3f(point3f(-1), point3f(wall_thick * s.x, 2.f, 2.f)),
                   vec3f());
-  pls.rasterSolid(bbox3f(point2f(-1), point3f(1.f, wall_thick * s.y, 1.f)),
+  pls.rasterSolid(bbox3f(point3f(-1), point3f(2.f, wall_thick * s.y, 2.f)),
                   vec3f());
-  pls.rasterSolid(bbox3f(point2f(-1), point3f(1.f, 1.f, wall_thick * s.z)),
+  pls.rasterSolid(bbox3f(point3f(-1), point3f(2.f, 2.f, wall_thick * s.z)),
+                  vec3f());
+  pls.rasterSolid(bbox3f(point3f(1.f - wall_thick * s.x, -1, -1), point3f(2)),
+                  vec3f());
+  // pls.rasterSolid(bbox3f(point3f(-1, 1.f - wall_thick * s.y, -1),
+  // point3f(2)),
+  //                 vec3f());
+  pls.rasterSolid(bbox3f(point3f(-1, -1, 1.f - wall_thick * s.z), point3f(2)),
                   vec3f());
   LevelSet3H ls(pls.surfaceLevelSet());
   for (auto e : ls.grid().accessor()) {
@@ -50,7 +57,7 @@ int main() {
   LevelSet3ModelD slsm(pls.solidLevelSet());
   // slsm.color = circe::Color::Yellow();
   app.scene.add(&lsm);
-  app.scene.add(&slsm);
+  // app.scene.add(&slsm);
   slsm.update();
   app.renderCallback = [&]() {
     // pls.step(1.f / 60.f);
@@ -58,6 +65,7 @@ int main() {
   };
   int frame = 0;
   app.viewports[0].renderEndCallback = [&]() {
+    return;
     std::vector<unsigned char> image;
     size_t w, h;
     app.viewports[0].renderer->currentPixels(image, w, h);
@@ -71,6 +79,12 @@ int main() {
       std::cout << "encoder error " << error << ": "
                 << lodepng_error_text(error) << std::endl;
   };
+  circe::CartesianGrid grid(res.x);
+  // grid.setDimension(0, 0, res.x);
+  // grid.setDimension(1, 0, res.y);
+  // grid.setDimension(2, 0, res.z);
+  grid.transform = ponos::scale(s.x, s.y, s.z);
+  app.scene.add(&grid);
   app.run();
   return 0;
 }

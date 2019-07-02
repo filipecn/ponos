@@ -152,8 +152,9 @@ class Levelset3Model : public circe::SceneObject {
 public:
   Levelset3Model(poseidon::cuda::LevelSet3<L> &ls) : ls_(ls) {
     circe::BufferDescriptor vertex_desc =
-        circe::create_vertex_buffer_descriptor(3, 0, GL_TRIANGLES);
+        circe::create_vertex_buffer_descriptor(6, 0, GL_TRIANGLES);
     vertex_desc.addAttribute(std::string("position"), 3, 0, GL_FLOAT);
+    vertex_desc.addAttribute(std::string("normal"), 3, 3, GL_FLOAT);
     circe::BufferDescriptor index_desc = circe::create_index_buffer_descriptor(
         3, 0, ponos::GeometricPrimitiveType::TRIANGLES);
     m_.mesh().setDescription(vertex_desc, index_desc);
@@ -164,27 +165,44 @@ public:
         circe::ShaderManager::instance().loadFromFiles(
             {vs.c_str(), fs.c_str()}));
     shader->addVertexAttribute("position", 0);
-    shader->addUniform("model", 1);
-    shader->addUniform("view", 2);
-    shader->addUniform("projection", 3);
-    shader->addUniform("color", 4);
+    shader->addVertexAttribute("normal", 1);
+    shader->addUniform("Light.position", 2);
+    shader->addUniform("Light.ambient", 3);
+    shader->addUniform("Light.diffuse", 4);
+    shader->addUniform("Light.specular", 5);
+    shader->addUniform("Material.kAmbient", 6);
+    shader->addUniform("Material.kDiffuse", 7);
+    shader->addUniform("Material.kSpecular", 8);
+    shader->addUniform("Material.shininess", 9);
+    shader->addUniform("cameraPosition", 10);
+    shader->addUniform("model", 11);
+    shader->addUniform("view", 12);
+    shader->addUniform("projection", 13);
     m_.setShader(shader);
     m_.draw_callback = [](circe::ShaderProgram *s,
                           const circe::CameraInterface *camera,
                           ponos::Transform t) {
       s->begin();
-      s->setUniform("color", ponos::vec4(1, 1, 1, 1));
+      s->setUniform("Light.position", ponos::vec3(0, 1, 0));
+      s->setUniform("Light.ambient", ponos::vec3(1, 1, 1));
+      s->setUniform("Light.diffuse", ponos::vec3(1, 1, 1));
+      s->setUniform("Light.specular", ponos::vec3(1, 1, 1));
+      s->setUniform("Material.kAmbient", ponos::vec3(0.5, 0.5, 0.5));
+      s->setUniform("Material.kDiffuse", ponos::vec3(1.0, 0.5, 0.5));
+      s->setUniform("Material.kSpecular", ponos::vec3(0.8, 1, 1));
+      s->setUniform("Material.shininess", 200.f);
       s->setUniform("model", ponos::transpose(t.matrix()));
       s->setUniform("view",
                     ponos::transpose(camera->getViewTransform().matrix()));
       s->setUniform(
           "projection",
           ponos::transpose(camera->getProjectionTransform().matrix()));
+      s->setUniform("cameraPosition", camera->getPosition());
     };
   }
   void update() {
     std::cerr << "update level set:\n";
-    ls_.isosurface(vertices_, indices_);
+    ls_.isosurface(vertices_, indices_, 0.f, &normals_);
     std::cerr << indices_.size() << std::endl;
     if (!indices_.size())
       // TODO: clean current buffer
@@ -194,11 +212,16 @@ public:
     rm_.primitiveType = ponos::GeometricPrimitiveType::TRIANGLES;
     rm_.meshDescriptor.count = indices_.size() / 3;
     rm_.meshDescriptor.elementSize = 3;
+    rm_.normalDescriptor.count = vertices_.size() / 3;
+    rm_.normalDescriptor.elementSize = 3;
     rm_.positionDescriptor.count = vertices_.size() / 3;
     rm_.positionDescriptor.elementSize = 3;
     hermes::cuda::memcpy(rm_.positions, vertices_);
+    hermes::cuda::memcpy(rm_.normals, normals_);
     hermes::cuda::memcpy(rm_.positionsIndices, indices_);
-    m_.mesh().update(&rm_.positions[0], rm_.positionDescriptor.count,
+    rm_.buildInterleavedData();
+    // std::cerr << rm_ << std::endl;
+    m_.mesh().update(&rm_.interleavedData[0], rm_.positionDescriptor.count,
                      &rm_.positionsIndices[0], rm_.meshDescriptor.count);
   }
   void draw(const circe::CameraInterface *camera, ponos::Transform t) override {
@@ -209,7 +232,7 @@ public:
 private:
   // data
   poseidon::cuda::LevelSet3<L> &ls_;
-  hermes::cuda::MemoryBlock1Df vertices_;
+  hermes::cuda::MemoryBlock1Df vertices_, normals_;
   hermes::cuda::MemoryBlock1Du indices_;
   // vis
   ponos::RawMesh rm_;
