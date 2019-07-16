@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_GEOMETRY_PLANE_H
 #define PONOS_GEOMETRY_PLANE_H
@@ -47,6 +47,10 @@ public:
     normal = n;
     offset = o;
   }
+  point3 closestPoint(const point3 &p) const {
+    float t = (dot(vec3(normal), vec3(p)) - offset) / vec3(normal).length2();
+    return p - t * vec3(normal);
+  }
   /** \brief  projects **v** on plane
    * \param v
    * \returns projected **v**
@@ -57,6 +61,9 @@ public:
    * \returns reflected **v**
    */
   vec3 reflect(const vec3 &v) { return ponos::reflect(v, normal); }
+  bool onNormalSide(const point3 &p) const {
+    return dot(vec3(normal), p - closestPoint(p)) >= 0;
+  }
 
   friend std::ostream &operator<<(std::ostream &os, const Plane &p) {
     os << "[Plane] offset " << p.offset << " " << p.normal;
@@ -123,6 +130,6 @@ public:
   real_t offset;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

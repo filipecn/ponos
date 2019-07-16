@@ -27,6 +27,7 @@
 
 #include <hermes/numeric/cuda_grid.h>
 #include <hermes/parallel/cuda_reduce.h>
+#include <ponos/common/timer.h>
 #include <poseidon/math/cuda_fd.h>
 #include <poseidon/simulation/cuda_defs.h>
 #include <poseidon/simulation/cuda_integrator.h>
@@ -123,43 +124,64 @@ public:
     while (time_step > 0) {
       float dt = min(time_step, dtFromCFLCondition());
       std::cerr << "timestep: " << dt << std::endl;
+      ponos::Timer timer;
       // input: LS[SRC] output: LS[DST]
       updateSurfaceDistanceField();
+      std::cerr << "updateSurfaceDistanceFiled in " << timer.tackTick()
+                << "ms\n";
       // input: LS[DST] output: material
       classifyCells();
+      std::cerr << "classifyCells in " << timer.tackTick() << "ms\n";
       fill3(velocity_[DST].u().data(), 0.f);
       fill3(velocity_[DST].v().data(), 0.f);
       fill3(velocity_[DST].w().data(), 0.f);
       fill3(divergence_.data(), 0.f);
       fill3(pressure_.data(), 0.f);
+      std::cerr << "resetFields in " << timer.tackTick() << "ms\n";
       // input: material, force, v[SRC] output: v[DST]
       // std::cerr << "SROUCE V\n";
       // std::cerr << velocity_[SRC].v().data() << std::endl;
+      timer.tackTick();
       applyExternalForces(dt);
+      std::cerr << "applyExternalForces in " << timer.tackTick() << "ms\n";
       // input: material, v[DST] output: v[SRC]
       propagateVelocity();
+      std::cerr << "propagateVelocity in " << timer.tackTick() << "ms\n";
       // velocity_[DST].copy(velocity_[SRC]);
       advectVelocity(dt);
+      std::cerr << "advectVelocity in " << timer.tackTick() << "ms\n";
       // velocity_[SRC].copy(velocity_[DST]);
       // inpute materia, v[DST] output: v[DST]
-      enforceBoundaries();
+      enforceBoundaries(DST, false);
+      std::cerr << "enforceBoundaries in " << timer.tackTick() << "ms\n";
       // resolveViscosity(dt);
       // input: v[DST] output: divergence
       computeDivergence();
+      std::cerr << "computeDivergence in " << timer.tackTick() << "ms\n";
       // std::cerr << divergence_.data() << std::endl;
       // input: material, divergence output: pressure
       solvePressure(dt);
+      std::cerr << "solvePressure in " << timer.tackTick() << "ms\n";
       // std::cerr << material_.data() << std::endl;
       // std::cerr << divergence_.data() << std::endl;
       // std::cerr << pressure_.data() << std::endl;
       // input: v[DST] output: v[DST]
       project(dt);
+      std::cerr << "project in " << timer.tackTick() << "ms\n";
       // velocity_[DST].copy(velocity_[SRC]);
       // input: material, v[DST] output: v[SRC]
       propagateVelocity();
+      std::cerr << "propagateVelocity in " << timer.tackTick() << "ms\n";
+      // input: material, v[SRC] output: v[SRC]
+      enforceBoundaries(SRC, true);
+      std::cerr << "enforceBoundaries in " << timer.tackTick() << "ms\n";
+      // velocity_[SRC].copy(velocity_[DST]);
       // input: material, v[SRC], LS[SRC] output: LS[DST]
       advectFluid(dt);
+      // dtFromCFLCondition();
+      std::cerr << "advectFluid in " << timer.tackTick() << "ms\n";
       velocity_[DST].copy(velocity_[SRC]);
+      std::cerr << "velocity copy in " << timer.tackTick() << "ms\n";
       time_step -= dt;
       SRC = (SRC) ? 0 : 1;
       DST = (DST) ? 0 : 1;
@@ -207,7 +229,7 @@ private:
   void propagateVelocity();
   // After velocity advection, solid walls may end up with wrong velocities
   // This function sets velocity components values on solid walls appropriately
-  void enforceBoundaries();
+  void enforceBoundaries(size_t buffer, bool onlyNormalVelocities);
 
   size_t SRC = 0;
   size_t DST = 1;
@@ -220,7 +242,7 @@ private:
   hermes::cuda::RegularGrid3<L, float> pressure_;
   hermes::cuda::RegularGrid3<L, float> divergence_;
   hermes::cuda::RegularGrid3<L, MaterialType> material_;
-  ENOIntegrator3 fluidIntegrator;
+  SemiLagrangianIntegrator3 fluidIntegrator;
 };
 
 using PracticalLiquidsSolver3D =

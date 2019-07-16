@@ -46,6 +46,11 @@ public:
     far_.normal.z = t.matrix().m[3][2] - t.matrix().m[2][2];
     far_.offset = t.matrix().m[3][3] - t.matrix().m[2][3];
   }
+  bool isInside(const ponos::point3 &p) const {
+    return !near_.onNormalSide(p) && !far_.onNormalSide(p) &&
+           !left.onNormalSide(p) && !right.onNormalSide(p) &&
+           !bottom.onNormalSide(p) && !top.onNormalSide(p);
+  }
 
   Plane near_;
   Plane far_;
@@ -55,6 +60,6 @@ public:
   Plane top;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

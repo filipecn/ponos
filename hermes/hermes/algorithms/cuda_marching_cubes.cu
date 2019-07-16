@@ -596,9 +596,9 @@ __global__ void __generateNormals(MemoryBlock1Accessor<float> vertices,
     // else
     //   n.x = 1.f;
     for (int i = 0; i < 3; i++) {
-      normals[tid * 9 + i * 3 + 0] = 0;//n.x;
-      normals[tid * 9 + i * 3 + 1] = 0;//n.y;
-      normals[tid * 9 + i * 3 + 2] = 1;//n.z;
+      normals[tid * 9 + i * 3 + 0] = n.x;
+      normals[tid * 9 + i * 3 + 1] = n.y;
+      normals[tid * 9 + i * 3 + 2] = n.z;
     }
   }
 }
@@ -637,15 +637,12 @@ void MarchingCubes::extractSurface(RegularGrid3Df &f, MemoryBlock1Df &vertices,
   __generateVertices<<<td.gridSize, td.blockSize>>>(
       vertices.accessor(), indices.accessor(), f.accessor(),
       d_index_offset.accessor(), cube_type.accessor(), isovalue);
-  std::cerr << vertices << std::endl;
-  std::cerr << std::endl;
   if (normals) {
     normals->resize(count * 3 * 3);
     normals->allocate();
     ThreadArrayDistributionInfo ntd(count);
     __generateNormals<<<ntd.gridSize, ntd.blockSize>>>(vertices.accessor(),
                                                        normals->accessor());
-    std::cerr << *normals << std::endl;
   }
 }
 

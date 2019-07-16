@@ -51,8 +51,8 @@ __global__ void __computeDistanceNextToSurface(LevelSet3Accessor in,
       float in_IJK = in(I, J, K);
       if (sign(in_ijk) * sign(in_IJK) < 0) {
         float theta = in_ijk / (in_ijk - in_IJK);
-        if ((i > I || j > J || k > K) && in_ijk > in_IJK)
-          theta *= -1;
+        // if ((i > I || j > J || k > K) && in_ijk > in_IJK)
+        //   theta *= -1;
         float phi = sign(in(i, j, k)) * theta * in.spacing().x;
         if (fabsf(minDist) > fabs(phi))
           minDist = phi;
@@ -69,9 +69,10 @@ __global__ void __handleSolids(LevelSet3Accessor s, LevelSet3Accessor f) {
   if (f.isIndexStored(i, j, k)) {
     if (f(i, j, k) < 0 && s(i, j, k) < 0) {
       f(i, j, k) = -s(i, j, k);
-    } else if (f(i, j, k) < 0 && fabs(f(i, j, k)) > fabs(s(i, j, k))) {
-      f(i, j, k) = sign(f(i, j, k)) * fabs(s(i, j, k));
     }
+    // else if (f(i, j, k) < 0 && fabs(f(i, j, k)) > fabs(s(i, j, k))) {
+    //   f(i, j, k) = sign(f(i, j, k)) * fabs(s(i, j, k));
+    // }
   }
 }
 
@@ -146,9 +147,11 @@ void PracticalLiquidsSolver3<
   fill3(surface_ls_[DST].grid().data(), Constants::greatest<float>());
   __handleSolids<<<td.gridSize, td.blockSize>>>(solid_ls_.accessor(),
                                                 surface_ls_[SRC].accessor());
-  // compute distances of points closest to surface
+  // std::cerr << "FLUID BEFORE\n" << surface_ls_[SRC].grid().data() <<
+  // std::endl; compute distances of points closest to surface
   __computeDistanceNextToSurface<<<td.gridSize, td.blockSize>>>(
       surface_ls_[SRC].accessor(), surface_ls_[DST].accessor());
+  // std::cerr << "FLUID\n" << surface_ls_[DST].grid().data() << std::endl;
   {
     LevelSet3H hls(surface_ls_[DST]);
     // propagate distances in positive direction
@@ -157,11 +160,13 @@ void PracticalLiquidsSolver3<
     propagate(hls, -1);
     memcpy(surface_ls_[DST].grid().data(), hls.grid().data());
   }
-  // std::cerr << solid_ls_.grid().data() << std::endl;
-  // std::cerr << surface_ls_[DST].grid().data() << std::endl;
+  // std::cerr << "SOLID\n" << solid_ls_.grid().data() << std::endl;
+  // std::cerr << "FLUID AFTER PROPAGATION\n"
+  //           << surface_ls_[DST].grid().data() << std::endl;
   __handleSolids<<<td.gridSize, td.blockSize>>>(solid_ls_.accessor(),
                                                 surface_ls_[DST].accessor());
-  // std::cerr << surface_ls_[DST].grid().data() << std::endl;
+  // std::cerr << "FLUID AFTER SOLID\n"
+  //           << surface_ls_[DST].grid().data() << std::endl;
   // exit(0);
 }
 
@@ -270,17 +275,17 @@ __global__ void __computeDivergence(StaggeredGrid3Accessor vel,
     bool sback = solid(i, j, k - 1) == MaterialType::SOLID;
     bool sfront = solid(i, j, k + 1) == MaterialType::SOLID;
     if (sleft)
-      left = 0; // tex3D(uSolidTex3, xc, yc, zc);
+      left = 0;
     if (sright)
-      right = 0; // tex3D(uSolidTex3, xc + 1, yc, zc);
+      right = 0;
     if (sbottom)
-      bottom = 0; // tex3D(vSolidTex3, xc, yc, zc);
+      bottom = 0;
     if (stop)
-      top = 0; // tex3D(vSolidTex3, xc, yc + 1, zc);
+      top = 0;
     if (sback)
-      back = 0; // tex3D(vSolidTex3, xc, yc + 1, zc);
+      back = 0;
     if (sfront)
-      front = 0; // tex3D(vSolidTex3, xc, yc + 1, zc);
+      front = 0;
     divergence(i, j, k) =
         dot(invdx, vec3f(right - left, top - bottom, front - back));
   }
@@ -508,26 +513,43 @@ void PracticalLiquidsSolver3<MemoryLocation::DEVICE>::advectFluid(float dt) {
 
 __global__ void __enforceBoundaries(StaggeredGrid3Accessor vel,
                                     StaggeredGrid3Accessor svel,
-                                    RegularGrid3Accessor<MaterialType> m) {
+                                    RegularGrid3Accessor<MaterialType> m,
+                                    bool onlyNormalVelocities) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   int k = blockIdx.z * blockDim.z + threadIdx.z;
   if (m.isIndexStored(i, j, k) && m(i, j, k) == MaterialType::SOLID) {
-    vel.u(i, j, k) = svel.u(i, j, k);
-    vel.u(i + 1, j, k) = svel.u(i + 1, j, k);
-    vel.v(i, j, k) = svel.v(i, j, k);
-    vel.v(i, j + 1, k) = svel.v(i, j + 1, k);
-    vel.w(i, j, k) = svel.w(i, j, k);
-    vel.w(i, j, k + 1) = svel.w(i, j, k + 1);
+    if (onlyNormalVelocities) {
+      if (m(i + 1, j, k) != MaterialType::SOLID)
+        vel.u(i + 1, j, k) = svel.u(i + 1, j, k);
+      if (m(i, j + 1, k) != MaterialType::SOLID)
+        vel.v(i, j + 1, k) = svel.v(i, j + 1, k);
+      if (m(i, j, k + 1) != MaterialType::SOLID)
+        vel.w(i, j, k + 1) = svel.v(i, j, k + 1);
+      if (m(i - 1, j, k) != MaterialType::SOLID)
+        vel.u(i, j, k) = svel.u(i, j, k);
+      if (m(i, j - 1, k) != MaterialType::SOLID)
+        vel.v(i, j, k) = svel.v(i, j, k);
+      if (m(i, j, k - 1) != MaterialType::SOLID)
+        vel.w(i, j, k) = svel.w(i, j, k);
+    } else {
+      vel.u(i, j, k) = svel.u(i, j, k);
+      vel.u(i + 1, j, k) = svel.u(i + 1, j, k);
+      vel.v(i, j, k) = svel.v(i, j, k);
+      vel.v(i, j + 1, k) = svel.v(i, j + 1, k);
+      vel.w(i, j, k) = svel.w(i, j, k);
+      vel.w(i, j, k + 1) = svel.w(i, j, k + 1);
+    }
   }
 }
 
 template <>
-void PracticalLiquidsSolver3<MemoryLocation::DEVICE>::enforceBoundaries() {
+void PracticalLiquidsSolver3<MemoryLocation::DEVICE>::enforceBoundaries(
+    size_t buffer, bool onlyNormalVelocities) {
   hermes::ThreadArrayDistributionInfo td(material_.resolution());
-  __enforceBoundaries<<<td.gridSize, td.blockSize>>>(velocity_[DST].accessor(),
-                                                     solid_velocity_.accessor(),
-                                                     material_.accessor());
+  __enforceBoundaries<<<td.gridSize, td.blockSize>>>(
+      velocity_[buffer].accessor(), solid_velocity_.accessor(),
+      material_.accessor(), onlyNormalVelocities);
 }
 
 void propagate(RegularGrid3Hm &mat, RegularGrid3Hf &vel, int dim) {
@@ -550,8 +572,8 @@ void propagate(RegularGrid3Hm &mat, RegularGrid3Hf &vel, int dim) {
   while (!q.empty()) {
     vec3i p = q.front();
     q.pop();
-    if (t(p.x, p.y, p.z) > 8)
-      continue;
+    // if (t(p.x, p.y, p.z) > 8)
+    //   continue;
     // average velocity from neighbors closer to surface
     float sum = 0;
     int count = 0;

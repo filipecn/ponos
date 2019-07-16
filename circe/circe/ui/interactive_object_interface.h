@@ -7,7 +7,7 @@ namespace circe {
 
 class InteractiveObjectInterface {
 public:
-  InteractiveObjectInterface() : id(-1), selected(false), active(false) {}
+  InteractiveObjectInterface() : /*id(-1),*/ selected(false), active(false) {}
   virtual ~InteractiveObjectInterface() {}
 
   virtual void mouse(CameraInterface &camera, ponos::point2 p) {
@@ -29,7 +29,7 @@ public:
 
   virtual void updateTransform() = 0;
 
-  int id;
+  // int id;
   bool selected;
   bool active;
   TrackballInterface trackball;

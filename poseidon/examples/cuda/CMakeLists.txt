@@ -41,7 +41,10 @@ ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(practical_liquids2 PRIVATE hermes poseidon ponos circe lodepng cufft)
 # PRACTICAL LIQUIDS 3
 add_executable(practical_liquids3 practical_liquids3.cu render.cu)
-target_compile_definitions(practical_liquids3 PUBLIC -DSHADERS_PATH="${POSEIDON_SOURCE_DIR}/examples/shaders")
+target_compile_definitions(practical_liquids3 PUBLIC 
+-DASSETS_PATH="${POSEIDON_SOURCE_DIR}/examples/assets"
+-DSHADERS_PATH="${POSEIDON_SOURCE_DIR}/examples/shaders"
+)
 set_target_properties(practical_liquids3 PROPERTIES
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
 CUDA_RESOLVE_DEVICE_SYMBOLS ON

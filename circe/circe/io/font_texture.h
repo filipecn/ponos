@@ -57,39 +57,22 @@ public:
     float offsetY = 0;
   };
   FontAtlas();
+  /// \param path **[in]**
   void loadFont(const char *path);
-  Glyph getGlyph(uint character, float offsetX, float offsetY);
+  /// \brief Get the Glyph object
+  /// \param character **[in]**
+  /// \param offsetX **[in]**
+  /// \param offsetY **[in]**
+  /// \return Glyph
+  Glyph getGlyph(uint character, float offsetX, float offsetY) const;
+  /// \param text **[in]**
   void setText(std::string text);
-  void render();
+  /// \param text **[in]**
+  /// \param m **[in]**
+  void setText(std::string text, ponos::RawMesh &m) const;
   ponos::RawMeshSPtr rawMesh;
   SceneMeshSPtr mesh;
   Texture texture;
-};
-
-class FontTexture {
-public:
-  struct Character {
-    std::shared_ptr<circe::Texture> texture; //!< the glyph texture
-    ponos::ivec2 size;                       //!< size of glyph
-    ponos::ivec2 bearing; //!< offset from baseline to left/top of glyph
-    GLuint advance;       //!< offset to advance to next glyph
-  };
-  FontTexture();
-  ~FontTexture();
-  /// \param c character ascii code
-  /// \param s true size
-  /// \param a glyph texture attributes
-  /// \param p glyph texture parameters
-  /// \param bearing offset from baseline to left/top of glyph
-  /// \param advance offset to advance to next glyph
-  void addCharacter(GLubyte c, ponos::ivec2 s, TextureAttributes a,
-                    TextureParameters p, ponos::ivec2 bearing, GLuint advance);
-  /// \param c character ascii code
-  /// \return character object
-  const Character &operator[](GLubyte c) const;
-
-private:
-  std::map<GLchar, Character> characters;
 };
 
 } // namespace circe

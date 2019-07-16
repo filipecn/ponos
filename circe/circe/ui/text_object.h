@@ -1,4 +1,4 @@
-// Created by filipecn on 3/28/18.
+// Created by filipecn on 7/10/19.
 /*
  * Copyright (c) 2018 FilipeCN
  *
@@ -23,34 +23,34 @@
  *
  */
 
-#include "font_manager.h"
+#ifndef CIRCE_TEXT_OBJECT_H
+#define CIRCE_TEXT_OBJECT_H
+
+#include <circe/scene/scene_object.h>
+#include <ponos/structures/raw_mesh.h>
 
 namespace circe {
 
-FontManager FontManager::instance_;
+class TextObject : public SceneObject {
+public:
+  /// \brief Construct a new Text Object object
+  /// \param id **[in]**
+  TextObject(int id = -1);
+  /// \param text **[in]**
+  void setText(std::string text);
+  void draw(const CameraInterface *c, ponos::Transform t) override;
 
-FontManager &FontManager::instance() { return instance_; }
+  float text_size = 1.f;   //!< text scale
+  Color text_color;        //!< text color
+  ponos::point3f position; //!< text position
 
-int FontManager::loadFromFile(const char *filename) {
-  instance_.fonts_.emplace_back();
-  instance_.fonts_[instance_.fonts_.size() - 1].loadFont(filename);
-  return instance_.fonts_.size() - 1;
-}
-
-void FontManager::setText(int id, const std::string &t, ponos::RawMesh &m) {
-  if (id < 0 || static_cast<size_t>(id) >= instance_.fonts_.size())
-    return;
-  instance_.fonts_[id].setText(t, m);
-}
-
-void FontManager::bindTexture(int id, GLenum target) {
-  if (id < 0 || static_cast<size_t>(id) >= instance_.fonts_.size())
-    return;
-  instance_.fonts_[id].texture.bind(target);
-}
-
-FontManager::FontManager() {}
-
-FontManager::~FontManager() {}
+private:
+  int font_id_ = -1;
+  ponos::RawMeshSPtr raw_mesh_;
+  ShaderProgramPtr shader_;
+  SceneMeshSPtr mesh_;
+};
 
 } // namespace circe
+
+#endif // CIRCE_FONT_TEXTURE_H

@@ -154,7 +154,8 @@ public:
     circe::BufferDescriptor vertex_desc =
         circe::create_vertex_buffer_descriptor(6, 0, GL_TRIANGLES);
     vertex_desc.addAttribute(std::string("position"), 3, 0, GL_FLOAT);
-    vertex_desc.addAttribute(std::string("normal"), 3, 3, GL_FLOAT);
+    vertex_desc.addAttribute(std::string("normal"), 3, 3 * sizeof(float),
+                             GL_FLOAT);
     circe::BufferDescriptor index_desc = circe::create_index_buffer_descriptor(
         3, 0, ponos::GeometricPrimitiveType::TRIANGLES);
     m_.mesh().setDescription(vertex_desc, index_desc);
@@ -183,14 +184,14 @@ public:
                           const circe::CameraInterface *camera,
                           ponos::Transform t) {
       s->begin();
-      s->setUniform("Light.position", ponos::vec3(0, 1, 0));
+      s->setUniform("Light.position", ponos::vec3(0, -1, 1));
       s->setUniform("Light.ambient", ponos::vec3(1, 1, 1));
       s->setUniform("Light.diffuse", ponos::vec3(1, 1, 1));
       s->setUniform("Light.specular", ponos::vec3(1, 1, 1));
       s->setUniform("Material.kAmbient", ponos::vec3(0.5, 0.5, 0.5));
       s->setUniform("Material.kDiffuse", ponos::vec3(1.0, 0.5, 0.5));
       s->setUniform("Material.kSpecular", ponos::vec3(0.8, 1, 1));
-      s->setUniform("Material.shininess", 200.f);
+      s->setUniform("Material.shininess", 100.f);
       s->setUniform("model", ponos::transpose(t.matrix()));
       s->setUniform("view",
                     ponos::transpose(camera->getViewTransform().matrix()));
@@ -244,6 +245,110 @@ using LevelSet2ModelD = Levelset2Model<hermes::cuda::MemoryLocation::DEVICE>;
 using LevelSet2ModelH = Levelset2Model<hermes::cuda::MemoryLocation::HOST>;
 using LevelSet3ModelD = Levelset3Model<hermes::cuda::MemoryLocation::DEVICE>;
 using LevelSet3ModelH = Levelset3Model<hermes::cuda::MemoryLocation::HOST>;
+
+template <hermes::cuda::MemoryLocation L>
+class LevelSet3DistancesModel : public circe::SceneObject {
+public:
+  LevelSet3DistancesModel(poseidon::cuda::LevelSet3<L> &ls) : ls_(ls) {
+    glGenVertexArrays(1, &VAO_);
+    buffer_.bufferDescriptor =
+        circe::create_vertex_buffer_descriptor(6, 0, GL_POINTS);
+    buffer_.bufferDescriptor.addAttribute(std::string("position"), 3, 0,
+                                          GL_FLOAT);
+    buffer_.bufferDescriptor.addAttribute(std::string("color"), 3,
+                                          3 * sizeof(float), GL_FLOAT);
+    auto vs = std::string(SHADERS_PATH) + "/point3.vert";
+    auto fs = std::string(SHADERS_PATH) + "/point3.frag";
+    shader_ = circe::createShaderProgramPtr(
+        circe::ShaderManager::instance().loadFromFiles(
+            {vs.c_str(), fs.c_str()}));
+    shader_->addVertexAttribute("position", 0);
+    shader_->addVertexAttribute("color", 1);
+    shader_->addUniform("model", 2);
+    shader_->addUniform("view", 3);
+    shader_->addUniform("projection", 4);
+    font_id_ = circe::FontManager::loadFromFile(
+        (std::string(ASSETS_PATH) + "/arial.ttf").c_str());
+  }
+  void update() {
+    labels_.clear();
+    size_t count = ls_.grid().resolution().x * ls_.grid().resolution().y *
+                   ls_.grid().resolution().z;
+    if (vertex_and_color_.size() != count * 6)
+      vertex_and_color_.resize(count * 6);
+    size_t i = 0;
+    hermes::cuda::RegularGrid3Hf h_grid(ls_.grid());
+    for (auto e : h_grid.accessor()) {
+      auto p = e.worldPosition();
+      vertex_and_color_[i * 6 + 0] = p.x;
+      vertex_and_color_[i * 6 + 1] = p.y;
+      vertex_and_color_[i * 6 + 2] = p.z;
+      vertex_and_color_[i * 6 + 3] = fabs(e.value);
+      vertex_and_color_[i * 6 + 4] = fabs(e.value);
+      vertex_and_color_[i * 6 + 5] = fabs(e.value);
+      labels_.emplace_back(font_id_);
+      labels_[i].setText(ponos::concat(e.value));
+      labels_[i].text_size = 0.00004;
+      labels_[i].text_color = circe::COLOR_RED;
+      labels_[i].position = ponos::point3(p.x, p.y, p.z);
+      i++;
+    }
+    buffer_.bufferDescriptor.elementCount = count;
+    buffer_.bufferDescriptor.elementSize = 6;
+    glBindVertexArray(VAO_);
+    buffer_.set(vertex_and_color_.data());
+    glBindVertexArray(0);
+  }
+  void draw(const circe::CameraInterface *camera, ponos::Transform t) override {
+    if (!this->visible)
+      return;
+    glBindVertexArray(VAO_);
+    buffer_.bind();
+    shader_->begin();
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    buffer_.locateAttributes(*shader_.get());
+    shader_->setUniform("model", ponos::transpose(t.matrix()));
+    shader_->setUniform("view",
+                        ponos::transpose(camera->getViewTransform().matrix()));
+    shader_->setUniform(
+        "projection",
+        ponos::transpose(camera->getProjectionTransform().matrix()));
+    glDrawArrays(buffer_.bufferDescriptor.elementType, 0,
+                 buffer_.bufferDescriptor.elementCount);
+    shader_->end();
+    glBindVertexArray(0);
+    int count = 0;
+    for (auto &l : labels_) {
+      if (true ||
+          // camera->getFrustum().isInside(l.position)) {
+          ponos::dot(camera->getTarget() - camera->getPosition(),
+                     l.position - camera->getPosition()) >= 0.3) {
+        // &&
+        // ponos::distance(l.position, camera->getPosition()) < 10.f / 32.f) {
+        l.draw(camera, t);
+        count++;
+      }
+    }
+    std::cerr << count << std::endl;
+  }
+
+private:
+  // data
+  poseidon::cuda::LevelSet3<L> &ls_;
+  // vis
+  GLuint VAO_;
+  circe::VertexBuffer buffer_;
+  std::vector<float> vertex_and_color_;
+  circe::ShaderProgramPtr shader_;
+  // text
+  int font_id_ = -1;
+  std::vector<circe::TextObject> labels_;
+};
+
+using LevelSet3DistancesModelD =
+    LevelSet3DistancesModel<hermes::cuda::MemoryLocation::DEVICE>;
+using LevelSet3DistancesModelH =
+    LevelSet3DistancesModel<hermes::cuda::MemoryLocation::HOST>;
 
 template <hermes::cuda::MemoryLocation L>
 class ParticleSystem2Model : public circe::SceneObject {

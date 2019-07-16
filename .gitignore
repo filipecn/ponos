@@ -2,6 +2,7 @@
 *~
 win_build
 build
+build8
 .idea
 cmake-build-debug
 poseidon/app

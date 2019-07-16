@@ -52,6 +52,7 @@ set(CIRCE_HEADERS
         # circe/ui/nanogui_screen.h
         circe/ui/scene_app.h
         circe/ui/text_renderer.h
+        circe/ui/text_object.h
         circe/ui/font_manager.h
         circe/ui/trackball.h
         circe/ui/trackball_interface.h
@@ -94,6 +95,7 @@ set(CIRCE_SOURCES
         circe/ui/app.cpp
         # circe/ui/nanogui_screen.cpp
         circe/ui/text_renderer.cpp
+        circe/ui/text_object.cpp
         circe/ui/font_manager.cpp
         circe/ui/trackball_interface.cpp
         circe/ui/ui_camera.cpp

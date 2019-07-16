@@ -21,18 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_TEXT_MANAGER_H
 #define CIRCE_TEXT_MANAGER_H
 
-#ifdef FREETYPE_INCLUDED
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#endif
-
 #include <circe/io/font_texture.h>
-#include <circe/ui/text_renderer.h>
 
 namespace circe {
 
@@ -45,22 +39,21 @@ public:
   void operator=(FontManager const &) = delete;
   /// \param filename .ttf full path
   /// \return font id
-  int loadFromFile(const char *filename);
-  /// \param id font id
-  /// \return font texture
-  const FontTexture &fontTexture(size_t id = 0);
+  static int loadFromFile(const char *filename);
+  /// \param id **[in]**
+  /// \param t **[in]**
+  /// \param m **[in]**
+  static void setText(int id, const std::string &t, ponos::RawMesh &m);
+  /// \param id **[in]**
+  /// \param target **[in]**
+  static void bindTexture(int id, GLenum target);
 
 private:
   FontManager();
-  void init();
   static FontManager instance_;
-  bool initialized_;
-  std::vector<FontTexture> fonts_; //!< fonts textures
-#ifdef FREETYPE_INCLUDED
-  FT_Library ft;
-#endif
+  std::vector<FontAtlas> fonts_; //!< fonts textures
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_TEXT_MANAGER_H

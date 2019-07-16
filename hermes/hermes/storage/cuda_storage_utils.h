@@ -699,6 +699,10 @@ std::ostream &operator<<(std::ostream &os,
   std::cerr << "3d MemoryBlock (" << data.size().x << " x " << data.size().y
             << " x " << data.size().z << ")\n";
   auto acc = data.accessor();
+  os << "y     z  \\  x\t";
+  for (int x = 0; x < data.size().x; x++)
+    os << "      x[" << x << "]\t";
+  os << std::endl;
   for (int z = 0; z < data.size().z; z++) {
     for (int y = data.size().y - 1; y >= 0; y--) {
       os << "y[" << y << "] z[" << z << "]:\t";
@@ -710,6 +714,10 @@ std::ostream &operator<<(std::ostream &os,
           os << std::setprecision(6) << std::setw(10) << acc(x, y, z) << "\t";
       os << std::endl;
     }
+    os << "y     z  /  x\t";
+    for (int x = 0; x < data.size().x; x++)
+      os << "      x[" << x << "]\t";
+    os << std::endl;
     os << "==================================================\n";
   }
   return os;

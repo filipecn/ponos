@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include "font_texture.h"
 
@@ -29,27 +29,6 @@
 #include <stb_truetype.h>
 
 namespace circe {
-
-FontTexture::FontTexture() = default;
-
-FontTexture::~FontTexture() = default;
-
-void FontTexture::addCharacter(GLubyte c, ponos::ivec2 s,
-                               circe::TextureAttributes a,
-                               circe::TextureParameters p, ponos::ivec2 bearing,
-                               GLuint advance) {
-  Character character;
-  character.texture.reset(new Texture(a, p));
-  character.size = s;
-  character.bearing = bearing;
-  character.advance = advance;
-  characters.insert(std::pair<GLchar, Character>(c, character));
-}
-
-const FontTexture::Character &FontTexture::operator[](GLubyte c) const {
-  auto it = characters.find(c);
-  return it->second;
-}
 
 void FontAtlas::loadFont(const char *path) {
   auto fontData = ponos::readFile(path);
@@ -89,7 +68,7 @@ void FontAtlas::loadFont(const char *path) {
 }
 
 FontAtlas::Glyph FontAtlas::getGlyph(uint character, float offsetX,
-                                     float offsetY) {
+                                     float offsetY) const {
   stbtt_aligned_quad quad;
 
   stbtt_GetPackedQuad(font.charInfo.get(), font.atlasWidth, font.atlasHeight,
@@ -159,12 +138,47 @@ void FontAtlas::setText(std::string text) {
   mesh.reset(new SceneMesh(rawMesh));
 }
 
-void FontAtlas::render() {
-  //  glBindVertexArray(rotatingLabel.vao);
-  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-  //  glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount,
-  //  GL_UNSIGNED_SHORT, nullptr);
+void FontAtlas::setText(std::string text, ponos::RawMesh &m) const {
+  m.clear();
+  m.meshDescriptor.elementSize = 3;
+  m.meshDescriptor.count = text.size() * 2;
+  m.positionDescriptor.elementSize = 3;
+  m.positionDescriptor.count = text.size() * 4;
+  m.texcoordDescriptor.elementSize = 2;
+  m.texcoordDescriptor.count = text.size() * 4;
+  m.normalDescriptor.elementSize = 0;
+  m.normalDescriptor.count = 0;
+
+  uint16_t lastIndex = 0;
+  float offsetX = 0, offsetY = 0;
+  for (auto c : text) {
+    const auto glyphInfo = getGlyph(c, offsetX, offsetY);
+    offsetX = glyphInfo.offsetX;
+    offsetY = glyphInfo.offsetY;
+    for (int k = 0; k < 4; k++) {
+      for (int j = 0; j < 3; j++)
+        m.positions.emplace_back(glyphInfo.positions[k][j]);
+      for (int j = 0; j < 2; j++)
+        m.texcoords.emplace_back(glyphInfo.uvs[k][j]);
+    }
+    ponos::RawMesh::IndexData data;
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
+    m.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 1;
+    m.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 2;
+    m.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
+    m.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 2;
+    m.indices.emplace_back(data);
+    data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 3;
+    m.indices.emplace_back(data);
+
+    lastIndex += 4;
+  }
+  m.buildInterleavedData();
 }
 
 FontAtlas::FontAtlas() {}
-}
+} // namespace circe

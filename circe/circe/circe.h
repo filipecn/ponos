@@ -37,9 +37,11 @@
 #include <circe/scene/volume_box.h>
 #include <circe/scene/wireframe_mesh.h>
 #include <circe/ui/app.h>
+#include <circe/ui/font_manager.h>
 #include <circe/ui/interactive_object_interface.h>
 #include <circe/ui/modifier_cursor.h>
 #include <circe/ui/scene_app.h>
+#include <circe/ui/text_object.h>
 #include <circe/ui/text_renderer.h>
 #include <circe/ui/track_mode.h>
 #include <circe/ui/trackball.h>
