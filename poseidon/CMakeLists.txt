@@ -57,5 +57,5 @@ if(BUILD_EXAMPLES)
 endif(BUILD_EXAMPLES)
 if(BUILD_TESTS)
         add_subdirectory(tests/unit_tests)
-endif(BUILD_TESTS
+endif(BUILD_TESTS)
 

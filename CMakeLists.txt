@@ -35,8 +35,9 @@ endif (MSVC)
 set(CMAKE_CXX_FLAGS ${RELEASE_FLAGS})
 set(CMAKE_CXX_FLAGS_DEBUG ${DEBUG_FLAGS})
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
-# external 
+# external
 include(ExternalProject)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext")
 # tests
 if(BUILD_TESTS)
     # Google Tests
@@ -55,7 +56,6 @@ endif (WIN32)
 add_subdirectory(ponos)
 if (BUILD_CIRCE OR BUILD_ALL)
     # GLFW
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext")
     include(glfw)
     # tiny obj
     set(TINYOBJLOADER_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyobj")

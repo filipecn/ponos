@@ -8,11 +8,11 @@ int main() {
   // app.addViewport2D(0 , 0, WIDTH, HEIGHT);
   // app.getCamera<circe::UserCamera2D>(0)->setPosition(ponos::Point3(0.5,0,0));
   app.addViewport2D(0, 0, WIDTH / 2, HEIGHT / 2);
-  app.getCamera<circe::UserCamera2D>(0)->setPosition(ponos::Point3(1, 0, 0));
+  app.getCamera<circe::UserCamera2D>(0)->setPosition(ponos::point3(1, 0, 0));
   //  app.getCamera<circe::UserCamera2D>(0)->fit(ponos::BBox2D::unitBox());
   app.addViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT / 2);
   app.addViewport2D(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-  app.getCamera<circe::UserCamera2D>(2)->setPosition(ponos::Point3(0, 1, 0));
+  app.getCamera<circe::UserCamera2D>(2)->setPosition(ponos::point3(0, 1, 0));
   app.addViewport2D(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
   auto grid = app.scene.add(new circe::CartesianGrid(5));
   UNUSED_VARIABLE(grid);

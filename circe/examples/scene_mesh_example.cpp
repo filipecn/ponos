@@ -54,7 +54,7 @@ int main() {
   mesh->buildInterleavedData();
   auto texture = circe::ImageTexture::checkBoard(64, 64);
   ponos::RawMeshSPtr m(
-      ponos::create_icosphere_mesh(ponos::Point3(), 1.f, 3, true, false));
+      ponos::create_icosphere_mesh(ponos::point3(), 1.f, 3, true, false));
   // create a vertex buffer for base mesh
   // circe::SceneMesh sm(*m.get());
   circe::SceneMesh smesh(mesh);
