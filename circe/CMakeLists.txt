@@ -118,7 +118,7 @@ if(BUILD_EXAMPLES)
 endif(BUILD_EXAMPLES)
 if(BUILD_TESTS)
         # add_subdirectory(tests)
-endif(BUILD_TESTS
+endif(BUILD_TESTS)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/circe
         DESTINATION ${INSTALL_PATH}/include
