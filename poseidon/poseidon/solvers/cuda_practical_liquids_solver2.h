@@ -129,28 +129,25 @@ public:
       fill2(divergence_.data(), 0.f);
       fill2(pressure_.data(), 0.f);
       // input: material, force, v[SRC] output: v[DST]
-      // std::cerr << "SROUCE V\n";
-      // std::cerr << velocity_[SRC].v().data() << std::endl;
       applyExternalForces(dt);
       // input: material, v[DST] output: v[SRC]
       propagateVelocity();
       // velocity_[DST].copy(velocity_[SRC]);
       advectVelocity(dt);
-      // velocity_[SRC].copy(velocity_[DST]);
       // inpute materia, v[DST] output: v[DST]
       enforceBoundaries();
-      // resolveViscosity(dt);
       // input: v[DST] output: divergence
       computeDivergence();
-      // std::cerr << divergence_.data() << std::endl;
       // input: material, divergence output: pressure
-      solvePressure(dt);
-      // std::cerr << material_.data() << std::endl;
-      // std::cerr << divergence_.data() << std::endl;
-      // std::cerr << pressure_.data() << std::endl;
+      // solvePressure(dt);
+      solve2ndOrderPressure(dt);
+      // input: v[DST], material
+      computeFluidKineticEnergy();
       // input: v[DST] output: v[DST]
       project(dt);
-      // velocity_[DST].copy(velocity_[SRC]);
+      // input: v[DST], material
+      computeFluidKineticEnergy();
+      std::cerr << std::endl;
       // input: material, v[DST] output: v[SRC]
       propagateVelocity();
       // input: material, v[SRC], LS[SRC] output: LS[DST]
@@ -173,7 +170,7 @@ private:
     float min_s = fminf(material_.spacing().x, material_.spacing().y);
     float max_v = fmaxf(maxAbs(velocity_[SRC].u().data()),
                         maxAbs(velocity_[SRC].v().data()));
-    std::cerr << "max_v " << max_v << std::endl;
+    // std::cerr << "max_v " << max_v << std::endl;
     if (max_v < 1e-8)
       return Constants::greatest<float>();
     return min_s / max_v;
@@ -190,6 +187,7 @@ private:
   void computeDivergence();
   /// \param dt **[in]**
   void solvePressure(float dt);
+  void solve2ndOrderPressure(float dt);
   /// \param dt **[in]**
   void project(float dt);
   /// \param dt **[in]**
@@ -202,6 +200,8 @@ private:
   // After velocity advection, solid walls may end up with wrong velocities
   // This function sets velocity components values on solid walls appropriately
   void enforceBoundaries();
+  /// Computes approximated total kinetic energy of the system
+  void computeFluidKineticEnergy();
 
   size_t SRC = 0;
   size_t DST = 1;
@@ -214,7 +214,7 @@ private:
   hermes::cuda::RegularGrid2<L, float> pressure_;
   hermes::cuda::RegularGrid2<L, float> divergence_;
   hermes::cuda::RegularGrid2<L, MaterialType> material_;
-  ENOIntegrator2 fluidIntegrator;
+  SemiLagrangianIntegrator2 fluidIntegrator;
 };
 
 using PracticalLiquidsSolver2D =

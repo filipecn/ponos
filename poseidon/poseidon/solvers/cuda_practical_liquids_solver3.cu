@@ -505,10 +505,6 @@ template <>
 void PracticalLiquidsSolver3<MemoryLocation::DEVICE>::advectFluid(float dt) {
   fluidIntegrator.advect(velocity_[SRC], material_, surface_ls_[SRC].grid(),
                          surface_ls_[DST].grid(), dt);
-  // SemiLagrangianIntegrator2 integrator;
-  // integrator.set(surface_ls_[SRC].grid().info());
-  // integrator.advect(velocity_[SRC], material_, surface_ls_[SRC].grid(),
-  //                   surface_ls_[DST].grid(), dt);
 }
 
 __global__ void __enforceBoundaries(StaggeredGrid3Accessor vel,

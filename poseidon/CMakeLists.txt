@@ -52,7 +52,10 @@ CMAKE_CUDA_SEPARABLE_COMPILATION ON
 target_include_directories(poseidon PUBLIC ${PONOS_SOURCE_DIR} ${HERMES_SOURCE_DIR} ${POSEIDON_SOURCE_DIR})
 target_link_libraries(poseidon PUBLIC ponos hermes)
 
+if(BUILD_EXAMPLES)
+        add_subdirectory(examples/cuda)
+endif(BUILD_EXAMPLES)
+if(BUILD_TESTS)
+        add_subdirectory(tests/unit_tests)
+endif(BUILD_TESTS
 
-add_subdirectory(examples/cuda)
-
-add_subdirectory(tests/unit_tests)

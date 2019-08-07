@@ -117,14 +117,12 @@ add_library(ponos_shared SHARED ${PONOS_SOURCES} ${PONOS_HEADERS})
 target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos_shared ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
-# add_subdirectory(examples)
-# add_subdirectory(tests)
-
-if (WIN32)
-    SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
-else (WIN32)
-    SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
-endif (WIN32)
+if(BUILD_EXAMPLES)
+        add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
+if(BUILD_TESTS)
+        add_subdirectory(tests)
+endif(BUILD_TESTS)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ponos
         DESTINATION ${INSTALL_PATH}/include

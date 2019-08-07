@@ -52,4 +52,6 @@ CMAKE_CUDA_SEPARABLE_COMPILATION ON
         FOLDER "HERMES")
 target_include_directories(hermes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
 
-add_subdirectory(tests)
+if(BUILD_TESTS)
+        add_subdirectory(tests)
+endif(BUILD_TESTS)

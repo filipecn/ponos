@@ -94,8 +94,9 @@ public:
   __host__ __device__ const float &operator()(int i, int j) const {
     return acc_(i, j);
   }
-  __host__ __device__ hermes::cuda::vec2f gradient(int i, int j) const {
-    return gradientAt(acc_, i, j, 1);
+  __host__ __device__ hermes::cuda::vec2f gradient(int i, int j,
+                                                   int order = 3) const {
+    return gradientAt(acc_, i, j, order);
   }
   __host__ __device__ hermes::cuda::point2f worldPosition(int i, int j) {
     return acc_.worldPosition(i, j);

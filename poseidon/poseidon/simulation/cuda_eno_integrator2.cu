@@ -73,16 +73,16 @@ __global__ void __eno_advect(StaggeredGrid2Accessor vel,
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   if (in.isIndexStored(i, j)) {
-    if (m(i, j) == MaterialType::SOLID) {
-      // out(i, j) = 0;
-      return;
-    }
+    // if (m(i, j) == MaterialType::SOLID) {
+    //   // out(i, j) = 0;
+    //   return;
+    // }
     //  else if (m(i, j) == MaterialType::FLUID) {
     vec2f v = vel(i, j);
-    vec2f dphi = gradientAt(in, i, j, 1, v);
-
+    vec2f dphi = gradientAt(in, i, j, 2);
+    printf("%f %f\n", dphi.x, dphi.y);
     out(i, j) = in(i, j) - dt * dot(v, dphi);
-    out(i, j) = in(in.worldPosition(i, j) - dt * v);
+    // out(i, j) = in(in.worldPosition(i, j) - dt * v);
     // }
   }
 }

@@ -113,12 +113,12 @@ target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PL
 target_link_libraries(circe PUBLIC ponos  ${GLFW_LIBRARIES} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
 # add_dependencies(circe glfw glad)
 
-add_subdirectory(examples)
-
-if (WIN32)
-else (WIN32)
-        SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
-endif (WIN32)
+if(BUILD_EXAMPLES)
+        add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
+if(BUILD_TESTS)
+        # add_subdirectory(tests)
+endif(BUILD_TESTS
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/circe
         DESTINATION ${INSTALL_PATH}/include

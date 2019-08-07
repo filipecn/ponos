@@ -47,8 +47,8 @@ __global__ void __computeDistanceNextToSurface(LevelSet2Accessor in,
       float in_IJ = in(I, J);
       if (sign(in_ij) * sign(in_IJ) < 0) {
         float theta = in_ij / (in_ij - in_IJ);
-        if ((i > I || j > J) && in_ij > in_IJ)
-          theta *= -1;
+        // if ((i > I || j > J) && in_ij > in_IJ)
+        //   theta *= -1;
         float phi = sign(in(i, j)) * theta * in.spacing().x;
         if (fabsf(minDist) > fabs(phi))
           minDist = phi;
@@ -64,9 +64,10 @@ __global__ void __handleSolids(LevelSet2Accessor s, LevelSet2Accessor f) {
   if (f.isIndexStored(i, j)) {
     if (f(i, j) < 0 && s(i, j) < 0) {
       f(i, j) = -s(i, j);
-    } else if (f(i, j) < 0 && fabs(f(i, j)) > fabs(s(i, j))) {
-      f(i, j) = sign(f(i, j)) * fabs(s(i, j));
     }
+    // else if (f(i, j) < 0 && fabs(f(i, j)) > fabs(s(i, j))) {
+    //   f(i, j) = sign(f(i, j)) * fabs(s(i, j));
+    // }
   }
 }
 
@@ -167,29 +168,12 @@ void PracticalLiquidsSolver2<
       surface_ls_[DST].accessor(), solid_ls_.accessor(), material_.accessor());
 }
 
-__device__ float boxSD(const bbox2f &box, const point2f &p) {
-  if (box.contains(p))
-    return fmaxf(
-        box.lower.x - p.x,
-        fmaxf(p.x - box.upper.x, fmaxf(box.lower.y - p.y, p.y - box.upper.y)));
-  point2f c = p;
-  if (p.x < box.lower.x)
-    c.x = box.lower.x;
-  else if (p.x > box.upper.x)
-    c.x = box.upper.x;
-  if (p.y < box.lower.y)
-    c.y = box.lower.y;
-  else if (p.y > box.upper.y)
-    c.y = box.upper.y;
-  return distance(c, p);
-}
-
 __global__ void __rasterSolid(LevelSet2Accessor ls, StaggeredGrid2Accessor vel,
                               bbox2f box, vec2f v) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   if (ls.isIndexStored(i, j)) {
-    ls(i, j) = fminf(ls(i, j), boxSD(box, ls.worldPosition(i, j)));
+    ls(i, j) = fminf(ls(i, j), SDF::box(box, ls.worldPosition(i, j)));
   }
 }
 
@@ -450,10 +434,6 @@ template <>
 void PracticalLiquidsSolver2<MemoryLocation::DEVICE>::advectFluid(float dt) {
   fluidIntegrator.advect(velocity_[SRC], material_, surface_ls_[SRC].grid(),
                          surface_ls_[DST].grid(), dt);
-  // SemiLagrangianIntegrator2 integrator;
-  // integrator.set(surface_ls_[SRC].grid().info());
-  // integrator.advect(velocity_[SRC], material_, surface_ls_[SRC].grid(),
-  //                   surface_ls_[DST].grid(), dt);
 }
 
 __global__ void __enforceBoundaries(StaggeredGrid2Accessor vel,
@@ -537,6 +517,57 @@ void PracticalLiquidsSolver2<MemoryLocation::DEVICE>::propagateVelocity() {
   propagate(m, vel.u(), 0);
   propagate(m, vel.v(), 1);
   velocity_[SRC].copy(vel);
+}
+
+__global__ void __computeKineticEnergy(StaggeredGrid2Accessor data,
+                                       RegularGrid2Accessor<MaterialType> m,
+                                       float *c) {
+  __shared__ float cache[256];
+
+  int tid = blockDim.x * blockIdx.x + threadIdx.x;
+  int cacheindex = threadIdx.x;
+  int n = data.resolution.x * data.resolution.y;
+
+  float temp = 0.0;
+  while (tid < n) {
+    int i = tid / data.resolution.x;
+    int j = tid % data.resolution.x;
+    if (m(i, j) == MaterialType::FLUID)
+      temp += data(i, j).length();
+    tid += blockDim.x * gridDim.x;
+  }
+  cache[cacheindex] = temp;
+  __syncthreads();
+
+  int i = blockDim.x / 2;
+  while (i != 0) {
+    if (cacheindex < i)
+      cache[cacheindex] += cache[cacheindex + i];
+    __syncthreads();
+    i /= 2;
+  }
+  if (cacheindex == 0)
+    c[blockIdx.x] = cache[0];
+}
+
+template <>
+void PracticalLiquidsSolver2<
+    MemoryLocation::DEVICE>::computeFluidKineticEnergy() {
+  auto data = velocity_[DST].accessor();
+  size_t blockSize = (data.resolution.x * data.resolution.y + 256 - 1) / 256;
+  if (blockSize > 32)
+    blockSize = 32;
+  float *c = new float[blockSize];
+  float *d_c;
+  cudaMalloc((void **)&d_c, blockSize * sizeof(float));
+  __computeKineticEnergy<<<blockSize, 256>>>(data, material_.accessor(), d_c);
+  cudaMemcpy(c, d_c, blockSize * sizeof(float), cudaMemcpyDeviceToHost);
+  float sum = 0;
+  for (int i = 0; i < blockSize; i++)
+    sum += c[i];
+  cudaFree(d_c);
+  delete[] c;
+  std::cerr << "kin " << sum << " ";
 }
 
 } // namespace cuda

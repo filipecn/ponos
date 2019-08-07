@@ -15,23 +15,6 @@ inline void flipImage(std::vector<unsigned char> &data, size_t w, size_t h) {
       }
 }
 
-float boxSD(const bbox2f &box, const point2f &p) {
-  if (box.contains(p))
-    return fmaxf(
-        box.lower.x - p.x,
-        fmaxf(p.x - box.upper.x, fmaxf(box.lower.y - p.y, p.y - box.upper.y)));
-  point2f c = p;
-  if (p.x < box.lower.x)
-    c.x = box.lower.x;
-  else if (p.x > box.upper.x)
-    c.x = box.upper.x;
-  if (p.y < box.lower.y)
-    c.y = box.lower.y;
-  else if (p.y > box.upper.y)
-    c.y = box.upper.y;
-  return distance(c, p);
-}
-
 int main() {
   vec2u res(128);
   vec2f s(1.f / 128);

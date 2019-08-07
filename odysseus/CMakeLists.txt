@@ -32,4 +32,6 @@ set_target_properties(odysseus PROPERTIES
 
 target_link_libraries(odysseus ${odysseus_LIBRARIES})
 
-add_subdirectory(examples)
+if(BUILD_EXAMPLES)
+	add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
