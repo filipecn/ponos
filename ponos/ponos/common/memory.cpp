@@ -28,7 +28,7 @@ namespace ponos {
 
 void *allocAligned(size_t size) {
 #ifdef _WIN32
-  return _aligned_malloc(CACHE_L1_LINE_SIZE, size);
+  return _aligned_malloc(PONOS_CACHE_L1_LINE_SIZE, size);
 #elif defined(__APPLE__)
   void *ptr;
   if (posix_memalign(&ptr, PONOS_CACHE_L1_LINE_SIZE, size) != 0)

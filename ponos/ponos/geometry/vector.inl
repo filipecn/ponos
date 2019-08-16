@@ -96,7 +96,7 @@ template <typename T> Vector2<T> Vector2<T>::left() const {
 }
 
 template <typename T> bool Vector2<T>::HasNaNs() const {
-  return std::isnan(x) || std::isnan(y);
+  return std::isnan((double)x) || std::isnan((double)y);
 }
 
 template <typename T>
@@ -258,7 +258,7 @@ template <typename T> T Vector3<T>::length2() const {
 template <typename T> T Vector3<T>::length() const { return sqrtf(length2()); }
 
 template <typename T> bool Vector3<T>::HasNaNs() const {
-  return std::isnan(x) || std::isnan(y) || std::isnan(z);
+  return std::isnan((double)x) || std::isnan((double)y) || std::isnan((double)z);
 }
 
 template <typename T>

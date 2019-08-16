@@ -336,12 +336,12 @@ using vec2 = Vector2<float>;
 using vec2d = Vector2<double>;
 using vec2f = Vector2<float>;
 using vec2i = Vector2<int>;
-using vec2u = Vector2<uint>;
+using vec2u = Vector2<unsigned int>;
 using vec3d = Vector3<double>;
 using vec3 = Vector3<float>;
 using vec3f = Vector3<float>;
 using vec3i = Vector3<int>;
-using vec3u = Vector3<uint>;
+using vec3u = Vector3<unsigned int>;
 
 } // namespace cuda
 

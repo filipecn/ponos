@@ -60,6 +60,7 @@ set(PONOS_HEADERS
         ponos/geometry/parametric_surface.h
         ponos/geometry/plane.h
         ponos/geometry/point.h
+		ponos/geometry/point.inl
         ponos/geometry/polygon.h
         ponos/geometry/quaternion.h
         ponos/geometry/queries.h
@@ -113,12 +114,8 @@ set_target_properties(ponos PROPERTIES
 target_include_directories(ponos PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
 
-add_library(ponos_shared SHARED ${PONOS_SOURCES} ${PONOS_HEADERS})
-target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(ponos_shared ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
-
 if(BUILD_EXAMPLES)
-        add_subdirectory(examples)
+ #       add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
 if(BUILD_TESTS)
         add_subdirectory(tests)
@@ -128,7 +125,14 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ponos
         DESTINATION ${INSTALL_PATH}/include
         FILES_MATCHING REGEX "(.*\\.[inl|h])")
 
-install(TARGETS ponos ponos_shared
+
+if(BUILD_SHARED)
+	add_library(ponos_shared SHARED ${PONOS_SOURCES} ${PONOS_HEADERS})
+	target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+	target_link_libraries(ponos_shared ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
+
+	install(TARGETS ponos ponos_shared
         LIBRARY DESTINATION ${INSTALL_PATH}/lib
         ARCHIVE DESTINATION ${INSTALL_PATH}//lib
         )
+endif(BUILD_SHARED)

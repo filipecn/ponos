@@ -10,6 +10,7 @@ option(BUILD_POSEIDON "build poseidon library" OFF)
 option(BUILD_ODYSSEUS "build odysseus library" OFF)
 option(BUILD_TESTS "build library unit tests" OFF)
 option(BUILD_EXAMPLES "build library examples" OFF)
+option(BUILD_SHARED "build library shared" OFF)
 
 # compilation configurations
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)

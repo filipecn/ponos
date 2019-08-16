@@ -61,7 +61,7 @@ public:
 };
 
 typedef Point2<float> point2;
-typedef Point2<uint> point2u;
+typedef Point2<unsigned int> point2u;
 typedef Point2<int> point2i;
 typedef Point2<float> point2f;
 typedef Point2<double> point2d;
@@ -129,7 +129,7 @@ public:
 };
 
 typedef Point3<float> point3;
-typedef Point3<uint> point3u;
+typedef Point3<unsigned int> point3u;
 typedef Point3<int> point3i;
 typedef Point3<float> point3f;
 typedef Point3<float> point3d;

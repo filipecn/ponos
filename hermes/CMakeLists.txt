@@ -41,6 +41,9 @@ set(HERMES_SOURCES
         hermes/storage/cuda_texture_kernels.cu
         )
 
+#find_package(CUDA  REQUIRED)
+#include_directories("${CUDA_INCLUDE_DIRS}")
+
 enable_language("CUDA")
 add_library(hermes STATIC ${HERMES_SOURCES} ${HERMES_HEADERS})
 set_target_properties(hermes PROPERTIES
@@ -55,3 +58,23 @@ target_include_directories(hermes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
 if(BUILD_TESTS)
         add_subdirectory(tests)
 endif(BUILD_TESTS)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/hermes
+        DESTINATION ${INSTALL_PATH}/include
+        FILES_MATCHING REGEX "(.*\\.[inl|h])")
+
+if(BUILD_SHARED)
+	add_library(hermes_shared SHARED ${HERMES_SOURCES} ${HERMES_HEADERS})
+	set_target_properties(hermes_shared PROPERTIES
+		LINKER_LANGUAGE CUDA
+		CUDA_STANDARD 11
+		CUDA_RESOLVE_DEVICE_SYMBOLS ON
+		CMAKE_CUDA_SEPARABLE_COMPILATION ON
+        OUTPUT_NAME "hermes_shared"
+        FOLDER "HERMES_SHARED")
+	target_include_directories(hermes_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
+	install(TARGETS hermes hermes_shared
+        LIBRARY DESTINATION ${INSTALL_PATH}/lib
+        ARCHIVE DESTINATION ${INSTALL_PATH}//lib
+        )
+endif(BUILD_SHARED)

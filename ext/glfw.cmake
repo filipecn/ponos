@@ -8,7 +8,7 @@ else()
 
     ExternalProject_Add(
     glfw PREFIX glfw
-    URL "https://github.com/glfw/glfw/archive/3.2.1.tar.gz"
+    URL "https://github.com/glfw/glfw/archive/3.3.tar.gz"
     # URL_HASH SHA1=fe17a0610a239311a726ecabcd2dbd669fb24ca8
     CMAKE_ARGS
             "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"

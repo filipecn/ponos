@@ -16,7 +16,14 @@ memory.cu
 blas.cu
 )
 
-target_link_libraries(hermes_tests gtest pthread hermes )
+if (WIN32)
+    target_link_libraries(hermes_tests hermes gtest)
+elseif(APPLE)
+    target_link_libraries(hermes_tests hermes gtest pthread)
+else (WIN32)
+    target_link_libraries(hermes_tests hermes gtest gcov pthread)
+endif (WIN32)
+
 set_target_properties(hermes PROPERTIES
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
 CUDA_RESOLVE_DEVICE_SYMBOLS ON

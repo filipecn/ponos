@@ -27,10 +27,10 @@ add_executable(post_effects_example WIN32 post_effects_example.cpp)
 if (MSVC)
         set(WINDOWS_BINARIES
                 hello_circe_test
-                bvh_example
-                scene_app
+#                bvh_example
+                #scene_app
                 compute_shader
-                hemesh_example
+ #               hemesh_example
                 save_viewport_example
                 viewports
                 text_example

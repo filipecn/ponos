@@ -39,19 +39,19 @@ public:
   /// Default constructor.
   __host__ __device__ HaltonSequence() : base(2), ind(1) {}
   /// \param b base ( > 1)
-  __host__ __device__ HaltonSequence(uint b) : base(b), ind(1) {}
+  __host__ __device__ HaltonSequence(unsigned int b) : base(b), ind(1) {}
   /// \param b base ( > 1)
-  __host__ __device__ void setBase(uint b) {
+  __host__ __device__ void setBase(unsigned int b) {
     base = b;
     ind = 1;
   }
-  __host__ __device__ void setIndex(uint i) { ind = i; }
+  __host__ __device__ void setIndex(unsigned int i) { ind = i; }
   /// pseudo-random floating-point number.
   /// \return a float in the range [0, 1)
   __host__ __device__ float randomFloat() {
     float result = 0.f;
     float f = 1.f;
-    uint i = ind++;
+    unsigned int i = ind++;
     while (i > 0) {
       f /= base;
       result += f * (i % base);
@@ -61,7 +61,7 @@ public:
   }
 
 private:
-  uint base, ind;
+  unsigned int base, ind;
 };
 
 } // namespace cuda

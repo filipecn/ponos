@@ -134,7 +134,7 @@ template <typename T> T reduceAdd(const T *data, unsigned int n) {
 }
 
 template <typename T>
-__global__ void __min(MemoryBlock2Accessor<T> data, T *c) {
+__global__ void k__min(MemoryBlock2Accessor<T> data, T *c) {
   __shared__ float cache[256];
 
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
@@ -169,7 +169,7 @@ template <typename T> T min(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
   T *c = new T[blockSize];
   T *d_c;
   cudaMalloc((void **)&d_c, blockSize * sizeof(T));
-  __min<<<blockSize, 256>>>(data.accessor(), d_c);
+  k__min<<<blockSize, 256>>>(data.accessor(), d_c);
   cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
   T norm = 0;
   for (int i = 0; i < blockSize; i++)
@@ -180,7 +180,7 @@ template <typename T> T min(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
 }
 
 template <typename T>
-__global__ void __max(MemoryBlock2Accessor<T> data, T *c) {
+__global__ void k__max(MemoryBlock2Accessor<T> data, T *c) {
   __shared__ float cache[256];
 
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
@@ -215,7 +215,7 @@ template <typename T> T max(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
   T *c = new T[blockSize];
   T *d_c;
   cudaMalloc((void **)&d_c, blockSize * sizeof(T));
-  __max<<<blockSize, 256>>>(data.accessor(), d_c);
+  k__max<<<blockSize, 256>>>(data.accessor(), d_c);
   cudaMemcpy(c, d_c, blockSize * sizeof(T), cudaMemcpyDeviceToHost);
   T norm = 0;
   for (int i = 0; i < blockSize; i++)
