@@ -65,6 +65,11 @@ public:
   T j = T(0);
 };
 
+template <typename T>
+Index2<T> operator+(const Index2<T> &a, const Index2<T> &b) {
+  return Index2<T>(a.i + b.i, a.j + b.j);
+}
+
 template <typename T> bool operator<=(const Index2<T> &a, const Index2<T> &b) {
   return a.i <= b.i && a.j <= b.j;
 }
@@ -178,6 +183,16 @@ template <typename T, typename TT>
 bool operator<(const Index3<T> &a, const Size3<TT> &b) {
   return a.i < static_cast<T>(b.i) && a.j < static_cast<T>(b.j) &&
          a.k < static_cast<T>(b.k);
+}
+template <typename T, typename TT>
+bool operator>(const Index3<T> &a, const Size3<TT> &b) {
+  return a.i > static_cast<T>(b.i) && a.j > static_cast<T>(b.j) &&
+         a.k > static_cast<T>(b.k);
+}
+template <typename T, typename TT>
+bool operator>=(const Index3<T> &a, const Size3<TT> &b) {
+  return a.i >= static_cast<T>(b.i) && a.j >= static_cast<T>(b.j) &&
+         a.k >= static_cast<T>(b.k);
 }
 
 template <typename T> class Index3Iterator {

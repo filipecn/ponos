@@ -48,7 +48,7 @@ public:
 
   bool intersect(const ponos::Ray3 &r, float *t = nullptr) override {
     return ponos::distance2(circle.c, ponos::point2(r.o.x, r.o.y)) <=
-           SQR(circle.r);
+           ponos::SQR(circle.r);
   }
 
   ponos::Circle circle;

@@ -60,6 +60,9 @@ public:
       : width(width), height(height), depth(depth) {}
   T operator[](int i) const { return (&width)[i]; }
   T &operator[](int i) { return (&width)[i]; }
+  Size2<T> slice(int d1 = 0, int d2 = 0) const {
+    return Size2<T>((&width)[d1], (&width)[d2]);
+  }
 
   T width = T(0);
   T height = T(0);

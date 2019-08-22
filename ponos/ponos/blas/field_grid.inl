@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 template <typename T> ScalarGrid2D<T>::ScalarGrid2D() {}
 
@@ -69,7 +69,8 @@ template <typename T> T ScalarGrid2D<T>::sample(float x, float y) const {
   point2 gp = this->dataGridPosition(point2(x, y));
   return bilerp(gp.x - i, gp.y - j, (*this)(i, j), (*this)(i + 1, j),
                 (*this)(i + 1, j + 1), (*this)(i, j + 1));
-  */ point2 gp = this->dataGridPosition(point2(x, y));
+  */
+  point2 gp = this->dataGridPosition(point2(x, y));
   int x0 = static_cast<int>(gp.x);
   int y0 = static_cast<int>(gp.y);
   int x1 = x0 + 1;
@@ -125,7 +126,7 @@ Vector<T, 2> VectorGrid2D<T>::sample(float x, float y) const {
 template <typename T>
 void computeDivergenceField(const VectorGrid2D<T> &vectorGrid,
                             ScalarGrid2D<T> *scalarGrid) {
-  ivec2 d = vectorGrid.getDimensions();
+  size2 d = vectorGrid.getDimensions();
   if (scalarGrid->getDimensions() != d)
     scalarGrid->setDimensions(d[0], d[1]);
   scalarGrid->setTransform(vectorGrid.toWorld);

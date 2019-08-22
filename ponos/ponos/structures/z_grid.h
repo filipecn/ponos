@@ -35,10 +35,8 @@ public:
 
   T infNorm() const {
     T r = std::fabs((*this)(0, 0));
-    ivec2 ij;
-    ivec2 D(this->width, this->height);
-    FOR_INDICES0_2D(D, ij)
-    r = std::max(r, std::fabs((*this)(ij)));
+    for (auto ij : Index2Range<i32>(this->width, this->height))
+      r = std::max(r, std::fabs((*this)(ij)));
     return r;
   }
 

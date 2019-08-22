@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_ALGORITHMS_MARCHING_SQUARES_H
 #define PONOS_ALGORITHMS_MARCHING_SQUARES_H
@@ -54,35 +54,34 @@ void marchingSquares(const FieldInterface2D<T> *field, const bbox2 &region,
   //  3|____| 1
   //  0  0  1
   T zero = 0;
-  ivec2 ij, D = cells.getDimensions();
-  FOR_INDICES0_2D(D, ij) {
-    int m = (grid(ij + ivec2(0, 0)) < zero) ? 1 : 0;
-    m |= (grid(ij + ivec2(1, 0)) < zero) ? 2 : 0;
-    m |= (grid(ij + ivec2(1, 1)) < zero) ? 4 : 0;
-    m |= (grid(ij + ivec2(0, 1)) < zero) ? 8 : 0;
+  for (auto ij : Index2Range<i32>(cells.getDimensions())) {
+    int m = (grid(ij + index2(0, 0)) < zero) ? 1 : 0;
+    m |= (grid(ij + index2(1, 0)) < zero) ? 2 : 0;
+    m |= (grid(ij + index2(1, 1)) < zero) ? 4 : 0;
+    m |= (grid(ij + index2(0, 1)) < zero) ? 8 : 0;
     cells(ij) = m;
     point2 wp[2] = {grid.toWorld(point2(ij[0], ij[1])),
                     grid.toWorld(point2(ij[0] + 1, ij[1] + 1))};
     for (int i = 0; i < 2; i++) {
-      if (xEdges(ij + ivec2(0, i)) < 0 &&
+      if (xEdges(ij + index2(0, i)) < 0 &&
           (((m >> (i * 2)) & 1) ^ ((m >> (i * 2 + 1)) & 1))) {
         std::function<float(float)> f = [&](float c) -> float {
           return field->sample(c, wp[i].y);
         };
-        float x = bisect(wp[0].x, wp[1].x, grid(ij + ivec2(0, i)),
-                         grid(ij + ivec2(1, i)), error, f);
+        float x = bisect(wp[0].x, wp[1].x, grid(ij + index2(0, i)),
+                         grid(ij + index2(1, i)), error, f);
         rm->addPosition({x, wp[i].y});
-        xEdges(ij + ivec2(0, i)) = (rm->positions.size() / 2) - 1;
+        xEdges(ij + index2(0, i)) = (rm->positions.size() / 2) - 1;
       }
-      if (yEdges(ij + ivec2(i, 0)) < 0 &&
+      if (yEdges(ij + index2(i, 0)) < 0 &&
           (((m >> i) & 1) ^ ((m >> (3 - i) & 1)))) {
         std::function<float(float)> f = [&](float c) -> float {
           return field->sample(wp[i].x, c);
         };
-        float y = bisect(wp[0].y, wp[1].y, grid(ij + ivec2(i, 0)),
-                         grid(ij + ivec2(i, 1)), error, f);
+        float y = bisect(wp[0].y, wp[1].y, grid(ij + index2(i, 0)),
+                         grid(ij + index2(i, 1)), error, f);
         rm->addPosition({wp[i].x, y});
-        yEdges(ij + ivec2(i, 0)) = (rm->positions.size() / 2) - 1;
+        yEdges(ij + index2(i, 0)) = (rm->positions.size() / 2) - 1;
       }
     }
   }
@@ -102,9 +101,9 @@ void marchingSquares(const FieldInterface2D<T> *field, const bbox2 &region,
                           {0, 1},    // 13
                           {3, 0},    // 14
                           {-1, -1}}; // 15
-  FOR_INDICES0_2D(D, ij) {
-    int edgePoint[4] = {xEdges(ij + ivec2(0, 0)), yEdges(ij + ivec2(1, 0)),
-                        xEdges(ij + ivec2(0, 1)), yEdges(ij + ivec2(0, 0))};
+  for (auto ij : Index2Range<i32>(cells.getDimensions())) {
+    int edgePoint[4] = {xEdges(ij + index2(0, 0)), yEdges(ij + index2(1, 0)),
+                        xEdges(ij + index2(0, 1)), yEdges(ij + index2(0, 0))};
     if (cells(ij) > 0 && cells(ij) < 15) {
       rm->addFace({{edgePoint[edgeTable[cells(ij)][0]], 0, 0},
                    {edgePoint[edgeTable[cells(ij)][1]], 0, 0}});
@@ -121,8 +120,8 @@ void marchingSquares(const FieldInterface2D<T> *field, const bbox2 &region,
   rm->primitiveType = GeometricPrimitiveType::LINES;
   rm->splitIndexData();
   rm->buildInterleavedData();
-}
+} // namespace ponos
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_ALGORITHMS_MARCHING_SQUARES_H

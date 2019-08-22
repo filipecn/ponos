@@ -57,18 +57,16 @@ public:
     int i;
     FOR_LOOP(i, 0, d[0])
     data[i] = new T *[d[1]];
-    ponos::ivec2 dd = d.xy();
-    ponos::ivec2 ij;
-    FOR_INDICES0_2D(dd, ij)
-    data[ij[0]][ij[1]] = new T[d[2]];
+    for (auto ij : Index2Range<i32>(d.slice()))
+      data[ij[0]][ij[1]] = new T[d[2]];
   }
   T operator()(const index3 &i) const {
-    if (i >= ivec3() && i < dimensions)
+    if (i >= size3() && i < dimensions)
       return data[i[0]][i[1]][i[2]];
     return background;
   }
   T &operator()(const index3 &i) {
-    if (i >= ivec3() && i < dimensions)
+    if (i >= size3() && i < dimensions)
       return data[i[0]][i[1]][i[2]];
     return bdummy;
   }
@@ -87,10 +85,8 @@ public:
 
 private:
   void clear() {
-    ponos::ivec2 d = dimensions.xy();
-    ponos::ivec2 ij;
-    FOR_INDICES0_2D(d, ij)
-    delete[] data[ij[0]][ij[1]];
+    for (auto ij : Index2Range<i32>(dimensions.slice()))
+      delete[] data[ij[0]][ij[1]];
     int i;
     FOR_LOOP(i, 0, dimensions[0])
     delete[] data[i];

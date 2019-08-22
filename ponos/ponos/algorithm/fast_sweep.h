@@ -121,7 +121,7 @@ void fastMarch2D(GridType *phi, MaskType *mask, T MASK_VALUE,
     (*phi)(p.i, p.j) = p.t;
     index2 dir[4] = {index2(-1, 0), index2(1, 0), index2(0, -1), index2(0, 1)};
     for (int i = 0; i < 4; i++) {
-      ivec2 ij = ivec2(p.i, p.j) + dir[i];
+      index2 ij = index2(p.i, p.j) + dir[i];
       if (ij[0] < 0 || ij[0] >= frozen.getDimensions()[0] || ij[1] < 0 ||
           ij[1] >= frozen.getDimensions()[1] || frozen(ij) || !(*mask)(ij))
         continue;
