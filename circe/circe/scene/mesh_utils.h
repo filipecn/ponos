@@ -34,7 +34,7 @@ namespace circe {
 /// \param o **[in]** offset
 /// \return pointer to a <RawMesh> object with the list of vertices and indices
 /// that describe a grid in the 3D space.
-ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
+ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
                                  const ponos::vec3 &o);
 /// \param m **[in]** base mesh
 /// \return RawMesh representing the edges of **m**.

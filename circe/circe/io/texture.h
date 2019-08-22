@@ -49,7 +49,7 @@ public:
   /// retrieve texture pixel data
   /// \return list of pixels by row major
   std::vector<unsigned char> texels() const;
-  ponos::uivec3 size() const;
+  ponos::size3 size() const;
   GLuint textureObjectId() const;
   GLenum target() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);

@@ -17,7 +17,7 @@ public:
   /* @inherit */
   void draw(const CameraInterface *camera,
             ponos::Transform transform) override {
-    glColor4f(0, 0, 0, 0.7);
+    /*glColor4f(0, 0, 0, 0.7);
     glLineWidth(3.0);
     glBegin(GL_LINES);
     ponos::ivec3 ijk;
@@ -54,7 +54,7 @@ public:
       glVertex(grid.toWorld(ponos::point3(grid.dimensions[0] - 1 + 0.5f,
                                           ij[0] - 0.5f, ij[1] - 0.5f)));
     }
-    glEnd();
+    glEnd();*/
   }
 
   ponos::CGridInterface<ponos::vec3> &grid;

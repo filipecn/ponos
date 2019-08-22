@@ -123,9 +123,9 @@ void parallel_for(size_t start, size_t end,
       std::min(hardware_threads != 0 ? hardware_threads : 2, max_threads);
   const uint block_size = length / num_threads;
   std::vector<std::thread> threads(num_threads - 1);
-  uint32 first = 0;
+  u32 first = 0;
   for (size_t i = 0; i < num_threads - 1; i++) {
-    size_t last = std::min(first + block_size, static_cast<uint32>(length - 1));
+    size_t last = std::min(first + block_size, static_cast<u32>(length - 1));
     threads[i] = std::thread(f, start + first, start + last);
     first = last + 1;
   }

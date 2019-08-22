@@ -3,6 +3,7 @@ set(target ponos_unit_tests)
 
 file(GLOB SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/bbox_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/bvh_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/parallel_tests.cpp

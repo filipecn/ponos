@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_STRUCTURES_REGULAR_GRID_H
 #define PONOS_STRUCTURES_REGULAR_GRID_H
@@ -46,9 +46,9 @@ public:
    * @d **[in]** dimensions
    * @b **[in]** background (default value)
    */
-  RegularGrid(const ivec3 &d, const T &b) { set(d, b); }
+  RegularGrid(const size3 &d, const T &b) { set(d, b); }
   ~RegularGrid() { clear(); }
-  void set(const ivec3 &d, const T &b) {
+  void set(const size3 &d, const T &b) {
     clear();
     dimensions = d;
     background = b;
@@ -62,12 +62,12 @@ public:
     FOR_INDICES0_2D(dd, ij)
     data[ij[0]][ij[1]] = new T[d[2]];
   }
-  T operator()(const ivec3 &i) const {
+  T operator()(const index3 &i) const {
     if (i >= ivec3() && i < dimensions)
       return data[i[0]][i[1]][i[2]];
     return background;
   }
-  T &operator()(const ivec3 &i) {
+  T &operator()(const index3 &i) {
     if (i >= ivec3() && i < dimensions)
       return data[i[0]][i[1]][i[2]];
     return bdummy;
@@ -97,7 +97,7 @@ private:
     delete data;
   }
 
-  ponos::ivec3 dimensions;
+  ponos::size3 dimensions;
   T ***data;
   T background, bdummy;
 };
@@ -111,7 +111,7 @@ public:
    * @d **[in]** dimensions
    * @b **[in]** border (default value)
    */
-  RegularGrid2D(const ivec2 &d, const T &b) : data(nullptr) {
+  RegularGrid2D(const size2 &d, const T &b) : data(nullptr) {
     UNUSED_VARIABLE(b);
     this->set(d);
   }
@@ -151,6 +151,6 @@ private:
   T **data;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif

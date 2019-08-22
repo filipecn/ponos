@@ -1,26 +1,29 @@
-/*
- * Copyright (c) 2017 FilipeCN
- *
- * The MIT License (MIT)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
+/// Copyright (c) 2017, FilipeCN.
+///
+/// The MIT License (MIT)
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to
+/// deal in the Software without restriction, including without limitation the
+/// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+/// sell copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+/// IN THE SOFTWARE.
+///
+///\file numeric.h
+///\author FilipeCN (filipedecn@gmail.com)
+///\date 2017-03-14
+///
+///\brief
 
 #ifndef PONOS_GEOMETRY_NUMERIC_H
 #define PONOS_GEOMETRY_NUMERIC_H
@@ -30,71 +33,89 @@
 #include <algorithm>
 #include <cmath>
 #include <functional>
+#include <vector>
 
 namespace ponos {
 
 #ifndef INFINITY
 #define INFINITY FLT_MAX
 #endif
-
-class Constants {
-public:
-  static double pi;     // = 3.14159265358979323846f;
-  static double two_pi; // = 6.28318530718
+///\brief
+///
+struct Constants {
+  static constexpr double pi = 3.14159265358979323846;
+  static constexpr double two_pi = 6.28318530718;
+  static constexpr double inv_pi = 0.31830988618379067154;
+  static constexpr double inv_two_pi = 0.15915494309189533577;
+  static constexpr double inv_four_pi = 0.07957747154594766788;
   static real_t real_infinity;
-  template <typename T> static T lowest() {
+  template <typename T> static constexpr T lowest() {
     return std::numeric_limits<T>::lowest();
   }
-  template <typename T> static T greatest() {
+  template <typename T> static constexpr T greatest() {
     return std::numeric_limits<T>::max();
   }
 };
+///\brief
+///
+struct Check {
+  ///\brief
+  ///
+  ///\tparam T
+  ///\param a **[in]**
+  ///\return constexpr bool
+  template <typename T> static constexpr bool is_zero(T a) {
+    return std::fabs(a) < 1e-8;
+  }
+  ///\brief
+  ///
+  ///\tparam T
+  ///\param a **[in]**
+  ///\param b **[in]**
+  ///\return constexpr bool
+  template <typename T> static constexpr bool is_equal(T a, T b) {
+    return fabs(a - b) < 1e-8;
+  }
+  ///\brief
+  ///
+  ///\tparam T
+  ///\param a **[in]**
+  ///\param b **[in]**
+  ///\param e **[in]**
+  ///\return constexpr bool
+  template <typename T> static constexpr bool is_equal(T a, T b, T e) {
+    return fabs(a - b) < e;
+  }
+  ///\brief
+  ///
+  ///\tparam T
+  ///\param x **[in]**
+  ///\param a **[in]**
+  ///\param b **[in]**
+  ///\return constexpr bool
+  template <typename T> static constexpr bool is_between(T x, T a, T b) {
+    return x > a && x < b;
+  }
+  ///\brief
+  ///
+  ///\tparam T
+  ///\param x **[in]**
+  ///\param a **[in]**
+  ///\param b **[in]**
+  ///\return constexpr bool
+  template <typename T> static constexpr bool is_between_closed(T x, T a, T b) {
+    return x >= a && x <= b;
+  }
+};
 
-#ifndef INV_PI
-#define INV_PI 0.31830988618379067154f
-#endif
-#ifndef INV_TWOPI
-#define INV_TWOPI 0.15915494309189533577f
-#endif
-#ifndef INV_FOURPI
-#define INV_FOURPI 0.07957747154594766788f
-#endif
-
-#ifndef SQR
-#define SQR(A) ((A) * (A))
-#endif
-
-#ifndef CUBE
-#define CUBE(A) ((A) * (A) * (A))
-#endif
-
-#ifndef TO_DEGREES
-#define TO_DEGREES(A) ((A)*180.f / ponos::Constants::pi)
-#endif
-
-#ifndef TO_RADIANS
-#define TO_RADIANS(A) ((A)*Constants::pi / 180.f)
-#endif
-
-#ifndef IS_ZERO
-#define IS_ZERO(A) (fabs(A) < 1e-8)
-#endif
-
-#ifndef IS_EQUAL
-#define IS_EQUAL(A, B) (fabs((A) - (B)) < 1e-6)
-#endif
-
-#ifndef IS_EQUAL_ERROR
-#define IS_EQUAL_ERROR(A, B, C) (fabs((A) - (B)) < C)
-#endif
-
-#ifndef IS_BETWEEN
-#define IS_BETWEEN(A, B, C) ((A) > (B) && (A) < (C))
-#endif
-
-#ifndef IS_BETWEEN_CLOSE
-#define IS_BETWEEN_CLOSE(A, B, C) ((A) >= (B) && (A) <= (C))
-#endif
+template <typename T> constexpr T SQR(T a) { return a * a; }
+template <typename T> constexpr T CUBE(T a) { return a * a * a; }
+template <typename T> constexpr T DEGREES(T a) {
+  return a * 180.f / Constants::pi;
+}
+template <typename T> constexpr T RADIANS(T a) {
+  return a * Constants::pi / 180.f;
+}
 
 /** \brief computes the arc-tangent of y/x
  * \param y
@@ -267,7 +288,7 @@ inline bool isPowerOf2(int v) { return (v & (v - 1)) == 0; }
  * \param v **[in]** value
  * \return the next number in power of 2
  */
-inline uint32 roundUpPow2(uint32 v) {
+inline u32 roundUpPow2(u32 v) {
   v--;
   v |= v >> 1;
   v |= v >> 2;
@@ -278,7 +299,7 @@ inline uint32 roundUpPow2(uint32 v) {
 }
 inline bool solve_quadratic(float A, float B, float C, float &t0, float &t1) {
   float delta = B * B - 4.f * A * C;
-  if (IS_ZERO(A) || delta <= 0.)
+  if (Check::is_zero(A) || delta <= 0.)
     return false;
   float sDelta = sqrtf(delta);
   float q;
@@ -308,168 +329,6 @@ inline float quadraticBSpline(float r) {
     return 0.5f * (1.5f - r) * (1.5f - r);
   return 0.0f;
 }
-template <typename T>
-inline T bilinearInterpolation(T f00, T f10, T f11, T f01, T x, T y) {
-  return f00 * (1.0 - x) * (1.0 - y) + f10 * x * (1.0 - y) +
-         f01 * (1.0 - x) * y + f11 * x * y;
-}
-template <typename T> inline T cubicInterpolate(T p[4], T x) {
-  return p[1] + 0.5 * x *
-                    (p[2] - p[0] +
-                     x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] +
-                          x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
-}
-template <typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
-  T arr[4];
-  arr[0] = cubicInterpolate(p[0], y);
-  arr[1] = cubicInterpolate(p[1], y);
-  arr[2] = cubicInterpolate(p[2], y);
-  arr[3] = cubicInterpolate(p[3], y);
-  return cubicInterpolate(arr, x);
-}
-template <typename T>
-inline T trilinearInterpolate(float *p, T ***data, T b,
-                              const int dimensions[3]) {
-  int i0 = p[0], j0 = p[1], k0 = p[2];
-  int i1 = p[0] + 1, j1 = p[1] + 1, k1 = p[2] + 1;
-  float x = p[0] - i0;
-  float y = p[1] - j0;
-  float z = p[2] - k0;
-  T v000 = (i0 < 0 || j0 < 0 || k0 < 0 || i0 >= dimensions[0] ||
-            j0 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i0][j0][k0];
-  T v001 = (i0 < 0 || j0 < 0 || k1 < 0 || i0 >= dimensions[0] ||
-            j0 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i0][j0][k1];
-  T v010 = (i0 < 0 || j1 < 0 || k0 < 0 || i0 >= dimensions[0] ||
-            j1 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i0][j1][k0];
-  T v011 = (i0 < 0 || j1 < 0 || k1 < 0 || i0 >= dimensions[0] ||
-            j1 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i0][j1][k1];
-  T v100 = (i1 < 0 || j0 < 0 || k0 < 0 || i1 >= dimensions[0] ||
-            j0 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i1][j0][k0];
-  T v101 = (i1 < 0 || j0 < 0 || k1 < 0 || i1 >= dimensions[0] ||
-            j0 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i1][j0][k1];
-  T v110 = (i1 < 0 || j1 < 0 || k0 < 0 || i1 >= dimensions[0] ||
-            j1 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i1][j1][k0];
-  T v111 = (i1 < 0 || j1 < 0 || k1 < 0 || i1 >= dimensions[0] ||
-            j1 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i1][j1][k1];
-  return v000 * (1.f - x) * (1.f - y) * (1.f - z) +
-         v100 * x * (1.f - y) * (1.f - z) + v010 * (1.f - x) * y * (1.f - z) +
-         v110 * x * y * (1.f - z) + v001 * (1.f - x) * (1.f - y) * z +
-         v101 * x * (1.f - y) * z + v011 * (1.f - x) * y * z + v111 * x * y * z;
-}
-template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
-  int x, y, z;
-  int i, j, k;
-  float dx, dy, dz;
-  float u[4], v[4], w[4];
-  T r[4], q[4];
-  T vox = T(0);
-
-  x = (int)p[0], y = (int)p[1], z = (int)p[2];
-  dx = p[0] - (float)x, dy = p[1] - (float)y, dz = p[2] - (float)z;
-
-  u[0] = -0.5 * CUBE(dx) + SQR(dx) - 0.5 * dx;
-  u[1] = 1.5 * CUBE(dx) - 2.5 * SQR(dx) + 1;
-  u[2] = -1.5 * CUBE(dx) + 2 * SQR(dx) + 0.5 * dx;
-  u[3] = 0.5 * CUBE(dx) - 0.5 * SQR(dx);
-
-  v[0] = -0.5 * CUBE(dy) + SQR(dy) - 0.5 * dy;
-  v[1] = 1.5 * CUBE(dy) - 2.5 * SQR(dy) + 1;
-  v[2] = -1.5 * CUBE(dy) + 2 * SQR(dy) + 0.5 * dy;
-  v[3] = 0.5 * CUBE(dy) - 0.5 * SQR(dy);
-
-  w[0] = -0.5 * CUBE(dz) + SQR(dz) - 0.5 * dz;
-  w[1] = 1.5 * CUBE(dz) - 2.5 * SQR(dz) + 1;
-  w[2] = -1.5 * CUBE(dz) + 2 * SQR(dz) + 0.5 * dz;
-  w[3] = 0.5 * CUBE(dz) - 0.5 * SQR(dz);
-
-  int ijk[3] = {x - 1, y - 1, z - 1};
-  for (k = 0; k < 4; k++) {
-    q[k] = 0;
-    for (j = 0; j < 4; j++) {
-      r[j] = 0;
-      for (i = 0; i < 4; i++) {
-        r[j] += u[i] * data[ijk[0]][ijk[1]][ijk[2]];
-        ijk[0]++;
-      }
-      q[k] += v[j] * r[j];
-      ijk[0] = x - 1;
-      ijk[1]++;
-    }
-    vox += w[k] * q[k];
-    ijk[0] = x - 1;
-    ijk[1] = y - 1;
-    ijk[2]++;
-  }
-  return (vox < T(0) ? T(0.0) : vox);
-}
-template <typename T>
-inline T tricubicInterpolate(float *p, T ***data, T b,
-                             const int dimensions[3]) {
-  int x, y, z;
-  int i, j, k;
-  float dx, dy, dz;
-  float u[4], v[4], w[4];
-  T r[4], q[4];
-  T vox = T(0);
-
-  x = (int)p[0], y = (int)p[1], z = (int)p[2];
-  dx = p[0] - (float)x, dy = p[1] - (float)y, dz = p[2] - (float)z;
-
-  u[0] = -0.5 * CUBE(dx) + SQR(dx) - 0.5 * dx;
-  u[1] = 1.5 * CUBE(dx) - 2.5 * SQR(dx) + 1;
-  u[2] = -1.5 * CUBE(dx) + 2 * SQR(dx) + 0.5 * dx;
-  u[3] = 0.5 * CUBE(dx) - 0.5 * SQR(dx);
-
-  v[0] = -0.5 * CUBE(dy) + SQR(dy) - 0.5 * dy;
-  v[1] = 1.5 * CUBE(dy) - 2.5 * SQR(dy) + 1;
-  v[2] = -1.5 * CUBE(dy) + 2 * SQR(dy) + 0.5 * dy;
-  v[3] = 0.5 * CUBE(dy) - 0.5 * SQR(dy);
-
-  w[0] = -0.5 * CUBE(dz) + SQR(dz) - 0.5 * dz;
-  w[1] = 1.5 * CUBE(dz) - 2.5 * SQR(dz) + 1;
-  w[2] = -1.5 * CUBE(dz) + 2 * SQR(dz) + 0.5 * dz;
-  w[3] = 0.5 * CUBE(dz) - 0.5 * SQR(dz);
-
-  int ijk[3] = {x - 1, y - 1, z - 1};
-  for (k = 0; k < 4; k++) {
-    q[k] = 0;
-    for (j = 0; j < 4; j++) {
-      r[j] = 0;
-      for (i = 0; i < 4; i++) {
-        if (ijk[0] < 0 || ijk[0] >= dimensions[0] || ijk[1] < 0 ||
-            ijk[1] >= dimensions[1] || ijk[2] < 0 || ijk[2] >= dimensions[2])
-          r[j] += u[i] * b;
-        else
-          r[j] += u[i] * data[ijk[0]][ijk[1]][ijk[2]];
-        ijk[0]++;
-      }
-      q[k] += v[j] * r[j];
-      ijk[0] = x - 1;
-      ijk[1]++;
-    }
-    vox += w[k] * q[k];
-    ijk[0] = x - 1;
-    ijk[1] = y - 1;
-    ijk[2]++;
-  }
-  return (vox < T(0) ? T(0.0) : vox);
-}
 inline float smooth(float a, float b) {
   return std::max(0.f, 1.f - a / SQR(b));
 }
@@ -482,7 +341,7 @@ inline float sharpen(const float &r2, const float &h) {
  * \return the number with the bits of **n** splitted and separated by 1 bit.
  * Ex: n = 1101, return 101001
  */
-inline uint32 separateBy1(uint32 n) {
+inline u32 separateBy1(u32 n) {
   n = (n ^ (n << 8)) & 0x00ff00ff;
   n = (n ^ (n << 4)) & 0x0f0f0f0f;
   n = (n ^ (n << 2)) & 0x33333333;
@@ -495,11 +354,11 @@ inline uint32 separateBy1(uint32 n) {
  * \return the morton code of **x** and **y**. The morton code is the
  * combination of the two binary numbers with the bits interleaved.
  */
-inline uint32 encodeMortonCode(uint32 x, uint32 y) {
+inline u32 encodeMortonCode(u32 x, u32 y) {
   return (separateBy1(y) << 1) + separateBy1(x);
 }
 
-inline uint32_t separateBy2(uint32_t n) {
+inline u32 separateBy2(u32 n) {
   n = (n ^ (n << 16)) & 0xff0000ff;
   n = (n ^ (n << 8)) & 0x0300f00f;
   n = (n ^ (n << 4)) & 0x030c30c3;
@@ -514,8 +373,16 @@ inline uint32_t separateBy2(uint32_t n) {
  * \return the morton code of **x**, **y** and **z**. The morton code is the
  * combination of the two binary numbers with the bits interleaved.
  */
-inline uint32_t encodeMortonCode(uint32_t x, uint32_t y, uint32_t z) {
+inline u32 encodeMortonCode(u32 x, u32 y, u32 z) {
   return (separateBy2(z) << 2) + (separateBy2(y) << 1) + separateBy2(x);
+}
+
+template <typename T> T dot(const std::vector<T> &a, const std::vector<T> &b) {
+  ASSERT_FATAL(a.size() == b.size());
+  T sum = T(0);
+  for (size_t i = 0; i < a.size(); i++)
+    sum = sum + a[i] * b[i];
+  return sum;
 }
 
 } // namespace ponos

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_GRAPHICS_COMPUTE_SHADER_H
 #define CIRCE_GRAPHICS_COMPUTE_SHADER_H
@@ -41,14 +41,14 @@ public:
   void bindTexture(GLenum t) const;
   void setTexture(const TextureAttributes &a, const TextureParameters &p);
   void setBuffer(const char *name, GLuint id, GLuint bindingPoint);
-  void setGroupSize(const ponos::uivec3 gs);
+  void setGroupSize(const ponos::size3 gs);
 
 private:
   std::unique_ptr<Texture> texture;
-  ponos::uivec3 groupSize;
+  ponos::size3 groupSize;
   std::vector<GLuint> blockIndices, bufferIds;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_GRAPHICS_COMPUTE_SHADER_H

@@ -26,19 +26,19 @@
 
 namespace circe {
 
-ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
+ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
                                  const ponos::vec3 &o) {
   auto *m = new ponos::RawMesh();
-  ponos::ivec2 ij;
+  ponos::index2 ij;
   // XY
-  FOR_INDICES0_2D(d.xy(0, 1), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[0], d[1])) {
     ponos::point3 p(ij[0], ij[1], 0.f);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
-  FOR_INDICES0_2D(d.xy(0, 1), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[0], d[1])) {
     ponos::point3 p(ij[0], ij[1], d[2] - 1);
     p = p * s + o;
     m->positions.emplace_back(p.x);
@@ -46,14 +46,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
     m->positions.emplace_back(p.z);
   }
   // YZ
-  FOR_INDICES0_2D(d.xy(1, 2), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[1], d[2])) {
     ponos::point3 p(0.f, ij[0], ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
-  FOR_INDICES0_2D(d.xy(1, 2), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[1], d[2])) {
     ponos::point3 p(d[0] - 1, ij[0], ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
@@ -61,14 +61,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
     m->positions.emplace_back(p.z);
   }
   // XZ
-  FOR_INDICES0_2D(d.xy(0, 2), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[0], d[2])) {
     ponos::point3 p(ij[0], 0.f, ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
-  FOR_INDICES0_2D(d.xy(0, 2), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[0], d[2])) {
     ponos::point3 p(ij[0], d[1] - 1, ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
@@ -78,21 +78,21 @@ ponos::RawMesh *create_grid_mesh(const ponos::ivec3 &d, float s,
   m->positionDescriptor.count = m->positions.size() / 3;
   int xy = d[0] * d[1];
   // create indices for xy planes
-  FOR_INDICES0_2D(d.xy(0, 1), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[0], d[1])) {
     m->positionsIndices.emplace_back(ij[0] * d[0] + ij[1]);
     m->positionsIndices.emplace_back(xy + ij[0] * d[0] + ij[1]);
   }
   int acc = xy * 2;
   int yz = d[1] * d[2];
   // create indices for yz planes
-  FOR_INDICES0_2D(d.xy(1, 2), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[1], d[2])) {
     m->positionsIndices.emplace_back(acc + ij[0] * d[1] + ij[1]);
     m->positionsIndices.emplace_back(acc + yz + ij[0] * d[1] + ij[1]);
   }
   acc += yz * 2;
   int xz = d[0] * d[2];
   // create indices for xz planes
-  FOR_INDICES0_2D(d.xy(1, 2), ij) {
+  for (auto ij : ponos::Index3Range<i32>(d[0], d[2])) {
     m->positionsIndices.emplace_back(acc + ij[0] * d[1] + ij[1]);
     m->positionsIndices.emplace_back(acc + xz + ij[0] * d[1] + ij[1]);
   }
@@ -207,9 +207,8 @@ float y, float z) -> ponos::point2 {
       return ponos::point2(std::atan2(y, x), std::acos(z));
     };
     for (size_t i = 0; i < vertexCount; i++) {
-      auto uv = parametric(mesh->vertices[i * 3 + 0], mesh->vertices[i * 3 + 1],
-mesh->vertices[i * 3 + 2]);
-      mesh->addUV({uv.x, uv.y});
+      auto uv = parametric(mesh->vertices[i * 3 + 0], mesh->vertices[i * 3 +
+1], mesh->vertices[i * 3 + 2]); mesh->addUV({uv.x, uv.y});
     }
     mesh->texcoordDescriptor.count = vertexCount;
     mesh->texcoordDescriptor.elementSize = 2;

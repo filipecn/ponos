@@ -153,9 +153,9 @@ protected:
     // Compute bound of HLBVH node centroids, choose split dimension _dim_
     bbox3f centroidBounds;
     for (int i = start; i < end; ++i) {
-      point3f centroid =
-          (treeletRoots[i]->bounds.lower + treeletRoots[i]->bounds.upper) *
-          0.5f;
+      point3f centroid = (treeletRoots[i]->bounds.lower +
+                          treeletRoots[i]->bounds.upper.asVector3()) *
+                         0.5f;
       centroidBounds = make_union(centroidBounds, centroid);
     }
     int dim = centroidBounds.maxExtent();

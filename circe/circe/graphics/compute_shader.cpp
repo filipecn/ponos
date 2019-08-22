@@ -69,6 +69,6 @@ void ComputeShader::setTexture(const TextureAttributes &a,
   texture.reset(new circe::Texture(a, p));
   groupSize = texture->size();
 }
-void ComputeShader::setGroupSize(const ponos::uivec3 gs) { groupSize = gs; }
+void ComputeShader::setGroupSize(const ponos::size3 gs) { groupSize = gs; }
 
 } // namespace circe

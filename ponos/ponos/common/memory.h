@@ -71,7 +71,7 @@ void freeAligned(void *ptr);
 /// \brief Allocates cache-aligned **count** objects.
 /// \param count number of objects.
 /// \returns pointer to allocated region.
-template <typename T> T *allocAligned(uint32 count) {
+template <typename T> T *allocAligned(u32 count) {
   return static_cast<T *>(allocAligned(count * sizeof(T)));
 }
 
@@ -95,7 +95,7 @@ public:
   template <typename T> T *alloc(size_t count = 1, bool runConstructor = true) {
     T *ret = static_cast<T *>(alloc(count * sizeof(T)));
     if (runConstructor)
-      for (uint32 i = 0; i < count; i++)
+      for (u32 i = 0; i < count; i++)
         new (&ret[i]) T();
     return ret;
   }
@@ -125,55 +125,55 @@ private:
  */
 template <typename T, int logBlockSize = 2> class BlockedArray {
 public:
-  BlockedArray(uint32 nu, uint32 nv, const T *d = nullptr) {
+  BlockedArray(u32 nu, u32 nv, const T *d = nullptr) {
     uRes = nu;
     vRes = nv;
     uBlocks = roundUp(uRes) >> logBlockSize;
-    uint32 nAlloc = roundUp(uRes) * roundUp(vRes);
+    u32 nAlloc = roundUp(uRes) * roundUp(vRes);
     data = allocAligned<T>(nAlloc);
-    for (uint32 i = 0; i < nAlloc; i++)
+    for (u32 i = 0; i < nAlloc; i++)
       new (&data[i]) T();
     if (d != nullptr)
-      for (uint32 v = 0; v < vRes; ++v)
-        for (uint32 u = 0; u < uRes; ++u)
+      for (u32 v = 0; v < vRes; ++v)
+        for (u32 u = 0; u < uRes; ++u)
           (*this)(u, v) = d[v * uRes + u];
   }
   /** \brief get
    * \returns block size (1 << **logBlockSize**)
    */
-  uint32 blockSize() const { return 1 << logBlockSize; }
+  u32 blockSize() const { return 1 << logBlockSize; }
   /** \brief rounding
    * \param x **[in]** quantity to be rounded
    * Rounds both dimensions up to the a multiple of the block size.
    * \returns rounded value
    */
-  uint32 roundUp(uint32 x) const {
+  u32 roundUp(u32 x) const {
     return (x + blockSize() - 1) & !(blockSize() - 1);
   }
   /** \brief get
    * \returns u dimension size
    */
-  uint32 uSize() { return uRes; }
+  u32 uSize() { return uRes; }
   /** \brief get
    * \returns v dimension size
    */
-  uint32 vSize() { return vRes; }
+  u32 vSize() { return vRes; }
 
-  uint32 blockNumber(uint32 a) const { return a >> logBlockSize; }
+  u32 blockNumber(u32 a) const { return a >> logBlockSize; }
 
-  uint32 blockOffset(uint32 a) const { return (a & (blockSize() - 1)); }
+  u32 blockOffset(u32 a) const { return (a & (blockSize() - 1)); }
 
-  T &operator()(uint32 u, uint32 v) {
-    uint32 bu = blockNumber(u), bv = blockNumber(v);
-    uint32 ou = blockOffset(u), ov = blockOffset(v);
-    uint32 offset = blockSize() * blockSize() * (uBlocks * bv + bu);
+  T &operator()(u32 u, u32 v) {
+    u32 bu = blockNumber(u), bv = blockNumber(v);
+    u32 ou = blockOffset(u), ov = blockOffset(v);
+    u32 offset = blockSize() * blockSize() * (uBlocks * bv + bu);
     offset += blockSize() * ov + ou;
     return data[offset];
   }
 
 private:
   T *data;
-  uint32 uRes, vRes, uBlocks;
+  u32 uRes, vRes, uBlocks;
 };
 
 } // namespace ponos

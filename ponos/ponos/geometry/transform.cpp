@@ -28,8 +28,8 @@ void Transform2::scale(real_t x, real_t y) {
 }
 
 void Transform2::rotate(real_t angle) {
-  real_t sin_a = sinf(TO_RADIANS(angle));
-  real_t cos_a = cosf(TO_RADIANS(angle));
+  real_t sin_a = sinf(RADIANS(angle));
+  real_t cos_a = cosf(RADIANS(angle));
   mat3 M(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
   vec2 t = getTranslate();
   m.m[0][2] = m.m[1][2] = 0;
@@ -41,8 +41,8 @@ void Transform2::rotate(real_t angle) {
 }
 
 Transform2 rotate(real_t angle) {
-  real_t sin_a = sinf(TO_RADIANS(angle));
-  real_t cos_a = cosf(TO_RADIANS(angle));
+  real_t sin_a = sinf(RADIANS(angle));
+  real_t cos_a = cosf(RADIANS(angle));
   mat3 m(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
   return Transform2(m, transpose(m));
 }
@@ -57,7 +57,7 @@ Transform2 inverse(const Transform2 &t) { return Transform2(t.m_inv, t.m); }
 
 Transform::Transform(const mat4 &mat) : m(mat), m_inv(inverse(mat)) {}
 
-Transform::Transform(const mat4 &mat, const mat4& inv_mat)
+Transform::Transform(const mat4 &mat, const mat4 &inv_mat)
     : m(mat), m_inv(inv_mat) {}
 
 Transform::Transform(const real_t mat[4][4]) {
@@ -127,24 +127,24 @@ Transform scale(real_t x, real_t y, real_t z) {
 }
 
 Transform rotateX(real_t angle) {
-  real_t sin_a = sinf(TO_RADIANS(angle));
-  real_t cos_a = cosf(TO_RADIANS(angle));
+  real_t sin_a = sinf(RADIANS(angle));
+  real_t cos_a = cosf(RADIANS(angle));
   mat4 m(1.f, 0.f, 0.f, 0.f, 0.f, cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f,
          0.f, 0.f, 0.f, 1.f);
   return Transform(m, transpose(m));
 }
 
 Transform rotateY(real_t angle) {
-  real_t sin_a = sinf(TO_RADIANS(angle));
-  real_t cos_a = cosf(TO_RADIANS(angle));
+  real_t sin_a = sinf(RADIANS(angle));
+  real_t cos_a = cosf(RADIANS(angle));
   mat4 m(cos_a, 0.f, sin_a, 0.f, 0.f, 1.f, 0.f, 0.f, -sin_a, 0.f, cos_a, 0.f,
          0.f, 0.f, 0.f, 1.f);
   return Transform(m, transpose(m));
 }
 
 Transform rotateZ(real_t angle) {
-  real_t sin_a = sinf(TO_RADIANS(angle));
-  real_t cos_a = cosf(TO_RADIANS(angle));
+  real_t sin_a = sinf(RADIANS(angle));
+  real_t cos_a = cosf(RADIANS(angle));
   mat4 m(cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f,
          0.f, 0.f, 0.f, 1.f);
   return Transform(m, transpose(m));
@@ -152,8 +152,8 @@ Transform rotateZ(real_t angle) {
 
 Transform rotate(real_t angle, const vec3 &axis) {
   vec3 a = normalize(axis);
-  real_t s = sinf(TO_RADIANS(angle));
-  real_t c = cosf(TO_RADIANS(angle));
+  real_t s = sinf(RADIANS(angle));
+  real_t c = cosf(RADIANS(angle));
   real_t m[4][4];
 
   m[0][0] = a.x * a.x + (1.f - a.x * a.x) * c;
@@ -212,7 +212,7 @@ Transform frustumTransform(real_t left, real_t right, real_t bottom, real_t top,
 }
 
 Transform perspective(real_t fov, real_t aspect, real_t zNear, real_t zFar) {
-  real_t xmax = zNear * tanf(TO_RADIANS(fov / 2.f));
+  real_t xmax = zNear * tanf(RADIANS(fov / 2.f));
   real_t ymax = xmax / aspect;
   return frustumTransform(-xmax, xmax, -ymax, ymax, zNear, zFar);
 }
@@ -222,7 +222,7 @@ Transform perspective(real_t fov, real_t n, real_t f) {
   mat4 persp = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, f / (f - n), -f * n / (f - n),
                     0, 0, 1, 0);
   // scale to canonical viewing volume
-  real_t invTanAng = 1.f / tanf(TO_RADIANS(fov) / 2.f);
+  real_t invTanAng = 1.f / tanf(RADIANS(fov) / 2.f);
   return scale(invTanAng, invTanAng, 1) * Transform(persp);
 }
 

@@ -63,7 +63,7 @@ bool ray_segment_intersection(const Ray3 &r, const Segment3 &s, real_t *t) {
 bool plane_line_intersection(const Plane pl, const Line l, point3 &p) {
   vec3 nvector = vec3(pl.normal.x, pl.normal.y, pl.normal.z);
   real_t k = dot(nvector, l.direction());
-  if (IS_ZERO(k))
+  if (Check::is_zero(k))
     return false;
   real_t r = (pl.offset - dot(nvector, vec3(l.a.x, l.a.y, l.a.z))) / k;
   p = l(r);
@@ -225,8 +225,9 @@ bool triangle_point_intersection(const point2 &p, const point2 *vertices) {
   real_t u = -1, v = -1, w = -1;
   triangle_barycentric_coordinates(p, vertices[0], vertices[1], vertices[2], u,
                                    v, w);
-  return IS_BETWEEN_CLOSE(u, 0.f, 1.f) && IS_BETWEEN_CLOSE(v, 0.f, 1.f) &&
-         IS_BETWEEN_CLOSE(w, 0.f, 1.f);
+  return Check::is_between_closed(u, 0.f, 1.f) &&
+         Check::is_between_closed(v, 0.f, 1.f) &&
+         Check::is_between_closed(w, 0.f, 1.f);
 }
 
 bool triangle_ray_intersection(const point3 &p1, const point3 &p2,

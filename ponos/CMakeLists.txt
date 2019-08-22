@@ -40,8 +40,8 @@ set(PONOS_HEADERS
         #ponos/blas/staggered_grid.inl
         #ponos/blas/symmetric_matrix.h
         ponos/common/defs.h
+		ponos/common/index.h
         ponos/common/file.h
-        ponos/common/iterators.h
         ponos/common/macros.h
         ponos/common/memory.h
         ponos/common/parallel.h
@@ -51,6 +51,7 @@ set(PONOS_HEADERS
         ponos/geometry/bbox.inl
         ponos/geometry/ellipse.h
         ponos/geometry/frustum.h
+		ponos/geometry/interpolation.h
         ponos/geometry/interval.h
         ponos/geometry/interval.inl
         ponos/geometry/line.h

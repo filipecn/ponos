@@ -20,11 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_STRUCTURES_C_GRID_INTERFACE_H
 #define PONOS_STRUCTURES_C_GRID_INTERFACE_H
 
+#include <ponos/common/index.h>
+#include <ponos/common/size.h>
 #include <ponos/geometry/bbox.h>
 #include <ponos/geometry/transform.h>
 
@@ -55,30 +57,30 @@ public:
    * \param i **[in]** coordinate (grid space)
    * \param v **[in]** value
    */
-  virtual void set(const ivec3 &i, const T &v) = 0;
+  virtual void set(const size3 &i, const T &v) = 0;
   /* get
    * \param i **[in]** coordinate (grid space)
    * \return value at coordinate **i**
    */
-  virtual T operator()(const ivec3 &i) const = 0;
+  virtual T operator()(const index3 &i) const = 0;
   /* get
    * \param i **[in]** coordinate (grid space)
    * \return value at coordinate **i**
    */
-  virtual T &operator()(const ivec3 &i) = 0;
+  virtual T &operator()(const index3 &i) = 0;
   /* get
    * \param i **[in]** X coordinate (grid space)
    * \param j **[in]** Y coordinate (grid space)
    * \param k **[in]** Z coordinate (grid space)
    * \return value at coordinate **(i, j, k)**
    */
-  virtual T operator()(const uint &i, const uint &j, const uint &k) const = 0;
-  virtual T &operator()(const uint &i, const uint &j, const uint &k) = 0;
+  virtual T operator()(const i32 &i, const i32 &j, const i32 &k) const = 0;
+  virtual T &operator()(const i32 &i, const i32 &j, const i32 &k) = 0;
   /* get
    * @i **[in]** coordinate (grid space)
    * @return value at coordinate **i**
    */
-  virtual T operator()(const vec3 &i) const = 0;
+  virtual T operator()(const point3 &i) const = 0;
   /* get
    * @i **[in]** X coordinate (grid space)
    * @j **[in]** Y coordinate (grid space)
@@ -94,8 +96,10 @@ public:
    *
    * @return **true** if the grid contains the coordinate **i**
    */
-  bool belongs(const ivec3 &i) const { return ivec3() <= i && i < dimensions; }
-  point3 worldPosition(const ivec3 &ijk) const {
+  bool belongs(const index3 &i) const {
+    return index3() <= i && i < dimensions;
+  }
+  point3 worldPosition(const index3 &ijk) const {
     return toWorld(point3(ijk[0], ijk[1], ijk[2]));
   }
   // access mode
@@ -103,7 +107,7 @@ public:
   // default value
   T background;
   // grid dimensions
-  ivec3 dimensions;
+  size3 dimensions;
   // grid to world transform
   Transform toWorld;
   // world to grid transform
@@ -170,8 +174,8 @@ public:
     }
     return getData(i, j);
   }
-  T &operator()(const ivec2 &ij) { return accessData(ij[0], ij[1]); }
-  T operator()(const ivec2 &ij) const { return accessData(ij[0], ij[1]); }
+  T &operator()(const index2 &ij) { return accessData(ij[0], ij[1]); }
+  T operator()(const index2 &ij) const { return accessData(ij[0], ij[1]); }
   T &operator()(int i, int j) { return accessData(i, j); }
   T operator()(int i, int j) const { return accessData(i, j); }
   T safeData(int i, int j) const {
@@ -222,7 +226,7 @@ public:
   /** Sets grid's dimensions
    * \param d (width,height) **[in]** (number of cells)
    */
-  void set(const ivec2 &d) { setDimensions(d[0], d[1]); }
+  void set(const size2 &d) { setDimensions(d[0], d[1]); }
   /** Sets grid's properties
    * \param w width **[in]** (number of cells)
    * \param h height **[in]** (number of cells)
@@ -240,9 +244,9 @@ public:
    */
   void set(uint32_t w, uint32_t h, const bbox2 &b) {
     setDimensions(w, h);
-    vec2 size(w, h);
+    size2 size(w, h);
     setTransform(translate(vec2(b.lower)) *
-                 scale(b.size(0) / size.x, b.size(1) / size.y));
+                 scale(b.size(0) / size.width, b.size(1) / size.height));
   }
   /** data position
    * \return grid data position relative to grid origin
@@ -305,7 +309,7 @@ public:
    * \param ij **[in]** index
    * \return world position
    */
-  point2 dataWorldPosition(const ivec2 &ij) const {
+  point2 dataWorldPosition(const index2 &ij) const {
     return toWorld(ponos::point2(ij[0], ij[1]) + dataOffset());
   }
   /** Index space to world position of data
@@ -328,7 +332,7 @@ public:
   /** Get grid spacing
    * \return cell size
    */
-  ivec2 getDimensions() const { return ivec2(width, height); }
+  size2 getDimensions() const { return size2(width, height); }
   /** Get grid dimensions
    * \return dimensions
    */
@@ -339,9 +343,9 @@ public:
   T border;                      //!< border value
   uint32_t width;                //!< number of cells in x direction
   uint32_t height;               //!< number of cells in y direction
-  vec2 offset;                //!< grid origin
-  Transform2 toWorld;           //!< grid space to world space transform
-  Transform2 toGrid;            //!< world space to grid space transform
+  vec2 offset;                   //!< grid origin
+  Transform2 toWorld;            //!< grid space to world space transform
+  Transform2 toGrid;             //!< world space to grid space transform
   GridDataPosition dataPosition; //!< grid data position type
   GridAccessMode accessMode;     //!< grid access mode
 };
@@ -356,6 +360,6 @@ inline std::ostream &operator<<(std::ostream &os, const Grid2DInterface<T> *g) {
   os << std::endl;
   return os;
 }
-}
+} // namespace ponos
 
 #endif // PONOS_STRUCTURES_C_GRID_INTERFACE_H

@@ -23,7 +23,7 @@
  */
 
 template <typename T>
-CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const vec3 cellSize,
+CRegularGrid<T>::CRegularGrid(const size3 &d, const T &b, const vec3 cellSize,
                               const vec3 &offset) {
   this->dimensions = d;
   this->background = b;
@@ -41,7 +41,7 @@ CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const vec3 cellSize,
 }
 
 template <typename T>
-CRegularGrid<T>::CRegularGrid(const ivec3 &d, const T &b, const bbox3 &bb) {
+CRegularGrid<T>::CRegularGrid(const size3 &d, const T &b, const bbox3 &bb) {
   this->dimensions = d;
   this->background = b;
   data = new T **[d[0]];
@@ -71,9 +71,8 @@ template <typename T> CRegularGrid<T>::~CRegularGrid() {
 }
 
 template <typename T> void CRegularGrid<T>::setAll(T v) {
-  ivec3 ijk;
-  FOR_INDICES0_3D(this->dimensions, ijk)
-  data[ijk[0]][ijk[1]][ijk[2]] = v;
+  for (auto ijk : Index3Range<i32>(this->dimensions))
+    data[ijk[0]][ijk[1]][ijk[2]] = v;
 }
 
 template <typename T> T CRegularGrid<T>::safeData(int i, int j, int k) const {
@@ -82,25 +81,24 @@ template <typename T> T CRegularGrid<T>::safeData(int i, int j, int k) const {
              [max(0, min(this->dimensions[2] - 1, k))];
 }
 
-template <typename T> void CRegularGrid<T>::set(const ivec3 &i, const T &v) {
-  this->data[std::max(0, std::min(this->dimensions[0] - 1, i[0]))]
-            [std::max(0, std::min(this->dimensions[1] - 1, i[1]))]
-            [std::max(0, std::min(this->dimensions[2] - 1, i[2]))] = v;
+template <typename T> void CRegularGrid<T>::set(const size3 &i, const T &v) {
+  this->data[std::max(0u, std::min(this->dimensions[0] - 1, i[0]))]
+            [std::max(0u, std::min(this->dimensions[1] - 1, i[1]))]
+            [std::max(0u, std::min(this->dimensions[2] - 1, i[2]))] = v;
 }
 
 template <typename T> void CRegularGrid<T>::normalize() {
-  ivec3 ijk;
   T M = data[0][0][0];
-  FOR_INDICES0_3D(this->dimensions, ijk)
-  M = ponos::max(M, data[ijk[0]][ijk[1]][ijk[2]]);
-  FOR_INDICES0_3D(this->dimensions, ijk)
-  data[ijk[0]][ijk[1]][ijk[2]] /= M;
+  for (auto ijk : Index3Range<i32>(this->dimensions))
+    M = ponos::max(M, data[ijk[0]][ijk[1]][ijk[2]]);
+  for (auto ijk : Index3Range<i32>(this->dimensions))
+    data[ijk[0]][ijk[1]][ijk[2]] /= M;
 }
 
 template <typename T> void CRegularGrid<T>::normalizeElements() {
-  ivec3 ijk;
-  FOR_INDICES0_3D(this->dimensions, ijk)
-  data[ijk[0]][ijk[1]][ijk[2]] = ponos::normalize(data[ijk[0]][ijk[1]][ijk[2]]);
+  for (auto ijk : Index3Range<i32>(this->dimensions))
+    data[ijk[0]][ijk[1]][ijk[2]] =
+        ponos::normalize(data[ijk[0]][ijk[1]][ijk[2]]);
 }
 
 template <typename T> CRegularGrid2D<T>::CRegularGrid2D() {}

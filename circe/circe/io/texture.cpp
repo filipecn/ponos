@@ -86,8 +86,8 @@ void Texture::bindImage(GLenum t) const {
   CHECK_GL_ERRORS;
 }
 
-ponos::uivec3 Texture::size() const {
-  return ponos::uivec3(attributes.width, attributes.height, attributes.depth);
+ponos::size3 Texture::size() const {
+  return ponos::size3(attributes.width, attributes.height, attributes.depth);
 }
 
 GLuint Texture::textureObjectId() const { return textureObject; }

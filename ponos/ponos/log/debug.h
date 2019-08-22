@@ -129,7 +129,7 @@ template <class... Args> std::string concat(const Args &... args) {
   return s.str();
 }
 
-inline void printBits(uint32 n) {
+inline void printBits(u32 n) {
   for (int i = 31; i >= 0; i--)
     if ((1 << i) & n)
       std::cout << '1';

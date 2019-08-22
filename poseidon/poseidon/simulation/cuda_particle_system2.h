@@ -222,7 +222,6 @@ private:
   hermes::cuda::Transform2f to_grid_; //!< map to underling grid
   size_t grid_resolution_ = 16;       //!< grid resolution for zcodes
   size_t active_count_ = 0;           //!< active particles count
-  // size_t _nextId = 0;      //!< next particle id to be created
   size_t n_bits_ = 0;       //!< number of bits used by the maximum coordinate
   size_t max_depth_ = 0;    //!< maximum depth of search tree, bounded by nbits
   size_t max_z_code_ = 0;   //!< maximum allowed morton code
@@ -271,7 +270,6 @@ private:
   hermes::cuda::Transform2f to_grid_; //!< map to underling grid
   size_t grid_resolution_ = 16;       //!< grid resolution for zcodes
   size_t active_count_ = 0;           //!< active particles count
-  // size_t _nextId = 0;      //!< next particle id to be created
   size_t n_bits_ = 0;       //!< number of bits used by the maximum coordinate
   size_t max_depth_ = 0;    //!< maximum depth of search tree, bounded by nbits
   size_t max_z_code_ = 0;   //!< maximum allowed morton code

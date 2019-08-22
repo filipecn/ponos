@@ -34,7 +34,7 @@
 #include <ponos/blas/symmetric_matrix.h>
 #include <ponos/common/defs.h>
 #include <ponos/common/file.h>
-#include <ponos/common/iterators.h>
+#include <ponos/common/index.h>
 #include <ponos/common/macros.h>
 #include <ponos/common/memory.h>
 #include <ponos/common/random.h>
@@ -42,6 +42,7 @@
 #include <ponos/geometry/bbox.h>
 #include <ponos/geometry/ellipse.h>
 #include <ponos/geometry/frustum.h>
+#include <ponos/geometry/interpolation.h>
 #include <ponos/geometry/interval.h>
 #include <ponos/geometry/line.h>
 #include <ponos/geometry/matrix.h>

@@ -1,26 +1,29 @@
-/*
- * Copyright (c) 2017 FilipeCN
- *
- * The MIT License (MIT)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
+/// Copyright (c) 2017, FilipeCN.
+///
+/// The MIT License (MIT)
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to
+/// deal in the Software without restriction, including without limitation the
+/// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+/// sell copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+/// IN THE SOFTWARE.
+///
+///\file point.h
+///\author FilipeCN (filipedecn@gmail.com)
+///\date 2019-08-18
+///
+///\brief
 
 #ifndef PONOS_GEOMETRY_POINT_H
 #define PONOS_GEOMETRY_POINT_H
@@ -33,97 +36,208 @@
 
 namespace ponos {
 
+///\brief
+///
+///\tparam T
 template <typename T> class Point2 {
+  static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
+                    std::is_same<T, float>::value ||
+                    std::is_same<T, double>::value,
+                "Point2 must hold an float type!");
+
 public:
   typedef T ScalarType;
-  Point2();
-  Point2(real_t f);
-  explicit Point2(const real_t *v);
-  explicit Point2(real_t _x, real_t _y);
-
+  Point2(T f = T(0)) { x = y = f; }
+  explicit Point2(const real_t *v) : x(v[0]), y(v[1]) {}
+  explicit Point2(real_t _x, real_t _y) : x(_x), y(_y) {}
   // access
-  T operator[](int i) const;
-  T &operator[](int i);
-  bool operator==(const Point2 &p) const;
-  Point2 operator+(const Vector2<T> &v) const;
-  Point2 operator-(const Vector2<T> &v) const;
-  Point2 operator-(const real_t &f) const;
-  Point2 operator+(const real_t &f) const;
-  Vector2<T> operator-(const Point2 &p) const;
-  Point2 operator/(real_t d) const;
-  Point2 operator*(real_t f) const;
-  Point2 &operator+=(const Vector2<T> &v);
-  Point2 &operator-=(const Vector2<T> &v);
-  Point2 &operator/=(real_t d);
-  bool operator<(const Point2 &p) const;
-  bool operator>=(const Point2 &p) const;
-  bool operator<=(const Point2 &p) const;
-  bool HasNaNs() const;
-  template <typename TT>
-  friend std::ostream &operator<<(std::ostream &os, const Point2<TT> &p);
-  T x, y;
+  T operator[](int i) const { return (&x)[i]; }
+  T &operator[](int i) { return (&x)[i]; }
+  // arithmetic
+  Point2 &operator+=(const Vector2<T> &v) {
+    x += v.x;
+    y += v.y;
+    return *this;
+  }
+  Point2 &operator-=(const Vector2<T> &v) {
+    x -= v.x;
+    y -= v.y;
+    return *this;
+  }
+  Point2 &operator/=(real_t d) {
+    x /= d;
+    y /= d;
+    return *this;
+  }
+  T x = T(0.0);
+  T y = T(0.0);
 };
 
-typedef Point2<real_t> point2;
-typedef Point2<uint> point2u;
-typedef Point2<int> point2i;
-typedef Point2<float> point2f;
-typedef Point2<double> point2d;
-
-template <typename T> Point2<T> operator*(real_t f, const Point2<T> &p);
-template <typename T> real_t distance(const Point2<T> &a, const Point2<T> &b);
-template <typename T> real_t distance2(const Point2<T> &a, const Point2<T> &b);
+// ARITHMETIC
+template <typename T>
+Point2<T> operator+(const Point2<T> a, const Vector2<T> &v) {
+  return Point2<T>(a.x + v.x, a.y + v.y);
+}
+template <typename T>
+Point2<T> operator-(const Point2<T> a, const Vector2<T> &v) {
+  return Point2<T>(a.x + v.x, a.y + v.y);
+}
+template <typename T> Point2<T> operator+(const Point2<T> a, const T &f) {
+  return Point2<T>(a.x + f, a.y + f);
+}
+template <typename T> Point2<T> operator-(const Point2<T> a, const T &f) {
+  return Point2<T>(a.x - f, a.y - f);
+}
+template <typename T>
+Vector2<T> operator-(const Point2<T> &a, const Point2<T> &b) {
+  return Vector2<T>(a.x - b.x, a.y - b.y);
+}
+template <typename T> Point2<T> operator/(const Point2<T> a, real_t f) {
+  return Point2<T>(a.x / f, a.y / f);
+}
+template <typename T> Point2<T> operator*(const Point2<T> a, real_t f) {
+  return Point2<T>(a.x * f, a.y * f);
+}
+template <typename T> Point2<T> operator*(real_t f, const Point2<T> &a) {
+  return Point2<T>(a.x * f, a.y * f);
+}
+// BOOLEAN
+template <typename T> bool operator==(const Point2<T> &a, const Point2<T> &b) {
+  return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y);
+}
+template <typename T> bool operator<(const Point2<T> &a, const Point2<T> &b) {
+  return !(a.x >= b.x || a.y >= b.y);
+}
+template <typename T> bool operator>=(const Point2<T> &a, const Point2<T> &b) {
+  return a.x >= b.x && a.y >= b.y;
+}
+template <typename T> bool operator<=(const Point2<T> &a, const Point2<T> &b) {
+  return a.x <= b.x && a.y <= b.y;
+}
+// GEOMETRY
+template <typename T> real_t distance(const Point2<T> &a, const Point2<T> &b) {
+  return (a - b).length();
+}
+template <typename T> real_t distance2(const Point2<T> &a, const Point2<T> &b) {
+  return (a - b).length2();
+}
 
 template <typename T> class Point3 {
+  static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
+                    std::is_same<T, float>::value ||
+                    std::is_same<T, double>::value,
+                "Size2 must hold an float type!");
+
 public:
-  Point3();
-  explicit Point3(real_t _x, real_t _y, real_t _z);
-  explicit Point3(const Vector3<T> &v);
-  explicit Point3(const real_t *v);
-  explicit Point3(real_t v);
-  explicit Point3(const Point2<T> &p);
+  Point3() {}
+  explicit Point3(real_t v) { x = y = z = v; }
+  explicit Point3(real_t _x, real_t _y, real_t _z) : x(_x), y(_y), z(_z) {}
+  explicit Point3(const Vector3<T> &v) : x(v.x), y(v.y), z(v.z) {}
+  explicit Point3(const Point2<T> &p) : x(p.x), y(p.y), z(0) {}
+  explicit Point3(const real_t *v) : x(v[0]), y(v[1]), z(v[2]) {}
   explicit operator Vector3<T>() const { return Vector3<T>(x, y, z); }
   // access
-  T operator[](int i) const;
-  T &operator[](int i);
+  T operator[](int i) const { return (&x)[i]; }
+  T &operator[](int i) { return (&x)[i]; }
+  Point2<T> xy() const { return Point2<T>(x, y); }
+  Point2<T> yz() const { return Point2<T>(y, z); }
+  Point2<T> xz() const { return Point2<T>(x, z); }
   // arithmetic
-  Point3 operator+(const Vector3<T> &v) const;
-  Point3 operator+(const Point3<T> &v) const;
-  Point3 operator+(const real_t &f) const;
-  Point3 operator-(const real_t &f) const;
-  Point3 &operator+=(const Vector3<T> &v);
-  Vector3<T> operator-(const Point3 &p) const;
-  Point3 operator-(const Vector3<T> &v) const;
-  Point3 &operator-=(const Vector3<T> &v);
-  bool operator==(const Point3 &p) const;
-  bool operator>=(const Point3 &p) const;
-  bool operator<=(const Point3 &p) const;
-  Point3 operator*(real_t d) const;
-  Point3 operator/(real_t d) const;
-  Point3 &operator/=(real_t d);
-  Point3 &operator*=(T d);
-  // boolean
-  bool operator==(const Point3 &p);
-  Point2<T> xy() const;
-  Point2<T> yz() const;
-  Point2<T> xz() const;
-  Vector3<T> asVector3() const;
-  ivec3 asIVec3() const;
-  bool HasNaNs() const;
+  Point3 &operator+=(const Vector3<T> &v) {
+    x += v.x;
+    y += v.y;
+    z += v.z;
+    return *this;
+  }
+  Point3 &operator-=(const Vector3<T> &v) {
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+    return *this;
+  }
+  Point3 &operator/=(real_t d) {
+    x /= d;
+    y /= d;
+    z /= d;
+    return *this;
+  }
+  Point3 &operator*=(T d) {
+    x *= d;
+    y *= d;
+    z *= d;
+    return *this;
+  }
+  Vector3<T> asVector3() const { return Vector3<T>(x, y, z); }
   static uint dimension() { return 3; }
-  template <typename TT>
-  friend std::ostream &operator<<(std::ostream &os, const Point3<TT> &p);
-  T x, y, z;
+  T x = T(0.0);
+  T y = T(0.0);
+  T z = T(0.0);
 };
 
-typedef Point3<real_t> point3;
-typedef Point3<uint> point3u;
-typedef Point3<int> point3i;
-typedef Point3<float> point3f;
-typedef Point3<float> point3d;
+// ARITHMETIC
+template <typename T>
+Vector3<T> operator-(const Point3<T> &a, const Point3<T> &b) {
+  return Vector3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+template <typename T>
+Point3<T> operator-(const Point3<T> &a, const Vector3<T> &v) {
+  return Point3<T>(a.x - v.x, a.y - v.y, a.z - v.z);
+}
+template <typename T>
+Point3<T> operator+(const Point3<T> &a, const Vector3<T> &v) {
+  return Point3<T>(a.x + v.x, a.y + v.y, a.z + v.z);
+}
+template <typename T> Point3<T> operator+(const Point3<T> &a, const real_t &f) {
+  return Point3<T>(a.x + f, a.y + f, a.z + f);
+}
+template <typename T> Point3<T> operator-(const Point3<T> &a, const real_t &f) {
+  return Point3<T>(a.x - f, a.y - f, a.z - f);
+}
+template <typename T> Point3<T> operator*(const Point3<T> &a, real_t f) {
+  return Point3<T>(a.x * f, a.y * f, a.z * f);
+}
+template <typename T> Point3<T> operator/(const Point3<T> &a, real_t f) {
+  return Point3<T>(a.x / f, a.y / f, a.z / f);
+}
+// BOOLEAN
+template <typename T> bool operator==(const Point3<T> &a, const Point3<T> &b) {
+  return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y) &&
+         Check::is_equal(a.z, b.z);
+}
+template <typename T> bool operator!=(const Point3<T> &a, const Point3<T> &b) {
+  return !Check::is_equal(a.x, b.x) || !Check::is_equal(a.y, b.y) ||
+         !Check::is_equal(a.z, b.z);
+}
+template <typename T> bool operator>=(const Point3<T> &a, const Point3<T> &b) {
+  return a.x >= b.x && a.y >= b.y && a.z >= b.z;
+}
+template <typename T> bool operator<=(const Point3<T> &a, const Point3<T> &b) {
+  return a.x <= b.x && a.y <= b.y && a.z <= b.z;
+}
+// GEOMETRY
+template <typename T> real_t distance(const Point3<T> &a, const Point3<T> &b) {
+  return (a - b).length();
+}
+template <typename T> real_t distance2(const Point3<T> &a, const Point3<T> &b) {
+  return (a - b).length2();
+}
 
-template <typename T> real_t distance(const Point3<T> &a, const Point3<T> &b);
-template <typename T> real_t distance2(const Point3<T> &a, const Point3<T> &b);
+using point2 = Point2<real_t>;
+using point2f = Point2<float>;
+using point2d = Point2<double>;
+
+using point3 = Point3<real_t>;
+using point3f = Point3<float>;
+using point3d = Point3<double>;
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Point2<T> &p) {
+  os << "Point2[" << p.x << " " << p.y << "]";
+}
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Point3<T> &p) {
+  os << "Point3[" << p.x << " " << p.y << " " << p.z << "]";
+}
 
 template <class T, size_t D> class Point {
 public:

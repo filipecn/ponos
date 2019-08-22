@@ -20,13 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_BLAS_C_REGULAR_GRID_H
 #define PONOS_BLAS_C_REGULAR_GRID_H
 
 #include <ponos/blas/field.h>
 #include <ponos/common/macros.h>
+#include <ponos/geometry/interpolation.h>
 #include <ponos/log/debug.h>
 #include <ponos/structures/grid_interface.h>
 
@@ -47,57 +48,56 @@ public:
    * \param cellSize **[in | optional]** grid spacing
    * \param offset **[in | optional]** grid origin
    */
-  CRegularGrid(const ivec3 &d, const T &b, const vec3 cellSize = vec3(1.f),
+  CRegularGrid(const size3 &d, const T &b, const vec3 cellSize = vec3(1.f),
                const vec3 &offset = vec3());
-  CRegularGrid(const ivec3 &d, const T &b, const bbox3 &bb);
+  CRegularGrid(const size3 &d, const T &b, const bbox3 &bb);
 
   ~CRegularGrid();
   /* @inherit */
-  void set(const ivec3 &i, const T &v) override;
+  void set(const size3 &i, const T &v) override;
   void setAll(T v);
   /* @inherit */
-  T operator()(const ivec3 &i) const override {
-    CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
-    CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
-    CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
+  T operator()(const index3 &i) const override {
+    Check::is_between(i[0], 0, static_cast<i32>(this->dimensions[0]));
+    Check::is_between(i[1], 0, static_cast<i32>(this->dimensions[1]));
+    Check::is_between(i[2], 0, static_cast<i32>(this->dimensions[2]));
     return data[i[0]][i[1]][i[2]];
   }
   /* @inherit */
-  T &operator()(const ivec3 &i) override {
-    CHECK_IN_BETWEEN(i[0], 0, this->dimensions[0]);
-    CHECK_IN_BETWEEN(i[1], 0, this->dimensions[1]);
-    CHECK_IN_BETWEEN(i[2], 0, this->dimensions[2]);
+  T &operator()(const index3 &i) override {
+    Check::is_between(i[0], 0, static_cast<i32>(this->dimensions[0]));
+    Check::is_between(i[1], 0, static_cast<i32>(this->dimensions[1]));
+    Check::is_between(i[2], 0, static_cast<i32>(this->dimensions[2]));
     return data[i[0]][i[1]][i[2]];
   }
   /* @inherit */
-  T operator()(const uint &i, const uint &j, const uint &k) const override {
-    CHECK_IN_BETWEEN(static_cast<int>(i), 0, this->dimensions[0]);
-    CHECK_IN_BETWEEN(static_cast<int>(j), 0, this->dimensions[1]);
-    CHECK_IN_BETWEEN(static_cast<int>(k), 0, this->dimensions[2]);
+  T operator()(const i32 &i, const i32 &j, const i32 &k) const override {
+    Check::is_between(i, 0, static_cast<i32>(this->dimensions[0]));
+    Check::is_between(j, 0, static_cast<i32>(this->dimensions[1]));
+    Check::is_between(k, 0, static_cast<i32>(this->dimensions[2]));
     return data[i][j][k];
   }
   /* @inherit */
-  T &operator()(const uint &i, const uint &j, const uint &k) override {
-    CHECK_IN_BETWEEN(static_cast<int>(i), 0, this->dimensions[0]);
-    CHECK_IN_BETWEEN(static_cast<int>(j), 0, this->dimensions[1]);
-    CHECK_IN_BETWEEN(static_cast<int>(k), 0, this->dimensions[2]);
+  T &operator()(const i32 &i, const i32 &j, const i32 &k) override {
+    Check::is_between(i, 0, static_cast<i32>(this->dimensions[0]));
+    Check::is_between(j, 0, static_cast<i32>(this->dimensions[1]));
+    Check::is_between(k, 0, static_cast<i32>(this->dimensions[2]));
     return data[i][j][k];
   }
   T safeData(int i, int j, int k) const;
   T operator()(const float &x, const float &y, const float &z) const override {
     point3 gp = this->toGrid(ponos::point3(x, y, z));
     float p[3] = {gp.x, gp.y, gp.z};
-    return trilinearInterpolate<T>(p, data, this->background,
-                                   &this->dimensions.x);
+    return trilinearInterpolate<T>(p, data, this->background, this->dimensions);
   }
-  T operator()(const vec3 &i) const override {
+  T operator()(const point3 &i) const override {
     return (*this)(i[0], i[1], i[2]);
   }
   void normalize() override;
   void normalizeElements() override;
 
 private:
-  T ***data;
+  T ***data = nullptr;
 };
 /**
  */
@@ -132,6 +132,6 @@ protected:
 
 #include "c_regular_grid.inl"
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_BLAS_C_REGULAR_GRID_H

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_BLAS_BLAS_H
 #define PONOS_BLAS_BLAS_H
@@ -138,8 +138,8 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
   typedef SparseMatrix<double> MatrixType;
   // Sets the given scalar value to the output vector.
   static void set(ScalarType s, VectorType *result) {
-    if (IS_EQUAL_ERROR(s, static_cast<ScalarType>(0.0),
-                       static_cast<ScalarType>(1e-8)))
+    if (Check::is_equal(s, static_cast<ScalarType>(0.0),
+                        static_cast<ScalarType>(1e-8)))
       result->resetCount();
     else
       result->iterate([s](ScalarType &v, size_t i) {
@@ -237,6 +237,6 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
   }
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_BLAS_BLAS_H

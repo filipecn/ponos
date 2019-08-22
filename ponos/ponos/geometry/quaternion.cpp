@@ -27,9 +27,7 @@ Quaternion Quaternion::operator-(const Quaternion &q) const {
   return Quaternion(v - q.v, w - q.w);
 }
 
-Quaternion Quaternion::operator-() const {
-  return Quaternion(-v, -w);
-}
+Quaternion Quaternion::operator-() const { return Quaternion(-v, -w); }
 
 Quaternion &Quaternion::operator-=(const Quaternion &q) {
   v -= q.v;
@@ -50,11 +48,11 @@ Quaternion Quaternion::operator*(const Quaternion &q) const {
 }
 
 bool Quaternion::operator==(const Quaternion &q) {
-  return IS_EQUAL(w, q.w) && v == q.v;
+  return Check::is_equal(w, q.w) && v == q.v;
 }
 
 void Quaternion::fromAxisAndAngle(const vec3 &_v, real_t angle) {
-  real_t theta = TO_RADIANS(angle / 2);
+  real_t theta = RADIANS(angle / 2);
   v = _v * sinf(theta);
   w = cosf(theta);
 }

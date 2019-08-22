@@ -269,8 +269,8 @@ BVH<T>::HLBVHBuild(MemoryArena &arena, std::vector<ElementInfo> &elementInfo,
         constexpr int mortonBits = 10;
         constexpr int mortonScale = 1 << mortonBits;
         mortonElements[i].elementIndex = elementInfo[i].elementNumber;
-        vec3 centroidOffset =
-            bounds.offset(elementInfo[i].centroid) * mortonScale;
+        vec3 centroidOffset = bounds.offset(elementInfo[i].centroid) *
+                              static_cast<real_t>(mortonScale);
         mortonElements[i].mortonCode = encodeMortonCode(
             centroidOffset.x, centroidOffset.y, centroidOffset.z);
       },

@@ -25,6 +25,7 @@
 #ifndef PONOS_ALGORITHM_SCATTER_H
 #define PONOS_ALGORITHM_SCATTER_H
 
+#include <ponos/common/index.h>
 #include <ponos/common/macros.h>
 #include <ponos/geometry/parametric_surface.h>
 #include <ponos/geometry/sphere.h>
@@ -61,10 +62,9 @@ template <typename T>
 void grid_scatter(const bbox2 &bbox, size_t w, size_t h,
                   std::vector<T> &points) {
   Transform2 t(bbox);
-  ivec2 ij, D(w - 1, h - 1);
-  FOR_INDICES0_E2D(D, ij) {
-    point2 p = t(point2(static_cast<float>(ij[0]) / D[0],
-                        static_cast<float>(ij[1]) / D[1]));
+  for (auto ij : Index2Range<i32>(w - 1, h - 1)) {
+    point2 p = t(point2(static_cast<float>(ij.i) / (w - 1),
+                        static_cast<float>(ij.j) / (h - 1)));
     points.emplace_back(p.x, p.y);
   }
 }
@@ -72,10 +72,9 @@ void grid_scatter(const bbox2 &bbox, size_t w, size_t h,
 inline void grid_scatter(const bbox2 &bbox, size_t w, size_t h,
                          const std::function<void(point2)> &f) {
   Transform2 t(bbox);
-  ivec2 ij, D(w - 1, h - 1);
-  FOR_INDICES0_2D(D, ij) {
-    point2 p = t(point2(static_cast<float>(ij[0]) / D[0],
-                        static_cast<float>(ij[1]) / D[1]));
+  for (auto ij : Index2Range<i32>(w - 1, h - 1)) {
+    point2 p = t(point2(static_cast<float>(ij.i) / (w - 1),
+                        static_cast<float>(ij.j) / (h - 1)));
     f(p);
   }
 }

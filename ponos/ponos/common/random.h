@@ -13,9 +13,9 @@ namespace ponos {
 class RNG {
 public:
   /// \param seed
-  explicit RNG(uint32 seed = 0) { UNUSED_VARIABLE(seed); }
+  explicit RNG(u32 seed = 0) { UNUSED_VARIABLE(seed); }
   /// \param seed
-  void setSeed(uint32 seed) { UNUSED_VARIABLE(seed); }
+  void setSeed(u32 seed) { UNUSED_VARIABLE(seed); }
   /// pseudo-random floating-point number.
   /// \return a float in the range [0, 1)
   virtual float randomFloat() { return 0.f; }

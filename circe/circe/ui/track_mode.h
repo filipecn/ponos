@@ -176,7 +176,8 @@ public:
     ponos::vec3 axis =
         ponos::normalize(ponos::cross((a - tb.center()), (b - tb.center())));
     float phi = ponos::distance(a, b) / tb.radius();
-    tb.accumulatePartialTransform(ponos::rotate(-TO_DEGREES(phi) * 0.7f, axis));
+    tb.accumulatePartialTransform(
+        ponos::rotate(-ponos::DEGREES(phi) * 0.7f, axis));
     start_ = p;
   }
 
@@ -209,7 +210,7 @@ private:
       return hs;
     if ((!resSp && resHp))
       return hh;
-    float angleDeg = TO_DEGREES(
+    float angleDeg = ponos::DEGREES(
         asin(ponos::dot(ponos::normalize(camera.getPosition() - tb.center()),
                         ponos::normalize(hs - tb.center()))));
     if (angleDeg < 45)

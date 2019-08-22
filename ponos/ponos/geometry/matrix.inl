@@ -84,7 +84,8 @@ template <typename T> void Matrix4x4<T>::column_major(T *a) const {
       a[k++] = m[j][i];
 }
 
-template <typename T> Matrix4x4<T> Matrix4x4<T>::operator*(const Matrix4x4 &mat) {
+template <typename T>
+Matrix4x4<T> Matrix4x4<T>::operator*(const Matrix4x4 &mat) {
   Matrix4x4 r;
   for (int i = 0; i < 4; ++i)
     for (int j = 0; j < 4; ++j)
@@ -105,7 +106,7 @@ Vector4<T> Matrix4x4<T>::operator*(const Vector4<T> &v) const {
 template <typename T> bool Matrix4x4<T>::operator==(const Matrix4x4 &_m) const {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++)
-      if (!IS_EQUAL(m[i][j], _m.m[i][j]))
+      if (!Check::is_equal(m[i][j], _m.m[i][j]))
         return false;
   return true;
 }
@@ -117,9 +118,9 @@ template <typename T> bool Matrix4x4<T>::operator!=(const Matrix4x4 &_m) const {
 template <typename T> bool Matrix4x4<T>::isIdentity() {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++)
-      if (i != j && !IS_EQUAL(m[i][j], 0.f))
+      if (i != j && !Check::is_equal(m[i][j], 0.f))
         return false;
-      else if (i == j && !IS_EQUAL(m[i][j], 1.f))
+      else if (i == j && !Check::is_equal(m[i][j], 1.f))
         return false;
   return true;
 }
@@ -503,7 +504,7 @@ template <typename T> T Matrix2x2<T>::determinant() {
   return m[0][0] * m[1][1] - m[0][1] * m[1][0];
 }
 
-template<typename T>
+template <typename T>
 Vector2<T> Matrix2x2<T>::operator*(const Vector2<T> &v) const {
   Vector2<T> r;
   for (int i = 0; i < 2; i++)
@@ -512,7 +513,8 @@ Vector2<T> Matrix2x2<T>::operator*(const Vector2<T> &v) const {
   return r;
 }
 
-template <typename T> Matrix2x2<T> Matrix2x2<T>::operator*(const Matrix2x2<T> &mat) {
+template <typename T>
+Matrix2x2<T> Matrix2x2<T>::operator*(const Matrix2x2<T> &mat) {
   Matrix2x2 r;
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j)
