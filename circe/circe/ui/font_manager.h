@@ -40,6 +40,7 @@ public:
   /// \param filename .ttf full path
   /// \return font id
   static int loadFromFile(const char *filename);
+  static int loadFromFile(const std::string &filename);
   /// \param id **[in]**
   /// \param t **[in]**
   /// \param m **[in]**
@@ -49,7 +50,7 @@ public:
   static void bindTexture(int id, GLenum target);
 
 private:
-  FontManager();
+  FontManager() noexcept;
   static FontManager instance_;
   std::vector<FontAtlas> fonts_; //!< fonts textures
 };

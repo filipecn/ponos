@@ -187,7 +187,7 @@ RawMesh *create_quad_mesh(const point3 &p1, const point3 &p2, const point3 &p3,
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
-  return mesh;
+  return std::move(mesh);
 }
 
 RawMesh *create_quad_wireframe_mesh(const point3 &p1, const point3 &p2,
@@ -457,9 +457,9 @@ RawMeshSPtr RawMeshes::segment(const point3 &a, const point3 &b) {
   return mesh;
 }
 
-RawMeshSPtr RawMeshes::cube(const ponos::Transform &transform,
-                            bool generateNormals, bool generateUVs) {
-  RawMeshSPtr mesh = std::make_shared<RawMesh>();
+RawMesh *RawMeshes::cube(const ponos::Transform &transform,
+                         bool generateNormals, bool generateUVs) {
+  auto *mesh = new RawMesh();
   //  y          2      3
   //  |_x     6      7
   // z          0       1
@@ -516,7 +516,7 @@ RawMeshSPtr RawMeshes::cube(const ponos::Transform &transform,
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
-  return mesh;
+  return std::move(mesh);
 }
 
 RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,

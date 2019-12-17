@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_STRUCTURES_HALF_EDGE_H
 #define PONOS_STRUCTURES_HALF_EDGE_H
@@ -33,17 +33,16 @@
 
 namespace ponos {
 
-template <class T, int D, typename V = float, typename F = float,
-          typename E = float>
+template <class T, typename V = float, typename F = float, typename E = float>
 class HEMesh {
 public:
   HEMesh() {}
   HEMesh(const RawMesh *rm) {
     FATAL_ASSERT(rm->meshDescriptor.elementSize == 3);
     for (size_t i = 0; i < rm->positionDescriptor.count; i++)
-      addVertex(Point<float, 2>(
-          {rm->positions[i * rm->positionDescriptor.elementSize + 0],
-           rm->positions[i * rm->positionDescriptor.elementSize + 1]}));
+      addVertex(
+          point2({rm->positions[i * rm->positionDescriptor.elementSize + 0],
+                  rm->positions[i * rm->positionDescriptor.elementSize + 1]}));
     std::map<std::pair<int, int>, int> m;
     for (size_t i = 0; i < rm->meshDescriptor.count; i++) {
       int faceEdges[3];
@@ -68,12 +67,12 @@ public:
     }
   }
   struct Vertex {
-    Vertex(T x, T y) : position(Point<T, D>({x, y})), edge(-1) {}
-    Vertex(const Point<T, D> &p) : position(p), edge(-1) {}
-    Point<T, D> position; //!< HE vertex position
-    Vector<T, D> normal;  //!< HE vertex normal
-    int edge;             //!< HE connected to this vertex
-    V data;               //!< vertex user's data
+    Vertex(T x, T y) : position(Point2<T>(x, y)), edge(-1) {}
+    Vertex(const Point2<T> &p) : position(p), edge(-1) {}
+    Point2<T> position; //!< HE vertex position
+    Vector2<T> normal;  //!< HE vertex normal
+    int edge;           //!< HE connected to this vertex
+    V data;             //!< vertex user's data
   };
   struct Edge {
     Edge() { orig = dest = pair = face = next = prev = -1; }
@@ -87,16 +86,16 @@ public:
   };
   struct Face {
     Face() : edge(-1) {}
-    int edge;            //!< one half edge
-    F data;              //!< face user's data
-    Vector<T, D> normal; //!< face's normal
+    int edge;          //!< one half edge
+    F data;            //!< face user's data
+    Vector2<T> normal; //!< face's normal
   };
   Vertex &getVertex(size_t v) { return vertices[v]; }
   void setVertexData(size_t v, const V &data) { vertices[v].data = data; }
   const std::vector<Vertex> &getVertices() const { return vertices; }
   const std::vector<Edge> &getEdges() const { return edges; }
   const std::vector<Face> &getFaces() const { return faces; }
-  size_t addVertex(const Point<T, D> &p) {
+  size_t addVertex(const Point2<T> &p) {
     vertices.emplace_back(p);
     return vertices.size() - 1;
   }
@@ -282,13 +281,13 @@ private:
   std::vector<Face> faces;
 };
 
-typedef HEMesh<float, 2> HEMesh2DF;
+typedef HEMesh<float> HEMesh2DF;
 
 inline void computeBoundaryNormals(HEMesh2DF *mesh) {
   if (!mesh)
     return;
   auto &vertices = mesh->getVertices();
-  auto &edges = mesh->getEdges();
+  const auto &edges = mesh->getEdges();
   std::vector<bool> vis(vertices.size(), false);
   // loop over every boundary edge
   for (size_t e = 0; e < edges.size(); e++) {
@@ -304,12 +303,11 @@ inline void computeBoundaryNormals(HEMesh2DF *mesh) {
     auto &a = vertices[edges[otherEdge].orig].position;
     auto &b = vertices[edges[e].dest].position;
     auto &v = mesh->getVertex(edges[e].orig);
-    v.normal = Vector<float, 2>(
-                   0.5f * ((b - v.position).left() + (v.position - a).left()))
-                   .normalized();
+    v.normal = normalize(
+        vec2f(0.5f * ((b - v.position).left() + (v.position - a).left())));
   }
 }
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_STRUCTURES_HALF_EDGE_H

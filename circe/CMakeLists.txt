@@ -31,12 +31,8 @@ set(CIRCE_HEADERS
         circe/io/utils.h
         circe/io/viewport_display.h
         circe/io/user_input.h
-        #  circe/io/vulkan_application.h
-        # circe/io/vulkan_resource.h
-        #  circe/io/vulkan_utils.h
         circe/scene/bvh.h
         circe/scene/camera.h
-        # circe/scene/camera_2d.h
         circe/scene/camera_projection.h
         circe/scene/mesh_utils.h
         circe/scene/quad.h
@@ -49,7 +45,6 @@ set(CIRCE_HEADERS
         circe/ui/app.h
         circe/ui/interactive_object_interface.h
         circe/ui/modifier_cursor.h
-        # circe/ui/nanogui_screen.h
         circe/ui/scene_app.h
         circe/ui/text_renderer.h
         circe/ui/text_object.h
@@ -82,10 +77,8 @@ set(CIRCE_SOURCES
         circe/io/texture.cpp
         circe/io/utils.cpp
         circe/io/viewport_display.cpp
-        #  circe/io/vulkan_application.cpp
         circe/scene/bvh.cpp
         circe/scene/camera.cpp
-        # circe/scene/camera_2d.cpp
         circe/scene/mesh_utils.cpp
         circe/scene/quad.cpp
         circe/scene/scene_mesh.cpp
@@ -93,7 +86,6 @@ set(CIRCE_SOURCES
         circe/scene/volume_box.cpp
         circe/scene/wireframe_mesh.cpp
         circe/ui/app.cpp
-        # circe/ui/nanogui_screen.cpp
         circe/ui/text_renderer.cpp
         circe/ui/text_object.cpp
         circe/ui/font_manager.cpp
@@ -110,10 +102,12 @@ set_target_properties(circe PROPERTIES
 
 target_compile_definitions(circe PUBLIC -DASSETS_PATH="${CIRCE_SOURCE_DIR}/examples/assets" -DSHADERS_PATH="${CIRCE_SOURCE_DIR}/examples/shaders")
 target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PLY_INCLUDES} ${TINYOBJLOADER_INCLUDES} ${GLAD_INCLUDES} ${GLFW_INCLUDE_DIR})
-target_link_libraries(circe PUBLIC ponos  ${GLFW_LIBRARIES} ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
-if(glfw AND glad)
+target_link_libraries(circe PUBLIC ponos  
+${GLFW_LIBRARIES} 
+${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
+#if(glfw AND glad)
         add_dependencies(circe glfw glad)
-endif(glfw AND glad)
+#endif(glfw AND glad)
 
 if(BUILD_EXAMPLES)
         add_subdirectory(examples)

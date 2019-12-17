@@ -26,7 +26,7 @@
  */
 
 #include <ponos/geometry/utils.h>
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 
 namespace ponos {
 

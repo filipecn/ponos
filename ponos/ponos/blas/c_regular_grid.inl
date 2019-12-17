@@ -62,10 +62,10 @@ CRegularGrid<T>::CRegularGrid(const size3 &d, const T &b, const bbox3 &bb) {
 }
 
 template <typename T> CRegularGrid<T>::~CRegularGrid() {
-  for (int i = 0; i < this->dimensions[0]; i++)
-    for (int j = 0; j < this->dimensions[1]; j++)
+  for (u32 i = 0; i < this->dimensions[0]; i++)
+    for (u32 j = 0; j < this->dimensions[1]; j++)
       delete[] data[i][j];
-  for (int i = 0; i < this->dimensions[0]; i++)
+  for (u32 i = 0; i < this->dimensions[0]; i++)
     delete[] data[i];
   delete[] data;
 }

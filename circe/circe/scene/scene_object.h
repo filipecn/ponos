@@ -74,23 +74,24 @@ public:
     rawMesh->computeBBox();
     rawMesh->splitIndexData();
     rawMesh->buildInterleavedData();
-    mesh_ = createSceneMeshPtr(rawMesh);
+    mesh_ = createSceneMeshPtr(rawMesh.get());
   }
   SceneMeshObject(const std::string &filename, ShaderProgramPtr s)
       : SceneMeshObject(filename) {
     shader_ = s;
   }
-  SceneMeshObject(ponos::RawMeshSPtr m,
-                  std::function<void(ShaderProgram *, const CameraInterface *,
-                                     ponos::Transform)>
-                      f =
-                          [](ShaderProgram *s, const CameraInterface *camera,
-                             ponos::Transform t) {
-                            UNUSED_VARIABLE(s);
-                            UNUSED_VARIABLE(camera);
-                            UNUSED_VARIABLE(t);
-                          },
-                  ShaderProgramPtr s = nullptr) {
+  SceneMeshObject(
+      const ponos::RawMesh *m,
+      std::function<void(ShaderProgram *, const CameraInterface *,
+                         ponos::Transform)>
+          f =
+              [](ShaderProgram *s, const CameraInterface *camera,
+                 ponos::Transform t) {
+                UNUSED_VARIABLE(s);
+                UNUSED_VARIABLE(camera);
+                UNUSED_VARIABLE(t);
+              },
+      ShaderProgramPtr s = nullptr) {
     this->visible = true;
     shader_ = s;
     drawCallback = f;

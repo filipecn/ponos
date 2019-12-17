@@ -34,7 +34,7 @@ namespace circe {
 class SceneMesh {
 public:
   /// \param rm raw mesh
-  explicit SceneMesh(ponos::RawMeshSPtr rm);
+  explicit SceneMesh(const ponos::RawMesh *rm);
   /// Binds buffers
   void bind();
   void unbind();
@@ -42,13 +42,13 @@ public:
   const VertexBuffer *vertexBuffer() const;
   /// \return index buffer pointer
   const IndexBuffer *indexBuffer() const;
-  ponos::RawMeshSPtr rawMesh();
+  const ponos::RawMesh *rawMesh() const;
 
 protected:
   GLuint VAO;
   std::vector<float> vertexData_;
   std::vector<uint> indexData_;
-  ponos::RawMeshSPtr mesh_;
+  const ponos::RawMesh *mesh_ = nullptr;
   VertexBuffer vertexBuffer_;
   IndexBuffer indexBuffer_;
 };

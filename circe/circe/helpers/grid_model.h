@@ -82,7 +82,7 @@ public:
     this->grid = g;
     scaleFactor = sf;
     mode = Mode::RAW;
-    this->f = [&](const ponos::Vector<T, 2> v, ponos::point3 p) {
+    this->f = [&](const ponos::Vector2<T> v, ponos::point3 p) {
       glColor4fv(this->dataColor.asArray());
       glPointSize(3.f);
       glBegin(GL_POINTS);

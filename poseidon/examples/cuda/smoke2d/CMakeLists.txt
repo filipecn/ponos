@@ -3,6 +3,7 @@ set(UTILS_SRCS render.h render.cu)
 # 2d
 add_executable(cuSmoke2 main.cu ${UTILS_SRCS})
 set_target_properties(cuSmoke2 PROPERTIES
+LINKER_LANGUAGE CUDA
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
 CUDA_RESOLVE_DEVICE_SYMBOLS ON
 CUDA_STANDARD 11

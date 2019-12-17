@@ -39,7 +39,7 @@ int main() {
   positionsBuffer.bind();
   velocitiesBuffer.bind();
   ComputeShader shader(source);
-  shader.setGroupSize(ponos::uivec3(PARTICLE_COUNT / 128, 1, 1));
+  shader.setGroupSize(ponos::size3(PARTICLE_COUNT / 128, 1, 1));
   shader.setBuffer("PositionBuffer", positionsBuffer.id(), 0);
   shader.setBuffer("VelocityBuffer", velocitiesBuffer.id(), 1);
   shader.setBuffer("FloatBuffer", floatsBuffer.id(), 2);

@@ -36,7 +36,7 @@ namespace circe {
 class TriangleMesh : public SceneMeshObject {
 public:
   TriangleMesh(const std::string &filename);
-  TriangleMesh(ponos::RawMeshSPtr m);
+  TriangleMesh(const ponos::RawMesh *m);
   virtual ~TriangleMesh() {}
   /* @inherit */
   void draw(const CameraInterface *camera, ponos::Transform transform) override;

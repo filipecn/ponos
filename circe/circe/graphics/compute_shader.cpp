@@ -66,7 +66,7 @@ void ComputeShader::setBuffer(const char *name, GLuint id,
 }
 void ComputeShader::setTexture(const TextureAttributes &a,
                                const TextureParameters &p) {
-  texture.reset(new circe::Texture(a, p));
+  texture = std::make_unique<circe::Texture>(a, p);
   groupSize = texture->size();
 }
 void ComputeShader::setGroupSize(const ponos::size3 gs) { groupSize = gs; }

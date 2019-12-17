@@ -37,20 +37,18 @@ ScalarGrid2D<T>::ScalarGrid2D(uint w, uint h, const bbox2 &b) {
   this->set(w, h, b);
 }
 
-template <typename T>
-Vector<T, 2> ScalarGrid2D<T>::gradient(int i, int j) const {
+template <typename T> Vector2<T> ScalarGrid2D<T>::gradient(int i, int j) const {
   T left = (*this)(i - 1, j);
   T right = (*this)(i + 1, j);
   T down = (*this)(i, j - 1);
   T up = (*this)(i, j + 1);
   vec2 cs = this->cellSize();
-  return 0.5f * Vector<T, 2>({right - left, up - down}) /
-         Vector<T, 2>({cs.x, cs.y});
+  return 0.5f * Vector2<T>({right - left, up - down}) / Vector2<T>(cs.x, cs.y);
 }
 
 template <typename T>
-Vector<T, 2> ScalarGrid2D<T>::gradient(float x, float y) const {
-  Point<int, 2> c = (*this).dataCell(point2(x, y));
+Vector2<T> ScalarGrid2D<T>::gradient(float x, float y) const {
+  index2 c = (*this).dataCell(point2(x, y));
   int i = c[0], j = c[1];
   point2 gp = this->dataGridPosition(point2(x, y));
   return bilerp(gp.x - i, gp.y - j, gradient(i, j), gradient(i + 1, j),
@@ -113,14 +111,13 @@ template <typename T> T VectorGrid2D<T>::divergence(float x, float y) const {
   return static_cast<T>(0.0);
 }
 
-template <typename T>
-Vector<T, 2> VectorGrid2D<T>::curl(float x, float y) const {
-  return Vector<T, 2>();
+template <typename T> Vector2<T> VectorGrid2D<T>::curl(float x, float y) const {
+  return Vector2<T>();
 }
 
 template <typename T>
-Vector<T, 2> VectorGrid2D<T>::sample(float x, float y) const {
-  return Vector<T, 2>();
+Vector2<T> VectorGrid2D<T>::sample(float x, float y) const {
+  return Vector2<T>();
 }
 
 template <typename T>

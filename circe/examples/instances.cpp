@@ -1,5 +1,7 @@
 #include <circe/circe.h>
 
+#include <memory>
+
 int main() {
   circe::SceneApp<> app(800, 800);
   std::shared_ptr<circe::InstanceSet> spheres, quads;
@@ -18,9 +20,9 @@ int main() {
   // ponos::RawMeshSPtr circleMesh(ponos::RawMeshes::icosphere());
   ponos::RawMeshSPtr segmentMesh(
       ponos::RawMeshes::segment(ponos::point2(1, 0)));
-  ponos::RawMeshSPtr cube = ponos::RawMeshes::cube();
+  ponos::RawMeshSPtr cube(ponos::RawMeshes::cube());
   // circe::SceneMesh qm(*wquadMesh.get());
-  circe::SceneMesh qm(segmentMesh);
+  circe::SceneMesh qm(segmentMesh.get());
   const char *fs = CIRCE_INSTANCES_FS;
   const char *vs = CIRCE_INSTANCES_VS;
   circe::ShaderProgram quadShader(vs, nullptr, fs);
@@ -29,7 +31,7 @@ int main() {
   quadShader.addVertexAttribute("transform_matrix", 2);
   quadShader.addUniform("model_view_matrix", 3);
   quadShader.addUniform("projection_matrix", 4);
-  quads.reset(new circe::InstanceSet(qm, quadShader, n / 2));
+  quads = std::make_shared<circe::InstanceSet>(qm, quadShader, n / 2);
   {
     // create a buffer for particles positions + sizes
     circe::BufferDescriptor trans = circe::create_array_stream_descriptor(16);
@@ -55,8 +57,8 @@ int main() {
       auto m = quads->instanceF(tid, i);
       float t[16];
       (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
-       ponos::translate(ponos::vec3(sampler.sample(
-           ponos::bbox3(ponos::point3(-5, 0, 0), ponos::point3(5, 5, 5))))))
+          ponos::translate(ponos::vec3(sampler.sample(
+              ponos::bbox3(ponos::point3(-5, 0, 0), ponos::point3(5, 5, 5))))))
           .matrix()
           .column_major(t);
       for (size_t k = 0; k < 16; k++)

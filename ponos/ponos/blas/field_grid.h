@@ -20,14 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_BLAS_FIELD_GRID_H
 #define PONOS_BLAS_FIELD_GRID_H
 
 #include <ponos/blas/c_regular_grid.h>
 #include <ponos/blas/field.h>
-#include <ponos/common/macros.h>
 #include <ponos/log/debug.h>
 
 #include <algorithm>
@@ -45,8 +44,8 @@ public:
   ScalarGrid2D(uint w, uint h);
   ScalarGrid2D(uint w, uint h, const bbox2 &b);
   virtual ~ScalarGrid2D() {}
-  Vector<T, 2> gradient(int x, int y) const;
-  Vector<T, 2> gradient(float x, float y) const override;
+  Vector2<T> gradient(int x, int y) const;
+  Vector2<T> gradient(float x, float y) const override;
   T laplacian(float x, float y) const override;
   T sample(float x, float y) const override;
 };
@@ -54,7 +53,7 @@ public:
 typedef ScalarGrid2D<float> ScalarGrid2f;
 
 template <typename T>
-class VectorGrid2D : public CRegularGrid2D<Vector<T, 2>>,
+class VectorGrid2D : public CRegularGrid2D<Vector2<T>>,
                      virtual public VectorField2D<T> {
 public:
   VectorGrid2D();
@@ -62,8 +61,8 @@ public:
   VectorGrid2D(uint w, uint h, const bbox2 &b);
   T divergence(int i, int j) const;
   T divergence(float x, float y) const override;
-  Vector<T, 2> curl(float x, float y) const override;
-  Vector<T, 2> sample(float x, float y) const override;
+  Vector2<T> curl(float x, float y) const override;
+  Vector2<T> sample(float x, float y) const override;
 
 private:
 };
@@ -74,6 +73,6 @@ void computeDivergenceField(const VectorGrid2D<T> &vectorGrid2D,
 
 #include "field_grid.inl"
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_BLAS_FIELD_GRID_H

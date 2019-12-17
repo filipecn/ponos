@@ -43,7 +43,7 @@ template <typename T> class Point2 {
   static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
                     std::is_same<T, float>::value ||
                     std::is_same<T, double>::value,
-                "Point2 must hold an float type!");
+                "Point2 must hold a float type!");
 
 public:
   typedef T ScalarType;
@@ -80,7 +80,7 @@ Point2<T> operator+(const Point2<T> a, const Vector2<T> &v) {
 }
 template <typename T>
 Point2<T> operator-(const Point2<T> a, const Vector2<T> &v) {
-  return Point2<T>(a.x + v.x, a.y + v.y);
+  return Point2<T>(a.x - v.x, a.y - v.y);
 }
 template <typename T> Point2<T> operator+(const Point2<T> a, const T &f) {
   return Point2<T>(a.x + f, a.y + f);
@@ -233,38 +233,13 @@ using point3d = Point3<double>;
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Point2<T> &p) {
   os << "Point2[" << p.x << " " << p.y << "]";
+  return os;
 }
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Point3<T> &p) {
   os << "Point3[" << p.x << " " << p.y << " " << p.z << "]";
+  return os;
 }
-
-template <class T, size_t D> class Point {
-public:
-  Point();
-  Point(T v);
-  explicit Point(Point2<T> p);
-  Point(std::initializer_list<T> p);
-  T operator[](int i) const;
-  T &operator[](int i);
-  bool operator>=(const Point<T, D> &p) const;
-  bool operator<=(const Point<T, D> &p) const;
-  Vector<T, D> operator-(const Point<T, D> &p) const;
-  Point<T, D> operator+(const Vector<T, D> &V) const;
-  Point2<T> floatXY(size_t x = 0, size_t y = 1) const;
-  friend std::ostream &operator<<(std::ostream &os, const Point &p) {
-    os << "[Point<" << D << ">]";
-    for (size_t i = 0; i < p.size; i++)
-      os << p[i] << " ";
-    os << std::endl;
-    return os;
-  }
-
-  size_t size;
-  T v[D];
-};
-
-#include "point.inl"
 
 } // namespace ponos
 

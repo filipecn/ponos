@@ -1,7 +1,7 @@
 #ifndef PONOS_STRUCTURES_OBJECT_POOL_H
 #define PONOS_STRUCTURES_OBJECT_POOL_H
 
-#include <ponos/common/memory.h>
+#include <ponos/storage/memory.h>
 
 #include <functional>
 #include <memory>

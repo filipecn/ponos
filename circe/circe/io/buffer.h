@@ -39,17 +39,17 @@ namespace circe {
  */
 struct BufferDescriptor {
   struct Attribute {
-    long offset = 0; //!< attribute data offset (in bytes)
-    size_t size = 0; //!< attribute number of components
+    u32 offset = 0;  //!< attribute data offset (in bytes)
+    u32 size = 0;    //!< attribute number of components
     GLenum type = 0; //!< attribute data type
   };
   std::map<const std::string, Attribute> attributes; //!< name - attribute map
-  GLuint elementSize = 0;  //!< how many components are assigned to each element
-  size_t elementCount = 0; //!< number of elements
-  GLuint elementType;      //!< type of elements  (GL_TRIANGLES, ...)
-  GLuint type;             //!< buffer type (GL_ARRAY_BUFFER, ...)
-  GLuint use;              //!< use  (GL_STATIC_DRAW, ...)
-  GLuint dataType;         //!< (GL_FLOAT, ...)
+  GLuint elementSize = 0; //!< how many components are assigned to each element
+  u32 elementCount = 0;   //!< number of elements
+  GLuint elementType;     //!< type of elements  (GL_TRIANGLES, ...)
+  GLuint type;            //!< buffer type (GL_ARRAY_BUFFER, ...)
+  GLuint use;             //!< use  (GL_STATIC_DRAW, ...)
+  GLuint dataType;        //!< (GL_FLOAT, ...)
   BufferDescriptor()
       : elementSize(0), elementCount(0), elementType(GL_TRIANGLES),
         type(GL_ARRAY_BUFFER), use(GL_STATIC_DRAW), dataType(GL_FLOAT) {}
@@ -62,7 +62,7 @@ struct BufferDescriptor {
    * \param _use **[in | optional]** buffer use
    * \param _dataType **[in | optional]** data type
    */
-  BufferDescriptor(GLuint _elementSize, size_t _elementCount,
+  BufferDescriptor(GLuint _elementSize, u32 _elementCount,
                    GLuint _elementType = GL_TRIANGLES,
                    GLuint _type = GL_ARRAY_BUFFER, GLuint _use = GL_STATIC_DRAW,
                    GLuint _dataType = GL_FLOAT)
@@ -281,9 +281,10 @@ public:
       return;
     const BufferDescriptor::Attribute &va =
         bufferDescriptor.attributes.find(name)->second;
-    glVertexAttribPointer(
-        static_cast<GLuint>(location), va.size, va.type, GL_FALSE,
-        bufferDescriptor.elementSize * sizeof(float), (void *)(va.offset));
+    glVertexAttribPointer(static_cast<GLuint>(location), va.size, va.type,
+                          GL_FALSE,
+                          bufferDescriptor.elementSize * sizeof(float),
+                          reinterpret_cast<const void *>(va.offset));
   }
   GLuint id() const { return bufferId; }
   /// locates and register buffer attributes in shader program

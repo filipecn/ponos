@@ -25,7 +25,7 @@
 #define CIRCE_COLORS_COLOR_PALETTE_H
 
 #include <circe/colors/color.h>
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 
 #include <initializer_list>
 #include <vector>

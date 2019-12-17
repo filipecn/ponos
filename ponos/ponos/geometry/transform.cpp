@@ -3,7 +3,7 @@
 
 namespace ponos {
 
-Transform2::Transform2(const mat3 &mat, const mat3 inv_mat)
+Transform2::Transform2(const mat3 &mat, const mat3 &inv_mat)
     : m(mat), m_inv(inv_mat) {}
 
 Transform2::Transform2(const bbox2 &bbox) {
@@ -44,16 +44,16 @@ Transform2 rotate(real_t angle) {
   real_t sin_a = sinf(RADIANS(angle));
   real_t cos_a = cosf(RADIANS(angle));
   mat3 m(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
-  return Transform2(m, transpose(m));
+  return {m, transpose(m)};
 }
 
 Transform2 translate(const vec2 &v) {
   mat3 m(1.f, 0.f, v.x, 0.f, 1.f, v.y, 0.f, 0.f, 1.f);
   mat3 m_inv(1.f, 0.f, -v.x, 0.f, 1.f, -v.y, 0.f, 0.f, 1.f);
-  return Transform2(m, m_inv);
+  return {m, m_inv};
 }
 
-Transform2 inverse(const Transform2 &t) { return Transform2(t.m_inv, t.m); }
+Transform2 inverse(const Transform2 &t) { return {t.m_inv, t.m}; }
 
 Transform::Transform(const mat4 &mat) : m(mat), m_inv(inverse(mat)) {}
 
@@ -93,37 +93,43 @@ void Transform::scale(real_t x, real_t y, real_t z) {
 
 bool Transform::swapsHandedness() const {
   real_t det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
-               (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
-               (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
+      (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
+      (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
   return det < 0;
 }
 
 Transform2 scale(real_t x, real_t y) {
   mat3 m(x, 0, 0, 0, y, 0, 0, 0, 1);
   mat3 inv(1.f / x, 0, 0, 0, 1.f / y, 0, 0, 0, 1);
-  return Transform2(m, inv);
+  return {m, inv};
+}
+
+Transform2 scale(const vec2 &s) {
+  mat3 m(s.x, 0, 0, 0, s.y, 0, 0, 0, 1);
+  mat3 inv(1.f / s.x, 0, 0, 0, 1.f / s.y, 0, 0, 0, 1);
+  return {m, inv};
 }
 
 Transform segmentToSegmentTransform(point3 a, point3 b, point3 c, point3 d) {
   // Consider two bases a b e f and c d g h
   // TODO implement
-  return Transform();
+  return {};
 }
 
-Transform inverse(const Transform &t) { return Transform(t.m_inv, t.m); }
+Transform inverse(const Transform &t) { return {t.m_inv, t.m}; }
 
 Transform translate(const vec3 &d) {
   mat4 m(1.f, 0.f, 0.f, d.x, 0.f, 1.f, 0.f, d.y, 0.f, 0.f, 1.f, d.z, 0.f, 0.f,
          0.f, 1.f);
   mat4 m_inv(1.f, 0.f, 0.f, -d.x, 0.f, 1.f, 0.f, -d.y, 0.f, 0.f, 1.f, -d.z, 0.f,
              0.f, 0.f, 1.f);
-  return Transform(m, m_inv);
+  return {m, m_inv};
 }
 
 Transform scale(real_t x, real_t y, real_t z) {
   mat4 m(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
   mat4 inv(1.f / x, 0, 0, 0, 0, 1.f / y, 0, 0, 0, 0, 1.f / z, 0, 0, 0, 0, 1);
-  return Transform(m, inv);
+  return {m, inv};
 }
 
 Transform rotateX(real_t angle) {
@@ -131,7 +137,7 @@ Transform rotateX(real_t angle) {
   real_t cos_a = cosf(RADIANS(angle));
   mat4 m(1.f, 0.f, 0.f, 0.f, 0.f, cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f,
          0.f, 0.f, 0.f, 1.f);
-  return Transform(m, transpose(m));
+  return {m, transpose(m)};
 }
 
 Transform rotateY(real_t angle) {
@@ -139,7 +145,7 @@ Transform rotateY(real_t angle) {
   real_t cos_a = cosf(RADIANS(angle));
   mat4 m(cos_a, 0.f, sin_a, 0.f, 0.f, 1.f, 0.f, 0.f, -sin_a, 0.f, cos_a, 0.f,
          0.f, 0.f, 0.f, 1.f);
-  return Transform(m, transpose(m));
+  return {m, transpose(m)};
 }
 
 Transform rotateZ(real_t angle) {
@@ -147,7 +153,7 @@ Transform rotateZ(real_t angle) {
   real_t cos_a = cosf(RADIANS(angle));
   mat4 m(cos_a, -sin_a, 0.f, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f,
          0.f, 0.f, 0.f, 1.f);
-  return Transform(m, transpose(m));
+  return {m, transpose(m)};
 }
 
 Transform rotate(real_t angle, const vec3 &axis) {
@@ -177,7 +183,7 @@ Transform rotate(real_t angle, const vec3 &axis) {
   m[3][3] = 1;
 
   mat4 mat(m);
-  return Transform(mat, transpose(mat));
+  return {mat, transpose(mat)};
 }
 
 Transform frustumTransform(real_t left, real_t right, real_t bottom, real_t top,
@@ -208,7 +214,7 @@ Transform frustumTransform(real_t left, real_t right, real_t bottom, real_t top,
   m[3][3] = 0.f;
 
   mat4 projection(m);
-  return Transform(projection, inverse(projection));
+  return {projection, inverse(projection)};
 }
 
 Transform perspective(real_t fov, real_t aspect, real_t zNear, real_t zFar) {
@@ -331,12 +337,12 @@ Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
   m[3][3] = 1.f;
 
   mat4 projection(m);
-  return Transform(projection, inverse(projection));
+  return {projection, inverse(projection)};
 }
 
 Transform orthographic(real_t znear, real_t zfar) {
   return scale(1.f, 1.f, 1.f / (zfar - znear)) *
-         translate(vec3(0.f, 0.f, -znear));
+      translate(vec3(0.f, 0.f, -znear));
 }
 
 } // namespace ponos

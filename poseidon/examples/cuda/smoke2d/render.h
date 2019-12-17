@@ -44,8 +44,8 @@ public:
       d_buffer = d_data;
     else {
       freeBufferOnDestroy = true;
-      CUDA_CHECK(
-          cudaMalloc((void **)&d_buffer, size.x * size.y * size.z * sizeof(T)));
+      CUDA_CHECK(cudaMalloc((void **)&d_buffer,
+                            size.width * size.height * size.depth * sizeof(T)));
     }
     // Register this texture with CUDA
     CUDA_CHECK(cudaGraphicsGLRegisterImage(
@@ -70,7 +70,7 @@ public:
                                                      0, 0));
     if (target == GL_TEXTURE_3D) {
       CUDA_CHECK(cudaBindSurfaceToArray(surfaceWrite, texture_ptr));
-      hermes::cuda::vec3u res(size.x, size.y, size.z);
+      hermes::cuda::vec3u res(size.width, size.height, size.depth);
       hermes::ThreadArrayDistributionInfo td(res);
       __writeTexture<T><<<td.gridSize, td.blockSize>>>(d_buffer, res);
       // cudaExtent extent = make_cudaExtent(size.x * sizeof(T), size.y,
@@ -83,9 +83,10 @@ public:
       // copyParams.kind = cudaMemcpyDeviceToDevice;
       // CUDA_CHECK(cudaMemcpy3D(&copyParams));
     } else {
-      CUDA_CHECK(cudaMemcpyToArray(texture_ptr, 0, 0, d_buffer,
-                                   size.x * size.y * size.z * sizeof(T),
-                                   cudaMemcpyDeviceToDevice));
+      CUDA_CHECK(
+          cudaMemcpyToArray(texture_ptr, 0, 0, d_buffer,
+                            size.width * size.height * size.depth * sizeof(T),
+                            cudaMemcpyDeviceToDevice));
     }
     CUDA_CHECK(cudaGraphicsUnmapResources(1, &cudaResource, 0));
   }
@@ -104,7 +105,7 @@ public:
 private:
   GLenum target = GL_TEXTURE_3D;
   GLuint textureObjectId = 0;
-  ponos::uivec3 size;
+  ponos::size3 size;
   T *d_buffer = nullptr;
   bool freeBufferOnDestroy = false;
   struct cudaGraphicsResource *cudaResource = nullptr;

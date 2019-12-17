@@ -2,7 +2,7 @@
 #define HELIOS_CORE_MATERIAL_H
 
 #include <helios/core/interaction.h>
-#include <ponos/common/memory.h>
+#include <ponos/storage/memory.h>
 
 namespace helios {
 

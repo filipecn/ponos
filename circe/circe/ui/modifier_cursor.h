@@ -28,6 +28,7 @@
 #include <circe/colors/color_palette.h>
 #include <circe/scene/scene_object.h>
 #include <functional>
+#include <utility>
 
 namespace circe {
 
@@ -84,13 +85,13 @@ public:
 class CircleCursor : public ModifierCursor {
 public:
   CircleCursor(const ponos::Circle &c,
-               const std::function<void(const CircleCursor &, ponos::vec2)> &f,
-               Color fc = COLOR_BLACK, Color ac = COLOR_RED)
-      : mouseCallback(f), fillColor(fc), activeColor(ac), circle(c) {
+               std::function<void(const CircleCursor &, ponos::vec2)> f,
+               Color fc = Color::Black(), Color ac = Color::Red())
+      : mouseCallback(std::move(f)), fillColor(fc), activeColor(ac), circle(c) {
     fillColor.a = 0.1;
     activeColor.a = 0.3;
   }
-  virtual ~CircleCursor() {}
+  ~CircleCursor() override = default;
 
   void draw(const CameraInterface *camera,
             ponos::Transform transform) override {

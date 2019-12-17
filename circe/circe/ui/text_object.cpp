@@ -66,7 +66,7 @@ TextObject::TextObject(int id) : font_id_(id) {
 
 void TextObject::setText(std::string text) {
   FontManager::instance().setText(font_id_, text, *raw_mesh_);
-  mesh_.reset(new SceneMesh(raw_mesh_));
+  mesh_.reset(new SceneMesh(raw_mesh_.get()));
 }
 
 void TextObject::draw(const CameraInterface *c, ponos::Transform t) {

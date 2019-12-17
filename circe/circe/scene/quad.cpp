@@ -27,24 +27,23 @@
 namespace circe {
 
 Quad::Quad() {
-  ponos::RawMeshSPtr rawMesh(new ponos::RawMesh());
-  rawMesh->meshDescriptor.elementSize = 3;
-  rawMesh->meshDescriptor.count = 2;
-  rawMesh->positionDescriptor.elementSize = 2;
-  rawMesh->positionDescriptor.count = 4;
-  rawMesh->texcoordDescriptor.elementSize = 2;
-  rawMesh->texcoordDescriptor.count = 4;
-  rawMesh->positions = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
-  rawMesh->texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
-  rawMesh->indices.resize(6);
-  rawMesh->indices[0].positionIndex = rawMesh->indices[0].texcoordIndex = 0;
-  rawMesh->indices[1].positionIndex = rawMesh->indices[1].texcoordIndex = 1;
-  rawMesh->indices[2].positionIndex = rawMesh->indices[2].texcoordIndex = 2;
-  rawMesh->indices[3].positionIndex = rawMesh->indices[3].texcoordIndex = 0;
-  rawMesh->indices[4].positionIndex = rawMesh->indices[4].texcoordIndex = 2;
-  rawMesh->indices[5].positionIndex = rawMesh->indices[5].texcoordIndex = 3;
-  rawMesh->splitIndexData();
-  rawMesh->buildInterleavedData();
+  rawMesh_.meshDescriptor.elementSize = 3;
+  rawMesh_.meshDescriptor.count = 2;
+  rawMesh_.positionDescriptor.elementSize = 2;
+  rawMesh_.positionDescriptor.count = 4;
+  rawMesh_.texcoordDescriptor.elementSize = 2;
+  rawMesh_.texcoordDescriptor.count = 4;
+  rawMesh_.positions = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
+  rawMesh_.texcoords = std::vector<float>({0, 0, 1, 0, 1, 1, 0, 1});
+  rawMesh_.indices.resize(6);
+  rawMesh_.indices[0].positionIndex = rawMesh_.indices[0].texcoordIndex = 0;
+  rawMesh_.indices[1].positionIndex = rawMesh_.indices[1].texcoordIndex = 1;
+  rawMesh_.indices[2].positionIndex = rawMesh_.indices[2].texcoordIndex = 2;
+  rawMesh_.indices[3].positionIndex = rawMesh_.indices[3].texcoordIndex = 0;
+  rawMesh_.indices[4].positionIndex = rawMesh_.indices[4].texcoordIndex = 2;
+  rawMesh_.indices[5].positionIndex = rawMesh_.indices[5].texcoordIndex = 3;
+  rawMesh_.splitIndexData();
+  rawMesh_.buildInterleavedData();
   const char *fs = "#version 440 core\n"
                    "in vec2 texCoord;"
                    "out vec4 outColor;"
@@ -69,18 +68,18 @@ Quad::Quad() {
   shader_->addUniform("view", 3);
   shader_->addUniform("projection", 4);
   shader_->addUniform("tex", 5);
-  this->mesh_ = createSceneMeshPtr(rawMesh);
+  this->mesh_ = createSceneMeshPtr(&rawMesh_);
 }
 
 void Quad::set(const ponos::point2 &pm, const ponos::point2 &pM) {
-  this->mesh_->rawMesh()->interleavedData[0] = pm.x;
-  this->mesh_->rawMesh()->interleavedData[1] = pm.y;
-  this->mesh_->rawMesh()->interleavedData[4] = pM.x;
-  this->mesh_->rawMesh()->interleavedData[5] = pm.y;
-  this->mesh_->rawMesh()->interleavedData[8] = pM.x;
-  this->mesh_->rawMesh()->interleavedData[9] = pM.y;
-  this->mesh_->rawMesh()->interleavedData[12] = pm.x;
-  this->mesh_->rawMesh()->interleavedData[13] = pM.y;
+  rawMesh_.interleavedData[0] = pm.x;
+  rawMesh_.interleavedData[1] = pm.y;
+  rawMesh_.interleavedData[4] = pM.x;
+  rawMesh_.interleavedData[5] = pm.y;
+  rawMesh_.interleavedData[8] = pM.x;
+  rawMesh_.interleavedData[9] = pM.y;
+  rawMesh_.interleavedData[12] = pm.x;
+  rawMesh_.interleavedData[13] = pM.y;
   //   glBindVertexArray(VAO);
   //   this->vb->set(&this->rawMesh->interleavedData[0]);
   //   glBindVertexArray(0);

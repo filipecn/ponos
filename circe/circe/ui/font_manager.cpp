@@ -37,6 +37,12 @@ int FontManager::loadFromFile(const char *filename) {
   return instance_.fonts_.size() - 1;
 }
 
+int FontManager::loadFromFile(const std::string &filename) {
+  instance_.fonts_.emplace_back();
+  instance_.fonts_[instance_.fonts_.size() - 1].loadFont(filename.c_str());
+  return instance_.fonts_.size() - 1;
+}
+
 void FontManager::setText(int id, const std::string &t, ponos::RawMesh &m) {
   if (id < 0 || static_cast<size_t>(id) >= instance_.fonts_.size())
     return;
@@ -49,8 +55,8 @@ void FontManager::bindTexture(int id, GLenum target) {
   instance_.fonts_[id].texture.bind(target);
 }
 
-FontManager::FontManager() {}
+FontManager::FontManager() noexcept = default;
 
-FontManager::~FontManager() {}
+FontManager::~FontManager() = default;
 
 } // namespace circe

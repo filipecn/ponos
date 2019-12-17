@@ -39,11 +39,11 @@ namespace circe {
 /// Draws texts on the screen.
 class TextRenderer {
 public:
-  explicit TextRenderer(const char *filename);
+  explicit TextRenderer(const std::string& filename);
   /// \param s text size
   /// \param c text color
   /// \param id font id (from font manager)
-  explicit TextRenderer(float scale = 1.f, Color c = COLOR_BLACK,
+  explicit TextRenderer(float scale = 1.f, Color c = Color::Black(),
                         size_t id = 0);
   /// \brief draws text on screen from a screen position
   /// \param s text
@@ -52,7 +52,7 @@ public:
   /// \param scale
   /// \param c color
   void render(std::string s, GLfloat x, GLfloat y, GLfloat scale = 1.f,
-              circe::Color c = COLOR_BLACK);
+              circe::Color c = Color::Black());
   /// \brief draws text on screen from a screen position
   /// \param s text
   /// \param p pixel position (in world coordinates)

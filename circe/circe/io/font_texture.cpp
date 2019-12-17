@@ -28,6 +28,8 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 
+#include <memory>
+
 namespace circe {
 
 void FontAtlas::loadFont(const char *path) {
@@ -35,7 +37,7 @@ void FontAtlas::loadFont(const char *path) {
   std::unique_ptr<uchar[]> atlasData(
       new uchar[font.atlasWidth * font.atlasHeight]);
 
-  font.charInfo.reset(new stbtt_packedchar[font.charCount]);
+  font.charInfo = std::make_unique<stbtt_packedchar[]>(font.charCount);
 
   stbtt_pack_context context;
   if (!stbtt_PackBegin(&context, atlasData.get(), font.atlasWidth,
@@ -135,7 +137,7 @@ void FontAtlas::setText(std::string text) {
     lastIndex += 4;
   }
   rawMesh->buildInterleavedData();
-  mesh.reset(new SceneMesh(rawMesh));
+  mesh.reset(new SceneMesh(rawMesh.get()));
 }
 
 void FontAtlas::setText(std::string text, ponos::RawMesh &m) const {

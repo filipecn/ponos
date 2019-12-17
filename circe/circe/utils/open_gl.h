@@ -121,11 +121,6 @@ void glVertex(ponos::point2 v);
  */
 void glVertex(ponos::vec2 v);
 
-/* glVertex
- * Same as glVertex2f
- */
-void glVertex(ponos::Point<float, 2> v);
-
 void glColor(Color c);
 
 /// multiplies **t** to current OpenGL matrix

@@ -6,27 +6,62 @@ if(GLFW_FOUND)
 else()
     message(STATUS "GLFW not found - will build from source")
 
-    ExternalProject_Add(
-    glfw PREFIX glfw
-    URL "https://github.com/glfw/glfw/archive/3.3.tar.gz"
-    # URL_HASH SHA1=fe17a0610a239311a726ecabcd2dbd669fb24ca8
-    CMAKE_ARGS
-            "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
-            "-DCMAKE_BUILD_TYPE=Release"
-            "-DGLFW_BUILD_EXAMPLES=OFF"
-            "-DGLFW_BUILD_TESTS=OFF"
-            "-DGLFW_BUILD_DOCS=OFF"
-    CMAKE_CACHE_ARGS
-        "-DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}"
-        "-DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}"
-    )
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-    ExternalProject_Get_Property(glfw INSTALL_DIR)
+# Download and unpack glfw at configure time
+configure_file(${CMAKE_CURRENT_LIST_DIR}/glfw.CMakeLists.in glfw-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -D "CMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+            -D "CMAKE_BUILD_TYPE=Release"
+            -D "GLFW_BUILD_EXAMPLES=OFF"
+         "-DGLFW_BUILD_EXAMPLES=OFF"
+        "-DGLFW_BUILD_TESTS=OFF"
+            "-DGLFW_BUILD_DOCS=OFF"
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/glfw-download )
+if(result)
+  message(FATAL_ERROR "CMake step for glfw failed: ${result}")
+endif()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/glfw-download )
+if(result)
+  message(FATAL_ERROR "Build step for glfw failed: ${result}")
+endif()
+
+# Add glfw directly to our build. This defines
+# the gtest and gtest_main targets.
+add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/glfw-src
+                 ${CMAKE_CURRENT_BINARY_DIR}/glfw-build
+                 EXCLUDE_FROM_ALL)
+
+
+
+ #   ExternalProject_Add(
+ #   glfw PREFIX glfw
+ #   URL "https://github.com/glfw/glfw/archive/3.3.tar.gz"
+ #   # URL_HASH SHA1=fe17a0610a239311a726ecabcd2dbd669fb24ca8
+  #  CMAKE_ARGS
+  #          "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+  #          "-DCMAKE_BUILD_TYPE=Release"
+  #          "-DGLFW_BUILD_EXAMPLES=OFF"
+ #           "-DGLFW_BUILD_TESTS=OFF"
+ #           "-DGLFW_BUILD_DOCS=OFF"
+ #   CMAKE_CACHE_ARGS
+ #       "-DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}"
+ #       "-DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}"
+ #   )
+
+  # ExternalProject_Get_Property(glfw INSTALL_DIR)
     set(GLFW_INCLUDE_DIR ${INSTALL_DIR}/include)
     set(GLFW_LIBRARIES
         ${INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-    if(UNIX)
+	set(GLFW_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw-src/include")
+	set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/glfw3.lib")
+    
+	if(UNIX)
         find_package(Threads REQUIRED)
         find_package(X11 REQUIRED)
 

@@ -89,7 +89,7 @@ bool GraphicsDisplay::init() {
   return true;
 }
 
-void GraphicsDisplay::start() {
+int GraphicsDisplay::start() {
   while (!glfwWindowShouldClose(this->window)) {
     glfwGetFramebufferSize(window, &this->width, &this->height);
     glViewport(0, 0, this->width, this->height);
@@ -101,6 +101,7 @@ void GraphicsDisplay::start() {
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
+  return 0;
 }
 
 bool GraphicsDisplay::isRunning() {

@@ -3,7 +3,7 @@
 
 #include <ponos/common/defs.h>
 #include <ponos/geometry/bbox.h>
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 
 namespace ponos {
 
@@ -71,7 +71,20 @@ public:
                       RNG *rngY = new HaltonSequence(5),
                       RNG *rngZ = new HaltonSequence(7))
       : rngX_(rngX), rngY_(rngY), rngZ_(rngZ) {}
-  /// Samples a bbox region
+  /// Samples a 1-dimensional bbox region
+  /// \param region sampling domain
+  /// \return a random point inside **region**
+  float sample(const bbox1 &region) {
+    return rngX_->randomFloat() * region.extends() + region.lower;
+  }
+  /// Samples a 2-dimensional bbox region
+  /// \param region sampling domain
+  /// \return a random point inside **region**
+  point2 sample(const bbox2 &region) {
+    return point2(rngX_->randomFloat() * region.size(0) + region.lower[0],
+                  rngY_->randomFloat() * region.size(1) + region.lower[1]);
+  }
+  /// Samples a 3-dimensional bbox region
   /// \param region sampling domain
   /// \return a random point inside **region**
   point3 sample(const bbox3 &region) {

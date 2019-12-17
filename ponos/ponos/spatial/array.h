@@ -1,7 +1,7 @@
 #ifndef PONOS_SPATIAL_ARRAY_H
 #define PONOS_SPATIAL_ARRAY_H
 
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 #include <ponos/geometry/ray.h>
 #include <ponos/spatial/spatial_structure_interface.h>
 

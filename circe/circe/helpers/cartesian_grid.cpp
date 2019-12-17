@@ -24,6 +24,8 @@
 
 #include <circe/helpers/cartesian_grid.h>
 
+#include <memory>
+
 namespace circe {
 
 CartesianGrid::CartesianGrid() {
@@ -36,16 +38,16 @@ CartesianGrid::CartesianGrid() {
                    "layout (location = 0) uniform mat4 mvp;"
                    "void main() {"
                    "gl_Position = mvp * vec4(position, 1);}";
-  gridShader_.reset(new ShaderProgram(vs, nullptr, fs));
+  gridShader_ = std::make_shared<ShaderProgram>(vs, nullptr, fs);
   gridShader_->addVertexAttribute("position", 0);
   gridShader_->addUniform("mvp", 0);
 }
 
 CartesianGrid::CartesianGrid(int d) : CartesianGrid() {
-  xAxisColor = COLOR_RED;
-  yAxisColor = COLOR_BLUE;
-  zAxisColor = COLOR_GREEN;
-  gridColor = COLOR_BLACK;
+  xAxisColor = Color::Red();
+  yAxisColor = Color::Blue();
+  zAxisColor = Color::Green();
+  gridColor = Color::Black();
   for (auto &plane : planes) {
     plane.low = -d;
     plane.high = d;
@@ -74,8 +76,8 @@ void CartesianGrid::draw(const CameraInterface *camera, ponos::Transform t) {
   gridShader_->begin();
   gridShader_->setUniform(
       "mvp", ponos::transpose((camera->getProjectionTransform() *
-                               camera->getViewTransform() *
-                               camera->getModelTransform() * this->transform)
+          camera->getViewTransform() *
+          camera->getModelTransform() * this->transform)
                                   .matrix()));
   glDrawArrays(GL_LINES, 0, mesh.positions.size());
   CHECK_GL_ERRORS;

@@ -25,7 +25,7 @@
 #ifndef PONOS_GEOMETRY_UTILS_H
 #define PONOS_GEOMETRY_UTILS_H
 
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 #include <ponos/geometry/vector.h>
 
 namespace ponos {

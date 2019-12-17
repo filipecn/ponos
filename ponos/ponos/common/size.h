@@ -34,13 +34,15 @@ namespace ponos {
 
 /// Holds 2-dimensional size
 ///\tparam T must be an unsigned integer type
-template <typename T> class Size2 {
+template<typename T> class Size2 {
   static_assert(std::is_same<T, u8>::value || std::is_same<T, u16>::value ||
                     std::is_same<T, u32>::value || std::is_same<T, u64>::value,
                 "Size2 must hold an unsigned integer type!");
 
 public:
-  Size2(T width = T(0), T height = T(0)) : width(width), height(height) {}
+  explicit Size2(T width = T(0), T height = T(0))
+      : width(width), height(height) {}
+  T total() const { return width * height; }
   T operator[](int i) const { return (&width)[i]; }
   T &operator[](int i) { return (&width)[i]; }
 
@@ -48,16 +50,26 @@ public:
   T height = T(0);
 };
 
+template<typename T>
+bool operator==(const Size2<T> &a, const Size2<T> &b) {
+  return a.width == b.width && a.height == b.height;
+}
+template<typename T>
+bool operator!=(const Size2<T> &a, const Size2<T> &b) {
+  return a.width != b.width || a.height != b.height;
+}
+
 /// Holds 2-dimensional size
 ///\tparam T must be an unsigned integer type
-template <typename T> class Size3 {
+template<typename T> class Size3 {
   static_assert(std::is_same<T, u8>::value || std::is_same<T, u16>::value ||
                     std::is_same<T, u32>::value || std::is_same<T, u64>::value,
                 "Size3 must hold an unsigned integer type!");
 
 public:
-  Size3(T width = T(0), T height = T(0), T depth = T(0))
+  explicit Size3(T width = T(0), T height = T(0), T depth = T(0))
       : width(width), height(height), depth(depth) {}
+  T total() const { return width * height * depth; }
   T operator[](int i) const { return (&width)[i]; }
   T &operator[](int i) { return (&width)[i]; }
   Size2<T> slice(int d1 = 0, int d2 = 0) const {
@@ -80,6 +92,16 @@ using size3_16 = Size3<u16>;
 using size3_32 = Size3<u32>;
 using size3_64 = Size3<u64>;
 
+template<typename T>
+std::ostream &operator<<(std::ostream &o, const Size2<T> &s) {
+  o << "Size[" << s.width << ", " << s.height << "]";
+  return o;
+}
+template<typename T>
+std::ostream &operator<<(std::ostream &o, const Size3<T> &s) {
+  o << "Size[" << s.width << ", " << s.height << ", " << s.depth << "]";
+  return o;
+}
 } // namespace ponos
 
 #endif

@@ -24,7 +24,7 @@ int main() {
   shader->addUniform("view", 12);
   shader->addUniform("projection", 13);
   auto obj = circe::createSceneMeshObjectSPtr(objPath, shader);
-  std::cerr << *obj->mesh()->rawMesh() << std::endl;
+//  std::cerr << *obj->mesh()->rawMesh() << std::endl;
   obj->transform = ponos::scale(0.5, 0.5, 0.5);
   obj->drawCallback = [](circe::ShaderProgram *s,
                          const circe::CameraInterface *camera,

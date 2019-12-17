@@ -1,9 +1,9 @@
 #ifndef PONOS_STRUCTURES_Z_GRID_H
 #define PONOS_STRUCTURES_Z_GRID_H
 
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 #include <ponos/log/debug.h>
-#include <ponos/structures/grid_interface.h>
+#include <ponos/numeric/grid_interface.h>
 
 #include <algorithm>
 #include <functional>

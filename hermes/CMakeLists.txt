@@ -41,16 +41,23 @@ set(HERMES_SOURCES
         hermes/storage/cuda_texture_kernels.cu
         )
 
-#find_package(CUDA  REQUIRED)
-#include_directories("${CUDA_INCLUDE_DIRS}")
+# find_package(CUDA REQUIRED)
+
+set(CMAKE_CUDA_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CUDA_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 enable_language("CUDA")
-add_library(hermes STATIC ${HERMES_SOURCES} ${HERMES_HEADERS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+#CUDA_COMPILE_PTX(ptx_files ${HERMES_SOURCES} ${HERMES_HEADERS})
+add_library(hermes STATIC ${HERMES_SOURCES} ${HERMES_HEADERS})# ${ptx_files})
 set_target_properties(hermes PROPERTIES
 LINKER_LANGUAGE CUDA
 CUDA_STANDARD 11
 CUDA_RESOLVE_DEVICE_SYMBOLS ON
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
+POSITION_INDEPENDENT_CODE OFF
         OUTPUT_NAME "hermes"
         FOLDER "HERMES")
 target_include_directories(hermes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )

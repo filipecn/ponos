@@ -1,5 +1,5 @@
 #include <ponos/geometry/matrix.h>
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 #include <ponos/geometry/queries.h>
 
 #include <utility>

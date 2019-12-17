@@ -26,10 +26,9 @@
 #define PONOS_BLAS_C_REGULAR_GRID_H
 
 #include <ponos/blas/field.h>
-#include <ponos/common/macros.h>
-#include <ponos/geometry/interpolation.h>
+#include <ponos/numeric/interpolation.h>
 #include <ponos/log/debug.h>
-#include <ponos/structures/grid_interface.h>
+#include <ponos/numeric/grid_interface.h>
 
 #include <algorithm>
 #include <memory>

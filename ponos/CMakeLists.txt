@@ -42,22 +42,20 @@ set(PONOS_HEADERS
         ponos/common/defs.h
 		ponos/common/index.h
         ponos/common/file.h
-        ponos/common/macros.h
-        ponos/common/memory.h
+        ponos/storage/memory.h
         ponos/common/parallel.h
         ponos/common/random.h
         ponos/common/timer.h
         ponos/geometry/bbox.h
-        ponos/geometry/bbox.inl
         ponos/geometry/ellipse.h
         ponos/geometry/frustum.h
-		ponos/geometry/interpolation.h
+        ponos/numeric/interpolation.h
         ponos/geometry/interval.h
         ponos/geometry/interval.inl
         ponos/geometry/line.h
         ponos/geometry/matrix.h
         ponos/geometry/normal.h
-        ponos/geometry/numeric.h
+        ponos/numeric/numeric.h
         ponos/geometry/parametric_surface.h
         ponos/geometry/plane.h
         ponos/geometry/point.h
@@ -76,14 +74,16 @@ set(PONOS_HEADERS
         ponos/geometry/vector.inl
         ponos/log/debug.h
         ponos/parallel/parallel.h
+        ponos/numeric/grid.h
+        ponos/storage/memory_block.h
         ponos/structures/bah.h
         ponos/structures/brep.hpp
         ponos/structures/bvh.h
         ponos/structures/bvh.inl
-        ponos/structures/grid_interface.h
-        ponos/structures/half_edge3.h
-        ponos/structures/half_edge.h
-        ponos/structures/level_set.h
+        ponos/numeric/grid_interface.h
+        #ponos/structures/half_edge3.h
+        #ponos/structures/half_edge.h
+        ponos/numeric/level_set.h
         ponos/structures/mesh.h
         ponos/structures/object_pool.h
         ponos/structures/octree.h
@@ -92,7 +92,7 @@ set(PONOS_HEADERS
         ponos/structures/quad_tree.h
         ponos/structures/quad_tree.inl
         ponos/structures/raw_mesh.h
-        ponos/structures/regular_grid.h
+        ponos/numeric/regular_grid.h
         ponos/structures/tetrahedron_mesh.h
         ponos/structures/tetrahedron_mesh.inl
         ponos/structures/z_grid.h
@@ -125,7 +125,6 @@ endif(BUILD_TESTS)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ponos
         DESTINATION ${INSTALL_PATH}/include
         FILES_MATCHING REGEX "(.*\\.[inl|h])")
-
 
 if(BUILD_SHARED)
 	add_library(ponos_shared SHARED ${PONOS_SOURCES} ${PONOS_HEADERS})

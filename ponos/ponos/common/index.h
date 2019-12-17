@@ -36,7 +36,7 @@ namespace ponos {
 
 /// Holds 2-dimensional index coordinates
 ///\tparam T must be an integer type
-template <typename T> struct Index2 {
+template<typename T> struct Index2 {
   static_assert(std::is_same<T, i8>::value || std::is_same<T, i16>::value ||
                     std::is_same<T, i32>::value || std::is_same<T, i64>::value,
                 "Index2 must hold an integer type!");
@@ -48,34 +48,46 @@ public:
   Index2(T i = T(0), T j = T(0)) : i(i), j(j) {}
   T operator[](int _i) const { return (&i)[_i]; }
   T &operator[](int _i) { return (&i)[_i]; }
-  ///\brief are equal? operator
-  ///\param other **[in]**
-  ///\return bool true if both coordinate values are equal
-  bool operator==(const Index2<T> &other) const {
-    return i == other.i && j == other.j;
-  }
-  /// \brief are different? operator
-  ///\param other **[in]**
-  ///\return bool true if any coordinate value is different
-  bool operator!=(const Index2<T> &other) const {
-    return i != other.i || j != other.j;
+  void clampTo(const size2 &s) {
+    i = std::max(0, std::min(i, static_cast<T>(s.width)));
+    j = std::max(0, std::min(j, static_cast<T>(s.height)));
   }
 
   T i = T(0);
   T j = T(0);
 };
 
-template <typename T>
+template<typename T>
 Index2<T> operator+(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i + b.i, a.j + b.j);
 }
-
-template <typename T> bool operator<=(const Index2<T> &a, const Index2<T> &b) {
+template<typename T>
+Index2<T> operator-(const Index2<T> &a, const Index2<T> &b) {
+  return Index2<T>(a.i - b.i, a.j - b.j);
+}
+template<typename T> bool operator<=(const Index2<T> &a, const Index2<T> &b) {
   return a.i <= b.i && a.j <= b.j;
 }
+///\brief are equal? operator
+///\param other **[in]**
+///\return bool true if both coordinate values are equal
+template<typename T>
+bool operator==(const Index2<T> &a, const Index2<T> &b) {
+  return a.i == b.i && a.j == b.j;
+}
+/// \brief are different? operator
+///\param other **[in]**
+///\return bool true if any coordinate value is different
+template<typename T>
+bool operator!=(const Index2<T> &a, const Index2<T> &b) {
+  return a.i != b.i || a.j != b.j;
+}
 
-template <typename T> class Index2Iterator {
+template<typename T> class Index2Iterator {
 public:
+  Index2Iterator() = default;
+  Index2Iterator(Index2<T> lower, Index2<T> upper) :
+      index_(lower), lower_(lower), upper_(upper) {}
   ///\brief Construct a new Index2Iterator object
   ///\param lower **[in]** lower bound
   ///\param upper **[in]** upper bound
@@ -115,7 +127,7 @@ private:
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type
-template <typename T> class Index2Range {
+template<typename T> class Index2Range {
 public:
   ///\brief Construct a new Index2Range object
   ///\param upper_i **[in]** upper bound i
@@ -123,9 +135,9 @@ public:
   Index2Range(T upper_i, T upper_j)
       : lower_(Index2<T>()), upper_(Index2<T>(upper_i, upper_j)) {}
   ///\brief Construct a new Index2Range object
-  ///\param upper **[in]** upper bound
   ///\param lower **[in]** lower bound
-  Index2Range(Index2<T> upper, Index2<T> lower = Index2<T>())
+  ///\param upper **[in]** upper bound
+  Index2Range(Index2<T> lower, Index2<T> upper = Index2<T>())
       : lower_(lower), upper_(upper) {}
   Index2Range(size2 upper)
       : lower_(Index2<T>()), upper_(Index2<T>(upper.width, upper.height)) {}
@@ -144,7 +156,7 @@ private:
 
 /// Holds 3-dimensional index coordinates
 ///\tparam T must be an integer type
-template <typename T> struct Index3 {
+template<typename T> struct Index3 {
   static_assert(std::is_same<T, i8>::value || std::is_same<T, i16>::value ||
                     std::is_same<T, i32>::value || std::is_same<T, i64>::value,
                 "Index3 must hold an integer type!");
@@ -173,29 +185,29 @@ template <typename T> struct Index3 {
   T k;
 };
 
-template <typename T> bool operator<=(const Index3<T> &a, const Index3<T> &b) {
+template<typename T> bool operator<=(const Index3<T> &a, const Index3<T> &b) {
   return a.i <= b.i && a.j <= b.j && a.k <= b.k;
 }
-template <typename T> bool operator<(const Index3<T> &a, const Index3<T> &b) {
+template<typename T> bool operator<(const Index3<T> &a, const Index3<T> &b) {
   return a.i < b.i && a.j < b.j && a.k < b.k;
 }
-template <typename T, typename TT>
+template<typename T, typename TT>
 bool operator<(const Index3<T> &a, const Size3<TT> &b) {
   return a.i < static_cast<T>(b.i) && a.j < static_cast<T>(b.j) &&
-         a.k < static_cast<T>(b.k);
+      a.k < static_cast<T>(b.k);
 }
-template <typename T, typename TT>
+template<typename T, typename TT>
 bool operator>(const Index3<T> &a, const Size3<TT> &b) {
   return a.i > static_cast<T>(b.i) && a.j > static_cast<T>(b.j) &&
-         a.k > static_cast<T>(b.k);
+      a.k > static_cast<T>(b.k);
 }
-template <typename T, typename TT>
+template<typename T, typename TT>
 bool operator>=(const Index3<T> &a, const Size3<TT> &b) {
   return a.i >= static_cast<T>(b.i) && a.j >= static_cast<T>(b.j) &&
-         a.k >= static_cast<T>(b.k);
+      a.k >= static_cast<T>(b.k);
 }
 
-template <typename T> class Index3Iterator {
+template<typename T> class Index3Iterator {
 public:
   ///\brief Construct a new Index3Iterator object
   ///\param lower **[in]** lower bound
@@ -240,7 +252,7 @@ private:
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type
-template <typename T> class Index3Range {
+template<typename T> class Index3Range {
 public:
   ///\brief Construct a new Index3Range object
   ///\param upper_i **[in]** upper bound i
@@ -280,12 +292,12 @@ using index3_16 = Index3<i16>;
 using index3_32 = Index3<i32>;
 using index3_64 = Index3<i64>;
 
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &o, const Index2<T> &ij) {
   o << "Index[" << ij.i << ", " << ij.j << "]";
   return o;
 }
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &o, const Index3<T> &ijk) {
   o << "Index[" << ijk.i << ", " << ijk.j << ", " << ijk.k << "]";
   return o;

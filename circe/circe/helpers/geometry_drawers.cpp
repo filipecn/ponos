@@ -23,7 +23,7 @@
  */
 
 #include <circe/helpers/geometry_drawers.h>
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 
 namespace circe {
 

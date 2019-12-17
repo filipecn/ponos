@@ -13,6 +13,5 @@ int main() {
       unsigned error = lodepng::encode("test.png", data, w, h);
     }
   };
-  app.run();
-  return 0;
+  return app.run();
 }

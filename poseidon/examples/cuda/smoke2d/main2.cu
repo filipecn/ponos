@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   if (argc > 1)
     sscanf(argv[1], "%d", &resSize);
   // sim
-  ponos::uivec2 resolution(resSize);
+  ponos::size2 resolution(resSize);
   vec2u res(resSize);
   GridSmokeSolver2 solver;
   solver.setSpacing(ponos::vec2f(1.f / res.x, 1.f / res.y));

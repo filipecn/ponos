@@ -26,7 +26,6 @@
 #define PONOS_ALGORITHM_SCATTER_H
 
 #include <ponos/common/index.h>
-#include <ponos/common/macros.h>
 #include <ponos/geometry/parametric_surface.h>
 #include <ponos/geometry/sphere.h>
 #include <ponos/geometry/transform.h>

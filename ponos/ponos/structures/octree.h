@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_STRUCTURES_OCTREE_H
 #define PONOS_STRUCTURES_OCTREE_H
@@ -44,14 +44,16 @@ namespace ponos {
  */
 /// Represents an Octree
 /// \tparam NodeData Data Type stored in each node
-template<typename NodeData> class Octree {
+template <typename NodeData> class Octree {
 public:
   struct Node {
     friend class Octree;
     /// Constructor
     /// \param r root's region on space
-    /// \param p [opitional] a parent node, if so, the new node becomes its child
-    explicit Node(const bbox3 &r, Node *p = nullptr) : bbox_(r), level_(0), parent(p) {
+    /// \param p [opitional] a parent node, if so, the new node becomes its
+    /// child
+    explicit Node(const bbox3 &r, Node *p = nullptr)
+        : bbox_(r), level_(0), parent(p) {
       for (int i = 0; i < 8; i++)
         children[i] = nullptr;
       if (parent)
@@ -61,9 +63,9 @@ public:
     /// \return **true** if leaf
     bool isLeaf() const {
       return children[0] == nullptr && children[1] == nullptr &&
-          children[2] == nullptr && children[3] == nullptr &&
-          children[4] == nullptr && children[5] == nullptr &&
-          children[6] == nullptr && children[7] == nullptr;
+             children[2] == nullptr && children[3] == nullptr &&
+             children[4] == nullptr && children[5] == nullptr &&
+             children[6] == nullptr && children[7] == nullptr;
     }
     /// node id on the tree
     /// \return id
@@ -79,7 +81,7 @@ public:
 
   private:
     uint id_;         ///< node's unique id on the tree
-    bbox3 bbox_;       ///< region in space this node occupies
+    bbox3 bbox_;      ///< region in space this node occupies
     uint level_;      ///< level on the tree of this node
     Node *parent;     ///< pointer to parent node
     uint childNumber; ///< which child is this
@@ -98,7 +100,8 @@ public:
   /// \param region root's region on space
   /// \param rootData root's data
   /// \param f refinement criteria
-  /// \param sf **[opitional]** called right after children are created (pre-order traversal)
+  /// \param sf **[opitional]** called right after children are created
+  /// (pre-order traversal)
   Octree(const bbox3 &region, NodeData rootData,
          const std::function<bool(Node &node)> &f,
          std::function<void(Node &)> sf = nullptr);
@@ -118,7 +121,8 @@ protected:
   /// refine tree
   /// \param node starting node
   /// \param f refinement criteria
-  /// \param sf **[opitional]** called right after children are created (pre-order traversal)
+  /// \param sf **[opitional]** called right after children are created
+  /// (pre-order traversal)
   void refine(Node *node, const std::function<bool(Node &node)> &f,
               std::function<void(Node &)> sf = nullptr);
   /// pre-order traversal
@@ -132,13 +136,13 @@ protected:
                 const std::function<bool(const Node &node)> &f) const;
   /// free memory
   void clean(Node *node);
-  Node *root_;    ///< tree's root
-  uint height_;   ///< current height
-  uint count_;    ///< current node count
+  Node *root_;  ///< tree's root
+  uint height_; ///< current height
+  uint count_;  ///< current node count
 };
 
 #include "ponos/structures/octree.inl"
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_STRUCTURES_OCTREE_H

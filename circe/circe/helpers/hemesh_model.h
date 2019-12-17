@@ -71,8 +71,8 @@ public:
       // std::cout << "edge " << k << " = " << e.orig
       //	<< " | " << e.dest << std::endl;
       glColor4f(0, 0, 0, 0.5);
-      ponos::point2 a = vertices[e.orig].position.floatXY();
-      ponos::point2 b = vertices[e.dest].position.floatXY();
+      ponos::point2 a = vertices[e.orig].position;
+      ponos::point2 b = vertices[e.dest].position;
       ponos::vec2 v = ponos::normalize(b - a);
       glBegin(GL_LINES);
       circe::glVertex(a);
@@ -95,18 +95,16 @@ public:
       glBegin(GL_LINES);
       if (e.next >= 0) {
         circe::glVertex(B);
-        ponos::vec2 V =
-            ponos::normalize(vertices[edges[e.next].dest].position.floatXY() -
-                             vertices[edges[e.next].orig].position.floatXY());
-        circe::glVertex(vertices[edges[e.next].orig].position.floatXY() +
+        ponos::vec2 V = ponos::normalize(vertices[edges[e.next].dest].position -
+                                         vertices[edges[e.next].orig].position);
+        circe::glVertex(vertices[edges[e.next].orig].position +
                         distanceFromEdge * V.left() + distanceFromVertex * V);
       }
       if (e.prev >= 0) {
         circe::glVertex(A);
-        ponos::vec2 V =
-            ponos::normalize(vertices[edges[e.prev].dest].position.floatXY() -
-                             vertices[edges[e.prev].orig].position.floatXY());
-        circe::glVertex(vertices[edges[e.prev].dest].position.floatXY() +
+        ponos::vec2 V = ponos::normalize(vertices[edges[e.prev].dest].position -
+                                         vertices[edges[e.prev].orig].position);
+        circe::glVertex(vertices[edges[e.prev].dest].position +
                         distanceFromEdge * V.left() - distanceFromVertex * V);
       }
       glEnd();

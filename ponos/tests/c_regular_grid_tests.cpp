@@ -13,7 +13,7 @@ TEST(ScalarGrid2f, Access) {
     UNUSED_VARIABLE(f);
     count++;
     ASSERT_NEAR(grid(i, j), 1.f, error);
-    ASSERT_NEAR(grid(ivec2(i, j)), 1.f, error);
+    ASSERT_NEAR(grid(index2(i, j)), 1.f, error);
   });
   EXPECT_EQ(count, 10 * 10);
 }
@@ -28,24 +28,24 @@ TEST(ScalarGrid2f, DataPosition) {
     vec2 d = grid.dataOffset();
     ASSERT_NEAR(d[0], 0.0f, error);
     ASSERT_NEAR(d[1], 0.0f, error);
-    Point2 wp = grid.dataWorldPosition(ivec2(10, 10));
+    point2 wp = grid.dataWorldPosition(index2(10, 10));
     ASSERT_NEAR(wp[0], 1.0f, error);
     ASSERT_NEAR(wp[1], 2.0f, error);
-    wp = Point2(0.1, 0.2);
-    Point2 gp = grid.toGrid(wp);
+    wp = point2(0.1, 0.2);
+    point2 gp = grid.toGrid(wp);
     ASSERT_NEAR(gp[0], 1.f, error);
     ASSERT_NEAR(gp[1], 1.f, error);
-    Point2 dgp = grid.dataGridPosition(wp);
+    point2 dgp = grid.dataGridPosition(wp);
     ASSERT_NEAR(dgp[0], 1.f, error);
     ASSERT_NEAR(dgp[1], 1.f, error);
     grid.dataPosition = GridDataPosition::CELL_CENTER;
     d = grid.dataOffset();
     ASSERT_NEAR(d[0], 0.5f, error);
     ASSERT_NEAR(d[1], 0.5f, error);
-    wp = grid.dataWorldPosition(ivec2(10, 10));
+    wp = grid.dataWorldPosition(index2(10, 10));
     ASSERT_NEAR(wp[0], 1.05f, error);
     ASSERT_NEAR(wp[1], 2.1f, error);
-    wp = Point2(0.1, 0.2);
+    wp = point2(0.1, 0.2);
     dgp = grid.dataGridPosition(wp);
     ASSERT_NEAR(dgp[0], 0.5f, error);
     ASSERT_NEAR(dgp[1], 0.5f, error);
@@ -53,10 +53,10 @@ TEST(ScalarGrid2f, DataPosition) {
     d = grid.dataOffset();
     ASSERT_NEAR(d[0], 0.0f, error);
     ASSERT_NEAR(d[1], 0.5f, error);
-    wp = grid.dataWorldPosition(ivec2(10, 10));
+    wp = grid.dataWorldPosition(index2(10, 10));
     ASSERT_NEAR(wp[0], 1.0f, error);
     ASSERT_NEAR(wp[1], 2.1f, error);
-    wp = Point2(0.1, 0.2);
+    wp = point2(0.1, 0.2);
     dgp = grid.dataGridPosition(wp);
     ASSERT_NEAR(dgp[0], 1.f, error);
     ASSERT_NEAR(dgp[1], 0.5f, error);
@@ -64,10 +64,10 @@ TEST(ScalarGrid2f, DataPosition) {
     d = grid.dataOffset();
     ASSERT_NEAR(d[0], 0.5f, error);
     ASSERT_NEAR(d[1], 0.0f, error);
-    wp = grid.dataWorldPosition(ivec2(10, 10));
+    wp = grid.dataWorldPosition(index2(10, 10));
     ASSERT_NEAR(wp[0], 1.05f, error);
     ASSERT_NEAR(wp[1], 2.0f, error);
-    wp = Point2(0.1, 0.2);
+    wp = point2(0.1, 0.2);
     dgp = grid.dataGridPosition(wp);
     ASSERT_NEAR(dgp[0], 0.5f, error);
     ASSERT_NEAR(dgp[1], 1.f, error);
@@ -78,7 +78,7 @@ TEST(ScalarGrid2f, DataPosition) {
         GridDataPosition::V_FACE_CENTER, GridDataPosition::U_FACE_CENTER};
     for (auto type : types) {
       grid.dataPosition = type;
-      BBox2 b = grid.cellWBox(Point<int, 2>({5, 5}));
+      bbox2 b = grid.cellWBox(Point<int, 2>({5, 5}));
       ASSERT_NEAR(b.lower.x, 0.5f, error);
       ASSERT_NEAR(b.lower.y, 1.f, error);
       ASSERT_NEAR(b.upper.x, 0.6f, error);

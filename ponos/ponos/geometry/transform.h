@@ -37,9 +37,9 @@ namespace ponos {
 
 class Transform2 {
 public:
-  Transform2() {}
-  Transform2(const mat3 &mat, const mat3 inv_mat);
-  Transform2(const bbox2 &bbox);
+  Transform2() = default;
+  Transform2(const mat3 &mat, const mat3 &inv_mat);
+  explicit Transform2(const bbox2 &bbox);
   void reset();
   void translate(const vec2 &d);
   void scale(real_t x, real_t y);
@@ -81,9 +81,9 @@ public:
     return ret;
   }
   Transform2 operator*(const Transform2 &t) const {
-    mat3 m1 = mat3::mul(m, t.m);
-    mat3 m1_inv = mat3::mul(t.m_inv, m_inv);
-    return Transform2(m1, m1_inv);
+    mat3 m1 = m * t.m;
+    mat3 m1_inv = t.m_inv * m_inv;
+    return {m1, m1_inv};
   }
   Ray2 operator()(const Ray2 &r) {
     Ray2 ret = r;
@@ -102,17 +102,18 @@ private:
 };
 
 Transform2 scale(real_t x, real_t y);
+Transform2 scale(const vec2& s);
 Transform2 rotate(real_t angle);
 Transform2 translate(const vec2 &v);
 Transform2 inverse(const Transform2 &t);
 
 class Transform {
 public:
-  Transform() {}
-  Transform(const mat4 &mat);
+  Transform() = default;
+  explicit Transform(const mat4 &mat);
   Transform(const mat4 &mat, const mat4 &inv_mat);
-  Transform(const real_t mat[4][4]);
-  Transform(const bbox3 &bbox);
+  explicit Transform(const real_t mat[4][4]);
+  explicit Transform(const bbox3 &bbox);
   void reset();
   void translate(const vec3 &d);
   void scale(real_t x, real_t y, real_t z);
@@ -195,8 +196,8 @@ public:
     return *this;
   }
   Transform operator*(const Transform &t) const {
-    mat4 m1 = mat4::mul(m, t.m);
-    mat4 m1_inv = mat4::mul(t.m_inv, m_inv);
+    mat4 m1 = m * t.m;
+    mat4 m1_inv = t.m_inv * m_inv;
     return Transform(m1, m1_inv);
   }
   point3 operator*(const point3 &p) const { return (*this)(p); }

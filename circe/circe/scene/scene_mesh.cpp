@@ -27,10 +27,10 @@
 
 namespace circe {
 
-SceneMesh::SceneMesh(ponos::RawMeshSPtr rm) : mesh_(rm) {
-  setup_buffer_data_from_mesh(*rm.get(), vertexData_, indexData_);
+SceneMesh::SceneMesh(const ponos::RawMesh *rm) : mesh_(rm) {
+  setup_buffer_data_from_mesh(*rm, vertexData_, indexData_);
   BufferDescriptor ver, ind;
-  create_buffer_description_from_mesh(*mesh_.get(), ver, ind);
+  create_buffer_description_from_mesh(*mesh_, ver, ind);
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
   vertexBuffer_.set(&vertexData_[0], ver);
@@ -52,7 +52,7 @@ const VertexBuffer *SceneMesh::vertexBuffer() const { return &vertexBuffer_; }
 
 const IndexBuffer *SceneMesh::indexBuffer() const { return &indexBuffer_; }
 
-ponos::RawMeshSPtr SceneMesh::rawMesh() { return mesh_; }
+const ponos::RawMesh *SceneMesh::rawMesh() const { return mesh_; }
 
 void SceneMesh::unbind() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);

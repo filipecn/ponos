@@ -25,12 +25,14 @@
 #include <circe/ui/font_manager.h>
 #include <circe/ui/text_renderer.h>
 
+#include <utility>
+
 namespace circe {
 
 TextRenderer::TextRenderer(float scale, Color c, size_t id)
     : fontId(id), textSize(scale), textColor(c) {
   dynamicScale_ = 1.f;
-  dynamicColor_ = COLOR_BLACK;
+  dynamicColor_ = Color::Black();
   static int sid = circe::ShaderManager::instance().loadFromTexts(
       "#version 440 core\n"
       "layout (location = 0) in vec3 position;"
@@ -70,7 +72,7 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   UNUSED_VARIABLE(x);
   UNUSED_VARIABLE(y);
   UNUSED_VARIABLE(scale);
-  atlas.setText(s);
+  atlas.setText(std::move(s));
   atlas.mesh->bind();
   atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader().get());
   atlas.texture.bind(GL_TEXTURE0);
@@ -89,7 +91,7 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   glDrawElements(ib->bufferDescriptor.elementType,
                  ib->bufferDescriptor.elementCount *
                      ib->bufferDescriptor.elementSize,
-                 ib->bufferDescriptor.dataType, 0);
+                 ib->bufferDescriptor.dataType, nullptr);
   circe::CHECK_GL_ERRORS;
   quad_.shader()->end();
 }
@@ -97,7 +99,7 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
 void TextRenderer::render(std::string s, const ponos::point3 &p,
                           const CameraInterface *camera, GLfloat scale,
                           circe::Color c) {
-  atlas.setText(s);
+  atlas.setText(std::move(s));
   atlas.mesh->bind();
   atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader().get());
   atlas.texture.bind(GL_TEXTURE0);
@@ -105,7 +107,7 @@ void TextRenderer::render(std::string s, const ponos::point3 &p,
   quad_.shader()->setUniform("textColor", ponos::vec4(c.r, c.g, c.b, c.a));
   quad_.shader()->setUniform(
       "model_matrix", ponos::transpose((ponos::translate(ponos::vec3(p)) *
-                                        ponos::scale(scale, scale, scale))
+          ponos::scale(scale, scale, scale))
                                            .matrix()));
   quad_.shader()->setUniform(
       "view_matrix", ponos::transpose(camera_->getViewTransform().matrix()));
@@ -118,7 +120,7 @@ void TextRenderer::render(std::string s, const ponos::point3 &p,
   glDrawElements(ib->bufferDescriptor.elementType,
                  ib->bufferDescriptor.elementCount *
                      ib->bufferDescriptor.elementSize,
-                 ib->bufferDescriptor.dataType, 0);
+                 ib->bufferDescriptor.dataType, nullptr);
   circe::CHECK_GL_ERRORS;
   quad_.shader()->end();
 }
@@ -152,8 +154,8 @@ TextRenderer &TextRenderer::withColor(Color c) {
 
 TextRenderer &TextRenderer::operator<<(TextRenderer &tr) { return tr; }
 
-TextRenderer::TextRenderer(const char *filename) : TextRenderer() {
-  atlas.loadFont(filename);
+TextRenderer::TextRenderer(const std::string &filename) : TextRenderer() {
+  atlas.loadFont(filename.c_str());
 }
 
 } // namespace circe

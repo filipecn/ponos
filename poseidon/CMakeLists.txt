@@ -21,7 +21,7 @@ set(POSEIDON_HEADERS
         poseidon/solvers/cuda_smoke_solver_kernels.h
         poseidon/solvers/cuda_smoke_solver3_kernels.h
         )
-        
+
 set(POSEIDON_SOURCES
         poseidon/math/cuda_fd.cu
         poseidon/math/cuda_pcg.cu
@@ -43,19 +43,20 @@ set(POSEIDON_SOURCES
 
 add_library(poseidon ${POSEIDON_SOURCES} ${POSEIDON_HEADERS})
 set_target_properties(poseidon PROPERTIES
-CUDA_STANDARD 11
-LINKER_LANGUAGE CUDA
-CUDA_RESOLVE_DEVICE_SYMBOLS ON
-CMAKE_CUDA_SEPARABLE_COMPILATION ON
+        CUDA_STANDARD 11
+        LINKER_LANGUAGE CUDA
+        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+        CMAKE_CUDA_SEPARABLE_COMPILATION ON
         OUTPUT_NAME "poseidon"
         FOLDER "POSEIDON")
 target_include_directories(poseidon PUBLIC ${PONOS_SOURCE_DIR} ${HERMES_SOURCE_DIR} ${POSEIDON_SOURCE_DIR})
 target_link_libraries(poseidon PUBLIC ponos hermes)
 
-if(BUILD_EXAMPLES)
-        add_subdirectory(examples/cuda)
-endif(BUILD_EXAMPLES)
-if(BUILD_TESTS)
-        add_subdirectory(tests/unit_tests)
-endif(BUILD_TESTS)
+if (BUILD_EXAMPLES)
+    # add_subdirectory(examples/cuda)
+    add_subdirectory(examples/shallow_waters)
+endif (BUILD_EXAMPLES)
+if (BUILD_TESTS)
+    add_subdirectory(tests/unit_tests)
+endif (BUILD_TESTS)
 

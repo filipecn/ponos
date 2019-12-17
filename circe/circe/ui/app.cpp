@@ -53,10 +53,10 @@ void App::init() {
   initialized = true;
 }
 
-void App::run() {
+int App::run() {
   if (!initialized)
     init();
-  GraphicsDisplay::instance().start();
+  return GraphicsDisplay::instance().start();
 }
 
 void App::exit() { GraphicsDisplay::instance().stop(); }

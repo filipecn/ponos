@@ -85,7 +85,7 @@ public:
   /* main loop
    * Starts the application, opens the window and enters in the main loop.
    */
-  void start();
+  int start();
   /* exit
    * Closes the window.
    */

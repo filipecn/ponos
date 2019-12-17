@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef PONOS_BLAS_FIELD_H
 #define PONOS_BLAS_FIELD_H
@@ -38,17 +38,17 @@ public:
 
 template <class T> class ScalarField2D : virtual public FieldInterface2D<T> {
 public:
-  virtual Vector<T, 2> gradient(float x, float y) const = 0;
+  virtual Vector2<T> gradient(float x, float y) const = 0;
   virtual T laplacian(float x, float y) const = 0;
 };
 
 template <typename T>
-class VectorField2D : virtual public FieldInterface2D<Vector<T, 2>> {
+class VectorField2D : virtual public FieldInterface2D<Vector2<T>> {
 public:
   virtual T divergence(float x, float y) const = 0;
-  virtual Vector<T, 2> curl(float x, float y) const = 0;
+  virtual Vector2<T> curl(float x, float y) const = 0;
 };
 
-} // ponos namespace
+} // namespace ponos
 
 #endif // PONOS_BLAS_FIELD_H

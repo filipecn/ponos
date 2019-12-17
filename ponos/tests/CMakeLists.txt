@@ -1,20 +1,19 @@
 set(target ponos_unit_tests)
 
-
 file(GLOB SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/bbox_tests.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/bvh_tests.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/parallel_tests.cpp
-        # ${CMAKE_CURRENT_SOURCE_DIR}/search_tests.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/storage_tests.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/common_tests.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/numeric_tests.cpp
         )
 
 add_executable(${target} ${SOURCES})
 target_include_directories(${target} PUBLIC ${GOOGLE_TEST_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR})
+
 if (WIN32)
     target_link_libraries(${target} ponos gtest)
-elseif(APPLE)
+elseif (APPLE)
     target_link_libraries(${target} ponos gtest pthread)
 else (WIN32)
     target_link_libraries(${target} ponos gtest gcov pthread)

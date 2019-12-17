@@ -41,6 +41,9 @@ public:
    */
   void set(const ponos::point2 &pm, const ponos::point2 &pM);
   void draw(const CameraInterface *camera, ponos::Transform transform) override;
+
+private:
+  ponos::RawMesh rawMesh_;
 };
 
 } // namespace circe

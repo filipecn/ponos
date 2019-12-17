@@ -250,8 +250,8 @@ public:
   }
   ///
   /// \param res
-  void setResolution(const ponos::uivec2 &res) {
-    resolution = hermes::cuda::vec2u(res.x, res.y);
+  void setResolution(const ponos::size2 &res) {
+    resolution = hermes::cuda::vec2u(res.width, res.height);
     velocity.resize(resolution);
     velocityCopy.resize(resolution);
     for (auto &f : scalarFields)
@@ -510,8 +510,8 @@ public:
   }
   ///
   /// \param res
-  void setResolution(const ponos::uivec2 &res) {
-    resolution_ = hermes::cuda::vec2u(res.x, res.y);
+  void setResolution(const ponos::size2 &res) {
+    resolution_ = hermes::cuda::vec2u(res.width, res.height);
     for (size_t i = 0; i < 2; i++) {
       velocity_[i].resize(resolution_);
       for (auto &f : scalarFields_[i])
@@ -693,8 +693,8 @@ public:
   }
   ///
   /// \param res
-  void setResolution(const ponos::uivec3 &res) {
-    resolution_ = hermes::cuda::vec3u(res.x, res.y, res.z);
+  void setResolution(const ponos::size3 &res) {
+    resolution_ = hermes::cuda::vec3u(res.width, res.height, res.depth);
     for (size_t i = 0; i < 2; i++) {
       velocity_[i].resize(resolution_);
       for (auto &f : scalarFields_[i])

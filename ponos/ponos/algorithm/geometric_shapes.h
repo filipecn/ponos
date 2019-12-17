@@ -46,9 +46,11 @@ RawMesh *create_icosphere_mesh(const point3 &center, real_t radius,
 /// \param generateNormals
 /// \param generateUVs
 /// \return
-RawMesh *create_quad_mesh(const point3 &p1, const point3 &p2, const point3 &p3,
-                          const point3 &p4, bool generateNormals,
-                          bool generateUVs);
+RawMesh *create_quad_mesh(const point3 &p1 = std::move(point3(0, 0, 0)),
+                          const point3 &p2 = std::move(point3(1, 0, 0)),
+                          const point3 &p3 = std::move(point3(1, 1, 0)),
+                          const point3 &p4 = std::move(point3(0, 1, 0)),
+                          bool generateNormals = true, bool generateUVs = true);
 /// \param p1
 /// \param p2
 /// \param p3
@@ -76,9 +78,8 @@ public:
   /// \param generateNormals
   /// \param generateUVs
   /// \return
-  static RawMeshSPtr
-  cube(const ponos::Transform &transform = ponos::Transform(),
-       bool generateNormals = false, bool generateUVs = false);
+  static RawMesh *cube(const ponos::Transform &transform = ponos::Transform(),
+                       bool generateNormals = false, bool generateUVs = false);
 
   /// \param transform
   /// \param triangleFaces

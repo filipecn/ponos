@@ -45,7 +45,7 @@ int main() {
   solver.setUIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setVIntegrator(new poseidon::cuda::MacCormackIntegrator2());
   solver.setIntegrator(new poseidon::cuda::MacCormackIntegrator2());
-  solver.setResolution(ponos::uivec2(WIDTH, HEIGHT));
+  solver.setResolution(ponos::size2(WIDTH, HEIGHT));
   solver.setDx(1.0 / WIDTH);
   solver.init();
   poseidon::cuda::GridSmokeInjector2::injectCircle(ponos::point2f(0.5f, 0.2f),

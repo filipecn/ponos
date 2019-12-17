@@ -29,7 +29,7 @@
 #define PONOS_GEOMETRY_VECTOR_H
 
 #include <ponos/geometry/normal.h>
-#include <ponos/geometry/numeric.h>
+#include <ponos/numeric/numeric.h>
 #include <ponos/log/debug.h>
 
 #include <cstring>
@@ -378,7 +378,7 @@ using vec4 = Vector4<real_t>;
 using vec3d = Vector3<double>;
 using vec3f = Vector3<float>;
 using vec2f = Vector2<float>;
-
+/*
 template <typename T = float, size_t D = 3> class Vector {
 public:
   Vector();
@@ -433,12 +433,14 @@ inline Vector<T, D> operator*(T f, const Vector<T, D> &v) {
 /* round
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
- */
+ 
+
+
 template <typename T> Vector<int, 3> ceil(const Vector3<T> &v);
 /* round
  * @v **[in]** vector
  * @return a vector with floor applied to all components
- */
+ *
 template <typename T> Vector<int, 3> floor(const Vector3<T> &v);
 
 template <typename T> Vector<int, 3> min(Vector<int, 3> a, Vector<int, 3> b);
@@ -447,12 +449,12 @@ template <typename T> Vector<int, 3> max(Vector<int, 3> a, Vector<int, 3> b);
 /* round
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
- */
+ *
 template <typename T> Vector<int, 2> ceil(const Vector2<T> &v);
 /* round
  * @v **[in]** vector
  * @return a vector with floor applied to all components
- */
+ *
 template <typename T> Vector<int, 2> floor(const Vector2<T> &v);
 
 Vector<int, 2> min(Vector<int, 2> a, Vector<int, 2> b);
@@ -463,7 +465,7 @@ template <typename T, size_t D> T normalize(Vector<T, D> &v) {
   for (size_t i = 0; i < D; i++)
     v[i] = v[i] / d;
 }
-
+*/
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Vector2<T> &v) {
   os << "Vector2 [" << v.x << " " << v.y << "]";

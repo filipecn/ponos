@@ -61,7 +61,7 @@ before_install:
 script:
   # - git submodule update --init --recursive
   - cmake --version
-  - cmake . -DBUILD_TESTS
+  - cmake . -DBUILD_TESTS=ON
   - make
 after_success:
 #  - codecov

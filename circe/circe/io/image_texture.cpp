@@ -74,9 +74,9 @@ ImageTexture ImageTexture::checkBoard(size_t w, size_t h) {
       size_t row = j / step;
       size_t column = i / step;
       if (row % 2)
-        tex.setTexel((column % 2) ? COLOR_BLACK : COLOR_WHITE, i, j);
+        tex.setTexel((column % 2) ? Color::Black() : Color::White(), i, j);
       else
-        tex.setTexel((column % 2) ? COLOR_WHITE : COLOR_BLACK, i, j);
+        tex.setTexel((column % 2) ? Color::White() : Color::Black(), i, j);
     }
   CHECK_GL_ERRORS;
   tex.update();

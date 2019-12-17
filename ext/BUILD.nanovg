@@ -1,7 +1,0 @@
-cc_library(
-    name = "nanovg",
-    srcs = glob(["src/*.c"]),
-    hdrs = glob(["scr/*.h"]),
-    includes = ["src"],
-    visibility = ["//visibility:public"],
-)

@@ -1,7 +1,14 @@
+# avoid policy warning message
+if (POLICY CMP0048)
+    cmake_policy(SET CMP0048 NEW)
+endif (POLICY CMP0048)
+# main project
 project(PONOS)
-
 cmake_minimum_required(VERSION 3.1)
-
+cmake_policy(VERSION 3.1)
+##########################################
+##               options                ##
+##########################################
 option(BUILD_ALL "build all libraries" OFF)
 option(BUILD_CIRCE "build circe library" OFF)
 option(BUILD_HERMES "build hermes library" OFF)
@@ -11,39 +18,17 @@ option(BUILD_ODYSSEUS "build odysseus library" OFF)
 option(BUILD_TESTS "build library unit tests" OFF)
 option(BUILD_EXAMPLES "build library examples" OFF)
 option(BUILD_SHARED "build library shared" OFF)
-
-# compilation configurations
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE "ON")
-if (CMAKE_COMPILER_IS_GNUCXX)
-    # set(DEBUG_FLAGS "${DEBUG_FLAGS} -g -Wall -Wextra --coverage -fPIC")
-    set(DEBUG_FLAGS "${DEBUG_FLAGS} -g -Wall -Wextra  -fPIC")
-    # set(RELEASE_FLAGS "-O3 -Wall -Wextra --coverage -fPIC")
-    set(RELEASE_FLAGS "-O3 -Wall -Wextra  -fPIC")
-endif (CMAKE_COMPILER_IS_GNUCXX)
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(DEBUG_FLAGS "${DEBUG_FLAGS} -std=c++11 -g -Wall -Wextra --coverage -fPIC")
-    set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra --coverage -fPIC")
-endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-if (MINGW)
-    set(RELEASE_FLAGS "-std=c++11 -O3 -Wall -Wextra --coverage")
-endif (MINGW)
-if (MSVC)
-    set(DEBUG_FLAGS "/FS /Zi /EHsc /MDd /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
-    set(RELEASE_FLAGS "/FS /EHsc")
-endif (MSVC)
-set(CMAKE_CXX_FLAGS ${RELEASE_FLAGS})
-set(CMAKE_CXX_FLAGS_DEBUG ${DEBUG_FLAGS})
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
-# external
+# cmake modules
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
+# check for specific machine/compiler options.
+include(ConfigCompilerFlags)
+# include external libraries path
 include(ExternalProject)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext")
 # tests
-if(BUILD_TESTS)
-    # Google Tests
+if (BUILD_TESTS)
     include(gtest)
-endif(BUILD_TESTS)
+endif (BUILD_TESTS)
 # path variables
 set(ROOT_PROJECT_PATH "${PROJECT_SOURCE_DIR}")
 set(BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
@@ -52,63 +37,31 @@ if (WIN32)
 else (WIN32)
     SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
 endif (WIN32)
-
-
+##########################################
+##              projects                ##
+##########################################
 add_subdirectory(ponos)
 if (BUILD_CIRCE OR BUILD_ALL)
-    # GLFW
     include(glfw)
-    # tiny obj
-    set(TINYOBJLOADER_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyobj")
-    # set(TINYOBJLOADER_LIBS tinyobjloader)
-    # Triangle
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/triangle" "deps_build/triangle")
-    set_target_properties(triangle PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-    set(TRIANGLE_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/deps/triangle")
-    set(TRIANGLE_LIBS triangle)
-    # Lodepng
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/lodepng" "ext_build/lodepng")
-    set_target_properties(lodepng PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-    set(LODEPNG_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/ext/lodepng")
-    set(LODEPNG_LIBS lodepng)
-    # stb image library
-    set(STB_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/ext/stb")
-    # ply reader
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/ply" "ext_build/ply")
-    set_target_properties(ply PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-    set(PLY_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/ext/ply")
-    set(PLY_LIBS ply)
-    # glad
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/glad" "ext_build/glad")
-    # set_target_properties(glad PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-    # target_compile_definitions(glad PUBLIC GLAD_GENERATOR="c++")
-    set(GLAD_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/ext/glad/include")
-    IF (CMAKE_BUILD_TYPE MATCHES DEBUG)
-        set(GLAD_LIBS "${CMAKE_BINARY_DIR}/ext_build/glad/libgladd.so")
-    ENDIF (CMAKE_BUILD_TYPE MATCHES DEBUG)
-    IF (CMAKE_BUILD_TYPE MATCHES RELEASE)
-        set(GLAD_LIBS "${CMAKE_BINARY_DIR}/ext_build/glad/libglad.so")
-    ENDIF (CMAKE_BUILD_TYPE MATCHES RELEASE)
-    set(TRIANGLE_INCLUDE "")
-    set(TETGEN_INCLUDE "")
-    if (NOT ("${TRIANGLE_INCLUDE}" STREQUAL "" OR "${TRIANGLE_LIB}" STREQUAL ""))
-        add_definitions(-DTRIANGLE_INCLUDED)
-    endif (NOT ("${TRIANGLE_INCLUDE}" STREQUAL "" OR "${TRIANGLE_LIB}" STREQUAL ""))
-    if (NOT ("${TETGEN_INCLUDE}" STREQUAL "" OR "${TETGEN_LIB}" STREQUAL ""))
-        add_definitions(-DTETGEN_INCLUDED)
-    endif (NOT ("${TETGEN_INCLUDE}" STREQUAL "" OR "${TETGEN_LIB}" STREQUAL ""))
+    include(tinyobj)
+    include(triangle)
+    include(ply)
+    include(stb)
+    include(glad)
     add_subdirectory(circe)
 endif (BUILD_CIRCE OR BUILD_ALL)
-if(BUILD_HERMES OR BUILD_ALL)
+if (BUILD_HERMES OR BUILD_ALL)
     add_subdirectory(hermes)
-endif()
-if(BUILD_HELIOS OR BUILD_ALL)
- #   add_subdirectory(helios)
-endif(BUILD_HELIOS OR BUILD_ALL)
-if(BUILD_POSEIDON OR BUILD_ALL)
+endif (BUILD_HERMES OR BUILD_ALL)
+if (BUILD_HELIOS OR BUILD_ALL)
+    #   add_subdirectory(helios)
+endif (BUILD_HELIOS OR BUILD_ALL)
+if (BUILD_POSEIDON OR BUILD_ALL)
     add_subdirectory(poseidon)
-endif(BUILD_POSEIDON OR BUILD_ALL)
-
+endif (BUILD_POSEIDON OR BUILD_ALL)
+##########################################
+##         output variables             ##
+##########################################
 get_directory_property(PONOS_HAS_PARENT PARENT_DIRECTORY)
 if (PONOS_HAS_PARENT)
     set(PONOS_INCLUDES ${PONOS_SOURCE_DIR} ${CIRCE_SOURCE_DIR} ${GLAD_INCLUDES} PARENT_SCOPE)
