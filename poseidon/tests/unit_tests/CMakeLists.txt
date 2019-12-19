@@ -1,16 +1,25 @@
-enable_language("CUDA")
+set(target poseidon_unit_tests)
 
-add_executable(poseidon_tests 
-main.cpp 
-fd.cu
-smoke_solver.cu
-particle_system.cu
-level_set.cu
-)
+file(GLOB SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/numeric_tests.cpp
+        )
 
-target_link_libraries(poseidon_tests gtest pthread poseidon hermes )
-set_target_properties(poseidon PROPERTIES
-CMAKE_CUDA_SEPARABLE_COMPILATION ON
-CUDA_STANDARD 11
-)
-target_include_directories(poseidon_tests PUBLIC ${POSEIDON_SOURCE_DIR} ${HERMES_SOURCE_DIR})
+add_executable(${target} ${SOURCES})
+target_include_directories(${target} PUBLIC ${GOOGLE_TEST_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR})
+
+if (WIN32)
+    target_link_libraries(${target} poseidon gtest)
+elseif (APPLE)
+    target_link_libraries(${target} poseidon gtest pthread)
+else (WIN32)
+    target_link_libraries(${target} poseidon gtest gcov pthread)
+endif (WIN32)
+
+add_custom_target(test_poseidon
+        COMMAND poseidon_unit_tests DEPENDS poseidon_unit_tests
+        COMMAND lcov --directory .. --capture -output-file cov.info
+        COMMAND lcov --remove cov.info '/usr/*' --output-file cov.info
+        COMMAND lcov --remove cov.info '*/external/*' --output-file cov.info.cleaned
+        COMMAND genhtml cov.info.cleaned --output-directory out
+        )

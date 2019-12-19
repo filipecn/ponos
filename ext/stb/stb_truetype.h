@@ -431,32 +431,32 @@ typedef signed   int    stbtt_int32;
 typedef char stbtt__check_size32[sizeof(stbtt_int32)==4 ? 1 : -1];
 typedef char stbtt__check_size16[sizeof(stbtt_int16)==2 ? 1 : -1];
 
-// e.g. #define your own STBTT_ifloor/STBTT_iceil() to avoid math.h
+// e.g. #define your own STBTT_ifloor/STBTT_iceil() to avoid numeric.h
 #ifndef STBTT_ifloor
-#include <math.h>
+#include <numeric.h>
 #define STBTT_ifloor(x)   ((int) floor(x))
 #define STBTT_iceil(x)    ((int) ceil(x))
 #endif
 
 #ifndef STBTT_sqrt
-#include <math.h>
+#include <numeric.h>
 #define STBTT_sqrt(x)      sqrt(x)
 #define STBTT_pow(x,y)     pow(x,y)
 #endif
 
 #ifndef STBTT_fmod
-#include <math.h>
+#include <numeric.h>
 #define STBTT_fmod(x,y)    fmod(x,y)
 #endif
 
 #ifndef STBTT_cos
-#include <math.h>
+#include <numeric.h>
 #define STBTT_cos(x)       cos(x)
 #define STBTT_acos(x)      acos(x)
 #endif
 
 #ifndef STBTT_fabs
-#include <math.h>
+#include <numeric.h>
 #define STBTT_fabs(x)      fabs(x)
 #endif
 

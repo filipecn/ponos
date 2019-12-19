@@ -22,7 +22,7 @@
  *
  */
 
-#include <poseidon/math/cuda_fd.h>
+#include <poseidon/numeric/cuda_fd.h>
 
 namespace poseidon {
 

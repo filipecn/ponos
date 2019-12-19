@@ -45,9 +45,10 @@ public:
   ///\brief Construct a new Index2 object
   ///\param i **[in]** i coordinate value
   ///\param j **[in]** j coordinate value
-  Index2(T i = T(0), T j = T(0)) : i(i), j(j) {}
+  explicit Index2(T i = T(0), T j = T(0)) : i(i), j(j) {}
   T operator[](int _i) const { return (&i)[_i]; }
   T &operator[](int _i) { return (&i)[_i]; }
+  Index2<T> plus(T _i, T _j) const { return Index2<T>(i + _i, j + _j); }
   void clampTo(const size2 &s) {
     i = std::max(0, std::min(i, static_cast<T>(s.width)));
     j = std::max(0, std::min(j, static_cast<T>(s.height)));
@@ -137,9 +138,9 @@ public:
   ///\brief Construct a new Index2Range object
   ///\param lower **[in]** lower bound
   ///\param upper **[in]** upper bound
-  Index2Range(Index2<T> lower, Index2<T> upper = Index2<T>())
+  explicit Index2Range(Index2<T> lower, Index2<T> upper = Index2<T>())
       : lower_(lower), upper_(upper) {}
-  Index2Range(size2 upper)
+  explicit Index2Range(size2 upper)
       : lower_(Index2<T>()), upper_(Index2<T>(upper.width, upper.height)) {}
   ///\return Index2Iterator<T>
   Index2Iterator<T> begin() const {
@@ -164,7 +165,7 @@ template<typename T> struct Index3 {
   ///\param i **[in]** i coordinate value
   ///\param j **[in]** j coordinate value
   ///\param k **[in]** k coordinate value
-  Index3(T i = T(0), T j = T(0), T k = T(0)) : i(i), j(j), k(k) {}
+  explicit Index3(T i = T(0), T j = T(0), T k = T(0)) : i(i), j(j), k(k) {}
   T operator[](int _i) const { return (&i)[_i]; }
   T &operator[](int _i) { return (&i)[_i]; }
   ///\brief are equal? operator
@@ -192,17 +193,17 @@ template<typename T> bool operator<(const Index3<T> &a, const Index3<T> &b) {
   return a.i < b.i && a.j < b.j && a.k < b.k;
 }
 template<typename T, typename TT>
-bool operator<(const Index3<T> &a, const Size3<TT> &b) {
+bool operator<(const Index3<T> &a, const Size3 <TT> &b) {
   return a.i < static_cast<T>(b.i) && a.j < static_cast<T>(b.j) &&
       a.k < static_cast<T>(b.k);
 }
 template<typename T, typename TT>
-bool operator>(const Index3<T> &a, const Size3<TT> &b) {
+bool operator>(const Index3<T> &a, const Size3 <TT> &b) {
   return a.i > static_cast<T>(b.i) && a.j > static_cast<T>(b.j) &&
       a.k > static_cast<T>(b.k);
 }
 template<typename T, typename TT>
-bool operator>=(const Index3<T> &a, const Size3<TT> &b) {
+bool operator>=(const Index3<T> &a, const Size3 <TT> &b) {
   return a.i >= static_cast<T>(b.i) && a.j >= static_cast<T>(b.j) &&
       a.k >= static_cast<T>(b.k);
 }
@@ -263,9 +264,9 @@ public:
   ///\brief Construct a new Index3Range object
   ///\param upper **[in]** upper bound
   ///\param lower **[in]** lower bound
-  Index3Range(Index3<T> upper, Index3<T> lower = Index3<T>())
+  explicit Index3Range(Index3<T> upper, Index3<T> lower = Index3<T>())
       : lower_(lower), upper_(upper) {}
-  Index3Range(size3 upper)
+  explicit Index3Range(size3 upper)
       : lower_(Index3<T>()),
         upper_(Index3<T>(upper.width, upper.height, upper.depth)) {}
   ///\return Index3Iterator<T>

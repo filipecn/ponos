@@ -336,7 +336,7 @@
 
 #define SQUAREROOTTWO 1.4142135623730950488016887242096980785696718753769480732
 
-/* And here's one for those of you who are intimidated by math.              */
+/* And here's one for those of you who are intimidated by numeric.              */
 
 #define ONETHIRD 0.333333333333333333333333333333333333333333333333333333333333
 

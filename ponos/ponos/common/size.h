@@ -51,6 +51,11 @@ public:
 };
 
 template<typename T>
+Size2<T> operator+(const Size2<T> &a, const Size2<T> &b) {
+  return Size2<T>(a.width + b.width, a.height + b.height);
+}
+
+template<typename T>
 bool operator==(const Size2<T> &a, const Size2<T> &b) {
   return a.width == b.width && a.height == b.height;
 }
