@@ -5,12 +5,17 @@ set(POSEIDON_HEADERS
         poseidon/numeric/staggered_grid.h
         poseidon/numeric/vector_fields.h
         poseidon/numeric/vector_grid.h
+        poseidon/simulation/integrators/integrator_interface.h
+        poseidon/simulation/integrators/semi_lagrangian_integrator.h
+        poseidon/solvers/grid_smoke_solver.h
         )
 
 set(POSEIDON_SOURCES
         poseidon/numeric/staggered_grid.cpp
         poseidon/numeric/vector_fields.cpp
         poseidon/numeric/vector_grid.cpp
+        poseidon/simulation/integrators/semi_lagrangian_integrator.cpp
+        poseidon/solvers/grid_smoke_solver.cpp
         )
 
 add_library(poseidon ${POSEIDON_SOURCES} ${POSEIDON_HEADERS})
@@ -25,6 +30,7 @@ target_link_libraries(poseidon PUBLIC ponos hermes)
 
 if (BUILD_EXAMPLES)
     add_subdirectory(examples/shallow_waters)
+    add_subdirectory(examples/smoke_sim)
 endif (BUILD_EXAMPLES)
 if (BUILD_TESTS)
     add_subdirectory(tests/cuda_unit_tests)

@@ -29,16 +29,15 @@ namespace circe {
 ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
                                  const ponos::vec3 &o) {
   auto *m = new ponos::RawMesh();
-  ponos::index2 ij;
   // XY
-  for (auto ij : ponos::Index3Range<i32>(d[0], d[1])) {
+  for (auto ij : ponos::Index2Range<i32>(d[0], d[1])) {
     ponos::point3 p(ij[0], ij[1], 0.f);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
-  for (auto ij : ponos::Index3Range<i32>(d[0], d[1])) {
+  for (auto ij : ponos::Index2Range<i32>(d[0], d[1])) {
     ponos::point3 p(ij[0], ij[1], d[2] - 1);
     p = p * s + o;
     m->positions.emplace_back(p.x);
@@ -46,14 +45,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
     m->positions.emplace_back(p.z);
   }
   // YZ
-  for (auto ij : ponos::Index3Range<i32>(d[1], d[2])) {
+  for (auto ij : ponos::Index2Range<i32>(d[1], d[2])) {
     ponos::point3 p(0.f, ij[0], ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
-  for (auto ij : ponos::Index3Range<i32>(d[1], d[2])) {
+  for (auto ij : ponos::Index2Range<i32>(d[1], d[2])) {
     ponos::point3 p(d[0] - 1, ij[0], ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
@@ -61,14 +60,14 @@ ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
     m->positions.emplace_back(p.z);
   }
   // XZ
-  for (auto ij : ponos::Index3Range<i32>(d[0], d[2])) {
+  for (auto ij : ponos::Index2Range<i32>(d[0], d[2])) {
     ponos::point3 p(ij[0], 0.f, ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
     m->positions.emplace_back(p.y);
     m->positions.emplace_back(p.z);
   }
-  for (auto ij : ponos::Index3Range<i32>(d[0], d[2])) {
+  for (auto ij : ponos::Index2Range<i32>(d[0], d[2])) {
     ponos::point3 p(ij[0], d[1] - 1, ij[1]);
     p = p * s + o;
     m->positions.emplace_back(p.x);
@@ -78,21 +77,21 @@ ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
   m->positionDescriptor.count = m->positions.size() / 3;
   int xy = d[0] * d[1];
   // create indices for xy planes
-  for (auto ij : ponos::Index3Range<i32>(d[0], d[1])) {
+  for (auto ij : ponos::Index2Range<i32>(d[0], d[1])) {
     m->positionsIndices.emplace_back(ij[0] * d[0] + ij[1]);
     m->positionsIndices.emplace_back(xy + ij[0] * d[0] + ij[1]);
   }
   int acc = xy * 2;
   int yz = d[1] * d[2];
   // create indices for yz planes
-  for (auto ij : ponos::Index3Range<i32>(d[1], d[2])) {
+  for (auto ij : ponos::Index2Range<i32>(d[1], d[2])) {
     m->positionsIndices.emplace_back(acc + ij[0] * d[1] + ij[1]);
     m->positionsIndices.emplace_back(acc + yz + ij[0] * d[1] + ij[1]);
   }
   acc += yz * 2;
   int xz = d[0] * d[2];
   // create indices for xz planes
-  for (auto ij : ponos::Index3Range<i32>(d[0], d[2])) {
+  for (auto ij : ponos::Index2Range<i32>(d[0], d[2])) {
     m->positionsIndices.emplace_back(acc + ij[0] * d[1] + ij[1]);
     m->positionsIndices.emplace_back(acc + xz + ij[0] * d[1] + ij[1]);
   }
@@ -100,7 +99,7 @@ ponos::RawMesh *create_grid_mesh(const ponos::size3 &d, float s,
 }
 
 ponos::RawMesh *create_wireframe_mesh(const ponos::RawMesh *m) {
-  ponos::RawMesh *mesh = new ponos::RawMesh();
+  auto *mesh = new ponos::RawMesh();
   mesh->positionDescriptor.count = m->positionDescriptor.count;
   mesh->positions = std::vector<float>(m->positions);
   size_t nelements = m->indices.size() / m->meshDescriptor.elementSize;

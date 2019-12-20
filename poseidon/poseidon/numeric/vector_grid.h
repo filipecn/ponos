@@ -77,6 +77,7 @@ public:
   VectorGrid2(const ponos::size2 &res,
               const ponos::vec2 &s,
               const ponos::point2 &o = ponos::point2());
+  void copy(const VectorGrid2 &other);
   ponos::size2 resolution() const;
   ponos::vec2 spacing() const;
   ponos::point2 origin() const;
@@ -89,17 +90,32 @@ public:
   /// Changes grid cell size
   /// \param d new size
   virtual void setSpacing(const ponos::vec2 &s);
-  const ponos::Grid2<real_t> &u() const;
-  const ponos::Grid2<real_t> &v() const;
+  /// \return u component accessor
+  ponos::Grid2Accessor<real_t> u();
+  /// \return v component accessor
+  ponos::Grid2Accessor<real_t> v();
+  ///
+  /// \param address_mode
+  /// \param interpolation_mode
+  /// \param border
+  /// \return
   VectorGrid2Accessor accessor(ponos::AddressMode address_mode = ponos::AddressMode::CLAMP_TO_EDGE,
                                ponos::InterpolationMode interpolation_mode = ponos::InterpolationMode::MONOTONIC_CUBIC,
                                real_t border = 0);
+  /// Assigns value to every u and v component
+  /// \param value assign value
+  /// \return *this
+  VectorGrid2 &operator=(const real_t &value);
+  /// Assigns value.x to every u component and value.y to every v component
+  /// \param value assign value
+  /// \return *this
+  VectorGrid2 &operator=(const ponos::vec2 &value);
 
 protected:
   ponos::size2 resolution_;
   ponos::point2 origin_;
   ponos::vec2 spacing_;
-  ponos::Grid2<real_t> u_grid, v_grid;
+  ponos::Grid2<real_t> u_grid_, v_grid_;
 };
 
 } // poseidon namespace

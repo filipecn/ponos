@@ -60,12 +60,20 @@ VectorGrid2::VectorGrid2(const ponos::size2 &res,
                          const ponos::vec2 &s,
                          const ponos::point2 &o)
     : resolution_(res), origin_(o), spacing_(s) {
-  u_grid.setResolution(res);
-  u_grid.setOrigin(o);
-  u_grid.setSpacing(s);
-  v_grid.setResolution(res);
-  v_grid.setOrigin(o);
-  v_grid.setSpacing(s);
+  u_grid_.setResolution(res);
+  u_grid_.setOrigin(o);
+  u_grid_.setSpacing(s);
+  v_grid_.setResolution(res);
+  v_grid_.setOrigin(o);
+  v_grid_.setSpacing(s);
+}
+
+void VectorGrid2::copy(const VectorGrid2 &other) {
+  resolution_ = other.resolution_;
+  origin_ = other.origin_;
+  spacing_ = other.spacing_;
+  u_grid_.copy(other.u_grid_);
+  v_grid_.copy(other.v_grid_);
 }
 
 ponos::size2 VectorGrid2::resolution() const { return resolution_; }
@@ -76,32 +84,44 @@ ponos::point2 VectorGrid2::origin() const { return origin_; }
 
 void VectorGrid2::resize(const ponos::size2 &res) {
   resolution_ = res;
-  u_grid.setResolution(res);
-  v_grid.setResolution(res);
+  u_grid_.setResolution(res);
+  v_grid_.setResolution(res);
 }
 
 void VectorGrid2::setOrigin(const ponos::point2 &o) {
   origin_ = o;
-  u_grid.setOrigin(o);
-  v_grid.setOrigin(o);
+  u_grid_.setOrigin(o);
+  v_grid_.setOrigin(o);
 }
 
 void VectorGrid2::setSpacing(const ponos::vec2 &s) {
   spacing_ = s;
-  u_grid.setSpacing(s);
-  v_grid.setSpacing(s);
+  u_grid_.setSpacing(s);
+  v_grid_.setSpacing(s);
 }
 
-const ponos::Grid2<real_t> &VectorGrid2::u() const { return u_grid; }
+ponos::Grid2Accessor<real_t> VectorGrid2::u() { return u_grid_.accessor(); }
 
-const ponos::Grid2<real_t> &VectorGrid2::v() const { return v_grid; }
+ponos::Grid2Accessor<real_t> VectorGrid2::v() { return v_grid_.accessor(); }
 
 VectorGrid2Accessor VectorGrid2::accessor(ponos::AddressMode address_mode,
                                           ponos::InterpolationMode interpolation_mode,
                                           real_t border) {
-  return {resolution_, spacing_, u_grid.accessor(
+  return {resolution_, spacing_, u_grid_.accessor(
       address_mode, interpolation_mode, border),
-          v_grid.accessor(address_mode, interpolation_mode, border)};
+          v_grid_.accessor(address_mode, interpolation_mode, border)};
+}
+
+VectorGrid2 &VectorGrid2::operator=(const real_t &value) {
+  u_grid_ = value;
+  v_grid_ = value;
+  return *this;
+}
+
+VectorGrid2 &VectorGrid2::operator=(const ponos::vec2 &value) {
+  u_grid_ = value.x;
+  v_grid_ = value.y;
+  return *this;
 }
 
 } // poseidon namespace

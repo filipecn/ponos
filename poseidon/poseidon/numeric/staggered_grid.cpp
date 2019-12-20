@@ -57,38 +57,38 @@ StaggeredGrid2::StaggeredGrid2(ponos::size2 res,
   this->origin_ = o;
   this->resolution_ = res;
   this->spacing_ = s;
-  this->u_grid.setResolution(res + size2(1, 0));
-  this->u_grid.setOrigin(o + s.x * vec2(-0.5f, 0.f));
-  this->u_grid.setSpacing(s);
-  this->v_grid.setResolution(res + size2(0, 1));
-  this->v_grid.setOrigin(o + s.y * vec2(0.f, -0.5f));
-  this->v_grid.setSpacing(s);
+  this->u_grid_.setResolution(res + size2(1, 0));
+  this->u_grid_.setOrigin(o + s.x * vec2(-0.5f, 0.f));
+  this->u_grid_.setSpacing(s);
+  this->v_grid_.setResolution(res + size2(0, 1));
+  this->v_grid_.setOrigin(o + s.y * vec2(0.f, -0.5f));
+  this->v_grid_.setSpacing(s);
 }
 
 void StaggeredGrid2::setSpacing(const vec2 &s) {
   this->spacing_ = s;
-  this->u_grid.setSpacing(s);
-  this->v_grid.setSpacing(s);
+  this->u_grid_.setSpacing(s);
+  this->v_grid_.setSpacing(s);
   setOrigin(this->origin_);
 }
 
 void StaggeredGrid2::resize(const size2 &res) {
   this->resolution_ = res;
-  this->u_grid.setResolution(res + size2(1, 0));
-  this->v_grid.setResolution(res + size2(0, 1));
+  this->u_grid_.setResolution(res + size2(1, 0));
+  this->v_grid_.setResolution(res + size2(0, 1));
 }
 
 void StaggeredGrid2::setOrigin(const point2f &o) {
   this->origin_ = o;
-  this->u_grid.setOrigin(o + this->spacing_.x * vec2(-0.5f, 0.f));
-  this->v_grid.setOrigin(o + this->spacing_.y * vec2(0.f, -0.5f));
+  this->u_grid_.setOrigin(o + this->spacing_.x * vec2(-0.5f, 0.f));
+  this->v_grid_.setOrigin(o + this->spacing_.y * vec2(0.f, -0.5f));
 }
 
 StaggeredGrid2Accessor StaggeredGrid2::accessor(ponos::AddressMode address_mode,
                                                 ponos::InterpolationMode interpolation_mode,
                                                 real_t border) {
   return {this->resolution_, this->spacing_,
-          this->u_grid.accessor(address_mode, interpolation_mode, border),
-          this->v_grid.accessor(address_mode, interpolation_mode, border)};
+          this->u_grid_.accessor(address_mode, interpolation_mode, border),
+          this->v_grid_.accessor(address_mode, interpolation_mode, border)};
 }
 } // poseidon namespace
