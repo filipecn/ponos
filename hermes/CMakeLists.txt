@@ -70,6 +70,11 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/hermes
         DESTINATION ${INSTALL_PATH}/include
         FILES_MATCHING REGEX "(.*\\.[inl|h])")
 
+install(TARGETS hermes
+        LIBRARY DESTINATION ${INSTALL_PATH}/lib
+        ARCHIVE DESTINATION ${INSTALL_PATH}//lib
+        )
+
 if(BUILD_SHARED)
 	add_library(hermes_shared SHARED ${HERMES_SOURCES} ${HERMES_HEADERS})
 	set_target_properties(hermes_shared PROPERTIES

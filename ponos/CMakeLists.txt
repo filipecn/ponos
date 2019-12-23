@@ -126,6 +126,11 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ponos
         DESTINATION ${INSTALL_PATH}/include
         FILES_MATCHING REGEX "(.*\\.[inl|h])")
 
+install(TARGETS ponos
+        LIBRARY DESTINATION ${INSTALL_PATH}/lib
+        ARCHIVE DESTINATION ${INSTALL_PATH}//lib
+        )
+
 if(BUILD_SHARED)
 	add_library(ponos_shared SHARED ${PONOS_SOURCES} ${PONOS_HEADERS})
 	target_include_directories(ponos_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

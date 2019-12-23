@@ -6,6 +6,9 @@ endif (POLICY CMP0048)
 project(PONOS)
 cmake_minimum_required(VERSION 3.1)
 cmake_policy(VERSION 3.1)
+# path variables
+set(ROOT_PROJECT_PATH "${PROJECT_SOURCE_DIR}")
+set(BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
 ##########################################
 ##               options                ##
 ##########################################
@@ -18,6 +21,7 @@ option(BUILD_ODYSSEUS "build odysseus library" OFF)
 option(BUILD_TESTS "build library unit tests" OFF)
 option(BUILD_EXAMPLES "build library examples" OFF)
 option(BUILD_SHARED "build library shared" OFF)
+set(INSTALL_PATH ${BUILD_ROOT} CACHE STRING "include and lib folders path")
 # cmake modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 # check for specific machine/compiler options.
@@ -29,14 +33,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext")
 if (BUILD_TESTS)
     include(gtest)
 endif (BUILD_TESTS)
-# path variables
-set(ROOT_PROJECT_PATH "${PROJECT_SOURCE_DIR}")
-set(BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
-if (WIN32)
-    SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/wbuild)
-else (WIN32)
-    SET(INSTALL_PATH ${ROOT_PROJECT_PATH}/build)
-endif (WIN32)
 ##########################################
 ##              projects                ##
 ##########################################
