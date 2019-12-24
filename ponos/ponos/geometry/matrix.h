@@ -603,7 +603,7 @@ Matrix3x3<T> operator*(const Matrix3x3<T> &A, const Matrix3x3<T> &B) {
 }
 template <typename T>
 Matrix3x3<T> operator*(const Matrix3x3<T> &A, const T &f) {
-  return Matrix3x3(A.m[0][0] * f, A.m[0][1] * f, A.m[0][2] * f, A.m[1][0] * f,
+  return Matrix3x3<T>(A.m[0][0] * f, A.m[0][1] * f, A.m[0][2] * f, A.m[1][0] * f,
                    A.m[1][1] * f, A.m[1][2] * f, A.m[2][0] * f, A.m[2][1] * f,
                    A.m[2][2] * f);
 }

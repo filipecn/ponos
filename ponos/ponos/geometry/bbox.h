@@ -56,7 +56,7 @@ typedef BBox1<real_t> bbox1;
 
 template<typename T>
 BBox1<T> make_union(const BBox1<T> &b, const T &p) {
-  BBox2 <T> ret = b;
+  BBox1 <T> ret = b;
   ret.lower = std::min(b.lower, p);
   ret.upper = std::max(b.upper, p);
   return ret;

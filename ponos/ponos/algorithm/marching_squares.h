@@ -29,7 +29,6 @@
 #include <ponos/geometry/bbox.h>
 #include <ponos/numeric/numeric.h>
 #include <ponos/structures/raw_mesh.h>
-#include <ponos/numeric/regular_grid.h>
 
 namespace ponos {
 

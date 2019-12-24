@@ -8,7 +8,7 @@
 #include <circe/helpers/cartesian_grid.h>
 #include <circe/helpers/geometry_drawers.h>
 #include <circe/helpers/grid_model.h>
-#include <circe/helpers/hemesh_model.h>
+//#include <circe/helpers/hemesh_model.h>
 #include <circe/helpers/quad_tree_model.h>
 #include <circe/helpers/scene_handle.h>
 #include <circe/helpers/tmesh_model.h>

@@ -1,6 +1,6 @@
-#include <ponos/algorithm/fast_sweep.h>
+//#include <ponos/algorithm/fast_sweep.h>
 #include <ponos/algorithm/geometric_shapes.h>
-#include <ponos/algorithm/marching_squares.h>
+//#include <ponos/algorithm/marching_squares.h>
 #include <ponos/algorithm/scatter.h>
 #include <ponos/algorithm/search.h>
 #include <ponos/algorithm/sort.h>
@@ -77,7 +77,6 @@
 #include <ponos/structures/point_set_interface.h>
 #include <ponos/structures/quad_tree.h>
 #include <ponos/structures/raw_mesh.h>
-#include <ponos/numeric/regular_grid.h>
 #include <ponos/structures/tetrahedron_mesh.h>
 #include <ponos/structures/z_grid.h>
 #include <ponos/structures/z_point_set.h>

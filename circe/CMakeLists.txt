@@ -12,7 +12,7 @@ set(CIRCE_HEADERS
         circe/helpers/cartesian_grid.h
         circe/helpers/geometry_drawers.h
         circe/helpers/grid_model.h
-        circe/helpers/hemesh_model.h
+#        circe/helpers/hemesh_model.h
         circe/helpers/quad_tree_model.h
         circe/helpers/scene_handle.h
         circe/helpers/vector_grid.h

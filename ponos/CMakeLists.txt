@@ -2,9 +2,9 @@ project(PONOS)
 
 set(PONOS_HEADERS
         ponos/ponos.h
-        ponos/algorithm/fast_sweep.h
+        #ponos/algorithm/fast_sweep.h
         ponos/algorithm/geometric_shapes.h
-        ponos/algorithm/marching_squares.h
+        #ponos/algorithm/marching_squares.h
         ponos/algorithm/scatter.h
         ponos/algorithm/sort.h
         ponos/algorithm/triangulate.h
@@ -92,7 +92,6 @@ set(PONOS_HEADERS
         ponos/structures/quad_tree.h
         ponos/structures/quad_tree.inl
         ponos/structures/raw_mesh.h
-        ponos/numeric/regular_grid.h
         ponos/structures/tetrahedron_mesh.h
         ponos/structures/tetrahedron_mesh.inl
         ponos/structures/z_grid.h

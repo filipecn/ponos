@@ -6,7 +6,6 @@
 #include <ponos/geometry/queries.h>
 #include <ponos/geometry/vector.h>
 #include <ponos/structures/half_edge.h>
-#include <ponos/numeric/regular_grid.h>
 #include <ponos/structures/tetrahedron_mesh.h>
 
 namespace ponos {
