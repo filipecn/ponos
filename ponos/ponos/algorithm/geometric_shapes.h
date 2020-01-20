@@ -80,6 +80,12 @@ public:
   /// \return
   static RawMesh *cube(const ponos::Transform &transform = ponos::Transform(),
                        bool generateNormals = false, bool generateUVs = false);
+  ///
+  /// \param transform
+  /// \param generate_uvs
+  /// \return
+  static RawMesh *quad(const ponos::Transform &transform = ponos::Transform(),
+                       bool generate_uvs = false);
 
   /// \param transform
   /// \param triangleFaces

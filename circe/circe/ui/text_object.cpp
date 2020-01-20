@@ -26,6 +26,8 @@
 #include <circe/ui/font_manager.h>
 #include <circe/ui/text_object.h>
 
+#include <memory>
+
 namespace circe {
 
 TextObject::TextObject(int id) : font_id_(id) {
@@ -61,10 +63,10 @@ TextObject::TextObject(int id) : font_id_(id) {
   shader_->addUniform("projection_matrix", 2);
   shader_->addUniform("text", 3);
   shader_->addUniform("textColor", 4);
-  raw_mesh_.reset(new ponos::RawMesh());
+  raw_mesh_ = std::make_shared<ponos::RawMesh>();
 }
 
-void TextObject::setText(std::string text) {
+void TextObject::setText(const std::string& text) {
   FontManager::instance().setText(font_id_, text, *raw_mesh_);
   mesh_.reset(new SceneMesh(raw_mesh_.get()));
 }
@@ -86,13 +88,14 @@ void TextObject::draw(const CameraInterface *c, ponos::Transform t) {
   shader_->setUniform("projection_matrix",
                       ponos::transpose(c->getProjectionTransform().matrix()));
   shader_->setUniform("text", 0);
-  circe::CHECK_GL_ERRORS;
+  using namespace circe;
+  CHECK_GL_ERRORS;
   auto ib = mesh_->indexBuffer();
   glDrawElements(ib->bufferDescriptor.elementType,
                  ib->bufferDescriptor.elementCount *
                      ib->bufferDescriptor.elementSize,
                  ib->bufferDescriptor.dataType, 0);
-  circe::CHECK_GL_ERRORS;
+  CHECK_GL_ERRORS;
   shader_->end();
 }
 

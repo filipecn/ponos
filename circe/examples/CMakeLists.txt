@@ -5,6 +5,8 @@ add_executable(hello_circe_test WIN32 hello_circe.cpp)
 add_dependencies(hello_circe_test circe)
 add_executable(volume_box_example WIN32 volume_box_example.cpp)
 add_dependencies(volume_box_example circe)
+add_executable(volume_box2_example WIN32 volume_box2_example.cpp)
+add_dependencies(volume_box2_example circe)
 # add_executable(bvh_example WIN32 bvh_example.cpp)
 # add_dependencies(bvh_example circe)
 # add_executable(scene_app WIN32 scene_app.cpp)
@@ -38,6 +40,7 @@ if (MSVC)
                 instances
                 post_effects_example
                 volume_box_example
+                volume_box2_example
         )
     # Tell MSVC to use main instead of WinMain for Windows subsystem executables
     set_target_properties(${WINDOWS_BINARIES} PROPERTIES

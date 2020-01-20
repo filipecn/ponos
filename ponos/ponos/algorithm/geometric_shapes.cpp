@@ -125,8 +125,8 @@ RawMesh *create_icosphere_mesh(const point3 &center, float radius,
   if (generateUVs) {
     std::function<point2(float, float, float)> parametric =
         [](float x, float y, float z) -> point2 {
-      return point2(std::atan2(y, x), std::acos(z));
-    };
+          return point2(std::atan2(y, x), std::acos(z));
+        };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
           parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1],
@@ -288,7 +288,7 @@ RawMeshSPtr icosphere(const point2 &center, float radius, size_t divisions,
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 2;
   mesh->apply(scale(radius, radius, 0) *
-              translate(vec3(center.x, center.y, 0)));
+      translate(vec3(center.x, center.y, 0)));
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
@@ -391,8 +391,8 @@ RawMeshSPtr icosphere(const point3 &center, float radius, size_t divisions,
   if (generateUVs) {
     std::function<point2(float, float, float)> parametric =
         [](float x, float y, float z) -> point2 {
-      return point2(std::atan2(y, x), std::acos(z));
-    };
+          return point2(std::atan2(y, x), std::acos(z));
+        };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
           parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1],
@@ -516,7 +516,40 @@ RawMesh *RawMeshes::cube(const ponos::Transform &transform,
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
-  return std::move(mesh);
+  return mesh;
+}
+
+RawMesh *RawMeshes::quad(const ponos::Transform &transform,
+                         bool generate_uvs) {
+  auto *mesh = new RawMesh();
+  mesh->addPosition({0.f, 0.f});
+  mesh->addPosition({1.f, 0.f});
+  mesh->addPosition({1.f, 1.f});
+  mesh->addPosition({0.f, 1.f});
+  mesh->addFace({0, 1, 2});
+  mesh->addFace({0, 2, 3});
+  // fix normal and uvs indices
+  for (auto &i : mesh->indices)
+    i.normalIndex = i.texcoordIndex = i.positionIndex;
+  size_t vertexCount = mesh->positions.size() / 2;
+  if (generate_uvs) {
+    mesh->addUV({0, 0}); // 0
+    mesh->addUV({1, 0}); // 1
+    mesh->addUV({1, 1}); // 2
+    mesh->addUV({0, 1}); // 3
+    mesh->texcoordDescriptor.count = vertexCount;
+    mesh->texcoordDescriptor.elementSize = 2;
+  }
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::TRIANGLES;
+  mesh->meshDescriptor.count = mesh->indices.size() / 3;
+  mesh->meshDescriptor.elementSize = 3;
+  mesh->positionDescriptor.count = vertexCount;
+  mesh->positionDescriptor.elementSize = 2;
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
 }
 
 RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,

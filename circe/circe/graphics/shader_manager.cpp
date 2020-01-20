@@ -28,7 +28,7 @@ namespace circe {
 
 ShaderManager ShaderManager::instance_;
 
-ShaderManager::ShaderManager() {}
+ShaderManager::ShaderManager() = default;
 
 int ShaderManager::loadFromFiles(std::initializer_list<const char *> l) {
   std::vector<GLuint> objects;
@@ -98,8 +98,7 @@ int ShaderManager::loadFromText(const char *s, GLuint shaderType) {
 }
 
 bool ShaderManager::useShader(GLuint program) {
-  glUseProgram(program);
-  CHECK_GL_ERRORS;
+  CHECK_GL(glUseProgram(program));
   return true;
 }
 
@@ -113,8 +112,8 @@ GLuint ShaderManager::createProgram(const GLchar *vertexShaderSource,
   GLuint VertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
   GLuint FragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
   // Load source code strings into shaders
-  glShaderSource(VertexShaderObject, 1, &vertexShaderSource, NULL);
-  glShaderSource(FragmentShaderObject, 1, &fragmentShaderSource, NULL);
+  glShaderSource(VertexShaderObject, 1, &vertexShaderSource, nullptr);
+  glShaderSource(FragmentShaderObject, 1, &fragmentShaderSource, nullptr);
   // Compile the brick vertex shader, and print out
   // the compiler log file.
   glCompileShader(VertexShaderObject);
@@ -151,7 +150,7 @@ GLuint ShaderManager::compile(const char *shaderSource, GLuint shaderType) {
   GLint compiled;
   GLuint shaderObject = glCreateShader(shaderType);
 
-  glShaderSource(shaderObject, 1, &shaderSource, NULL);
+  glShaderSource(shaderObject, 1, &shaderSource, nullptr);
 
   glCompileShader(shaderObject);
   CHECK_GL_ERRORS;

@@ -21,10 +21,10 @@ public:
             ponos::Transform transform) override {
     ponos::Transform inv = ponos::inverse(bvh->sceneMesh->transform);
     ponos::Ray3 r(ponos::point3(0, 0, 0), ponos::vec3(1, 1, 1));
-    glBegin(GL_LINES);
-    circe::glVertex(r.o);
-    circe::glVertex(r.o + 1000.f * r.d);
-    glEnd();
+//    glBegin(GL_LINES);
+//    circe::glVertex(r.o);
+//    circe::glVertex(r.o + 1000.f * r.d);
+//    glEnd();
     recDraw(inv(r), bvh->root);
     return;
     static int k = 0;

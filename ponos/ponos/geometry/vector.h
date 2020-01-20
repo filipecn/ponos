@@ -29,8 +29,8 @@
 #define PONOS_GEOMETRY_VECTOR_H
 
 #include <ponos/geometry/normal.h>
-#include <ponos/numeric/numeric.h>
 #include <ponos/log/debug.h>
+#include <ponos/numeric/numeric.h>
 
 #include <cstring>
 #include <initializer_list>
@@ -433,7 +433,7 @@ inline Vector<T, D> operator*(T f, const Vector<T, D> &v) {
 /* round
  * @v **[in]** vector
  * @return a vector with ceil applied to all components
- 
+
 
 
 template <typename T> Vector<int, 3> ceil(const Vector3<T> &v);

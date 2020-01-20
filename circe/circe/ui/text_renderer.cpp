@@ -86,19 +86,21 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
       "projection_matrix",
       ponos::transpose(ponos::ortho(0, 800, 0, 800).matrix()));
   quad_.shader()->setUniform("text", 0);
-  circe::CHECK_GL_ERRORS;
+  using namespace circe;
+  CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
   glDrawElements(ib->bufferDescriptor.elementType,
                  ib->bufferDescriptor.elementCount *
                      ib->bufferDescriptor.elementSize,
                  ib->bufferDescriptor.dataType, nullptr);
-  circe::CHECK_GL_ERRORS;
+  CHECK_GL_ERRORS;
   quad_.shader()->end();
 }
 
 void TextRenderer::render(std::string s, const ponos::point3 &p,
                           const CameraInterface *camera, GLfloat scale,
                           circe::Color c) {
+  UNUSED_VARIABLE(camera);
   atlas.setText(std::move(s));
   atlas.mesh->bind();
   atlas.mesh->vertexBuffer()->locateAttributes(*quad_.shader().get());
@@ -115,13 +117,14 @@ void TextRenderer::render(std::string s, const ponos::point3 &p,
       "projection_matrix",
       ponos::transpose(camera_->getProjectionTransform().matrix()));
   quad_.shader()->setUniform("text", 0);
-  circe::CHECK_GL_ERRORS;
+  using namespace circe;
+  CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
   glDrawElements(ib->bufferDescriptor.elementType,
                  ib->bufferDescriptor.elementCount *
                      ib->bufferDescriptor.elementSize,
                  ib->bufferDescriptor.dataType, nullptr);
-  circe::CHECK_GL_ERRORS;
+  CHECK_GL_ERRORS;
   quad_.shader()->end();
 }
 

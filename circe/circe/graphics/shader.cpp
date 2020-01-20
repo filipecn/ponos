@@ -28,25 +28,25 @@ namespace circe {
 
 ShaderProgram::ShaderProgram(const ShaderProgram &other) {
   programId = other.programId;
-  for (auto a : other.attrLocations)
+  for (const auto& a : other.attrLocations)
     attrLocations[a.first] = a.second;
-  for (auto a : other.uniformLocations)
+  for (const auto& a : other.uniformLocations)
     uniformLocations[a.first] = a.second;
 }
 
-ShaderProgram::ShaderProgram(const ShaderProgram &&other) {
+ShaderProgram::ShaderProgram(const ShaderProgram &&other) noexcept {
   programId = other.programId;
-  for (auto a : other.attrLocations)
+  for (const auto& a : other.attrLocations)
     attrLocations[a.first] = a.second;
-  for (auto a : other.uniformLocations)
+  for (const auto& a : other.uniformLocations)
     uniformLocations[a.first] = a.second;
 }
 
 ShaderProgram &ShaderProgram::operator=(const ShaderProgram &other) {
   programId = other.programId;
-  for (auto a : other.attrLocations)
+  for (const auto& a : other.attrLocations)
     attrLocations[a.first] = a.second;
-  for (auto a : other.uniformLocations)
+  for (const auto& a : other.uniformLocations)
     uniformLocations[a.first] = a.second;
   return *this;
 }
@@ -57,7 +57,7 @@ ShaderProgram::ShaderProgram(int id) {
 }
 
 ShaderProgram::ShaderProgram(const char *vs, const char *gs, const char *fs)
-    : ShaderProgram(ShaderManager::instance().loadFromTexts(vs, gs, fs)) {}
+    : ShaderProgram(ShaderManager::loadFromTexts(vs, gs, fs)) {}
 
 ShaderProgram::ShaderProgram(std::initializer_list<const char *> files)
     : programId(0) {
@@ -65,7 +65,7 @@ ShaderProgram::ShaderProgram(std::initializer_list<const char *> files)
 }
 
 bool ShaderProgram::loadFromFiles(std::initializer_list<const char *> files) {
-  int program = ShaderManager::instance().loadFromFiles(files);
+  int program = ShaderManager::loadFromFiles(files);
   if (program < 0)
     return false;
   programId = static_cast<GLuint>(program);
@@ -81,7 +81,7 @@ bool ShaderProgram::begin() {
 void ShaderProgram::registerVertexAttributes(const VertexBuffer *b) {
   if (!ShaderManager::instance().useShader(programId))
     return;
-  for (auto va : attrLocations) {
+  for (const auto& va : attrLocations) {
     GLint attribute = va.second;
     glEnableVertexAttribArray(attribute);
     CHECK_GL_ERRORS;
@@ -167,7 +167,7 @@ void ShaderProgram::setUniform(const char *name, const ponos::point3 &v) {
               << " not located. (Probably has not been added.\n";
     return;
   }
-  glUniform3fv(loc, 1, &v.x);
+  CHECK_GL(glUniform3fv(loc, 1, &v.x));
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec2 &v) {

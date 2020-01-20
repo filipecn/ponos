@@ -30,7 +30,6 @@
 #include <ponos/common/defs.h>
 #include <sstream>
 
-
 #ifndef UNUSED_VARIABLE
 #define UNUSED_VARIABLE(x) ((void)x)
 #endif

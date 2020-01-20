@@ -41,7 +41,7 @@ class ShaderProgram {
 public:
   explicit ShaderProgram(int id = 0);
   ShaderProgram(const ShaderProgram &other);
-  ShaderProgram(const ShaderProgram &&other);
+  ShaderProgram(const ShaderProgram &&other) noexcept;
   ShaderProgram &operator=(const ShaderProgram &other);
 
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
@@ -59,7 +59,7 @@ public:
   /// Activate shader program
   bool begin();
   /// Deactivate shader program
-  void end();
+  static void end();
   /// \param name
   /// \param location
   void addVertexAttribute(const char *name, GLint location);

@@ -30,16 +30,44 @@
 
 namespace circe {
 
-class VolumeBox : public SceneMeshObject {
+class VolumeBox2 : public SceneMeshObject {
 public:
-  VolumeBox(size_t w, size_t h, size_t d, float *data = nullptr);
-  ~VolumeBox();
+  VolumeBox2(u32 w, u32 h, float *data = nullptr);
+  ~VolumeBox2() override;
   void draw(const CameraInterface *camera, ponos::Transform t) override;
+  /// \return
   const Texture &texture() const;
+  /// \return
   Texture &texture();
+  /// \param data
   void update(float *data);
 
-  float absortion = 1.f;
+  float absorption = 1.f;
+  ponos::vec3 light_intensity = ponos::vec3(1);
+  ponos::vec2 light_position = ponos::vec2();
+private:
+  VolumeBox2();
+  void render(GLenum cullFace);
+  Texture density_texture_;
+};
+
+class VolumeBox : public SceneMeshObject {
+public:
+  /// \param w box width (in cells)
+  /// \param h box height (in cells)
+  /// \param d box depth (in cells)
+  /// \param data [default = nullptr] initial data
+  VolumeBox(size_t w, size_t h, size_t d, float *data = nullptr);
+  ~VolumeBox() override;
+  void draw(const CameraInterface *camera, ponos::Transform t) override;
+  /// \return
+  const Texture &texture() const;
+  /// \return
+  Texture &texture();
+  /// \param data
+  void update(float *data);
+
+  float absorption = 1.f;
   ponos::vec3 lightIntensity = ponos::vec3(1);
   ponos::vec3 lightPos = ponos::vec3();
 

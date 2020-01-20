@@ -15,7 +15,7 @@ void printShaderInfoLog(GLuint shader) {
   CHECK_GL_ERRORS;
 
   if (infologLength > 0) {
-    infoLog = (GLchar *)malloc((size_t)infologLength);
+    infoLog = (GLchar *) malloc((size_t) infologLength);
     if (infoLog == NULL) {
       printf("ERROR: Could not allocate InfoLog buffer\n");
       exit(1);
@@ -43,7 +43,7 @@ void printProgramInfoLog(GLuint program) {
   CHECK_GL_ERRORS;
 
   if (infologLength > 0) {
-    infoLog = (GLchar *)malloc(infologLength);
+    infoLog = (GLchar *) malloc(infologLength);
     if (infoLog == NULL) {
       printf("ERROR: Could not allocate InfoLog buffer\n");
       exit(1);
@@ -58,72 +58,66 @@ void printProgramInfoLog(GLuint program) {
 std::string glErrorToString(GLenum error, bool description) {
   std::string s, d;
   switch (error) {
-  case GL_NO_ERROR:
-    s += "GL_NO_ERROR";
+  case GL_NO_ERROR:s += "GL_NO_ERROR";
     break;
-  case GL_INVALID_ENUM:
-    s += "GL_INVALID_ENUM";
+  case GL_INVALID_ENUM:s += "GL_INVALID_ENUM";
     d += "Given when an enumeration parameter is not a legal enumeration for "
          "that function. This is given only for local problems; if the spec "
          "allows the enumeration in certain circumstances, where other "
          "parameters or state dictate those circumstances, then "
          "GL_INVALID_OPERATION is the result instead.";
     break;
-  case GL_INVALID_VALUE:
-    s += "GL_INVALID_VALUE";
+  case GL_INVALID_VALUE:s += "GL_INVALID_VALUE";
     d += "Given when a value parameter is not a legal value for that function. "
          "This is only given for local problems; if the spec allows the value "
          "in certain circumstances, where other parameters or state dictate "
          "those circumstances, then GL_INVALID_OPERATION is the result "
          "instead.";
     break;
-  case GL_INVALID_OPERATION:
-    s += "GL_INVALID_OPERATION";
+  case GL_INVALID_OPERATION:s += "GL_INVALID_OPERATION";
     d += "Given when the set of state for a command is not legal for the "
          "parameters given to that command. It is also given for commands "
          "where combinations of parameters define what the legal parameters "
          "are.";
     break;
-  case GL_STACK_OVERFLOW:
-    s += "GL_STACK_OVERFLOW";
+  case GL_STACK_OVERFLOW:s += "GL_STACK_OVERFLOW";
     d += "Given when a stack pushing operation cannot be done because it would "
          "overflow the limit of that stack's size.";
     break;
-  case GL_STACK_UNDERFLOW:
-    s += "GL_STACK_UNDERFLOW";
+  case GL_STACK_UNDERFLOW:s += "GL_STACK_UNDERFLOW";
     d += "Given when a stack popping operation cannot be done because the "
          "stack is already at its lowest point.";
     break;
-  case GL_OUT_OF_MEMORY:
-    s += "GL_OUT_OF_MEMORY";
+  case GL_OUT_OF_MEMORY:s += "GL_OUT_OF_MEMORY";
     d += "Given when performing an operation that can allocate memory, and the "
          "memory cannot be allocated. The results of OpenGL functions that "
          "return this error are undefined; it is allowable for partial "
          "operations to happen.";
     break;
-  case GL_INVALID_FRAMEBUFFER_OPERATION:
-    s += "GL_INVALID_FRAMEBUFFER_OPERATION";
+  case GL_INVALID_FRAMEBUFFER_OPERATION:s += "GL_INVALID_FRAMEBUFFER_OPERATION";
     d += "Given when doing anything that would attempt to read from or "
          "write/render to a framebuffer that is not complete.";
     break;
-  case GL_CONTEXT_LOST:
-    s += "GL_CONTEXT_LOST";
+  case GL_CONTEXT_LOST:s += "GL_CONTEXT_LOST";
     d += "Given if the OpenGL context has been lost, due to a graphics card "
          "reset.";
     break;
-  default:
-    s += "Undefined error code";
+  default:s += "Undefined error code";
   }
   return s + ((description) ? "(" + d + ")" : "");
 }
 
-bool printOglError(const char *file, int line) {
+bool checkGL(const char *file, int line_number, const char *function, const char*line) {
   GLenum glErr;
   bool retCode = false;
 
   while ((glErr = glad_glGetError()) != GL_NO_ERROR) {
-    std::cerr << "glError in file " << file << " @ line " << line << ": "
-              << glErrorToString(glErr) << std::endl;
+    std::cerr << '[' << file << "][" << line_number << "]";
+    if(function)
+      std::cerr << "[" << function << "]";
+    if(line)
+      std::cerr << "[" << line << "]";
+    std::cerr << ": " << glErrorToString(glErr) << std::endl;
     retCode = true;
   }
   return retCode;
@@ -133,8 +127,7 @@ bool checkFramebuffer() {
   std::string error;
   std::string name;
   switch (glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
-  case GL_FRAMEBUFFER_COMPLETE:
-    return true;
+  case GL_FRAMEBUFFER_COMPLETE:return true;
   case GL_FRAMEBUFFER_UNDEFINED:
     error += "target is the default framebuffer, but the default framebuffer "
              "does not exist.";
@@ -185,8 +178,7 @@ bool checkFramebuffer() {
              "are not from textures of the same target.";
     name += "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
     break;
-  default:
-    break;
+  default:break;
   }
 
   error += "\n";
@@ -208,7 +200,7 @@ bool initGLEW() {
 }
 
 void getGlVersion(int *major, int *minor) {
-  const char *str = (const char *)glGetString(GL_VERSION);
+  const char *str = (const char *) glGetString(GL_VERSION);
   std::cout << ">>>>>>>>>>> " << str << std::endl;
   if ((str == NULL) || (sscanf(str, "%d.%d", major, minor) != 2)) {
     *major = *minor = 0;
@@ -216,13 +208,13 @@ void getGlVersion(int *major, int *minor) {
   }
 }
 
-void glVertex(ponos::point3 v) { glVertex3f(v.x, v.y, v.z); }
+//void glVertex(ponos::point3 v) { glVertex3f(v.x, v.y, v.z); }
+//
+//void glVertex(ponos::point2 v) { glVertex2f(v.x, v.y); }
+//
+//void glVertex(ponos::vec2 v) { glVertex2f(v.x, v.y); }
 
-void glVertex(ponos::point2 v) { glVertex2f(v.x, v.y); }
-
-void glVertex(ponos::vec2 v) { glVertex2f(v.x, v.y); }
-
-void glColor(Color c) { glColor4f(c.r, c.g, c.b, c.a); }
+//void glColor(Color c) { glColor4f(c.r, c.g, c.b, c.a); }
 
 void glApplyTransform(const ponos::Transform &transform) {
   std::cerr << "forbiden call at " << LOG_LOCATION << std::endl;

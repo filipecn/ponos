@@ -54,13 +54,14 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/glfw-src
  #   )
 
   # ExternalProject_Get_Property(glfw INSTALL_DIR)
-    set(GLFW_INCLUDE_DIR ${INSTALL_DIR}/include)
-    set(GLFW_LIBRARIES
-        ${INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX})
+  #  set(GLFW_INCLUDE_DIR ${INSTALL_DIR}/include)
+  #  set(GLFW_LIBRARIES
+  #      ${INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX})
 
 	set(GLFW_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw-src/include")
-	set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/glfw3.lib")
-    
+	set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/Debug/glfw3.lib")
+    set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/glfw3.lib")
+
 	if(UNIX)
         find_package(Threads REQUIRED)
         find_package(X11 REQUIRED)

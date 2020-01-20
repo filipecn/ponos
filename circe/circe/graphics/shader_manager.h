@@ -44,19 +44,19 @@ public:
   /// \brief Creates a shader program from a list of shader files.
   /// It expects only one file of each type with extensions .frag, .vert, etc...
   ///\return program id. **-1** if error.
-  int loadFromFiles(std::initializer_list<const char *> l);
+  static int loadFromFiles(std::initializer_list<const char *> l);
   /// \brief Creates a shader program from strings.
   /// \param vs vertex shader
   /// \param gs geometry shader
   /// \param fs fragment shader
   /// \return program id. **-1** if error.
-  int loadFromTexts(const char *vs, const char *gs, const char *fs);
-  int loadFromText(const char *s, GLuint shaderType);
+  static int loadFromTexts(const char *vs, const char *gs, const char *fs);
+  static int loadFromText(const char *s, GLuint shaderType);
   /// \brief use program
   ///\param program **[in]** program's id
   /// Activate program
   ///\return **true** if success
-  bool useShader(GLuint program);
+  static bool useShader(GLuint program);
 
   ShaderManager(ShaderManager const &) = delete;
   void operator=(ShaderManager const &) = delete;
@@ -64,9 +64,9 @@ public:
 private:
   ShaderManager();
 
-  GLuint createProgram(const GLchar *, const GLchar *);
-  GLuint compile(const char *shaderSource, GLuint shaderType);
-  GLuint createProgram(const std::vector<GLuint> &objects);
+  static GLuint createProgram(const GLchar *, const GLchar *);
+  static GLuint compile(const char *shaderSource, GLuint shaderType);
+  static GLuint createProgram(const std::vector<GLuint> &objects);
 
   static ShaderManager instance_;
 };

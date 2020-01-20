@@ -37,7 +37,7 @@ public:
   /// \param id **[in]**
   TextObject(int id = -1);
   /// \param text **[in]**
-  void setText(std::string text);
+  void setText(const std::string& text);
   void draw(const CameraInterface *c, ponos::Transform t) override;
 
   float text_size = 1.f;   //!< text scale
