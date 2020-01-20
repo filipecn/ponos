@@ -162,7 +162,7 @@ __global__ void k__min(MemoryBlock2Accessor<T> data, T *c) {
     c[blockIdx.x] = cache[0];
 }
 
-template <typename T> T min(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+template <typename T> T minValue(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
   size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
   if (blockSize > 32)
     blockSize = 32;
@@ -208,7 +208,7 @@ __global__ void k__max(MemoryBlock2Accessor<T> data, T *c) {
     c[blockIdx.x] = cache[0];
 }
 
-template <typename T> T max(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+template <typename T> T maxValue(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
   size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
   if (blockSize > 32)
     blockSize = 32;

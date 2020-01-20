@@ -770,16 +770,16 @@ void fill3(RegularGrid3<MemoryLocation::DEVICE, T> &grid, const bbox3f &region,
                                          increment);
 }
 
-template <MemoryLocation L, typename T> T min(RegularGrid2<L, T> &grid);
+template <MemoryLocation L, typename T> T minValue(RegularGrid2<L, T> &grid);
 
-template <typename T> T min(RegularGrid2<MemoryLocation::DEVICE, T> &grid) {
-  return min(grid.data());
+template <typename T> T minValue(RegularGrid2<MemoryLocation::DEVICE, T> &grid) {
+  return minValue(grid.data());
 }
 
-template <MemoryLocation L, typename T> T max(RegularGrid2<L, T> &grid);
+template <MemoryLocation L, typename T> T maxValue(RegularGrid2<L, T> &grid);
 
-template <typename T> T max(RegularGrid2<MemoryLocation::DEVICE, T> &grid) {
-  return max(grid.data());
+template <typename T> T maxValue(RegularGrid2<MemoryLocation::DEVICE, T> &grid) {
+  return maxValue(grid.data());
 }
 
 // TODO: DEPRECATED

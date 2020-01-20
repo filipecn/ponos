@@ -94,7 +94,7 @@ TEST(RegularGrid2, reduce) {
     for (auto e : g.accessor())
       e.value = e.i() - e.j();
     RegularGrid2Df d_g(g);
-    EXPECT_EQ(min(d_g), -99);
-    EXPECT_EQ(max(d_g), 99);
+    EXPECT_EQ(minValue(d_g), -99);
+    EXPECT_EQ(maxValue(d_g), 99);
   }
 }

@@ -316,8 +316,7 @@ template <typename T>
 __host__ __device__ void tangential(const Vector3<T> &a, Vector3<T> &b,
                                     Vector3<T> &c);
 template <typename T> __host__ __device__ Vector3<T> cos(const Vector3<T> &v);
-template <typename T>
-__host__ __device__ Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b);
+
 template <typename T> __host__ __device__ Vector3<T> abs(const Vector3<T> &a);
 
 template <typename T>
