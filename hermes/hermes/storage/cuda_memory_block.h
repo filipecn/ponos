@@ -85,7 +85,7 @@ public:
   ///\return const T* device pointer
   const T *ptr() const { return (const T *)data_; }
   ///\return  T* device pointer
-  T *ptr() const { return (T *)data_; }
+  T *ptr() { return (T *)data_; }
   /// frees memory and set size to zero
   void clear() {
     if (data_)
