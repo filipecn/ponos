@@ -83,7 +83,9 @@ public:
   ///\return size_t memory block size in bytes
   size_t memorySize() const { return size_ * sizeof(T); }
   ///\return const T* device pointer
-  const T *ptr() const { return (T *)data_; }
+  const T *ptr() const { return (const T *)data_; }
+  ///\return  T* device pointer
+  T *ptr() const { return (T *)data_; }
   /// frees memory and set size to zero
   void clear() {
     if (data_)
