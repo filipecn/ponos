@@ -39,7 +39,7 @@ inline __host__ __device__ float monotonicCubicInterpolate(float fkm1, float fk,
   double Dk = fkp1 - fk;
   double dk = (fkp1 - fkm1) * 0.5f;
   double dkp1 = (fkp2 - fk) * 0.5f;
-  if (fabsf(Dk) < 1e-12)
+  if (fabsf(Dk) < 1e-12f)
     dk = dkp1 = 0.0;
   else {
     if (sign(dk) != sign(Dk))

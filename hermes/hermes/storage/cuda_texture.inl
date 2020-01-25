@@ -4,10 +4,10 @@ Texture<T>::Texture(int w, int h, bool fromDevice, const T *data) : w(w), h(h) {
   init();
   if (data) {
     if (fromDevice)
-      CUDA_CHECK(cudaMemcpy(d_data, data, w * h * sizeof(T),
+      CHECK_CUDA(cudaMemcpy(d_data, data, w * h * sizeof(T),
                             cudaMemcpyDeviceToDevice));
     else
-      CUDA_CHECK(
+      CHECK_CUDA(
           cudaMemcpy(d_data, data, w * h * sizeof(T), cudaMemcpyHostToDevice));
   }
 }
@@ -34,14 +34,14 @@ template <typename T> const T *Texture<T>::deviceData() const { return d_data; }
 
 template <typename T> void Texture<T>::updateTextureMemory() {
   if (d_data && texArray)
-    CUDA_CHECK(cudaMemcpyToArray(texArray, 0, 0, d_data, w * h * sizeof(T),
+    CHECK_CUDA(cudaMemcpyToArray(texArray, 0, 0, d_data, w * h * sizeof(T),
                                  cudaMemcpyDeviceToDevice));
 }
 
 template <typename T> void Texture<T>::init() {
   cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
-  CUDA_CHECK(cudaMalloc((void **)&d_data, sizeof(T) * w * h));
-  CUDA_CHECK(cudaMallocArray(&texArray, &channelDesc, w, h));
+  CHECK_CUDA(cudaMalloc((void **)&d_data, sizeof(T) * w * h));
+  CHECK_CUDA(cudaMallocArray(&texArray, &channelDesc, w, h));
 }
 
 template <typename T> void Texture<T>::clear() {
@@ -53,7 +53,7 @@ template <typename T> void Texture<T>::clear() {
 
 template <typename T> void Texture<T>::copy(const Texture<T> &other) {
   if (w == other.w && h == other.h)
-    CUDA_CHECK(cudaMemcpy(d_data, other.d_data, w * h * sizeof(T),
+    CHECK_CUDA(cudaMemcpy(d_data, other.d_data, w * h * sizeof(T),
                           cudaMemcpyDeviceToDevice));
 }
 

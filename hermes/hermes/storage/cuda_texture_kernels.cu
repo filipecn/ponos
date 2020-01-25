@@ -70,7 +70,7 @@ void fillTexture(cudaPitchedPtr data, float value, unsigned int w,
 
 void copyToArray3D(cudaPitchedPtr data, cudaArray *array, cudaExtent size) {
   ThreadArrayDistributionInfo td(size.width, size.height, size.depth);
-  CUDA_CHECK(cudaBindSurfaceToArray(tex3Out, array));
+  CHECK_CUDA(cudaBindSurfaceToArray(tex3Out, array));
   __surfWrite<<<td.gridSize, td.blockSize>>>(data, size);
 }
 

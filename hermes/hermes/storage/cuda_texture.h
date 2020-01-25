@@ -151,45 +151,92 @@ template <typename T> void fill(Texture<T> &texture, T value);
 template <typename T> class Texture3 {
 public:
   Texture3() = default;
-  virtual ~Texture3();
+  virtual ~Texture3() { clear(); }
   /// \param w texture width (in texels)
   /// \param h texture height (in texels)
   /// \param d texture depth (in texels)
   /// \param texDesc texture parameters
   /// \param fromDevice **[optional]** initial data location
   /// \param data **[optional]** initial data
-  Texture3(int w, int h, int d, bool fromDevice = false, T *data = nullptr);
+  Texture3(int w, int h, int d, bool fromDevice = false, T *data = nullptr) {
+    resize(w, h, d);
+    init();
+    if (data) {
+      copyLinearToPitched(
+          d_data, data,
+          (fromDevice) ? cudaMemcpyDeviceToDevice : cudaMemcpyHostToDevice, d);
+    }
+  }
   /// Clear texture memory and allocates a new one with new size
   /// \param newWidth new texture width (in texels)
   /// \param newHeight new texture height (in texels)
   /// \param newDepth new texture depth (in texels)
-  void resize(int newWidth, int newHeight, int newDepth);
+  void resize(int newWidth, int newHeight, int newDepth) {
+    clear();
+    size.width = newWidth;
+    size.height = newHeight;
+    size.depth = newDepth;
+    init();
+  }
   /// \return unsigned int texture width (in texels)
-  unsigned int width() const;
+  unsigned int width() const { return size.width; }
   /// \return unsigned int texture height (in texels)
-  unsigned int height() const;
+  unsigned int height() const { return size.height; }
   /// \return unsigned int texture depth (in texels)
-  unsigned int depth() const;
+  unsigned int depth() const { return size.depth; }
   /// \return const cudaArray* texture memory pointer
-  const cudaArray *textureArray() const;
+  const cudaArray *textureArray() const { return texArray; }
   /// \return T* device's global memory data
-  T *deviceData();
-  cudaPitchedPtr pitchedData();
+  T *deviceData() { return reinterpret_cast<T *>(d_data.ptr); }
+  cudaPitchedPtr pitchedData() { return d_data; }
   ///
-  size_t pitch() const;
+  size_t pitch() const { return d_data.pitch; }
   /// \return const T* device's global memory data
-  const T *deviceData() const;
+  const T *deviceData() const {
+    return reinterpret_cast<const T *>(d_data.ptr);
+  }
   /// allocates texture memory on device
-  void allocateTextureMemory();
+  void allocateTextureMemory() {
+    releaseTextureMemory();
+    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
+    CHECK_CUDA(cudaMalloc3DArray(&texArray, &channelDesc, size));
+  }
   /// free texture memory on device
-  void releaseTextureMemory();
+  void releaseTextureMemory() {
+    if (texArray)
+      cudaFreeArray(texArray);
+    texArray = nullptr;
+  }
   /// Copies data from global memory (read/write) to texture memory (read only)
-  void updateTextureMemory();
-  void copy(const Texture3<T> &other);
+  void updateTextureMemory() {
+    if (d_data.ptr && texArray) {
+      cudaMemcpy3DParms copyParams = {0};
+      copyParams.srcPtr = d_data;
+      copyParams.dstArray = texArray;
+      copyParams.extent = size;
+      copyParams.kind = cudaMemcpyDeviceToDevice;
+      CHECK_CUDA(cudaMemcpy3D(&copyParams));
+    }
+  }
+  void copy(const Texture3<T> &other) {
+    if (size.width == other.size.width && size.height == other.size.height &&
+        size.depth == other.size.depth)
+      copyPitchedToPitched<T>(d_data, other.d_data, cudaMemcpyDeviceToDevice,
+                              size.depth);
+  }
 
 private:
-  void init();
-  void clear();
+  void init() {
+    cudaExtent extent =
+        make_cudaExtent(size.width * sizeof(T), size.height, size.depth);
+    CHECK_CUDA(cudaMalloc3D(&d_data, extent));
+  }
+  void clear() {
+    if (d_data.ptr)
+      cudaFree(d_data.ptr);
+    if (texArray)
+      cudaFreeArray(texArray);
+  }
 
   cudaExtent size;
   cudaPitchedPtr d_data;
@@ -224,10 +271,14 @@ std::ostream &operator<<(std::ostream &os, Texture3<T> &tex) {
 /// \tparam T data type
 /// \param texture
 /// \param value
-template <typename T> void fill(Texture3<T> &texture, T value);
+template <typename T> void fill(Texture3<T> &texture, T value) {
+  fillTexture(texture.pitchedData(), value, texture.width(), texture.height(),
+              texture.depth());
+  texture.updateTextureMemory();
+}
 
 #include "cuda_texture.inl"
-#include "cuda_texture3.inl"
+// #include "cuda_texture3.inl"
 
 } // namespace cuda
 

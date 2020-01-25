@@ -67,14 +67,15 @@ __host__ __device__ size_t pitchedIndexOffset(size_t pitch, size_t w, size_t h,
 }
 
 template <typename T>
-void copyLinearToLinear(T *dst, const T *src, cudaMemcpyKind kind, vec3u size) {
-  CUDA_CHECK(cudaMemcpy(dst, src, size.x * size.y * size.z * sizeof(T), kind));
+void copyLinearToLinear(T *&dst, const T *src, cudaMemcpyKind kind,
+                        vec3u size) {
+  CHECK_CUDA(cudaMemcpy(dst, src, size.x * size.y * size.z * sizeof(T), kind));
 }
 
 template <typename T>
 void copyPitchedToPitched(cudaPitchedPtr dst, cudaPitchedPtr src,
                           cudaMemcpyKind kind) {
-  CUDA_CHECK(cudaMemcpy2D(dst.ptr, dst.pitch, src.ptr, src.pitch, src.xsize,
+  CHECK_CUDA(cudaMemcpy2D(dst.ptr, dst.pitch, src.ptr, src.pitch, src.xsize,
                           src.ysize, kind));
 }
 
@@ -95,7 +96,7 @@ void copyPitchedToPitched(cudaPitchedPtr dst, cudaPitchedPtr src,
   p.extent.height = dst.ysize;
   p.extent.depth = depth;
   p.kind = kind;
-  CUDA_CHECK(cudaMemcpy3D(&p));
+  CHECK_CUDA(cudaMemcpy3D(&p));
 }
 
 template <typename T>
@@ -115,7 +116,7 @@ void copyPitchedToLinear(T *linearMemory, cudaPitchedPtr pitchedMemory,
   p.extent.height = pitchedMemory.ysize;
   p.extent.depth = depth;
   p.kind = kind;
-  CUDA_CHECK(cudaMemcpy3D(&p));
+  CHECK_CUDA(cudaMemcpy3D(&p));
 }
 
 template <typename T>
@@ -135,13 +136,13 @@ void copyLinearToPitched(cudaPitchedPtr pitchedMemory, T *linearMemory,
   p.extent.height = pitchedMemory.ysize;
   p.extent.depth = depth;
   p.kind = kind;
-  CUDA_CHECK(cudaMemcpy3D(&p));
+  CHECK_CUDA(cudaMemcpy3D(&p));
 }
 
 template <typename T>
 void copyPitchedToArray(cudaArray *dst, cudaPitchedPtr src,
                         cudaMemcpyKind kind) {
-  CUDA_CHECK(cudaMemcpy2DToArray(dst, 0, 0, src.ptr, src.pitch, src.xsize,
+  CHECK_CUDA(cudaMemcpy2DToArray(dst, 0, 0, src.ptr, src.pitch, src.xsize,
                                  src.ysize, kind));
 }
 
@@ -155,8 +156,10 @@ void copyPitchedToArray(cudaArray *dst, cudaPitchedPtr src, cudaMemcpyKind kind,
   copyParams.dstArray = dst;
   copyParams.extent = extent;
   copyParams.kind = kind;
-  CUDA_CHECK(cudaMemcpy3D(&copyParams));
+  CHECK_CUDA(cudaMemcpy3D(&copyParams));
 }
+
+/*
 
 template <typename T> class MemoryBlock1Accessor {
 public:
@@ -212,7 +215,7 @@ public:
   void allocate() {
     if (data_)
       cudaFree(data_);
-    CUDA_CHECK(cudaMalloc(&data_, size_ * sizeof(T)));
+    CHECK_CUDA(cudaMalloc(&data_, size_ * sizeof(T)));
   }
   size_t memorySize() { return size_ * sizeof(T); }
   T *ptr() { return data_; }
@@ -256,7 +259,7 @@ private:
   size_t size_;
   T *data_ = nullptr;
 };
-
+*/
 template <typename T> class MemoryBlock2Iterator {
 public:
   class Element {
@@ -349,7 +352,7 @@ public:
     if (data_)
       cudaFree(data_);
     void *pdata = nullptr;
-    CUDA_CHECK(cudaMallocPitch(&pdata, &pitch_, size_.x * sizeof(T), size_.y));
+    CHECK_CUDA(cudaMallocPitch(&pdata, &pitch_, size_.x * sizeof(T), size_.y));
     data_ = reinterpret_cast<T *>(pdata);
   }
   size_t memorySize() { return pitch_ * size_.x * size_.y * sizeof(T); }
@@ -518,7 +521,7 @@ public:
       cudaFree(data_);
     cudaPitchedPtr pdata;
     cudaExtent extent = make_cudaExtent(size_.x * sizeof(T), size_.y, size_.z);
-    CUDA_CHECK(cudaMalloc3D(&pdata, extent));
+    CHECK_CUDA(cudaMalloc3D(&pdata, extent));
     pitch_ = pdata.pitch;
     data_ = reinterpret_cast<T *>(pdata.ptr);
   }
@@ -582,14 +585,14 @@ private:
   T *data_ = nullptr;
 };
 
-template <MemoryLocation A, MemoryLocation B, typename T>
+/*template <MemoryLocation A, MemoryLocation B, typename T>
 bool memcpy(MemoryBlock1<A, T> &dst, MemoryBlock1<B, T> &src) {
   if (dst.size() != src.size())
     return false;
   auto kind = copyDirection(src.location(), dst.location());
-  CUDA_CHECK(cudaMemcpy(dst.ptr(), src.ptr(), src.size() * sizeof(T), kind));
+  CHECK_CUDA(cudaMemcpy(dst.ptr(), src.ptr(), src.size() * sizeof(T), kind));
   return true;
-}
+}*/
 
 template <MemoryLocation A, MemoryLocation B, typename T>
 bool memcpy(MemoryBlock2<A, T> &dst, MemoryBlock2<B, T> &src) {
@@ -628,11 +631,11 @@ bool memcpy(Array3<T> &dst, MemoryBlock3<L, T> &src) {
   return true;
 }
 
-template <MemoryLocation L, typename T>
+/*template <MemoryLocation L, typename T>
 bool memcpy(std::vector<T> &dst, const MemoryBlock1<L, T> &src) {
   dst.resize(src.size());
   auto kind = copyDirection(src.location(), MemoryLocation::HOST);
-  CUDA_CHECK(cudaMemcpy(dst.data(), src.ptr(), src.size() * sizeof(T), kind));
+  CHECK_CUDA(cudaMemcpy(dst.data(), src.ptr(), src.size() * sizeof(T), kind));
   return true;
 }
 
@@ -661,7 +664,7 @@ std::ostream &operator<<(std::ostream &os,
   os << host << std::endl;
   return os;
 }
-
+*/
 template <typename T>
 std::ostream &operator<<(std::ostream &os,
                          MemoryBlock2<MemoryLocation::HOST, T> &data) {
@@ -779,14 +782,14 @@ void fill3(MemoryBlock3<MemoryLocation::HOST, T> &data, T value) {
     e.value = value;
 }
 
-using MemoryBlock1Dd = MemoryBlock1<MemoryLocation::DEVICE, double>;
+/*using MemoryBlock1Dd = MemoryBlock1<MemoryLocation::DEVICE, double>;
 using MemoryBlock1Hd = MemoryBlock1<MemoryLocation::HOST, double>;
 using MemoryBlock1Df = MemoryBlock1<MemoryLocation::DEVICE, float>;
 using MemoryBlock1Hf = MemoryBlock1<MemoryLocation::HOST, float>;
 using MemoryBlock1Di = MemoryBlock1<MemoryLocation::DEVICE, int>;
 using MemoryBlock1Hi = MemoryBlock1<MemoryLocation::HOST, int>;
 using MemoryBlock1Du = MemoryBlock1<MemoryLocation::DEVICE, unsigned int>;
-using MemoryBlock1Hu = MemoryBlock1<MemoryLocation::HOST, unsigned int>;
+using MemoryBlock1Hu = MemoryBlock1<MemoryLocation::HOST, unsigned int>;*/
 using MemoryBlock2Df = MemoryBlock2<MemoryLocation::DEVICE, float>;
 using MemoryBlock2Hf = MemoryBlock2<MemoryLocation::HOST, float>;
 using MemoryBlock2Di = MemoryBlock2<MemoryLocation::DEVICE, int>;

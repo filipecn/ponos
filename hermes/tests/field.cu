@@ -9,7 +9,7 @@ TEST(Field, fill) {
   auto &t = ft.texture();
   fillTexture(t);
   std::vector<float> h_data(t.width() * t.height());
-  CUDA_CHECK(cudaMemcpy(h_data.data(), t.deviceData(),
+  CHECK_CUDA(cudaMemcpy(h_data.data(), t.deviceData(),
                         h_data.size() * sizeof(float), cudaMemcpyDeviceToHost));
   print(h_data.data(), t.width(), t.height());
 }

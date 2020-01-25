@@ -28,6 +28,7 @@ set(HERMES_HEADERS
         hermes/numeric/cuda_staggered_grid.h
         hermes/parallel/cuda_reduce.h
         hermes/storage/cuda_array.h
+        hermes/storage/cuda_memory_block.h
         hermes/storage/cuda_texture.h
         hermes/storage/cuda_texture.inl
         hermes/storage/cuda_texture_kernels.h
@@ -49,6 +50,13 @@ set(CMAKE_CUDA_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 enable_language("CUDA")
+list(APPEND CUDA_NVCC_FLAGS -arch compute_30 -use_fast_math)
+add_definitions(-D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__=1)
+if (MSVC)
+    list(APPEND CUDA_NVCC_FLAGS --compiler-options /D_USE_MATH_DEFINES)
+endif (MSVC)
+
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #CUDA_COMPILE_PTX(ptx_files ${HERMES_SOURCES} ${HERMES_HEADERS})
 add_library(hermes STATIC ${HERMES_SOURCES} ${HERMES_HEADERS})# ${ptx_files})

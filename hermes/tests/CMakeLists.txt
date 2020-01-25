@@ -4,16 +4,16 @@ set(sources
         main.cpp
         #particle_system.cu
         #array.cu
-        utils.h
-        algorithms.cu
-        utils.cu
-        transform.cu
-        numeric.cu
-        texture.cu
-        field.cu
-        grids.cu
+        #utils.h
+        #algorithms.cu
+        #utils.cu
+        #transform.cu
+        #numeric.cu
+        #texture.cu
+        #field.cu
+        #grids.cu
         memory.cu
-        blas.cu
+        #blas.cu
         )
 
 #include_directories(${HERMES_SOURCE_DIR} "${gtest_SOURCE_DIR}/include")

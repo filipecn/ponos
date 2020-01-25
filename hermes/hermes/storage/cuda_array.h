@@ -41,7 +41,7 @@ public:
   hermes::cuda::vec2u size() const { return size_; }
   void allocate() {
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
-    CUDA_CHECK(cudaMallocArray(&array_, &channelDesc, size_.x, size_.y));
+    CHECK_CUDA(cudaMallocArray(&array_, &channelDesc, size_.x, size_.y));
   }
   const cudaArray *data() const { return array_; }
   cudaArray *data() { return array_; }
@@ -62,7 +62,7 @@ public:
   void allocate() {
     cudaExtent extent = make_cudaExtent(size_.x, size_.y, size_.z);
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<T>();
-    CUDA_CHECK(cudaMalloc3DArray(&array_, &channelDesc, extent));
+    CHECK_CUDA(cudaMalloc3DArray(&array_, &channelDesc, extent));
   }
   const cudaArray *data() const { return array_; }
   cudaArray *data() { return array_; }

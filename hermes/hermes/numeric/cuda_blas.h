@@ -26,6 +26,7 @@
 #define HERMES_NUMERIC_CUDA_BLAS_H
 
 #include <hermes/common/cuda_parallel.h>
+#include <hermes/storage/cuda_memory_block.h>
 #include <hermes/storage/cuda_storage_utils.h>
 
 namespace hermes {
@@ -142,29 +143,22 @@ template <typename T> void sub(T *a, T *b, T *c, size_t n) {
 
 // r = dot(a,b)
 template <typename T>
-T dot(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
-      MemoryBlock1<MemoryLocation::DEVICE, T> &b,
-      MemoryBlock1<MemoryLocation::DEVICE, T> &w) {
+T dot(CuMemoryBlock1<T> &a, CuMemoryBlock1<T> &b, CuMemoryBlock1<T> &w) {
   return dot(a.ptr(), b.ptr(), a.size());
 }
 // r = max |a[i]|
-template <typename T>
-T infnorm(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
-          MemoryBlock1<MemoryLocation::DEVICE, T> &w) {
+template <typename T> T infnorm(CuMemoryBlock1<T> &a, CuMemoryBlock1<T> &w) {
   return infnorm(a.ptr(), a.size());
 }
 // r = a * x + y
 template <typename T>
-void axpy(T a, MemoryBlock1<MemoryLocation::DEVICE, T> &x,
-          MemoryBlock1<MemoryLocation::DEVICE, T> &y,
-          MemoryBlock1<MemoryLocation::DEVICE, T> &r) {
+void axpy(T a, CuMemoryBlock1<T> &x, CuMemoryBlock1<T> &y,
+          CuMemoryBlock1<T> &r) {
   axpy(a, x.ptr(), y.ptr(), r.ptr(), x.size());
 }
 // r = a - b
 template <typename T>
-void sub(MemoryBlock1<MemoryLocation::DEVICE, T> &a,
-         MemoryBlock1<MemoryLocation::DEVICE, T> &b,
-         MemoryBlock1<MemoryLocation::DEVICE, T> &r) {
+void sub(CuMemoryBlock1<T> &a, CuMemoryBlock1<T> &b, CuMemoryBlock1<T> &r) {
   sub(a.ptr(), b.ptr(), r.ptr(), a.size());
 }
 

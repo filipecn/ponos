@@ -26,6 +26,7 @@
 #define HERMES_ALGORITHMS_MARCHING_CUBES_H
 
 #include <hermes/numeric/cuda_grid.h>
+#include <hermes/storage/cuda_memory_block.h>
 
 namespace hermes {
 
@@ -39,9 +40,9 @@ public:
   /// \param indices **[out]**
   /// \param isovalue **[in]**
   template <MemoryLocation L>
-  static void
-  extractIsoline(RegularGrid2<L, float> &f, MemoryBlock1<L, float> &vertices,
-                 MemoryBlock1<L, unsigned int> &indices, float isovalue = 0.f);
+  static void extractIsoline(RegularGrid2<L, float> &f,
+                             CuMemoryBlock1f &vertices,
+                             CuMemoryBlock1u &indices, float isovalue = 0.f);
 };
 
 class MarchingCubes {
@@ -52,10 +53,10 @@ public:
   /// \param indices **[out]**
   /// \param isovalue **[in]**
   template <MemoryLocation L>
-  static void
-  extractSurface(RegularGrid3<L, float> &f, MemoryBlock1<L, float> &vertices,
-                 MemoryBlock1<L, unsigned int> &indices, float isovalue = 0.f,
-                 MemoryBlock1<L, float> *normals = nullptr);
+  static void extractSurface(RegularGrid3<L, float> &f,
+                             CuMemoryBlock1f &vertices,
+                             CuMemoryBlock1u &indices, float isovalue = 0.f,
+                             CuMemoryBlock1f *normals = nullptr);
 };
 
 } // namespace cuda

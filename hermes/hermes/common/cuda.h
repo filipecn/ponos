@@ -40,7 +40,7 @@ static void handleCudaError(cudaError_t err, const char *file, int line) {
   }
 }
 
-#define CUDA_CHECK(err) (handleCudaError(err, __FILE__, __LINE__))
+#define CHECK_CUDA(err) (handleCudaError(err, __FILE__, __LINE__))
 
 } // namespace cuda
 

@@ -4,6 +4,23 @@
 
 using namespace hermes::cuda;
 
+TEST(MemoryBlock1, Constructors) {
+  { CuMemoryBlock1<vec2> a(1000); }
+  {
+    std::vector<int> data(1000);
+    for (int i = 0; i < 1000; ++i)
+      data[i] = i;
+    CuMemoryBlock1<int> a = data;
+    auto v = a.hostData();
+    for (int i = 0; i < 1000; ++i)
+      EXPECT_EQ(v[i], i);
+  }
+  {
+    CuMemoryBlock1<int> a = std::move(CuMemoryBlock1<int>(1000));
+    CuMemoryBlock1<int> b(CuMemoryBlock1<int>(1000));
+  }
+}
+
 TEST(MemoryBlock2, memcpy) {
   {
     vec2u res(8);

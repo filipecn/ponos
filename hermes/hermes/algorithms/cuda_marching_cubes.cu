@@ -82,8 +82,8 @@ __device__ float intersect(float p1, float v1, float p2, float v2,
 }
 
 __global__ void
-__generateVertices(MemoryBlock1Accessor<float> vertices,
-                   MemoryBlock1Accessor<unsigned int> indices,
+__generateVertices(CuMemoryBlock1Accessor<float> vertices,
+                   CuMemoryBlock1Accessor<unsigned int> indices,
                    RegularGrid2Accessor<float> f,
                    MemoryBlock2Accessor<unsigned int> index_offset,
                    MemoryBlock2Accessor<unsigned char> type, float isovalue) {
@@ -125,8 +125,8 @@ __generateVertices(MemoryBlock1Accessor<float> vertices,
 
 template <>
 void MarchingSquares::extractIsoline(RegularGrid2Df &f,
-                                     MemoryBlock1Df &vertices,
-                                     MemoryBlock1Du &indices, float isovalue) {
+                                     CuMemoryBlock1f &vertices,
+                                     CuMemoryBlock1u &indices, float isovalue) {
   // classify squares
   vec2u size(f.resolution().x - 1, f.resolution().y - 1);
   MemoryBlock2Duc square_type(size);
@@ -154,9 +154,7 @@ void MarchingSquares::extractIsoline(RegularGrid2Df &f,
   memcpy(d_index_offset, h_index_offset);
   // compute vertices
   vertices.resize(count * 2 * 2);
-  vertices.allocate();
   indices.resize(count * 2);
-  indices.allocate();
   __generateVertices<<<td.gridSize, td.blockSize>>>(
       vertices.accessor(), indices.accessor(), f.accessor(),
       d_index_offset.accessor(), square_type.accessor(), isovalue);
@@ -515,8 +513,8 @@ __device__ point3f intersect(float value, point3f p1, point3f p2, float v1,
 }
 
 __global__ void
-__generateVertices(MemoryBlock1Accessor<float> vertices,
-                   MemoryBlock1Accessor<unsigned int> indices,
+__generateVertices(CuMemoryBlock1Accessor<float> vertices,
+                   CuMemoryBlock1Accessor<unsigned int> indices,
                    RegularGrid3Accessor<float> f,
                    MemoryBlock3Accessor<unsigned int> index_offset,
                    MemoryBlock3Accessor<unsigned char> type, float isovalue) {
@@ -579,8 +577,8 @@ __generateVertices(MemoryBlock1Accessor<float> vertices,
   }
 }
 
-__global__ void __generateNormals(MemoryBlock1Accessor<float> vertices,
-                                  MemoryBlock1Accessor<float> normals) {
+__global__ void __generateNormals(CuMemoryBlock1Accessor<float> vertices,
+                                  CuMemoryBlock1Accessor<float> normals) {
 
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   if (tid < vertices.size() / 9) {
@@ -604,9 +602,9 @@ __global__ void __generateNormals(MemoryBlock1Accessor<float> vertices,
 }
 
 template <>
-void MarchingCubes::extractSurface(RegularGrid3Df &f, MemoryBlock1Df &vertices,
-                                   MemoryBlock1Du &indices, float isovalue,
-                                   MemoryBlock1Df *normals) {
+void MarchingCubes::extractSurface(RegularGrid3Df &f, CuMemoryBlock1f &vertices,
+                                   CuMemoryBlock1u &indices, float isovalue,
+                                   CuMemoryBlock1f *normals) {
   // classify cubes
   vec3u size = f.resolution() - vec3u(1);
   MemoryBlock3Duc cube_type(size);
@@ -631,15 +629,12 @@ void MarchingCubes::extractSurface(RegularGrid3Df &f, MemoryBlock1Df &vertices,
   memcpy(d_index_offset, h_index_offset);
   // compute vertices
   vertices.resize(count * 3 * 3);
-  vertices.allocate();
   indices.resize(count * 3);
-  indices.allocate();
   __generateVertices<<<td.gridSize, td.blockSize>>>(
       vertices.accessor(), indices.accessor(), f.accessor(),
       d_index_offset.accessor(), cube_type.accessor(), isovalue);
   if (normals) {
     normals->resize(count * 3 * 3);
-    normals->allocate();
     ThreadArrayDistributionInfo ntd(count);
     __generateNormals<<<ntd.gridSize, ntd.blockSize>>>(vertices.accessor(),
                                                        normals->accessor());

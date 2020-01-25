@@ -28,22 +28,21 @@
 #ifndef PONOS_STORAGE_MEMORY_BLOCK_H
 #define PONOS_STORAGE_MEMORY_BLOCK_H
 
-#include <ponos/common/size.h>
 #include <ponos/common/index.h>
+#include <ponos/common/size.h>
+
 
 namespace ponos {
-
 /// Holds a linear memory area representing a 2-dimensional array. It provides
 /// memory alignment via a custom size of allocated memory per row (called pitch
 /// size).
 /// \tparam T data type
-template<class T>
-class MemoryBlock2 {
+template <class T> class MemoryBlock2 {
 public:
   MemoryBlock2() = default;
   /// \param size dimensions (in element count)
-  explicit MemoryBlock2(const size2 &size) : pitch_(size.width * sizeof(T)),
-                                             size_(size) {
+  explicit MemoryBlock2(const size2 &size)
+      : pitch_(size.width * sizeof(T)), size_(size) {
     data_ = new char[pitch_ * size.height];
   }
   /// \param size dimensions (in element count)
@@ -52,13 +51,12 @@ public:
       : pitch_(pitch), size_(size) {
     data_ = new char[pitch_ * size.height];
   }
-  MemoryBlock2(const MemoryBlock2 &other) : MemoryBlock2(other.size_,
-                                                         other.pitch_) {
+  MemoryBlock2(const MemoryBlock2 &other)
+      : MemoryBlock2(other.size_, other.pitch_) {
     memcpy(data_, other.data_, memorySize());
   }
   MemoryBlock2(const MemoryBlock2 &&other) = delete;
-  MemoryBlock2(MemoryBlock2 &other) : MemoryBlock2(other.size_,
-                                                   other.pitch_) {
+  MemoryBlock2(MemoryBlock2 &other) : MemoryBlock2(other.size_, other.pitch_) {
     memcpy(data_, other.data_, memorySize());
   }
   MemoryBlock2(MemoryBlock2 &&other) noexcept
@@ -87,12 +85,12 @@ public:
   /// \param ij (0 <= ij < size)
   /// \return reference to element at ij position
   T &operator()(index2 ij) {
-    return (T &) (*((char *) data_ + ij.j * pitch_ + ij.i * sizeof(T)));
+    return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
   /// \param ij (0 <= ij < size)
   /// \return const reference to element at ij position
   const T &operator()(index2 ij) const {
-    return (T &) (*((char *) data_ + ij.j * pitch_ + ij.i * sizeof(T)));
+    return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
   /// \return memory usage (in bytes)
   size_t memorySize() const { return size_.height * pitch_; }
@@ -113,19 +111,20 @@ public:
   /// Assign value to all data
   /// \param value assign value
   /// \return *this
-  MemoryBlock2& operator=(const T& value) {
-    if(!data_)
+  MemoryBlock2 &operator=(const T &value) {
+    if (!data_)
       data_ = new char[pitch_ * size_.height];
-    for(index2 ij : Index2Range<i32>(size_))
+    for (index2 ij : Index2Range<i32>(size_))
       (*this)(ij) = value;
     return *this;
   }
+
 private:
   size_t pitch_ = 0;
   size2 size_{};
   void *data_ = nullptr;
 };
 
-} // ponos namespace
+} // namespace ponos
 
-#endif //PONOS_STORAGE_MEMORY_BLOCK_H
+#endif // PONOS_STORAGE_MEMORY_BLOCK_H
