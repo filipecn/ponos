@@ -18,6 +18,8 @@ TEST(MemoryBlock1, Constructors) {
   {
     CuMemoryBlock1<int> a = std::move(CuMemoryBlock1<int>(1000));
     CuMemoryBlock1<int> b(CuMemoryBlock1<int>(1000));
+    b = a;
+    a = std::vector<int>(1000);
   }
 }
 

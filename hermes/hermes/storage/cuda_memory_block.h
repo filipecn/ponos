@@ -70,6 +70,22 @@ public:
         cudaMemcpy(data_, &data[0], size_ * sizeof(T), cudaMemcpyHostToDevice));
   }
   ~CuMemoryBlock1() { clear(); }
+  ///\param other **[in]**
+  ///\return CuMemoryBlock1<T>&
+  CuMemoryBlock1<T> &operator=(const CuMemoryBlock1<T> &other) {
+    resize(other.size_);
+    CHECK_CUDA(cudaMemcpy(data_, other.data_, size_ * sizeof(T),
+                          cudaMemcpyDeviceToDevice));
+    return *this;
+  }
+  ///\param data **[in]**
+  ///\return CuMemoryBlock1<T>&
+  CuMemoryBlock1<T> &operator=(const std::vector<T> &data) {
+    resize(data.size());
+    CHECK_CUDA(
+        cudaMemcpy(data_, &data[0], size_ * sizeof(T), cudaMemcpyHostToDevice));
+    return *this;
+  }
   /// frees any previous data and allocates a new block
   ///\param new_size **[in]** new element count
   void resize(size_t new_size) {
