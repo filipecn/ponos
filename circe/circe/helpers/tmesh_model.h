@@ -54,7 +54,7 @@ public:
   }
 
   void draw(const CameraInterface *camera, ponos::Transform t) override {
-    GL_DRAW_POINTS(4.f, glColor(COLOR_BLACK);
+    /*GL_DRAW_POINTS(4.f, glColor(COLOR_BLACK);
                    for (size_t i = 0; i < mesh_.vertices.size(); i++)
                        glVertex(mesh_.vertices[i].position);
 
@@ -73,7 +73,7 @@ public:
       auto v = mesh_.faceVertices(f);
       for (size_t k = 0; k < 3; k++)
         glVertex(mesh_.vertices[v[k]].position);
-    })
+    })*/
   }
 
   bool intersect(const ponos::Ray3 &r, float *t) override {
