@@ -32,8 +32,18 @@ if (BUILD_EXAMPLES)
     add_subdirectory(examples/shallow_waters)
     add_subdirectory(examples/smoke_sim)
 endif (BUILD_EXAMPLES)
+
 if (BUILD_TESTS)
     add_subdirectory(tests/cuda_unit_tests)
     add_subdirectory(tests/unit_tests)
 endif (BUILD_TESTS)
 
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/poseidon
+        DESTINATION ${INSTALL_PATH}/include
+        FILES_MATCHING REGEX "(.*\\.[inl|h])")
+
+install(TARGETS poseidon
+        LIBRARY DESTINATION ${INSTALL_PATH}/lib
+        ARCHIVE DESTINATION ${INSTALL_PATH}//lib
+        )
