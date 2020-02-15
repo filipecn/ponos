@@ -30,8 +30,8 @@
 #include "../geometry/bbox.h"
 #include "../geometry/transform.h"
 
-#include "../../../../../Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.23.28105/include/algorithm"
-#include "../../../../../Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.23.28105/include/functional"
+#include <algorithm>
+#include <functional>
 
 namespace ponos {
 

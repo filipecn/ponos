@@ -34,7 +34,7 @@
 #define UNUSED_VARIABLE(x) ((void)x)
 #endif
 #ifndef LOG_LOCATION
-#define LOG_LOCATION "[" << __FILE__ << ", line " << __LINE__ << "]"
+#define LOG_LOCATION "[" << __FILE__ << "][" << __LINE__ << "]"
 #endif
 #ifndef FATAL_ASSERT
 #define FATAL_ASSERT(A)                                                        \
@@ -84,6 +84,11 @@
       std::cout << LOG_LOCATION << " " << std::endl;                           \
   }
 #endif
+
+#ifndef PING
+#define PING std ::cerr << LOG_LOCATION << "[" << __FUNCTION__ << "]: PING\n";
+#endif
+
 #ifndef LOG
 #define LOG std::cout << LOG_LOCATION << " "
 #endif
@@ -114,7 +119,7 @@
 namespace ponos {
 
 // Condition to stop processing
-inline void concatenate(std::ostringstream &s) {}
+inline void concatenate(std::ostringstream &s) { UNUSED_VARIABLE(s); }
 
 template <typename H, typename... T>
 void concatenate(std::ostringstream &s, H p, T... t) {

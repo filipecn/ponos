@@ -9,6 +9,8 @@ set(HERMES_HEADERS
         hermes/common/cuda_parallel.h
         hermes/common/cuda_random.h
         hermes/common/defs.h
+        hermes/common/index.h
+        hermes/common/size.h
         hermes/geometry/cuda_bbox.h
         hermes/geometry/cuda_bbox.inl
         hermes/geometry/cuda_matrix.h
@@ -27,6 +29,7 @@ set(HERMES_HEADERS
         hermes/numeric/cuda_numeric.h
         hermes/numeric/cuda_staggered_grid.h
         hermes/parallel/cuda_reduce.h
+        hermes/storage/array.h
         hermes/storage/cuda_array.h
         hermes/storage/cuda_memory_block.h
         hermes/storage/cuda_texture.h
@@ -50,11 +53,11 @@ set(CMAKE_CUDA_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 enable_language("CUDA")
-list(APPEND CUDA_NVCC_FLAGS -arch compute_30 -use_fast_math)
+# list(APPEND CUDA_NVCC_FLAGS -arch compute_35 -use_fast_math –expt-extended-lambda)
 add_definitions(-D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__=1)
-if (MSVC)
-    list(APPEND CUDA_NVCC_FLAGS --compiler-options /D_USE_MATH_DEFINES)
-endif (MSVC)
+# if (MSVC)
+#     list(APPEND CUDA_NVCC_FLAGS --compiler-options /D_USE_MATH_DEFINES)
+# endif (MSVC)
 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -63,12 +66,26 @@ add_library(hermes STATIC ${HERMES_SOURCES} ${HERMES_HEADERS})# ${ptx_files})
 set_target_properties(hermes PROPERTIES
 LINKER_LANGUAGE CUDA
 CUDA_STANDARD 11
+CMAKE_CUDA_STANDARD_REQUIRED ON
+CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON
 CUDA_RESOLVE_DEVICE_SYMBOLS ON
 CMAKE_CUDA_SEPARABLE_COMPILATION ON
 POSITION_INDEPENDENT_CODE OFF
-        OUTPUT_NAME "hermes"
-        FOLDER "HERMES")
-target_include_directories(hermes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
+OUTPUT_NAME "hermes"
+FOLDER "HERMES")
+target_compile_options(hermes PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
+                       --generate-line-info
+                       --use_fast_math
+                       -arch=sm_50
+                        -Xcompiler -pg
+                       --relocatable-device-code=true
+                     #  -–exp-extended-lambda
+                       >)
+target_compile_options(hermes PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)
+
+target_include_directories(hermes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${PONOS_SOURCE_DIR})
+target_link_libraries(hermes PUBLIC ponos)
 
 if(BUILD_TESTS)
         add_subdirectory(tests)

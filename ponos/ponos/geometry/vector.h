@@ -228,10 +228,10 @@ template <typename T>
 Vector3<T> operator*(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>(a.x * b.x, a.y * b.y, a.z * b.z);
 }
-template <typename T> Vector3<T> operator*(const Vector3<T> &a, T f) {
+template <typename T> Vector3<T> operator*(const Vector3<T> &a, const T &f) {
   return Vector3<T>(a.x * f, a.y * f, a.z * f);
 }
-template <typename T> Vector3<T> operator/(const Vector3<T> &a, T f) {
+template <typename T> Vector3<T> operator/(const Vector3<T> &a, const T &f) {
   T inv = 1.f / f;
   return Vector3<T>(a.x * inv, a.y * inv, a.z * inv);
 }
@@ -378,94 +378,7 @@ using vec4 = Vector4<real_t>;
 using vec3d = Vector3<double>;
 using vec3f = Vector3<float>;
 using vec2f = Vector2<float>;
-/*
-template <typename T = float, size_t D = 3> class Vector {
-public:
-  Vector();
-  Vector(std::initializer_list<T> values);
-  Vector(size_t n, const T *t);
-  Vector(const T &t);
-  Vector(const T &x, const T &y);
-  Vector(const T &x, const T &y, const T &z);
-  T operator[](int i) const;
-  T &operator[](int i);
-  bool operator==(const Vector<T, D> &_v) const;
-  bool operator!=(const Vector<T, D> &_v) const;
-  bool operator<=(const Vector<T, D> &_v) const;
-  bool operator<(const Vector<T, D> &_v) const;
-  bool operator>=(const Vector<T, D> &_v) const;
-  bool operator>(const Vector<T, D> &_v) const;
-  Vector<T, D> operator-(const Vector<T, D> &_v) const;
-  Vector<T, D> operator+(const Vector<T, D> &_v) const;
-  Vector<T, D> operator*(const Vector<T, D> &_v) const;
-  Vector<T, D> operator/(const Vector<T, D> &_v) const;
-  Vector<T, D> operator/=(T f);
-  Vector<T, D> operator-=(const Vector<T, D> &_v);
-  Vector<T, 2> operator/(T f) const;
-  Vector<T, 2> xy(size_t x = 0, size_t y = 1) const;
-  Vector<T, 2> floatXY(size_t x = 0, size_t y = 1) const;
-  Vector<float, 3> floatXYZ(size_t x = 0, size_t y = 1, size_t z = 2);
-  T max() const;
-  T length2() const;
-  T length() const;
-  Vector<T, D> normalized() const;
-  Vector<T, 2> right() const;
-  Vector<T, 2> left() const;
-  friend std::ostream &operator<<(std::ostream &os, const Vector &v) {
-    os << "Vector[<" << D << ">]";
-    for (size_t i = 0; i < v.size; i++)
-      os << v[i] << " ";
-    os << std::endl;
-    return os;
-  }
 
-  size_t size;
-  T v[D];
-};
-
-#include "vector.inl"
-
-template <typename T, size_t D>
-inline Vector<T, D> operator*(T f, const Vector<T, D> &v) {
-  return v * f;
-}
-
-/* round
- * @v **[in]** vector
- * @return a vector with ceil applied to all components
-
-
-
-template <typename T> Vector<int, 3> ceil(const Vector3<T> &v);
-/* round
- * @v **[in]** vector
- * @return a vector with floor applied to all components
- *
-template <typename T> Vector<int, 3> floor(const Vector3<T> &v);
-
-template <typename T> Vector<int, 3> min(Vector<int, 3> a, Vector<int, 3> b);
-template <typename T> Vector<int, 3> max(Vector<int, 3> a, Vector<int, 3> b);
-
-/* round
- * @v **[in]** vector
- * @return a vector with ceil applied to all components
- *
-template <typename T> Vector<int, 2> ceil(const Vector2<T> &v);
-/* round
- * @v **[in]** vector
- * @return a vector with floor applied to all components
- *
-template <typename T> Vector<int, 2> floor(const Vector2<T> &v);
-
-Vector<int, 2> min(Vector<int, 2> a, Vector<int, 2> b);
-Vector<int, 2> max(Vector<int, 2> a, Vector<int, 2> b);
-
-template <typename T, size_t D> T normalize(Vector<T, D> &v) {
-  T d = v.length();
-  for (size_t i = 0; i < D; i++)
-    v[i] = v[i] / d;
-}
-*/
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Vector2<T> &v) {
   os << "Vector2 [" << v.x << " " << v.y << "]";

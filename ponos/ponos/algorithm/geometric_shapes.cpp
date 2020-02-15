@@ -125,8 +125,8 @@ RawMesh *create_icosphere_mesh(const point3 &center, float radius,
   if (generateUVs) {
     std::function<point2(float, float, float)> parametric =
         [](float x, float y, float z) -> point2 {
-          return point2(std::atan2(y, x), std::acos(z));
-        };
+      return point2(std::atan2(y, x), std::acos(z));
+    };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
           parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1],
@@ -288,7 +288,7 @@ RawMeshSPtr icosphere(const point2 &center, float radius, size_t divisions,
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 2;
   mesh->apply(scale(radius, radius, 0) *
-      translate(vec3(center.x, center.y, 0)));
+              translate(vec3(center.x, center.y, 0)));
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
@@ -391,8 +391,8 @@ RawMeshSPtr icosphere(const point3 &center, float radius, size_t divisions,
   if (generateUVs) {
     std::function<point2(float, float, float)> parametric =
         [](float x, float y, float z) -> point2 {
-          return point2(std::atan2(y, x), std::acos(z));
-        };
+      return point2(std::atan2(y, x), std::acos(z));
+    };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
           parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1],
@@ -459,6 +459,7 @@ RawMeshSPtr RawMeshes::segment(const point3 &a, const point3 &b) {
 
 RawMesh *RawMeshes::cube(const ponos::Transform &transform,
                          bool generateNormals, bool generateUVs) {
+  UNUSED_VARIABLE(transform);
   auto *mesh = new RawMesh();
   //  y          2      3
   //  |_x     6      7
@@ -519,8 +520,8 @@ RawMesh *RawMeshes::cube(const ponos::Transform &transform,
   return mesh;
 }
 
-RawMesh *RawMeshes::quad(const ponos::Transform &transform,
-                         bool generate_uvs) {
+RawMesh *RawMeshes::quad(const ponos::Transform &transform, bool generate_uvs) {
+  UNUSED_VARIABLE(transform);
   auto *mesh = new RawMesh();
   mesh->addPosition({0.f, 0.f});
   mesh->addPosition({1.f, 0.f});
@@ -554,6 +555,7 @@ RawMesh *RawMeshes::quad(const ponos::Transform &transform,
 
 RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,
                                      bool triangleFaces) {
+  UNUSED_VARIABLE(transform);
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   //  y          2      3
   //  |_x     6      7

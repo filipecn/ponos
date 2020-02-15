@@ -40,9 +40,10 @@ set(PONOS_HEADERS
         #ponos/blas/staggered_grid.inl
         #ponos/blas/symmetric_matrix.h
         ponos/common/defs.h
-		ponos/common/index.h
+        ponos/common/index.h
         ponos/common/file.h
         ponos/storage/memory.h
+        ponos/storage/array.h
         ponos/common/parallel.h
         ponos/common/random.h
         ponos/common/timer.h

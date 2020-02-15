@@ -77,17 +77,17 @@ public:
   enum class Mode { RAW, EQUAL };
   VectorGrid2DModel() {}
   VectorGrid2DModel(const ponos::VectorGrid2D<T> *g, float sf = 1.f) {
-    this->gridColor = COLOR_TRANSPARENT;
-    this->dataColor = COLOR_RED;
+    this->gridColor = Color::Transparent();
+    this->dataColor = Color::Red();
     this->grid = g;
     scaleFactor = sf;
     mode = Mode::RAW;
     this->f = [&](const ponos::Vector2<T> v, ponos::point3 p) {
-      glColor4fv(this->dataColor.asArray());
-      glPointSize(3.f);
-      glBegin(GL_POINTS);
-      glVertex(p);
-      glEnd();
+      // glColor4fv(this->dataColor.asArray());
+      // glPointSize(3.f);
+      // glBegin(GL_POINTS);
+      // glVertex(p);
+      // glEnd();
       switch (mode) {
       case Mode::RAW:
         draw_vector(ponos::point2(p.x, p.y),
@@ -128,10 +128,10 @@ public:
     model->gridColor = gridColor;
     model->dataColor = dataColor;
     model->f = [this, gridColor, dataColor](float v, ponos::point3 p) {
-      glPointSize(4);
-      glBegin(GL_POINTS);
-      glVertex(p);
-      glEnd();
+      // glPointSize(4);
+      // glBegin(GL_POINTS);
+      // glVertex(p);
+      // glEnd();
       std::ostringstream stringStream;
       stringStream << v;
       std::string copyOfStr = stringStream.str();

@@ -93,8 +93,8 @@ void Transform::scale(real_t x, real_t y, real_t z) {
 
 bool Transform::swapsHandedness() const {
   real_t det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
-      (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
-      (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
+               (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
+               (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
   return det < 0;
 }
 
@@ -111,6 +111,10 @@ Transform2 scale(const vec2 &s) {
 }
 
 Transform segmentToSegmentTransform(point3 a, point3 b, point3 c, point3 d) {
+  UNUSED_VARIABLE(a);
+  UNUSED_VARIABLE(b);
+  UNUSED_VARIABLE(c);
+  UNUSED_VARIABLE(d);
   // Consider two bases a b e f and c d g h
   // TODO implement
   return {};
@@ -342,7 +346,7 @@ Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
 
 Transform orthographic(real_t znear, real_t zfar) {
   return scale(1.f, 1.f, 1.f / (zfar - znear)) *
-      translate(vec3(0.f, 0.f, -znear));
+         translate(vec3(0.f, 0.f, -znear));
 }
 
 } // namespace ponos

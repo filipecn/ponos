@@ -70,3 +70,24 @@ TEST(Interpolation, monotonicCubic) {
       }
   }
 }
+
+TEST(Grid, Methods) {
+  { // 2D
+    Grid2<float> g(size2(10, 10), vec2(0.1, 0.1), point2(1, 2));
+    for (auto e : g.accessor())
+      e.value = e.index().i * 10 + e.index().j;
+    Grid2<float> gg;
+    gg = g;
+    EXPECT_EQ(g.resolution(), gg.resolution());
+    EXPECT_EQ(g.spacing(), gg.spacing());
+    EXPECT_EQ(g.origin(), gg.origin());
+    g = 7.3f;
+    for (auto e : g.accessor())
+      EXPECT_NEAR(e.value, 7.3f, 1e-8);
+    Array2<float> a(size2(10, 10));
+    a = 1.f;
+    g = a;
+    for (auto e : g.accessor())
+      EXPECT_NEAR(e.value, 1.f, 1e-8);
+  }
+}

@@ -17,6 +17,8 @@ public:
   /* @inherit */
   void draw(const CameraInterface *camera,
             ponos::Transform transform) override {
+    UNUSED_VARIABLE(transform);
+    UNUSED_VARIABLE(camera);
     /*glColor4f(0, 0, 0, 0.7);
     glLineWidth(3.0);
     glBegin(GL_LINES);

@@ -22,7 +22,7 @@
  *
  */
 
-#include <poseidon/numeric/cuda_fd.h>
+#include <poseidon/cuda/numeric/cuda_fd.h>
 
 namespace poseidon {
 
@@ -31,8 +31,8 @@ namespace cuda {
 using namespace hermes::cuda;
 
 template <typename T>
-__global__ void __mul(FDMatrix2Accessor A, MemoryBlock1Accessor<T> x,
-                      MemoryBlock1Accessor<T> b) {
+__global__ void __mul(FDMatrix2Accessor A, CuMemoryBlock1Accessor<T> x,
+                      CuMemoryBlock1Accessor<T> b) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   if (!A.isIndexStored(i, j, i, j))
@@ -55,21 +55,21 @@ __global__ void __mul(FDMatrix2Accessor A, MemoryBlock1Accessor<T> x,
     b[index] += A(i, j, i, j + 1) * x[idx];
 }
 
-template <> void mul(FDMatrix2D &A, MemoryBlock1Df &x, MemoryBlock1Df &b) {
+template <> void mul(FDMatrix2D &A, CuMemoryBlock1f &x, CuMemoryBlock1f &b) {
   hermes::ThreadArrayDistributionInfo td(A.gridSize());
   __mul<<<td.gridSize, td.blockSize>>>(A.accessor(), x.accessor(),
                                        b.accessor());
 }
 
-template <> void mul(FDMatrix2D &A, MemoryBlock1Dd &x, MemoryBlock1Dd &b) {
+template <> void mul(FDMatrix2D &A, CuMemoryBlock1d &x, CuMemoryBlock1d &b) {
   hermes::ThreadArrayDistributionInfo td(A.gridSize());
   __mul<<<td.gridSize, td.blockSize>>>(A.accessor(), x.accessor(),
                                        b.accessor());
 }
 
 template <typename T>
-__global__ void __mul(FDMatrix3Accessor A, MemoryBlock1Accessor<T> x,
-                      MemoryBlock1Accessor<T> b) {
+__global__ void __mul(FDMatrix3Accessor A, CuMemoryBlock1Accessor<T> x,
+                      CuMemoryBlock1Accessor<T> b) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   int k = blockIdx.z * blockDim.z + threadIdx.z;

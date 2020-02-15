@@ -11,7 +11,7 @@
 //#include <circe/helpers/hemesh_model.h>
 #include <circe/helpers/quad_tree_model.h>
 #include <circe/helpers/scene_handle.h>
-#include <circe/helpers/tmesh_model.h>
+//#include <circe/helpers/tmesh_model.h>
 #include <circe/helpers/vector_grid.h>
 #include <circe/io/buffer.h>
 #include <circe/io/display_renderer.h>

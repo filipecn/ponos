@@ -31,10 +31,10 @@ namespace hermes {
 
 namespace cuda {
 
-template <typename T> class Array2 {
+template <typename T> class CuArray2 {
 public:
-  Array2(hermes::cuda::vec2u size) : size_(size) { allocate(); }
-  ~Array2() {
+  CuArray2(hermes::cuda::vec2u size) : size_(size) { allocate(); }
+  ~CuArray2() {
     if (array_)
       cudaFreeArray(array_);
   }
@@ -51,10 +51,10 @@ private:
   cudaArray *array_ = nullptr;
 };
 
-template <typename T> class Array3 {
+template <typename T> class CuArray3 {
 public:
-  Array3(hermes::cuda::vec3u size) : size_(size) { allocate(); }
-  ~Array3() {
+  CuArray3(hermes::cuda::vec3u size) : size_(size) { allocate(); }
+  ~CuArray3() {
     if (array_)
       cudaFreeArray(array_);
   }

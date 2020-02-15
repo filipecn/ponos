@@ -28,6 +28,7 @@
 #ifndef PONOS_COMMON_INDEX_H
 #define PONOS_COMMON_INDEX_H
 
+#include <algorithm>
 #include <iostream>
 #include <ponos/common/defs.h>
 #include <ponos/common/size.h>
@@ -36,7 +37,7 @@ namespace ponos {
 
 /// Holds 2-dimensional index coordinates
 ///\tparam T must be an integer type
-template<typename T> struct Index2 {
+template <typename T> struct Index2 {
   static_assert(std::is_same<T, i8>::value || std::is_same<T, i16>::value ||
                     std::is_same<T, i32>::value || std::is_same<T, i64>::value,
                 "Index2 must hold an integer type!");
@@ -58,37 +59,35 @@ public:
   T j = T(0);
 };
 
-template<typename T>
+template <typename T>
 Index2<T> operator+(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i + b.i, a.j + b.j);
 }
-template<typename T>
+template <typename T>
 Index2<T> operator-(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i - b.i, a.j - b.j);
 }
-template<typename T> bool operator<=(const Index2<T> &a, const Index2<T> &b) {
+template <typename T> bool operator<=(const Index2<T> &a, const Index2<T> &b) {
   return a.i <= b.i && a.j <= b.j;
 }
 ///\brief are equal? operator
 ///\param other **[in]**
 ///\return bool true if both coordinate values are equal
-template<typename T>
-bool operator==(const Index2<T> &a, const Index2<T> &b) {
+template <typename T> bool operator==(const Index2<T> &a, const Index2<T> &b) {
   return a.i == b.i && a.j == b.j;
 }
 /// \brief are different? operator
 ///\param other **[in]**
 ///\return bool true if any coordinate value is different
-template<typename T>
-bool operator!=(const Index2<T> &a, const Index2<T> &b) {
+template <typename T> bool operator!=(const Index2<T> &a, const Index2<T> &b) {
   return a.i != b.i || a.j != b.j;
 }
 
-template<typename T> class Index2Iterator {
+template <typename T> class Index2Iterator {
 public:
   Index2Iterator() = default;
-  Index2Iterator(Index2<T> lower, Index2<T> upper) :
-      index_(lower), lower_(lower), upper_(upper) {}
+  Index2Iterator(Index2<T> lower, Index2<T> upper)
+      : index_(lower), lower_(lower), upper_(upper) {}
   ///\brief Construct a new Index2Iterator object
   ///\param lower **[in]** lower bound
   ///\param upper **[in]** upper bound
@@ -128,7 +127,7 @@ private:
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type
-template<typename T> class Index2Range {
+template <typename T> class Index2Range {
 public:
   ///\brief Construct a new Index2Range object
   ///\param upper_i **[in]** upper bound i
@@ -157,7 +156,7 @@ private:
 
 /// Holds 3-dimensional index coordinates
 ///\tparam T must be an integer type
-template<typename T> struct Index3 {
+template <typename T> struct Index3 {
   static_assert(std::is_same<T, i8>::value || std::is_same<T, i16>::value ||
                     std::is_same<T, i32>::value || std::is_same<T, i64>::value,
                 "Index3 must hold an integer type!");
@@ -186,29 +185,29 @@ template<typename T> struct Index3 {
   T k;
 };
 
-template<typename T> bool operator<=(const Index3<T> &a, const Index3<T> &b) {
+template <typename T> bool operator<=(const Index3<T> &a, const Index3<T> &b) {
   return a.i <= b.i && a.j <= b.j && a.k <= b.k;
 }
-template<typename T> bool operator<(const Index3<T> &a, const Index3<T> &b) {
+template <typename T> bool operator<(const Index3<T> &a, const Index3<T> &b) {
   return a.i < b.i && a.j < b.j && a.k < b.k;
 }
-template<typename T, typename TT>
-bool operator<(const Index3<T> &a, const Size3 <TT> &b) {
+template <typename T, typename TT>
+bool operator<(const Index3<T> &a, const Size3<TT> &b) {
   return a.i < static_cast<T>(b.i) && a.j < static_cast<T>(b.j) &&
-      a.k < static_cast<T>(b.k);
+         a.k < static_cast<T>(b.k);
 }
-template<typename T, typename TT>
-bool operator>(const Index3<T> &a, const Size3 <TT> &b) {
+template <typename T, typename TT>
+bool operator>(const Index3<T> &a, const Size3<TT> &b) {
   return a.i > static_cast<T>(b.i) && a.j > static_cast<T>(b.j) &&
-      a.k > static_cast<T>(b.k);
+         a.k > static_cast<T>(b.k);
 }
-template<typename T, typename TT>
-bool operator>=(const Index3<T> &a, const Size3 <TT> &b) {
+template <typename T, typename TT>
+bool operator>=(const Index3<T> &a, const Size3<TT> &b) {
   return a.i >= static_cast<T>(b.i) && a.j >= static_cast<T>(b.j) &&
-      a.k >= static_cast<T>(b.k);
+         a.k >= static_cast<T>(b.k);
 }
 
-template<typename T> class Index3Iterator {
+template <typename T> class Index3Iterator {
 public:
   ///\brief Construct a new Index3Iterator object
   ///\param lower **[in]** lower bound
@@ -253,7 +252,7 @@ private:
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type
-template<typename T> class Index3Range {
+template <typename T> class Index3Range {
 public:
   ///\brief Construct a new Index3Range object
   ///\param upper_i **[in]** upper bound i
@@ -293,12 +292,12 @@ using index3_16 = Index3<i16>;
 using index3_32 = Index3<i32>;
 using index3_64 = Index3<i64>;
 
-template<typename T>
+template <typename T>
 std::ostream &operator<<(std::ostream &o, const Index2<T> &ij) {
   o << "Index[" << ij.i << ", " << ij.j << "]";
   return o;
 }
-template<typename T>
+template <typename T>
 std::ostream &operator<<(std::ostream &o, const Index3<T> &ijk) {
   o << "Index[" << ijk.i << ", " << ijk.j << ", " << ijk.k << "]";
   return o;

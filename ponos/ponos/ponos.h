@@ -35,8 +35,6 @@
 #include <ponos/common/defs.h>
 #include <ponos/common/file.h>
 #include <ponos/common/index.h>
-#include <ponos/storage/memory.h>
-#include <ponos/storage/memory_block.h>
 #include <ponos/common/random.h>
 #include <ponos/common/timer.h>
 #include <ponos/geometry/bbox.h>
@@ -66,9 +64,14 @@
 #include <ponos/parallel/parallel.h>
 #include <ponos/spatial/array.h>
 #include <ponos/spatial/spatial_structure_interface.h>
+#include <ponos/storage/array.h>
+#include <ponos/storage/memory.h>
+#include <ponos/storage/memory_block.h>
+
 // #include <ponos/structures/brep.hpp>
-#include <ponos/structures/bvh.h>
 #include <ponos/numeric/grid_interface.h>
+#include <ponos/structures/bvh.h>
+
 // #include <ponos/structures/half_edge.h>
 #include <ponos/numeric/level_set.h>
 #include <ponos/structures/mesh.h>

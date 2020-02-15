@@ -95,6 +95,8 @@ public:
 
   void draw(const CameraInterface *camera,
             ponos::Transform transform) override {
+    UNUSED_VARIABLE(camera);
+    UNUSED_VARIABLE(transform);
     ponos::Circle c = circle;
     if (this->dragging)
       glColor(activeColor);

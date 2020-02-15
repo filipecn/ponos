@@ -34,7 +34,7 @@ namespace circe {
 template <typename T> class CircleHandle : public SceneObject {
 public:
   CircleHandle() {
-    fillColor = selectedColor = COLOR_BLUE;
+    fillColor = selectedColor = Color::Blue();
     fillColor.a = 0.1f;
     circle.c = ponos::point2();
     circle.r = 0.1f;

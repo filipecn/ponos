@@ -31,8 +31,8 @@
 #include <ponos/common/index.h>
 #include <ponos/common/size.h>
 
-
 namespace ponos {
+
 /// Holds a linear memory area representing a 2-dimensional array. It provides
 /// memory alignment via a custom size of allocated memory per row (called pitch
 /// size).
@@ -62,6 +62,11 @@ public:
   MemoryBlock2(MemoryBlock2 &&other) noexcept
       : pitch_(other.pitch_), size_(other.size_), data_(other.data_) {
     other.data_ = nullptr;
+  }
+  MemoryBlock2<T> &operator=(const MemoryBlock2<T> &other) {
+    size_ = other.size_;
+    pitch_ = other.pitch_;
+    memcpy(data_, other.data_, memorySize());
   }
   virtual ~MemoryBlock2() {
     if (data_)

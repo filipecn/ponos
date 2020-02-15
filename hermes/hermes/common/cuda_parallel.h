@@ -25,34 +25,45 @@
 #ifndef HERMES_COMMON_PARALLEL_H
 #define HERMES_COMMON_PARALLEL_H
 
+#include <hermes/common/size.h>
 #include <hermes/geometry/cuda_vector.h>
 
 namespace hermes {
 
+namespace cuda {
+
 #define GPU_BLOCK_SIZE 1024
 
 struct ThreadArrayDistributionInfo {
-  ThreadArrayDistributionInfo(unsigned int n) {
+  __host__ __device__ ThreadArrayDistributionInfo(u32 n) {
     blockSize.x = GPU_BLOCK_SIZE;
     gridSize.x = n / blockSize.x + 1;
   }
-  ThreadArrayDistributionInfo(unsigned int w, unsigned int h) {
+  __host__ __device__ ThreadArrayDistributionInfo(size2 s) {
+    blockSize = dim3(16, 16);
+    gridSize = dim3((s.width + blockSize.x - 1) / blockSize.x,
+                    (s.height + blockSize.y - 1) / blockSize.y);
+  }
+  __host__ __device__ ThreadArrayDistributionInfo(unsigned int w,
+                                                  unsigned int h) {
     blockSize = dim3(16, 16);
     gridSize = dim3((w + blockSize.x - 1) / blockSize.x,
                     (h + blockSize.y - 1) / blockSize.y);
   }
-  ThreadArrayDistributionInfo(cuda::vec2u resolution) {
+  __host__ __device__ ThreadArrayDistributionInfo(cuda::vec2u resolution) {
     blockSize = dim3(16, 16);
     gridSize = dim3((resolution.x + blockSize.x - 1) / blockSize.x,
                     (resolution.y + blockSize.y - 1) / blockSize.y);
   }
-  ThreadArrayDistributionInfo(cuda::vec3u resolution) {
+  __host__ __device__ ThreadArrayDistributionInfo(cuda::vec3u resolution) {
     blockSize = dim3(16, 16);
     gridSize = dim3((resolution.x + blockSize.x - 1) / blockSize.x,
                     (resolution.y + blockSize.y - 1) / blockSize.y,
                     (resolution.z + blockSize.z - 1) / blockSize.z);
   }
-  ThreadArrayDistributionInfo(unsigned int w, unsigned int h, unsigned int d) {
+  __host__ __device__ ThreadArrayDistributionInfo(unsigned int w,
+                                                  unsigned int h,
+                                                  unsigned int d) {
     blockSize = dim3(8, 8, 8);
     gridSize = dim3((w + blockSize.x - 1) / blockSize.x,
                     (h + blockSize.y - 1) / blockSize.y,
@@ -61,6 +72,8 @@ struct ThreadArrayDistributionInfo {
   dim3 gridSize;
   dim3 blockSize;
 };
+
+} // namespace cuda
 
 } // namespace hermes
 

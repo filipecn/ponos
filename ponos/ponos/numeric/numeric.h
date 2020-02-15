@@ -43,11 +43,11 @@ namespace ponos {
 ///\brief
 ///
 struct Constants {
-  static constexpr double pi = 3.14159265358979323846;
-  static constexpr double two_pi = 6.28318530718;
-  static constexpr double inv_pi = 0.31830988618379067154;
-  static constexpr double inv_two_pi = 0.15915494309189533577;
-  static constexpr double inv_four_pi = 0.07957747154594766788;
+  static constexpr real_t pi = 3.14159265358979323846;
+  static constexpr real_t two_pi = 6.28318530718;
+  static constexpr real_t inv_pi = 0.31830988618379067154;
+  static constexpr real_t inv_two_pi = 0.15915494309189533577;
+  static constexpr real_t inv_four_pi = 0.07957747154594766788;
   static real_t real_infinity;
   template <typename T> static constexpr T lowest() {
     return std::numeric_limits<T>::lowest();
@@ -117,11 +117,10 @@ template <typename T> constexpr T RADIANS(T a) {
   return a * Constants::pi / 180.f;
 }
 
-template<typename T>
-char sign(T n) {
-  if(n < 0)
+template <typename T> char sign(T n) {
+  if (n < 0)
     return -1;
-  if(n > 0)
+  if (n > 0)
     return 1;
   return 0;
 }

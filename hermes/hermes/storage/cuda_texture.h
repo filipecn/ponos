@@ -29,6 +29,7 @@
 #include <hermes/storage/cuda_storage_utils.h>
 #include <hermes/storage/cuda_texture_kernels.h>
 #include <iomanip>
+#include <ponos/numeric/grid.h>
 #include <type_traits>
 #include <vector>
 
@@ -38,13 +39,14 @@ enum class TextureReadMode { ELEMENT, NORMALIZED };
 
 struct TextureDescriptor {
   TextureDescriptor() {}
-  TextureDescriptor(AddressMode amode) {
+  TextureDescriptor(ponos::AddressMode amode) {
     for (int i = 0; i < 3; i++)
       addressMode[i] = amode;
   }
-  AddressMode addressMode[3] = {AddressMode::BORDER, AddressMode::BORDER,
-                                AddressMode::BORDER};
-  FilterMode filterMode = FilterMode::LINEAR;
+  ponos::AddressMode addressMode[3] = {ponos::AddressMode::BORDER,
+                                       ponos::AddressMode::BORDER,
+                                       ponos::AddressMode::BORDER};
+  ponos::FilterMode filterMode = ponos::FilterMode::LINEAR;
   TextureReadMode readMode = TextureReadMode::ELEMENT;
   bool normalizedCoordinates = false;
   bool sRGB = false;
@@ -52,23 +54,23 @@ struct TextureDescriptor {
 
 namespace cuda {
 
-inline cudaTextureAddressMode cudaValue(AddressMode addressMode) {
+inline cudaTextureAddressMode cudaValue(ponos::AddressMode addressMode) {
   switch (addressMode) {
-  case AddressMode::BORDER:
+  case ponos::AddressMode::BORDER:
     return cudaAddressModeBorder;
-  case AddressMode::WRAP:
+  case ponos::AddressMode::WRAP:
     return cudaAddressModeWrap;
-  case AddressMode::CLAMP_TO_EDGE:
+  case ponos::AddressMode::CLAMP_TO_EDGE:
     return cudaAddressModeClamp;
   }
   return cudaAddressModeMirror;
 }
 
-inline cudaTextureFilterMode cudaValue(FilterMode filterMode) {
+inline cudaTextureFilterMode cudaValue(ponos::FilterMode filterMode) {
   switch (filterMode) {
-  case FilterMode::LINEAR:
+  case ponos::FilterMode::LINEAR:
     return cudaFilterModeLinear;
-  case FilterMode::POINT:
+  case ponos::FilterMode::POINT:
     return cudaFilterModePoint;
   }
   return cudaFilterModeLinear;

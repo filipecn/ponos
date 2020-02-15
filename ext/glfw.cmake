@@ -115,7 +115,9 @@ install(DIRECTORY
         ${GLFW_INCLUDE_DIR}/GLFW
         DESTINATION ${INSTALL_PATH}/include
         FILES_MATCHING REGEX "(.*\\.[inl|h])")
+if(glfw)
 install(TARGETS glfw
         LIBRARY DESTINATION ${INSTALL_PATH}/lib
         ARCHIVE DESTINATION ${INSTALL_PATH}//lib
         )
+endif(glfw)

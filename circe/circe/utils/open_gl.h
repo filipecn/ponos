@@ -31,38 +31,19 @@
 
 #include <circe/colors/color.h>
 
-//#define GL_DRAW_POINTS(SIZE, CODE)                                             \
-//  glPointSize(SIZE);                                                           \
-//  glBegin(GL_POINTS);                                                          \
-//  CODE glEnd();                                                                \
-//  glPointSize(1);
-
-//#define GL_DRAW_LINES(SIZE, CODE)                                              \
-//  glLineWidth(SIZE);                                                           \
-//  glBegin(GL_LINES);                                                           \
-//  CODE glEnd();                                                                \
-//  glLineWidth(1);
-
-#define GL_DRAW_LINE_LOOP(SIZE, CODE)                                          \
-  glLineWidth(SIZE);                                                           \
-  glBegin(GL_LINE_LOOP);                                                       \
-  CODE glEnd();                                                                \
-  glLineWidth(1);
-
-//#define GL_DRAW_TRIANGLES(CODE)                                                \
-//  glBegin(GL_TRIANGLES);                                                       \
-//  CODE glEnd();                                                                \
-//  glPointSize(1);
 namespace circe {
 
 #ifdef GL_DEBUG
 
-#define CHECK_GL(A) { \
-  A; \
-  if(checkGL(__FILE__, __LINE__, __FUNCTION__, #A)) \
-  exit(-1); \
+#define CHECK_GL(A)                                                            \
+  {                                                                            \
+    A;                                                                         \
+    if (checkGL(__FILE__, __LINE__, __FUNCTION__, #A))                         \
+      exit(-1);                                                                \
   }
-#define CHECK_GL_ERRORS if(checkGL(__FILE__, __LINE__, __FUNCTION__)) exit(-1)
+#define CHECK_GL_ERRORS                                                        \
+  if (checkGL(__FILE__, __LINE__, __FUNCTION__))                               \
+  exit(-1)
 #define CHECK_FRAMEBUFFER checkFramebuffer()
 #else
 #define CHECK_GL
@@ -93,9 +74,7 @@ void printProgramInfoLog(GLuint program);
 /// \param function caller function
 /// \param line caller line
 /// \return true if any OpenGL error occurred
-bool checkGL(const char *file,
-             int line_number,
-             const char *function = nullptr,
+bool checkGL(const char *file, int line_number, const char *function = nullptr,
              const char *line = nullptr);
 ///
 /// \param error
@@ -104,7 +83,7 @@ std::string glErrorToString(GLenum error, bool description = true);
 
 /* error check
  * Check framebuffer is COMPLETE
-* @return **false** if NO errors occured
+ * @return **false** if NO errors occured
  */
 bool checkFramebuffer();
 
@@ -114,21 +93,6 @@ bool checkFramebuffer();
  * Retreives opengl version. Any error is sent to **stderr**.
  */
 void getGlVersion(int *major, int *minor);
-
-/* glVertex
- * Same as glVertex3f
- */
-//void glVertex(ponos::point3 v);
-
-/* glVertex
- * Same as glVertex2f
- */
-//void glVertex(ponos::point2 v);
-
-/* glVertex
- * Same as glVertex2f
- */
-//void glVertex(ponos::vec2 v);
 
 void glColor(Color c);
 

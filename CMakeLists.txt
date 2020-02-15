@@ -6,6 +6,7 @@ endif (POLICY CMP0048)
 project(PONOS)
 cmake_minimum_required(VERSION 3.1)
 cmake_policy(VERSION 3.1)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 # path variables
 set(ROOT_PROJECT_PATH "${PROJECT_SOURCE_DIR}")
 set(BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
@@ -30,9 +31,7 @@ include(ConfigCompilerFlags)
 include(ExternalProject)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext")
 # tests
-if (BUILD_TESTS)
-    include(gtest)
-endif (BUILD_TESTS)
+include(catch2)
 ##########################################
 ##              projects                ##
 ##########################################

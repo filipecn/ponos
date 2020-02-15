@@ -5,6 +5,8 @@
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/common/cuda_random.h>
 #include <hermes/common/defs.h>
+#include <hermes/common/index.h>
+#include <hermes/common/size.h>
 #include <hermes/geometry/cuda_matrix.h>
 #include <hermes/geometry/cuda_numeric.h>
 #include <hermes/geometry/cuda_point.h>
@@ -16,6 +18,7 @@
 #include <hermes/numeric/cuda_interpolation.h>
 #include <hermes/numeric/cuda_staggered_grid.h>
 #include <hermes/parallel/cuda_reduce.h>
+#include <hermes/storage/array.h>
 #include <hermes/storage/cuda_array.h>
 #include <hermes/storage/cuda_memory_block.h>
 #include <hermes/storage/cuda_storage_utils.h>

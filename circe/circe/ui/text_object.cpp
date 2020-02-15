@@ -66,12 +66,13 @@ TextObject::TextObject(int id) : font_id_(id) {
   raw_mesh_ = std::make_shared<ponos::RawMesh>();
 }
 
-void TextObject::setText(const std::string& text) {
+void TextObject::setText(const std::string &text) {
   FontManager::instance().setText(font_id_, text, *raw_mesh_);
   mesh_.reset(new SceneMesh(raw_mesh_.get()));
 }
 
 void TextObject::draw(const CameraInterface *c, ponos::Transform t) {
+  UNUSED_VARIABLE(t);
   mesh_->bind();
   mesh_->vertexBuffer()->locateAttributes(*shader_.get());
   FontManager::bindTexture(font_id_, GL_TEXTURE0);

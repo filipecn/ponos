@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #include <circe/scene/wireframe_mesh.h>
 
@@ -30,6 +30,8 @@ WireframeMesh::WireframeMesh(const std::string &filename)
     : SceneMeshObject(filename) {}
 
 WireframeMesh::WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t) {
+  UNUSED_VARIABLE(m);
+  UNUSED_VARIABLE(t);
   // rawMesh = m;
   // setupVertexBuffer();
   // setupIndexBuffer();
@@ -38,7 +40,8 @@ WireframeMesh::WireframeMesh(ponos::RawMesh *m, const ponos::Transform &t) {
 
 void WireframeMesh::draw(const CameraInterface *camera,
                          ponos::Transform transform) {
-  glPushMatrix();
+  UNUSED_VARIABLE(camera);
+  // glPushMatrix();
   // vb->bind();
   // ib->bind();
   float pm[16];
@@ -60,4 +63,4 @@ void WireframeMesh::setupIndexBuffer() {
   // ib.reset(new IndexBuffer(&rawMesh->positionsIndices[0], indexDescriptor));
 }
 
-} // circe namespace
+} // namespace circe

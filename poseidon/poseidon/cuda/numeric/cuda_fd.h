@@ -25,7 +25,7 @@
 #ifndef POSEIDON_NUMERIC_CUDA_FD_H
 #define POSEIDON_NUMERIC_CUDA_FD_H
 
-#include <hermes/storage/cuda_storage_utils.h>
+#include <hermes/storage/cuda_memory_block.h>
 
 namespace poseidon {
 
@@ -340,11 +340,11 @@ operator<<(std::ostream &os,
 }
 
 template <hermes::cuda::MemoryLocation L, typename T>
-void mul(FDMatrix2<L> &A, hermes::cuda::MemoryBlock1<L, T> &x,
-         hermes::cuda::MemoryBlock1<L, T> &b);
+void mul(FDMatrix2<L> &A, hermes::cuda::CuMemoryBlock1<T> &x,
+         hermes::cuda::CuMemoryBlock1<T> &b);
 template <hermes::cuda::MemoryLocation L, typename T>
-void mul(FDMatrix3<L> &A, hermes::cuda::MemoryBlock1<L, T> &x,
-         hermes::cuda::MemoryBlock1<L, T> &b);
+void mul(FDMatrix3<L> &A, hermes::cuda::CuMemoryBlock1<T> &x,
+         hermes::cuda::CuMemoryBlock1<T> &b);
 
 using FDMatrix2D = FDMatrix2<hermes::cuda::MemoryLocation::DEVICE>;
 using FDMatrix2H = FDMatrix2<hermes::cuda::MemoryLocation::HOST>;

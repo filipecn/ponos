@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
-*/
+ */
 
 #ifndef CIRCE_HELPERS_QUAD_TREE_MODEL_H
 #define CIRCE_HELPERS_QUAD_TREE_MODEL_H
@@ -41,7 +41,7 @@ namespace circe {
 template <typename QT> class QuadTreeModel : public SceneObject {
 public:
   QuadTreeModel() : tree(nullptr) {}
-  QuadTreeModel(const QT *qt) : tree(qt) { edgesColor = COLOR_BLACK; }
+  QuadTreeModel(const QT *qt) : tree(qt) { edgesColor = Color::Black(); }
   void draw() const {
     tree->traverse([this](const typename QT::Node &node) -> bool {
       glColor4fv(edgesColor.asArray());
@@ -59,6 +59,6 @@ private:
   const QT *tree;
 };
 
-} // circe namespace
+} // namespace circe
 
 #endif // CIRCE_HELPERS_QUAD_TREE_MODEL_H

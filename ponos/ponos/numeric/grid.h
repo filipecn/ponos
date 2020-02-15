@@ -29,8 +29,8 @@
 #define PONOS_NUMERIC_GRID_H
 
 #include <ponos/geometry/transform.h>
-#include <ponos/storage/memory_block.h>
 #include <ponos/numeric/interpolation.h>
+#include <ponos/storage/array.h>
 
 namespace ponos {
 
@@ -47,57 +47,48 @@ enum class FilterMode { LINEAR, POINT };
 enum class InterpolationMode { LINEAR, MONOTONIC_CUBIC };
 
 // forward declaration of Grid2
-template<typename T> class Grid2;
+template <typename T> class Grid2;
 // forward declaration of Grid2Accessor
-template<typename T> class Grid2Accessor;
+template <typename T> class Grid2Accessor;
 /// Auxiliary class to allow c++ iteration in loops.
 /// Ex: for(auto e : grid.accessor()) {}
 /// \tparam T grid data type
-template<typename T> class Grid2Iterator {
+template <typename T> class Grid2Iterator {
 public:
   /// Represents the current grid index element being iterated
   class Element {
   public:
     Element(T &v, const index2 &ij, const Grid2Accessor<T> &acc)
-        : value(v), index_(ij), acc_(acc) {}
-    /// \return current iteration grid index
-    index2 index() const { return index_; }
-    /// \return current iteration grid index's i component
-    int i() const { return index_.i; }
-    /// \return current iteration grid index's j component
-    int j() const { return index_.j; }
+        : value(v), index(ij), acc_(acc) {}
     /// \return world position coordinates of the current index
-    point2 worldPosition() const {
-      return acc_.worldPosition(index_);
-    }
+    point2 worldPosition() const { return acc_.worldPosition(index); }
     /// \return region (in world coordinates) of the grid cell respective to
     /// the current index
-    bbox2 region() const {
-      return acc_.cellRegion(index_);
-    }
+    bbox2 region() const { return acc_.cellRegion(index); }
     /// Reference to the grid data stored in the current index
     T &value;
+    /// Index of the grid data element
+    const index2 &index;
+
   private:
-    index2 index_;
     const Grid2Accessor<T> &acc_;
   };
   ///
   /// \param grid_accessor grid to be iterated over
   /// \param ij starting grid index for iteration
   Grid2Iterator(Grid2Accessor<T> &grid_accessor, const index2 &ij)
-      : acc_(grid_accessor), it(Index2Iterator<i32>(index2(0, 0),
-                                                    index2(grid_accessor.resolution().width,
-                                                           grid_accessor.resolution().height),
-                                                    ij)) {}
+      : acc_(grid_accessor),
+        it(Index2Iterator<i32>(index2(0, 0),
+                               index2(grid_accessor.resolution().width,
+                                      grid_accessor.resolution().height),
+                               ij)) {}
   /// \return increment operator to move to the next grid index
   Grid2Iterator &operator++() {
     ++it;
     return *this;
   }
   /// \return current grid index element
-  Element operator*() {
-    return Element(acc_(*it), *it, acc_);
-  }
+  Element operator*() { return Element(acc_[*it], *it, acc_); }
   /// operator required by the loop iteration code of c++
   /// \param other
   /// \return true if iterators are different
@@ -111,16 +102,15 @@ private:
 };
 /// Class that provides access to grid elements.
 /// \tparam T grid data type
-template<typename T>
-class Grid2Accessor {
+template <typename T> class Grid2Accessor {
 public:
   /// \param grid
   /// \param address_mode
   /// \param border
-  explicit Grid2Accessor(Grid2<T> &grid,
-                         AddressMode address_mode = AddressMode::CLAMP_TO_EDGE,
-                         T border = T(0),
-                         InterpolationMode interpolation_mode = InterpolationMode::MONOTONIC_CUBIC)
+  explicit Grid2Accessor(
+      Grid2<T> &grid, AddressMode address_mode = AddressMode::CLAMP_TO_EDGE,
+      T border = T(0),
+      InterpolationMode interpolation_mode = InterpolationMode::MONOTONIC_CUBIC)
       : grid_(grid), address_mode_(address_mode),
         interpolation_mode_(interpolation_mode), border_(border) {}
   /// \return grid resolution
@@ -164,19 +154,18 @@ public:
   }
   /// \param ij position index
   /// \return reference to data stored at ij based on the address mode
-  T &operator()(const index2 &ij) {
+  T &operator[](const index2 &ij) {
     index2 fij = ij;
     switch (address_mode_) {
     case AddressMode::REPEAT:
-      fij.i = (ij.i < 0) ? grid_.resolution().width - 1 - ij.i : ij.i
-          % grid_.resolution().width;
-      fij.j = (ij.j < 0) ? grid_.resolution().height - 1 - ij.j : ij.j
-          % grid_.resolution().height;
+      fij.i = (ij.i < 0) ? grid_.resolution().width - 1 - ij.i
+                         : ij.i % grid_.resolution().width;
+      fij.j = (ij.j < 0) ? grid_.resolution().height - 1 - ij.j
+                         : ij.j % grid_.resolution().height;
       break;
     case AddressMode::CLAMP_TO_EDGE:
       fij.clampTo(
-          size2(grid_.resolution().width - 1,
-                grid_.resolution().height - 1));
+          size2(grid_.resolution().width - 1, grid_.resolution().height - 1));
       break;
     case AddressMode::BORDER:
       if (!grid_.data().stores(ij)) {
@@ -184,12 +173,15 @@ public:
         return dummy_;
       }
       break;
-    case AddressMode::WRAP:break;
-    case AddressMode::MIRROR:break;
-    default:break;
+    case AddressMode::WRAP:
+      break;
+    case AddressMode::MIRROR:
+      break;
+    default:
+      break;
     }
     FATAL_ASSERT(grid_.data().stores(fij));
-    return grid_.data()(fij);
+    return grid_.data()[fij];
   }
   /// \param world_position (in world coordinates)
   /// \return sampled data value in world_position based on the interpolation
@@ -198,31 +190,26 @@ public:
     auto cp = cellPosition(world_position);
     auto ip = cellIndex(world_position);
     switch (interpolation_mode_) {
-    case InterpolationMode::LINEAR :
-      return bilerp<T>(cp.x,
-                       cp.y,
-                       (*this)(ip),
-                       (*this)(ip + index2(1, 0)),
-                       (*this)(ip + index2(1, 1)),
-                       (*this)(ip + index2(0, 1)));
-    case InterpolationMode::MONOTONIC_CUBIC:T f[4][4];
+    case InterpolationMode::LINEAR:
+      return bilerp<T>(cp.x, cp.y, (*this)[ip], (*this)[ip + index2(1, 0)],
+                       (*this)[ip + index2(1, 1)], (*this)[ip + index2(0, 1)]);
+    case InterpolationMode::MONOTONIC_CUBIC:
+      T f[4][4];
       for (int dx = -1; dx <= 2; ++dx)
         for (int dy = -1; dy <= 2; ++dy)
-          f[dx + 1][dy + 1] = (*this)(ip + index2(dx, dy));
+          f[dx + 1][dy + 1] = (*this)[ip + index2(dx, dy)];
       return monotonicCubicInterpolate(f, cp);
-    default: break;
+    default:
+      break;
     }
     return T(0);
   }
   /// \return starting iterator
-  Grid2Iterator<T> begin() {
-    return Grid2Iterator<float>(*this, index2(0, 0));
-  }
+  Grid2Iterator<T> begin() { return Grid2Iterator<float>(*this, index2(0, 0)); }
   /// \return sentinel iterator
   Grid2Iterator<T> end() {
-    return Grid2Iterator<float>(*this,
-                                index2(grid_.resolution().width,
-                                       grid_.resolution().height));
+    return Grid2Iterator<float>(
+        *this, index2(grid_.resolution().width, grid_.resolution().height));
   }
 
 private:
@@ -234,24 +221,57 @@ private:
 };
 /// A Grid2 is a numerical discretization of an arbitrary 2-dimensional domain
 /// that can be used for numerical simulations and other applications. Each
-/// grid index represents the lower vertex of a cell grid, so the center of the
+/// grid index represents the lower vertex of a grid cell, so the center of the
 /// cell (i,j) is (i + .5, j + .5). In other words, data is stored at vertex
 /// positions.
 /// \tparam T grid data type
-template<typename T>
-class Grid2 {
+template <typename T> class Grid2 {
 public:
   friend class Grid2Accessor<T>;
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   Grid2() = default;
   /// \param resolution grid resolution
   /// \param spacing cell size
   /// \return grid origin (world position of index (0,0))
   explicit Grid2(const size2 &resolution, const vec2 &spacing = vec2(1, 1),
-                 const point2 &origin = point2(0, 0)) :
-      origin_(origin), spacing_(spacing) {
+                 const point2 &origin = point2(0, 0))
+      : origin_(origin), spacing_(spacing) {
     data_.resize(resolution);
     updateTransform();
   }
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
+  /// Copy all fields from other object. Performs raw data copy.
+  /// \param other
+  Grid2 &operator=(const Grid2 &other) {
+    to_grid_ = other.to_grid_;
+    to_world_ = other.to_world_;
+    origin_ = other.origin_;
+    spacing_ = other.spacing_;
+    data_ = other.data_;
+    return *this;
+  }
+  /// Assign value to all positions
+  /// \param value assign value
+  /// \return *this
+  Grid2 &operator=(const T &value) {
+    data_ = value;
+    return *this;
+  }
+  Grid2 &operator=(Array2<T> &values) {
+    data_ = values;
+    return *this;
+  }
+  Grid2 &operator=(Array2<T> &&values) {
+    data_ = values;
+    return *this;
+  }
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
   /// \return grid resolution
   size2 resolution() const { return data_.size(); }
   /// \return grid spacing (cell size)
@@ -273,33 +293,17 @@ public:
     updateTransform();
   }
   /// \return reference to memory data
-  const MemoryBlock2<T> &data() const { return data_; }
+  const Array2<T> &data() const { return data_; }
   /// \return reference to memory data
-  MemoryBlock2<T> &data() { return data_; }
+  Array2<T> &data() { return data_; }
   /// \param address_mode
   /// \param border border value
   /// \return accessor for grid data
-  Grid2Accessor<T>
-  accessor(AddressMode address_mode = AddressMode::CLAMP_TO_EDGE,
-           InterpolationMode interpolation_mode = InterpolationMode::MONOTONIC_CUBIC,
-           T border = T(0)) {
+  Grid2Accessor<T> accessor(
+      AddressMode address_mode = AddressMode::CLAMP_TO_EDGE,
+      InterpolationMode interpolation_mode = InterpolationMode::MONOTONIC_CUBIC,
+      T border = T(0)) {
     return Grid2Accessor<T>(*this, address_mode, border, interpolation_mode);
-  }
-  /// Copy all fields from other object. Performs raw data copy.
-  /// \param other
-  void copy(const Grid2 &other) {
-    to_grid_ = other.to_grid_;
-    to_world_ = other.to_world_;
-    origin_ = other.origin_;
-    spacing_ = other.spacing_;
-    data_.copy(other.data_);
-  }
-  /// Assign value to all positions
-  /// \param value assign value
-  /// \return *this
-  Grid2& operator=(const T& value) {
-    data_ = value;
-    return *this;
   }
 
 private:
@@ -310,9 +314,9 @@ private:
   Transform2 to_grid_, to_world_;
   point2 origin_;
   vec2 spacing_;
-  MemoryBlock2<T> data_;
+  Array2<T> data_;
 };
 
-} // ponos namespace
+} // namespace ponos
 
-#endif //PONOS_NUMERIC_GRID_H
+#endif // PONOS_NUMERIC_GRID_H

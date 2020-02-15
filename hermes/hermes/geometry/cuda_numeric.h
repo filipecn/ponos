@@ -32,13 +32,25 @@ namespace hermes {
 
 namespace cuda {
 
-template <typename T> inline __host__ __device__ void swap(T &a, T &b) {
+template <typename T> __host__ __device__ T min(const T &a, const T &b) {
+  if (a < b)
+    return a;
+  return b;
+}
+
+template <typename T> __host__ __device__ T max(const T &a, const T &b) {
+  if (a > b)
+    return a;
+  return b;
+}
+
+template <typename T> __host__ __device__ void swap(T &a, T &b) {
   T tmp = a;
   a = b;
   b = tmp;
 }
 
-template <typename T> inline __host__ __device__ int sign(T a) {
+template <typename T> __host__ __device__ int sign(T a) {
   return a >= 0 ? 1 : -1;
 }
 

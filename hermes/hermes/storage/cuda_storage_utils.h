@@ -31,10 +31,20 @@
 #include <hermes/geometry/cuda_vector.h>
 #include <hermes/storage/cuda_array.h>
 #include <iomanip>
+#include <ponos/storage/array.h>
 #include <vector>
 
 namespace hermes {
 namespace cuda {
+
+template <typename T> cudaPitchedPtr pitchedDataFrom(ponos::Array2<T> &array) {
+  cudaPitchedPtr pd{0};
+  pd.ptr = array.data();
+  pd.pitch = array.pitch();
+  pd.xsize = array.size().width * sizeof(T);
+  pd.ysize = array.size().height;
+  return pd;
+}
 
 inline cudaMemcpyKind copyDirection(MemoryLocation src, MemoryLocation dst) {
   if (src == MemoryLocation::DEVICE && dst == MemoryLocation::DEVICE)
@@ -604,7 +614,7 @@ bool memcpy(MemoryBlock2<A, T> &dst, MemoryBlock2<B, T> &src) {
 }
 
 template <MemoryLocation L, typename T>
-bool memcpy(Array2<T> &dst, MemoryBlock2<L, T> &src) {
+bool memcpy(CuArray2<T> &dst, MemoryBlock2<L, T> &src) {
   if (dst.size() != src.size())
     return false;
   auto kind = copyDirection(src.location(), MemoryLocation::DEVICE);
@@ -623,7 +633,7 @@ bool memcpy(MemoryBlock3<A, T> &dst, MemoryBlock3<B, T> &src) {
 }
 
 template <MemoryLocation L, typename T>
-bool memcpy(Array3<T> &dst, MemoryBlock3<L, T> &src) {
+bool memcpy(CuArray3<T> &dst, MemoryBlock3<L, T> &src) {
   if (dst.size() != src.size())
     return false;
   auto kind = copyDirection(src.location(), MemoryLocation::DEVICE);

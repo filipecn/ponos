@@ -57,50 +57,48 @@ VolumeBox2::VolumeBox2() {
                    "vec4(position, 0.0, 1.0);"
                    "  tex = texcoord;"
                    "}";
-  const char *fs =
-      "#version 440 core\n"
-      "layout(location = 0) out vec4 fragColor;"
-//      "layout(location = 4) uniform vec3 cameraPosition;"
-      "layout(location = 5) uniform sampler2D g_densityTex;"
-//      "layout(location = 6) uniform vec2 g_lightPos;"
-//      "layout(location = 7) uniform vec3 g_lightIntensity;"
-      "layout(location = 8) uniform float g_absorption;"
-      "in vec2 tex;"
-      "void main() {\n"
-      // diagonal of the cube
-      "const float maxDist = sqrt(2.0);\n"
-      "const int numSamples = 128;\n"
-      "const float scale = maxDist/float(numSamples);\n"
-      "const int numLightSamples = 32;\n"
-      "const float lscale = maxDist / float(numLightSamples);\n"
-      // assume all coordinates are in texture space
-      "vec2 pos = tex;\n"
-      // sample density
-      "float density = texture(g_densityTex, pos).x;\n"
-      "if(pos.x < 0.0 || pos.y < 0.0 || pos.x > 1.0 || "
-      "pos.y > 1.0) density = 0.;\n"
-      "float T = 1.0;\n"
-      // skip empty space
-      "    if (density > 0.0) {"
-      // attenuate ray-throughput
-      "        T *= 1.0-density*scale*g_absorption;}\n"
+  const char *fs = "#version 440 core\n"
+                   "layout(location = 0) out vec4 fragColor;"
+                   //      "layout(location = 4) uniform vec3 cameraPosition;"
+                   "layout(location = 5) uniform sampler2D g_densityTex;"
+                   //      "layout(location = 6) uniform vec2 g_lightPos;"
+                   //      "layout(location = 7) uniform vec3 g_lightIntensity;"
+                   "layout(location = 8) uniform float g_absorption;"
+                   "in vec2 tex;"
+                   "void main() {\n"
+                   // diagonal of the cube
+                   "const float maxDist = sqrt(2.0);\n"
+                   "const int numSamples = 128;\n"
+                   "const float scale = maxDist/float(numSamples);\n"
+                   "const int numLightSamples = 32;\n"
+                   "const float lscale = maxDist / float(numLightSamples);\n"
+                   // assume all coordinates are in texture space
+                   "vec2 pos = tex;\n"
+                   // sample density
+                   "float density = texture(g_densityTex, pos).x;\n"
+                   "if(pos.x < 0.0 || pos.y < 0.0 || pos.x > 1.0 || "
+                   "pos.y > 1.0) density = 0.;\n"
+                   "float T = 1.0;\n"
+                   // skip empty space
+                   "    if (density > 0.0) {"
+                   // attenuate ray-throughput
+                   "        T *= 1.0-density*scale*g_absorption;}\n"
 
-      "fragColor.xyz = vec3(density,density,density);\n"
-      "fragColor.w = 1.0;// - T;\n"
-//      "fragColor = vec4(0,1,0,1);"
-      "}";
+                   "fragColor.xyz = vec3(density,density,density);\n"
+                   "fragColor.w = 1.0;// - T;\n"
+                   //      "fragColor = vec4(0,1,0,1);"
+                   "}";
   shader_ = circe::createShaderProgramPtr(vs, nullptr, fs);
   shader_->addVertexAttribute("position", 0);
   shader_->addVertexAttribute("texcoord", 1);
   shader_->addUniform("model_view_matrix", 2);
   shader_->addUniform("projection_matrix", 3);
-//  shader_->addUniform("cameraPosition", 4);
+  //  shader_->addUniform("cameraPosition", 4);
   shader_->addUniform("g_densityTex", 5);
-//  shader_->addUniform("g_lightPos", 6);
-//  shader_->addUniform("g_lightIntensity", 7);
+  //  shader_->addUniform("g_lightPos", 6);
+  //  shader_->addUniform("g_lightIntensity", 7);
   shader_->addUniform("g_absorption", 8);
-  mesh_ = createSceneMeshPtr(
-      ponos::RawMeshes::quad(ponos::Transform(), true));
+  mesh_ = createSceneMeshPtr(ponos::RawMeshes::quad(ponos::Transform(), true));
 }
 
 VolumeBox2::~VolumeBox2() = default;
@@ -115,11 +113,11 @@ void VolumeBox2::draw(const CameraInterface *camera, ponos::Transform t) {
       "projection_matrix",
       ponos::transpose(camera->getProjectionTransform().matrix()));
   CHECK_GL_ERRORS;
-//  shader_->setUniform("cameraPosition", camera->getPosition());
+  //  shader_->setUniform("cameraPosition", camera->getPosition());
   shader_->setUniform("g_densityTex", 0);
-//  shader_->setUniform("g_lightPos", light_position);
+  //  shader_->setUniform("g_lightPos", light_position);
   CHECK_GL_ERRORS;
-//  shader_->setUniform("g_lightIntensity", light_intensity);
+  //  shader_->setUniform("g_lightIntensity", light_intensity);
   shader_->setUniform("g_absorption", absorption);
   CHECK_GL_ERRORS;
   mesh_->bind();
@@ -131,10 +129,11 @@ void VolumeBox2::draw(const CameraInterface *camera, ponos::Transform t) {
 }
 
 void VolumeBox2::render(GLenum cullFace) {
-//  glEnable(GL_DEPTH_TEST);
-//  glEnable(GL_CULL_FACE);
-//  glFrontFace(GL_CCW);
-//  glCullFace(cullFace);
+  UNUSED_VARIABLE(cullFace);
+  //  glEnable(GL_DEPTH_TEST);
+  //  glEnable(GL_CULL_FACE);
+  //  glFrontFace(GL_CCW);
+  //  glCullFace(cullFace);
   glDrawElements(mesh_->indexBuffer()->bufferDescriptor.elementType,
                  mesh_->indexBuffer()->bufferDescriptor.elementCount *
                      mesh_->indexBuffer()->bufferDescriptor.elementSize,

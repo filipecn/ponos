@@ -39,8 +39,7 @@ public:
       : a(A), b(B), c(C), d(D) {}
 
   Color operator()(float t) {
-    return Color(a + b * cos((c * t + d) * static_cast<const real_t>(
-                                               ponos::Constants::two_pi)));
+    return Color(a + b * cos((c * t + d) * ponos::Constants::two_pi));
   }
   ponos::vec3 a, b, c, d;
 };

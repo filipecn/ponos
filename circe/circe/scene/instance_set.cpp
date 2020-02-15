@@ -145,6 +145,7 @@ void InstanceSet::bind(uint b) {
 
 void InstanceSet::draw(const CameraInterface *camera,
                        ponos::Transform transform) {
+  UNUSED_VARIABLE(transform);
   // bind buffers and locate attributes
   shader_.begin();
   baseMesh_.bind();
