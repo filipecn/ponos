@@ -105,9 +105,9 @@ target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PL
 target_link_libraries(circe PUBLIC ponos  
 ${GLFW_LIBRARIES} 
 ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
-if(glfw AND glad)
+# if(glfw AND glad)
         add_dependencies(circe glfw glad)
-endif(glfw AND glad)
+# endif(glfw AND glad)
 
 if(BUILD_EXAMPLES)
         add_subdirectory(examples)
