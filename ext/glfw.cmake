@@ -1,10 +1,10 @@
 include(ExternalProject)
-find_package(GLFW 3.2 QUIET)
+# find_package(GLFW 3.2 QUIET)
 
-if(GLFW_FOUND)
-    message(STATUS "Found GLFW")
-else()
-    message(STATUS "GLFW not found - will build from source")
+# if(GLFW_FOUND)
+    # message(STATUS "Found GLFW")
+# else()
+    # message(STATUS "GLFW not found - will build from source")
 
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -37,30 +37,12 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/glfw-src
                  EXCLUDE_FROM_ALL)
 
 
+   set(GLFW_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/glfw-src/include)
+   set(GLFW_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX})
 
- #   ExternalProject_Add(
- #   glfw PREFIX glfw
- #   URL "https://github.com/glfw/glfw/archive/3.3.tar.gz"
- #   # URL_HASH SHA1=fe17a0610a239311a726ecabcd2dbd669fb24ca8
-  #  CMAKE_ARGS
-  #          "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
-  #          "-DCMAKE_BUILD_TYPE=Release"
-  #          "-DGLFW_BUILD_EXAMPLES=OFF"
- #           "-DGLFW_BUILD_TESTS=OFF"
- #           "-DGLFW_BUILD_DOCS=OFF"
- #   CMAKE_CACHE_ARGS
- #       "-DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}"
- #       "-DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}"
- #   )
-
-  # ExternalProject_Get_Property(glfw INSTALL_DIR)
-  #  set(GLFW_INCLUDE_DIR ${INSTALL_DIR}/include)
-  #  set(GLFW_LIBRARIES
-  #      ${INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX})
-
-	set(GLFW_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw-src/include")
-	set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/Debug/glfw3.lib")
-    set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/glfw3.lib")
+	# set(GLFW_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw-src/include")
+	# set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/Debug/glfw3.lib")
+    # set(GLFW_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/glfw-build/src/glfw3.lib")
 
 	if(UNIX)
         find_package(Threads REQUIRED)
@@ -99,14 +81,20 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/glfw-src
         list(APPEND GLFW_LIBRARIES ${GLFW_LIBRARIES} ${COCOA_LIBRARY} ${CV_LIBRARY})
         else(APPLE)
           list(APPEND GLFW_LIBRARIES
-            "${X11_Xrandr_LIB}" "${X11_Xxf86vm_LIB}" "${X11_Xcursor_LIB}"
-            "${X11_Xinerama_LIB}" "${X11_Xinput_LIB}"
-            "${CMAKE_THREAD_LIBS_INIT}" -ldl)
+            "${X11_Xrandr_LIB}" 
+            "${X11_Xxf86vm_LIB}" 
+            "${X11_Xcursor_LIB}"
+            "${X11_Xinerama_LIB}" 
+            "${X11_Xinput_LIB}"
+            "${CMAKE_THREAD_LIBS_INIT}" 
+            -lX11
+            -ldl
+            )
 
 
         endif(APPLE)
     endif()
-endif()
+# endif()
 
 set(GLFW_INCLUDE_DIR ${GLFW_INCLUDE_DIR} CACHE STRING "")
 set(GLFW_LIBRARIES ${GLFW_LIBRARIES} CACHE STRING "")
