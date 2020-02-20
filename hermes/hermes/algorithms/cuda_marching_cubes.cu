@@ -55,24 +55,24 @@ __constant__ int ms_segment_table[16][5] = {
     {0, -1, -1, -1, -1}  // case 15: no edges
 };
 
-__global__ void
-__classifySquares(RegularGrid2Accessor<float> f,
-                  MemoryBlock2Accessor<unsigned char> square_type,
-                  MemoryBlock2Accessor<unsigned int> count, float isovalue) {
+__global__ void __classifySquares(Grid2Accessor<float> f,
+                                  Array2Accessor<unsigned char> square_type,
+                                  Array2Accessor<unsigned int> count,
+                                  float isovalue) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
-  if (f.isIndexStored(i + 1, j + 1)) {
+  if (f.stores(index2(i + 1, j + 1))) {
     unsigned char type = 0;
-    if (f(i, j) < isovalue)
+    if (f[index2(i, j)] < isovalue)
       type |= 1;
-    if (f(i + 1, j) < isovalue)
+    if (f[index2(i + 1, j)] < isovalue)
       type |= 2;
-    if (f(i + 1, j + 1) < isovalue)
+    if (f[index2(i + 1, j + 1)] < isovalue)
       type |= 4;
-    if (f(i, j + 1) < isovalue)
+    if (f[index2(i, j + 1)] < isovalue)
       type |= 8;
-    square_type(i, j) = type;
-    count(i, j) = ms_segment_table[type][0];
+    square_type[index2(i, j)] = type;
+    count[index2(i, j)] = ms_segment_table[type][0];
   }
 }
 
@@ -81,19 +81,19 @@ __device__ float intersect(float p1, float v1, float p2, float v2,
   return p1 + (isovalue - v1) * (p2 - p1) / (v2 - v1);
 }
 
-__global__ void
-__generateVertices(CuMemoryBlock1Accessor<float> vertices,
-                   CuMemoryBlock1Accessor<unsigned int> indices,
-                   RegularGrid2Accessor<float> f,
-                   MemoryBlock2Accessor<unsigned int> index_offset,
-                   MemoryBlock2Accessor<unsigned char> type, float isovalue) {
+__global__ void __generateVertices(Array1Accessor<float> vertices,
+                                   Array1Accessor<unsigned int> indices,
+                                   Grid2Accessor<float> f,
+                                   Array2Accessor<unsigned int> index_offset,
+                                   Array2Accessor<unsigned char> type,
+                                   float isovalue) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
-  if (type.isIndexValid(i, j)) {
+  if (type.contains(index2(i, j))) {
     int square_vertex_indices[4][2] = {
         {i, j}, {i + 1, j}, {i + 1, j + 1}, {i, j + 1}};
     int edge_vertex[4][2] = {{0, 1}, {1, 2}, {3, 2}, {0, 3}};
-    size_t square_type = type(i, j);
+    size_t square_type = type[index2(i, j)];
     size_t num_segments = ms_segment_table[square_type][0];
     for (size_t s = 0; s < num_segments; s++) {
       for (size_t e = 0; e < 2; e++) {
@@ -102,20 +102,20 @@ __generateVertices(CuMemoryBlock1Accessor<float> vertices,
                           square_vertex_indices[edge_vertex[edge][0]][1]};
         int v1Index[2] = {square_vertex_indices[edge_vertex[edge][1]][0],
                           square_vertex_indices[edge_vertex[edge][1]][1]};
-        auto v0 = f.worldPosition(v0Index[0], v0Index[1]);
-        auto v1 = f.worldPosition(v1Index[0], v1Index[1]);
-        size_t vertexIndex = (index_offset(i, j) + s) * 2 * 2 + e * 2;
-        indices[(index_offset(i, j) + s) * 2 + e] =
-            (index_offset(i, j) + s) * 2 + e;
+        auto v0 = f.worldPosition(index2(v0Index[0], v0Index[1]));
+        auto v1 = f.worldPosition(index2(v1Index[0], v1Index[1]));
+        size_t vertexIndex = (index_offset[index2(i, j)] + s) * 2 * 2 + e * 2;
+        indices[(index_offset[index2(i, j)] + s) * 2 + e] =
+            (index_offset[index2(i, j)] + s) * 2 + e;
         if (edge % 2) {
           vertices[vertexIndex + 0] = v0[0];
           vertices[vertexIndex + 1] =
-              intersect(v0[1], f(v0Index[0], v0Index[1]), v1[1],
-                        f(v1Index[0], v1Index[1]), isovalue);
+              intersect(v0[1], f[index2(v0Index[0], v0Index[1])], v1[1],
+                        f[index2(v1Index[0], v1Index[1])], isovalue);
         } else {
           vertices[vertexIndex + 0] =
-              intersect(v0[0], f(v0Index[0], v0Index[1]), v1[0],
-                        f(v1Index[0], v1Index[1]), isovalue);
+              intersect(v0[0], f[index2(v0Index[0], v0Index[1])], v1[0],
+                        f[index2(v1Index[0], v1Index[1])], isovalue);
           vertices[vertexIndex + 1] = v0[1];
         }
       }
@@ -123,41 +123,36 @@ __generateVertices(CuMemoryBlock1Accessor<float> vertices,
   }
 }
 
-template <>
-void MarchingSquares::extractIsoline(RegularGrid2Df &f,
-                                     CuMemoryBlock1f &vertices,
-                                     CuMemoryBlock1u &indices, float isovalue) {
+void MarchingSquares::extractIsoline(Grid2<float> &f, array1f &vertices,
+                                     array1u &indices, float isovalue) {
   // classify squares
-  vec2u size(f.resolution().x - 1, f.resolution().y - 1);
-  MemoryBlock2Duc square_type(size);
-  square_type.allocate();
-  MemoryBlock2Du d_index_offset(size);
-  d_index_offset.allocate();
+  /*size2 size(f.resolution().width - 1, f.resolution().height - 1);
+  Array2<unsigned char> square_type(size);
+  array2u d_index_offset(size);
   ThreadArrayDistributionInfo td(size);
   __classifySquares<<<td.gridSize, td.blockSize>>>(
       f.accessor(), square_type.accessor(), d_index_offset.accessor(),
       isovalue);
   // compute indices
-  MemoryBlock2Hu h_index_offset(size);
-  h_index_offset.allocate();
-  auto accIndices = h_index_offset.accessor();
-  memcpy(h_index_offset, d_index_offset);
-  size_t count = 0;
-  for (size_t j = 0; j < size.y; j++)
-    for (size_t i = 0; i < size.x; i++) {
-      int tmp = accIndices(i, j);
-      accIndices(i, j) = count;
-      count += tmp;
-    }
-  if (!count)
-    return;
-  memcpy(d_index_offset, h_index_offset);
-  // compute vertices
-  vertices.resize(count * 2 * 2);
-  indices.resize(count * 2);
-  __generateVertices<<<td.gridSize, td.blockSize>>>(
-      vertices.accessor(), indices.accessor(), f.accessor(),
-      d_index_offset.accessor(), square_type.accessor(), isovalue);
+  ponos::array2u h_index_offset(size);
+    auto accIndices = h_index_offset.accessor();
+    memcpy(h_index_offset, d_index_offset);
+    size_t count = 0;
+    for (size_t j = 0; j < size.y; j++)
+      for (size_t i = 0; i < size.x; i++) {
+        int tmp = accIndices(i, j);
+        accIndices(i, j) = count;
+        count += tmp;
+      }
+    if (!count)
+      return;
+    memcpy(d_index_offset, h_index_offset);
+    // compute vertices
+    vertices.resize(count * 2 * 2);
+    indices.resize(count * 2);
+    __generateVertices<<<td.gridSize, td.blockSize>>>(
+        vertices.accessor(), indices.accessor(), f.accessor(),
+        d_index_offset.accessor(), square_type.accessor(), isovalue);*/
 }
 
 // Cube indices:

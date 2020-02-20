@@ -50,6 +50,10 @@ public:
   T operator[](int _i) const { return (&i)[_i]; }
   T &operator[](int _i) { return (&i)[_i]; }
   Index2<T> plus(T _i, T _j) const { return Index2<T>(i + _i, j + _j); }
+  Index2<T> left() const { return Index2<T>(i - 1, j); }
+  Index2<T> right() const { return Index2<T>(i + 1, j); }
+  Index2<T> down() const { return Index2<T>(i, j - 1); }
+  Index2<T> up() const { return Index2<T>(i, j + 1); }
   void clampTo(const size2 &s) {
     i = std::max(0, std::min(i, static_cast<T>(s.width)));
     j = std::max(0, std::min(j, static_cast<T>(s.height)));

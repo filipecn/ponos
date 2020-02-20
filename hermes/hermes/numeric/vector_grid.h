@@ -41,7 +41,7 @@ public:
   /// \param resolution in number of cells
   /// \param origin (0,0) corner position
   /// \param dx cell size
-  VectorGridTexture2(vec2u resolution, point2f origin, float dx) {
+  VectorGridTexture2(size2 resolution, point2f origin, float dx) {
     uGrid.resize(resolution);
     uGrid.setOrigin(origin);
     uGrid.setDx(dx);
@@ -51,7 +51,7 @@ public:
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  virtual void resize(vec2u res) {
+  virtual void resize(size2 res) {
     uGrid.resize(res);
     vGrid.resize(res);
   }
@@ -166,31 +166,28 @@ public:
   /// \param addressMode **[default = AccessMode::NONE]** accessMode defines how
   /// outside of bounds is treated
   /// \param border * * [default = T()]** border
-  VectorGrid2Accessor(const vec2u &resolution, const vec2f &spacing,
-                      RegularGrid2Accessor<float> u,
-                      RegularGrid2Accessor<float> v)
+  VectorGrid2Accessor(const size2 &resolution, const vec2f &spacing,
+                      Grid2Accessor<float> u, Grid2Accessor<float> v)
       : resolution(resolution), spacing(spacing), u_(u), v_(v) {}
-  virtual __host__ __device__ vec2f operator()(int i, int j) {
-    return vec2f(u_(i, j), v_(i, j));
+  virtual __device__ vec2f operator()(int i, int j) {
+    return vec2f(u_[index2(i, j)], v_[index2(i, j)]);
   }
-  virtual __host__ __device__ vec2f operator()(point2f wp) {
+  virtual __device__ vec2f operator()(point2f wp) {
     return vec2f(u_(wp), v_(wp));
   }
-  __host__ __device__ float &u(int i, int j) { return u_(i, j); }
-  __host__ __device__ float &v(int i, int j) { return v_(i, j); }
-  __host__ __device__ float u(int i, int j) const { return u_(i, j); }
-  __host__ __device__ float v(int i, int j) const { return v_(i, j); }
-  __host__ __device__ RegularGrid2Accessor<float> &uAccessor() { return u_; }
-  __host__ __device__ RegularGrid2Accessor<float> &vAccessor() { return v_; }
+  __device__ float &u(int i, int j) { return u_[index2(i, j)]; }
+  __device__ float &v(int i, int j) { return v_[index2(i, j)]; }
+  __host__ __device__ Grid2Accessor<float> &uAccessor() { return u_; }
+  __host__ __device__ Grid2Accessor<float> &vAccessor() { return v_; }
 
-  const vec2u resolution;
+  const size2 resolution;
   const vec2f spacing;
 
 protected:
-  RegularGrid2Accessor<float> u_, v_;
+  Grid2Accessor<float> u_, v_;
 };
 
-template <MemoryLocation L> class VectorGrid2 {
+template class VectorGrid2 {
 public:
   VectorGrid2() {
     setSpacing(vec2f(1.f));
@@ -199,7 +196,7 @@ public:
   /// \param res resolution in number of cells
   /// \param o origin (0,0,0) corner position
   /// \param s spacing cell size
-  VectorGrid2(vec2u res, point2f o, vec2f s)
+  VectorGrid2(size2 res, point2f o, vec2f s)
       : resolution_(res), origin_(o), spacing_(s) {
     uGrid.resize(res);
     uGrid.setOrigin(o);
@@ -208,12 +205,12 @@ public:
     vGrid.setOrigin(o);
     vGrid.setSpacing(s);
   }
-  vec2u resolution() const { return resolution_; }
+  size2 resolution() const { return resolution_; }
   vec2f spacing() const { return spacing_; }
   point2f origin() const { return origin_; }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  virtual void resize(vec2u res) {
+  virtual void resize(size2 res) {
     resolution_ = res;
     uGrid.resize(res);
     vGrid.resize(res);
@@ -232,10 +229,10 @@ public:
     uGrid.setSpacing(s);
     vGrid.setSpacing(s);
   }
-  const RegularGrid2<L, float> &u() const { return uGrid; }
-  const RegularGrid2<L, float> &v() const { return vGrid; }
-  RegularGrid2<L, float> &u() { return uGrid; }
-  RegularGrid2<L, float> &v() { return vGrid; }
+  const Grid2<float> &u() const { return uGrid; }
+  const Grid2<float> &v() const { return vGrid; }
+  Grid2<float> &u() { return uGrid; }
+  Grid2<float> &v() { return vGrid; }
   VectorGrid2Accessor accessor() {
     return VectorGrid2Accessor(resolution_, spacing_, uGrid.accessor(),
                                vGrid.accessor());
@@ -252,10 +249,10 @@ public:
   }
 
 protected:
-  vec2u resolution_;
+  size2 resolution_;
   point2f origin_;
   vec2f spacing_;
-  RegularGrid2<L, float> uGrid, vGrid;
+  Grid2<float> uGrid, vGrid;
 };
 
 // template <MemoryLocation L>

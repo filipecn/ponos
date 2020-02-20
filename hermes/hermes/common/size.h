@@ -50,6 +50,10 @@ public:
   __host__ __device__ T total() const { return width * height; }
   __host__ __device__ T operator[](int i) const { return (&width)[i]; }
   __host__ __device__ T &operator[](int i) { return (&width)[i]; }
+  __host__ __device__ bool contains(int i, int j) const {
+    return i >= 0 && j >= 0 && i < static_cast<i64>(width) &&
+           j < static_cast<i64>(height);
+  }
 
   T width = T(0);
   T height = T(0);

@@ -39,10 +39,8 @@ public:
   /// \param vertices **[out]**
   /// \param indices **[out]**
   /// \param isovalue **[in]**
-  template <MemoryLocation L>
-  static void extractIsoline(RegularGrid2<L, float> &f,
-                             CuMemoryBlock1f &vertices,
-                             CuMemoryBlock1u &indices, float isovalue = 0.f);
+  static void extractIsoline(Grid2<float> &f, array1f &vertices,
+                             array1u &indices, float isovalue = 0.f);
 };
 
 class MarchingCubes {

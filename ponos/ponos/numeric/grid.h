@@ -34,6 +34,28 @@
 
 namespace ponos {
 
+/// \brief Position names inside the grid
+///  CELL_CENTER: cell centers (c)
+///  U_FACE_CENTER: vertical face centers (u)
+///  V_FACE_CENTER: horizontal face centers (v)
+///  W_FACE_CENTER: depth face centers (w)
+///  VERTEX_CENTER: vertex centers (V)
+///
+///  Diagram of positions:
+///
+///           ------------
+///           |          |
+///           u    c     |
+///           |          |
+///           V----v------
+///
+enum class GridPosition {
+  CELL_CENTER,
+  U_FACE_CENTER,
+  V_FACE_CENTER,
+  W_FACE_CENTER,
+  VERTEX_CENTER
+};
 /// Grid address mode: Defines how out of boundaries grid positions are handled
 ///
 /// REPEAT:
@@ -220,10 +242,15 @@ private:
   T dummy_ = T(0);
 };
 /// A Grid2 is a numerical discretization of an arbitrary 2-dimensional domain
-/// that can be used for numerical simulations and other applications. Each
-/// grid index represents the lower vertex of a grid cell, so the center of the
-/// cell (i,j) is (i + .5, j + .5). In other words, data is stored at vertex
-/// positions.
+/// that can be used for numerical simulations and other applications.
+/// The grid origin (O) is based on the lowest cell center of the grid
+///                           .        .
+///                           .      .
+///                          --- ---
+///                         | O |   | ...
+///                          --------
+/// Cell indices are cell-based, so the lowest vertex of cell (i,j), in index
+/// space, is (i - 0.5, j - 0.5).
 /// \tparam T grid data type
 template <typename T> class Grid2 {
 public:
@@ -238,7 +265,7 @@ public:
   explicit Grid2(const size2 &resolution, const vec2 &spacing = vec2(1, 1),
                  const point2 &origin = point2(0, 0))
       : origin_(origin), spacing_(spacing) {
-    data_.resize(resolution);
+    setResolution(resolution);
     updateTransform();
   }
   // ***********************************************************************
@@ -272,7 +299,7 @@ public:
   // ***********************************************************************
   //                         GETTERS & SETTERS
   // ***********************************************************************
-  /// \return grid resolution
+  /// \return grid resolution (in cells)
   size2 resolution() const { return data_.size(); }
   /// \return grid spacing (cell size)
   vec2 spacing() const { return spacing_; }

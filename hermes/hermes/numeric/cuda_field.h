@@ -40,7 +40,7 @@ public:
   FieldTexture2() = default;
   /// \param toField world to field transform
   /// \param size texture resolution
-  FieldTexture2(const Transform2<float> toField, const vec2u &size)
+  FieldTexture2(const Transform2<float> toField, const size2 &size)
       : toField(toField), toWorld(inverse(toField)) {
     texture_.resize(size[0], size[1]);
   }
@@ -49,11 +49,11 @@ public:
     toWorld = toWorldTransform;
     toField = inverse(toWorldTransform);
   }
-  vec2u resolution() const {
-    return vec2u(texture_.width(), texture_.height());
+  size2 resolution() const {
+    return size2(texture_.width(), texture_.height());
   }
   /// \param size texture resolution
-  void resize(const vec2u &size) { texture_.resize(size[0], size[1]); }
+  void resize(const size2 &size) { texture_.resize(size[0], size[1]); }
   /// \return Texture<T>& reference to texture object
   Texture<T> &texture() { return texture_; }
   /// \return const Texture<T>& const reference to texture object

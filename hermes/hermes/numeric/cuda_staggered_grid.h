@@ -48,19 +48,19 @@ public:
   /// \param resolution in number of cells
   /// \param origin (0,0) corner position
   /// \param dx cell size
-  StaggeredGridTexture2(vec2u resolution, point2f origin, float dx) {
-    uGrid.resize(resolution + vec2u(1, 0));
+  StaggeredGridTexture2(size2 resolution, point2f origin, float dx) {
+    uGrid.resize(resolution + size2(1, 0));
     uGrid.setOrigin(origin + vec2f(-0.5f, 0.f));
     uGrid.setDx(dx);
-    vGrid.resize(resolution + vec2u(0, 1));
+    vGrid.resize(resolution + size2(0, 1));
     vGrid.setOrigin(origin + vec2f(0.f, -0.5f));
     vGrid.setDx(dx);
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  void resize(vec2u res) override {
-    uGrid.resize(res + vec2u(1, 0));
-    vGrid.resize(res + vec2u(0, 1));
+  void resize(size2 res) override {
+    uGrid.resize(res + size2(1, 0));
+    vGrid.resize(res + size2(0, 1));
   }
   /// Changes grid origin position
   /// \param o in world space
@@ -72,15 +72,14 @@ public:
 
 class StaggeredGrid2Accessor : public VectorGrid2Accessor {
 public:
-  StaggeredGrid2Accessor(const vec2u &resolution, const vec2f &spacing,
-                         RegularGrid2Accessor<float> u,
-                         RegularGrid2Accessor<float> v)
+  StaggeredGrid2Accessor(const size2 &resolution, const vec2f &spacing,
+                         Grid2Accessor<float> u, Grid2Accessor<float> v)
       : VectorGrid2Accessor(resolution, spacing, u, v) {}
-  __host__ __device__ vec2f operator()(int i, int j) override {
-    return 0.5f * vec2f(this->u_(i + 1, j) + this->u_(i, j),
-                        this->v_(i, j + 1) + this->v_(i, j));
+  __device__ vec2f operator()(int i, int j) override {
+    return 0.5f * vec2f(this->u_[index2(i + 1, j)] + this->u_[index2(i, j)],
+                        this->v_[index2(i, j + 1)] + this->v_[index2(i, j)]);
   }
-  __host__ __device__ vec2f operator()(point2f wp) override {
+  __device__ vec2f operator()(point2f wp) override {
     return vec2f(this->u_(wp), this->v_(wp));
   }
 };
@@ -101,14 +100,14 @@ public:
   /// \param res resolution in number of cells
   /// \param o origin (0,0) corner position
   /// \param s cell size
-  StaggeredGrid2(vec2u res, point2f o, const vec2f &s) {
+  StaggeredGrid2(size2 res, point2f o, const vec2f &s) {
     this->origin_ = o;
     this->resolution_ = res;
     this->spacing_ = s;
-    this->uGrid.resize(res + vec2u(1, 0));
+    this->uGrid.resize(res + size2(1, 0));
     this->uGrid.setOrigin(o + s.x * vec2f(-0.5f, 0.f));
     this->uGrid.setSpacing(s);
-    this->vGrid.resize(res + vec2u(0, 1));
+    this->vGrid.resize(res + size2(0, 1));
     this->vGrid.setOrigin(o + s.y * vec2f(0.f, -0.5f));
     this->vGrid.setSpacing(s);
   }
@@ -122,10 +121,10 @@ public:
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  void resize(vec2u res) override {
+  void resize(size2 res) override {
     this->resolution_ = res;
-    this->uGrid.resize(res + vec2u(1, 0));
-    this->vGrid.resize(res + vec2u(0, 1));
+    this->uGrid.resize(res + size2(1, 0));
+    this->vGrid.resize(res + size2(0, 1));
   }
   /// Changes grid origin position
   /// \param o in world space

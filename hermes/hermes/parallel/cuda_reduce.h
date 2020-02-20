@@ -133,8 +133,7 @@ template <typename T> T reduceAdd(const T *data, unsigned int n) {
   return h_r;
 }
 
-template <typename T>
-__global__ void k__min(MemoryBlock2Accessor<T> data, T *c) {
+template <typename T> __global__ void k__min(Array2Accessor<T> data, T *c) {
   __shared__ float cache[256];
 
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
@@ -162,7 +161,7 @@ __global__ void k__min(MemoryBlock2Accessor<T> data, T *c) {
     c[blockIdx.x] = cache[0];
 }
 
-template <typename T> T minValue(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+template <typename T> T minValue(Array2<T> &data) {
   size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
   if (blockSize > 32)
     blockSize = 32;
@@ -179,8 +178,7 @@ template <typename T> T minValue(MemoryBlock2<MemoryLocation::DEVICE, T> &data) 
   return norm;
 }
 
-template <typename T>
-__global__ void k__max(MemoryBlock2Accessor<T> data, T *c) {
+template <typename T> __global__ void k__max(Array2Accessor<T> data, T *c) {
   __shared__ float cache[256];
 
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
@@ -208,7 +206,7 @@ __global__ void k__max(MemoryBlock2Accessor<T> data, T *c) {
     c[blockIdx.x] = cache[0];
 }
 
-template <typename T> T maxValue(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+template <typename T> T maxValue(Array2<T> &data) {
   size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
   if (blockSize > 32)
     blockSize = 32;
@@ -225,8 +223,7 @@ template <typename T> T maxValue(MemoryBlock2<MemoryLocation::DEVICE, T> &data) 
   return norm;
 }
 
-template <typename T>
-__global__ void __max_abs(MemoryBlock2Accessor<T> data, T *c) {
+template <typename T> __global__ void __max_abs(Array2Accessor<T> data, T *c) {
   __shared__ float cache[256];
 
   int tid = blockDim.x * blockIdx.x + threadIdx.x;
@@ -254,7 +251,7 @@ __global__ void __max_abs(MemoryBlock2Accessor<T> data, T *c) {
     c[blockIdx.x] = cache[0];
 }
 
-template <typename T> T maxAbs(MemoryBlock2<MemoryLocation::DEVICE, T> &data) {
+template <typename T> T maxAbs(Array2<T> &data) {
   size_t blockSize = (data.size().x * data.size().y + 256 - 1) / 256;
   if (blockSize > 32)
     blockSize = 32;

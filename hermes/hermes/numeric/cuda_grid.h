@@ -159,6 +159,9 @@ public:
     auto wp = info_.to_world(point2(ij.i, ij.j));
     return bbox2(wp, wp + grid_.spacing_);
   }
+  __host__ __device__ bool stores(const index2 &ij) const {
+    return info_.resolution.contains(ij.i, ij.j);
+  }
   /// \param ij position index
   /// \return reference to data stored at ij based on the address mode
   __device__ T &operator[](const index2 &ij) {
@@ -187,6 +190,7 @@ public:
     default:
       break;
     }
+
     assert(grid_.contains(fij));
     return grid_[fij];
   }
@@ -375,7 +379,7 @@ private:
 struct Grid2Info {
   Transform2<float> toField;
   Transform2<float> toWorld;
-  vec2u resolution;
+  size2 resolution;
   point2f origin;
   float dx;
 };
@@ -392,7 +396,7 @@ struct Grid3Info {
 struct RegularGrid2Info {
   Transform2<float> toGrid;
   Transform2<float> toWorld;
-  vec2u resolution;
+  size2 resolution;
   point2f origin;
   vec2f spacing;
 };
@@ -404,7 +408,7 @@ struct RegularGrid3Info {
   point3f origin;
   vec3f spacing;
 };
-
+/*
 template <typename T> class RegularGrid2Iterator {
 public:
   class Element {
@@ -424,12 +428,12 @@ public:
     vec2i index_;
     RegularGrid2Info &info_;
   };
-  __host__ __device__
-  RegularGrid2Iterator(MemoryBlock2Accessor<T> &dataAccessor,
-                       RegularGrid2Info &info, const vec2i &ij)
+  __host__ __device__ RegularGrid2Iterator(Array2Accessor<T> &dataAccessor,
+                                           RegularGrid2Info &info,
+                                           const vec2i &ij)
       : acc_(dataAccessor), info_(info), size_(info.resolution), i(ij.x),
         j(ij.y) {}
-  __host__ __device__ vec2u size() const { return size_; }
+  __host__ __device__ size2 size() const { return size_; }
   __host__ __device__ RegularGrid2Iterator &operator++() {
     i++;
     if (i >= size_.x) {
@@ -449,12 +453,12 @@ public:
   }
 
 private:
-  MemoryBlock2Accessor<T> acc_;
+  Array2Accessor<T> acc_;
   RegularGrid2Info info_;
   int i = 0, j = 0;
-  vec2u size_;
-};
-
+  size2 size_;
+};*/
+/*
 /// Accessor for arrays stored on the device.
 /// \tparam T data type
 template <typename T> class RegularGrid2Accessor {
@@ -464,11 +468,11 @@ public:
   /// outside of bounds is treated
   /// \param border * * [default = T()]** border
   RegularGrid2Accessor(
-      const RegularGrid2Info &info, MemoryBlock2Accessor<T> data,
+      const RegularGrid2Info &info, Array2Accessor<T> data,
       ponos::AddressMode addressMode = ponos::AddressMode::CLAMP_TO_EDGE,
       T border = T(0))
       : info_(info), data_(data), address_mode_(addressMode), border_(border) {}
-  __host__ __device__ vec2u resolution() const { return data_.size(); }
+  __host__ __device__ size2 resolution() const { return data_.size(); }
   __host__ __device__ vec2f spacing() const { return info_.spacing; }
   /// \param i size[0] index
   /// \param j size[1] index
@@ -547,7 +551,7 @@ public:
 
 private:
   RegularGrid2Info info_;
-  MemoryBlock2Accessor<T> data_;
+  Array2Accessor<T> data_;
   ponos::AddressMode
       address_mode_; //!< defines how out of bounds data is treated
   T border_;         //!< border value
@@ -561,11 +565,11 @@ public:
   /// outside of bounds is treated
   /// \param border * * [default = T()]** border
   RegularGrid2Accessor(
-      const RegularGrid2Info &info, MemoryBlock2Accessor<float> data,
+      const RegularGrid2Info &info, Array2Accessor<float> data,
       ponos::AddressMode addressMode = ponos::AddressMode::CLAMP_TO_EDGE,
       float border = 0.f)
       : info_(info), data_(data), address_mode_(addressMode), border_(border) {}
-  __host__ __device__ vec2u resolution() const { return data_.size(); }
+  __host__ __device__ size2 resolution() const { return data_.size(); }
   __host__ __device__ vec2f spacing() const { return info_.spacing; }
   /// \param i size[0] index
   /// \param j size[1] index
@@ -654,7 +658,7 @@ public:
 
 private:
   RegularGrid2Info info_;
-  MemoryBlock2Accessor<float> data_;
+  Array2Accessor<float> data_;
   ponos::AddressMode
       address_mode_; //!< defines how out of bounds data is treated
   float border_;     //!< border value
@@ -667,7 +671,7 @@ public:
   template <MemoryLocation LL> RegularGrid2(RegularGrid2<LL, T> &other) {
     copy(other);
   }
-  RegularGrid2(const vec2u &size = vec2u()) {
+  RegularGrid2(const size2 &size = size2()) {
     info_.resolution = size;
     data_.resize(size);
     if (size.x * size.y != 0)
@@ -675,12 +679,12 @@ public:
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  void resize(const vec2u &res) {
+  void resize(const size2 &res) {
     info_.resolution = res;
     data_.resize(res);
     data_.allocate();
   }
-  vec2u resolution() const { return info_.resolution; }
+  size2 resolution() const { return info_.resolution; }
   vec2f spacing() const { return info_.spacing; }
   point2f origin() const { return info_.origin; }
   /// Changes grid origin position
@@ -701,8 +705,8 @@ public:
     return RegularGrid2Accessor<T>(info_, data_.accessor(), addressMode,
                                    border);
   }
-  MemoryBlock2<L, T> &data() { return data_; }
-  const MemoryBlock2<L, T> &data() const { return data_; }
+  Array2<L, T> &data() { return data_; }
+  const Array2<L, T> &data() const { return data_; }
   const RegularGrid2Info &info() const { return info_; }
   template <MemoryLocation LL> void copy(RegularGrid2<LL, T> &other) {
     info_ = other.info();
@@ -719,7 +723,7 @@ private:
   }
 
   RegularGrid2Info info_;
-  MemoryBlock2<L, T> data_;
+  Array2<L, T> data_;
 };
 
 using RegularGrid2Df = RegularGrid2<MemoryLocation::DEVICE, float>;
@@ -728,7 +732,7 @@ using RegularGrid2Di = RegularGrid2<MemoryLocation::DEVICE, int>;
 using RegularGrid2Hf = RegularGrid2<MemoryLocation::HOST, float>;
 using RegularGrid2Huc = RegularGrid2<MemoryLocation::HOST, unsigned char>;
 using RegularGrid2Hi = RegularGrid2<MemoryLocation::HOST, int>;
-
+*/
 template <typename T> class RegularGrid3Iterator {
 public:
   class Element {
@@ -1112,20 +1116,21 @@ void fill3(RegularGrid3<MemoryLocation::DEVICE, T> &grid, const bbox3f &region,
   __fill3<<<td.gridSize, td.blockSize>>>(grid.accessor(), region, value,
                                          increment);
 }
-
+/*
 template <MemoryLocation L, typename T> T minValue(RegularGrid2<L, T> &grid);
 
 template <typename T>
 T minValue(RegularGrid2<MemoryLocation::DEVICE, T> &grid) {
   return minValue(grid.data());
 }
-
-template <MemoryLocation L, typename T> T maxValue(RegularGrid2<L, T> &grid);
-
+*/
+// template <MemoryLocation L, typename T> T maxValue(RegularGrid2<L, T> &grid);
+/*
 template <typename T>
 T maxValue(RegularGrid2<MemoryLocation::DEVICE, T> &grid) {
   return maxValue(grid.data());
 }
+*/
 
 // TODO: DEPRECATED
 /// Represents a texture field with position offset and scale
@@ -1135,15 +1140,15 @@ public:
   /// \param resolution in number of cells
   /// \param origin (0,0) coordinate position
   /// \param dx cell size
-  GridTexture2(vec2u resolution, point2f origin, float dx)
+  GridTexture2(size2 resolution, point2f origin, float dx)
       : origin(origin), dx(dx) {
     texGrid.resize(resolution);
     updateTransform();
   }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  void resize(vec2u res) { texGrid.resize(res); }
-  vec2u resolution() const { return texGrid.resolution(); }
+  void resize(size2 res) { texGrid.resize(res); }
+  size2 resolution() const { return texGrid.resolution(); }
   /// Changes grid origin position
   /// \param o in world space
   void setOrigin(const point2f &o) {
@@ -1160,7 +1165,7 @@ public:
   /// \return Info grid info to be passed to kernels
   Grid2Info info() const {
     return {texGrid.toFieldTransform(), texGrid.toWorldTransform(),
-            vec2u(texGrid.texture().width(), texGrid.texture().height()),
+            size2(texGrid.texture().width(), texGrid.texture().height()),
             origin, dx};
   }
   void copy(const GridTexture2 &other) {

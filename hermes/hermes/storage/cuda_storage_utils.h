@@ -270,6 +270,8 @@ private:
   T *data_ = nullptr;
 };
 */
+
+/*
 template <typename T> class MemoryBlock2Iterator {
 public:
   class Element {
@@ -422,7 +424,7 @@ private:
   size_t pitch_ = 0;
   T *data_ = nullptr;
 };
-
+*/
 template <typename T> class MemoryBlock3Iterator {
 public:
   class Element {
@@ -604,7 +606,7 @@ bool memcpy(MemoryBlock1<A, T> &dst, MemoryBlock1<B, T> &src) {
   return true;
 }*/
 
-template <MemoryLocation A, MemoryLocation B, typename T>
+/*template <MemoryLocation A, MemoryLocation B, typename T>
 bool memcpy(MemoryBlock2<A, T> &dst, MemoryBlock2<B, T> &src) {
   if (dst.size() != src.size())
     return false;
@@ -621,7 +623,7 @@ bool memcpy(CuArray2<T> &dst, MemoryBlock2<L, T> &src) {
   copyPitchedToArray<T>(dst.data(), src.pitchedData(), kind);
   return true;
 }
-
+*/
 template <MemoryLocation A, MemoryLocation B, typename T>
 bool memcpy(MemoryBlock3<A, T> &dst, MemoryBlock3<B, T> &src) {
   if (dst.size() != src.size())
@@ -675,7 +677,7 @@ std::ostream &operator<<(std::ostream &os,
   return os;
 }
 */
-template <typename T>
+/*template <typename T>
 std::ostream &operator<<(std::ostream &os,
                          MemoryBlock2<MemoryLocation::HOST, T> &data) {
   std::cerr << "2d MemoryBlock (" << data.size().x << " x " << data.size().y
@@ -705,7 +707,7 @@ std::ostream &operator<<(std::ostream &os,
   memcpy(host, data);
   os << host << std::endl;
   return os;
-}
+}*/
 template <typename T>
 std::ostream &operator<<(std::ostream &os,
                          MemoryBlock3<MemoryLocation::HOST, T> &data) {
@@ -745,7 +747,7 @@ std::ostream &operator<<(std::ostream &os,
   os << host << std::endl;
   return os;
 }
-template <typename T>
+/*template <typename T>
 __global__ void __fill2(MemoryBlock2Accessor<T> data, T value) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -766,7 +768,7 @@ void fill2(MemoryBlock2<MemoryLocation::HOST, T> &data, T value) {
   for (auto e : data.accessor())
     e.value = value;
 }
-
+*/
 template <typename T>
 __global__ void __fill3(MemoryBlock3Accessor<T> data, T value) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -800,14 +802,14 @@ using MemoryBlock1Di = MemoryBlock1<MemoryLocation::DEVICE, int>;
 using MemoryBlock1Hi = MemoryBlock1<MemoryLocation::HOST, int>;
 using MemoryBlock1Du = MemoryBlock1<MemoryLocation::DEVICE, unsigned int>;
 using MemoryBlock1Hu = MemoryBlock1<MemoryLocation::HOST, unsigned int>;*/
-using MemoryBlock2Df = MemoryBlock2<MemoryLocation::DEVICE, float>;
-using MemoryBlock2Hf = MemoryBlock2<MemoryLocation::HOST, float>;
-using MemoryBlock2Di = MemoryBlock2<MemoryLocation::DEVICE, int>;
-using MemoryBlock2Hi = MemoryBlock2<MemoryLocation::HOST, int>;
-using MemoryBlock2Duc = MemoryBlock2<MemoryLocation::DEVICE, unsigned char>;
-using MemoryBlock2Huc = MemoryBlock2<MemoryLocation::HOST, unsigned char>;
-using MemoryBlock2Du = MemoryBlock2<MemoryLocation::DEVICE, unsigned int>;
-using MemoryBlock2Hu = MemoryBlock2<MemoryLocation::HOST, unsigned int>;
+// using MemoryBlock2Df = MemoryBlock2<MemoryLocation::DEVICE, float>;
+// using MemoryBlock2Hf = MemoryBlock2<MemoryLocation::HOST, float>;
+// using MemoryBlock2Di = MemoryBlock2<MemoryLocation::DEVICE, int>;
+// using MemoryBlock2Hi = MemoryBlock2<MemoryLocation::HOST, int>;
+// using MemoryBlock2Duc = MemoryBlock2<MemoryLocation::DEVICE, unsigned char>;
+// using MemoryBlock2Huc = MemoryBlock2<MemoryLocation::HOST, unsigned char>;
+// using MemoryBlock2Du = MemoryBlock2<MemoryLocation::DEVICE, unsigned int>;
+// using MemoryBlock2Hu = MemoryBlock2<MemoryLocation::HOST, unsigned int>;
 using MemoryBlock3Df = MemoryBlock3<MemoryLocation::DEVICE, float>;
 using MemoryBlock3Hf = MemoryBlock3<MemoryLocation::HOST, float>;
 using MemoryBlock3Di = MemoryBlock3<MemoryLocation::DEVICE, int>;

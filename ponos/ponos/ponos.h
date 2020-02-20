@@ -61,12 +61,14 @@
 #include <ponos/numeric/grid.h>
 #include <ponos/numeric/interpolation.h>
 #include <ponos/numeric/numeric.h>
+#include <ponos/numeric/vector_grid.h>
 #include <ponos/parallel/parallel.h>
 #include <ponos/spatial/array.h>
 #include <ponos/spatial/spatial_structure_interface.h>
 #include <ponos/storage/array.h>
 #include <ponos/storage/memory.h>
 #include <ponos/storage/memory_block.h>
+
 
 // #include <ponos/structures/brep.hpp>
 #include <ponos/numeric/grid_interface.h>

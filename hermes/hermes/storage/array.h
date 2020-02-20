@@ -166,10 +166,10 @@ private:
   void *data_{nullptr};
 };
 
-using array1d = Array1<double>;
-using array1f = Array1<float>;
-using array1i = Array1<int>;
-using array1u = Array1<unsigned int>;
+using array1d = Array1<f64>;
+using array1f = Array1<f32>;
+using array1i = Array1<i32>;
+using array1u = Array1<u32>;
 
 /*****************************************************************************
 *************************       ARRAY2 ACCESSOR      *************************
@@ -423,10 +423,10 @@ private:
   void *data_{nullptr};
 };
 
-using array2d = Array2<double>;
-using array2f = Array2<float>;
-using array2i = Array2<int>;
-using array2u = Array2<unsigned int>;
+using array2d = Array2<f64>;
+using array2f = Array2<f32>;
+using array2i = Array2<i32>;
+using array2u = Array2<u32>;
 } // namespace cuda
 
 } // namespace hermes

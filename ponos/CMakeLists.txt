@@ -76,6 +76,7 @@ set(PONOS_HEADERS
         ponos/log/debug.h
         ponos/parallel/parallel.h
         ponos/numeric/grid.h
+        ponos/numeric/vector_grid.h
         ponos/storage/memory_block.h
         ponos/structures/bah.h
         ponos/structures/brep.hpp
