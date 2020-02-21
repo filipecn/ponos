@@ -11,19 +11,18 @@ set(HERMES_HEADERS
         hermes/common/defs.h
         hermes/common/index.h
         hermes/common/size.h
-        hermes/geometry/cuda_bbox.h
+        hermes/geometry/bbox.h
         hermes/geometry/cuda_bbox.inl
-        hermes/geometry/cuda_matrix.h
+        hermes/geometry/matrix.h
         hermes/geometry/cuda_numeric.h
-        hermes/geometry/cuda_transform.h
-        hermes/geometry/cuda_transform.inl
-        hermes/geometry/cuda_vector.h
+        hermes/geometry/transform.h
+        hermes/geometry/vector.h
         hermes/geometry/cuda_point.h
         hermes/geometry/cuda_point.inl
         hermes/numeric/cuda_field.h
         hermes/numeric/cuda_interpolation.h
         hermes/numeric/vector_grid.h
-        hermes/numeric/cuda_grid.h
+        hermes/numeric/grid.h
         hermes/numeric/cuda_grid_kernels.h
         hermes/numeric/cuda_numeric.h
         hermes/numeric/cuda_staggered_grid.h
@@ -39,7 +38,6 @@ set(HERMES_HEADERS
         
 set(HERMES_SOURCES
         hermes/algorithms/cuda_marching_cubes.cu
-        hermes/numeric/cuda_grid.cu
         hermes/numeric/cuda_interpolation.cu
         hermes/storage/cuda_texture_kernels.cu
         )

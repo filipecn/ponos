@@ -27,7 +27,7 @@
 
 #include <cstring>
 #include <cuda_runtime.h>
-#include <hermes/geometry/cuda_vector.h>
+#include <hermes/geometry/vector.h>
 
 namespace hermes {
 

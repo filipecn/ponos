@@ -25,7 +25,7 @@
 #ifndef HERMES_NUMERIC_CUDA_STAGGERED_GRID_H
 #define HERMES_NUMERIC_CUDA_STAGGERED_GRID_H
 
-#include <hermes/numeric/cuda_vector_field.h>
+#include <hermes/numeric/vector_grid.h>
 #include <hermes/storage/cuda_storage_utils.h>
 
 namespace hermes {
@@ -70,16 +70,16 @@ public:
   }
 };
 
-class StaggeredGrid2Accessor : public VectorGrid2Accessor {
+/*class StaggeredGrid2Accessor {
 public:
   StaggeredGrid2Accessor(const size2 &resolution, const vec2f &spacing,
                          Grid2Accessor<float> u, Grid2Accessor<float> v)
       : VectorGrid2Accessor(resolution, spacing, u, v) {}
-  __device__ vec2f operator()(int i, int j) override {
+  __device__ vec2f operator()(int i, int j) {
     return 0.5f * vec2f(this->u_[index2(i + 1, j)] + this->u_[index2(i, j)],
                         this->v_[index2(i, j + 1)] + this->v_[index2(i, j)]);
   }
-  __device__ vec2f operator()(point2f wp) override {
+  __device__ vec2f operator()(point2f wp) {
     return vec2f(this->u_(wp), this->v_(wp));
   }
 };
@@ -142,7 +142,7 @@ public:
 
 using StaggeredGrid2D = StaggeredGrid2<MemoryLocation::DEVICE>;
 using StaggeredGrid2H = StaggeredGrid2<MemoryLocation::HOST>;
-
+*/
 class StaggeredGrid3Accessor : public VectorGrid3Accessor {
 public:
   StaggeredGrid3Accessor(const vec3u &resolution, const vec3f &spacing,

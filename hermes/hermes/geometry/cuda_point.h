@@ -25,7 +25,8 @@
 #ifndef HERMES_GEOMETRY_CUDA_POINT_H
 #define HERMES_GEOMETRY_CUDA_POINT_H
 
-#include <hermes/geometry/cuda_vector.h>
+#include <hermes/geometry/vector.h>
+#include <ponos/geometry/point.h>
 
 namespace hermes {
 
@@ -55,6 +56,8 @@ public:
   __host__ __device__ bool operator>=(const Point2 &p) const;
   __host__ __device__ bool operator<=(const Point2 &p) const;
   bool HasNaNs() const;
+
+  ponos::Point2<T> ponos() const { return ponos::Point2<T>(x, y); }
   template <typename TT>
   friend std::ostream &operator<<(std::ostream &os, const Point2<TT> &p);
   T x, y;

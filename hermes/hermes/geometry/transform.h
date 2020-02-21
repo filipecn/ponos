@@ -26,9 +26,9 @@
 #define HERMES_GEOMETRY_CUDA_TRANSFORM_H
 
 #include <cmath>
-#include <hermes/geometry/cuda_bbox.h>
-#include <hermes/geometry/cuda_matrix.h>
-#include <hermes/geometry/cuda_vector.h>
+#include <hermes/geometry/bbox.h>
+#include <hermes/geometry/matrix.h>
+#include <hermes/geometry/vector.h>
 
 namespace hermes {
 
@@ -147,6 +147,12 @@ __host__ __device__ Transform2<T> inverse(const Transform2<T> &t) {
 template <typename T> __host__ __device__ Transform2<T> scale(T x, T y) {
   Matrix3x3<T> m(x, 0, 0, 0, y, 0, 0, 0, 1);
   Matrix3x3<T> inv(1.f / x, 0, 0, 0, 1.f / y, 0, 0, 0, 1);
+  return Transform2<T>(m, inv);
+}
+template <typename T>
+__host__ __device__ Transform2<T> scale(const Vector2<T> &v) {
+  Matrix3x3<T> m(v.x, 0, 0, 0, v.y, 0, 0, 0, 1);
+  Matrix3x3<T> inv(1.f / v.x, 0, 0, 0, 1.f / v.y, 0, 0, 0, 1);
   return Transform2<T>(m, inv);
 }
 

@@ -148,10 +148,10 @@ public:
     setOrigin(point2(0.f));
   }
   /// \param res **[in]** resolution (in number of cells)
-  /// \param o **[in]** origin (0,0) corner cell center
   /// \param s **[in]** cell size
+  /// \param o **[in]** origin (0,0) corner cell center
   /// \param grid_type **[in]** vector components position
-  VectorGrid2(size2 res, point2 o, vec2 s,
+  VectorGrid2(size2 res, vec2 s, point2 o = point2(),
               VectorGridType grid_type = VectorGridType::CELL_CENTERED)
       : grid_type_(grid_type), resolution_(res), origin_(o), spacing_(s) {
     setResolution(res);
@@ -183,6 +183,18 @@ public:
   // ***********************************************************************
   //                         GETTERS & SETTERS
   // ***********************************************************************
+  /// \param grid_type **[in]**
+  void setGridType(VectorGridType grid_type) {
+    if (grid_type != grid_type_) {
+      grid_type_ = grid_type;
+      setResolution(resolution_);
+      setSpacing(spacing_);
+      setOrigin(origin_);
+    } else
+      grid_type_ = grid_type;
+  }
+  /// \return VectorGridType
+  VectorGridType gridType() const { return grid_type_; }
   /// \return size2 grid resolution
   size2 resolution() const { return resolution_; }
   /// \return vec2f grid spacing (cell size)

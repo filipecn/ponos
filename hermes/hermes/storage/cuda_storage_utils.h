@@ -28,7 +28,7 @@
 #include <hermes/common/cuda.h>
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/common/defs.h>
-#include <hermes/geometry/cuda_vector.h>
+#include <hermes/geometry/vector.h>
 #include <hermes/storage/cuda_array.h>
 #include <iomanip>
 #include <ponos/storage/array.h>

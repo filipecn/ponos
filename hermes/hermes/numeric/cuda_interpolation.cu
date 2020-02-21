@@ -23,8 +23,8 @@
  */
 
 #include <hermes/geometry/cuda_numeric.h>
-#include <hermes/numeric/cuda_grid.h>
 #include <hermes/numeric/cuda_interpolation.h>
+#include <hermes/numeric/grid.h>
 
 namespace hermes {
 

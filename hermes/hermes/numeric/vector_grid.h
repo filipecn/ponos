@@ -25,11 +25,273 @@
 #ifndef HERMES_NUMERIC_CUDA_VECTOR_GRID_H
 #define HERMES_NUMERIC_CUDA_VECTOR_GRID_H
 
-#include <hermes/numeric/cuda_grid.h>
+#include <hermes/numeric/grid.h>
+#include <ponos/numeric/vector_grid.h>
 
 namespace hermes {
 
 namespace cuda {
+
+// Accessor for arrays stored on the device.
+// \tparam T data type
+template <typename T> class VectorGrid2Accessor {
+public:
+  /// \param info **[in]**
+  /// \param grid_type **[in]**
+  /// \param u **[in]**
+  /// \param v **[in]**
+  VectorGrid2Accessor(Info2 info, ponos::VectorGridType grid_type,
+                      Grid2Accessor<float> u, Grid2Accessor<float> v)
+      : info_(info), grid_type_(grid_type), u_(u), v_(v) {}
+  __host__ __device__ Grid2Accessor<T> &u() { return u_; }
+  __host__ __device__ Grid2Accessor<T> &v() { return v_; }
+  /// \return grid resolution
+  __host__ __device__ size2 resolution() const { return info_.resolution; }
+  /// \return grid spacing
+  __host__ __device__ vec2 spacing() const { return info_.spacing; }
+  /// \return grid origin (world position of index (0,0))
+  __host__ __device__ point2 origin() const { return info_.origin; }
+  /// \param world_position (in world coordinates)
+  /// \return world_position in grid coordinates
+  __host__ __device__ point2 gridPosition(const point2 &world_position) const {
+    return info_.to_grid(world_position);
+  }
+  /// \param grid_position (in grid coordinates)
+  /// \return grid_position in world coordinates
+  __host__ __device__ point2 worldPosition(const point2 &grid_position) const {
+    return info_.to_world(grid_position);
+  }
+  /// \param grid_position (in grid coordinates)
+  /// \return grid_position in world coordinates
+  __host__ __device__ point2 worldPosition(const index2 &grid_position) const {
+    return info_.to_world(point2(grid_position.i, grid_position.j));
+  }
+  /// \param world_position (in world coordinates)
+  /// \return offset of world_position inside the cell containing it (in [0,1]).
+  __host__ __device__ point2 cellPosition(const point2 &world_position) const {
+    auto gp = info_.to_grid(world_position);
+    return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
+  }
+  /// \param world_position (in world coordinates)
+  /// \return index of the cell that contains world_position
+  __host__ __device__ index2 cellIndex(const point2 &world_position) const {
+    auto gp = info_.to_grid(world_position);
+    return index2(gp.x, gp.y);
+  }
+  /// \param ij cell index
+  /// \return ij cell's region (in world coordinates)
+  __host__ __device__ bbox2 cellRegion(const index2 &ij) const {
+    auto wp = info_.to_world(point2(ij.i, ij.j));
+    return bbox2(wp, wp + info_.spacing);
+  }
+  /// \param ij **[in]**
+  /// \return Vector2<T>
+  __device__ Vector2<T> operator[](const index2 &ij) {
+    switch (grid_type_) {
+    case ponos::VectorGridType::CELL_CENTERED:
+      return Vector2<T>(u_[ij], v_[ij]);
+    case ponos::VectorGridType::STAGGERED:
+      return Vector2<T>((u_[ij] + u_[ij.right()]) / 2,
+                        (v_[ij] + v_[ij.up()]) / 2);
+    }
+    return Vector2<T>();
+  }
+  /// \param wp **[in]**
+  /// \return Vector2<T>
+  __device__ Vector2<T> operator()(const point2 &wp) {
+    return {u_(wp), v_(wp)};
+  }
+
+protected:
+  Info2 info_;
+  ponos::VectorGridType grid_type_;
+  Grid2Accessor<float> u_, v_;
+};
+
+/// Represents a vector field. Data samples follow the vector grid type.
+/// The origin is at cell centes
+///                 ---------
+///                |         |
+///                |    o    |
+///                |         |
+///                ----------
+/// For a NxM vector grid, the staggered type stores (N + 1)xM v components and
+/// Nx(M+1) u components
+/// \tparam T
+template <typename T> class VectorGrid2 {
+  static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
+                    std::is_same<T, float>::value ||
+                    std::is_same<T, double>::value,
+                "VectorGrid2 must hold an float type!");
+
+public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
+  VectorGrid2(
+      ponos::VectorGridType grid_type = ponos::VectorGridType::CELL_CENTERED)
+      : grid_type_(grid_type) {
+    setSpacing(vec2f(1.f));
+    setOrigin(point2f(0.f));
+  }
+  /// \param res resolution in number of cells
+  /// \param s spacing cell size
+  /// \param o origin (0,0,0) corner position
+  VectorGrid2(
+      size2 res, vec2f s, point2f o = point2f(),
+      ponos::VectorGridType grid_type = ponos::VectorGridType::CELL_CENTERED)
+      : grid_type_(grid_type) {
+    setResolution(res);
+    setSpacing(s);
+    setOrigin(o);
+  }
+  /// \param host_grid **[in]**
+  explicit VectorGrid2(ponos::VectorGrid2<T> &host_grid) {
+    setResolution(
+        size2(host_grid.resolution().width, host_grid.resolution().height));
+    setSpacing(vec2f(host_grid.spacing().x, host_grid.spacing().y));
+    setOrigin(point2f(host_grid.origin().x, host_grid.origin().y));
+    grid_type_ = host_grid.gridType();
+    u_ = host_grid.u();
+    v_ = host_grid.v();
+  }
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
+  VectorGrid2 &operator=(ponos::VectorGrid2<T> &host_grid) {
+    setResolution(
+        size2(host_grid.resolution().width, host_grid.resolution().height));
+    setSpacing(vec2f(host_grid.spacing().x, host_grid.spacing().y));
+    setOrigin(point2f(host_grid.origin().x, host_grid.origin().y));
+    grid_type_ = host_grid.gridType();
+    u_ = host_grid.u();
+    v_ = host_grid.v();
+    return *this;
+  }
+  /// Copy all fields from other object. Performs raw data copy.
+  /// \param other
+  VectorGrid2 &operator=(VectorGrid2 &other) {
+    grid_type_ = other.grid_type_;
+    setResolution(other.info_.resolution);
+    setSpacing(other.info_.spacing);
+    setOrigin(other.info_.origin);
+    u_ = other.u_;
+    v_ = other.v_;
+    return *this;
+  }
+  /// Assign value to all positions
+  /// \param value assign value
+  /// \return *this
+  VectorGrid2 &operator=(const T &value) {
+    u_ = value;
+    v_ = value;
+    return *this;
+  }
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
+  /// \param grid_type **[in]**
+  void setGridType(ponos::VectorGridType grid_type) {
+    if (grid_type != grid_type_) {
+      grid_type_ = grid_type;
+      setResolution(info_.resolution);
+      setSpacing(info_.spacing);
+      setOrigin(info_.origin);
+    } else
+      grid_type_ = grid_type;
+  }
+  /// \return VectorGridType
+  ponos::VectorGridType gridType() const { return grid_type_; }
+
+  /// \return size2 grid resolution
+  size2 resolution() const { return info_.resolution; }
+  /// \return vec2f grid spacing (cell size)
+  vec2 spacing() const { return info_.spacing; }
+  /// \return grid origin (world position of index (0,0))
+  point2 origin() const { return info_.origin; }
+  /// Changes grid resolution
+  /// \param res new resolution (in number of cells)
+  virtual void setResolution(size2 res) {
+    info_.resolution = res;
+    switch (grid_type_) {
+    case ponos::VectorGridType::CELL_CENTERED:
+      u_.setResolution(res);
+      v_.setResolution(res);
+      break;
+    case ponos::VectorGridType::STAGGERED:
+      u_.setResolution(res + size2(1, 0));
+      v_.setResolution(res + size2(0, 1));
+      break;
+    default:
+      break;
+    }
+  }
+  /// Changes grid origin position
+  /// \param o in world space
+  virtual void setOrigin(const point2f &o) {
+    info_.origin = o;
+    switch (grid_type_) {
+    case ponos::VectorGridType::CELL_CENTERED:
+      u_.setOrigin(o);
+      v_.setOrigin(o);
+      break;
+    case ponos::VectorGridType::STAGGERED:
+      u_.setOrigin(o - vec2(info_.spacing.x / 2, 0));
+      v_.setOrigin(o - vec2(0, info_.spacing.y / 2));
+      break;
+
+    default:
+      break;
+    }
+    updateTransform();
+  }
+  /// Changes grid cell size
+  /// \param d new size
+  virtual void setSpacing(const vec2f &s) {
+    info_.spacing = s;
+    u_.setSpacing(s);
+    v_.setSpacing(s);
+    setOrigin(info_.origin);
+  }
+  /// \return ponos::VectorGrid2<T>
+  ponos::VectorGrid2<T> hostData() {
+    ponos::VectorGrid2<T> h;
+    h.setOrigin(info_.origin.ponos());
+    h.setSpacing(info_.spacing.ponos());
+    h.setResolution(info_.resolution.ponos());
+    h.u() = u_.hostData();
+    h.v() = v_.hostData();
+    return h;
+  }
+  const Grid2<float> &u() const { return u_; }
+  const Grid2<float> &v() const { return v_; }
+  Grid2<float> &u() { return u_; }
+  Grid2<float> &v() { return v_; }
+  /// \param address_mode **[in]**
+  /// \param interpolation_mode **[in]**
+  /// \param border **[in]**
+  /// \return VectorGrid2Accessor<T>
+  VectorGrid2Accessor<T>
+  accessor(ponos::AddressMode address_mode = ponos::AddressMode::CLAMP_TO_EDGE,
+           ponos::InterpolationMode interpolation_mode =
+               ponos::InterpolationMode::MONOTONIC_CUBIC,
+           T border = T(0)) {
+    return VectorGrid2Accessor<T>(
+        info_, grid_type_,
+        u_.accessor(address_mode, border, interpolation_mode),
+        v_.accessor(address_mode, border, interpolation_mode));
+  }
+
+protected:
+  void updateTransform() {
+    info_.to_world =
+        translate(vec2(info_.origin.x, info_.origin.y)) * scale(info_.spacing);
+    info_.to_grid = inverse(info_.to_world);
+  }
+  Info2 info_;
+  ponos::VectorGridType grid_type_{ponos::VectorGridType::CELL_CENTERED};
+  Grid2<T> u_, v_;
+};
 
 // TODO: DEPRECATED
 class VectorGridTexture2 {
@@ -158,109 +420,12 @@ protected:
   GridTexture3<float> uGrid, vGrid, wGrid;
 };
 
-// Accessor for arrays stored on the device.
-// \tparam T data type
-class VectorGrid2Accessor {
-public:
-  /// \param data raw pointer to device data
-  /// \param addressMode **[default = AccessMode::NONE]** accessMode defines how
-  /// outside of bounds is treated
-  /// \param border * * [default = T()]** border
-  VectorGrid2Accessor(const size2 &resolution, const vec2f &spacing,
-                      Grid2Accessor<float> u, Grid2Accessor<float> v)
-      : resolution(resolution), spacing(spacing), u_(u), v_(v) {}
-  virtual __device__ vec2f operator()(int i, int j) {
-    return vec2f(u_[index2(i, j)], v_[index2(i, j)]);
-  }
-  virtual __device__ vec2f operator()(point2f wp) {
-    return vec2f(u_(wp), v_(wp));
-  }
-  __device__ float &u(int i, int j) { return u_[index2(i, j)]; }
-  __device__ float &v(int i, int j) { return v_[index2(i, j)]; }
-  __host__ __device__ Grid2Accessor<float> &uAccessor() { return u_; }
-  __host__ __device__ Grid2Accessor<float> &vAccessor() { return v_; }
-
-  const size2 resolution;
-  const vec2f spacing;
-
-protected:
-  Grid2Accessor<float> u_, v_;
-};
-
-template class VectorGrid2 {
-public:
-  VectorGrid2() {
-    setSpacing(vec2f(1.f));
-    setOrigin(point2f(0.f));
-  }
-  /// \param res resolution in number of cells
-  /// \param o origin (0,0,0) corner position
-  /// \param s spacing cell size
-  VectorGrid2(size2 res, point2f o, vec2f s)
-      : resolution_(res), origin_(o), spacing_(s) {
-    uGrid.resize(res);
-    uGrid.setOrigin(o);
-    uGrid.setSpacing(s);
-    vGrid.resize(res);
-    vGrid.setOrigin(o);
-    vGrid.setSpacing(s);
-  }
-  size2 resolution() const { return resolution_; }
-  vec2f spacing() const { return spacing_; }
-  point2f origin() const { return origin_; }
-  /// Changes grid resolution
-  /// \param res new resolution (in number of cells)
-  virtual void resize(size2 res) {
-    resolution_ = res;
-    uGrid.resize(res);
-    vGrid.resize(res);
-  }
-  /// Changes grid origin position
-  /// \param o in world space
-  virtual void setOrigin(const point2f &o) {
-    origin_ = o;
-    uGrid.setOrigin(o);
-    vGrid.setOrigin(o);
-  }
-  /// Changes grid cell size
-  /// \param d new size
-  virtual void setSpacing(const vec2f &s) {
-    spacing_ = s;
-    uGrid.setSpacing(s);
-    vGrid.setSpacing(s);
-  }
-  const Grid2<float> &u() const { return uGrid; }
-  const Grid2<float> &v() const { return vGrid; }
-  Grid2<float> &u() { return uGrid; }
-  Grid2<float> &v() { return vGrid; }
-  VectorGrid2Accessor accessor() {
-    return VectorGrid2Accessor(resolution_, spacing_, uGrid.accessor(),
-                               vGrid.accessor());
-  }
-  /// Copy data from other staggered grid
-  /// other reference from other field
-  template <MemoryLocation LL> void copy(VectorGrid2<LL> &other) {
-    if (other.resolution() != resolution())
-      resize(other.resolution());
-    setOrigin(other.origin());
-    setSpacing(other.spacing());
-    memcpy(uGrid.data(), other.u().data());
-    memcpy(vGrid.data(), other.v().data());
-  }
-
-protected:
-  size2 resolution_;
-  point2f origin_;
-  vec2f spacing_;
-  Grid2<float> uGrid, vGrid;
-};
-
 // template <MemoryLocation L>
 // void fill3(VectorGrid3<L> &grid, const bbox3f &region, vec3f value,
 //            bool overwrite = false);
 
-using VectorGrid2D = VectorGrid2<MemoryLocation::DEVICE>;
-using VectorGrid2H = VectorGrid2<MemoryLocation::HOST>;
+// using VectorGrid2D = VectorGrid2<MemoryLocation::DEVICE>;
+// using VectorGrid2H = VectorGrid2<MemoryLocation::HOST>;
 // Accessor for arrays stored on the device.
 // Indices are accessed as: i * width * height + j * height + k
 // \tparam T data type

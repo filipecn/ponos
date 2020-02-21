@@ -25,7 +25,7 @@
 #ifndef HERMES_ALGORITHMS_MARCHING_CUBES_H
 #define HERMES_ALGORITHMS_MARCHING_CUBES_H
 
-#include <hermes/numeric/cuda_grid.h>
+#include <hermes/numeric/grid.h>
 #include <hermes/storage/cuda_memory_block.h>
 
 namespace hermes {

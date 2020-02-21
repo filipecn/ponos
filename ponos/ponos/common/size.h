@@ -28,6 +28,7 @@
 #ifndef PONOS_COMMON_SIZE_H
 #define PONOS_COMMON_SIZE_H
 
+#include <iostream>
 #include <ponos/common/defs.h>
 
 namespace ponos {

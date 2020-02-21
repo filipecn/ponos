@@ -28,6 +28,7 @@
 #include <cuda_runtime.h>
 #include <hermes/common/defs.h>
 #include <iostream>
+#include <ponos/geometry/vector.h>
 
 namespace hermes {
 
@@ -80,6 +81,8 @@ public:
   __host__ __device__ T length() const { return sqrtf(length2()); }
   __host__ __device__ Vector2<T> right() const { return Vector2(y, -x); }
   __host__ __device__ Vector2<T> left() const { return Vector2(-y, x); }
+
+  ponos::Vector2<T> ponos() const { return ponos::Vector2<T>(x, y); }
   template <typename TT>
   friend std::ostream &operator<<(std::ostream &os, const Vector2<TT> &v);
   T x, y;

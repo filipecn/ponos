@@ -25,7 +25,7 @@
 #ifndef HERMES_NUMERIC_FIELD_H
 #define HERMES_NUMERIC_FIELD_H
 
-#include <hermes/geometry/cuda_transform.h>
+#include <hermes/geometry/transform.h>
 #include <hermes/storage/cuda_texture.h>
 
 namespace hermes {

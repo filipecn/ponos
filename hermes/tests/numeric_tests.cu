@@ -26,7 +26,7 @@ struct map_ipj {
   }
 };
 
-TEST_CASE("Grid-sanity", "[numeric][grid][access]") {
+TEST_CASE("Grid", "[numeric][grid][access]") {
   SECTION("2d") {
     Grid2<float> g(size2(10, 10), vec2(0.1, 0.1), point2(1, 2));
     g = 3.0;
@@ -52,5 +52,177 @@ TEST_CASE("Grid-sanity", "[numeric][grid][access]") {
     hg = g.hostData();
     for (auto e : hg.accessor())
       REQUIRE(e.value == Approx(1).margin(1e-8));
+  }
+}
+
+TEST_CASE("VectorGrid", "[numeric][grid]") {
+  SECTION("2d") {
+    SECTION("CELL CENTERED") {
+      VectorGrid2<float> vg(size2(10, 10), vec2(1));
+      REQUIRE(vg.resolution() == size2(10, 10));
+      REQUIRE(vg.u().resolution() == size2(10, 10));
+      REQUIRE(vg.v().resolution() == size2(10, 10));
+      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+      REQUIRE(vg.u().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().y == Approx(0).margin(1e-8));
+      VectorGrid2<float> vg2;
+      vg2 = vg;
+      REQUIRE(vg2.resolution() == size2(10, 10));
+      REQUIRE(vg2.u().resolution() == size2(10, 10));
+      REQUIRE(vg2.v().resolution() == size2(10, 10));
+      REQUIRE(vg2.origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg2.origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg2.spacing().x == Approx(1).margin(1e-8));
+      REQUIRE(vg2.spacing().y == Approx(1).margin(1e-8));
+      REQUIRE(vg2.u().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg2.u().origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg2.v().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg2.v().origin().y == Approx(0).margin(1e-8));
+      vg.setGridType(ponos::VectorGridType::STAGGERED);
+      REQUIRE(vg.resolution() == size2(10, 10));
+      REQUIRE(vg.u().resolution() == size2(11, 10));
+      REQUIRE(vg.v().resolution() == size2(10, 11));
+      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+      REQUIRE(vg.u().origin().x == Approx(-0.5).margin(1e-8));
+      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().y == Approx(-0.5).margin(1e-8));
+    }
+    SECTION("STAGGERED") {
+      VectorGrid2<float> vg(ponos::VectorGridType::STAGGERED);
+      vg.setResolution(size2(10, 10));
+      REQUIRE(vg.resolution() == size2(10, 10));
+      REQUIRE(vg.u().resolution() == size2(11, 10));
+      REQUIRE(vg.v().resolution() == size2(10, 11));
+      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+      REQUIRE(vg.u().origin().x == Approx(-0.5).margin(1e-8));
+      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().y == Approx(-0.5).margin(1e-8));
+      VectorGrid2<float> vg2;
+      vg2 = vg;
+      REQUIRE(vg2.resolution() == size2(10, 10));
+      REQUIRE(vg2.u().resolution() == size2(11, 10));
+      REQUIRE(vg2.v().resolution() == size2(10, 11));
+      REQUIRE(vg2.origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg2.origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg2.spacing().x == Approx(1).margin(1e-8));
+      REQUIRE(vg2.spacing().y == Approx(1).margin(1e-8));
+      REQUIRE(vg2.u().origin().x == Approx(-0.5).margin(1e-8));
+      REQUIRE(vg2.u().origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg2.v().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg2.v().origin().y == Approx(-0.5).margin(1e-8));
+      vg.setGridType(ponos::VectorGridType::CELL_CENTERED);
+      REQUIRE(vg.resolution() == size2(10, 10));
+      REQUIRE(vg.u().resolution() == size2(10, 10));
+      REQUIRE(vg.v().resolution() == size2(10, 10));
+      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+      REQUIRE(vg.u().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+      REQUIRE(vg.v().origin().y == Approx(0).margin(1e-8));
+    }
+  }
+}
+
+struct map_sincos {
+  map_sincos(Grid2Accessor<float> acc) : acc(acc) {}
+  __device__ void operator()(index2 index, float &value) const {
+    auto wp = acc.worldPosition(index);
+    value = sin(wp.x) * cos(wp.y);
+  }
+  Grid2Accessor<float> acc;
+};
+
+TEST_CASE("VectorGridAccessor", "[numeric][grid][accessor]") {
+  auto f = [](ponos::point2 wp) -> float { return sin(wp.x) * cos(wp.y); };
+  SECTION("2d") {
+    SECTION("methods") {
+      ponos::VectorGrid2<float> hg(ponos::size2(10), ponos::vec2(0.1),
+                                   ponos::point2(),
+                                   ponos::VectorGridType::STAGGERED);
+      VectorGrid2<float> dg(size2(10), vec2(0.1), point2(),
+                            ponos::VectorGridType::STAGGERED);
+      auto hacc = hg.accessor();
+      auto dacc = dg.accessor();
+      for (index2 ij : Index2Range<i32>(dg.resolution())) {
+        REQUIRE(hacc.u().worldPosition(ij.ponos()).x ==
+                Approx(dacc.u().worldPosition(ij).x).margin(1e-8));
+        REQUIRE(hacc.u().worldPosition(ij.ponos()).y ==
+                Approx(dacc.u().worldPosition(ij).y).margin(1e-8));
+        REQUIRE(hacc.v().worldPosition(ij.ponos()).x ==
+                Approx(dacc.v().worldPosition(ij).x).margin(1e-8));
+        REQUIRE(hacc.v().worldPosition(ij.ponos()).y ==
+                Approx(dacc.v().worldPosition(ij).y).margin(1e-8));
+      }
+    }
+    SECTION("device to host") {
+      VectorGrid2<float> dg(size2(10), vec2f(0.01));
+      dg.u().map(map_sincos(dg.u().accessor()));
+      dg.v().map(map_sincos(dg.v().accessor()));
+      auto hg = dg.hostData();
+      auto dacc = dg.accessor();
+      auto hacc = hg.accessor();
+      for (index2 ij : Index2Range<i32>(dg.resolution())) {
+        auto v = hacc[ij.ponos()];
+        REQUIRE(v.x == Approx(f(hacc.worldPosition(ij.ponos()))));
+        REQUIRE(v.y == Approx(f(hacc.worldPosition(ij.ponos()))));
+        REQUIRE(hacc.u().worldPosition(ij.ponos()).x ==
+                Approx(dacc.u().worldPosition(ij).x).margin(1e-8));
+        REQUIRE(hacc.u().worldPosition(ij.ponos()).y ==
+                Approx(dacc.u().worldPosition(ij).y).margin(1e-8));
+        REQUIRE(hacc.v().worldPosition(ij.ponos()).x ==
+                Approx(dacc.v().worldPosition(ij).x).margin(1e-8));
+        REQUIRE(hacc.v().worldPosition(ij.ponos()).y ==
+                Approx(dacc.v().worldPosition(ij).y).margin(1e-8));
+      }
+    }
+    SECTION("host to device") {
+      ponos::VectorGrid2<float> hg(ponos::size2(10), ponos::vec2(0.1),
+                                   ponos::point2(),
+                                   ponos::VectorGridType::STAGGERED);
+      for (auto e : hg.u().accessor())
+        e.value = f(e.worldPosition());
+      for (auto e : hg.v().accessor())
+        e.value = f(e.worldPosition());
+
+      VectorGrid2<float> dg;
+      dg = hg;
+
+      auto hdg = dg.hostData();
+      auto hacc = hg.accessor();
+      auto dacc = dg.accessor();
+      for (index2 ij : Index2Range<i32>(dg.resolution())) {
+        auto v = hacc[ij.ponos()];
+        REQUIRE(v.x == Approx((f(hacc.u().worldPosition(ij.ponos())) +
+                               f(hacc.u().worldPosition(ij.right().ponos()))) /
+                              2));
+        REQUIRE(v.y == Approx((f(hacc.v().worldPosition(ij.ponos())) +
+                               f(hacc.v().worldPosition(ij.up().ponos()))) /
+                              2));
+        REQUIRE(hacc.u().worldPosition(ij.ponos()).x ==
+                Approx(dacc.u().worldPosition(ij).x).margin(1e-8));
+        REQUIRE(hacc.u().worldPosition(ij.ponos()).y ==
+                Approx(dacc.u().worldPosition(ij).y).margin(1e-8));
+        REQUIRE(hacc.v().worldPosition(ij.ponos()).x ==
+                Approx(dacc.v().worldPosition(ij).x).margin(1e-8));
+        REQUIRE(hacc.v().worldPosition(ij.ponos()).y ==
+                Approx(dacc.v().worldPosition(ij).y).margin(1e-8));
+      }
+    }
   }
 }

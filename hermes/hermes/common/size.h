@@ -29,6 +29,7 @@
 #define HERMES_COMMON_SIZE_H
 
 #include <ponos/common/defs.h>
+#include <ponos/common/size.h>
 #include <type_traits>
 
 namespace hermes {
@@ -54,6 +55,8 @@ public:
     return i >= 0 && j >= 0 && i < static_cast<i64>(width) &&
            j < static_cast<i64>(height);
   }
+
+  ponos::Size2<T> ponos() const { return ponos::Size2<T>(width, height); }
 
   T width = T(0);
   T height = T(0);

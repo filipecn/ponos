@@ -277,9 +277,10 @@ public:
   ///\param other **[in]** host grid
   ///\return Grid2&
   Grid2 &operator=(ponos::Grid2<T> &other) {
-    info_.resolution = other.resolution();
-    info_.spacing = other.spacing();
-    info_.origin = other.origin();
+    info_.resolution =
+        size2(other.resolution().width, other.resolution().height);
+    info_.spacing = vec2f(other.spacing().x, other.spacing().y);
+    info_.origin = point2f(other.origin().x, other.origin().y);
     updateTransform();
     data_ = other.data();
     return *this;
@@ -311,7 +312,7 @@ public:
   // ***********************************************************************
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
-  void resize(const size2 &res) {
+  void setResolution(const size2 &res) {
     info_.resolution = res;
     data_.resize(res);
   }
@@ -348,8 +349,11 @@ public:
   ///\return Grid2Accessor<T>
   Grid2Accessor<T>
   accessor(ponos::AddressMode addressMode = ponos::AddressMode::CLAMP_TO_EDGE,
-           T border = T(0)) {
-    return Grid2Accessor<T>(info_, data_.accessor(), addressMode, border);
+           T border = T(0),
+           ponos::InterpolationMode interpolation_mode =
+               ponos::InterpolationMode::MONOTONIC_CUBIC) {
+    return Grid2Accessor<T>(info_, data_.accessor(), addressMode, border,
+                            interpolation_mode);
   }
   ///\return Array2<T>& raw data
   Array2<T> &data() { return data_; }

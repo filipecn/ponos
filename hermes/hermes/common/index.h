@@ -30,10 +30,7 @@
 
 #include <hermes/common/size.h>
 #include <hermes/geometry/cuda_numeric.h>
-#include <ponos/common/defs.h>
-
-
-#include <ponos/common/defs.h>
+#include <ponos/common/index.h>
 
 namespace hermes {
 
@@ -58,10 +55,15 @@ public:
   __host__ __device__ Index2<T> plus(T _i, T _j) const {
     return Index2<T>(i + _i, j + _j);
   }
+  __host__ __device__ Index2<T> left() const { return Index2<T>(i - 1, j); }
+  __host__ __device__ Index2<T> right() const { return Index2<T>(i + 1, j); }
+  __host__ __device__ Index2<T> up() const { return Index2<T>(i, j + 1); }
+  __host__ __device__ Index2<T> down() const { return Index2<T>(i, j - 1); }
   __host__ __device__ void clampTo(const size2 &s) {
     i = max(0, min(i, static_cast<T>(s.width)));
     j = max(0, min(j, static_cast<T>(s.height)));
   }
+  ponos::Index2<T> ponos() const { return ponos::Index2<T>(i, j); }
 
   T i = T(0);
   T j = T(0);
