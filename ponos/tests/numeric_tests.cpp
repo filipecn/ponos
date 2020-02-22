@@ -200,6 +200,20 @@ TEST_CASE("GridAccessor", "[numeric][grid][accessor]") {
 
 TEST_CASE("VectorGrid", "[numeric][grid]") {
   SECTION("2d") {
+    SECTION("constructors operatiors") {
+      VectorGrid2<float> empty;
+      REQUIRE(empty.resolution() == size2(0, 0));
+      empty = VectorGrid2<float>(size2(10, 10), vec2(1));
+      REQUIRE(empty.resolution() == size2(10, 10));
+      auto g = empty;
+      REQUIRE(g.resolution() == size2(10, 10));
+      auto g2 = std::move(VectorGrid2<float>(size2(7, 7), vec2(1)));
+      REQUIRE(g2.resolution() == size2(7, 7));
+      std::vector<VectorGrid2<float>> gs;
+      gs.emplace_back(size2(10, 10), vec2(1));
+      gs.emplace_back(size2(7, 7), vec2(1));
+      std::vector<VectorGrid2<float>> gs2 = gs;
+    }
     SECTION("CELL CENTERED") {
       VectorGrid2<float> vg(size2(10, 10), vec2(1));
       REQUIRE(vg.resolution() == size2(10, 10));

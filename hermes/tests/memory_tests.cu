@@ -40,7 +40,7 @@ TEST_CASE("Array-access", "[memory][array][access]") {
   }
 }
 
-TEST_CASE("Array-sanity", "[memory][array][access]") {
+TEST_CASE("Array", "[memory][array][access]") {
   SECTION("2d") {
     {
       Array2<vec2> a(size2(10, 10));

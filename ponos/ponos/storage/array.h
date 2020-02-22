@@ -131,7 +131,7 @@ public:
   }
   /// \param other **[in]**
   /// \return Array2<T>&
-  Array2<T> &operator=(const Array2<T> &&other) {
+  Array2<T> &operator=(Array2<T> &&other) {
     size_ = other.size_;
     pitch_ = other.pitch_;
     data_ = other.data_;

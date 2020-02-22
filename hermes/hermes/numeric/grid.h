@@ -248,7 +248,7 @@ public:
   Grid2() = default;
   ///\brief Construct a new Grid2 object from other Grid2
   ///\param other **[in]**
-  Grid2(Grid2<T> &other) {
+  explicit Grid2(Grid2<T> &other) {
     info_ = other.info_;
     data_ = other.data_;
   }
@@ -263,7 +263,7 @@ public:
   }
   ///\brief Construct a new Grid2 object from host Grid2
   ///\param other **[in]** host grid
-  Grid2(ponos::Grid2<T> &other) {
+  explicit Grid2(ponos::Grid2<T> &other) {
     info_.resolution = other.resolution();
     info_.spacing = other.spacing();
     info_.origin = other.origin();
@@ -283,6 +283,14 @@ public:
     info_.origin = point2f(other.origin().x, other.origin().y);
     updateTransform();
     data_ = other.data();
+    return *this;
+  }
+  /// Copy data
+  ///\param other **[in]**
+  ///\return Grid2&
+  Grid2 &operator=(const Grid2 &other) {
+    info_ = other.info_;
+    data_ = other.data_;
     return *this;
   }
   /// Copy data

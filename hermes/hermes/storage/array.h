@@ -205,7 +205,7 @@ public:
   Array2CAccessor(const T *data, size2 size, size_t pitch)
       : size_(size), pitch_(pitch), data_(data) {}
   __host__ __device__ size2 size() const { return size_; }
-  __device__ const T &operator[](index2 ij) const {
+  __device__ T operator[](index2 ij) const {
     return (
         const T &)(*((const char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
@@ -234,6 +234,25 @@ template <typename T> __global__ void __fill(Array2Accessor<T> array, T value) {
 template <typename T> void fill(Array2Accessor<T> array, T value) {
   ThreadArrayDistributionInfo td(array.size());
   __fill<T><<<td.gridSize, td.blockSize>>>(array, value);
+}
+/// \tparam T
+/// \param destination **[in]**
+/// \param source **[in]**
+template <typename T>
+__global__ void __copy(Array2Accessor<T> destination,
+                       Array2CAccessor<T> source) {
+  index2 index(blockIdx.x * blockDim.x + threadIdx.x,
+               blockIdx.y * blockDim.y + threadIdx.y);
+  if (destination.contains(index) && source.contains(index))
+    destination[index] = source[index];
+}
+/// \tparam T
+/// \param destination **[in]**
+/// \param source **[in]**
+template <typename T>
+void copy(Array2Accessor<T> destination, Array2CAccessor<T> source) {
+  ThreadArrayDistributionInfo td(destination.size());
+  __copy<T><<<td.gridSize, td.blockSize>>>(destination, source);
 }
 /// Auxiliary class that encapsulates a c++ lambda function into device code
 ///\tparam T array data type
@@ -288,14 +307,14 @@ public:
     auto acc = Array2Accessor<T>((T *)data_, size_, pitch_);
     fill(acc, value);
   }
-  Array2(const Array2<T> &other) = delete;
+  // Array2(const Array2<T> &other) = delete;
   ///\param other **[in]**
-  Array2(Array2<T> &other) {
+  Array2(const Array2<T> &other) {
     resize(other.size_);
     copyPitchedToPitched<T>(pitchedData(), other.pitchedData(),
                             cudaMemcpyDeviceToDevice);
   }
-  Array2(const Array2 &&other) = delete;
+  // Array2(const Array2 &&other) = delete;
   ///\param other **[in]**
   Array2(Array2 &&other) noexcept
       : size_(other.size_), data_(other.data_), pitch_(other.pitch_) {
@@ -316,7 +335,11 @@ public:
   // ***********************************************************************
   ///\param other **[in]**
   ///\return Array2<T>&
-  Array2<T> &operator=(const Array2<T> &other) = delete;
+  Array2<T> &operator=(const Array2<T> &other) {
+    resize(other.size());
+    copy((*this).accessor(), other.constAccessor());
+    return *this;
+  }
   ///\param other **[in]**
   ///\return Array1<T>&
   Array2<T> &operator=(Array2<T> &other) {
@@ -378,7 +401,7 @@ public:
   ///\return  T* raw device pointer
   T *data() { return (T *)data_; }
   ///\return cudaPitchedPtr
-  cudaPitchedPtr pitchedData() {
+  cudaPitchedPtr pitchedData() const {
     cudaPitchedPtr pd{0};
     pd.ptr = data_;
     pd.pitch = pitch_;

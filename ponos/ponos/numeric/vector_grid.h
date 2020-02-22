@@ -158,6 +158,22 @@ public:
     setSpacing(s);
     setOrigin(o);
   }
+  VectorGrid2(const VectorGrid2<T> &other) {
+    grid_type_ = other.grid_type_;
+    setResolution(other.resolution_);
+    setSpacing(other.spacing_);
+    setOrigin(other.origin_);
+    u_ = other.u_;
+    v_ = other.v_;
+  }
+  VectorGrid2(VectorGrid2<T> &&other) {
+    grid_type_ = other.grid_type_;
+    setResolution(other.resolution_);
+    setSpacing(other.spacing_);
+    setOrigin(other.origin_);
+    u_ = std::move(other.u_);
+    v_ = std::move(other.v_);
+  }
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************

@@ -268,6 +268,20 @@ public:
     setResolution(resolution);
     updateTransform();
   }
+  Grid2(const Grid2 &other) {
+    to_grid_ = other.to_grid_;
+    to_world_ = other.to_world_;
+    origin_ = other.origin_;
+    spacing_ = other.spacing_;
+    data_ = other.data_;
+  }
+  Grid2(Grid2 &&other) {
+    to_grid_ = other.to_grid_;
+    to_world_ = other.to_world_;
+    origin_ = other.origin_;
+    spacing_ = other.spacing_;
+    data_ = std::move(other.data_);
+  }
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************

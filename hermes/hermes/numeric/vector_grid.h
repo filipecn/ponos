@@ -146,7 +146,7 @@ public:
     setOrigin(o);
   }
   /// \param host_grid **[in]**
-  explicit VectorGrid2(ponos::VectorGrid2<T> &host_grid) {
+  VectorGrid2(ponos::VectorGrid2<T> &host_grid) {
     setResolution(
         size2(host_grid.resolution().width, host_grid.resolution().height));
     setSpacing(vec2f(host_grid.spacing().x, host_grid.spacing().y));
@@ -155,9 +155,53 @@ public:
     u_ = host_grid.u();
     v_ = host_grid.v();
   }
+  VectorGrid2(const ponos::VectorGrid2<T> &host_grid) {
+    setResolution(
+        size2(host_grid.resolution().width, host_grid.resolution().height));
+    setSpacing(vec2f(host_grid.spacing().x, host_grid.spacing().y));
+    setOrigin(point2f(host_grid.origin().x, host_grid.origin().y));
+    grid_type_ = host_grid.gridType();
+    u_ = host_grid.u();
+    v_ = host_grid.v();
+  }
+  VectorGrid2(const VectorGrid2<T> &other) {
+    grid_type_ = other.grid_type_;
+    setResolution(other.info_.resolution);
+    setSpacing(other.info_.spacing);
+    setOrigin(other.info_.origin);
+    u_ = other.u_;
+    v_ = other.v_;
+  }
+  VectorGrid2(VectorGrid2<T> &other) {
+    grid_type_ = other.grid_type_;
+    setResolution(other.info_.resolution);
+    setSpacing(other.info_.spacing);
+    setOrigin(other.info_.origin);
+    u_ = other.u_;
+    v_ = other.v_;
+  }
+  VectorGrid2(VectorGrid2<T> &&other) noexcept {
+    grid_type_ = other.grid_type_;
+    setResolution(other.info_.resolution);
+    setSpacing(other.info_.spacing);
+    setOrigin(other.info_.origin);
+    u_ = std::move(other.u_);
+    v_ = std::move(other.v_);
+  }
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
+  VectorGrid2 &operator=(const ponos::VectorGrid2<T> &host_grid) {
+    setResolution(
+        size2(host_grid.resolution().width, host_grid.resolution().height));
+    setSpacing(vec2f(host_grid.spacing().x, host_grid.spacing().y));
+    setOrigin(point2f(host_grid.origin().x, host_grid.origin().y));
+    grid_type_ = host_grid.gridType();
+    PING;
+    u_ = host_grid.u();
+    v_ = host_grid.v();
+    return *this;
+  }
   VectorGrid2 &operator=(ponos::VectorGrid2<T> &host_grid) {
     setResolution(
         size2(host_grid.resolution().width, host_grid.resolution().height));
@@ -166,6 +210,17 @@ public:
     grid_type_ = host_grid.gridType();
     u_ = host_grid.u();
     v_ = host_grid.v();
+    return *this;
+  }
+  /// Copy all fields from other object. Performs raw data copy.
+  /// \param other
+  VectorGrid2 &operator=(const VectorGrid2 &other) {
+    grid_type_ = other.grid_type_;
+    setResolution(other.info_.resolution);
+    setSpacing(other.info_.spacing);
+    setOrigin(other.info_.origin);
+    u_ = other.u_;
+    v_ = other.v_;
     return *this;
   }
   /// Copy all fields from other object. Performs raw data copy.
