@@ -290,7 +290,7 @@ public:
   ///\return Grid2&
   Grid2 &operator=(const Grid2 &other) {
     info_ = other.info_;
-    data_ = other.data_;
+    // data_ = other.data_;
     return *this;
   }
   /// Copy data

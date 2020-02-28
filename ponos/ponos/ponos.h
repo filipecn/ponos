@@ -32,6 +32,7 @@
 //#include <ponos/blas/sparse_vector.h>
 #include <ponos/blas/staggered_grid.h>
 #include <ponos/blas/symmetric_matrix.h>
+#include <ponos/blas/vector.h>
 #include <ponos/common/defs.h>
 #include <ponos/common/file.h>
 #include <ponos/common/index.h>
@@ -68,7 +69,6 @@
 #include <ponos/storage/array.h>
 #include <ponos/storage/memory.h>
 #include <ponos/storage/memory_block.h>
-
 
 // #include <ponos/structures/brep.hpp>
 #include <ponos/numeric/grid_interface.h>

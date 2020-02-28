@@ -22,6 +22,7 @@ set(PONOS_HEADERS
         ponos/blas/field_grid.h
         ponos/blas/field_grid.inl
         ponos/blas/field.h
+        ponos/blas/vector.h
         #ponos/blas/gauss_jordan.h
         #ponos/blas/interpolator.h
         #ponos/blas/interpolator.inl
@@ -60,7 +61,7 @@ set(PONOS_HEADERS
         ponos/geometry/parametric_surface.h
         ponos/geometry/plane.h
         ponos/geometry/point.h
-		ponos/geometry/point.inl
+	ponos/geometry/point.inl
         ponos/geometry/polygon.h
         ponos/geometry/quaternion.h
         ponos/geometry/queries.h

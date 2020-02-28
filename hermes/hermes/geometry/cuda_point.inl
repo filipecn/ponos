@@ -15,7 +15,7 @@ template <typename T> __host__ __device__ T &Point2<T>::operator[](int i) {
 
 template <typename T>
 __host__ __device__ bool Point2<T>::operator==(const Point2 &p) const {
-  return Check::isEqual(x, p.x) && Check::isEqual(y, p.y);
+  return Check::is_equal(x, p.x) && Check::is_equal(y, p.y);
 }
 
 template <typename T>

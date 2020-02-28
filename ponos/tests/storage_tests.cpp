@@ -26,6 +26,7 @@ TEST_CASE("Array2-sanity", "[storage][array][access]") {
       REQUIRE(e.value == 3);
       count++;
     }
+    std::cerr << a << std::endl;
     REQUIRE(count == 10 * 10);
   }
   {

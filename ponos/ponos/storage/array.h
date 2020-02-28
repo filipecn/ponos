@@ -220,6 +220,26 @@ private:
   void *data_ = nullptr;
 };
 
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
+  os << "Array2[" << array.size() << "]\n\t\t";
+  for (u32 i = 0; i < array.size().height; ++i)
+    os << "[," << i << "]\t";
+  os << std::endl;
+  for (u32 i = 0; i < array.size().width; ++i) {
+    os << "\t[" << i << ",]\t";
+    for (u32 j = 0; j < array.size().height; ++j)
+      os << array[index2(i, j)] << "\t";
+    os << std::endl;
+  }
+  return os;
+}
+
+using array2d = Array2<f64>;
+using array2f = Array2<f32>;
+using array2i = Array2<i32>;
+using array2u = Array2<u32>;
+
 } // namespace ponos
 
 #endif // PONOS_STORAGE_ARRAY_H

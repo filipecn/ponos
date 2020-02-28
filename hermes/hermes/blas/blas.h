@@ -25,6 +25,7 @@
 #ifndef HERMES_NUMERIC_CUDA_BLAS_H
 #define HERMES_NUMERIC_CUDA_BLAS_H
 
+#include <hermes/blas/vector.h>
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/storage/cuda_memory_block.h>
 #include <hermes/storage/cuda_storage_utils.h>
@@ -32,6 +33,54 @@
 namespace hermes {
 
 namespace cuda {
+
+/// Set of methods that compose the BLAS
+class BLAS {
+public:
+  /// Dot product
+  /// \tparam T
+  /// \param a **[in]**
+  /// \param b **[in]**
+  /// \return T
+  template <typename T> static T dot(const Vector<T> &a, const Vector<T> &b) {
+    return reduce<T, T, dot_predicate<T>>(a.data(), b.data(),
+                                          dot_predicate<T>());
+  }
+  /// Peforms r = a * x + y
+  /// \tparam T
+  /// \param a **[in]**
+  /// \param x **[in]**
+  /// \param y **[in]**
+  /// \param r **[out]**
+  template <typename T>
+  static void axpy(T a, const Vector<T> &x, const Vector<T> &y, Vector<T> &r) {
+    // r = a * x + y;
+    compute(x.data().constAccessor(), y.data().constAccessor(),
+            r.data().accessor(), axpy_operation<T>(a));
+  }
+  /// Computes max |v[i]|
+  /// \tparam T
+  /// \param v **[in]**
+  /// \return T
+  template <typename T> static T infNorm(const Vector<T> &v) {
+    return reduce<T, T, ReducePredicates::max_abs<T>>(
+        v.data(), ReducePredicates::max_abs<T>());
+  }
+  ///
+  /// \tparam T
+  template <typename T> struct dot_predicate {
+    __host__ __device__ T operator()(const T &a, const T &b) { return a * b; }
+    __host__ __device__ T reduce(const T &a, const T &b) { return a + b; }
+    T base_value{0};
+  };
+  template <typename T> struct axpy_operation {
+    __host__ __device__ axpy_operation(T a) : a(a) {}
+    __host__ __device__ void operator()(const T &x, const T &y, T &r) {
+      r = a * x + y;
+    }
+    T a{0};
+  };
+};
 
 template <typename T> __global__ void __axpy(T a, T *x, T *y, T *r, size_t n) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;

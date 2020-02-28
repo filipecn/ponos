@@ -26,12 +26,50 @@
 #define PONOS_BLAS_BLAS_H
 
 #include <cmath>
-#include <ponos/blas/fdm_matrix.h>
-#include <ponos/blas/sparse_matrix.h>
-#include <ponos/blas/sparse_vector.h>
+// #include <ponos/blas/fdm_matrix.h>
+// #include <ponos/blas/sparse_matrix.h>
+// #include <ponos/blas/sparse_vector.h>
+#include <ponos/blas/vector.h>
 
 namespace ponos {
 
+/// Set of methods that compose the BLAS
+class BLAS {
+public:
+  /// Dot product
+  /// \tparam T
+  /// \param a **[in]**
+  /// \param b **[in]**
+  /// \return T
+  template <typename T> static T dot(const Vector<T> &a, const Vector<T> &b) {
+    T sum = 0;
+    for (u32 i = 0; i < a.size(); ++i)
+      sum += a[i] * b[i];
+    return sum;
+  }
+  /// Peforms r = a * x + y
+  /// \tparam T
+  /// \param a **[in]**
+  /// \param x **[in]**
+  /// \param y **[in]**
+  /// \param r **[out]**
+  template <typename T>
+  static void axpy(T a, const Vector<T> &x, const Vector<T> &y, Vector<T> &r) {
+    r = a * x + y;
+  }
+  /// Computes max |v[i]|
+  /// \tparam T
+  /// \param v **[in]**
+  /// \return T
+  template <typename T> static T infNorm(const Vector<T> &v) {
+    T r = v.size() ? v[0] : 0;
+    for (u32 i = 0; i < v.size(); ++i)
+      r = std::max(r, std::abs(v[i]));
+    return r;
+  }
+};
+
+/*
 template <typename S, class V, class M> struct Blas {
   typedef S ScalarType;
   typedef V VectorType;
@@ -235,7 +273,7 @@ template <> struct Blas<double, SparseVector<double>, SparseMatrix<double>> {
     }
     return m;
   }
-};
+};*/
 
 } // namespace ponos
 

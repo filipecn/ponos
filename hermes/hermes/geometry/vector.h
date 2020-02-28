@@ -65,7 +65,7 @@ public:
     return *this;
   }
   __host__ __device__ Vector2<T> &operator/=(T f) {
-    Check::isEqual(f, 0.f);
+    Check::is_equal(f, 0.f);
     T inv = 1.f / f;
     x *= inv;
     y *= inv;
@@ -113,7 +113,7 @@ __host__ __device__ Vector2<T> operator*(T f, const Vector2<T> &v) {
 }
 template <typename T>
 __host__ __device__ Vector2<T> operator/(const Vector2<T> &v, T f) {
-  Check::isEqual(f, 0.f);
+  Check::is_equal(f, 0.f);
   T inv = 1. / f;
   return Vector2<T>(v.x * inv, v.y * inv);
 }
@@ -134,11 +134,11 @@ template <typename T>
 __host__ __device__ T cross(const Vector2<T> &a, const Vector2<T> &b);
 template <typename T>
 __host__ __device__ bool operator==(const Vector2<T> &u, const Vector2<T> &v) {
-  return Check::isEqual(u.x, v.x) && Check::isEqual(u.y, v.y);
+  return Check::is_equal(u.x, v.x) && Check::is_equal(u.y, v.y);
 }
 template <typename T>
 __host__ __device__ bool operator!=(const Vector2<T> &u, const Vector2<T> &v) {
-  return !Check::isEqual(u.x, v.x) || !Check::isEqual(u.y, v.y);
+  return !Check::is_equal(u.x, v.x) || !Check::is_equal(u.y, v.y);
 }
 // al
 ///  Projects a vector onto another.
@@ -197,7 +197,7 @@ public:
     return *this;
   }
   __host__ __device__ Vector3<T> &operator/=(T f) {
-    Check::isEqual(f, 0.f);
+    Check::is_equal(f, 0.f);
     T inv = 1.f / f;
     x *= inv;
     y *= inv;
@@ -242,7 +242,7 @@ __host__ __device__ Vector3<T> operator*(T f, const Vector3<T> &v) {
 }
 template <typename T>
 __host__ __device__ Vector3<T> operator/(const Vector3<T> &v, T f) {
-  Check::isEqual(f, 0.f);
+  Check::is_equal(f, 0.f);
   T inv = 1. / f;
   return Vector3<T>(v.x * inv, v.y * inv, v.z * inv);
 }
@@ -273,13 +273,13 @@ __host__ __device__ bool operator>(const Vector3<T> &u, const Vector3<T> &v) {
 }
 template <typename T>
 __host__ __device__ bool operator==(const Vector3<T> &u, const Vector3<T> &v) {
-  return Check::isEqual(u.x, v.x) && Check::isEqual(u.y, v.y) &&
-         Check::isEqual(u.z, v.z);
+  return Check::is_equal(u.x, v.x) && Check::is_equal(u.y, v.y) &&
+         Check::is_equal(u.z, v.z);
 }
 template <typename T>
 __host__ __device__ bool operator!=(const Vector3<T> &u, const Vector3<T> &v) {
-  return !Check::isEqual(u.x, v.x) || !Check::isEqual(u.y, v.y) ||
-         !Check::isEqual(u.z, v.z);
+  return !Check::is_equal(u.x, v.x) || !Check::is_equal(u.y, v.y) ||
+         !Check::is_equal(u.z, v.z);
 }
 // algebra
 template <typename T>

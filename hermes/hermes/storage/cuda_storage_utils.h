@@ -76,6 +76,11 @@ __host__ __device__ size_t pitchedIndexOffset(size_t pitch, size_t w, size_t h,
   return k * (pitch * h) + j * pitch + i * sizeof(T);
 }
 
+template <typename T> void copyToHost(T *&h_data, const T *d_data, u32 size) {
+  CHECK_CUDA(
+      cudaMemcpy(h_data, d_data, size * sizeof(T), cudaMemcpyDeviceToHost));
+}
+
 template <typename T>
 void copyLinearToLinear(T *&dst, const T *src, cudaMemcpyKind kind,
                         vec3u size) {

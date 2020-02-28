@@ -1,5 +1,6 @@
 set(SOURCES 
     main.cpp
+    blas_tests.cpp
     common_tests.cpp
     geometry_tests.cpp
     numeric_tests.cpp
@@ -9,6 +10,8 @@ set(SOURCES
 add_executable(ponos_tests ${SOURCES})
 target_include_directories(ponos_tests PUBLIC ${CATCH2_INCLUDES})
 target_link_options(ponos_tests INTERFACE --coverage)
+
+if(UNIX)
 target_link_libraries(ponos_tests ponos gcov)
 
 add_custom_target(test_ponos
@@ -20,4 +23,8 @@ add_custom_target(test_ponos
         COMMAND lcov --remove cov.info '*/tests/*' --output-file cov.info
         COMMAND genhtml cov.info --output-directory out
 )
+else(UNIX)
 
+target_link_libraries(ponos_tests ponos)
+
+endif(UNIX)

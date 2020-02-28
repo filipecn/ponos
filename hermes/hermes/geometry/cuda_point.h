@@ -187,8 +187,8 @@ __host__ __device__ Vector3<T> operator-(const Point3<T> &q,
 }
 template <typename T>
 __host__ __device__ bool operator==(const Point3<T> &p, const Point3<T> &q) {
-  return Check::isEqual(p.x, q.x) && Check::isEqual(p.y, q.y) &&
-         Check::isEqual(p.z, q.z);
+  return Check::is_equal(p.x, q.x) && Check::is_equal(p.y, q.y) &&
+         Check::is_equal(p.z, q.z);
 }
 template <typename T>
 __host__ __device__ bool operator>=(const Point3<T> &q, const Point3<T> &p) {

@@ -45,6 +45,8 @@ template <typename T> class Size2 {
 
 public:
   __host__ __device__ Size2(){};
+  explicit Size2(const ponos::Size2<T> &ponos_size)
+      : width(ponos_size.width), height(ponos_size.height) {}
   __host__ __device__ explicit Size2(T size) : width(size), height(size) {}
   __host__ __device__ explicit Size2(T width, T height)
       : width(width), height(height) {}

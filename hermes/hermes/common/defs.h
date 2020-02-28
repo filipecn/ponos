@@ -47,7 +47,7 @@ public:
 
 class Check {
 public:
-  template <typename T> __host__ __device__ static bool isEqual(T a, T b) {
+  template <typename T> __host__ __device__ static bool is_equal(T a, T b) {
     return fabsf(a - b) < 1e-8f;
   }
 };

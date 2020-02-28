@@ -46,6 +46,9 @@ template <typename T> class Vector2 {
                 "Vector2 must hold an float type!");
 
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   Vector2() {}
   explicit Vector2(T _x, T _y) : x(_x), y(_y) {}
   explicit Vector2(const Point2<T> &p) : x(p.x), y(p.y) {}
@@ -55,9 +58,9 @@ public:
     x = f[0];
     y = f[1];
   }
-  // access
-  T operator[](size_t i) const { return (&x)[i]; }
-  T &operator[](size_t i) { return (&x)[i]; }
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
   // arithmetic
   Vector2 &operator+=(const Vector2 &v) {
     x += v.x;
@@ -81,17 +84,28 @@ public:
     return *this;
   }
   Vector2 operator-() const { return Vector2(-x, -y); }
-  // normalization
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
+  T operator[](size_t i) const { return (&x)[i]; }
+  T &operator[](size_t i) { return (&x)[i]; }
+  // ***********************************************************************
+  //                              METHODS
+  // ***********************************************************************
   T length2() const { return x * x + y * y; }
   T length() const { return sqrtf(length2()); }
   Vector2 right() const { return Vector2(y, -x); }
   Vector2 left() const { return Vector2(-y, x); }
-
+  // ***********************************************************************
+  //                           PUBLIC FIELDS
+  // ***********************************************************************
   T x = T(0.0);
   T y = T(0.0);
 };
 
-// ARITHMETIC
+// ***********************************************************************
+//                           ARITHMETIC
+// ***********************************************************************
 template <typename T>
 Vector2<T> operator+(const Vector2<T> &a, const Vector2<T> &b) {
   return Vector2<T>(a.x + b.x, a.y + b.y);
@@ -113,11 +127,16 @@ template <typename T> Vector2<T> operator*(T f, const Vector2<T> &v) {
 template <typename T> Vector2<T> operator/(T f, const Vector2<T> &v) {
   return Vector2<T>(f / v.x, f / v.y);
 }
-// BOOLEAN
+// ***********************************************************************
+//                           BOOLEAN
+// ***********************************************************************
 template <typename T>
 bool operator==(const Vector2<T> &a, const Vector2<T> &b) {
   return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y);
 }
+// ***********************************************************************
+//                           ARITHMETIC
+// ***********************************************************************
 // GEOMETRY
 template <typename T> T dot(const Vector2<T> &a, const Vector2<T> &b) {
   return a.x * b.x + a.y * b.y;
@@ -153,6 +172,9 @@ template <typename T> class Vector3 {
                 "Vector3 must hold an float type!");
 
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   Vector3() {}
   explicit Vector3(T _f) : x(_f), y(_f), z(_f) {}
   explicit Vector3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
@@ -163,17 +185,13 @@ public:
   }
   explicit Vector3(const Normal3<T> &n) : x(n.x), y(n.y), z(n.z) {}
   explicit Vector3(const Point3<T> &p) : x(p.x), y(p.y), z(p.z) {}
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
   Vector3 &operator=(const T &v) {
     x = y = z = v;
     return *this;
   }
-  // access
-  T operator[](int i) const { return (&x)[i]; }
-  T &operator[](int i) { return (&x)[i]; }
-  Vector2<T> xy(int i = 0, int j = 1) const {
-    return Vector2<T>((&x)[i], (&x)[j]);
-  }
-  // arithmetic
   Vector3<T> &operator+=(const Vector3<T> &v) {
     x += v.x;
     y += v.y;
@@ -207,10 +225,22 @@ public:
     return *this;
   }
   Vector3<T> operator-() const { return Vector3(-x, -y, -z); }
-  // normalization
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
+  T operator[](int i) const { return (&x)[i]; }
+  T &operator[](int i) { return (&x)[i]; }
+  Vector2<T> xy(int i = 0, int j = 1) const {
+    return Vector2<T>((&x)[i], (&x)[j]);
+  }
+  // ***********************************************************************
+  //                              METHODS
+  // ***********************************************************************
   T length2() const { return x * x + y * y + z * z; }
   T length() const { return sqrtf(length2()); }
-
+  // ***********************************************************************
+  //                           PUBLIC FIELDS
+  // ***********************************************************************
   T x = T(0.0);
   T y = T(0.0);
   T z = T(0.0);
@@ -308,14 +338,14 @@ template <typename T> Vector3<T> abs(const Vector3<T> &a) {
 
 template <typename T> class Vector4 {
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   Vector4() {}
   explicit Vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
-  // access
-  T operator[](int i) const { return (&x)[i]; }
-  T &operator[](int i) { return (&x)[i]; }
-  Vector2<T> xy() { return Vector2<T>(x, y); }
-  Vector3<T> xyz() { return Vector3<T>(x, y, z); }
-  // arithmetic
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
   Vector4<T> &operator+=(const Vector4<T> &v) {
     x += v.x;
     y += v.y;
@@ -346,10 +376,21 @@ public:
     return *this;
   }
   Vector4<T> operator-() const { return Vector4(-x, -y, -z, -w); }
-  // normalization
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
+  T operator[](int i) const { return (&x)[i]; }
+  T &operator[](int i) { return (&x)[i]; }
+  Vector2<T> xy() { return Vector2<T>(x, y); }
+  Vector3<T> xyz() { return Vector3<T>(x, y, z); }
+  // ***********************************************************************
+  //                              METHODS
+  // ***********************************************************************
   T length2() const { return x * x + y * y + z * z + w * w; }
   T length() const { return sqrtf(length2()); }
-
+  // ***********************************************************************
+  //                           PUBLIC FIELDS
+  // ***********************************************************************
   T x = T(0.0);
   T y = T(0.0);
   T z = T(0.0);

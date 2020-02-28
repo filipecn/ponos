@@ -5,12 +5,15 @@ set(HERMES_HEADERS
         hermes/algorithms/cuda_marching_cubes.h
         hermes/colors/cuda_color.h
         hermes/colors/cuda_color_palette.h
+        hermes/blas/blas.h
+        hermes/blas/vector.h
         hermes/common/cuda.h
         hermes/common/cuda_parallel.h
         hermes/common/cuda_random.h
         hermes/common/defs.h
         hermes/common/index.h
         hermes/common/size.h
+        hermes/common/reduce.h
         hermes/geometry/bbox.h
         hermes/geometry/cuda_bbox.inl
         hermes/geometry/matrix.h
@@ -26,7 +29,6 @@ set(HERMES_HEADERS
         hermes/numeric/cuda_grid_kernels.h
         hermes/numeric/cuda_numeric.h
         hermes/numeric/cuda_staggered_grid.h
-        hermes/parallel/cuda_reduce.h
         hermes/storage/array.h
         hermes/storage/cuda_array.h
         hermes/storage/cuda_memory_block.h

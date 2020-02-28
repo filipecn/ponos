@@ -67,7 +67,9 @@ protected:
   size_t size_;
   const T *data_ = nullptr;
 };
-
+/*****************************************************************************
+**************************      ARRAY2 KERNELS       *************************
+******************************************************************************/
 template <typename T> __global__ void __fill(Array1Accessor<T> array, T value) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   if (array.contains(x))
@@ -82,7 +84,13 @@ template <typename T> void fill(Array1Accessor<T> array, T value) {
 /// Holds a linear memory area representing a 1-dimensional array.
 /// \tparam T data type
 template <typename T> class Array1 {
+  static_assert(!std::is_same<T, bool>::value,
+                "Array1 can't hold booleans, use char instead!");
+
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   Array1() = default;
   Array1(size_t size) : size_(size) { resize(size); }
   Array1(size_t size, T value) : size_(size) {
@@ -105,6 +113,9 @@ public:
         cudaMemcpy(data_, &data[0], size_ * sizeof(T), cudaMemcpyHostToDevice));
   }
   ~Array1() { clear(); }
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
   ///\param other **[in]**
   ///\return Array1<T>&
   Array1<T> &operator=(const Array1<T> &other) {
@@ -125,6 +136,9 @@ public:
     fill(Array1Accessor<T>((T *)data_, size_), value);
     return *this;
   }
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
   /// frees any previous data and allocates a new block
   ///\param new_size **[in]** new element count
   void resize(size_t new_size) {
@@ -132,13 +146,6 @@ public:
       clear();
     size_ = new_size;
     CHECK_CUDA(cudaMalloc(&data_, size_ * sizeof(T)));
-  }
-  /// frees memory and set size to zero
-  void clear() {
-    if (data_)
-      CHECK_CUDA(cudaFree(data_));
-    data_ = nullptr;
-    size_ = 0;
   }
   ///\return size_t memory block size in elements
   size_t size() const { return size_; }
@@ -151,18 +158,28 @@ public:
   /// copies data to host side
   ///\return std::vector<T> data in host side
   std::vector<T> hostData() const {
-    std::vector<T> data(size_);
-    CHECK_CUDA(
-        cudaMemcpy(&data[0], data_, size_ * sizeof(T), cudaMemcpyDeviceToHost));
-    return data;
+    std::vector<T> h_data(size_);
+    CHECK_CUDA(cudaMemcpy(&h_data[0], data_, size_ * sizeof(T),
+                          cudaMemcpyDeviceToHost));
+    return h_data;
   }
   Array1Accessor<T> accessor() { return Array1Accessor<T>((T *)data_, size_); }
   Array1CAccessor<T> constAccessor() const {
     return Array1CAccessor<T>((const T *)data_, size_);
   }
+  // ***********************************************************************
+  //                            METHODS
+  // ***********************************************************************
+  /// frees memory and set size to zero
+  void clear() {
+    if (data_)
+      CHECK_CUDA(cudaFree(data_));
+    data_ = nullptr;
+    size_ = 0;
+  }
 
 private:
-  size_t size_{0};
+  u32 size_{0};
   void *data_{nullptr};
 };
 
@@ -177,15 +194,11 @@ using array1u = Array1<u32>;
 ///\tparam T array data type
 template <typename T> class Array2Accessor {
 public:
-  Array2Accessor(T *data, size2 size, size_t pitch)
+  Array2Accessor(void *data, size2 size, size_t pitch)
       : size_(size), pitch_(pitch), data_(data) {}
   __host__ __device__ size2 size() const { return size_; }
   __device__ T &operator[](index2 ij) {
     return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
-  }
-  __device__ const T &operator[](index2 ij) const {
-    return (
-        const T &)(*((const char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
   __device__ bool contains(index2 ij) const {
     return ij >= index2() && ij < size_;
@@ -194,7 +207,7 @@ public:
 protected:
   size2 size_;
   size_t pitch_;
-  T *data_ = nullptr;
+  void *data_ = nullptr;
 };
 /*****************************************************************************
 *********************     ARRAY2 CONST ACCESSOR      *************************
@@ -202,12 +215,11 @@ protected:
 ///\tparam T array data type
 template <typename T> class Array2CAccessor {
 public:
-  Array2CAccessor(const T *data, size2 size, size_t pitch)
+  Array2CAccessor(const void *data, size2 size, size_t pitch)
       : size_(size), pitch_(pitch), data_(data) {}
   __host__ __device__ size2 size() const { return size_; }
   __device__ T operator[](index2 ij) const {
-    return (
-        const T &)(*((const char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
+    return (T &)*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T));
   }
   __device__ bool contains(index2 ij) const {
     return ij >= index2() && ij < size_;
@@ -216,10 +228,10 @@ public:
 protected:
   size2 size_;
   size_t pitch_;
-  const T *data_ = nullptr;
+  const void *data_ = nullptr;
 };
 /*****************************************************************************
-**************************         ARRAY2            *************************
+**************************      ARRAY2 KERNELS       *************************
 ******************************************************************************/
 template <typename T> __global__ void __fill(Array2Accessor<T> array, T value) {
   index2 index(blockIdx.x * blockDim.x + threadIdx.x,
@@ -264,8 +276,6 @@ template <typename T, typename F> struct map_operation {
   }
   F operation;
 };
-///\brief
-///
 ///\tparam T
 ///\tparam F
 ///\param array **[in]**
@@ -289,7 +299,9 @@ void __host__ __device__ mapArray(Array2Accessor<T> array,
   ThreadArrayDistributionInfo td(array.size());
   __map<T, F><<<td.gridSize, td.blockSize>>>(array, operation);
 }
-
+/*****************************************************************************
+*************************           ARRAY2           *************************
+******************************************************************************/
 /// Holds a linear memory area representing a 1-dimensional array.
 /// \tparam T data type
 template <typename T> class Array2 {
@@ -325,8 +337,8 @@ public:
   Array2(const ponos::Array2<T> &data) = delete;
   ///\param data **[in]**
   Array2(ponos::Array2<T> &data) {
-    resize(data.size());
-    copyPitchedToPitched<T>(pitchedData(), data.pitchedData(),
+    resize(size2(data.size()));
+    copyPitchedToPitched<T>(pitchedData(), pitchedDataFrom(data),
                             cudaMemcpyHostToDevice);
   }
   ~Array2() { clear(); }
@@ -418,10 +430,10 @@ public:
     return data;
   }
   Array2Accessor<T> accessor() {
-    return Array2Accessor<T>((T *)data_, size_, pitch_);
+    return Array2Accessor<T>(data_, size_, pitch_);
   }
   Array2CAccessor<T> constAccessor() const {
-    return Array2CAccessor<T>((const T *)data_, size_, pitch_);
+    return Array2CAccessor<T>(data_, size_, pitch_);
   }
   // ***********************************************************************
   //                            METHODS
@@ -445,6 +457,13 @@ private:
   size_t pitch_ = 0;
   void *data_{nullptr};
 };
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, Array2<T> &array) {
+  auto h_array = array.hostData();
+  os << h_array;
+  return os;
+}
 
 using array2d = Array2<f64>;
 using array2f = Array2<f32>;
