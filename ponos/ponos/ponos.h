@@ -59,6 +59,7 @@
 #include <ponos/geometry/utils.h>
 #include <ponos/geometry/vector.h>
 #include <ponos/log/debug.h>
+#include <ponos/numeric/fd_matrix.h>
 #include <ponos/numeric/grid.h>
 #include <ponos/numeric/interpolation.h>
 #include <ponos/numeric/numeric.h>

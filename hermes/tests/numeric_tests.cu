@@ -247,3 +247,76 @@ TEST_CASE("VectorGridAccessor", "[numeric][grid][accessor]") {
     }
   }
 }
+
+TEST_CASE("FDMatrix", "[numeric][fdmatrix]") {
+  SECTION("2d") {
+    SECTION("sanity") {
+      // y
+      // |
+      //  ---x
+      //  S S S S  - - - -
+      //  S S S S  - - - -
+      //  S S S S  - - - -
+      //  S S S S  - - - -
+      ponos::size2 size(4);
+      ponos::FDMatrix2<f32> A(size);
+      auto &indices = A.indexData();
+      int curIndex = 0;
+      for (ponos::index2 ij : ponos::Index2Range<i32>(size))
+        if (ij.j == 0 || ij.j == static_cast<i64>(size.height - 1) ||
+            ij.i == 0 || ij.i == static_cast<i64>(size.width - 1))
+          indices[ij] = -1;
+        else
+          indices[ij] = curIndex++;
+      FDMatrix2<f32> d_A = A;
+      auto h_A = d_A.hostData();
+      for (ponos::index2 ij : ponos::Index2Range<i32>(
+               ponos::index2(1), ponos::index2(size).plus(-1, -1))) {
+        if (ij.i > 1)
+          REQUIRE(h_A.elementIndex(ij.left()) != -1);
+        else if (ij.i == 1)
+          REQUIRE(h_A.elementIndex(ij.left()) == -1);
+        if (ij.j > 1)
+          REQUIRE(h_A.elementIndex(ij.down()) != -1);
+        else if (ij.j == 1)
+          REQUIRE(h_A.elementIndex(ij.down()) == -1);
+        if (ij.i < static_cast<i64>(size.width) - 2)
+          REQUIRE(h_A.elementIndex(ij.right()) != -1);
+        else if (ij.i == static_cast<i64>(size.width) - 2)
+          REQUIRE(h_A.elementIndex(ij.right()) == -1);
+        if (ij.j < static_cast<i64>(size.height) - 2)
+          REQUIRE(h_A.elementIndex(ij.up()) != -1);
+        else if (ij.j == static_cast<i64>(size.height) - 2)
+          REQUIRE(h_A.elementIndex(ij.up()) == -1);
+        h_A(ij, ij) = 6;
+        h_A(ij, ij.right()) = 1;
+        h_A(ij, ij.up()) = 2;
+      }
+    }
+    SECTION("matrix vector") {
+      // 3 4 5 0  0     14
+      // 4 3 0 5  1  =  18
+      // 5 0 3 4  2     18
+      // 0 5 4 3  3     22
+      ponos::FDMatrix2<f32> A(ponos::size2(2));
+      int index = 0;
+      for (ponos::index2 ij : ponos::Index2Range<i32>(A.gridSize()))
+        A.indexData()[ij] = index++;
+      for (ponos::index2 ij : ponos::Index2Range<i32>(A.gridSize())) {
+        A(ij, ij) = 3;
+        A(ij, ij.right()) = 4;
+        A(ij, ij.up()) = 5;
+      }
+      ponos::Vector<f32> x(A.size(), 0);
+      for (u32 i = 0; i < x.size(); i++)
+        x[i] = i;
+      float ans[4] = {14, 18, 18, 22};
+      FDMatrix2<f32> d_A = A;
+      Vector<f32> d_x = x;
+      Vector<f32> r = d_A * d_x;
+      auto h_r = r.hostData();
+      for (u32 i = 0; i < r.size(); i++)
+        REQUIRE(h_r[i] == ans[i]);
+    }
+  }
+}

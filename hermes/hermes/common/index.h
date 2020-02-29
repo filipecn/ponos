@@ -36,6 +36,9 @@ namespace hermes {
 
 namespace cuda {
 
+/*****************************************************************************
+**************************          INDEX2           *************************
+******************************************************************************/
 /// Holds 2-dimensional index coordinates
 ///\tparam T must be an integer type
 template <typename T> struct Index2 {
@@ -44,14 +47,23 @@ template <typename T> struct Index2 {
                 "Index2 must hold an integer type!");
 
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   ///\brief Construct a new Index2 object
   ///\param i **[in]** i coordinate value
   ///\param j **[in]** j coordinate value
   Index2() = default;
   __host__ __device__ explicit Index2(T ij) : i(ij), j(ij) {}
   __host__ __device__ explicit Index2(T i, T j) : i(i), j(j) {}
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
   __host__ __device__ T operator[](int _i) const { return (&i)[_i]; }
   __host__ __device__ T &operator[](int _i) { return (&i)[_i]; }
+  // ***********************************************************************
+  //                            METHODS
+  // ***********************************************************************
   __host__ __device__ Index2<T> plus(T _i, T _j) const {
     return Index2<T>(i + _i, j + _j);
   }
@@ -64,11 +76,15 @@ public:
     j = max(0, min(j, static_cast<T>(s.height)));
   }
   ponos::Index2<T> ponos() const { return ponos::Index2<T>(i, j); }
-
+  // ***********************************************************************
+  //                            FIELDS
+  // ***********************************************************************
   T i = T(0);
   T j = T(0);
 };
-
+// ***********************************************************************
+//                             ARITHMETIC
+// ***********************************************************************
 template <typename T>
 __host__ __device__ Index2<T> operator+(const Index2<T> &a,
                                         const Index2<T> &b) {
@@ -79,6 +95,18 @@ __host__ __device__ Index2<T> operator-(const Index2<T> &a,
                                         const Index2<T> &b) {
   return Index2<T>(a.i - b.i, a.j - b.j);
 }
+/// \brief Computes the manhattan distance between two indices
+/// \tparam T
+/// \param a **[in]**
+/// \param b **[in]**
+/// \return T
+template <typename T>
+__host__ __device__ T distance(const Index2<T> &a, const Index2<T> &b) {
+  return fabsf(a.i - b.i) + fabsf(a.j - b.j);
+}
+// ***********************************************************************
+//                             BOOLEAN
+// ***********************************************************************
 template <typename T>
 __host__ __device__ bool operator<=(const Index2<T> &a, const Index2<T> &b) {
   return a.i <= b.i && a.j <= b.j;
@@ -113,7 +141,9 @@ template <typename T, typename TT>
 __host__ __device__ bool operator>=(const Index2<T> &a, const Size2<TT> &b) {
   return a.i >= static_cast<T>(b.width) && a.j >= static_cast<T>(b.height);
 }
-
+/*****************************************************************************
+**********************          INDEX2ITERATOR           *********************
+******************************************************************************/
 template <typename T> class Index2Iterator {
 public:
   Index2Iterator() = default;
@@ -155,7 +185,9 @@ public:
 private:
   Index2<T> index_, lower_, upper_;
 };
-
+/*****************************************************************************
+***********************          INDEX2RANGE           ***********************
+******************************************************************************/
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type
@@ -186,7 +218,9 @@ public:
 private:
   Index2<T> lower_, upper_;
 };
-
+/*****************************************************************************
+**************************          INDEX3           *************************
+******************************************************************************/
 /// Holds 3-dimensional index coordinates
 ///\tparam T must be an integer type
 template <typename T> struct Index3 {
@@ -218,7 +252,9 @@ template <typename T> struct Index3 {
   T j;
   T k;
 };
-
+// ***********************************************************************
+//                             BOOLEAN
+// ***********************************************************************
 template <typename T>
 __host__ __device__ bool operator<=(const Index3<T> &a, const Index3<T> &b) {
   return a.i <= b.i && a.j <= b.j && a.k <= b.k;
@@ -242,7 +278,9 @@ __host__ __device__ bool operator>=(const Index3<T> &a, const Size3<TT> &b) {
   return a.i >= static_cast<T>(b.i) && a.j >= static_cast<T>(b.j) &&
          a.k >= static_cast<T>(b.k);
 }
-
+/*****************************************************************************
+**********************          INDEX3ITERATOR           *********************
+******************************************************************************/
 template <typename T> class Index3Iterator {
 public:
   ///\brief Construct a new Index3Iterator object
@@ -285,7 +323,9 @@ public:
 private:
   Index3<T> index_, lower_, upper_;
 };
-
+/*****************************************************************************
+***********************          INDEX3RANGE           ***********************
+******************************************************************************/
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type

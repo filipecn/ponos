@@ -37,9 +37,8 @@ namespace hermes {
 namespace cuda {
 
 /*****************************************************************************
-*************************           ARRAY1           *************************
+*******************           ARRAY1  ACCESSOR            ********************
 ******************************************************************************/
-
 ///\brief
 ///
 ///\tparam T
@@ -55,7 +54,9 @@ protected:
   size_t size_;
   T *data_ = nullptr;
 };
-
+/*****************************************************************************
+*******************       ARRAY1 CONST ACCESSOR           ********************
+******************************************************************************/
 template <typename T> class Array1CAccessor {
 public:
   Array1CAccessor(const T *data, size_t size) : size_(size), data_(data) {}
@@ -68,7 +69,7 @@ protected:
   const T *data_ = nullptr;
 };
 /*****************************************************************************
-**************************      ARRAY2 KERNELS       *************************
+**************************      ARRAY1 KERNELS       *************************
 ******************************************************************************/
 template <typename T> __global__ void __fill(Array1Accessor<T> array, T value) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -80,7 +81,9 @@ template <typename T> void fill(Array1Accessor<T> array, T value) {
   ThreadArrayDistributionInfo td(array.size());
   __fill<T><<<td.gridSize, td.blockSize>>>(array, value);
 }
-
+/*****************************************************************************
+**************************           ARRAY1          *************************
+******************************************************************************/
 /// Holds a linear memory area representing a 1-dimensional array.
 /// \tparam T data type
 template <typename T> class Array1 {
@@ -319,14 +322,12 @@ public:
     auto acc = Array2Accessor<T>((T *)data_, size_, pitch_);
     fill(acc, value);
   }
-  // Array2(const Array2<T> &other) = delete;
   ///\param other **[in]**
   Array2(const Array2<T> &other) {
     resize(other.size_);
     copyPitchedToPitched<T>(pitchedData(), other.pitchedData(),
                             cudaMemcpyDeviceToDevice);
   }
-  // Array2(const Array2 &&other) = delete;
   ///\param other **[in]**
   Array2(Array2 &&other) noexcept
       : size_(other.size_), data_(other.data_), pitch_(other.pitch_) {

@@ -52,6 +52,7 @@ set(PONOS_HEADERS
         ponos/geometry/ellipse.h
         ponos/geometry/frustum.h
         ponos/numeric/interpolation.h
+        ponos/numeric/fd_matrix.h
         ponos/geometry/interval.h
         ponos/geometry/interval.inl
         ponos/geometry/line.h

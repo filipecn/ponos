@@ -25,6 +25,7 @@ set(HERMES_HEADERS
         hermes/numeric/cuda_field.h
         hermes/numeric/cuda_interpolation.h
         hermes/numeric/vector_grid.h
+        hermes/numeric/fd_matrix.h
         hermes/numeric/grid.h
         hermes/numeric/cuda_grid_kernels.h
         hermes/numeric/cuda_numeric.h

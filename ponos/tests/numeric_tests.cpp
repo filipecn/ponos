@@ -346,3 +346,85 @@ TEST_CASE("VectorGridAccessor", "[numeric][grid][accessor]") {
     }
   }
 }
+
+TEST_CASE("FDMatrix", "[numeric][fdmatrix]") {
+  SECTION("2d") {
+    SECTION("sanity") {
+      // y
+      // |
+      //  ---x
+      //  S S S S  - - - -
+      //  S S S S  - - - -
+      //  S S S S  - - - -
+      //  S S S S  - - - -
+      size2 size(4);
+      FDMatrix2<f32> A(size);
+      REQUIRE(A.gridSize() == size);
+      REQUIRE(A.size() == 4u * 4u);
+      auto &indices = A.indexData();
+      int curIndex = 0;
+      for (index2 ij : Index2Range<i32>(size))
+        if (ij.j == 0 || ij.j == static_cast<i64>(size.height - 1) ||
+            ij.i == 0 || ij.i == static_cast<i64>(size.width - 1))
+          indices[ij] = -1;
+        else
+          indices[ij] = curIndex++;
+      for (index2 ij : Index2Range<i32>(index2(1), index2(size).plus(-1, -1))) {
+        if (ij.i > 1)
+          REQUIRE(A.elementIndex(ij.left()) != -1);
+        else if (ij.i == 1)
+          REQUIRE(A.elementIndex(ij.left()) == -1);
+        if (ij.j > 1)
+          REQUIRE(A.elementIndex(ij.down()) != -1);
+        else if (ij.j == 1)
+          REQUIRE(A.elementIndex(ij.down()) == -1);
+        if (ij.i < static_cast<i64>(size.width) - 2)
+          REQUIRE(A.elementIndex(ij.right()) != -1);
+        else if (ij.i == static_cast<i64>(size.width) - 2)
+          REQUIRE(A.elementIndex(ij.right()) == -1);
+        if (ij.j < static_cast<i64>(size.height) - 2)
+          REQUIRE(A.elementIndex(ij.up()) != -1);
+        else if (ij.j == static_cast<i64>(size.height) - 2)
+          REQUIRE(A.elementIndex(ij.up()) == -1);
+        A(ij, ij) = 6;
+        A(ij, ij.right()) = 1;
+        A(ij, ij.up()) = 2;
+      }
+    }
+    SECTION("matrix vector") {
+      // 3 4 5 0  0     14
+      // 4 3 0 5  1  =  18
+      // 5 0 3 4  2     18
+      // 0 5 4 3  3     22
+      FDMatrix2<f32> A(size2(2));
+      int index = 0;
+      for (index2 ij : Index2Range<i32>(A.gridSize()))
+        A.indexData()[ij] = index++;
+      for (index2 ij : Index2Range<i32>(A.gridSize())) {
+        A(ij, ij) = 3;
+        A(ij, ij.right()) = 4;
+        A(ij, ij.up()) = 5;
+      }
+      Vector<f32> x(A.size(), 0);
+      for (u32 i = 0; i < x.size(); i++)
+        x[i] = i;
+      int idx = 0;
+      float ans[4] = {14, 18, 18, 22};
+      auto iacc = A.indexData();
+      for (index2 ij : Index2Range<i32>(A.gridSize())) {
+        REQUIRE(
+            ans[idx] ==
+            (iacc.stores(ij.left()) ? iacc[ij.left()] : 0) * A(ij, ij.left()) +
+                (iacc[ij.down()] ? iacc[ij.down()] : 0) * A(ij, ij.down()) +
+                (iacc.stores(ij) ? iacc[ij] : 0) * A(ij, ij) +
+                (iacc.stores(ij.right()) ? iacc[ij.right()] : 0) *
+                    A(ij, ij.right()) +
+                (iacc.stores(ij.up()) ? iacc[ij.up()] : 0) * A(ij, ij.up()));
+        idx++;
+      }
+      Vector<f32> r = A * x;
+      for (u32 i = 0; i < r.size(); i++)
+        REQUIRE(r[i] == ans[i]);
+    }
+  }
+}

@@ -35,6 +35,9 @@
 
 namespace ponos {
 
+/*****************************************************************************
+**************************          INDEX2           *************************
+******************************************************************************/
 /// Holds 2-dimensional index coordinates
 ///\tparam T must be an integer type
 template <typename T> struct Index2 {
@@ -43,12 +46,26 @@ template <typename T> struct Index2 {
                 "Index2 must hold an integer type!");
 
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
+  Index2() = default;
+  /// \param i **[in]**
+  explicit Index2(T i) : i(i), j(i) {}
   ///\brief Construct a new Index2 object
   ///\param i **[in]** i coordinate value
   ///\param j **[in]** j coordinate value
-  explicit Index2(T i = T(0), T j = T(0)) : i(i), j(j) {}
+  explicit Index2(T i, T j) : i(i), j(j) {}
+  template <typename S>
+  explicit Index2(const Size2<S> &size) : i(size.width), j(size.height) {}
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
   T operator[](int _i) const { return (&i)[_i]; }
   T &operator[](int _i) { return (&i)[_i]; }
+  // ***********************************************************************
+  //                            METHODS
+  // ***********************************************************************
   Index2<T> plus(T _i, T _j) const { return Index2<T>(i + _i, j + _j); }
   Index2<T> left() const { return Index2<T>(i - 1, j); }
   Index2<T> right() const { return Index2<T>(i + 1, j); }
@@ -58,11 +75,15 @@ public:
     i = std::max(0, std::min(i, static_cast<T>(s.width)));
     j = std::max(0, std::min(j, static_cast<T>(s.height)));
   }
-
+  // ***********************************************************************
+  //                            FIELDS
+  // ***********************************************************************
   T i = T(0);
   T j = T(0);
 };
-
+// ***********************************************************************
+//                             ARITHMETIC
+// ***********************************************************************
 template <typename T>
 Index2<T> operator+(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i + b.i, a.j + b.j);
@@ -71,6 +92,17 @@ template <typename T>
 Index2<T> operator-(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i - b.i, a.j - b.j);
 }
+/// \brief Computes the manhattan distance between two indices
+/// \tparam T
+/// \param a **[in]**
+/// \param b **[in]**
+/// \return T
+template <typename T> T distance(const Index2<T> &a, const Index2<T> &b) {
+  return std::abs(a.i - b.i) + std::abs(a.j - b.j);
+}
+// ***********************************************************************
+//                             BOOLEAN
+// ***********************************************************************
 template <typename T> bool operator<=(const Index2<T> &a, const Index2<T> &b) {
   return a.i <= b.i && a.j <= b.j;
 }
@@ -87,6 +119,9 @@ template <typename T> bool operator!=(const Index2<T> &a, const Index2<T> &b) {
   return a.i != b.i || a.j != b.j;
 }
 
+/*****************************************************************************
+**********************          INDEX2ITERATOR           *********************
+******************************************************************************/
 template <typename T> class Index2Iterator {
 public:
   Index2Iterator() = default;
@@ -127,7 +162,9 @@ public:
 private:
   Index2<T> index_, lower_, upper_;
 };
-
+/*****************************************************************************
+***********************          INDEX2RANGE           ***********************
+******************************************************************************/
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type
@@ -157,7 +194,9 @@ public:
 private:
   Index2<T> lower_, upper_;
 };
-
+/*****************************************************************************
+**************************          INDEX3           *************************
+******************************************************************************/
 /// Holds 3-dimensional index coordinates
 ///\tparam T must be an integer type
 template <typename T> struct Index3 {
@@ -188,7 +227,9 @@ template <typename T> struct Index3 {
   T j;
   T k;
 };
-
+// ***********************************************************************
+//                             BOOLEAN
+// ***********************************************************************
 template <typename T> bool operator<=(const Index3<T> &a, const Index3<T> &b) {
   return a.i <= b.i && a.j <= b.j && a.k <= b.k;
 }
@@ -210,7 +251,9 @@ bool operator>=(const Index3<T> &a, const Size3<TT> &b) {
   return a.i >= static_cast<T>(b.i) && a.j >= static_cast<T>(b.j) &&
          a.k >= static_cast<T>(b.k);
 }
-
+/*****************************************************************************
+**********************          INDEX3ITERATOR           *********************
+******************************************************************************/
 template <typename T> class Index3Iterator {
 public:
   ///\brief Construct a new Index3Iterator object
@@ -252,7 +295,9 @@ public:
 private:
   Index3<T> index_, lower_, upper_;
 };
-
+/*****************************************************************************
+***********************          INDEX3RANGE           ***********************
+******************************************************************************/
 /// Represents a closed-open range of indices [lower, upper),
 /// Can be used in a for each loop
 ///\tparam T must be an integer type

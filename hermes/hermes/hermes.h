@@ -19,6 +19,7 @@
 #include <hermes/numeric/cuda_field.h>
 #include <hermes/numeric/cuda_interpolation.h>
 #include <hermes/numeric/cuda_staggered_grid.h>
+#include <hermes/numeric/fd_matrix.h>
 #include <hermes/numeric/grid.h>
 #include <hermes/numeric/vector_grid.h>
 #include <hermes/storage/array.h>
