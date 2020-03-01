@@ -30,6 +30,7 @@
 
 #include <hermes/common/cuda.h>
 #include <hermes/common/defs.h>
+#include <hermes/storage/array.h>
 #include <hermes/storage/cuda_storage_utils.h>
 #include <ponos/common/defs.h>
 
