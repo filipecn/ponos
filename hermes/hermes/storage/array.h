@@ -31,8 +31,8 @@
 #include <hermes/common/cuda.h>
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/common/index.h>
+#include <hermes/storage/cuda_storage_utils.h>
 #include <ponos/storage/array.h>
-
 
 namespace hermes {
 
