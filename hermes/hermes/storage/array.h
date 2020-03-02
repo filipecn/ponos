@@ -28,8 +28,6 @@
 #ifndef HERMES_STORAGE_ARRAY_H
 #define HERMES_STORAGE_ARRAY_H
 
-#include <hermes/common/cuda.h>
-#include <hermes/common/cuda_parallel.h>
 #include <hermes/common/index.h>
 #include <hermes/storage/cuda_storage_utils.h>
 #include <ponos/storage/array.h>

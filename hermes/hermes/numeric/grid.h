@@ -281,6 +281,10 @@ public:
     info_ = other.info_;
     data_ = other.data_;
   }
+  explicit Grid2(const Grid2<T> &other) {
+    info_ = other.info_;
+    data_ = other.data_;
+  }
   ///\brief Construct a new Grid 2 object
   ///\param resolution **[in]** grid resolution
   ///\param spacing **[in]** cell size
