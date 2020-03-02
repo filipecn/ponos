@@ -34,12 +34,41 @@ namespace hermes {
 
 namespace cuda {
 
-struct Info2 {
-  Transform2<float> to_grid;
-  Transform2<float> to_world;
+class Info2 {
+public:
+  __host__ __device__ point2 toWorld(const point2 &gp) const {
+    return to_world_(gp);
+  }
+  __host__ __device__ point2 toGrid(const point2 &wp) const {
+    return to_grid_(wp);
+  }
+  __host__ __device__ const vec2 &spacing() const { return spacing_; }
+  __host__ __device__ const point2 &origin() const { return origin_; }
+  void set(const point2 &o, const vec2 &s) {
+    origin_ = o;
+    spacing_ = s;
+    updateTransforms();
+  }
+  void setOrigin(const point2 &o) {
+    origin_ = o;
+    updateTransforms();
+  }
+  void setSpacing(const vec2 &s) {
+    spacing_ = s;
+    updateTransforms();
+  }
   size2 resolution;
-  point2 origin;
-  vec2 spacing;
+
+private:
+  void updateTransforms() {
+    to_world_ = translate(vec2f(origin_[0], origin_[1])) *
+                scale(spacing_.x, spacing_.y);
+    to_grid_ = inverse(to_world_);
+  }
+  Transform2<float> to_grid_;
+  Transform2<float> to_world_;
+  point2 origin_;
+  vec2 spacing_;
 };
 /*****************************************************************************
 *************************            GRID2           *************************
@@ -123,40 +152,40 @@ public:
   /// \return grid resolutio),n
   __host__ __device__ size2 resolution() const { return info_.resolution; }
   /// \return grid spacing
-  __host__ __device__ vec2 spacing() const { return info_.spacing; }
+  __host__ __device__ vec2 spacing() const { return info_.spacing(); }
   /// \return grid origin (world position of index (0,0))
-  __host__ __device__ point2 origin() const { return info_.origin; }
+  __host__ __device__ point2 origin() const { return info_.origin(); }
   /// \param world_position (in world coordinates)
   /// \return world_position in grid coordinates
   __host__ __device__ point2 gridPosition(const point2 &world_position) const {
-    return info_.to_grid(world_position);
+    return info_.toGrid(world_position);
   }
   /// \param grid_position (in grid coordinates)
   /// \return grid_position in world coordinates
   __host__ __device__ point2 worldPosition(const point2 &grid_position) const {
-    return info_.to_world(grid_position);
+    return info_.toWorld(grid_position);
   }
   /// \param grid_position (in grid coordinates)
   /// \return grid_position in world coordinates
   __host__ __device__ point2 worldPosition(const index2 &grid_position) const {
-    return info_.to_world(point2(grid_position.i, grid_position.j));
+    return info_.toWorld(point2(grid_position.i, grid_position.j));
   }
   /// \param world_position (in world coordinates)
   /// \return offset of world_position inside the cell containing it (in [0,1]).
   __host__ __device__ point2 cellPosition(const point2 &world_position) const {
-    auto gp = info_.to_grid(world_position);
+    auto gp = info_.toGrid(world_position);
     return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
   }
   /// \param world_position (in world coordinates)
   /// \return index of the cell that contains world_position
   __host__ __device__ index2 cellIndex(const point2 &world_position) const {
-    auto gp = info_.to_grid(world_position);
+    auto gp = info_.toGrid(world_position);
     return index2(gp.x, gp.y);
   }
   /// \param ij cell index
   /// \return ij cell's region (in world coordinates)
   __host__ __device__ bbox2 cellRegion(const index2 &ij) const {
-    auto wp = info_.to_world(point2(ij.i, ij.j));
+    auto wp = info_.toWorld(point2(ij.i, ij.j));
     return bbox2(wp, wp + grid_.spacing_);
   }
   __host__ __device__ bool stores(const index2 &ij) const {
@@ -265,9 +294,7 @@ public:
   ///\param other **[in]** host grid
   explicit Grid2(ponos::Grid2<T> &other) {
     info_.resolution = other.resolution();
-    info_.spacing = other.spacing();
-    info_.origin = other.origin();
-    updateTransform();
+    info_.set(other.origin(), other.spacing());
     data_ = other.data();
   }
   // ***********************************************************************
@@ -279,9 +306,8 @@ public:
   Grid2 &operator=(ponos::Grid2<T> &other) {
     info_.resolution =
         size2(other.resolution().width, other.resolution().height);
-    info_.spacing = vec2f(other.spacing().x, other.spacing().y);
-    info_.origin = point2f(other.origin().x, other.origin().y);
-    updateTransform();
+    info_.set(point2f(other.origin().x, other.origin().y),
+              vec2f(other.spacing().x, other.spacing().y));
     data_ = other.data();
     return *this;
   }
@@ -290,7 +316,7 @@ public:
   ///\return Grid2&
   Grid2 &operator=(const Grid2 &other) {
     info_ = other.info_;
-    // data_ = other.data_;
+    data_ = other.data_;
     return *this;
   }
   /// Copy data
@@ -327,28 +353,22 @@ public:
   /// \return grid resolution
   size2 resolution() const { return info_.resolution; }
   /// \return grid spacing (cell size)
-  vec2 spacing() const { return info_.spacing; }
+  vec2 spacing() const { return info_.spacing(); }
   /// \return grid origin (world position of index (0,0))
-  point2 origin() const { return info_.origin; }
+  point2 origin() const { return info_.origin(); }
   /// Changes grid origin position
   /// \param o in world space
-  void setOrigin(const point2 &o) {
-    info_.origin = o;
-    updateTransform();
-  }
+  void setOrigin(const point2 &o) { info_.setOrigin(o); }
   /// Changes grid cell size
   /// \param s new size
-  void setSpacing(const vec2 &s) {
-    info_.spacing = s;
-    updateTransform();
-  }
+  void setSpacing(const vec2 &s) { info_.setSpacing(s); }
   ///\return ponos::Grid2 host grid
   ponos::Grid2<T> hostData() {
     ponos::Grid2<T> g;
     g.setResolution(
         ponos::size2(info_.resolution.width, info_.resolution.height));
-    g.setSpacing(ponos::vec2(info_.spacing.x, info_.spacing.y));
-    g.setOrigin(ponos::point2(info_.origin.x, info_.origin.y));
+    g.setSpacing(info_.spacing().ponos());
+    g.setOrigin(info_.origin().ponos());
     g = data_.hostData();
     return g;
   }
@@ -377,12 +397,6 @@ public:
   template <typename F> void map(F operation) { data_.map(operation); }
 
 private:
-  void updateTransform() {
-    info_.to_world = translate(vec2f(info_.origin[0], info_.origin[1])) *
-                     scale(info_.spacing.x, info_.spacing.y);
-    info_.to_grid = inverse(info_.to_world);
-  }
-
   Info2 info_{};
   Array2<T> data_;
 };

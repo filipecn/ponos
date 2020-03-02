@@ -48,41 +48,41 @@ public:
   /// \return grid resolution
   __host__ __device__ size2 resolution() const { return info_.resolution; }
   /// \return grid spacing
-  __host__ __device__ vec2 spacing() const { return info_.spacing; }
+  __host__ __device__ vec2 spacing() const { return info_.spacing(); }
   /// \return grid origin (world position of index (0,0))
-  __host__ __device__ point2 origin() const { return info_.origin; }
+  __host__ __device__ point2 origin() const { return info_.origin(); }
   /// \param world_position (in world coordinates)
   /// \return world_position in grid coordinates
   __host__ __device__ point2 gridPosition(const point2 &world_position) const {
-    return info_.to_grid(world_position);
+    return info_.toGrid(world_position);
   }
   /// \param grid_position (in grid coordinates)
   /// \return grid_position in world coordinates
   __host__ __device__ point2 worldPosition(const point2 &grid_position) const {
-    return info_.to_world(grid_position);
+    return info_.toWorld(grid_position);
   }
   /// \param grid_position (in grid coordinates)
   /// \return grid_position in world coordinates
   __host__ __device__ point2 worldPosition(const index2 &grid_position) const {
-    return info_.to_world(point2(grid_position.i, grid_position.j));
+    return info_.toWorld(point2(grid_position.i, grid_position.j));
   }
   /// \param world_position (in world coordinates)
   /// \return offset of world_position inside the cell containing it (in [0,1]).
   __host__ __device__ point2 cellPosition(const point2 &world_position) const {
-    auto gp = info_.to_grid(world_position);
+    auto gp = info_.toGrid(world_position);
     return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
   }
   /// \param world_position (in world coordinates)
   /// \return index of the cell that contains world_position
   __host__ __device__ index2 cellIndex(const point2 &world_position) const {
-    auto gp = info_.to_grid(world_position);
+    auto gp = info_.toGrid(world_position);
     return index2(gp.x, gp.y);
   }
   /// \param ij cell index
   /// \return ij cell's region (in world coordinates)
   __host__ __device__ bbox2 cellRegion(const index2 &ij) const {
-    auto wp = info_.to_world(point2(ij.i, ij.j));
-    return bbox2(wp, wp + info_.spacing);
+    auto wp = info_.toWorld(point2(ij.i, ij.j));
+    return bbox2(wp, wp + info_.spacing());
   }
   /// \param ij **[in]**
   /// \return Vector2<T>
@@ -167,24 +167,24 @@ public:
   VectorGrid2(const VectorGrid2<T> &other) {
     grid_type_ = other.grid_type_;
     setResolution(other.info_.resolution);
-    setSpacing(other.info_.spacing);
-    setOrigin(other.info_.origin);
+    setSpacing(other.info_.spacing());
+    setOrigin(other.info_.origin());
     u_ = other.u_;
     v_ = other.v_;
   }
   VectorGrid2(VectorGrid2<T> &other) {
     grid_type_ = other.grid_type_;
     setResolution(other.info_.resolution);
-    setSpacing(other.info_.spacing);
-    setOrigin(other.info_.origin);
+    setSpacing(other.info_.spacing());
+    setOrigin(other.info_.origin());
     u_ = other.u_;
     v_ = other.v_;
   }
   VectorGrid2(VectorGrid2<T> &&other) noexcept {
     grid_type_ = other.grid_type_;
     setResolution(other.info_.resolution);
-    setSpacing(other.info_.spacing);
-    setOrigin(other.info_.origin);
+    setSpacing(other.info_.spacing());
+    setOrigin(other.info_.origin());
     u_ = std::move(other.u_);
     v_ = std::move(other.v_);
   }
@@ -217,8 +217,8 @@ public:
   VectorGrid2 &operator=(const VectorGrid2 &other) {
     grid_type_ = other.grid_type_;
     setResolution(other.info_.resolution);
-    setSpacing(other.info_.spacing);
-    setOrigin(other.info_.origin);
+    setSpacing(other.info_.spacing());
+    setOrigin(other.info_.origin());
     u_ = other.u_;
     v_ = other.v_;
     return *this;
@@ -228,8 +228,8 @@ public:
   VectorGrid2 &operator=(VectorGrid2 &other) {
     grid_type_ = other.grid_type_;
     setResolution(other.info_.resolution);
-    setSpacing(other.info_.spacing);
-    setOrigin(other.info_.origin);
+    setSpacing(other.info_.spacing());
+    setOrigin(other.info_.origin());
     u_ = other.u_;
     v_ = other.v_;
     return *this;
@@ -250,8 +250,8 @@ public:
     if (grid_type != grid_type_) {
       grid_type_ = grid_type;
       setResolution(info_.resolution);
-      setSpacing(info_.spacing);
-      setOrigin(info_.origin);
+      setSpacing(info_.spacing());
+      setOrigin(info_.origin());
     } else
       grid_type_ = grid_type;
   }
@@ -261,9 +261,9 @@ public:
   /// \return size2 grid resolution
   size2 resolution() const { return info_.resolution; }
   /// \return vec2f grid spacing (cell size)
-  vec2 spacing() const { return info_.spacing; }
+  vec2 spacing() const { return info_.spacing(); }
   /// \return grid origin (world position of index (0,0))
-  point2 origin() const { return info_.origin; }
+  point2 origin() const { return info_.origin(); }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
   virtual void setResolution(size2 res) {
@@ -284,35 +284,34 @@ public:
   /// Changes grid origin position
   /// \param o in world space
   virtual void setOrigin(const point2f &o) {
-    info_.origin = o;
+    info_.setOrigin(o);
     switch (grid_type_) {
     case ponos::VectorGridType::CELL_CENTERED:
       u_.setOrigin(o);
       v_.setOrigin(o);
       break;
     case ponos::VectorGridType::STAGGERED:
-      u_.setOrigin(o - vec2(info_.spacing.x / 2, 0));
-      v_.setOrigin(o - vec2(0, info_.spacing.y / 2));
+      u_.setOrigin(o - vec2(info_.spacing().x / 2, 0));
+      v_.setOrigin(o - vec2(0, info_.spacing().y / 2));
       break;
 
     default:
       break;
     }
-    updateTransform();
   }
   /// Changes grid cell size
   /// \param d new size
   virtual void setSpacing(const vec2f &s) {
-    info_.spacing = s;
+    info_.setSpacing(s);
     u_.setSpacing(s);
     v_.setSpacing(s);
-    setOrigin(info_.origin);
+    setOrigin(info_.origin());
   }
   /// \return ponos::VectorGrid2<T>
   ponos::VectorGrid2<T> hostData() {
     ponos::VectorGrid2<T> h;
-    h.setOrigin(info_.origin.ponos());
-    h.setSpacing(info_.spacing.ponos());
+    h.setOrigin(info_.origin().ponos());
+    h.setSpacing(info_.spacing().ponos());
     h.setResolution(info_.resolution.ponos());
     h.u() = u_.hostData();
     h.v() = v_.hostData();
@@ -338,11 +337,6 @@ public:
   }
 
 protected:
-  void updateTransform() {
-    info_.to_world =
-        translate(vec2(info_.origin.x, info_.origin.y)) * scale(info_.spacing);
-    info_.to_grid = inverse(info_.to_world);
-  }
   Info2 info_;
   ponos::VectorGridType grid_type_{ponos::VectorGridType::CELL_CENTERED};
   Grid2<T> u_, v_;
