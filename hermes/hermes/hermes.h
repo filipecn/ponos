@@ -23,7 +23,7 @@
 #include <hermes/numeric/grid.h>
 #include <hermes/numeric/vector_grid.h>
 #include <hermes/storage/array.h>
-#include <hermes/storage/cuda_array.h>
+#include <hermes/storage/cu_array.h>
 #include <hermes/storage/cuda_memory_block.h>
 #include <hermes/storage/cuda_storage_utils.h>
 #include <hermes/storage/cuda_texture.h>

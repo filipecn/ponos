@@ -4,6 +4,15 @@
 
 using namespace hermes::cuda;
 
+texture<f32, cudaTextureType2D> tex2;
+
+__global__ void __copyArray(Array2Accessor<f32> dst) {
+  index2 index(blockIdx.x * blockDim.x + threadIdx.x,
+               blockIdx.y * blockDim.y + threadIdx.y);
+  if (dst.contains(index))
+    dst[index] = tex2D(tex2, index.i, index.j);
+}
+
 TEST_CASE("Array-access", "[memory][array][access]") {
   print_cuda_devices();
   {
@@ -108,5 +117,36 @@ TEST_CASE("Array-Methods", "[memory][array][methods]") {
     auto ha = a.hostData();
     for (auto e : ha)
       REQUIRE(e.value == e.index.i + e.index.j);
+  }
+}
+
+TEST_CASE("CuArray", "[memory][cuarray]") {
+  SECTION("2d") {
+    ponos::Array2<f32> data(ponos::size2(128));
+    for (auto ij : ponos::Index2Range<i32>(data.size()))
+      data[ij] = ij.i * 100 + ij.j;
+    Array2<f32> d_data = data;
+    CuArray2<f32> c = d_data;
+    CuArray2<f32> c2 = data;
+    auto td = ThreadArrayDistributionInfo(d_data.size());
+    tex2.normalized = 0;
+    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<f32>();
+    { // from c
+      Array2<f32> r(d_data.size());
+      CHECK_CUDA(cudaBindTextureToArray(tex2, c.data(), channelDesc));
+      __copyArray<<<td.gridSize, td.blockSize>>>(r.accessor());
+      auto h = r.hostData();
+      for (auto ij : ponos::Index2Range<i32>(data.size()))
+        REQUIRE(h[ij] == Approx(ij.i * 100 + ij.j).margin(1e-6));
+    }
+    { // from c2
+      Array2<f32> r(d_data.size());
+      CHECK_CUDA(cudaBindTextureToArray(tex2, c2.data(), channelDesc));
+      __copyArray<<<td.gridSize, td.blockSize>>>(r.accessor());
+      auto h = r.hostData();
+      for (auto ij : ponos::Index2Range<i32>(data.size()))
+        REQUIRE(h[ij] == Approx(ij.i * 100 + ij.j).margin(1e-6));
+    }
+    cudaUnbindTexture(tex2);
   }
 }

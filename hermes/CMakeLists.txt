@@ -31,7 +31,7 @@ set(HERMES_HEADERS
         hermes/numeric/cuda_numeric.h
         hermes/numeric/cuda_staggered_grid.h
         hermes/storage/array.h
-        hermes/storage/cuda_array.h
+        hermes/storage/cu_array.h
         hermes/storage/cuda_memory_block.h
         hermes/storage/cuda_texture.h
         hermes/storage/cuda_texture.inl

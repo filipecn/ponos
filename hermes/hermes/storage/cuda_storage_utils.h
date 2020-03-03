@@ -29,7 +29,6 @@
 #include <hermes/common/cuda_parallel.h>
 #include <hermes/common/defs.h>
 #include <hermes/geometry/vector.h>
-#include <hermes/storage/cuda_array.h>
 #include <iomanip>
 #include <ponos/storage/array.h>
 #include <vector>
@@ -639,14 +638,14 @@ bool memcpy(MemoryBlock3<A, T> &dst, MemoryBlock3<B, T> &src) {
   return true;
 }
 
-template <MemoryLocation L, typename T>
-bool memcpy(CuArray3<T> &dst, MemoryBlock3<L, T> &src) {
-  if (dst.size() != src.size())
-    return false;
-  auto kind = copyDirection(src.location(), MemoryLocation::DEVICE);
-  copyPitchedToArray<T>(dst.data(), src.pitchedData(), kind, dst.size().z);
-  return true;
-}
+// template <MemoryLocation L, typename T>
+// bool memcpy(CuArray3<T> &dst, MemoryBlock3<L, T> &src) {
+//   if (dst.size() != src.size())
+//     return false;
+//   auto kind = copyDirection(src.location(), MemoryLocation::DEVICE);
+//   copyPitchedToArray<T>(dst.data(), src.pitchedData(), kind, dst.size().z);
+//   return true;
+// }
 
 /*template <MemoryLocation L, typename T>
 bool memcpy(std::vector<T> &dst, const MemoryBlock1<L, T> &src) {
