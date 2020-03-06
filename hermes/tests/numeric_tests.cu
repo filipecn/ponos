@@ -37,6 +37,10 @@ struct map_ipj {
 TEST_CASE("Grid", "[numeric][grid][access]") {
   SECTION("2d") {
     Grid2<float> g(size2(10, 10), vec2(0.1, 0.1), point2(1, 2));
+    REQUIRE(g.spacing().x == Approx(0.1).margin(1e-8));
+    REQUIRE(g.spacing().y == Approx(0.1).margin(1e-8));
+    REQUIRE(g.origin().x == Approx(1).margin(1e-8));
+    REQUIRE(g.origin().y == Approx(2).margin(1e-8));
     g = 3.0;
     ponos::Grid2<float> hg = g.hostData();
     for (auto e : hg.accessor())
@@ -63,6 +67,7 @@ TEST_CASE("Grid", "[numeric][grid][access]") {
     std::vector<Grid2<f32>> grid_vector;
     grid_vector.emplace_back();
     grid_vector[0].setResolution(size2(10));
+    grid_vector.emplace_back();
     grid_vector.emplace_back();
     REQUIRE(grid_vector[0].resolution() == size2(10));
     REQUIRE(grid_vector[1].resolution() == size2(0));

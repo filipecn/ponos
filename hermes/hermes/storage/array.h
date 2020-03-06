@@ -349,6 +349,7 @@ public:
   ///\param other **[in]**
   ///\return Array2<T>&
   Array2<T> &operator=(const Array2<T> &other) {
+    // TODO: other is empty
     resize(other.size());
     copy((*this).accessor(), other.constAccessor());
     return *this;
@@ -356,6 +357,7 @@ public:
   ///\param other **[in]**
   ///\return Array1<T>&
   Array2<T> &operator=(Array2<T> &other) {
+    // TODO: other is empty
     resize(other.size_);
     copyPitchedToPitched<T>(pitchedData(), other.pitchedData(),
                             cudaMemcpyDeviceToDevice);
@@ -366,6 +368,7 @@ public:
   ///\param data **[in]**
   ///\return Array1<T>&
   Array2<T> &operator=(ponos::Array2<T> &data) {
+    // TODO: other is empty
     resize(size2(data.size().width, data.size().height));
     copyPitchedToPitched<T>(pitchedData(), pitchedDataFrom(data),
                             cudaMemcpyHostToDevice);
@@ -374,6 +377,7 @@ public:
   /// \param data **[in]**
   /// \return Array2<T>&
   Array2<T> &operator=(ponos::Array2<T> &&data) {
+    // TODO: other is empty
     resize(size2(data.size().width, data.size().height));
     copyPitchedToPitched<T>(pitchedData(), pitchedData(data),
                             cudaMemcpyHostToDevice);
@@ -382,6 +386,7 @@ public:
   /// \param value **[in]**
   /// \return Array2<T>&
   Array2<T> &operator=(T value) {
+    // TODO: other is empty
     fill(Array2Accessor<T>((T *)data_, size_, pitch_), value);
     return *this;
   }

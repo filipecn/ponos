@@ -112,6 +112,18 @@ public:
       : pitch_(other.pitch_), size_(other.size_), data_(other.data_) {
     other.data_ = nullptr;
   }
+  /// \param linear_vector **[in]**
+  Array2(const std::vector<std::vector<T>> &linear_vector) {
+    resize(size2(linear_vector.size(), linear_vector[0].size()));
+    for (auto ij : Index2Range<i32>(size_))
+      (*this)[ij] = linear_vector[ij.i][ij.j];
+  }
+  /// \param list **[in]**
+  Array2(std::initializer_list<std::initializer_list<T>> list) {
+    resize(size2(list.size(), list.begin()[0].size()));
+    for (auto ij : Index2Range<i32>(size_))
+      (*this)[ij] = list.begin()[ij.i].begin()[ij.j];
+  }
   ///
   virtual ~Array2() {
     if (data_)
@@ -120,6 +132,13 @@ public:
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
+  /// \param linear_vector **[in]**
+  /// \return Array2<T>&
+  Array2<T> &operator=(const std::vector<std::vector<T>> &linear_vector) {
+    resize(size2(linear_vector.size(), linear_vector[0].size()));
+    for (auto ij : Index2Range<i32>(size_))
+      (*this)[ij] = linear_vector[ij.i][ij.j];
+  }
   /// \param other **[in]**
   /// \return Array2<T>&
   Array2<T> &operator=(const Array2<T> &other) {
@@ -229,7 +248,10 @@ std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
   for (u32 i = 0; i < array.size().width; ++i) {
     os << "\t[" << i << ",]\t";
     for (u32 j = 0; j < array.size().height; ++j)
-      os << array[index2(i, j)] << "\t";
+      if (std::is_same<T, u8>())
+        os << (int)array[index2(i, j)] << "\t";
+      else
+        os << array[index2(i, j)] << "\t";
     os << std::endl;
   }
   return os;

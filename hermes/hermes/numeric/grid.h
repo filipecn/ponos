@@ -270,6 +270,11 @@ private:
 /// positions.
 /// \tparam T grid data type
 template <typename T> class Grid2 {
+  static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
+                    std::is_same<T, float>::value ||
+                    std::is_same<T, double>::value,
+                "Grid must hold an float type!");
+
 public:
   // ***********************************************************************
   //                           CONSTRUCTORS
@@ -292,6 +297,7 @@ public:
   Grid2(const size2 &resolution, const vec2 &spacing = vec2(1, 1),
         const point2 &origin = point2(0, 0)) {
     info_.resolution = resolution;
+    info_.set(origin, spacing);
     data_.resize(resolution);
   }
   ///\brief Construct a new Grid2 object from host Grid2

@@ -254,6 +254,10 @@ private:
 /// \tparam T grid data type
 template <typename T> class Grid2 {
 public:
+  static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
+                    std::is_same<T, float>::value ||
+                    std::is_same<T, double>::value,
+                "Grid must hold an float type!");
   friend class Grid2Accessor<T>;
   // ***********************************************************************
   //                           CONSTRUCTORS
