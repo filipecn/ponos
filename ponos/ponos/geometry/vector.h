@@ -438,4 +438,45 @@ std::ostream &operator<<(std::ostream &os, const Vector4<T> &v) {
 
 } // namespace ponos
 
+// std hash support
+namespace std {
+
+template <typename T> struct hash<ponos::Vector2<T>> {
+  size_t operator()(ponos::Vector2<T> const &v) const {
+    hash<T> hasher;
+    size_t s = 0;
+    // inject x component
+    size_t h = hasher(v.x);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    // inject y component
+    h = hasher(v.y);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    return s;
+  }
+};
+
+template <typename T> struct hash<ponos::Vector3<T>> {
+  size_t operator()(ponos::Vector3<T> const &v) const {
+    hash<T> hasher;
+    size_t s = 0;
+    // inject x component
+    size_t h = hasher(v.x);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    // inject y component
+    h = hasher(v.y);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    // inject y component
+    h = hasher(v.z);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    return s;
+  }
+};
+
+} // namespace std
+
 #endif

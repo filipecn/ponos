@@ -243,4 +243,44 @@ std::ostream &operator<<(std::ostream &os, const Point3<T> &p) {
 
 } // namespace ponos
 
+// std hash support
+namespace std {
+
+template <typename T> struct hash<ponos::Point2<T>> {
+  size_t operator()(ponos::Point2<T> const &v) const {
+    hash<T> hasher;
+    size_t s = 0;
+    // inject x component
+    size_t h = hasher(v.x);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    // inject y component
+    h = hasher(v.y);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    return s;
+  }
+};
+
+template <typename T> struct hash<ponos::Point3<T>> {
+  size_t operator()(ponos::Point3<T> const &v) const {
+    hash<T> hasher;
+    size_t s = 0;
+    // inject x component
+    size_t h = hasher(v.x);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    // inject y component
+    h = hasher(v.y);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    // inject y component
+    h = hasher(v.z);
+    h += 0x9e3779b9 + (s << 6) + (s >> 2);
+    s ^= h;
+    return s;
+  }
+};
+
+} // namespace std
 #endif

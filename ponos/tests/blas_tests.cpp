@@ -4,7 +4,7 @@
 
 using namespace ponos;
 
-TEST_CASE("Vector", "[blas][vector]") {
+TEST_CASE("BLAS_Vector", "[blas][vector]") {
   SECTION("constructors") {
     Vector<f32> a;
     REQUIRE(a.size() == 0);
