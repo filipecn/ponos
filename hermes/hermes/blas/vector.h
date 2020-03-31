@@ -229,6 +229,7 @@ public:
   }
   /// \return u32
   u32 size() const { return data_.size(); }
+  void resize(u32 new_size) { data_.resize(new_size); }
   const Array1<T> &data() const { return data_; }
   Array1<T> &data() { return data_; }
 
