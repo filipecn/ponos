@@ -303,8 +303,8 @@ public:
   ///\brief Construct a new Grid2 object from host Grid2
   ///\param other **[in]** host grid
   explicit Grid2(ponos::Grid2<T> &other) {
-    info_.resolution = other.resolution();
-    info_.set(other.origin(), other.spacing());
+    info_.resolution = size2(other.resolution());
+    info_.set(point2(other.origin()), vec2(other.spacing()));
     data_ = other.data();
   }
   // ***********************************************************************

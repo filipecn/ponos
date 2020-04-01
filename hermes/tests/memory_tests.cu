@@ -20,10 +20,10 @@ TEST_CASE("Array-access", "[memory][array][access]") {
     REQUIRE(a.size() == 1000u);
   }
   {
-    Array1<vec2i> a(1000, vec2i(1, 3));
+    Array1<index2> a(1000, index2(1, 3));
     auto v = a.hostData();
     for (auto vv : v)
-      REQUIRE(vv == vec2i(1, 3));
+      REQUIRE(vv == index2(1, 3));
   }
   {
     Array1<char> a(1000);

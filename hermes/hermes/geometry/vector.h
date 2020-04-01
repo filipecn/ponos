@@ -37,6 +37,8 @@ namespace cuda {
 template <typename T> class Point2;
 template <typename T> class Vector2 {
 public:
+  __host__ Vector2(const ponos::Vector2<T> &ponos_vector)
+      : x(ponos_vector.x), y(ponos_vector.y) {}
   __host__ __device__ Vector2() { x = y = 0; }
   __host__ __device__ Vector2(T _x, T _y) : x(_x), y(_y) {}
   __host__ __device__ Vector2(const Point2<T> &p) : x(p.x), y(p.y) {}

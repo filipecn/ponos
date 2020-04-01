@@ -38,6 +38,8 @@ public:
   __host__ __device__ Point2();
   __host__ __device__ Point2(T f);
   __host__ __device__ Point2(T _x, T _y);
+  __host__ Point2(const ponos::Point2<T> &ponos_point)
+      : x(ponos_point.x), y(ponos_point.y) {}
   // access
   __host__ __device__ T operator[](int i) const;
   __host__ __device__ T &operator[](int i);
