@@ -240,8 +240,8 @@ public:
     auto ip = cellIndex(world_position);
     switch (interpolation_mode_) {
     case InterpolationMode::LINEAR:
-      return bilerp<T>(cp.x, cp.y, (*this)[ip], (*this)[ip + index2(1, 0)],
-                       (*this)[ip + index2(1, 1)], (*this)[ip + index2(0, 1)]);
+      return bilerp<T>(cp.x, cp.y, (*this)[ip], (*this)[ip.right()],
+                       (*this)[ip.plus(1, 1)], (*this)[ip.up()]);
     case InterpolationMode::MONOTONIC_CUBIC:
       T f[4][4];
       for (int dx = -1; dx <= 2; ++dx)

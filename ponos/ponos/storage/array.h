@@ -144,12 +144,11 @@ public:
   /// Constructs an Array2 from a std vector matrix
   /// \param linear_vector **[in]** data matrix
   Array2(const std::vector<std::vector<T>> &linear_vector) {
-    resize(size2(linear_vector.size(), linear_vector[0].size()));
+    resize(size2(linear_vector[0].size(), linear_vector.size()));
     for (auto ij : Index2Range<i32>(size_))
-      (*this)[ij] = linear_vector[ij.i][ij.j];
+      (*this)[ij] = linear_vector[ij.j][ij.i];
   }
   /// Initialization list constructor
-  ///
   /// - Inner lists represent rows.
   /// \param list **[in]** data list
   /// \verbatim embed:rst:leading-slashes
@@ -158,9 +157,9 @@ public:
   ///       ponos::Array2<i32> a = {{1,2},{3,4}};
   /// \endverbatim
   Array2(std::initializer_list<std::initializer_list<T>> list) {
-    resize(size2(list.size(), list.begin()[0].size()));
+    resize(size2(list.begin()[0].size(), list.size()));
     for (auto ij : Index2Range<i32>(size_))
-      (*this)[ij] = list.begin()[ij.i].begin()[ij.j];
+      (*this)[ij] = list.begin()[ij.j].begin()[ij.i];
   }
   ///
   virtual ~Array2() {
@@ -170,14 +169,17 @@ public:
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
-  /// \param linear_vector **[in]**
+  /// Assign operator from raw data
+  /// - Inner vectors represent rows.
+  /// \param linear_vector **[in]** data matrix
   /// \return Array2<T>&
   Array2<T> &operator=(const std::vector<std::vector<T>> &linear_vector) {
-    resize(size2(linear_vector.size(), linear_vector[0].size()));
+    resize(size2(linear_vector[0].size(), linear_vector.size()));
     for (auto ij : Index2Range<i32>(size_))
-      (*this)[ij] = linear_vector[ij.i][ij.j];
+      (*this)[ij] = linear_vector[ij.j][ij.i];
   }
-  /// \param other **[in]**
+  /// Assign operator
+  /// \param other **[in]** const reference to other Array2 object
   /// \return Array2<T>&
   Array2<T> &operator=(const Array2<T> &other) {
     size_ = other.size_;
@@ -186,7 +188,8 @@ public:
     memcpy(data_, other.data_, other.memorySize());
     return *this;
   }
-  /// \param other **[in]**
+  /// Assign operator
+  /// \param other **[in]** temporary Array2 object
   /// \return Array2<T>&
   Array2<T> &operator=(Array2<T> &&other) {
     size_ = other.size_;

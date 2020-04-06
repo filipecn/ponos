@@ -305,7 +305,27 @@ void __host__ __device__ mapArray(Array2Accessor<T> array,
 /*****************************************************************************
 *************************           ARRAY2           *************************
 ******************************************************************************/
-/// Holds a linear memory area representing a 1-dimensional array.
+/// Holds a linear memory area representing a 2-dimensional array of
+/// ``size.width`` * ``size.height`` elements.
+///
+/// - Considering ``size.height`` rows of ``size.width`` elements, data is
+/// laid out in memory in **row major** fashion.
+///
+/// - Elements must be accessed through an Array2Accessor object, **in device
+/// code**.
+///
+/// - The methods use the convention of ``i`` and ``j`` indices, representing
+/// _column_ and _row_ indices respectively. ``i`` accesses the first
+/// dimension (``size.width``) and ``j`` accesses the second dimension
+/// (``size.height``).
+/// \verbatim embed:rst:leading-slashes"
+///   .. note::
+///     This index convention is the **opposite** of some mathematical forms
+///     where matrix elements are indexed by the i-th row and j-th column.
+///   .. note::
+///     This class is the equivalent of ponos's Array2. They can be user
+///     interchangeably to work with data in host and device.
+/// \endverbatim
 /// \tparam T data type
 template <typename T> class Array2 {
 public:
@@ -313,22 +333,25 @@ public:
   //                           CONSTRUCTORS
   // ***********************************************************************
   Array2() = default;
-  ///\param size **[in]**
+  ///\param size **[in]** dimensions (in elements count)
   Array2(size2 size) : size_(size) { resize(size); }
-  ///\param size **[in]**
-  ///\param value **[in]**
+  /// Constructor
+  ///\param size **[in]** dimensions (in elements count)
+  ///\param value **[in]** initial value of all elements
   Array2(size2 size, T value) : size_(size) {
     resize(size);
     auto acc = Array2Accessor<T>((T *)data_, size_, pitch_);
     fill(acc, value);
   }
-  ///\param other **[in]**
+  /// Copy constructor
+  ///\param other **[in]** const reference to other Array2 object
   Array2(const Array2<T> &other) {
     resize(other.size_);
     copyPitchedToPitched<T>(pitchedData(), other.pitchedData(),
                             cudaMemcpyDeviceToDevice);
   }
-  ///\param other **[in]**
+  /// Assign constructor
+  ///\param other **[in]** temporary Array2 object
   Array2(Array2 &&other) noexcept
       : size_(other.size_), data_(other.data_), pitch_(other.pitch_) {
     other.size_ = size2(0, 0);
@@ -336,7 +359,8 @@ public:
     other.data_ = nullptr;
   }
   Array2(const ponos::Array2<T> &data) = delete;
-  ///\param data **[in]**
+  /// Constructor from host data
+  ///\param data **[in]** reference to host Array2 object
   Array2(ponos::Array2<T> &data) {
     resize(size2(data.size()));
     copyPitchedToPitched<T>(pitchedData(), pitchedDataFrom(data),
@@ -346,7 +370,12 @@ public:
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
-  ///\param other **[in]**
+  /// Assign operator
+  /// \verbatim embed:rst:leading-slashes"
+  ///   .. warning::
+  ///     Copying from const objects is currently done using kernels.
+  /// \endverbatim
+  ///\param other **[in]** const reference to other Array2 object
   ///\return Array2<T>&
   Array2<T> &operator=(const Array2<T> &other) {
     // TODO: other is empty
@@ -354,7 +383,8 @@ public:
     copy((*this).accessor(), other.constAccessor());
     return *this;
   }
-  ///\param other **[in]**
+  /// Assign operator
+  ///\param other **[in]** reference to other Array 2 object
   ///\return Array1<T>&
   Array2<T> &operator=(Array2<T> &other) {
     // TODO: other is empty
@@ -365,7 +395,8 @@ public:
   }
   Array2<T> &operator=(const ponos::Array2<T> &data) = delete;
   Array2<T> &operator=(const ponos::Array2<T> &&data) = delete;
-  ///\param data **[in]**
+  /// Assign operator from host data
+  ///\param data **[in]** host data
   ///\return Array1<T>&
   Array2<T> &operator=(ponos::Array2<T> &data) {
     // TODO: other is empty
@@ -374,7 +405,8 @@ public:
                             cudaMemcpyHostToDevice);
     return *this;
   }
-  /// \param data **[in]**
+  /// Assign operator from host data
+  /// \param data **[in]** host data temporary object
   /// \return Array2<T>&
   Array2<T> &operator=(ponos::Array2<T> &&data) {
     // TODO: other is empty
@@ -383,6 +415,7 @@ public:
                             cudaMemcpyHostToDevice);
     return *this;
   }
+  /// Assigns ``value`` to all elements
   /// \param value **[in]**
   /// \return Array2<T>&
   Array2<T> &operator=(T value) {
@@ -393,8 +426,11 @@ public:
   // ***********************************************************************
   //                         GETTERS & SETTERS
   // ***********************************************************************
-  /// frees any previous data and allocates a new block
-  ///\param new_size **[in]** new element count
+  /// \verbatim embed:rst:leading-slashes"
+  ///   .. warning::
+  ///     This method frees any previous data and allocates a new block.
+  /// \endverbatim
+  ///\param new_size **[in]** new dimensions (in elements count)
   void resize(size2 new_size) {
     if (data_)
       clear();
@@ -410,7 +446,7 @@ public:
   }
   ///\return size_t memory block size in elements
   size2 size() const { return size_; }
-  ///\return u32
+  ///\return u32 pitch size (in bytes)
   size_t pitch() const { return pitch_; }
   ///\return size_t memory block size in bytes
   size_t memorySize() const { return pitch_ * size_.height; }
@@ -435,9 +471,11 @@ public:
                             cudaMemcpyDeviceToHost);
     return data;
   }
+  /// \return Array2Accessor<T>
   Array2Accessor<T> accessor() {
     return Array2Accessor<T>(data_, size_, pitch_);
   }
+  /// \return Array2CAccessor<T>
   Array2CAccessor<T> constAccessor() const {
     return Array2CAccessor<T>(data_, size_, pitch_);
   }
@@ -451,7 +489,9 @@ public:
     data_ = (T *)nullptr;
     size_ = size2(0, 0);
   }
-  ///\tparam F function type
+  /// Applies ``operation`` to all elements
+  ///\tparam F function type with an ``operator()`` following the signature:
+  ///``(index2, T&)``
   ///\param operation **[in]**
   template <typename F> void map(F operation) {
     mapArray<T, F>(Array2Accessor<T>((T *)data_, size_, pitch_),

@@ -37,15 +37,15 @@ TEST_CASE("Array2-sanity", "[storage][array][access]") {
     {
       std::vector<std::vector<int>> data = {{1, 2, 3}, {4, 5, 6}};
       Array2<int> a = data;
-      REQUIRE(a.size() == size2(2, 3));
+      REQUIRE(a.size() == size2(3, 2));
       for (index2 ij : Index2Range<i32>(a.size()))
-        REQUIRE(a[ij] == data[ij.i][ij.j]);
+        REQUIRE(a[ij] == data[ij.j][ij.i]);
     }
     {
       Array2<int> a = {{1, 2, 3}, {11, 12, 13}};
-      REQUIRE(a.size() == size2(2, 3));
+      REQUIRE(a.size() == size2(3, 2));
       for (index2 ij : Index2Range<i32>(a.size()))
-        REQUIRE(a[ij] == ij.i * 10 + ij.j + 1);
+        REQUIRE(a[ij] == ij.j * 10 + ij.i + 1);
     }
   }
   SECTION("Operators") {
