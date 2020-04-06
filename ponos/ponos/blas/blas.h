@@ -33,34 +33,55 @@
 
 namespace ponos {
 
-/// Set of methods that compose the BLAS
+/// The ``BLAS`` class offers a set of methods that compose the _Basic Linear
+/// Algebra Subprograms_.
 class BLAS {
 public:
-  /// Dot product
-  /// \tparam T
-  /// \param a **[in]**
-  /// \param b **[in]**
-  /// \return T
+  /// Computes the dot product of two vectors:
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. math::
+  ///       \mathbf{a} \cdot \mathbf{b} = a_ib_i
+  ///    .. warning::
+  ///       This method does **not** check if both ``a`` and ``b`` have the
+  ///       same size.
+  /// \endverbatim
+  /// \tparam T data type
+  /// \param a **[in]** numeric vector
+  /// \param b **[in]** numeric vector
+  /// \return T the resulting value of the dot product of ``a`` and ``b``
   template <typename T> static T dot(const Vector<T> &a, const Vector<T> &b) {
     T sum = 0;
     for (u32 i = 0; i < a.size(); ++i)
       sum += a[i] * b[i];
     return sum;
   }
-  /// Peforms r = a * x + y
-  /// \tparam T
-  /// \param a **[in]**
-  /// \param x **[in]**
-  /// \param y **[in]**
-  /// \param r **[out]**
+  /// Computes r = a * x + y
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. math::
+  ///       \mathbf{r} = a\mathbf{x} + \mathbf{y}
+  ///    .. warning::
+  ///       This method does **not** check if both ``x`` and ``y`` have the
+  ///       same size.
+  ///    .. note::
+  ///       ``r`` is resized to the same size of ``x``.
+  /// \endverbatim
+  /// \tparam T data type
+  /// \param a **[in]** scalar value
+  /// \param x **[in]** numeric vector
+  /// \param y **[in]** numeric vector
+  /// \param r **[out]** receives the result of ``a``*``x`` + ``y``
   template <typename T>
   static void axpy(T a, const Vector<T> &x, const Vector<T> &y, Vector<T> &r) {
     r = a * x + y;
   }
   /// Computes max |v[i]|
-  /// \tparam T
-  /// \param v **[in]**
-  /// \return T
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. math::
+  ///       max|a_i |
+  /// \endverbatim
+  /// \tparam T data type
+  /// \param v **[in]** numeric vector
+  /// \return T the maximum absolute value of an entry of ``v``
   template <typename T> static T infNorm(const Vector<T> &v) {
     T r = v.size() ? v[0] : 0;
     for (u32 i = 0; i < v.size(); ++i)
