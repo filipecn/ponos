@@ -39,7 +39,14 @@ namespace ponos {
 **************************          INDEX2           *************************
 ******************************************************************************/
 /// Holds 2-dimensional index coordinates
-///\tparam T must be an integer type
+///
+/// - Usually the field ``i`` is related to the **x** axis in cartesian
+/// coordinates, and the field ``j`` is related to the **y** axis.
+///\tparam T index type
+/// \verbatim embed:rst:leading-slashes
+///    .. warning::
+///       Index type must be a signed integer type.
+/// \endverbatim
 template <typename T> struct Index2 {
   static_assert(std::is_same<T, i8>::value || std::is_same<T, i16>::value ||
                     std::is_same<T, i32>::value || std::is_same<T, i64>::value,
@@ -50,27 +57,58 @@ public:
   //                           CONSTRUCTORS
   // ***********************************************************************
   Index2() = default;
-  /// \param i **[in]**
-  explicit Index2(T i) : i(i), j(i) {}
-  ///\brief Construct a new Index2 object
-  ///\param i **[in]** i coordinate value
-  ///\param j **[in]** j coordinate value
+  /// Constructor
+  /// \param v **[in]** value assigned to both ``i`` and ``j``
+  explicit Index2(T v) : i(v), j(v) {}
+  ///\brief Constructor
+  ///\param i **[in]** coordinate value for ``i``
+  ///\param j **[in]** coordinate value for ``j``
   explicit Index2(T i, T j) : i(i), j(j) {}
+  /// \brief Constructor from a Size2 object
+  /// - ``i`` receives ``size.with`` and ``j`` receives ``size.height``
+  /// \tparam S size type
+  /// \param size **[in]**
   template <typename S>
   explicit Index2(const Size2<S> &size) : i(size.width), j(size.height) {}
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
-  T operator[](int _i) const { return (&i)[_i]; }
-  T &operator[](int _i) { return (&i)[_i]; }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does not check if ``d`` is out of bounds.
+  /// \endverbatim
+  /// \param d **[in]** dimension number (``0`` for ``i`` and ``1`` for ``j``)
+  /// \return T coordinate value at dimension ``d``
+  T operator[](int d) const { return (&i)[d]; }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does not check if ``d`` is out of bounds.
+  /// \endverbatim
+  /// \param d **[in]** dimension number (``0`` for ``i`` and ``1`` for ``j``)
+  /// \return T reference to coordinate value at dimension ``d``
+  T &operator[](int d) { return (&i)[d]; }
   // ***********************************************************************
   //                            METHODS
   // ***********************************************************************
+  /// Generates an index with incremented values
+  /// \param _i **[in]** value incremented to ``i``
+  /// \param _j **[in]** value incremented to ``j``
+  /// \return Index2<T> resulting index coordinates
   Index2<T> plus(T _i, T _j) const { return Index2<T>(i + _i, j + _j); }
+  /// Generates a copy with ``i`` decremented by ``1``
+  /// \return Index2<T> resulting index coordinates (``i-1``, ``j``)
   Index2<T> left() const { return Index2<T>(i - 1, j); }
+  /// Generates a copy with ``i`` incremented by ``1``
+  /// \return Index2<T> resulting index coordinates (``i+1``, ``j``)
   Index2<T> right() const { return Index2<T>(i + 1, j); }
+  /// Generates a copy with ``j`` decremented by ``1``
+  /// \return Index2<T> resulting index coordinates (``i``, ``j-1``)
   Index2<T> down() const { return Index2<T>(i, j - 1); }
+  /// Generates a copy with ``j`` incremented by ``1``
+  /// \return Index2<T> resulting index coordinates (``i``, ``j+1``)
   Index2<T> up() const { return Index2<T>(i, j + 1); }
+  /// Clamps to the inclusive range ``[0, size]``
+  /// \param s **[in]** upper bound
   void clampTo(const size2 &s) {
     i = std::max(0, std::min(i, static_cast<T>(s.width)));
     j = std::max(0, std::min(j, static_cast<T>(s.height)));
@@ -78,7 +116,9 @@ public:
   // ***********************************************************************
   //                            FIELDS
   // ***********************************************************************
+  /// 0-th coordinate value
   T i = T(0);
+  /// 1-th coordinate value
   T j = T(0);
 };
 // ***********************************************************************
@@ -165,28 +205,37 @@ private:
 /*****************************************************************************
 ***********************          INDEX2RANGE           ***********************
 ******************************************************************************/
-/// Represents a closed-open range of indices [lower, upper),
-/// Can be used in a for each loop
+/// Represents a closed-open range of indices ``[lower, upper)``
+///
+/// Can be used in a for each loop that iterates over all indices in the range:
+/// \verbatim embed:rst:leading-slashes
+///    .. code-block:: cpp
+///
+///       ponos::size2 size(10,10);
+///       for(auto ij : ponos::Index2Range<int>(size)) {
+///         *ij; // index coordinates
+///       }
+/// \endverbatim
 ///\tparam T must be an integer type
 template <typename T> class Index2Range {
 public:
-  ///\brief Construct a new Index2Range object
+  ///\brief Constructs an index range ``[0, {upper_i,upper_j})``
   ///\param upper_i **[in]** upper bound i
   ///\param upper_j **[in]** upper bound j
   Index2Range(T upper_i, T upper_j)
       : lower_(Index2<T>()), upper_(Index2<T>(upper_i, upper_j)) {}
-  ///\brief Construct a new Index2Range object
+  ///\brief Constructs an index range ``[lower, upper)``
   ///\param lower **[in]** lower bound
-  ///\param upper **[in]** upper bound
+  ///\param upper **[in | default = Index2<T>()]** upper bound
   explicit Index2Range(Index2<T> lower, Index2<T> upper = Index2<T>())
       : lower_(lower), upper_(upper) {}
+  /// \brief Constructs an index range ``[0, upper)``
+  /// \param upper **[in]** upper bound
   explicit Index2Range(size2 upper)
       : lower_(Index2<T>()), upper_(Index2<T>(upper.width, upper.height)) {}
-  ///\return Index2Iterator<T>
   Index2Iterator<T> begin() const {
     return Index2Iterator<T>(lower_, upper_, lower_);
   }
-  ///\return Index2Iterator<T>
   Index2Iterator<T> end() const {
     return Index2Iterator<T>(lower_, upper_, upper_);
   }

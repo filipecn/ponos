@@ -78,9 +78,34 @@ private:
   int i = 0, j = 0;
 };
 
-/// Holds a linear memory area representing a 2-dimensional array. It provides
-/// memory alignment via a custom size of allocated memory per row (called pitch
-/// size).
+/// Holds a linear memory area representing a 2-dimensional array of
+/// ``size.width`` * ``size.height`` elements.
+///
+/// - Considering ``size.height`` rows of ``size.width`` elements, data is
+/// laid out in memory in **row major** fashion.
+///
+/// - It is also possible to set _row level_ memory alignment via a custom size
+/// of allocated memory per row, called pitch size. The minimal size of pitch is
+/// ``size.width``*``sizeof(T)``.
+///
+/// - The methods use the convention of ``i`` and ``j`` indices, representing
+/// _column_ and _row_ indices respectively. ``i`` accesses the first
+/// dimension (``size.width``) and ``j`` accesses the second dimension
+/// (``size.height``).
+/// \verbatim embed:rst:leading-slashes"
+///   .. note::
+///     This index convention is the **opposite** of some mathematical forms
+///     where matrix elements are indexed by the i-th row and j-th column.
+/// \endverbatim
+/// - Array2 provides a convenient way to access its elements:
+/// \verbatim embed:rst:leading-slashes
+///    .. code-block:: cpp
+///
+///       for(auto e : my_array2) {
+///         e.value = 0; // element value access
+///         e.index; // element index
+///       }
+/// \endverbatim
 /// \tparam T data type
 template <class T> class Array2 {
 public:
@@ -88,37 +113,50 @@ public:
   //                           CONSTRUCTORS
   // ***********************************************************************
   Array2() = default;
-  /// \param size dimensions (in element count)
+  /// pitch is set to ``size.width`` * ``sizeof(T)``
+  /// \param size dimensions (in elements count)
   Array2(const size2 &size) : pitch_(size.width * sizeof(T)), size_(size) {
     data_ = new char[pitch_ * size.height];
   }
-  /// \param size dimensions (in element count)
-  /// \param pitch in bytes
+  /// \param size dimensions (in elements count)
+  /// \param pitch memory size occupied by a single row (in bytes)
   explicit Array2(const size2 &size, size_t pitch)
       : pitch_(pitch), size_(size) {
     data_ = new char[pitch_ * size.height];
   }
-  /// \param other **[in]**
+  /// Copy constructor
+  /// \param other **[in]** const reference to other Array2 object
   Array2(const Array2 &other) : Array2(other.size_, other.pitch_) {
     memcpy(data_, other.data_, memorySize());
   }
   Array2(const Array2 &&other) = delete;
-  /// \param other **[in]**
+  /// Copy constructor
+  /// \param other **[in]** reference to other Array2 object
   Array2(Array2 &other) : Array2(other.size_, other.pitch_) {
     memcpy(data_, other.data_, memorySize());
   }
-  /// \param other **[in]**
+  /// Assign constructor
+  /// \param other **[in]** temporary Array2 object
   Array2(Array2 &&other) noexcept
       : pitch_(other.pitch_), size_(other.size_), data_(other.data_) {
     other.data_ = nullptr;
   }
-  /// \param linear_vector **[in]**
+  /// Constructs an Array2 from a std vector matrix
+  /// \param linear_vector **[in]** data matrix
   Array2(const std::vector<std::vector<T>> &linear_vector) {
     resize(size2(linear_vector.size(), linear_vector[0].size()));
     for (auto ij : Index2Range<i32>(size_))
       (*this)[ij] = linear_vector[ij.i][ij.j];
   }
-  /// \param list **[in]**
+  /// Initialization list constructor
+  ///
+  /// - Inner lists represent rows.
+  /// \param list **[in]** data list
+  /// \verbatim embed:rst:leading-slashes
+  ///    **Example**::
+  ///
+  ///       ponos::Array2<i32> a = {{1,2},{3,4}};
+  /// \endverbatim
   Array2(std::initializer_list<std::initializer_list<T>> list) {
     resize(size2(list.size(), list.begin()[0].size()));
     for (auto ij : Index2Range<i32>(size_))
@@ -157,7 +195,7 @@ public:
     other.data_ = nullptr;
     return *this;
   }
-  /// Assign value to all data
+  /// Assign ``value`` to all elements
   /// \param value assign value
   /// \return *this
   Array2 &operator=(T value) {
@@ -167,31 +205,53 @@ public:
       (*this)[ij] = value;
     return *this;
   }
-  /// \param ij (0 <= ij < size)
-  /// \return reference to element at ij position
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``ij`` is out of bounds.
+  /// \endverbatim
+  /// \param ij ``ij.i`` for column and ``ij.j`` for row
+  /// \return reference to element at ``ij`` position
   T &operator[](index2 ij) {
     return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
-  /// \param ij (0 <= ij < size)
-  /// \return const reference to element at ij position
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``ij`` is out of bounds.
+  /// \endverbatim
+  /// \param ij ``ij.i`` for column and ``ij.j`` for row
+  /// \return const reference to element at ``ij`` position
   const T &operator[](index2 ij) const {
     return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
-  /// \param i **[in]**
-  /// \param j **[in]**
-  /// \return T&
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``i`` or ``j`` are out of bounds.
+  /// \endverbatim
+  /// \param i **[in]** column index
+  /// \param j **[in]** row index
+  /// \return T& reference to element in row ``i`` and column ``j``
   T &operator()(u32 i, u32 j) {
     return (T &)(*((char *)data_ + j * pitch_ + i * sizeof(T)));
   }
-  /// \param ij (0 <= ij < size)
-  /// \return const reference to element at ij position
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``i`` or ``j`` are out of bounds.
+  /// \endverbatim
+  /// \param i **[in]** column index
+  /// \param j **[in]** row index
+  /// \return const reference to element at ``ij`` position
   const T &operator()(u32 i, u32 j) const {
     return (T &)(*((char *)data_ + j * pitch_ + i * sizeof(T)));
   }
   // ***********************************************************************
   //                         GETTERS & SETTERS
   // ***********************************************************************
-  /// \param new_size
+  /// Changes the dimensions
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. note::
+  ///       All previous data is erased.
+  /// \endverbatim
+  /// \param new_size new row and column counts
   void resize(const size2 &new_size) {
     if (data_)
       delete[](char *) data_;
@@ -199,28 +259,33 @@ public:
     size_ = new_size;
     data_ = new char[pitch_ * new_size.height];
   }
+  /// Computes actual memory usage
   /// \return memory usage (in bytes)
   size_t memorySize() const { return size_.height * pitch_; }
-  /// \return dimensions (in element count)
+  /// \return dimensions (in elements count)
   size2 size() const { return size_; }
   /// \return pitch size (in bytes)
   size_t pitch() const { return pitch_; }
-  /// \return const pointer to raw data
+  /// \return const pointer to raw data (**row major**)
   const T *data() const { return (const T *)data_; }
-  /// \return pointer to raw data
+  /// \return pointer to raw data (**row major**)
   T *data() { return (T *)data_; }
   // ***********************************************************************
   //                            METHODS
   // ***********************************************************************
+  /// Copies data from another Array2
+  ///
+  /// - This gets resized if necessary.
+  /// \param other **[in]**
   void copy(const Array2 &other) {
     pitch_ = other.pitch_;
     size_ = other.size_;
     resize(size_);
     memcpy(data_, other.data_, memorySize());
   }
-  /// Checks if ij is a safe position to access
+  /// Checks if ``ij`` is not out of bounds
   /// \param ij position index
-  /// \return true if position can be accessed
+  /// \return ``true`` if position can be accessed
   bool stores(const index2 &ij) const {
     return ij.i >= 0 &&
            static_cast<i64>(ij.i) < static_cast<i64>(size_.width) &&
