@@ -310,12 +310,12 @@ private:
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
   os << "Array2[" << array.size() << "]\n\t\t";
-  for (u32 i = 0; i < array.size().height; ++i)
-    os << "[," << i << "]\t";
+  for (u32 i = 0; i < array.size().width; ++i)
+    os << "[" << i << ",]\t";
   os << std::endl;
-  for (u32 i = 0; i < array.size().width; ++i) {
-    os << "\t[" << i << ",]\t";
-    for (u32 j = 0; j < array.size().height; ++j)
+  for (u32 j = 0; j < array.size().height; ++j) {
+    os << "\t[," << j << "]\t";
+    for (u32 i = 0; i < array.size().width; ++i)
       if (std::is_same<T, u8>())
         os << (int)array[index2(i, j)] << "\t";
       else
