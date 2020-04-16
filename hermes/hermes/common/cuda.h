@@ -90,6 +90,24 @@ inline void print_cuda_devices() {
   }
 }
 
+inline void print_cuda_memory_usage() {
+  size_t free_byte;
+  size_t total_byte;
+  CHECK_CUDA(cudaMemGetInfo(&free_byte, &total_byte));
+  double free_db = (double)free_byte;
+  double total_db = (double)total_byte;
+  double used_db = total_db - free_db;
+  printf("GPU memory usage: used = %f, free = %f MB, total = %f MB\n",
+         used_db / 1024.0 / 1024.0, free_db / 1024.0 / 1024.0,
+         total_db / 1024.0 / 1024.0);
+}
+
+#define CUDA_MEMORY_USAGE                                                      \
+  {                                                                            \
+    std::cerr << "[INFO][" << __FILE__ << "][" << __LINE__ << "]";             \
+    print_cuda_memory_usage();                                                 \
+  }
+
 } // namespace cuda
 
 } // namespace hermes

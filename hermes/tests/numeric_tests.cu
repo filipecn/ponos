@@ -74,7 +74,7 @@ TEST_CASE("Grid", "[numeric][grid][access]") {
     // check copy constructors
     std::vector<Grid2<f32>> grid_vector;
     grid_vector.emplace_back();
-    grid_vector[0].setResolution(size2(10));
+    grid_vector[0].setResolution(size2(10, 10));
     grid_vector.emplace_back();
     grid_vector.emplace_back();
     REQUIRE(grid_vector[0].resolution() == size2(10));

@@ -18,6 +18,7 @@ TEST_CASE("Array-access", "[memory][array][access]") {
   {
     Array1<vec2> a(1000);
     REQUIRE(a.size() == 1000u);
+    // CUDA_MEMORY_USAGE;
   }
   {
     Array1<index2> a(1000, index2(1, 3));

@@ -378,19 +378,19 @@ public:
   ///\param other **[in]** const reference to other Array2 object
   ///\return Array2<T>&
   Array2<T> &operator=(const Array2<T> &other) {
-    // TODO: other is empty
     resize(other.size());
-    copy((*this).accessor(), other.constAccessor());
+    if (size_.total() > 0)
+      copy((*this).accessor(), other.constAccessor());
     return *this;
   }
   /// Assign operator
   ///\param other **[in]** reference to other Array 2 object
   ///\return Array1<T>&
   Array2<T> &operator=(Array2<T> &other) {
-    // TODO: other is empty
     resize(other.size_);
-    copyPitchedToPitched<T>(pitchedData(), other.pitchedData(),
-                            cudaMemcpyDeviceToDevice);
+    if (size_.total() > 0)
+      copyPitchedToPitched<T>(pitchedData(), other.pitchedData(),
+                              cudaMemcpyDeviceToDevice);
     return *this;
   }
   Array2<T> &operator=(const ponos::Array2<T> &data) = delete;
@@ -399,28 +399,28 @@ public:
   ///\param data **[in]** host data
   ///\return Array1<T>&
   Array2<T> &operator=(ponos::Array2<T> &data) {
-    // TODO: other is empty
     resize(size2(data.size().width, data.size().height));
-    copyPitchedToPitched<T>(pitchedData(), pitchedDataFrom(data),
-                            cudaMemcpyHostToDevice);
+    if (data.size().total() > 0)
+      copyPitchedToPitched<T>(pitchedData(), pitchedDataFrom(data),
+                              cudaMemcpyHostToDevice);
     return *this;
   }
   /// Assign operator from host data
   /// \param data **[in]** host data temporary object
   /// \return Array2<T>&
   Array2<T> &operator=(ponos::Array2<T> &&data) {
-    // TODO: other is empty
     resize(size2(data.size().width, data.size().height));
-    copyPitchedToPitched<T>(pitchedData(), pitchedData(data),
-                            cudaMemcpyHostToDevice);
+    if (size_.total() > 0)
+      copyPitchedToPitched<T>(pitchedData(), pitchedData(data),
+                              cudaMemcpyHostToDevice);
     return *this;
   }
   /// Assigns ``value`` to all elements
   /// \param value **[in]**
   /// \return Array2<T>&
   Array2<T> &operator=(T value) {
-    // TODO: other is empty
-    fill(Array2Accessor<T>((T *)data_, size_, pitch_), value);
+    if (size_.total() > 0)
+      fill(Array2Accessor<T>((T *)data_, size_, pitch_), value);
     return *this;
   }
   // ***********************************************************************
