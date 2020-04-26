@@ -87,9 +87,10 @@ template <typename T> class Size3 {
                 "Size3 must hold an unsigned integer type!");
 
 public:
-  __host__ __device__ explicit Size3(T width = T(0), T height = T(0),
-                                     T depth = T(0))
-      : width(width), height(height), depth(depth) {}
+  __host__ __device__ Size3(){};
+  __host__ explict Size3(T size) : width(size), height(size), depth(size) {}
+  __host__ __device__ explicit Size3(T _width, T _height, T _depth)
+      : width(_width), height(_height), depth(_depth) {}
   __host__ __device__ T total() const { return width * height * depth; }
   __host__ __device__ T operator[](int i) const { return (&width)[i]; }
   __host__ __device__ T &operator[](int i) { return (&width)[i]; }

@@ -71,7 +71,8 @@ template <typename T> class Size3 {
                 "Size3 must hold an unsigned integer type!");
 
 public:
-  explicit Size3(T width = T(0), T height = T(0), T depth = T(0))
+  explicit Size3(T size) : width(size), height(size), depth(size) {}
+  explicit Size3(T width, T height, T depth)
       : width(width), height(height), depth(depth) {}
   T total() const { return width * height * depth; }
   T operator[](int i) const { return (&width)[i]; }
