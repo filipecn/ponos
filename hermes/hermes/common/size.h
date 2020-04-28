@@ -88,7 +88,7 @@ template <typename T> class Size3 {
 
 public:
   __host__ __device__ Size3(){};
-  __host__ explict Size3(T size) : width(size), height(size), depth(size) {}
+  __host__ Size3(T size) : width(size), height(size), depth(size) {}
   __host__ __device__ explicit Size3(T _width, T _height, T _depth)
       : width(_width), height(_height), depth(_depth) {}
   __host__ __device__ T total() const { return width * height * depth; }

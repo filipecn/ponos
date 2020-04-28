@@ -35,7 +35,7 @@ namespace ponos {
 
 /// Holds 2-dimensional size
 ///\tparam T must be an unsigned integer type
-template <typename T> class Size2 {
+template<typename T> class Size2 {
   static_assert(std::is_same<T, u8>::value || std::is_same<T, u16>::value ||
                     std::is_same<T, u32>::value || std::is_same<T, u64>::value,
                 "Size2 must hold an unsigned integer type!");
@@ -52,25 +52,26 @@ public:
   T height = T(0);
 };
 
-template <typename T> Size2<T> operator+(const Size2<T> &a, const Size2<T> &b) {
+template<typename T> Size2<T> operator+(const Size2<T> &a, const Size2<T> &b) {
   return Size2<T>(a.width + b.width, a.height + b.height);
 }
 
-template <typename T> bool operator==(const Size2<T> &a, const Size2<T> &b) {
+template<typename T> bool operator==(const Size2<T> &a, const Size2<T> &b) {
   return a.width == b.width && a.height == b.height;
 }
-template <typename T> bool operator!=(const Size2<T> &a, const Size2<T> &b) {
+template<typename T> bool operator!=(const Size2<T> &a, const Size2<T> &b) {
   return a.width != b.width || a.height != b.height;
 }
 
 /// Holds 2-dimensional size
 ///\tparam T must be an unsigned integer type
-template <typename T> class Size3 {
+template<typename T> class Size3 {
   static_assert(std::is_same<T, u8>::value || std::is_same<T, u16>::value ||
                     std::is_same<T, u32>::value || std::is_same<T, u64>::value,
                 "Size3 must hold an unsigned integer type!");
 
 public:
+  Size3() = default;
   explicit Size3(T size) : width(size), height(size), depth(size) {}
   explicit Size3(T width, T height, T depth)
       : width(width), height(height), depth(depth) {}
@@ -97,12 +98,12 @@ using size3_16 = Size3<u16>;
 using size3_32 = Size3<u32>;
 using size3_64 = Size3<u64>;
 
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &o, const Size2<T> &s) {
   o << "Size[" << s.width << ", " << s.height << "]";
   return o;
 }
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &o, const Size3<T> &s) {
   o << "Size[" << s.width << ", " << s.height << ", " << s.depth << "]";
   return o;
