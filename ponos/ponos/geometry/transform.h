@@ -102,7 +102,7 @@ private:
 };
 
 Transform2 scale(real_t x, real_t y);
-Transform2 scale(const vec2& s);
+Transform2 scale(const vec2 &s);
 Transform2 rotate(real_t angle);
 Transform2 translate(const vec2 &v);
 Transform2 inverse(const Transform2 &t);
@@ -233,6 +233,67 @@ public:
     }
   }
 
+  // static methods
+
+  /// \param fovy
+  /// \param aspect
+  /// \param z_near
+  /// \param z_far
+  /// \param zero_to_one
+  /// \return
+  Transform perspectiveRH(real_t fovy, real_t aspect, real_t z_near,
+                          real_t z_far, bool zero_to_one = false) {
+    const real_t tan_half_fovy = std::tan(RADIANS(fovy / 2.f));
+    mat4 m;
+    if (zero_to_one) {
+      m.m[0][0] = 1 / (aspect * tan_half_fovy);
+      m.m[1][1] = 1 / tan_half_fovy;
+      m.m[2][2] = z_far / (z_near - z_far);
+      m.m[2][3] = -1;
+      m.m[3][2] = -(z_far * z_near) / (z_far - z_near);
+    } else {
+      m.m[0][0] = 1 / (aspect * tan_half_fovy);
+      m.m[1][1] = 1 / (tan_half_fovy);
+      m.m[2][2] = -(z_far + z_near) / (z_far - z_near);
+      m.m[2][3] = -1;
+      m.m[3][2] = -(2 * z_far * z_near) / (z_far - z_near);
+    }
+    return Transform(m, inverse(m));
+  }
+  /// \param pos
+  /// \param target
+  /// \param up
+  /// \return
+  static Transform lookAtRH(const point3 &pos,
+                            const point3 &target,
+                            const vec3 &up) {
+    vec3 f = normalize(target - pos);
+    vec3 s = normalize(cross(f, normalize(up)));
+    vec3 u = cross(s, f);
+    real_t m[4][4];
+    m[0][0] = s.x;
+    m[1][0] = s.y;
+    m[2][0] = s.z;
+    m[3][0] = 0;
+
+    m[0][1] = u.x;
+    m[1][1] = u.y;
+    m[2][1] = u.z;
+    m[3][1] = 0;
+
+    m[0][2] = -f.x;
+    m[1][2] = -f.y;
+    m[2][2] = -f.z;
+    m[3][2] = 0;
+
+    m[0][3] = -dot(s, vec3(pos - point3()));
+    m[1][3] = -dot(u, vec3(pos - point3()));
+    m[2][3] = dot(f, vec3(pos - point3()));
+    m[3][3] = 1;
+
+    mat4 cam_to_world(m);
+    return Transform(cam_to_world, inverse(cam_to_world));
+  }
 protected:
   mat4 m, m_inv;
 };
