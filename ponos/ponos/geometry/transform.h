@@ -241,7 +241,7 @@ public:
   /// \param z_far
   /// \param zero_to_one
   /// \return
-  Transform perspectiveRH(real_t fovy, real_t aspect, real_t z_near,
+  static Transform perspectiveRH(real_t fovy, real_t aspect, real_t z_near,
                           real_t z_far, bool zero_to_one = false) {
     const real_t tan_half_fovy = std::tan(RADIANS(fovy / 2.f));
     mat4 m;
