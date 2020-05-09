@@ -60,10 +60,13 @@ public:
 
 class UserCamera3D : public UserCamera {
 public:
-  explicit UserCamera3D();
+  explicit UserCamera3D(bool left_handed = true);
   void setUp(const ponos::vec3 &u);
   void setFov(float f);
   void update() override;
+
+private:
+  bool left_handed_{true};
 };
 
 } // namespace circe

@@ -102,12 +102,12 @@ void UserCamera2D::mouseScroll(ponos::point2 p, ponos::vec2 d) {
   projection->update();
 }
 
-UserCamera3D::UserCamera3D() {
+UserCamera3D::UserCamera3D(bool left_handed) : left_handed_(left_handed) {
   this->pos = ponos::point3(20.f, 0.f, 0.f);
   this->target = ponos::point3(0.f, 0.f, 0.f);
   this->up = ponos::vec3(0.f, 1.f, 0.f);
   this->zoom = 1.f;
-  this->projection.reset(new PerspectiveProjection(45.f));
+  this->projection = std::make_shared<PerspectiveProjection>(45.f, left_handed);
   this->projection->znear = 0.1f;
   this->projection->zfar = 1000.f;
 }
@@ -124,7 +124,10 @@ void UserCamera3D::setFov(float f) {
 }
 
 void UserCamera3D::update() {
-  view = ponos::lookAtRH(pos, target, up);
+  if (left_handed_)
+    view = ponos::lookAtRH(pos, target, up);
+  else
+    view = ponos::Transform::lookAtRH(pos, target, up);
   view.computeInverse();
   model.computeInverse();
   normal = inverse((model * view).upperLeftMatrix());
