@@ -114,9 +114,9 @@ UserCamera3D::UserCamera3D(bool left_handed) : left_handed_(left_handed) {
 
 void UserCamera3D::setHandedness(bool left_handed) {
   left_handed_ = left_handed;
-  this->projection = std::make_unique<PerspectiveProjection>(
-      dynamic_cast<PerspectiveProjection *>(projection.get())->fov,
-      left_handed_);
+  dynamic_cast<PerspectiveProjection *>(projection.get())->left_handed =
+      left_handed;
+  projection->update();
   update();
 }
 
