@@ -25,8 +25,7 @@
 #ifndef CIRCE_UI_TRACK_MODE_H
 #define CIRCE_UI_TRACK_MODE_H
 
-#include <circe/helpers/geometry_drawers.h>
-#include <circe/scene/camera.h>
+#include <circe/scene/camera_interface.h>
 #include <circe/ui/trackball.h>
 
 #include <iostream>
@@ -162,9 +161,10 @@ public:
   RotateMode() : TrackMode() {}
   ~RotateMode() override = default;
   void draw(const Trackball &tb) override {
-    ponos::Sphere s(tb.center(), tb.radius() * 2.f);
-    glColor4f(0, 0, 0, 0.5);
-    draw_sphere(s);
+    UNUSED_VARIABLE(tb);
+//    ponos::Sphere s(tb.center(), tb.radius() * 2.f);
+//    glColor4f(0, 0, 0, 0.5);
+//    draw_sphere(s);
   }
   void update(Trackball &tb, CameraInterface &camera, ponos::point2 p,
               ponos::vec2 d) override {

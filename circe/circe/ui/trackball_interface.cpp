@@ -22,7 +22,7 @@
  *
  */
 
-#include <circe/io/user_input.h>
+#include <circe/gl/io/user_input.h>
 #include <circe/ui/trackball_interface.h>
 
 namespace circe {

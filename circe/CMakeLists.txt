@@ -3,97 +3,96 @@ project(CIRCE)
 set(CIRCE_HEADERS
         circe/colors/color.h
         circe/colors/color_palette.h
-        circe/graphics/compute_shader.h
-        circe/graphics/post_effect.h
-        circe/graphics/shader.h
-        circe/graphics/shader_manager.h
-        circe/helpers/bvh_model.h
-        circe/helpers/camera_model.h
-        circe/helpers/cartesian_grid.h
-        circe/helpers/geometry_drawers.h
-        circe/helpers/grid_model.h
+        circe/gl/graphics/compute_shader.h
+        circe/gl/graphics/post_effect.h
+        circe/gl/graphics/shader.h
+        circe/gl/graphics/shader_manager.h
+        circe/gl/helpers/bvh_model.h
+        circe/gl/helpers/camera_model.h
+        circe/gl/helpers/cartesian_grid.h
+        circe/gl/helpers/geometry_drawers.h
+        circe/gl/helpers/grid_model.h
 #        circe/helpers/hemesh_model.h
-        circe/helpers/quad_tree_model.h
-        circe/helpers/scene_handle.h
-        circe/helpers/vector_grid.h
+        circe/gl/helpers/quad_tree_model.h
+        circe/gl/helpers/scene_handle.h
+        circe/gl/helpers/vector_grid.h
 #        circe/helpers/tmesh_model.h
-        circe/io/buffer.h
-        circe/io/display_renderer.h
-        circe/io/framebuffer.h
-        circe/io/graphics_display.h
-        circe/io/image_texture.h
-        circe/io/font_texture.h
-        circe/io/render_texture.h
-        circe/io/screen_quad.h
-        circe/io/storage_buffer.h
-        circe/io/texture.h
-        circe/io/texture_parameters.h
+        circe/gl/io/buffer.h
+        circe/gl/io/display_renderer.h
+        circe/gl/io/framebuffer.h
+        circe/gl/io/graphics_display.h
+        circe/gl/io/image_texture.h
+        circe/gl/io/font_texture.h
+        circe/gl/io/render_texture.h
+        circe/gl/io/screen_quad.h
+        circe/gl/io/storage_buffer.h
+        circe/gl/io/texture.h
+        circe/gl/io/texture_parameters.h
         circe/io/utils.h
-        circe/io/viewport_display.h
-        circe/io/user_input.h
-        circe/scene/bvh.h
-        circe/scene/camera.h
+        circe/gl/io/viewport_display.h
+        circe/gl/io/user_input.h
+        circe/gl/scene/bvh.h
+        circe/scene/camera_interface.h
         circe/scene/camera_projection.h
-        circe/scene/mesh_utils.h
-        circe/scene/quad.h
-        circe/scene/scene.h
-        circe/scene/scene_mesh.h
-        circe/scene/scene_object.h
-        circe/scene/triangle_mesh.h
-        circe/scene/volume_box.h
-        circe/scene/wireframe_mesh.h
-        circe/ui/app.h
-        circe/ui/interactive_object_interface.h
-        circe/ui/modifier_cursor.h
-        circe/ui/scene_app.h
-        circe/ui/text_renderer.h
-        circe/ui/text_object.h
-        circe/ui/font_manager.h
+        circe/gl/scene/mesh_utils.h
+        circe/gl/scene/quad.h
+        circe/gl/scene/scene.h
+        circe/gl/scene/scene_mesh.h
+        circe/gl/scene/scene_object.h
+        circe/gl/scene/triangle_mesh.h
+        circe/gl/scene/volume_box.h
+        circe/gl/scene/wireframe_mesh.h
+        circe/gl/ui/app.h
+        circe/gl/ui/interactive_object_interface.h
+        circe/gl/ui/modifier_cursor.h
+        circe/gl/ui/scene_app.h
+        circe/gl/ui/text_renderer.h
+        circe/gl/ui/text_object.h
+        circe/gl/ui/font_manager.h
         circe/ui/trackball.h
         circe/ui/trackball_interface.h
         circe/ui/track_mode.h
         circe/ui/ui_camera.h
-        circe/utils/open_gl.h
-        circe/utils/win32_utils.h
+        circe/gl/utils/open_gl.h
+        circe/gl/utils/win32_utils.h
         circe/circe.h
         )
 
 set(CIRCE_SOURCES
-        circe/graphics/compute_shader.cpp
-        circe/graphics/post_effect.cpp
-        circe/graphics/shader.cpp
-        circe/graphics/shader_manager.cpp
-        circe/helpers/cartesian_grid.cpp
-        circe/helpers/geometry_drawers.cpp
-        circe/io/buffer.cpp
-        circe/io/display_renderer.cpp
-        circe/io/framebuffer.cpp
-        circe/io/graphics_display.cpp
-        circe/io/image_texture.cpp
-        circe/io/render_texture.cpp
-        circe/io/font_texture.cpp
-        circe/io/storage_buffer.cpp
-        circe/io/screen_quad.cpp
-        circe/io/texture.cpp
+        circe/gl/graphics/compute_shader.cpp
+        circe/gl/graphics/post_effect.cpp
+        circe/gl/graphics/shader.cpp
+        circe/gl/graphics/shader_manager.cpp
+        circe/gl/helpers/cartesian_grid.cpp
+        circe/gl/helpers/geometry_drawers.cpp
+        circe/gl/io/buffer.cpp
+        circe/gl/io/display_renderer.cpp
+        circe/gl/io/framebuffer.cpp
+        circe/gl/io/graphics_display.cpp
+        circe/gl/io/image_texture.cpp
+        circe/gl/io/render_texture.cpp
+        circe/gl/io/font_texture.cpp
+        circe/gl/io/storage_buffer.cpp
+        circe/gl/io/screen_quad.cpp
+        circe/gl/io/texture.cpp
         circe/io/utils.cpp
-        circe/io/viewport_display.cpp
-        circe/scene/bvh.cpp
-        circe/scene/camera.cpp
-        circe/scene/mesh_utils.cpp
-        circe/scene/quad.cpp
-        circe/scene/scene_mesh.cpp
-        circe/scene/triangle_mesh.cpp
-        circe/scene/volume_box.cpp
-        circe/scene/wireframe_mesh.cpp
-        circe/ui/app.cpp
-        circe/ui/text_renderer.cpp
-        circe/ui/text_object.cpp
-        circe/ui/font_manager.cpp
+        circe/gl/io/viewport_display.cpp
+        circe/gl/scene/bvh.cpp
+        circe/gl/scene/mesh_utils.cpp
+        circe/gl/scene/quad.cpp
+        circe/gl/scene/scene_mesh.cpp
+        circe/gl/scene/triangle_mesh.cpp
+        circe/gl/scene/volume_box.cpp
+        circe/gl/scene/wireframe_mesh.cpp
+        circe/gl/ui/app.cpp
+        circe/gl/ui/text_renderer.cpp
+        circe/gl/ui/text_object.cpp
+        circe/gl/ui/font_manager.cpp
         circe/ui/trackball_interface.cpp
         circe/ui/ui_camera.cpp
-        circe/utils/open_gl.cpp
+        circe/gl/utils/open_gl.cpp
         circe/circe.cpp
-        circe/scene/instance_set.cpp circe/scene/instance_set.h)
+        circe/gl/scene/instance_set.cpp circe/gl/scene/instance_set.h)
 
 add_library(circe STATIC ${CIRCE_SOURCES} ${CIRCE_HEADERS})
 set_target_properties(circe PROPERTIES
