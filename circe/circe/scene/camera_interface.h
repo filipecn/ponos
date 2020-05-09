@@ -160,7 +160,7 @@ protected:
   ponos::Transform model;
   ponos::Matrix3x3<real_t> normal;
   ponos::Frustum frustum;
-  std::shared_ptr<CameraProjection> projection;
+  std::unique_ptr<CameraProjection> projection;
 };
 
 } // namespace circe

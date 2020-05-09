@@ -107,9 +107,17 @@ UserCamera3D::UserCamera3D(bool left_handed) : left_handed_(left_handed) {
   this->target = ponos::point3(0.f, 0.f, 0.f);
   this->up = ponos::vec3(0.f, 1.f, 0.f);
   this->zoom = 1.f;
-  this->projection = std::make_shared<PerspectiveProjection>(45.f, left_handed);
+  this->projection = std::make_unique<PerspectiveProjection>(45.f, left_handed);
   this->projection->znear = 0.1f;
   this->projection->zfar = 1000.f;
+}
+
+void UserCamera3D::setHandedness(bool left_handed) {
+  left_handed_ = left_handed;
+  this->projection = std::make_unique<PerspectiveProjection>(
+      dynamic_cast<PerspectiveProjection *>(projection.get())->fov,
+      left_handed_);
+  update();
 }
 
 void UserCamera3D::setUp(const ponos::vec3 &u) {
