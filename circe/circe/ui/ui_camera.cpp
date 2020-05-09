@@ -23,7 +23,7 @@
  *
  */
 
-#include <circe/io/user_input.h>
+#include <circe/gl/io/user_input.h>
 #include <circe/ui/ui_camera.h>
 
 namespace circe {

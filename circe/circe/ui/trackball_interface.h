@@ -25,7 +25,7 @@
 #ifndef CIRCE_UI_TRACKBALL_INTERFACE_H
 #define CIRCE_UI_TRACKBALL_INTERFACE_H
 
-#include <circe/scene/camera.h>
+#include <circe/scene/camera_interface.h>
 #include <circe/ui/track_mode.h>
 #include <circe/ui/trackball.h>
 
@@ -70,8 +70,8 @@ public:
   /// \param mode attached mode
   /// \param tm track object
   void attachTrackMode(int button, Mode mode, TrackMode *tm);
-  /// \return true if cur mode is active
-  bool isActive() const;
+  /// \return true if current mode is active
+  [[nodiscard]] bool isActive() const;
 
   Trackball tb;
 

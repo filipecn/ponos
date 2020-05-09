@@ -1,3 +1,28 @@
+/*
+ * Copyright (c) 2017 FilipeCN
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
+
 #ifndef CIRCE_SCENE_CAMERA_PROJECTION_H
 #define CIRCE_SCENE_CAMERA_PROJECTION_H
 
@@ -7,55 +32,67 @@ namespace circe {
 
 class CameraProjection {
 public:
-  CameraProjection() {
-    ratio = 1.f;
-    znear = 0.01f;
-    zfar = 1000.f;
-  }
+  CameraProjection() = default;
   virtual ~CameraProjection() = default;
-
+  // updates projection transform after changes
   virtual void update() = 0;
 
-  float ratio;
-  float znear;
-  float zfar;
-  ponos::vec2 clipSize;
-  ponos::Transform transform;
+  float ratio{1.f}; //!< film size ratio
+  float znear{0.01f}; //!< z near clip plane
+  float zfar{1000.f};  //!< z far clip plane
+  ponos::vec2 clip_size; //!< window size (in pixels)
+  ponos::Transform transform; //!< projection transform
 };
 
 class PerspectiveProjection : public CameraProjection {
 public:
-  explicit PerspectiveProjection(float _fov = 45.f) : fov(_fov) {}
+  PerspectiveProjection() = default;
+  /// \param fov field of view angle (in degrees)
+  /// \param left_handed  transform handedness
+  explicit PerspectiveProjection(float fov, bool left_handed = true)
+      : fov(fov), left_handed(left_handed) {}
   void update() override {
-    this->transform =
-        ponos::perspective(fov, this->ratio, this->znear, this->zfar);
+    if (left_handed)
+      this->transform =
+          ponos::perspective(fov, this->ratio, this->znear, this->zfar);
+    else
+      this->transform = ponos::Transform::perspectiveRH(fov,
+                                                        this->ratio,
+                                                        this->znear,
+                                                        this->zfar);
   }
 
-  float fov;
+  float fov{45.f}; //!< field of view angle in degrees
+  bool left_handed{true};
 };
 
 class OrthographicProjection : public CameraProjection {
 public:
   OrthographicProjection() {
-    _region.lower.x = _region.lower.y = this->znear = -1.f;
-    _region.upper.x = _region.upper.y = this->zfar = 1.f;
+    region_.lower.x = region_.lower.y = this->znear = -1.f;
+    region_.upper.x = region_.upper.y = this->zfar = 1.f;
   }
-  void zoom(float z) { _region = ponos::scale(z, z)(_region); }
+  /// \param z
+  void zoom(float z) { region_ = ponos::scale(z, z)(region_); }
+  /// \param left
+  /// \param right
+  /// \param bottom
+  /// \param top
   void set(float left, float right, float bottom, float top) {
-    _region.lower.x = left;
-    _region.lower.y = bottom;
-    _region.upper.x = right;
-    _region.upper.y = top;
+    region_.lower.x = left;
+    region_.lower.y = bottom;
+    region_.upper.x = right;
+    region_.upper.y = top;
     update();
   }
   void update() override {
     this->transform =
-        ponos::ortho(_region.lower.x, _region.upper.x, _region.lower.y,
-                     _region.upper.y, this->znear, this->zfar);
+        ponos::ortho(region_.lower.x, region_.upper.x, region_.lower.y,
+                     region_.upper.y, this->znear, this->zfar);
   }
 
 private:
-  ponos::bbox2 _region;
+  ponos::bbox2 region_;
 };
 
 } // namespace circe

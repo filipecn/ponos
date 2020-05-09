@@ -26,7 +26,7 @@
 #ifndef CIRCE_UI_CAMERA_H
 #define CIRCE_UI_CAMERA_H
 
-#include <circe/scene/camera.h>
+#include <circe/scene/camera_interface.h>
 #include <circe/ui/trackball_interface.h>
 
 namespace circe {
