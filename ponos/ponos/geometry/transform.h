@@ -242,7 +242,7 @@ public:
   /// \param zero_to_one
   /// \return
   static Transform perspectiveRH(real_t fovy, real_t aspect, real_t z_near,
-                          real_t z_far, bool zero_to_one = false) {
+                                 real_t z_far, bool zero_to_one = false) {
     const real_t tan_half_fovy = std::tan(RADIANS(fovy / 2.f));
     mat4 m;
     if (zero_to_one) {
@@ -274,21 +274,21 @@ public:
     m[0][0] = s.x;
     m[1][0] = s.y;
     m[2][0] = s.z;
-    m[3][0] = 0;
+    m[3][0] = -dot(s, vec3(pos - point3()));
 
     m[0][1] = u.x;
     m[1][1] = u.y;
     m[2][1] = u.z;
-    m[3][1] = 0;
+    m[3][1] = -dot(u, vec3(pos - point3()));
 
     m[0][2] = -f.x;
     m[1][2] = -f.y;
     m[2][2] = -f.z;
-    m[3][2] = 0;
+    m[3][2] = dot(f, vec3(pos - point3()));
 
-    m[0][3] = -dot(s, vec3(pos - point3()));
-    m[1][3] = -dot(u, vec3(pos - point3()));
-    m[2][3] = dot(f, vec3(pos - point3()));
+    m[0][3] = 0;
+    m[1][3] = 0;
+    m[2][3] = 0;
     m[3][3] = 1;
 
     mat4 cam_to_world(m);

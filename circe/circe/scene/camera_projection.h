@@ -49,21 +49,32 @@ public:
   PerspectiveProjection() = default;
   /// \param fov field of view angle (in degrees)
   /// \param left_handed  transform handedness
-  explicit PerspectiveProjection(float fov, bool left_handed = true)
+  explicit PerspectiveProjection(float fov,
+                                 bool left_handed = true,
+                                 bool zero_to_one = true, bool flip_y = true)
       : fov(fov), left_handed(left_handed) {}
   void update() override {
     if (left_handed)
       this->transform =
           ponos::perspective(fov, this->ratio, this->znear, this->zfar);
-    else
+    else {
       this->transform = ponos::Transform::perspectiveRH(fov,
                                                         this->ratio,
                                                         this->znear,
-                                                        this->zfar);
+                                                        this->zfar,
+                                                        zero_to_one);
+      if(flip_y) {
+        auto m = this->transform.matrix();
+        m.m[1][1] *= -1;
+        this->transform = ponos::Transform(m);
+      }
+    }
   }
 
   float fov{45.f}; //!< field of view angle in degrees
   bool left_handed{true};
+  bool zero_to_one{true};
+  bool flip_y{true};
 };
 
 class OrthographicProjection : public CameraProjection {
