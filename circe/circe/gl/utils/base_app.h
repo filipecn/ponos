@@ -28,8 +28,7 @@
 #ifndef CIRCE_UTILS_BASE_APP_H
 #define CIRCE_UTILS_BASE_APP_H
 
-#include <circe/circe.h>
-#include <imgui.h>
+#include <circe/gl/ui/scene_app.h>
 #include <chrono>
 
 namespace circe::gl {

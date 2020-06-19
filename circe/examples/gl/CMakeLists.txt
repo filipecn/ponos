@@ -19,17 +19,15 @@ function(buildExample EXAMPLE_NAME)
             "${SHADER_DIR}/*.rchit"
             "${SHADER_DIR}/*.rmiss"
             )
-    add_executable(${EXAMPLE_NAME} ${MAIN_CPP} ${SHADERS} ${IMGUI_SOURCES})
+    add_executable(${EXAMPLE_NAME} ${MAIN_CPP} ${SHADERS})
     add_dependencies(${EXAMPLE_NAME} glfw ponos circe)
     target_link_libraries(${EXAMPLE_NAME}
             circe
             ${PONOS_LIBRARIES}
             ${CIRCE_LIBRARIES}
             ${GLFW_LIBRARIES}
-            imgui
             )
     target_include_directories(${EXAMPLE_NAME} PUBLIC
-            ${IMGUI_INCLUDES}
             ${STB_INCLUDES}
             ${GLFW_INCLUDES}
             ${VULKAN_INCLUDES}

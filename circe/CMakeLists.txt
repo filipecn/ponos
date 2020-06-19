@@ -1,5 +1,21 @@
 project(CIRCE)
 
+set(IMGUI_SOURCES
+        circe/imgui/imgui.cpp
+        circe/imgui/imgui_demo.cpp
+        circe/imgui/imgui_draw.cpp
+        circe/imgui/imgui_widgets.cpp
+        )
+
+set(IMGUI_HEADERS
+        circe/imgui/imconfig.h
+        circe/imgui/imgui.h
+        circe/imgui/imgui_internal.h
+        circe/imgui/imstb_rectpack.h
+        circe/imgui/imstb_textedit.h
+        circe/imgui/imstb_truetype.h
+        )
+
 set(CIRCE_HEADERS
         circe/colors/color.h
         circe/colors/color_palette.h
@@ -102,7 +118,7 @@ set(CIRCE_SOURCES
         circe/circe.cpp
         circe/gl/scene/instance_set.cpp circe/gl/scene/instance_set.h)
 
-add_library(circe STATIC ${CIRCE_SOURCES} ${CIRCE_HEADERS})
+add_library(circe STATIC ${CIRCE_SOURCES} ${CIRCE_HEADERS} ${IMGUI_HEADERS} ${IMGUI_SOURCES})
 set_target_properties(circe PROPERTIES
         OUTPUT_NAME "circe"
         FOLDER "CIRCE")
@@ -115,13 +131,10 @@ target_include_directories(circe PUBLIC
         ${TINYOBJLOADER_INCLUDES}
         ${GLAD_INCLUDES}
         ${GLFW_INCLUDE_DIR}
-        ${IMGUI_INCLUDES}
-        ${IMGUI_GL_INCLUDES}
         )
 target_link_libraries(circe PUBLIC ponos
         ${GLFW_LIBRARIES}
         ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad
-        imgui
         )
 # if(glfw AND glad)
 add_dependencies(circe glfw glad)

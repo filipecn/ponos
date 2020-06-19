@@ -26,6 +26,7 @@
 ///\brief
 
 #include "base_app.h"
+#include <circe/imgui/imgui.h>
 #include <circe/gl/imgui/imgui_impl_glfw.h>
 #include <circe/gl/imgui/imgui_impl_opengl3.h>
 
