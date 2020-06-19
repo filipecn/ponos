@@ -11,10 +11,10 @@ int main() {
           volumeData[z * res * res + y * res + x] = 1.f;
 
   // app
-  circe::SceneApp<> app(800, 800, "Volume Box Example");
-  circe::CartesianGrid grid(5);
+  circe::gl::SceneApp<> app(800, 800, "Volume Box Example");
+  circe::gl::CartesianGrid grid(5);
   app.scene.add(&grid);
-  circe::VolumeBox vb(res, res, res, volumeData.data());
+  circe::gl::VolumeBox vb(res, res, res, volumeData.data());
   app.scene.add(&vb);
   app.run();
   return 0;

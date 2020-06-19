@@ -48,6 +48,7 @@
 #include <circe/ui/trackball_interface.h>
 #include <circe/gl/utils/open_gl.h>
 #include <circe/gl/utils/win32_utils.h>
+#include <circe/gl/utils/base_app.h>
 
 
 namespace circe {

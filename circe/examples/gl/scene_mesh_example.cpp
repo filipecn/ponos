@@ -40,7 +40,7 @@ const char *fs = "#version 440 core\n"
                  "}";
 
 int main() {
-  circe::SceneApp<> app(800, 800, "", false);
+  circe::gl::SceneApp<> app(800, 800, "", false);
   app.init();
   app.addViewport(0, 0, 800, 800);
   ponos::RawMeshSPtr mesh(new ponos::RawMesh());
@@ -52,14 +52,14 @@ int main() {
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
-  auto texture = circe::ImageTexture::checkBoard(64, 64);
+  auto texture = circe::gl::ImageTexture::checkBoard(64, 64);
   ponos::RawMeshSPtr m(
       ponos::create_icosphere_mesh(ponos::point3(), 1.f, 3, true, false));
   // create a vertex buffer for base mesh
   // circe::SceneMesh sm(*m.get());
-  circe::SceneMesh smesh(mesh);
-  auto s = circe::ShaderProgram(
-      circe::ShaderManager::instance().loadFromTexts(vs, nullptr, fs));
+  circe::gl::SceneMesh smesh(mesh.get());
+  auto s = circe::gl::ShaderProgram(
+      circe::gl::ShaderManager::instance().loadFromTexts(vs, nullptr, fs));
   s.addVertexAttribute("position", 0);
   s.addVertexAttribute("normal", 1);
   s.addVertexAttribute("texcoord", 2);
@@ -76,19 +76,20 @@ int main() {
                  ponos::transpose(camera->getProjectionTransform().matrix()));
     s.setUniform("model",
                  ponos::transpose(camera->getViewTransform().matrix()));
-    circe::CHECK_GL_ERRORS;
+    using namespace circe::gl;
+    CHECK_GL_ERRORS;
     s.setUniform("tex", 0);
     //    s.setUniform("ldir", ponos::vec3(1,0,0));
-    circe::CHECK_GL_ERRORS;
+    CHECK_GL_ERRORS;
     auto ib = smesh.indexBuffer();
     glDrawElements(ib->bufferDescriptor.elementType,
                    ib->bufferDescriptor.elementCount *
                        ib->bufferDescriptor.elementSize,
                    ib->bufferDescriptor.dataType, 0);
-    circe::CHECK_GL_ERRORS;
+    CHECK_GL_ERRORS;
     s.end();
   };
-  circe::SceneObjectSPtr grid(new circe::CartesianGrid(5));
+  circe::gl::SceneObjectSPtr grid(new circe::gl::CartesianGrid(5));
   app.scene.add(grid.get());
   app.run();
   return 0;

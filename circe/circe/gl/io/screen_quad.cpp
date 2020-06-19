@@ -54,7 +54,6 @@ ScreenQuad::ScreenQuad() {
                    "layout (location = 0) uniform sampler2D tex;"
                    "void main(){"
                    " outColor = texture(tex, texCoord);}";
-  //      " outColor = vec4(1,0,0,1);}";
   const char *vs = "#version 440 core\n"
                    "layout (location = 0) in vec2 position;"
                    "layout (location = 1) in vec2 texcoord;"

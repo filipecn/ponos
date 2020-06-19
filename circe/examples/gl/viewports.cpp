@@ -4,7 +4,7 @@
 #define HEIGHT 800
 
 int main() {
-  circe::SceneApp<> app(WIDTH, HEIGHT, "Viewports Example", false);
+  circe::gl::SceneApp<> app(WIDTH, HEIGHT, "Viewports Example", false);
   // app.addViewport2D(0 , 0, WIDTH, HEIGHT);
   // app.getCamera<circe::UserCamera2D>(0)->setPosition(ponos::Point3(0.5,0,0));
   app.addViewport2D(0, 0, WIDTH / 2, HEIGHT / 2);
@@ -14,8 +14,7 @@ int main() {
   app.addViewport2D(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
   app.getCamera<circe::UserCamera2D>(2)->setPosition(ponos::point3(0, 1, 0));
   app.addViewport2D(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-  auto grid = app.scene.add(new circe::CartesianGrid(5));
+  auto grid = app.scene.add(new circe::gl::CartesianGrid(5));
   UNUSED_VARIABLE(grid);
-  app.run();
-  return 0;
+  return app.run();
 }

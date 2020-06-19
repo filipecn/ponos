@@ -149,8 +149,11 @@ GammaCorrection::GammaCorrection(float g) : gamma(g) {
                    "outColor = texture(tex, texCoord);"
                    "outColor.rgb = pow(outColor.rgb, vec3(1.0 / gammaBound));"
                    "}";
+
   shader.reset(new ShaderProgram(
       ShaderManager::instance().loadFromTexts(CIRCE_NO_VAO_VS, nullptr, fs)));
+  shader->addUniform("tex", 0);
+  shader->addUniform("gammaBound", 1);
 }
 
 void GammaCorrection::apply(const RenderTexture &in, RenderTexture &out) {

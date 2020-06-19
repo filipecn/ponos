@@ -120,7 +120,7 @@ void FontAtlas::setText(std::string text) {
       for (int j = 0; j < 2; j++)
         rawMesh->texcoords.emplace_back(glyphInfo.uvs[k][j]);
     }
-    ponos::RawMesh::IndexData data;
+    ponos::RawMesh::IndexData data{};
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex;
     rawMesh->indices.emplace_back(data);
     data.texcoordIndex = data.normalIndex = data.positionIndex = lastIndex + 1;
@@ -140,7 +140,7 @@ void FontAtlas::setText(std::string text) {
   mesh.reset(new SceneMesh(rawMesh.get()));
 }
 
-void FontAtlas::setText(std::string text, ponos::RawMesh &m) const {
+void FontAtlas::setText(const std::string& text, ponos::RawMesh &m) const {
   m.clear();
   m.meshDescriptor.elementSize = 3;
   m.meshDescriptor.count = text.size() * 2;

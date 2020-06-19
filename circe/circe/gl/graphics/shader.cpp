@@ -78,7 +78,7 @@ bool ShaderProgram::begin() {
   return true;
 }
 
-void ShaderProgram::registerVertexAttributes(const VertexBuffer *b) {
+[[maybe_unused]] void ShaderProgram::registerVertexAttributes(const VertexBuffer *b) {
   if (!ShaderManager::instance().useShader(programId))
     return;
   for (const auto& va : attrLocations) {

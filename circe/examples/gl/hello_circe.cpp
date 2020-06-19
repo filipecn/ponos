@@ -4,7 +4,6 @@ int main() {
   circe::gl::SceneApp<> app(800, 800, "");
   app.scene.add(new circe::gl::CartesianGrid(5));
   auto objPath = std::string(ASSETS_PATH) + "/suzanne.obj";
-  //   objPath = "C:/Users/fuiri/Desktop/dragon.obj";
   auto vs = std::string(SHADERS_PATH) + "/basic.vert";
   auto fs = std::string(SHADERS_PATH) + "/basic.frag";
   auto shader = circe::gl::createShaderProgramPtr(
@@ -24,7 +23,6 @@ int main() {
   shader->addUniform("view", 12);
   shader->addUniform("projection", 13);
   auto obj = circe::gl::createSceneMeshObjectSPtr(objPath, shader);
-//  std::cerr << *obj->mesh()->rawMesh() << std::endl;
   obj->transform = ponos::scale(0.5, 0.5, 0.5);
   obj->drawCallback = [](circe::gl::ShaderProgram *s,
                          const circe::CameraInterface *camera,

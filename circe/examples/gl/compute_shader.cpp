@@ -1,6 +1,6 @@
 #include <circe/circe.h>
 
-using namespace circe;
+using namespace circe::gl;
 
 const char *source =
     "#version 430\n"
@@ -31,7 +31,7 @@ Vec3 positions[PARTICLE_COUNT], velocities[PARTICLE_COUNT];
 Vec3 np[PARTICLE_COUNT], nv[PARTICLE_COUNT];
 float floats[PARTICLE_COUNT], nf[PARTICLE_COUNT];
 int main() {
-  circe::SceneApp<> app(800, 800, "Compute Shader Example");
+  SceneApp<> app(800, 800, "Compute Shader Example");
   StorageBuffer positionsBuffer(PARTICLE_COUNT * sizeof(Vec3), &positions[0]);
   StorageBuffer velocitiesBuffer(PARTICLE_COUNT * sizeof(Vec3), &velocities[0]);
   StorageBuffer floatsBuffer(PARTICLE_COUNT * sizeof(float), &floats[0]);

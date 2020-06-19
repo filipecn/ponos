@@ -42,6 +42,11 @@ SceneMesh::SceneMesh(const ponos::RawMesh *rm) : mesh_(rm) {
   CHECK_GL_ERRORS;
 }
 
+SceneMesh::~SceneMesh() {
+  glBindVertexArray(0);
+  glDeleteVertexArrays(1, &VAO);
+}
+
 void SceneMesh::bind() {
   glBindVertexArray(VAO);
   vertexBuffer_.bind();
@@ -64,7 +69,10 @@ SceneDynamicMesh::SceneDynamicMesh() {
   glBindVertexArray(VAO_);
 }
 
-SceneDynamicMesh::~SceneDynamicMesh() {}
+SceneDynamicMesh::~SceneDynamicMesh() {
+  glBindVertexArray(0);
+  glDeleteVertexArrays(1, &VAO_);
+}
 
 SceneDynamicMesh::SceneDynamicMesh(const BufferDescriptor &vertex_buffer_desc,
                                    const BufferDescriptor &index_buffer_desc)

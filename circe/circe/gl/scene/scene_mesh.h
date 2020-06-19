@@ -35,6 +35,7 @@ class SceneMesh {
 public:
   /// \param rm raw mesh
   explicit SceneMesh(const ponos::RawMesh *rm);
+  ~SceneMesh();
   /// Binds buffers
   void bind();
   void unbind();
@@ -71,10 +72,9 @@ public:
   /// Unbinds buffers
   void unbind();
   /// \return vertex buffer pointer
-  const VertexBuffer *vertexBuffer() const;
+  [[nodiscard]] const VertexBuffer *vertexBuffer() const;
   /// \return index buffer pointer
-  const IndexBuffer *indexBuffer() const;
-  void updateBuffers();
+  [[nodiscard]] const IndexBuffer *indexBuffer() const;
   /// \param vertex_buffer_data **[in]**
   /// \param vertex_count **[in]**
   /// \param index_buffer_data **[in]**

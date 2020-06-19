@@ -64,12 +64,12 @@ public:
   /// \param offsetX **[in]**
   /// \param offsetY **[in]**
   /// \return Glyph
-  Glyph getGlyph(uint character, float offsetX, float offsetY) const;
+  [[nodiscard]] Glyph getGlyph(uint character, float offsetX, float offsetY) const;
   /// \param text **[in]**
   void setText(std::string text);
   /// \param text **[in]**
   /// \param m **[in]**
-  void setText(std::string text, ponos::RawMesh &m) const;
+  void setText(const std::string& text, ponos::RawMesh &m) const;
   ponos::RawMeshSPtr rawMesh;
   SceneMeshSPtr mesh;
   Texture texture;

@@ -12,11 +12,14 @@ set(CIRCE_HEADERS
         circe/gl/helpers/cartesian_grid.h
         circe/gl/helpers/geometry_drawers.h
         circe/gl/helpers/grid_model.h
-#        circe/helpers/hemesh_model.h
+        #        circe/helpers/hemesh_model.h
         circe/gl/helpers/quad_tree_model.h
         circe/gl/helpers/scene_handle.h
         circe/gl/helpers/vector_grid.h
-#        circe/helpers/tmesh_model.h
+        #        circe/helpers/tmesh_model.h
+        # imgui
+        circe/gl/imgui/imgui_impl_glfw.h
+        circe/gl/imgui/imgui_impl_opengl3.h
         circe/gl/io/buffer.h
         circe/gl/io/display_renderer.h
         circe/gl/io/framebuffer.h
@@ -55,6 +58,7 @@ set(CIRCE_HEADERS
         circe/ui/ui_camera.h
         circe/gl/utils/open_gl.h
         circe/gl/utils/win32_utils.h
+        circe/gl/utils/base_app.h
         circe/circe.h
         )
 
@@ -65,6 +69,9 @@ set(CIRCE_SOURCES
         circe/gl/graphics/shader_manager.cpp
         circe/gl/helpers/cartesian_grid.cpp
         circe/gl/helpers/geometry_drawers.cpp
+        # imgui
+        circe/gl/imgui/imgui_impl_glfw.cpp
+        circe/gl/imgui/imgui_impl_opengl3.cpp
         circe/gl/io/buffer.cpp
         circe/gl/io/display_renderer.cpp
         circe/gl/io/framebuffer.cpp
@@ -91,6 +98,7 @@ set(CIRCE_SOURCES
         circe/ui/trackball_interface.cpp
         circe/ui/ui_camera.cpp
         circe/gl/utils/open_gl.cpp
+        circe/gl/utils/base_app.cpp
         circe/circe.cpp
         circe/gl/scene/instance_set.cpp circe/gl/scene/instance_set.h)
 
@@ -100,20 +108,31 @@ set_target_properties(circe PROPERTIES
         FOLDER "CIRCE")
 
 target_compile_definitions(circe PUBLIC -DASSETS_PATH="${CIRCE_SOURCE_DIR}/examples/assets" -DSHADERS_PATH="${CIRCE_SOURCE_DIR}/examples/shaders")
-target_include_directories(circe PUBLIC ${CIRCE_SOURCE_DIR} ${STB_INCLUDES} ${PLY_INCLUDES} ${TINYOBJLOADER_INCLUDES} ${GLAD_INCLUDES} ${GLFW_INCLUDE_DIR})
-target_link_libraries(circe PUBLIC ponos  
-${GLFW_LIBRARIES} 
-${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad)
+target_include_directories(circe PUBLIC
+        ${CIRCE_SOURCE_DIR}
+        ${STB_INCLUDES}
+        ${PLY_INCLUDES}
+        ${TINYOBJLOADER_INCLUDES}
+        ${GLAD_INCLUDES}
+        ${GLFW_INCLUDE_DIR}
+        ${IMGUI_INCLUDES}
+        ${IMGUI_GL_INCLUDES}
+        )
+target_link_libraries(circe PUBLIC ponos
+        ${GLFW_LIBRARIES}
+        ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad
+        imgui
+        )
 # if(glfw AND glad)
-        add_dependencies(circe glfw glad)
+add_dependencies(circe glfw glad)
 # endif(glfw AND glad)
 
-if(BUILD_EXAMPLES)
-        add_subdirectory(examples)
-endif(BUILD_EXAMPLES)
-if(BUILD_TESTS)
-        # add_subdirectory(tests)
-endif(BUILD_TESTS)
+if (BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif (BUILD_EXAMPLES)
+if (BUILD_TESTS)
+    # add_subdirectory(tests)
+endif (BUILD_TESTS)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/circe
         DESTINATION ${INSTALL_PATH}/include

@@ -10,11 +10,11 @@ int main() {
         volumeData[y * res + x] = 1.f;
 
   // app
-  circe::SceneApp<> app(800, 800, "Volume Box Example", false);
+  circe::gl::SceneApp<> app(800, 800, "Volume Box Example", false);
   app.addViewport2D(0,0,800,800);
-  circe::CartesianGrid grid(5);
+  circe::gl::CartesianGrid grid(5);
   app.scene.add(&grid);
-  circe::VolumeBox2 vb(res, res, volumeData.data());
+  circe::gl::VolumeBox2 vb(res, res, volumeData.data());
   app.scene.add(&vb);
   app.run();
   return 0;

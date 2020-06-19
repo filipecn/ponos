@@ -51,7 +51,7 @@ public:
   /// \param fs fragment shader
   ShaderProgram(const char *vs, const char *gs, const char *fs);
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
-  explicit ShaderProgram(std::initializer_list<const char *> files);
+  ShaderProgram(std::initializer_list<const char *> files);
   /// \brief Creates a shader program from shader files.
   /// It expects only one file of each type with extensions .fs, .vs and .gs.
   /// \return program id. **-1** if error.
@@ -70,7 +70,7 @@ public:
   /// locates atribute **name** in shader's program
   /// \param name attibute's name, must match name in shader code
   /// \return attributes layout location
-  int locateAttribute(const std::string &name) const;
+  [[nodiscard]] int locateAttribute(const std::string &name) const;
   /// Register shader attributes into vertex buffer
   /// \param b buffer pointer (must match attribute names)
   void registerVertexAttributes(const VertexBuffer *b);
@@ -86,13 +86,13 @@ public:
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 
-  friend std::ostream &operator<<(std::ostream &o, ShaderProgram shader) {
+  friend std::ostream &operator<<(std::ostream &o, const ShaderProgram& shader) {
     o << "SHADER (programId " << shader.programId << ")\n";
     o << "vertex attributes:\n";
-    for (auto a : shader.attrLocations)
+    for (const auto& a : shader.attrLocations)
       o << "\t" << a.first << "\t" << a.second << std::endl;
     o << "uniform list:\n";
-    for (auto a : shader.uniformLocations)
+    for (const auto& a : shader.uniformLocations)
       o << "\t" << a.first << "\t" << a.second << std::endl;
     o << std::endl;
     return o;

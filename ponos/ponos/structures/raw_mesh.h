@@ -84,11 +84,11 @@ public:
   void addFace(std::initializer_list<int> l);
   /// \param i element index
   /// \returns bbox of element (object space).
-  bbox3 elementBBox(size_t i) const;
+  [[nodiscard]] bbox3 elementBBox(size_t i) const;
   /// \param e element index
   /// \param v position index (inside element) [0..**elementSize**]
   /// \return position **v** from element **e**.
-  point3 positionElement(size_t e, size_t v) const;
+  [[nodiscard]] point3 positionElement(size_t e, size_t v) const;
   /// Builds a single array with interleaved information for vertex buffer
   /// (vertex | normal | texcoords | ... )
   void buildInterleavedData();

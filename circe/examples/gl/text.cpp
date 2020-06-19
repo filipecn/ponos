@@ -2,10 +2,10 @@
 #include <circe/circe.h>
 
 int main() {
-  circe::SceneApp<> app(800, 800, "", false);
+  circe::gl::SceneApp<> app(800, 800, "", false);
   app.addViewport2D(0, 0, 800, 800);
   std::string assets_path(ASSETS_PATH);
-  circe::TextRenderer textRenderer(assets_path + "/arial.ttf");
+  circe::gl::TextRenderer textRenderer(assets_path + "/arial.ttf");
   app.viewports[0].renderCallback = [&](circe::CameraInterface *camera) {
     textRenderer.setCamera(camera);
     textRenderer.at(ponos::point3f(1, 1, 1)) << "blas";
@@ -14,10 +14,10 @@ int main() {
         << textRenderer.withColor(circe::Color::Blue())
         << textRenderer.at(ponos::point3f(1, 0, 0)) << "test";
   };
-  circe::CartesianGrid grid(1);
+  circe::gl::CartesianGrid grid(1);
   app.scene.add(&grid);
-  int font_id = circe::FontManager::loadFromFile(assets_path + "/arial.ttf");
-  std::vector<circe::TextObject> list;
+  int font_id = circe::gl::FontManager::loadFromFile(assets_path + "/arial.ttf");
+  std::vector<circe::gl::TextObject> list;
   for (int i = 0; i < 100; i++) {
     list.emplace_back(font_id);
     list[i].setText(ponos::concat("t", i));

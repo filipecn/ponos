@@ -22,14 +22,14 @@ const char *fs = "#version 440 core\n"
                  "}";
 
 int main() {
-  circe::SceneApp<> app(WIDTH, HEIGHT, "Post Effects Example");
+  circe::gl::SceneApp<> app(WIDTH, HEIGHT, "Post Effects Example");
   app.init();
-  app.viewports[0].renderer->addEffect(new circe::GammaCorrection());
+  app.viewports[0].renderer->addEffect(new circe::gl::GammaCorrection());
   //  app.viewports[0].renderer->addEffect(new circe::FXAA());
   //  app.viewports[0].renderer->addEffect(new circe::PostEffect(
   //      new circe::Shader(circe_NO_VAO_VS, nullptr, fs)));
-  std::shared_ptr<circe::CartesianGrid> grid(
-      app.scene.add<circe::CartesianGrid>(new circe::CartesianGrid(5)));
+  std::shared_ptr<circe::gl::CartesianGrid> grid(
+      app.scene.add<circe::gl::CartesianGrid>(new circe::gl::CartesianGrid(5)));
   app.run();
   return 0;
 }

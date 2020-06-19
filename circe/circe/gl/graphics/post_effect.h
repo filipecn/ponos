@@ -42,6 +42,7 @@ public:
 
 protected:
   std::shared_ptr<ShaderProgram> shader;
+  ponos::RawMesh quad_;
 };
 
 /// Fast Approximate Anti-Aliasing (FXAA) is an anti-aliasing algorithm created

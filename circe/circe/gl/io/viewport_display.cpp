@@ -79,7 +79,7 @@ ponos::point3 ViewportDisplay::unProject(const CameraInterface &c,
 
 ponos::point3 ViewportDisplay::unProject() {
   return ponos::inverse(camera->getTransform()) *
-         ponos::point3(getMouseNPos().x, getMouseNPos().y, 0.f);
+      ponos::point3(getMouseNPos().x, getMouseNPos().y, 0.f);
 }
 
 } // namespace circe

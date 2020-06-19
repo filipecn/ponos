@@ -52,7 +52,7 @@ public:
   explicit PerspectiveProjection(float fov,
                                  bool left_handed = true,
                                  bool zero_to_one = true, bool flip_y = true)
-      : fov(fov), left_handed(left_handed) {}
+      : fov(fov), left_handed(left_handed), zero_to_one(zero_to_one), flip_y(flip_y) {}
   void update() override {
     if (left_handed)
       this->transform =
@@ -63,7 +63,7 @@ public:
                                                         this->znear,
                                                         this->zfar,
                                                         zero_to_one);
-      if(flip_y) {
+      if (flip_y) {
         auto m = this->transform.matrix();
         m.m[1][1] *= -1;
         this->transform = ponos::Transform(m);
