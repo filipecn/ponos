@@ -29,6 +29,29 @@
 
 namespace circe::gl {
 
+BufferInterface::BufferInterface(GLuint id) : bufferId(id) {}
+
+BufferInterface::BufferInterface(BufferDescriptor b, GLuint id)
+    : bufferDescriptor(std::move(b)), bufferId(id) {}
+
+BufferInterface::~BufferInterface() { glDeleteBuffers(1, &bufferId); }
+
+void BufferInterface::bind() const {
+  glBindBuffer(bufferDescriptor.type, bufferId);
+}
+
+void BufferInterface::registerAttribute(const std::string &name, GLint location) const {
+  if (bufferDescriptor.attributes.find(name) ==
+      bufferDescriptor.attributes.end())
+    return;
+  const BufferDescriptor::Attribute &va =
+      bufferDescriptor.attributes.find(name)->second;
+  glVertexAttribPointer(static_cast<GLuint>(location), va.size, va.type,
+                        GL_FALSE,
+                        bufferDescriptor.elementSize * sizeof(float),
+                        reinterpret_cast<const void *>(va.offset));
+}
+
 void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
   for (auto &attribute : bufferDescriptor.attributes) {
     GLint loc = s.locateAttribute(attribute.first);
@@ -49,12 +72,14 @@ void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
       glVertexAttribPointer(static_cast<GLuint>(loc + i), componentSize,
                             attribute.second.type, GL_FALSE,
                             bufferDescriptor.elementSize * sizeof(float),
-                            (void *)(attribute.second.offset +
-                                     i * componentSize * sizeof(float)));
+                            (void *) (attribute.second.offset +
+                                i * componentSize * sizeof(float)));
       CHECK_GL_ERRORS;
       glVertexAttribDivisor(static_cast<GLuint>(loc + i), d);
     }
   }
 }
+
+GLuint BufferInterface::id() const { return bufferId; }
 
 } // namespace circe

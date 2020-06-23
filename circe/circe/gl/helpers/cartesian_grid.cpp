@@ -77,8 +77,8 @@ void CartesianGrid::draw(const CameraInterface *camera, ponos::Transform t) {
   gridShader_->begin();
   gridShader_->setUniform(
       "mvp", ponos::transpose((camera->getProjectionTransform() *
-                               camera->getViewTransform() *
-                               camera->getModelTransform() * this->transform)
+          camera->getViewTransform() *
+          camera->getModelTransform() * this->transform)
                                   .matrix()));
   glDrawArrays(GL_LINES, 0, mesh.positions.size());
   CHECK_GL_ERRORS;
@@ -124,7 +124,7 @@ void CartesianGrid::updateBuffers() {
   }
   mesh.positionDescriptor.elementSize = 3;
   mesh.positionDescriptor.count = mesh.meshDescriptor.count * 2;
-  BufferDescriptor vd = create_vertex_buffer_descriptor(
+  BufferDescriptor vd = BufferDescriptor::forVertexBuffer(
       3, mesh.positionDescriptor.count, GL_LINES);
   vd.addAttribute(std::string("position"), 3, 0, GL_FLOAT);
   if (VAO_grid_)

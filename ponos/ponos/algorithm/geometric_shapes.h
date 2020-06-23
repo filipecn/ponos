@@ -63,7 +63,27 @@ RawMesh *create_quad_wireframe_mesh(const point3 &p1, const point3 &p2,
 
 class RawMeshes {
 public:
+  ///
+  /// \param radius
+  /// \param center
+  /// \param divisions
+  /// \return
+  static RawMeshSPtr circle(real_t radius = 1, const point2 &center = point2(), u32 divisions = 5);
+  ///
+  /// \param radius
+  /// \param center
+  /// \param divisions
+  /// \return
+  static RawMeshSPtr circuference(real_t radius = 1, const point2 &center = point2(), u32 divisions = 10);
+  ///
+  /// \param a
+  /// \param b
+  /// \return
   static RawMeshSPtr segment(const point2 &a, const point2 &b = point2());
+  ///
+  /// \param a
+  /// \param b
+  /// \return
   static RawMeshSPtr segment(const point3 &a, const point3 &b = point3());
   static RawMeshSPtr icosphere(const point2 &center = point2(),
                                real_t radius = 1.f, size_t divisions = 5,

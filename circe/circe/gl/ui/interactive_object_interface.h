@@ -5,9 +5,11 @@
 
 namespace circe::gl {
 
+/// An object that inherits from Interactive Object Interface carries a
+/// trackball field and handles user input.
 class InteractiveObjectInterface {
 public:
-  InteractiveObjectInterface() : /*id(-1),*/ selected(false), active(false) {}
+  InteractiveObjectInterface() : selected(false), active(false) {}
   virtual ~InteractiveObjectInterface() {}
 
   virtual void mouse(CameraInterface &camera, ponos::point2 p) {
@@ -29,7 +31,6 @@ public:
 
   virtual void updateTransform() = 0;
 
-  // int id;
   bool selected;
   bool active;
   TrackballInterface trackball;

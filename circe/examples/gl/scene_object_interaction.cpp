@@ -8,6 +8,9 @@ public:
   SceneObjectInteraction() : BaseApp(800, 800) {
     grid = std::make_unique<CartesianGrid>(5);
     this->app_->scene.add(grid.get());
+    circle_mesh = ponos::RawMeshes::circle();
+    mesh = std::make_unique<SceneMeshObject>(circle_mesh.get());
+    this->app_->scene.add(mesh.get());
   }
 
   void render(circe::CameraInterface *camera) override {
@@ -29,6 +32,8 @@ public:
 
   bool show_another_window = false;
   std::unique_ptr<CartesianGrid> grid;
+  ponos::RawMeshSPtr circle_mesh;
+  std::unique_ptr<SceneMeshObject> mesh;
 };
 
 int main() {

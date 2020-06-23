@@ -19,7 +19,8 @@ int main() {
       ponos::point3(0, 1, 0)));
   // ponos::RawMeshSPtr circleMesh(ponos::RawMeshes::icosphere());
   ponos::RawMeshSPtr segmentMesh(
-      ponos::RawMeshes::segment(ponos::point2(1, 0)));
+//      ponos::RawMeshes::segment(ponos::point2(1, 0)));
+      ponos::RawMeshes::circle());
   ponos::RawMeshSPtr cube(ponos::RawMeshes::cube());
   // circe::SceneMesh qm(*wquadMesh.get());
   circe::gl::SceneMesh qm(segmentMesh.get());
@@ -34,12 +35,12 @@ int main() {
   quads = std::make_shared<circe::gl::InstanceSet>(qm, quadShader, n / 2);
   {
     // create a buffer for particles positions + sizes
-    circe::gl::BufferDescriptor trans = circe::gl::create_array_stream_descriptor(16);
+    circe::gl::BufferDescriptor trans = circe::gl::BufferDescriptor::forArrayStream(16);
     trans.addAttribute("transform_matrix", 16, 0, trans.dataType);
     uint tid = quads->add(trans);
     // create a buffer for particles colors
     circe::gl::BufferDescriptor col =
-        circe::gl::create_array_stream_descriptor(4);  // r g b a
+        circe::gl::BufferDescriptor::forArrayStream(4);  // r g b a
     col.addAttribute("color", 4, 0, col.dataType); // 4 -> r g b a
     uint colid = quads->add(col);
     quads->resize(n);
@@ -56,7 +57,8 @@ int main() {
       c[3] = 0.4;
       auto m = quads->instanceF(tid, i);
       float t[16];
-      (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
+//      (ponos::scale(rng.randomFloat(), rng.randomFloat(), rng.randomFloat()) *
+      (ponos::scale(1, 1, 1) *
           ponos::translate(ponos::vec3(sampler.sample(
               ponos::bbox3(ponos::point3(-5, 0, 0), ponos::point3(5, 5, 5))))))
           .matrix()

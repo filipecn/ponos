@@ -35,10 +35,9 @@
 
 namespace circe::gl {
 
-///  \brief interface
 /// The Scene Object Interface represents an drawable object that can be
-/// intersected
-/// by a ray.
+/// intersected by a ray and drawn on the screen. It holds a transform that
+/// is applied before rendering.
 class SceneObject : public InteractiveObjectInterface {
 public:
   SceneObject() : visible(true) {}
@@ -84,13 +83,13 @@ public:
       const ponos::RawMesh *m,
       std::function<void(ShaderProgram *, const CameraInterface *,
                          ponos::Transform)>
-          f =
-              [](ShaderProgram *s, const CameraInterface *camera,
-                 ponos::Transform t) {
-                UNUSED_VARIABLE(s);
-                UNUSED_VARIABLE(camera);
-                UNUSED_VARIABLE(t);
-              },
+      f =
+      [](ShaderProgram *s, const CameraInterface *camera,
+         ponos::Transform t) {
+        UNUSED_VARIABLE(s);
+        UNUSED_VARIABLE(camera);
+        UNUSED_VARIABLE(t);
+      },
       ShaderProgramPtr s = nullptr) {
     this->visible = true;
     shader_ = s;
@@ -170,7 +169,7 @@ protected:
 typedef std::shared_ptr<SceneObject> SceneObjectSPtr;
 typedef std::shared_ptr<SceneMeshObject> SceneMeshObjectSPtr;
 
-template <typename... TArg>
+template<typename... TArg>
 SceneMeshObjectSPtr createSceneMeshObjectSPtr(TArg &&... Args) {
   return std::make_shared<SceneMeshObject>(std::forward<TArg>(Args)...);
 }

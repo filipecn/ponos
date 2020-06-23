@@ -125,8 +125,8 @@ RawMesh *create_icosphere_mesh(const point3 &center, float radius,
   if (generateUVs) {
     std::function<point2(float, float, float)> parametric =
         [](float x, float y, float z) -> point2 {
-      return point2(std::atan2(y, x), std::acos(z));
-    };
+          return point2(std::atan2(y, x), std::acos(z));
+        };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
           parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1],
@@ -288,7 +288,7 @@ RawMeshSPtr icosphere(const point2 &center, float radius, size_t divisions,
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 2;
   mesh->apply(scale(radius, radius, 0) *
-              translate(vec3(center.x, center.y, 0)));
+      translate(vec3(center.x, center.y, 0)));
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();
@@ -391,8 +391,8 @@ RawMeshSPtr icosphere(const point3 &center, float radius, size_t divisions,
   if (generateUVs) {
     std::function<point2(float, float, float)> parametric =
         [](float x, float y, float z) -> point2 {
-      return point2(std::atan2(y, x), std::acos(z));
-    };
+          return point2(std::atan2(y, x), std::acos(z));
+        };
     for (size_t i = 0; i < vertexCount; i++) {
       auto uv =
           parametric(mesh->positions[i * 3 + 0], mesh->positions[i * 3 + 1],
@@ -409,6 +409,59 @@ RawMeshSPtr icosphere(const point3 &center, float radius, size_t divisions,
   mesh->positionDescriptor.count = vertexCount;
   mesh->positionDescriptor.elementSize = 3;
   mesh->apply(scale(radius, radius, radius) * translate(vec3(center)));
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
+RawMeshSPtr RawMeshes::circle(real_t radius, const point2 &center, u32 divisions) {
+  // TODO: create TRIANGLE_FAN instead
+  RawMeshSPtr mesh = std::make_shared<RawMesh>();
+  mesh->addPosition({center.x, center.y});
+  real_t step = Constants::two_pi / divisions;
+  real_t angle = 0;
+  for (int i = 0; i < divisions; ++i, angle += step)
+    mesh->addPosition({center.x + radius * std::cos(angle), center.y + radius * std::sin(angle)});
+  for(int i = 2; i <= divisions; ++i)
+    mesh->addFace({0, i-1,i});
+  mesh->addFace({0, static_cast<i32>(divisions), 1});
+  // fix normal and uvs indices
+  for (auto &i : mesh->indices)
+    i.normalIndex = i.texcoordIndex = i.positionIndex;
+  size_t vertexCount = mesh->positions.size() / 2;
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::TRIANGLES;
+  mesh->meshDescriptor.count = divisions;
+  mesh->meshDescriptor.elementSize = 3;
+  mesh->positionDescriptor.count = vertexCount;
+  mesh->positionDescriptor.elementSize = 2;
+  mesh->computeBBox();
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
+RawMeshSPtr RawMeshes::circuference(real_t radius, const point2 &center, u32 divisions) {
+  // TODO: use LINE_LOOP instead
+  RawMeshSPtr mesh = std::make_shared<RawMesh>();
+  real_t step = Constants::two_pi / divisions;
+  real_t angle = 0;
+  for (int i = 0; i < divisions; ++i, angle += step)
+    mesh->addPosition({center.x + radius * std::cos(angle), center.y + radius * std::sin(angle)});
+  for(int i = 1; i < divisions; ++i)
+    mesh->addFace({i-1, i});
+  mesh->addFace({static_cast<int>(divisions) - 1, 0});
+  // fix normal and uvs indices
+  for (auto &i : mesh->indices)
+    i.normalIndex = i.texcoordIndex = i.positionIndex;
+  size_t vertexCount = mesh->positions.size() / 2;
+  // describe mesh
+  mesh->primitiveType = GeometricPrimitiveType::LINES;
+  mesh->meshDescriptor.count = divisions;
+  mesh->meshDescriptor.elementSize = 2;
+  mesh->positionDescriptor.count = vertexCount;
+  mesh->positionDescriptor.elementSize = 2;
   mesh->computeBBox();
   mesh->splitIndexData();
   mesh->buildInterleavedData();

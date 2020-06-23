@@ -34,23 +34,19 @@
 
 namespace circe::gl {
 
-/** \brief The scene stores the list of objects to be rendered.
- *
- * It is possible to define how these objects are arranged in memory by setting
- * a **StructureType**. The default organization is a flat array with no
- * acceleration schemes.
- */
-template <template <typename> class StructureType = ponos::Array> class Scene {
+/// Stores the list of **pointers** to objects that can be rendered, interacted
+/// and intersected.
+/// It is possible to define how these objects are arranged by setting
+/// a **StructureType**. The default organization is a flat array with no
+/// acceleration schemes.
+template<template<typename> class StructureType = ponos::Array> class Scene {
 public:
   Scene() {}
   virtual ~Scene() {}
 
-  /** \brief  add
-   * \param o pointer to the object
-   */
-  template <typename T = SceneObject> T *add(SceneObject *o) {
+  /// \param o pointer to the object
+  void add(SceneObject *o) {
     s.add(o);
-    return static_cast<T *>(o);
   }
 
   void render(CameraInterface *camera) {
