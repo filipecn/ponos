@@ -219,8 +219,8 @@ RawMesh *create_quad_wireframe_mesh(const point3 &p1, const point3 &p2,
   return mesh;
 }
 
-RawMeshSPtr icosphere(const point2 &center, float radius, size_t divisions,
-                      bool generateNormals) {
+RawMeshSPtr RawMeshes::icosphere(const point2 &center, float radius, size_t divisions,
+                                 bool generateNormals) {
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   // icosahedron
   float t = (1.0f + std::sqrt(5.0f)) / 2.0f;
@@ -295,8 +295,8 @@ RawMeshSPtr icosphere(const point2 &center, float radius, size_t divisions,
   return mesh;
 }
 
-RawMeshSPtr icosphere(const point3 &center, float radius, size_t divisions,
-                      bool generateNormals, bool generateUVs) {
+RawMeshSPtr RawMeshes::icosphere(const point3 &center, float radius, size_t divisions,
+                                 bool generateNormals, bool generateUVs) {
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   // icosahedron
   float t = (1.0f + std::sqrt(5.0f)) / 2.0f;
@@ -423,8 +423,8 @@ RawMeshSPtr RawMeshes::circle(real_t radius, const point2 &center, u32 divisions
   real_t angle = 0;
   for (int i = 0; i < divisions; ++i, angle += step)
     mesh->addPosition({center.x + radius * std::cos(angle), center.y + radius * std::sin(angle)});
-  for(int i = 2; i <= divisions; ++i)
-    mesh->addFace({0, i-1,i});
+  for (int i = 2; i <= divisions; ++i)
+    mesh->addFace({0, i - 1, i});
   mesh->addFace({0, static_cast<i32>(divisions), 1});
   // fix normal and uvs indices
   for (auto &i : mesh->indices)
@@ -449,8 +449,8 @@ RawMeshSPtr RawMeshes::circuference(real_t radius, const point2 &center, u32 div
   real_t angle = 0;
   for (int i = 0; i < divisions; ++i, angle += step)
     mesh->addPosition({center.x + radius * std::cos(angle), center.y + radius * std::sin(angle)});
-  for(int i = 1; i < divisions; ++i)
-    mesh->addFace({i-1, i});
+  for (int i = 1; i < divisions; ++i)
+    mesh->addFace({i - 1, i});
   mesh->addFace({static_cast<int>(divisions) - 1, 0});
   // fix normal and uvs indices
   for (auto &i : mesh->indices)

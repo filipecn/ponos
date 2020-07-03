@@ -20,7 +20,8 @@ int main() {
   // ponos::RawMeshSPtr circleMesh(ponos::RawMeshes::icosphere());
   ponos::RawMeshSPtr segmentMesh(
 //      ponos::RawMeshes::segment(ponos::point2(1, 0)));
-      ponos::RawMeshes::circle());
+//      ponos::RawMeshes::circle());
+      ponos::RawMeshes::icosphere(ponos::point3(), 1, 5, true, false));
   ponos::RawMeshSPtr cube(ponos::RawMeshes::cube());
   // circe::SceneMesh qm(*wquadMesh.get());
   circe::gl::SceneMesh qm(segmentMesh.get());

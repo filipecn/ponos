@@ -85,8 +85,8 @@ public:
   /// \param b
   /// \return
   static RawMeshSPtr segment(const point3 &a, const point3 &b = point3());
-  static RawMeshSPtr icosphere(const point2 &center = point2(),
-                               real_t radius = 1.f, size_t divisions = 5,
+  static RawMeshSPtr icosphere(const point2 &center,
+                               real_t radius, size_t divisions,
                                bool generateNormals = false);
 
   static RawMeshSPtr icosphere(const point3 &center, real_t radius,
