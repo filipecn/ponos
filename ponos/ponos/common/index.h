@@ -253,11 +253,13 @@ template<typename T> struct Index3 {
   static_assert(std::is_same<T, i8>::value || std::is_same<T, i16>::value ||
                     std::is_same<T, i32>::value || std::is_same<T, i64>::value,
                 "Index3 must hold an integer type!");
+  Index3() : i(0), j(0), k(0) {}
+  explicit Index3(T v) : i(v), j(v), k(v) {}
   ///\brief Construct a new Index2 object
   ///\param i **[in]** i coordinate value
   ///\param j **[in]** j coordinate value
   ///\param k **[in]** k coordinate value
-  explicit Index3(T i = T(0), T j = T(0), T k = T(0)) : i(i), j(j), k(k) {}
+  explicit Index3(T i, T j, T k) : i(i), j(j), k(k) {}
   T operator[](int _i) const { return (&i)[_i]; }
   T &operator[](int _i) { return (&i)[_i]; }
   ///\brief are equal? operator
@@ -273,9 +275,9 @@ template<typename T> struct Index3 {
     return i != other.i || j != other.j || k != other.k;
   }
 
-  T i;
-  T j;
-  T k;
+  T i{0};
+  T j{0};
+  T k{0};
 };
 // ***********************************************************************
 //                             BOOLEAN
