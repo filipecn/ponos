@@ -37,5 +37,15 @@ TEST_CASE("Index-sanity", "[common][index][access]") {
       cur++;
     }
     REQUIRE(cur == 10 * 10 * 10);
+    Index3Range<i32> range(index3(-5, -5, -5), index3(5, 5, 5));
+    REQUIRE(range.size().total() == 10 * 10 * 10);
+    cur = 0;
+    for (auto index : range) {
+      REQUIRE((cur % 100) % 10 - 5 == index.i);
+      REQUIRE((cur % 100) / 10 - 5 == index.j);
+      REQUIRE(cur / 100 - 5 == index.k);
+      cur++;
+    }
+    REQUIRE(cur == 10 * 10 * 10);
   }
 }
