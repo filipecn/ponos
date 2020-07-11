@@ -60,6 +60,14 @@ TEST_CASE("FileSystem", "[common]") {
     REQUIRE(FileSystem::appendToFile("append_test", "123"));
     REQUIRE(FileSystem::readFile("append_test") == "append_content123");
   }
+  SECTION("ls") {
+    REQUIRE(FileSystem::mkdir("ls_folder/folder"));
+    REQUIRE(FileSystem::writeFile("ls_folder/file1", "a"));
+    REQUIRE(FileSystem::writeFile("ls_folder/file2", "b"));
+    REQUIRE(FileSystem::writeFile("ls_folder/file3", "c"));
+    auto ls = FileSystem::ls("ls_folder");
+    REQUIRE(ls.size() == 6);
+  }
 }
 
 TEST_CASE("Index", "[common][index]") {
