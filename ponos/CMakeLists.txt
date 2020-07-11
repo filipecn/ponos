@@ -43,10 +43,12 @@ set(PONOS_HEADERS
         ponos/common/defs.h
         ponos/common/index.h
         ponos/common/file.h
-        ponos/storage/memory.h
+		ponos/common/file_system.h
+		ponos/storage/memory.h
         ponos/storage/array.h
         ponos/common/parallel.h
         ponos/common/random.h
+		ponos/common/str.h
         ponos/common/timer.h
         ponos/geometry/bbox.h
         ponos/geometry/ellipse.h

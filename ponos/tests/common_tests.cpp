@@ -4,7 +4,65 @@
 
 using namespace ponos;
 
-TEST_CASE("Index-sanity", "[common][index][access]") {
+TEST_CASE("Str", "[common]") {
+  SECTION("split") {
+    std::string a = "1 22 3 44 5";
+    auto s = Str::split(a);
+    REQUIRE(s.size() == 5);
+    REQUIRE(s[0] == "1");
+    REQUIRE(s[1] == "22");
+    REQUIRE(s[2] == "3");
+    REQUIRE(s[3] == "44");
+    REQUIRE(s[4] == "5");
+  }
+  SECTION("split with delimiter") {
+    std::string a = "1 2, 3,4, 5";
+    auto s = Str::split(a, ",");
+    REQUIRE(s.size() == 4);
+    REQUIRE(s[0] == "1 2");
+    REQUIRE(s[1] == " 3");
+    REQUIRE(s[2] == "4");
+    REQUIRE(s[3] == " 5");
+  }
+  SECTION("concat") {
+    std::string a = Str::concat("a", " ", 2, "b");
+    REQUIRE(a == "a 2b");
+  }
+}
+
+TEST_CASE("FileSystem", "[common]") {
+  SECTION("file extension") {
+    REQUIRE(FileSystem::fileExtension("path/to/file.ext4") == "ext4");
+  }
+ SECTION("read invalid file") {
+   REQUIRE(!FileSystem::fileExists("invalid__file"));
+   REQUIRE(FileSystem::readFile("invalid___file").empty());
+    REQUIRE(FileSystem::readBinaryFile("invalid___file").empty());
+ }
+ SECTION("isFile and isDirectory") {
+   REQUIRE(FileSystem::writeFile("filesystem_test_file.txt","test") == 4);
+   REQUIRE(FileSystem::isFile("filesystem_test_file.txt"));
+   REQUIRE(FileSystem::mkdir("path/to/dir"));
+   REQUIRE(FileSystem::isDirectory("path/to/dir"));
+ }
+ SECTION("copy file") {
+    REQUIRE(FileSystem::writeFile("source", "source_content") > 0);
+    REQUIRE(FileSystem::copyFile("source", "destination"));
+    REQUIRE(FileSystem::fileExists("destination"));
+    REQUIRE(FileSystem::readFile("destination") == "source_content");
+  }
+  SECTION("append") {
+    REQUIRE(FileSystem::writeFile("append_test", "") == 0);
+    REQUIRE(FileSystem::fileExists("append_test"));
+    REQUIRE(FileSystem::readFile("append_test").empty());
+    REQUIRE(FileSystem::appendToFile("append_test", "append_content"));
+    REQUIRE(FileSystem::readFile("append_test") == "append_content");
+    REQUIRE(FileSystem::appendToFile("append_test", "123"));
+    REQUIRE(FileSystem::readFile("append_test") == "append_content123");
+  }
+}
+
+TEST_CASE("Index", "[common][index]") {
   { // Index2
     index2 a;
     index2 b;
