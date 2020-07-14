@@ -93,18 +93,18 @@ TEST_CASE("FileSystem", "[common]") {
   SECTION("file extension") {
     REQUIRE(FileSystem::fileExtension("path/to/file.ext4") == "ext4");
   }
- SECTION("read invalid file") {
-   REQUIRE(!FileSystem::fileExists("invalid__file"));
-   REQUIRE(FileSystem::readFile("invalid___file").empty());
+  SECTION("read invalid file") {
+    REQUIRE(!FileSystem::fileExists("invalid__file"));
+    REQUIRE(FileSystem::readFile("invalid___file").empty());
     REQUIRE(FileSystem::readBinaryFile("invalid___file").empty());
- }
- SECTION("isFile and isDirectory") {
-   REQUIRE(FileSystem::writeFile("filesystem_test_file.txt","test") == 4);
-   REQUIRE(FileSystem::isFile("filesystem_test_file.txt"));
-   REQUIRE(FileSystem::mkdir("path/to/dir"));
-   REQUIRE(FileSystem::isDirectory("path/to/dir"));
- }
- SECTION("copy file") {
+  }
+  SECTION("isFile and isDirectory") {
+    REQUIRE(FileSystem::writeFile("filesystem_test_file.txt","test") == 4);
+    REQUIRE(FileSystem::isFile("filesystem_test_file.txt"));
+    REQUIRE(FileSystem::mkdir("path/to/dir"));
+    REQUIRE(FileSystem::isDirectory("path/to/dir"));
+  }
+  SECTION("copy file") {
     REQUIRE(FileSystem::writeFile("source", "source_content") > 0);
     REQUIRE(FileSystem::copyFile("source", "destination"));
     REQUIRE(FileSystem::fileExists("destination"));
@@ -130,14 +130,23 @@ TEST_CASE("FileSystem", "[common]") {
 }
 
 TEST_CASE("Index", "[common][index]") {
-  { // Index2
+  SECTION("Index2 arithmetic") {
+    index2 ij(1,-3);
+    REQUIRE(ij + index2(-7, 10) == index2(-6, 7));
+    REQUIRE(ij - index2(-7, 10) == index2(8, -13));
+    REQUIRE(ij + size2(7, 10) == index2(8, 7));
+    REQUIRE(ij - size2(7, 10) == index2(-6, -13));
+    REQUIRE(size2(7, 10) + ij == index2(8, 7));
+    REQUIRE(size2(7, 10) - ij == index2(6, 13));
+  }
+  SECTION("Index2") {
     index2 a;
     index2 b;
     REQUIRE(a == b);
     b.j = 1;
     REQUIRE(a != b);
   }
-  { // Index2Range
+  SECTION("Index2Range") {
     int cur = 0;
     for (auto index : Index2Range<i32>(10, 10)) {
       REQUIRE(cur % 10 == index.i);
@@ -146,14 +155,23 @@ TEST_CASE("Index", "[common][index]") {
     }
     REQUIRE(cur == 10 * 10);
   }
-  { // Index3
+  SECTION("Index3 arithmetic") {
+    index3 ij(1,-3, 0);
+    REQUIRE(ij + index3(-7, 10, 1) == index3(-6, 7, 1));
+    REQUIRE(ij - index3(-7, 10, 1) == index3(8, -13, -1));
+    REQUIRE(ij + size3(7, 10, 3) == index3(8, 7, 3));
+    REQUIRE(ij - size3(7, 10, 3) == index3(-6, -13, -3));
+    REQUIRE(size3(7, 10, 5) + ij == index3(8, 7, 5));
+    REQUIRE(size3(7, 10, 5) - ij == index3(6, 13, 5));
+  }
+  SECTION("Index3") {
     index3 a;
     index3 b;
     REQUIRE(a == b);
     b.j = 1;
     REQUIRE(a != b);
   }
-  { // Index3Range
+  SECTION("Index3Range") {
     int cur = 0;
     for (auto index : Index3Range<i32>(10, 10, 10)) {
       REQUIRE((cur % 100) % 10 == index.i);

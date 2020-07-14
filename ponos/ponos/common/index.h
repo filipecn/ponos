@@ -133,6 +133,22 @@ template<typename T>
 Index2<T> operator-(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i - b.i, a.j - b.j);
 }
+template<typename T, typename U>
+Index2<T> operator+(const Index2<T>& a, const Size2<U>& b) {
+  return Index2<T>(a.i + b.width, a.j + b.height);
+}
+template<typename U, typename T>
+Index2<T> operator+(const Size2<U>& b, const Index2<T>& a) {
+  return Index2<T>(a.i + b.width, a.j + b.height);
+}
+template<typename T, typename U>
+Index2<T> operator-(const Index2<T>& a, const Size2<U>& b) {
+  return Index2<T>(a.i - b.width, a.j - b.height);
+}
+template<typename U, typename T>
+Index2<T> operator-(const Size2<U>& b, const Index2<T>& a) {
+  return Index2<T>(b.width - a.i, b.height - a.j);
+}
 /// \brief Computes the manhattan distance between two indices
 /// \tparam T
 /// \param a **[in]**
@@ -279,6 +295,33 @@ template<typename T> struct Index3 {
   T j{0};
   T k{0};
 };
+// ***********************************************************************
+//                             ARITHMETIC
+// ***********************************************************************
+template<typename T>
+Index3<T> operator+(const Index3<T> &a, const Index3<T> &b) {
+  return Index3<T>(a.i + b.i, a.j + b.j, a.k + b.k);
+}
+template<typename T>
+Index3<T> operator-(const Index3<T> &a, const Index3<T> &b) {
+  return Index3<T>(a.i - b.i, a.j - b.j, a.k - b.k);
+}
+template<typename T, typename U>
+Index3<T> operator+(const Index3<T>& a, const Size3<U>& b) {
+  return Index3<T>(a.i + b.width, a.j + b.height, a.k + b.depth);
+}
+template<typename U, typename T>
+Index3<T> operator+(const Size3<U>& b, const Index3<T>& a) {
+  return Index3<T>(a.i + b.width, a.j + b.height, a.k + b.depth);
+}
+template<typename T, typename U>
+Index3<T> operator-(const Index3<T>& a, const Size3<U>& b) {
+  return Index3<T>(a.i - b.width, a.j - b.height, a.k - b.depth);
+}
+template<typename U, typename T>
+Index3<T> operator-(const Size3<U>& b, const Index3<T>& a) {
+  return Index3<T>(b.width - a.i, b.height - a.j, b.depth - a.k);
+}
 // ***********************************************************************
 //                             BOOLEAN
 // ***********************************************************************
