@@ -33,6 +33,7 @@
 #include <ponos/blas/staggered_grid.h>
 #include <ponos/blas/symmetric_matrix.h>
 #include <ponos/blas/vector.h>
+#include <ponos/common/arg_parser.h>
 #include <ponos/common/defs.h>
 #include <ponos/common/file.h>
 #include <ponos/common/file_system.h>
