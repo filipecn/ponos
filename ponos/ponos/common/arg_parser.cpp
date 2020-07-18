@@ -91,7 +91,9 @@ void ArgParser::printHelp() const {
 
 bool ArgParser::check(const std::string &name) const {
   const auto& it = m_.find(name);
-  return it != m_.end() && arguments_[it->second].given;
+  if(it == m_.end())
+    return false;
+  return arguments_[it->second].given;
 }
 
 }

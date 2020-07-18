@@ -37,6 +37,18 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.get<int>("-fps", 0) == 200);
     REQUIRE(parser.check("-v"));
   }
+  SECTION("simple 3") {
+    char * argv[5] = {"bin", "-f", "100", "-fps", "200"};
+    ArgParser parser;
+    parser.addArgument("-f");
+    parser.addArgument("-fps");
+    parser.addArgument("-v");
+    parser.parse(5, argv);
+    REQUIRE(parser.get<int>("-f", 0) == 100);
+    REQUIRE(parser.get<int>("-fps", 0) == 200);
+    REQUIRE(!parser.check("-v"));
+
+  }
   SECTION("required") {
     char * argv[3] = {"bin", "int_argument", "3"};
     ArgParser parser;
