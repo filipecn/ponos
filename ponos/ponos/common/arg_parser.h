@@ -46,7 +46,7 @@ public:
   ///
   /// \param argc
   /// \param argv
-  bool parse(int argc, char**argv);
+  bool parse(int argc, char**argv, bool verbose_parsing = false);
   ///
   /// \param name
   /// \param description

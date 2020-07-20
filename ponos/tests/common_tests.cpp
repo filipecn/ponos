@@ -15,12 +15,12 @@ TEST_CASE("ArgParser") {
     REQUIRE(!parser.check("arg2"));
   }
   SECTION("simple 2") {
-    char * argv[6] = {"bin", "-f", "100", "-fps", "200", "-v"};
+    char * argv[6] = {"bin", "-v", "-f", "100", "-fps", "200"};
     ArgParser parser;
     parser.addArgument("-f");
     parser.addArgument("-fps");
     parser.addArgument("-v");
-    parser.parse(6, argv);
+    parser.parse(6, argv, true);
     REQUIRE(parser.get<int>("-f", 0) == 100);
     REQUIRE(parser.get<int>("-fps", 0) == 200);
     REQUIRE(parser.check("-v"));
@@ -46,6 +46,7 @@ TEST_CASE("ArgParser") {
     parser.parse(5, argv);
     REQUIRE(parser.get<int>("-f", 0) == 100);
     REQUIRE(parser.get<int>("-fps", 0) == 200);
+    REQUIRE(!parser.check("-v"));
     REQUIRE(!parser.check("-v"));
 
   }

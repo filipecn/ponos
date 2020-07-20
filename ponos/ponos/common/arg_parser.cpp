@@ -36,11 +36,22 @@ namespace ponos {
 ArgParser::ArgParser(std::string bin, std::string description)
     : bin_{std::move(bin)}, description_{std::move(description)} {}
 
-bool ArgParser::parse(int argc, char **argv) {
+bool ArgParser::parse(int argc, char **argv, bool verbose_parsing) {
+  if(verbose_parsing) {
+    std::cout << "parsing arguments:\n\t";
+    for(int i = 0; i < argc; ++i)
+      std::cout << "[" << argv[i] << "]";
+    std::cout << std::endl << "\t\tfound: ";
+  }
   // build map of argument names
   for(u64 i = 0; i < arguments_.size(); ++i)
-    for(const auto& n : arguments_[i].names)
+    for(const auto& n : arguments_[i].names) {
       m_[n] = i;
+      if(verbose_parsing)
+        std::cout << "[" << n << ']';
+    }
+  if(verbose_parsing)
+    std::cout << std::endl;
   int current_argument = -1;
   // nameless arguments follow the arguments order
   u64 current_unknown = 0;
