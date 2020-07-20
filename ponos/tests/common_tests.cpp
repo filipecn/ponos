@@ -10,7 +10,7 @@ TEST_CASE("ArgParser") {
     ArgParser parser("test_bin", "test bin description");
     parser.addArgument("int_argument", "int argument description");
     parser.addArgument("arg2");
-    REQUIRE(parser.parse(3, argv));
+    REQUIRE(parser.parse(3, argv, true));
     REQUIRE(parser.get<int>("int_argument", 0) == 3);
     REQUIRE(!parser.check("arg2"));
   }

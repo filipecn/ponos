@@ -41,17 +41,12 @@ bool ArgParser::parse(int argc, char **argv, bool verbose_parsing) {
     std::cout << "parsing arguments:\n\t";
     for(int i = 0; i < argc; ++i)
       std::cout << "[" << argv[i] << "]";
-    std::cout << std::endl << "\t\tfound: ";
+    std::cout << std::endl;
   }
   // build map of argument names
   for(u64 i = 0; i < arguments_.size(); ++i)
-    for(const auto& n : arguments_[i].names) {
+    for(const auto& n : arguments_[i].names)
       m_[n] = i;
-      if(verbose_parsing)
-        std::cout << "[" << n << ']';
-    }
-  if(verbose_parsing)
-    std::cout << std::endl;
   int current_argument = -1;
   // nameless arguments follow the arguments order
   u64 current_unknown = 0;
@@ -70,6 +65,16 @@ bool ArgParser::parse(int argc, char **argv, bool verbose_parsing) {
       arguments_[current_unknown].given = true;
     }
   }
+  if(verbose_parsing) {
+    std::cout << "the following arguments were given:\n";
+    for(const auto& a: arguments_)
+      if(a.given) {
+        std::cout << "\t[" << a.names[0] << "]";
+        if(!a.values.empty())
+          std::cout << " = " << a.values[0];
+        std::cout << std::endl;
+      }
+  }
   // check if all required arguments were given
   for(const auto& a:  arguments_)
     if(a.required && !a.given)
@@ -81,6 +86,7 @@ void ArgParser::addArgument(const std::string &name, const std::string &descript
   Argument arg{};
   arg.description = description;
   arg.required = is_required;
+  arg.given = false;
   arg.names = {name};
   arguments_.emplace_back(arg);
 }
