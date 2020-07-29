@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <algorithm>
 
 #ifdef _WIN32
 #include <fstream>
