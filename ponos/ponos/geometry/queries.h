@@ -15,6 +15,11 @@
 
 namespace ponos {
 
+class GeometricQueries {
+public:
+  static point3 closestPoint(const bbox3 & box, const point3 & p);
+};
+
 /** \brief  intersection test
  * \param a **[in]**
  * \param b **[in]**

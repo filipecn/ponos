@@ -6,6 +6,11 @@
 
 namespace ponos {
 
+point3 GeometricQueries::closestPoint(const bbox3 & box, const point3 & p) {
+
+  return ponos::point3();
+}
+
 bool bbox_bbox_intersection(const bbox2 &a, const bbox2 &b) {
   for (int i = 0; i < 2; i++)
     if (!((a.lower[i] <= b.lower[i] && a.upper[i] >= b.lower[i]) ||

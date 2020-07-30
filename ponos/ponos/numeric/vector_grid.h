@@ -113,7 +113,7 @@ public:
   }
   /// \param wp **[in]**
   /// \return Vector2<T>
-  Vector2<T> operator()(const point2 &wp) { return {u_(wp), v_(wp)}; }
+  Vector2<T> operator()(const point2 &wp) { return std::move(Vector2<T>(u_(wp), v_(wp))); }
 
 private:
   VectorGrid2<T> &grid_;
