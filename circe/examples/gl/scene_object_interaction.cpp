@@ -26,7 +26,26 @@ public:
     ss << "MVP Matrix\n";
     ss << camera->getTransform().matrix() << std::endl;
     ss << GraphicsDisplay::instance().getMousePos() << std::endl;
-    ImGui::Text(ss.str().c_str());
+//    ImGui::Text(ss.str().c_str());
+    // open Dialog Simple
+    if (ImGui::Button("Open File Dialog"))
+      igfd::ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", 0, ".");
+
+    // display
+    if (igfd::ImGuiFileDialog::Instance()->FileDialog("ChooseFileDlgKey"))
+    {
+      // action if OK
+      if (igfd::ImGuiFileDialog::Instance()->IsOk == true)
+      {
+        std::string filePathName = igfd::ImGuiFileDialog::Instance()->GetFilePathName();
+        std::string filePath = igfd::ImGuiFileDialog::Instance()->GetCurrentPath();
+        // action
+        std::cerr << filePath << std::endl;
+      }
+      // close
+      igfd::ImGuiFileDialog::Instance()->CloseDialog("ChooseFileDlgKey");
+    }
+
     ImGui::End();
   }
 
