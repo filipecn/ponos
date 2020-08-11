@@ -38,11 +38,18 @@ namespace circe::gl {
 /// rendering.
 class InstanceSet : public SceneObject {
 public:
-  /// \param rm base mesh
-  /// \param s shader
+  InstanceSet();
+  /// \param rm base instance mesh
+  /// \param s instance shader
   /// \param n **[optional | def = 0]** number of instances
-  explicit InstanceSet(SceneMesh &rm, ShaderProgram s, size_t n = 0);
+  explicit InstanceSet(SceneMesh *rm, const ShaderProgram &s, size_t n = 0);
   ~InstanceSet() override;
+  /// \param mesh base mesh for all instances
+  inline void setInstanceMesh(SceneMesh *mesh) { base_mesh_ = mesh; }
+  /// \param shader shader applied to each instance object
+  inline void setInstanceShader(const ShaderProgram &shader) { shader_ = shader; }
+  /// \return total number of instances
+  inline u64 count() const { return count_; }
   /// \param d buffer descriptor
   /// \return index of the new buffer
   uint add(BufferDescriptor d);
@@ -63,12 +70,10 @@ public:
 
 private:
   ShaderProgram shader_;                   ///< instance shader program
-  SceneMesh &baseMesh_;                    ///< base mesh
-  VertexBuffer bv_;                        ///< base vertex buffer
-  IndexBuffer bi_;                         ///< base index buffer
-  uint count_;                             ///< number of instances
-  std::vector<uint> buffersIndices_;       ///< maps buffers -> data indices
-  std::vector<bool> dataChanged_;          ///< data of a buffer must be updated
+  SceneMesh *base_mesh_{nullptr};          ///< base mesh
+  uint count_{0};                          ///< number of instances
+  std::vector<uint> buffers_indices_;      ///< maps buffers -> data indices
+  std::vector<bool> data_changed_;         ///< data of a buffer must be updated
   std::vector<std::vector<uint>> dataU_;   ///< unsigned int data
   std::vector<std::vector<float>> dataF_;  ///< float data
   std::vector<std::vector<uchar>> dataC_;  ///< unsigned byte data
