@@ -6,16 +6,16 @@ using namespace ponos;
 
 TEST_CASE("ArgParser") {
   SECTION("simple") {
-    char * argv[3] = {"bin", "int_argument", "3"};
+    char *argv[3] = {"bin", "int_argument", "3"};
     ArgParser parser("test_bin", "test bin description");
     parser.addArgument("int_argument", "int argument description");
     parser.addArgument("arg2");
     REQUIRE(parser.parse(3, argv, true));
     REQUIRE(parser.get<int>("int_argument", 0) == 3);
     REQUIRE(!parser.check("arg2"));
-  }
+  }//
   SECTION("simple 2") {
-    char * argv[6] = {"bin", "-v", "-f", "100", "-fps", "200"};
+    char *argv[6] = {"bin", "-v", "-f", "100", "-fps", "200"};
     ArgParser parser;
     parser.addArgument("-f");
     parser.addArgument("-fps");
@@ -25,7 +25,7 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.get<int>("-fps", 0) == 200);
     REQUIRE(parser.check("-v"));
 
-  }
+  }//
   SECTION("simple 2") {
     char *argv[4] = {"bin", "100", "200", "-v"};
     ArgParser parser;
@@ -36,9 +36,9 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.get<int>("-f", 0) == 100);
     REQUIRE(parser.get<int>("-fps", 0) == 200);
     REQUIRE(parser.check("-v"));
-  }
+  }//
   SECTION("simple 3") {
-    char * argv[5] = {"bin", "-f", "100", "-fps", "200"};
+    char *argv[5] = {"bin", "-f", "100", "-fps", "200"};
     ArgParser parser;
     parser.addArgument("-f");
     parser.addArgument("-fps");
@@ -49,17 +49,17 @@ TEST_CASE("ArgParser") {
     REQUIRE(!parser.check("-v"));
     REQUIRE(!parser.check("-v"));
 
-  }
+  }//
   SECTION("required") {
-    char * argv[3] = {"bin", "int_argument", "3"};
+    char *argv[3] = {"bin", "int_argument", "3"};
     ArgParser parser;
-    parser.addArgument("req","", true);
+    parser.addArgument("req", "", true);
     parser.addArgument("int_argument");
     REQUIRE(!parser.parse(3, argv));
 
-  }
+  }//
   SECTION("positional arguments") {
-    char*argv[5] = {"bin", "4", "arg", "1", "2"};
+    char *argv[5] = {"bin", "4", "arg", "1", "2"};
     ArgParser parser;
     parser.addArgument("a0");
     parser.addArgument("a1");
@@ -74,9 +74,9 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.check("a1"));
     REQUIRE(parser.check("a2"));
     REQUIRE(parser.check("a3"));
-  }
+  }//
   SECTION("positional arguments mixed") {
-    char*argv[5] = {"bin", "4", "a1", "1", "2"};
+    char *argv[5] = {"bin", "4", "a1", "1", "2"};
     ArgParser parser;
     parser.addArgument("a0");
     parser.addArgument("a1");
@@ -88,7 +88,7 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.check("a0"));
     REQUIRE(parser.check("a1"));
     REQUIRE(parser.check("a2"));
-  }
+  }//
   SECTION("print help") {
     ArgParser parser("test bin", "test bin description.");
     parser.addArgument("a0", "a0 description", false);
@@ -96,7 +96,7 @@ TEST_CASE("ArgParser") {
     parser.addArgument("a2", "a2 description", true);
     parser.addArgument("a3", "a3 description", true);
     parser.printHelp();
-  }
+  }//
 }
 
 TEST_CASE("Str", "[common]") {
@@ -109,7 +109,7 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(s[2] == "3");
     REQUIRE(s[3] == "44");
     REQUIRE(s[4] == "5");
-  }
+  }//
   SECTION("split with delimiter") {
     std::string a = "1 2, 3,4, 5";
     auto s = Str::split(a, ",");
@@ -118,34 +118,83 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(s[1] == " 3");
     REQUIRE(s[2] == "4");
     REQUIRE(s[3] == " 5");
-  }
+  }//
   SECTION("concat") {
     std::string a = Str::concat("a", " ", 2, "b");
     REQUIRE(a == "a 2b");
-  }
+  }//
+  SECTION("regex match") {
+    REQUIRE(Str::match_r("subsequence123", "\\b(sub)([^ ]*)"));
+    REQUIRE(!Str::match_r("susequence123", "\\b(sub)([^ ]*)"));
+    REQUIRE(Str::match_r("sub-sequence123", "\\b(sub)([^ ]*)"));
+  }//
+  SECTION("regex contains") {
+    REQUIRE(Str::contains_r("subsequence123", "\\b(sub)"));
+    REQUIRE(!Str::contains_r("subsequence123", "\\b(qen)"));
+  }//
+  SECTION("regex search") {
+    std::string s("this subject has a submarine as a subsequence");
+    auto result = Str::search_r(s, "\\b(sub)([^ ]*)");
+    REQUIRE(result.size() == 3);
+    REQUIRE(result[0] == "subject");
+    REQUIRE(result[1] == "sub");
+    REQUIRE(result[2] == "ject");
+    int index =0;
+    std::string expected[3] = {"subject", "submarine", "subsequence"};
+    Str::search_r(s, "\\b(sub)([^ ]*)", [&](const std::smatch &m) {
+        REQUIRE(m[0] == expected[index++]);
+    });
+  }//
+  SECTION("regex replace") {
+    std::string s("there is a subsequence in the string");
+    REQUIRE(Str::replace_r(s, "\\b(sub)([^ ]*)", "sub-$2") == "there is a sub-sequence in the string");
+    REQUIRE(Str::replace_r(s, "\\b(sub)([^ ]*)", "$2") == "there is a sequence in the string");
+  }//
 }
 
 TEST_CASE("FileSystem", "[common]") {
+  SECTION("basename") {
+    REQUIRE(FileSystem::basename("/usr/local/file.ext") == "file.ext");
+    REQUIRE(FileSystem::basename("/usr/local/file.ext", ".ext") == "file");
+    REQUIRE(FileSystem::basename("file.ext", ".ext") == "file");
+    REQUIRE(FileSystem::basename("/usr/file.ex", ".ext") == "file.ex");
+    REQUIRE(FileSystem::basename("/usr/") == "");
+    REQUIRE(FileSystem::basename("/usr/", ".ext") == "");
+  }//
+  SECTION("basenames") {
+    std::vector<std::string> paths = {
+        "/usr/local/file.ext",
+        "file.ext",
+        "/usr/file.ex",
+        "/usr/.ext",
+        "/usr/"};
+    std::vector<std::string> expected = {
+        "file", "file", "file.ex", "", ""
+    };
+    auto basenames = FileSystem::basename(paths, ".ext");
+    for (u64 i = 0; i < basenames.size(); ++i)
+      REQUIRE(basenames[i] == expected[i]);
+  }//
   SECTION("file extension") {
     REQUIRE(FileSystem::fileExtension("path/to/file.ext4") == "ext4");
-  }
+  }//
   SECTION("read invalid file") {
     REQUIRE(!FileSystem::fileExists("invalid__file"));
     REQUIRE(FileSystem::readFile("invalid___file").empty());
     REQUIRE(FileSystem::readBinaryFile("invalid___file").empty());
-  }
+  }//
   SECTION("isFile and isDirectory") {
-    REQUIRE(FileSystem::writeFile("filesystem_test_file.txt","test") == 4);
+    REQUIRE(FileSystem::writeFile("filesystem_test_file.txt", "test") == 4);
     REQUIRE(FileSystem::isFile("filesystem_test_file.txt"));
     REQUIRE(FileSystem::mkdir("path/to/dir"));
     REQUIRE(FileSystem::isDirectory("path/to/dir"));
-  }
+  }//
   SECTION("copy file") {
     REQUIRE(FileSystem::writeFile("source", "source_content") > 0);
     REQUIRE(FileSystem::copyFile("source", "destination"));
     REQUIRE(FileSystem::fileExists("destination"));
     REQUIRE(FileSystem::readFile("destination") == "source_content");
-  }
+  }//
   SECTION("append") {
     REQUIRE(FileSystem::writeFile("append_test", "") == 0);
     REQUIRE(FileSystem::fileExists("append_test"));
@@ -154,7 +203,7 @@ TEST_CASE("FileSystem", "[common]") {
     REQUIRE(FileSystem::readFile("append_test") == "append_content");
     REQUIRE(FileSystem::appendToFile("append_test", "123"));
     REQUIRE(FileSystem::readFile("append_test") == "append_content123");
-  }
+  }//
   SECTION("ls") {
     REQUIRE(FileSystem::mkdir("ls_folder/folder"));
     REQUIRE(FileSystem::writeFile("ls_folder/file1", "a"));
@@ -162,26 +211,26 @@ TEST_CASE("FileSystem", "[common]") {
     REQUIRE(FileSystem::writeFile("ls_folder/file3", "c"));
     auto ls = FileSystem::ls("ls_folder");
     REQUIRE(ls.size() == 6);
-  }
+  }//
 }
 
 TEST_CASE("Index", "[common][index]") {
   SECTION("Index2 arithmetic") {
-    index2 ij(1,-3);
+    index2 ij(1, -3);
     REQUIRE(ij + index2(-7, 10) == index2(-6, 7));
     REQUIRE(ij - index2(-7, 10) == index2(8, -13));
     REQUIRE(ij + size2(7, 10) == index2(8, 7));
     REQUIRE(ij - size2(7, 10) == index2(-6, -13));
     REQUIRE(size2(7, 10) + ij == index2(8, 7));
     REQUIRE(size2(7, 10) - ij == index2(6, 13));
-  }
+  }//
   SECTION("Index2") {
     index2 a;
     index2 b;
     REQUIRE(a == b);
     b.j = 1;
     REQUIRE(a != b);
-  }
+  }//
   SECTION("Index2Range") {
     int cur = 0;
     for (auto index : Index2Range<i32>(10, 10)) {
@@ -190,23 +239,23 @@ TEST_CASE("Index", "[common][index]") {
       cur++;
     }
     REQUIRE(cur == 10 * 10);
-  }
+  }//
   SECTION("Index3 arithmetic") {
-    index3 ij(1,-3, 0);
+    index3 ij(1, -3, 0);
     REQUIRE(ij + index3(-7, 10, 1) == index3(-6, 7, 1));
     REQUIRE(ij - index3(-7, 10, 1) == index3(8, -13, -1));
     REQUIRE(ij + size3(7, 10, 3) == index3(8, 7, 3));
     REQUIRE(ij - size3(7, 10, 3) == index3(-6, -13, -3));
     REQUIRE(size3(7, 10, 5) + ij == index3(8, 7, 5));
     REQUIRE(size3(7, 10, 5) - ij == index3(6, 13, 5));
-  }
+  }//
   SECTION("Index3") {
     index3 a;
     index3 b;
     REQUIRE(a == b);
     b.j = 1;
     REQUIRE(a != b);
-  }
+  }//
   SECTION("Index3Range") {
     int cur = 0;
     for (auto index : Index3Range<i32>(10, 10, 10)) {
@@ -226,5 +275,5 @@ TEST_CASE("Index", "[common][index]") {
       cur++;
     }
     REQUIRE(cur == 10 * 10 * 10);
-  }
+  }//
 }

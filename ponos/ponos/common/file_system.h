@@ -37,9 +37,19 @@ namespace ponos {
 /// Set of usefull functions to manipulate files and directories
 class FileSystem {
 public:
+  /// Strips directory and suffix from filenames
+  /// \param paths **[in]** {/path/to/filename1suffix,...}
+  /// \param suffix **[in | optional]**
+  /// \return {filename1, filename2, ...}
+  static std::vector<std::string> basename(const std::vector<std::string> &paths, const std::string &suffix = "");
+  /// Strips directory and suffix from filename
+  /// \param path **[in]** /path/to/filenamesuffix
+  /// \param suffix **[in | optional]**
+  /// \return filename
+  static std::string basename(const std::string &path, const std::string &suffix = "");
   /// \param filename path/to/filename.extension
   /// \return file's extension, if any (after last '.')
-  static std::string fileExtension(const std::string& filename);
+  static std::string fileExtension(const std::string &filename);
   /// \brief loads contents from file
   /// \param filename **[in]** path/to/file.
   /// \param text     **[out]** receives file content.
@@ -50,65 +60,65 @@ public:
   static std::vector<unsigned char> readBinaryFile(const char *filename);
   /// \param filename **[in]** path/to/file.ext
   /// \return file's content
-  static std::string readFile(const std::string& filename);
+  static std::string readFile(const std::string &filename);
   /// Writes content to file.
   /// \param filename **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 writeFile(const std::string& filename,
-      const std::vector<char>& content, bool is_binary = false);
+  static u64 writeFile(const std::string &filename,
+                       const std::vector<char> &content, bool is_binary = false);
   /// Writes content to file.
   /// \param filename **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 writeFile(const std::string& filename,
-                       const std::string& content, bool is_binary = false);
+  static u64 writeFile(const std::string &filename,
+                       const std::string &content, bool is_binary = false);
   /// Appends content to file.
   /// \param filename **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 appendToFile(const std::string& filename,
-      const std::vector<char>& content, bool is_binary = false);
+  static u64 appendToFile(const std::string &filename,
+                          const std::vector<char> &content, bool is_binary = false);
   /// Appends content to file.
   /// \param filename **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 appendToFile(const std::string& filename,
-                          const std::string& content, bool is_binary = false);
+  static u64 appendToFile(const std::string &filename,
+                          const std::string &content, bool is_binary = false);
   /// Checks if file exists
   /// \param filename /path/to/file.ext
   /// \return **true** if file exists
-  static bool fileExists(const std::string& filename);
+  static bool fileExists(const std::string &filename);
   /// Checks if filename corresponds to a file.
   /// \param filename /path/to/file.ext
   /// \return **true** if filename points to a file.
-  static bool isFile(const std::string& filename);
+  static bool isFile(const std::string &filename);
   /// Checks if dir_name corresponds to a directory.
   /// \param dir_name **[in]** /path/to/directory
   /// \return **true** if dir_name points to a directory.
-  static bool isDirectory(const std::string& dir_name);
+  static bool isDirectory(const std::string &dir_name);
   /// Lists files inside a directory
   /// \param path **[in]** path/to/directory
   /// \return list of filenames
-  static std::vector<std::string> ls(const std::string& path);
+  static std::vector<std::string> ls(const std::string &path);
   /// Recursively creates the path of directories
   /// \param path path/to/directory
   /// \return true on success success
-  static bool mkdir(const std::string& path);
+  static bool mkdir(const std::string &path);
   ///
   /// \param source
   /// \param destination
   /// \return
-  static bool copyFile(const std::string& source, const std::string& destination);
+  static bool copyFile(const std::string &source, const std::string &destination);
   ///
   /// \param path
   /// \param with_backslash
   /// \return
-  static std::string normalizePath(const std::string& path, bool with_backslash = false);
+  static std::string normalizePath(const std::string &path, bool with_backslash = false);
 };
 
 }

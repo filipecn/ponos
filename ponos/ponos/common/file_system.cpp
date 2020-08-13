@@ -48,7 +48,25 @@
 #include <dirent.h>
 #endif
 
+#include <iostream>
+
 namespace ponos {
+
+std::string FileSystem::basename(const std::string &path, const std::string &suffix) {
+  std::size_t found = path.find_last_of("/\\");
+  std::string base_name = (found != std::string::npos) ? path.substr(found + 1) : path;
+  if (!suffix.empty() && suffix.size() <= base_name.size()
+      && base_name.substr(base_name.size() - suffix.size()) == suffix)
+    return base_name.substr(0, base_name.size() - suffix.size());
+  return base_name;
+}
+
+std::vector<std::string> FileSystem::basename(const std::vector<std::string> &paths, const std::string &suffix) {
+  std::vector<std::string> base_names;
+  for (const auto &p : paths)
+    base_names.emplace_back(basename(p, suffix));
+  return std::move(base_names);
+}
 
 std::string FileSystem::fileExtension(const std::string &filename) {
   std::string extension = filename;
@@ -122,7 +140,7 @@ std::vector<unsigned char> FileSystem::readBinaryFile(const char *filename) {
 std::string FileSystem::readFile(const std::string &filename) {
   std::string content;
   std::ifstream file(filename, std::ios::in);
-  if(file.good()) {
+  if (file.good()) {
     file >> content;
     file.close();
   }
@@ -134,15 +152,15 @@ bool FileSystem::fileExists(const std::string &filename) {
     fclose(file);
     return true;
   }
-    return false;
+  return false;
 }
 
 u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &content, bool is_binary) {
   auto flags = std::ios::out;
-  if(is_binary)
+  if (is_binary)
     flags |= std::ios::binary;
   std::ofstream file(filename, flags);
-  if(file.good()) {
+  if (file.good()) {
     file.write(content.data(), content.size());
     file.close();
     return content.size();
@@ -152,10 +170,10 @@ u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &
 
 u64 FileSystem::writeFile(const std::string &filename, const std::string &content, bool is_binary) {
   auto flags = std::ios::out;
-  if(is_binary)
+  if (is_binary)
     flags |= std::ios::binary;
   std::ofstream file(filename, flags);
-  if(file.good()) {
+  if (file.good()) {
     file << content;
     file.close();
     return content.size();
@@ -165,10 +183,10 @@ u64 FileSystem::writeFile(const std::string &filename, const std::string &conten
 
 u64 FileSystem::appendToFile(const std::string &filename, const std::vector<char> &content, bool is_binary) {
   auto flags = std::ios::out | std::ios::app;
-  if(is_binary)
+  if (is_binary)
     flags |= std::ios::binary;
   std::ofstream file(filename, flags);
-  if(file.good()) {
+  if (file.good()) {
     file.write(content.data(), content.size());
     file.close();
     return content.size();
@@ -207,23 +225,22 @@ std::vector<std::string> FileSystem::ls(const std::string &path) {
   std::vector<std::string> l;
 #ifdef WIN32
   std::string p = path + "\\*";
-			WIN32_FIND_DATA data;
-			HANDLE hFind = FindFirstFile(p.c_str(), &data);
-			if (hFind  != INVALID_HANDLE_VALUE)
-			{
-				do
-				{
-					res.push_back(data.cFileName);
-				}
-				while (FindNextFile(hFind, &data) != 0);
-				FindClose(hFind);
-				return true;
-			}
-			return false;
+            WIN32_FIND_DATA data;
+            HANDLE hFind = FindFirstFile(p.c_str(), &data);
+            if (hFind  != INVALID_HANDLE_VALUE)
+            {
+                do
+                {
+                    res.push_back(data.cFileName);
+                }
+                while (FindNextFile(hFind, &data) != 0);
+                FindClose(hFind);
+                return true;
+            }
+            return false;
 #else
-  DIR* dir = opendir(path.c_str());
-  if (dir != nullptr)
-  {
+  DIR *dir = opendir(path.c_str());
+  if (dir != nullptr) {
     struct dirent *dp;
     while ((dp = readdir(dir)) != nullptr)
       l.emplace_back(dp->d_name);
@@ -235,14 +252,13 @@ std::vector<std::string> FileSystem::ls(const std::string &path) {
 }
 
 bool FileSystem::mkdir(const std::string &path) {
-  auto mk_single_dir = [](const std::string& path_) -> int {
+  auto mk_single_dir = [](const std::string &path_) -> int {
     std::string npath = normalizePath(path_);
 
     struct stat st;
     int status = 0;
 
-    if (stat(path_.c_str(), &st) != 0)
-    {
+    if (stat(path_.c_str(), &st) != 0) {
 #if WIN32
       status = _mkdir(path.c_str());
 #else
@@ -250,9 +266,7 @@ bool FileSystem::mkdir(const std::string &path) {
 #endif
       if (status != 0 && errno != EEXIST)
         status = -1;
-    }
-    else if (!(S_IFDIR & st.st_mode))
-    {
+    } else if (!(S_IFDIR & st.st_mode)) {
       errno = ENOTDIR;
       status = -1;
     }
@@ -261,7 +275,7 @@ bool FileSystem::mkdir(const std::string &path) {
   };
   char *pp;
   char *sp;
-  int  status;
+  int status;
 #ifdef WIN32
   char *copyOfPath = _strdup(path.c_str());
 #else
@@ -270,11 +284,9 @@ bool FileSystem::mkdir(const std::string &path) {
 
   status = 0;
   pp = copyOfPath;
-  pp = pp + 3;		// Cut away Drive:
-  while ((status == 0) && (((sp = strchr(pp, '/')) != 0) || ((sp = strchr(pp, '\\')) != 0)))
-  {
-    if (sp != pp)
-    {
+  pp = pp + 3;        // Cut away Drive:
+  while ((status == 0) && (((sp = strchr(pp, '/')) != 0) || ((sp = strchr(pp, '\\')) != 0))) {
+    if (sp != pp) {
       *sp = '\0';
       status = mk_single_dir(copyOfPath);
       *sp = '/';
@@ -295,12 +307,10 @@ std::string FileSystem::normalizePath(const std::string &path, bool with_backsla
   std::replace(result.begin(), result.end(), '\\', '/');
   std::vector<std::string> tokens = Str::split(result, "/");
   unsigned int index = 0;
-  while (index < tokens.size())
-  {
-    if ((tokens[index] == "..") && (index > 0))
-    {
+  while (index < tokens.size()) {
+    if ((tokens[index] == "..") && (index > 0)) {
       tokens.erase(tokens.begin() + index - 1, tokens.begin() + index + 1);
-      index-=2;
+      index -= 2;
     }
     index++;
   }
@@ -318,14 +328,13 @@ bool FileSystem::copyFile(const std::string &source, const std::string &destinat
   char buffer[bufferSize];
   size_t size;
 
-  FILE* sourceFile = fopen(source.c_str(), "rb");
-  FILE* destFile = fopen(destination.c_str(), "wb");
+  FILE *sourceFile = fopen(source.c_str(), "rb");
+  FILE *destFile = fopen(destination.c_str(), "wb");
 
   if ((sourceFile == NULL) || (destFile == NULL))
     return false;
 
-  while (size = fread(buffer, 1, bufferSize, sourceFile))
-  {
+  while (size = fread(buffer, 1, bufferSize, sourceFile)) {
     fwrite(buffer, 1, size, destFile);
   }
 
