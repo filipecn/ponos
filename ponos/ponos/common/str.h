@@ -55,6 +55,11 @@ public:
     concat(s, args...);
     return s.str();
   }
+  /// Concatenate strings together separated by a separator
+  /// \param s array of strings
+  /// \param separator **[in | ""]**
+  /// \return final string
+  static std::string join(const std::vector<std::string> &s, const std::string &separator = "");
   /// Splits a string into tokens separated by delimiters
   /// \param s **[in]** input string
   /// \param delimiters **[in | default = " "]** delimiters

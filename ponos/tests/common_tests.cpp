@@ -99,6 +99,21 @@ TEST_CASE("ArgParser") {
   }//
 }
 
+namespace ponos {
+enum class Test : unsigned {
+  a1 = 0x1,
+  a2 = 0x2,
+};
+ENABLE_BITMASK_OPERATORS(Test);
+}
+
+TEST_CASE("bitmask operators") {
+  REQUIRE(static_cast<unsigned>(Test::a1 | Test::a2) == 0x3);
+  REQUIRE(static_cast<unsigned>(Test::a1 ^ Test::a2) == 0x3);
+  REQUIRE(static_cast<unsigned>(Test::a1 & Test::a2) == 0x0);
+  REQUIRE(static_cast<unsigned>(~Test::a1) == 0xfffffffe);
+}
+
 TEST_CASE("Str", "[common]") {
   SECTION("split") {
     std::string a = "1 22 3 44 5";
@@ -109,6 +124,11 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(s[2] == "3");
     REQUIRE(s[3] == "44");
     REQUIRE(s[4] == "5");
+  }//
+  SECTION("join") {
+    std::vector<std::string> s = {"a", "b", "c"};
+    auto ss = Str::join(s, ",");
+    REQUIRE(ss == "a,b,c");
   }//
   SECTION("split with delimiter") {
     std::string a = "1 2, 3,4, 5";
@@ -131,6 +151,7 @@ TEST_CASE("Str", "[common]") {
   SECTION("regex contains") {
     REQUIRE(Str::contains_r("subsequence123", "\\b(sub)"));
     REQUIRE(!Str::contains_r("subsequence123", "\\b(qen)"));
+    REQUIRE(Str::contains_r("/usr/local/lib.a", ".*\.a"));
   }//
   SECTION("regex search") {
     std::string s("this subject has a submarine as a subsequence");
@@ -139,17 +160,53 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(result[0] == "subject");
     REQUIRE(result[1] == "sub");
     REQUIRE(result[2] == "ject");
-    int index =0;
+    int index = 0;
     std::string expected[3] = {"subject", "submarine", "subsequence"};
     Str::search_r(s, "\\b(sub)([^ ]*)", [&](const std::smatch &m) {
-        REQUIRE(m[0] == expected[index++]);
+      REQUIRE(m[0] == expected[index++]);
     });
   }//
   SECTION("regex replace") {
     std::string s("there is a subsequence in the string");
     REQUIRE(Str::replace_r(s, "\\b(sub)([^ ]*)", "sub-$2") == "there is a sub-sequence in the string");
     REQUIRE(Str::replace_r(s, "\\b(sub)([^ ]*)", "$2") == "there is a sequence in the string");
+    std::string s2("/home//usr/local");
+    REQUIRE(Str::replace_r(s2, "\\b//", "/") == "/home/usr/local");
   }//
+}
+
+TEST_CASE("Path", "[common]") {
+  Path folder("path_test_folder/folder");
+  REQUIRE(folder.mkdir());
+  REQUIRE(FileSystem::touch(folder + "file.txt"));
+  REQUIRE(FileSystem::touch("path_test_folder/file.txt"));
+  SECTION("dir") {
+    Path path("folder_path");
+    REQUIRE(static_cast<std::string>(path) == "folder_path");
+    REQUIRE(!path.exists());
+    path = std::string("path_test_folder");
+    path.cd("folder");
+    REQUIRE(path == "path_test_folder/folder");
+    path.cd("../folder");
+    REQUIRE(path == "path_test_folder/folder");
+    path.cd("../folder/..").cd("folder");
+    REQUIRE(path == "path_test_folder/folder");
+    REQUIRE(path.isDirectory());
+    REQUIRE(!path.isFile());
+    path.join("folder2").join("/folder3");
+    REQUIRE(path == "path_test_folder/folder/folder2/folder3");
+    path.cd("../../");
+    REQUIRE(path == "path_test_folder/folder");
+  }//
+  SECTION("file") {
+    Path path("folder_path/file.txt");
+    REQUIRE(!path.exists());
+    path = folder + "file.txt";
+    REQUIRE(path.exists());
+    REQUIRE(path.isFile());
+    REQUIRE(path.cwd() == folder);
+    REQUIRE(path.extension() == "txt");
+  }
 }
 
 TEST_CASE("FileSystem", "[common]") {
@@ -206,12 +263,77 @@ TEST_CASE("FileSystem", "[common]") {
   }//
   SECTION("ls") {
     REQUIRE(FileSystem::mkdir("ls_folder/folder"));
-    REQUIRE(FileSystem::writeFile("ls_folder/file1", "a"));
-    REQUIRE(FileSystem::writeFile("ls_folder/file2", "b"));
-    REQUIRE(FileSystem::writeFile("ls_folder/file3", "c"));
-    auto ls = FileSystem::ls("ls_folder");
-    REQUIRE(ls.size() == 6);
+    REQUIRE(FileSystem::touch("ls_folder/file4"));
+    REQUIRE(FileSystem::touch("ls_folder/folder/file1"));
+    REQUIRE(FileSystem::touch("ls_folder/folder/file2"));
+    REQUIRE(FileSystem::touch("ls_folder/folder/file3"));
+    REQUIRE(FileSystem::mkdir("ls_folder/folder2"));
+    REQUIRE(FileSystem::touch("ls_folder/folder2/file2"));
+    REQUIRE(FileSystem::touch("ls_folder/folder2/file3"));
+    REQUIRE(FileSystem::mkdir("ls_folder/folder2/folder"));
+    REQUIRE(FileSystem::touch("ls_folder/folder2/folder/file1"));
+    // ls_folder
+    //  | folder
+    //     | file1
+    //     | file2
+    //     | file3
+    //  | folder2
+    //     | folder
+    //        | file1
+    //     | file2
+    //     | file3
+    //  | file4
+    { // simple ls
+      auto ls = FileSystem::ls("ls_folder/folder");
+      std::vector<std::string> expected = {"file1", "file2", "file3"};
+      REQUIRE(ls.size() == expected.size());
+      for (u64 i = 0; i < ls.size(); ++i)
+        REQUIRE(ls[i].name() == expected[i]);
+    }
+    {
+      auto ls = FileSystem::ls("ls_folder", ls_options::recursive | ls_options::files | ls_options::sort);
+      std::vector<std::string> expected = {"file4", "file1", "file2", "file3", "file2", "file3", "file1"};
+      REQUIRE(ls.size() == expected.size());
+      for (u64 i = 0; i < ls.size(); ++i)
+        REQUIRE(ls[i].name() == expected[i]);
+    }
+    {
+      auto ls = FileSystem::ls("ls_folder", ls_options::recursive | ls_options::files | ls_options::reverse_sort);
+      std::vector<std::string> expected = {"file1", "file3", "file2", "file3", "file2", "file1", "file4"};
+      REQUIRE(ls.size() == expected.size());
+      for (u64 i = 0; i < ls.size(); ++i)
+        REQUIRE(ls[i].name() == expected[i]);
+    }
+    {
+      auto ls = FileSystem::ls("ls_folder", ls_options::sort | ls_options::group_directories_first);
+      std::vector<std::string> expected = {"folder", "folder2", "file4"};
+      REQUIRE(ls.size() == expected.size());
+      for (u64 i = 0; i < ls.size(); ++i)
+        REQUIRE(ls[i].name() == expected[i]);
+    }
   }//
+  SECTION("filter") {
+    REQUIRE(FileSystem::mkdir("find_dir"));
+    Path find_dir("find_dir");
+    for (int i = 0; i < 5; i++)
+      REQUIRE((find_dir + Str::concat("file", i, ".ext1")).touch());
+    for (int i = 0; i < 5; i++)
+      REQUIRE((find_dir + Str::concat("file", i, ".ext2")).touch());
+    REQUIRE(FileSystem::mkdir("find_dir/folder"));
+    REQUIRE(find_dir.cd("folder").join("file5.ext1").touch());
+    { // search ext2
+      auto f = FileSystem::find("find_dir", ".*\.ext2", find_options::sort);
+      REQUIRE(f.size() == 5);
+      for(int i =0 ; i < 5; ++i)
+        REQUIRE(f[i].name() == concat("file", i , ".ext2"));
+    }
+    { // search ext1 rec
+      auto f = FileSystem::find("find_dir", ".*\.ext1", find_options::sort | find_options::recursive);
+      REQUIRE(f.size() == 6);
+      for(int i =0 ; i < 6; ++i)
+        REQUIRE(f[i].name() == concat("file", i , ".ext1"));
+    }
+  }
 }
 
 TEST_CASE("Index", "[common][index]") {

@@ -41,6 +41,7 @@ set(PONOS_HEADERS
         #ponos/blas/staggered_grid.inl
         #ponos/blas/symmetric_matrix.h
 		ponos/common/arg_parser.h
+		ponos/common/bitmask_operators.h
         ponos/common/defs.h
         ponos/common/index.h
         ponos/common/file.h

@@ -33,6 +33,8 @@
 #include <fcntl.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <iostream>
+#include <stack>
 #include <algorithm>
 
 #ifdef _WIN32
@@ -48,9 +50,150 @@
 #include <dirent.h>
 #endif
 
-#include <iostream>
-
 namespace ponos {
+
+Path::Path(const std::string &path) : path_(path) {}
+
+Path &Path::operator=(const std::string &path) {
+  path_ = path;
+  return *this;
+}
+
+Path &Path::operator+=(const std::string &other) {
+  this->join(other);
+  return *this;
+}
+
+Path &Path::operator+=(const Path &other) {
+  this->join(other);
+  return *this;
+}
+
+Path &Path::cd(const std::string &path) {
+  // TODO: what if path represents a file?
+  auto current_path = Str::split(path_, separator);
+  std::stack<std::string> stack;
+  for (const auto &s : current_path)
+    stack.push(s);
+  auto subpaths = Str::split(path, separator);
+  for (const auto &p : subpaths) {
+    if (p == ".")
+      continue;
+    if (p == ".." && !stack.empty())
+      stack.pop();
+    else if (p != "..")
+      stack.push(p);
+  }
+  path_ = "";
+  bool first = true;
+  while (!stack.empty()) {
+    if (first)
+      path_ = stack.top();
+    else
+      path_ = Str::concat(stack.top(), separator, path_);
+    first = false;
+    stack.pop();
+  }
+  return *this;
+}
+
+Path &Path::join(const Path &path) {
+  path_ = Str::join({path_, path.path_}, separator);
+  path_ = Str::replace_r(path_, separator + separator, separator);
+  return *this;
+}
+
+Path &Path::join(const std::string &path) {
+  path_ = Str::join({path_, path}, separator);
+  path_ = Str::replace_r(path_, separator + separator, separator);
+  return *this;
+}
+
+bool Path::exists() const {
+  return FileSystem::isFile(path_) || FileSystem::isDirectory(path_);
+}
+
+bool Path::isDirectory() const {
+  return FileSystem::isDirectory(path_);
+}
+
+bool Path::isFile() const {
+  return FileSystem::isFile(path_);
+}
+
+std::vector<std::string> Path::parts() const {
+  return Str::split(path_, separator);
+}
+
+std::string Path::name() const {
+  return FileSystem::basename(path_);
+}
+
+const std::string &Path::fullName() const {
+  return path_;
+}
+
+std::string Path::extension() const {
+  return FileSystem::fileExtension(path_);
+}
+
+bool Path::match_r(const std::string &regular_expression) const {}
+
+Path Path::cwd() const {
+  std::size_t found = path_.find_last_of("/\\");
+  if (found != std::string::npos)
+    return Path(path_.substr(0, found));
+  return *this;
+}
+
+bool Path::mkdir() const {
+  return FileSystem::mkdir(path_);
+}
+
+bool Path::touch() const {
+  return FileSystem::touch(path_);
+}
+
+u64 Path::writeTo(const std::string &content) const {}
+
+u64 Path::appendTo(const std::string &content) const {}
+
+Path operator+(const Path &a, const Path &b) {
+  Path p = a;
+  p.join(b);
+  return p;
+}
+Path operator+(const std::string &a, const Path &b) {
+  Path path(a);
+  path.join(b);
+  return path;
+}
+Path operator+(const Path &a, const std::string &b) {
+  Path p = a;
+  p.join(b);
+  return p;
+}
+bool operator==(const Path &a, const Path &b) {
+  return static_cast<std::string>(a) == static_cast<std::string>(b);
+}
+bool operator==(const std::string &a, const Path &b) {
+  return a == static_cast<std::string>(b);
+}
+bool operator==(const Path &a, const std::string &b) {
+  return static_cast<std::string>(a) == b;
+}
+
+bool operator==(const char *a, const Path &b) {
+  return a == b.fullName();
+}
+
+bool operator==(const Path &a, const char *b) {
+  return a.fullName() == b;
+}
+std::ostream &operator<<(std::ostream &o, const Path &path) {
+  o << path.fullName();
+  return o;
+}
 
 std::string FileSystem::basename(const std::string &path, const std::string &suffix) {
   std::size_t found = path.find_last_of("/\\");
@@ -65,7 +208,7 @@ std::vector<std::string> FileSystem::basename(const std::vector<std::string> &pa
   std::vector<std::string> base_names;
   for (const auto &p : paths)
     base_names.emplace_back(basename(p, suffix));
-  return std::move(base_names);
+  return base_names;
 }
 
 std::string FileSystem::fileExtension(const std::string &filename) {
@@ -155,6 +298,19 @@ bool FileSystem::fileExists(const std::string &filename) {
   return false;
 }
 
+bool FileSystem::touch(const std::string &filename) {
+  std::ofstream file(filename);
+  if (file.good()) {
+    file.close();
+    return true;
+  }
+  return false;
+}
+
+bool FileSystem::touch(const Path &path_to_file) {
+  return touch(path_to_file.fullName());
+}
+
 u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &content, bool is_binary) {
   auto flags = std::ios::out;
   if (is_binary)
@@ -221,8 +377,8 @@ bool FileSystem::isDirectory(const std::string &dir_name) {
   return false;
 }
 
-std::vector<std::string> FileSystem::ls(const std::string &path) {
-  std::vector<std::string> l;
+std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
+  std::vector<Path> l;
 #ifdef WIN32
   std::string p = path + "\\*";
             WIN32_FIND_DATA data;
@@ -239,13 +395,43 @@ std::vector<std::string> FileSystem::ls(const std::string &path) {
             }
             return false;
 #else
-  DIR *dir = opendir(path.c_str());
-  if (dir != nullptr) {
-    struct dirent *dp;
-    while ((dp = readdir(dir)) != nullptr)
-      l.emplace_back(dp->d_name);
-    closedir(dir);
-    return l;
+  std::function<void(const std::string &)> ls_;
+  ls_ = [&](const std::string &directory_path) {
+    DIR *dir = opendir(directory_path.c_str());
+    if (dir != nullptr) {
+      struct dirent *dp;
+      while ((dp = readdir(dir)) != nullptr) {
+        if (std::string(dp->d_name) == "." || std::string(dp->d_name) == "..")
+          continue;
+        auto full_path = directory_path + Str::concat("/", dp->d_name);
+        bool is_directory = isDirectory(full_path);
+        if ((options & ls_options::recursive) == ls_options::recursive && is_directory)
+          ls_(full_path);
+        if ((options & ls_options::directories) == ls_options::directories && !is_directory)
+          continue;
+        if ((options & ls_options::files) == ls_options::files && is_directory)
+          continue;
+        l.emplace_back(full_path);
+      }
+      closedir(dir);
+    }
+  };
+  ls_(path);
+  if ((options & (ls_options::sort | ls_options::reverse_sort | ls_options::group_directories_first))
+      != ls_options::none) {
+    bool reverse_order = (options & ls_options::reverse_sort) == ls_options::reverse_sort;
+    bool group_directories = (options & ls_options::group_directories_first) == ls_options::group_directories_first;
+    auto cmp = [&](const Path &a, const Path &b) -> bool {
+      if (group_directories) {
+        bool a_is_directory = a.isDirectory();
+        bool b_is_directory = b.isDirectory();
+        if (a_is_directory && b_is_directory)
+          return reverse_order ? a.fullName() > b.fullName() : a.fullName() < b.fullName();
+        return a_is_directory;
+      }
+      return reverse_order ? a.fullName() > b.fullName() : a.fullName() < b.fullName();
+    };
+    std::sort(l.begin(), l.end(), cmp);
   }
   return l;
 #endif
@@ -331,10 +517,10 @@ bool FileSystem::copyFile(const std::string &source, const std::string &destinat
   FILE *sourceFile = fopen(source.c_str(), "rb");
   FILE *destFile = fopen(destination.c_str(), "wb");
 
-  if ((sourceFile == NULL) || (destFile == NULL))
+  if ((sourceFile == nullptr) || (destFile == nullptr))
     return false;
 
-  while (size = fread(buffer, 1, bufferSize, sourceFile)) {
+  while ((size = fread(buffer, 1, bufferSize, sourceFile))) {
     fwrite(buffer, 1, size, destFile);
   }
 
@@ -342,6 +528,20 @@ bool FileSystem::copyFile(const std::string &source, const std::string &destinat
   fclose(destFile);
 
   return true;
+}
+
+std::vector<Path> FileSystem::find(const std::string &path, const std::string &pattern, find_options options) {
+  std::vector<Path> found;
+  ls_options lso = ls_options::files;
+  if ((options & find_options::recursive) == find_options::recursive)
+    lso = lso | ls_options::recursive;
+  if ((options & find_options::sort) == find_options::sort)
+    lso = lso | ls_options::sort;
+  const auto &l = ls(path, lso);
+  for (const auto &p : l)
+    if (Str::contains_r(p.fullName(), pattern))
+      found.emplace_back(p);
+  return found;
 }
 
 }

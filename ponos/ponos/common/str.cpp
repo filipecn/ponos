@@ -27,7 +27,21 @@
 
 #include "str.h"
 
+#include <iostream>
+
 namespace ponos {
+
+std::string Str::join(const std::vector<std::string> &s, const std::string &separator) {
+  std::string r;
+  bool first = true;
+  for (const auto &ss : s) {
+    if (!first)
+      r += separator;
+    first = false;
+    r += ss;
+  }
+  return r;
+}
 
 std::vector<std::string> Str::split(const std::string &s, const std::string &delimiters) {
   std::vector<std::string> tokens;
