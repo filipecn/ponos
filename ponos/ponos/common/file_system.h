@@ -39,6 +39,7 @@ namespace ponos {
 /// Representation of a directory/file in the filesystem
 class Path {
 public:
+  Path() = default;
   /// \param path
   explicit Path(const std::string &path);
   explicit operator std::string() const { return path_; }
