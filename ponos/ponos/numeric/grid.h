@@ -172,7 +172,7 @@ public:
   /// operator required by the loop iteration code of c++
   /// \param other
   /// \return true if iterators are different
-  bool operator!=(const Grid2Iterator<T> &other) {
+  bool operator!=(const ConstGrid2Iterator<T> &other) {
     return acc_.resolution() != other.acc_.resolution() || *it != *other.it;
   }
 

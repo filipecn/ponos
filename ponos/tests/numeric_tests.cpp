@@ -227,6 +227,8 @@ TEST_CASE("Grid2", "[numeric][grid]") {
           REQUIRE(acc(p) == Approx(f(p)).margin(1e-5));
         }
       }
+      auto cacc = g.accessor();
+      for(const auto& v : cacc) {}
     }//
       SECTION("CLAMP_TO_EDGE + MONOTONIC CUBIC INTERPOLATION") {
       auto acc = g.accessor(AddressMode::CLAMP_TO_EDGE,
