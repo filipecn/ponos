@@ -4,7 +4,7 @@
 
 using namespace ponos;
 
-TEST_CASE("Array2-sanity", "[storage][array][access]") {
+TEST_CASE("Array2", "[storage][array]") {
   SECTION("Constructors") {
     {
       Array2<vec2> a(size2(10, 10));
@@ -47,7 +47,7 @@ TEST_CASE("Array2-sanity", "[storage][array][access]") {
       for (index2 ij : Index2Range<i32>(a.size()))
         REQUIRE(a[ij] == ij.j * 10 + ij.i + 1);
     }
-  }
+  }//
   SECTION("Operators") {
     {
       Array2<int> a(size2(10, 10));
@@ -62,11 +62,8 @@ TEST_CASE("Array2-sanity", "[storage][array][access]") {
       std::cerr << a << std::endl;
       REQUIRE(count == 10 * 10);
     }
-  }
-}
-
-TEST_CASE("Array2-iterator", "[storage][array][iterator]") {
-  {
+  }//
+  SECTION("Array2-iterator") {
     Array2<vec2> a(size2(10, 10));
     for (auto e : a)
       e.value = vec2(1, 2);
@@ -76,5 +73,14 @@ TEST_CASE("Array2-iterator", "[storage][array][iterator]") {
       REQUIRE(e.value == vec2(1, 2));
     }
     REQUIRE(count == 100);
-  }
+  }//
+  SECTION("Const Array2-iterator") {
+    Array2<vec2> a(size2(10, 10));
+    a = vec2(1, 2);
+    auto f = [](const Array2<vec2> &array) {
+      for (const auto &d : array)
+        REQUIRE(d.value == vec2(1, 2));
+    };
+    f(a);
+  }//
 }

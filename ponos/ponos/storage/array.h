@@ -77,7 +77,50 @@ private:
   size_t pitch_ = 0;
   int i = 0, j = 0;
 };
+/// Auxiliary class to iterate an const Array2 inside a for loop.
+/// Ex: for(auto e : array) { e.value = x; }
+///\tparam T Array2 data type
+template <typename T> class ConstArray2Iterator {
+public:
+  class Element {
+  public:
+    Element(const T &v, const index2 &ij) : value(v), index(ij) {}
+    const T &value;
+    const index2 index;
+  };
+  ConstArray2Iterator(const T *data, const size2 &size, size_t pitch, const index2 &ij)
+      : size_(size), data_(data), pitch_(pitch), i(ij.i), j(ij.j) {}
+  size2 size() const { return size_; }
+  ConstArray2Iterator &operator++() {
+    i++;
+    if (i >= static_cast<i64>(size_.width)) {
+      i = 0;
+      j++;
+      if (j >= static_cast<i64>(size_.height)) {
+        i = j = -1;
+      }
+    }
+    return *this;
+  }
+  Element operator*() {
+    return Element((const T &)(*((const char *)data_ + j * pitch_ + i * sizeof(T))),
+                   index2(i, j));
+  }
+  bool operator==(const ConstArray2Iterator &other) {
+    return size_ == other.size_ && data_ == other.data_ && i == other.i &&
+        j == other.j && pitch_ == other.pitch_;
+  }
+  bool operator!=(const ConstArray2Iterator &other) {
+    return size_ != other.size_ || data_ != other.data_ || i != other.i ||
+        j != other.j || pitch_ != other.pitch_;
+  }
 
+private:
+  size2 size_;
+  const T *data_ = nullptr;
+  size_t pitch_ = 0;
+  int i = 0, j = 0;
+};
 /// Holds a linear memory area representing a 2-dimensional array of
 /// ``size.width`` * ``size.height`` elements.
 ///
@@ -299,6 +342,12 @@ public:
   }
   Array2Iterator<T> end() {
     return Array2Iterator<T>((T *)data_, size_, pitch_, index2(-1, -1));
+  }
+  ConstArray2Iterator<T> begin() const {
+    return ConstArray2Iterator<T>((T *)data_, size_, pitch_, index2(0, 0));
+  }
+  ConstArray2Iterator<T> end() const {
+    return ConstArray2Iterator<T>((T *)data_, size_, pitch_, index2(-1, -1));
   }
 
 private:
