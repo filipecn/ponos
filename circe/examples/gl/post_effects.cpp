@@ -28,8 +28,7 @@ int main() {
   //  app.viewports[0].renderer->addEffect(new circe::FXAA());
   //  app.viewports[0].renderer->addEffect(new circe::PostEffect(
   //      new circe::Shader(circe_NO_VAO_VS, nullptr, fs)));
-  std::shared_ptr<circe::gl::CartesianGrid> grid(
-      app.scene.add<circe::gl::CartesianGrid>(new circe::gl::CartesianGrid(5)));
+  app.scene.add(new circe::gl::CartesianGrid(5));
   app.run();
   return 0;
 }
