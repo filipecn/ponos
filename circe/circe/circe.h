@@ -2,6 +2,7 @@
 #include <circe/colors/color_palette.h>
 #include <circe/imgui/imgui.h>
 #include <circe/imgui/ImGuiFileDialog.h>
+#include <circe/imgui/TextEditor.h>
 #include <circe/gl/graphics/compute_shader.h>
 #include <circe/gl/graphics/shader.h>
 #include <circe/gl/graphics/shader_manager.h>

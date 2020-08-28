@@ -52,6 +52,7 @@ set(EXAMPLES
         post_effects
         text
         scene_object_interaction
+        shader_editor
         )
 
 foreach (EXAMPLE ${EXAMPLES})

@@ -284,7 +284,9 @@ std::string FileSystem::readFile(const std::string &filename) {
   std::string content;
   std::ifstream file(filename, std::ios::in);
   if (file.good()) {
-    file >> content;
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    content = ss.str();
     file.close();
   }
   return content;

@@ -6,6 +6,7 @@ set(IMGUI_SOURCES
         circe/imgui/imgui_draw.cpp
         circe/imgui/imgui_widgets.cpp
         circe/imgui/ImGuiFileDialog.cpp
+        circe/imgui/TextEditor.cpp
         )
 
 set(IMGUI_HEADERS
@@ -17,6 +18,7 @@ set(IMGUI_HEADERS
         circe/imgui/imstb_truetype.h
         circe/imgui/ImGuiFileDialog.h
         circe/imgui/ImGuiFileDialogConfig.h
+        circe/imgui/TextEditor.h
         )
 
 set(CIRCE_HEADERS
