@@ -23,30 +23,104 @@
  */
 
 #include <circe/gl/graphics/shader.h>
+#include <ponos/common/file_system.h>
 
 namespace circe::gl {
 
+Shader::Shader() = default;
+
+Shader::Shader(GLuint type) : type_(type) {
+  id_ = glCreateShader(type_);
+}
+
+Shader::Shader(const std::string &code, GLuint type) : Shader(type) {
+  compile(code, type);
+}
+
+Shader::Shader(const ponos::Path &code, GLuint type) : Shader(type) {
+  compile(code, type);
+}
+
+Shader::Shader(Shader &other) : type_(other.type_), id_(other.id_) {
+  glDeleteShader(id_);
+  other.id_ = 0;
+}
+
+Shader::Shader(Shader &&other) noexcept: Shader(other) {}
+
+Shader::~Shader() {
+  glDeleteShader(id_);
+}
+
+void Shader::setType(GLuint type) {
+  type_ = type;
+  glDeleteShader(id_);
+  id_ = glCreateShader(type_);
+}
+
+GLuint Shader::type() const { return type_; }
+
+bool Shader::compile(const std::string &code) {
+  err.clear();
+
+  GLint compiled;
+  const char *source_code = code.c_str();
+
+  glShaderSource(id_, 1, &source_code, nullptr);
+  glCompileShader(id_);
+
+  glGetShaderiv(id_, GL_COMPILE_STATUS, &compiled);
+  if (!compiled) {
+    // retrieve error string
+    GLsizei infolog_length = 0;
+    int chars_written = 0;
+    glGetShaderiv(id_, GL_INFO_LOG_LENGTH, &infolog_length);
+    if (infolog_length > 0) {
+      GLchar *log = (GLchar *) malloc((size_t) infolog_length);
+      glGetShaderInfoLog(id_, infolog_length, &chars_written, log);
+      err = log;
+      free(log);
+    }
+    return false;
+  }
+  return true;
+}
+
+bool Shader::compile(const std::string &code, GLuint type) {
+  setType(type);
+  return compile(code);
+}
+
+bool Shader::compile(const ponos::Path &file, GLuint type) {
+  setType(type);
+  return compile(file.read());
+}
+
+GLuint Shader::id() const {
+  return id_;
+}
+
 ShaderProgram::ShaderProgram(const ShaderProgram &other) {
   programId = other.programId;
-  for (const auto& a : other.attrLocations)
+  for (const auto &a : other.attrLocations)
     attrLocations[a.first] = a.second;
-  for (const auto& a : other.uniformLocations)
+  for (const auto &a : other.uniformLocations)
     uniformLocations[a.first] = a.second;
 }
 
 ShaderProgram::ShaderProgram(const ShaderProgram &&other) noexcept {
   programId = other.programId;
-  for (const auto& a : other.attrLocations)
+  for (const auto &a : other.attrLocations)
     attrLocations[a.first] = a.second;
-  for (const auto& a : other.uniformLocations)
+  for (const auto &a : other.uniformLocations)
     uniformLocations[a.first] = a.second;
 }
 
 ShaderProgram &ShaderProgram::operator=(const ShaderProgram &other) {
   programId = other.programId;
-  for (const auto& a : other.attrLocations)
+  for (const auto &a : other.attrLocations)
     attrLocations[a.first] = a.second;
-  for (const auto& a : other.uniformLocations)
+  for (const auto &a : other.uniformLocations)
     uniformLocations[a.first] = a.second;
   return *this;
 }
@@ -81,7 +155,7 @@ bool ShaderProgram::begin() {
 [[maybe_unused]] void ShaderProgram::registerVertexAttributes(const VertexBuffer *b) {
   if (!ShaderManager::instance().useShader(programId))
     return;
-  for (const auto& va : attrLocations) {
+  for (const auto &va : attrLocations) {
     GLint attribute = va.second;
     glEnableVertexAttribArray(attribute);
     CHECK_GL_ERRORS;
@@ -217,6 +291,222 @@ GLint ShaderProgram::getUniLoc(const GLchar *name) {
     return -1;
   return it->second;
   //  return glGetUniformLocation(programId, name);
+}
+
+Program::Program() {
+  id_ = glCreateProgram();
+}
+
+Program::Program(std::initializer_list<ponos::Path> files) : Program() {
+  std::vector<Shader> shaders;
+  for (const auto &file : files) {
+    GLuint type = GL_VERTEX_SHADER;
+    if (file.extension() == "frag")
+      type = GL_FRAGMENT_SHADER;
+    shaders.emplace_back(file, type);
+  }
+  // check for shader errors
+  for (const auto &shader : shaders)
+    if (!shader.id() || !shader.err.empty()) {
+      err = shader.err;
+      return;
+    }
+  link(shaders);
+}
+
+Program::Program(const std::vector<Shader> &shaders) : Program() {
+  destroy();
+  link(shaders);
+}
+
+Program::Program(Program &other) : id_(other.id_), attr_locations_(std::move(other.attr_locations_)),
+                                   uniform_locations_(std::move(other.uniform_locations_)) {
+  other.id_ = 0;
+}
+
+Program::Program(Program &&other) noexcept: Program(other) {}
+
+Program::~Program() {
+  destroy();
+}
+
+void Program::destroy() {
+  glDeleteProgram(id_);
+  id_ = 0;
+}
+
+void Program::attach(const Shader &shader) {
+  linked_ = false;
+  glAttachShader(id_, shader.id_);
+}
+
+void Program::attach(const std::vector<Shader> &shader_list) {
+  for (const auto &s : shader_list)
+    attach(s);
+}
+
+bool Program::link() {
+  if (!id_)
+    id_ = glCreateProgram();
+  glLinkProgram(id_);
+  return checkLinkageErrors();
+}
+
+bool Program::link(const std::vector<Shader> &shaders) {
+  for (const auto &shader : shaders)
+    glAttachShader(id_, shader.id_);
+  return link();
+}
+
+bool Program::use() {
+  if (!linked_)
+    if (!link())
+      return false;
+  CHECK_GL(glUseProgram(id_));
+  return true;
+}
+
+void Program::addVertexAttribute(const std::string &name, GLint location) {
+  attr_locations_[name] = location;
+}
+
+void Program::addUniform(const std::string &name, GLint location) {
+  uniform_locations_[name] = location;
+}
+
+int Program::locateAttribute(const std::string &name) const {
+  auto it = attr_locations_.find(name);
+  if (it == attr_locations_.end())
+    return -1;
+  return it->second;
+}
+
+void Program::setUniform(const std::string &name, const ponos::Transform &t) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Must be added first.)\n";
+    return;
+  }
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &t.matrix().m[0][0]);
+}
+
+void Program::setUniform(const std::string &name, const ponos::mat4 &m) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &m.m[0][0]);
+}
+
+void Program::setUniform(const std::string &name, const ponos::mat3 &m) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniformMatrix3fv(loc, 1, GL_FALSE, &m.m[0][0]);
+}
+
+void Program::setUniform(const std::string &name, const ponos::vec4 &v) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform4fv(loc, 1, &v.x);
+}
+
+void Program::setUniform(const std::string &name, const ponos::vec3 &v) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform3fv(loc, 1, &v.x);
+}
+
+void Program::setUniform(const std::string &name, const ponos::point3 &v) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  CHECK_GL(glUniform3fv(loc, 1, &v.x));
+}
+
+void Program::setUniform(const std::string &name, const ponos::vec2 &v) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform2fv(loc, 1, &v.x);
+}
+
+void Program::setUniform(const std::string &name, const Color &c) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform4fv(loc, 1, &c.r);
+}
+
+void Program::setUniform(const std::string &name, int i) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform1i(loc, i);
+}
+
+void Program::setUniform(const std::string &name, float f) {
+  GLint loc = getUniLoc(name);
+  if (loc == -1) {
+    std::cerr << "Attribute " << name
+              << " not located. (Probably has not been added.\n";
+    return;
+  }
+  glUniform1f(loc, f);
+}
+
+GLint Program::getUniLoc(const std::string &name) {
+  auto it = uniform_locations_.find(name);
+  if (it == uniform_locations_.end())
+    return -1;
+  return it->second;
+}
+
+bool Program::checkLinkageErrors() {
+  GLint linked = 0;
+  glGetProgramiv(id_, GL_LINK_STATUS, &linked);
+  if (!linked) {
+    // retrieve error string
+    GLsizei infolog_length = 0;
+    int chars_written = 0;
+    glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &infolog_length);
+    if (infolog_length > 0) {
+      GLchar *log = (GLchar *) malloc((int) (infolog_length + 1));
+      glGetProgramInfoLog(id_, infolog_length, &chars_written, log);
+      err = static_cast<const char *>(log);
+      free(log);
+    }
+    linked_ = false;
+    return false;
+  }
+  linked_ = true;
+  return true;
 }
 
 } // namespace circe

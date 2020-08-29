@@ -80,6 +80,34 @@ void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
   }
 }
 
+void BufferInterface::locateAttributes(const Program &s, uint d) const {
+  for (auto &attribute : bufferDescriptor.attributes) {
+    GLint loc = s.locateAttribute(attribute.first);
+    if (loc < 0)
+      continue;
+    // in case the attribute is a matrix, we need to point to n vectors
+    size_t componentSize = 1;
+    if (attribute.second.size % 3 == 0)
+      componentSize = 3;
+    else if (attribute.second.size % 4 == 0)
+      componentSize = 4;
+    else if (attribute.second.size % 2 == 0)
+      componentSize = 2;
+    size_t n = attribute.second.size / componentSize;
+    FATAL_ASSERT(n != 0);
+    for (size_t i = 0; i < n; i++) {
+      glEnableVertexAttribArray(static_cast<GLuint>(loc + i));
+      glVertexAttribPointer(static_cast<GLuint>(loc + i), componentSize,
+                            attribute.second.type, GL_FALSE,
+                            bufferDescriptor.elementSize * sizeof(float),
+                            (void *) (attribute.second.offset +
+                                i * componentSize * sizeof(float)));
+      CHECK_GL_ERRORS;
+      glVertexAttribDivisor(static_cast<GLuint>(loc + i), d);
+    }
+  }
+}
+
 GLuint BufferInterface::id() const { return bufferId; }
 
 } // namespace circe

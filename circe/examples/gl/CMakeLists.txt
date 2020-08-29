@@ -53,6 +53,7 @@ set(EXAMPLES
         text
         scene_object_interaction
         shader_editor
+        compiling_shaders
         )
 
 foreach (EXAMPLE ${EXAMPLES})

@@ -158,6 +158,12 @@ u64 Path::writeTo(const std::string &content) const {}
 
 u64 Path::appendTo(const std::string &content) const {}
 
+std::string Path::read() const {
+  if(!isFile())
+    return "";
+  return FileSystem::readFile(path_);
+}
+
 Path operator+(const Path &a, const Path &b) {
   Path p = a;
   p.join(b);
@@ -290,6 +296,10 @@ std::string FileSystem::readFile(const std::string &filename) {
     file.close();
   }
   return content;
+}
+
+std::string FileSystem::readFile(const Path &filename) {
+  return readFile(filename.fullName());
 }
 
 bool FileSystem::fileExists(const std::string &filename) {

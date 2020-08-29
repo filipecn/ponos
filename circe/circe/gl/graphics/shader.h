@@ -36,6 +36,135 @@
 
 namespace circe::gl {
 
+// Uniquely holds a single shader open gl object (RAII)
+// Note: This object can't be copied, only moved
+class Shader {
+public:
+  friend class Program;
+  Shader();
+  ///
+  /// \param type shader type
+  explicit Shader(GLuint type);
+  /// The code is compiled in construction time
+  /// \param code
+  /// \param type
+  Shader(const std::string &code, GLuint type);
+  ///
+  /// \param code
+  /// \param type
+  Shader(const ponos::Path &code, GLuint type);
+  Shader(const Shader &other) = delete;
+  Shader(const Shader &&other) = delete;
+  /// Copy constructor
+  Shader(Shader &other);
+  // Assign constructor
+  Shader(Shader &&other) noexcept;
+  /// The destructor destroys the open gl object
+  ~Shader();
+  /// \param type shader type: GL_COMPUTE_SHADER, GL_VERTEX_SHADER,
+  /// GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER,
+  /// GL_GEOMETRY_SHADER, or GL_FRAGMENT_SHADER
+  void setType(GLuint type);
+  ///
+  /// \return
+  [[nodiscard]] GLuint type() const;
+  ///
+  /// \param code
+  /// \return
+  bool compile(const std::string &code);
+  ///
+  /// \param code
+  /// \param type
+  bool compile(const std::string &code, GLuint type);
+  ///
+  /// \param file
+  /// \param type
+  bool compile(const ponos::Path &file, GLuint type);
+  ///
+  /// \return
+  GLuint id() const;
+
+  std::string err; //!< compilation error messages (if any)
+
+private:
+  GLuint type_{0};
+  GLuint id_{0};
+};
+
+// Uniquely holds a shader program (RAII)
+// A set of shaders compiled into a single program
+// Note: This object can't be copied, only moved
+class Program {
+public:
+  Program();
+  /// \param files expect extensions: .frag, .vert
+  Program(std::initializer_list<ponos::Path> files);
+  /// Construct from list of shaders
+  /// \param shader_list
+  explicit Program(const std::vector<Shader> &shader_list);
+  Program(const Program &other) = delete;
+  Program(const Program &&other) = delete;
+  /// Copy constructor
+  /// \param other
+  Program(Program &other);
+  /// Assign constructor
+  /// \param other
+  Program(Program &&other) noexcept;
+  ~Program();
+  /// Calls glDeleteProgram, but does not clean attributes and uniforms
+  /// Note: Shaders must be attached and linked again for reuse
+  void destroy();
+  /// Attach shader (calls glAttachShader)
+  /// \param shader pre-compiled shader
+  void attach(const Shader &shader);
+  /// Attach shader list (calls glAttachShader for each shader)
+  /// \param shader_list pre-compiled shader list
+  void attach(const std::vector<Shader> &shader_list);
+  /// Link pre-attached shaders
+  /// \return
+  bool link();
+  /// Attach and create program
+  /// \param shader_list pre-compiled shader list
+  /// \return
+  bool link(const std::vector<Shader> &shader_list);
+  /// Activate program (tries to link if necessary)
+  /// \return
+  bool use();
+  /// Register attribute from shader code
+  /// \param name attribute name
+  /// \param location layout location (must match shader code)
+  void addVertexAttribute(const std::string &name, GLint location);
+  /// Register uniform from shader code
+  /// \param name uniform name
+  /// \param location layout location (must match shader code)
+  void addUniform(const std::string &name, GLint location);
+  /// locates attribute **name** in shader's program
+  /// \param name attribute's name
+  /// \return attributes layout location (-1 if not found)
+  [[nodiscard]] int locateAttribute(const std::string &name) const;
+  // Uniforms
+  void setUniform(const std::string &name, const ponos::Transform &t);
+  void setUniform(const std::string &name, const ponos::mat4 &m);
+  void setUniform(const std::string &name, const ponos::mat3 &m);
+  void setUniform(const std::string &name, const ponos::vec4 &v);
+  void setUniform(const std::string &name, const ponos::vec3 &v);
+  void setUniform(const std::string &name, const ponos::vec2 &v);
+  void setUniform(const std::string &name, const ponos::point3 &v);
+  void setUniform(const std::string &name, const Color &c);
+  void setUniform(const std::string &name, int i);
+  void setUniform(const std::string &name, float f);
+
+  std::string err; //!< linkage errors (if any)
+private:
+  bool checkLinkageErrors();
+  GLint getUniLoc(const std::string& name);
+
+  GLuint id_{0};
+  std::map<std::string, GLint> attr_locations_;
+  std::map<std::string, GLint> uniform_locations_;
+  bool linked_{false};
+};
+
 /// Holds a program id and serves as an interface for setting its uniforms.
 class ShaderProgram {
 public:
@@ -86,13 +215,13 @@ public:
   void setUniform(const char *name, int i);
   void setUniform(const char *name, float f);
 
-  friend std::ostream &operator<<(std::ostream &o, const ShaderProgram& shader) {
+  friend std::ostream &operator<<(std::ostream &o, const ShaderProgram &shader) {
     o << "SHADER (programId " << shader.programId << ")\n";
     o << "vertex attributes:\n";
-    for (const auto& a : shader.attrLocations)
+    for (const auto &a : shader.attrLocations)
       o << "\t" << a.first << "\t" << a.second << std::endl;
     o << "uniform list:\n";
-    for (const auto& a : shader.uniformLocations)
+    for (const auto &a : shader.uniformLocations)
       o << "\t" << a.first << "\t" << a.second << std::endl;
     o << std::endl;
     return o;
@@ -110,7 +239,7 @@ protected:
 
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
 
-template <typename... TArg>
+template<typename... TArg>
 ShaderProgramPtr createShaderProgramPtr(TArg &&... Args) {
   return std::make_shared<ShaderProgram>(std::forward<TArg>(Args)...);
 }

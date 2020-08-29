@@ -265,6 +265,7 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
 
 /// forward declaration of ShaderProgram
 class ShaderProgram;
+class Program;
 
 /// Interface for device buffers accessed by shaders.
 /// A device buffer used by shaders must have its data laid out in memory in a
@@ -298,6 +299,7 @@ public:
   /// \param s shader
   /// \param d **[optional]** attribute divisor (default = 0)
   void locateAttributes(const ShaderProgram &s, uint d = 0) const;
+  void locateAttributes(const Program &s, uint d = 0) const;
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      FIELDS           //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////

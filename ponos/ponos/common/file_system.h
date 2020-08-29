@@ -64,6 +64,7 @@ public:
   bool touch() const;
   u64 writeTo(const std::string &content) const;
   u64 appendTo(const std::string &content) const;
+  std::string read() const;
 
   std::string separator{"/"};
 private:
@@ -125,6 +126,9 @@ public:
   /// \param filename **[in]** path/to/file.ext
   /// \return file's content
   static std::string readFile(const std::string &filename);
+  /// \param **[in]** filename path/to/file.ext
+  /// \return file's content
+  static std::string readFile(const Path &filename);
   /// Creates an empty file or access it.
   /// \param filename valid path/to/file.ext
   /// \return **true** if success
