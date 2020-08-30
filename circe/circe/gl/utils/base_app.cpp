@@ -42,6 +42,16 @@ BaseApp::~BaseApp() {
 }
 
 void BaseApp::prepare() {
+  GraphicsDisplay::instance().mouseCallback = [&](double x, double y) {
+    ImGuiIO &io = ImGui::GetIO();
+    if (!io.WantCaptureMouse)
+      app_->mouse(x, y);
+  };
+  GraphicsDisplay::instance().buttonCallback = [&](int b, int a, int m) {
+    ImGuiIO &io = ImGui::GetIO();
+    if (!io.WantCaptureMouse)
+      app_->button(b, a, m);
+  };
   // Setup Dear ImGui context
   ImGui::CreateContext();
   ImGuiIO &io = ImGui::GetIO();
@@ -58,6 +68,7 @@ void BaseApp::prepareFrame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
+
 }
 
 void BaseApp::finishFrame() {

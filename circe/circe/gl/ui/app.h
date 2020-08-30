@@ -68,6 +68,9 @@ public:
     return static_cast<T *>(viewports[i].camera.get());
   }
 
+  virtual void button(int b, int a, int m);
+  virtual void mouse(double x, double y);
+
   std::vector<ViewportDisplay> viewports;
   std::function<void()> renderCallback;
   std::function<void(unsigned int)> charCallback;
@@ -86,8 +89,6 @@ protected:
   virtual void render();
   virtual void charFunc(unsigned int pointcode);
   virtual void drop(int count, const char **filenames);
-  virtual void button(int b, int a, int m);
-  virtual void mouse(double x, double y);
   virtual void scroll(double dx, double dy);
   virtual void key(int key, int scancode, int action, int modifiers);
   virtual void resize(int w, int h);

@@ -50,16 +50,6 @@ public:
   }
   ~SceneApp() override = default;
 
-  Scene<StructureType> scene; //!< object container
-
-protected:
-  void render() override {
-    for (size_t i = 0; i < viewports.size(); i++)
-      viewports[i].render([&](CameraInterface *c) { scene.render(c); });
-    if (this->renderCallback)
-      this->renderCallback();
-  }
-
   void mouse(double x, double y) override {
     App::mouse(x, y);
     if (selectedObject && selectedObject->active) {
@@ -90,6 +80,16 @@ protected:
       selectedObject->button(*viewports[activeObjectViewport].camera.get(),
                              viewports[activeObjectViewport].getMouseNPos(), b,
                              a);
+  }
+
+  Scene<StructureType> scene; //!< object container
+
+protected:
+  void render() override {
+    for (size_t i = 0; i < viewports.size(); i++)
+      viewports[i].render([&](CameraInterface *c) { scene.render(c); });
+    if (this->renderCallback)
+      this->renderCallback();
   }
 
   int activeObjectViewport;
