@@ -29,6 +29,7 @@ int main() {
   bad_program.attach(bad_shader);
   if (!bad_program.link())
     std::cerr << "bad program " << bad_program.err << std::endl;
-
+  circe::gl::Program p;
+  p.destroy();
   return 0;
 }

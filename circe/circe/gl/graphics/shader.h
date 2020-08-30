@@ -158,6 +158,7 @@ public:
 private:
   bool checkLinkageErrors();
   GLint getUniLoc(const std::string& name);
+  void create();
 
   GLuint id_{0};
   std::map<std::string, GLint> attr_locations_;

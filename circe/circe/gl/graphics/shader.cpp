@@ -29,9 +29,7 @@ namespace circe::gl {
 
 Shader::Shader() = default;
 
-Shader::Shader(GLuint type) : type_(type) {
-  id_ = glCreateShader(type_);
-}
+Shader::Shader(GLuint type) : type_(type) {}
 
 Shader::Shader(const std::string &code, GLuint type) : Shader(type) {
   compile(code, type);
@@ -41,8 +39,9 @@ Shader::Shader(const ponos::Path &code, GLuint type) : Shader(type) {
   compile(code, type);
 }
 
-Shader::Shader(Shader &other) : type_(other.type_), id_(other.id_) {
+Shader::Shader(Shader &other) : type_(other.type_) {
   glDeleteShader(id_);
+  id_ = other.id_;
   other.id_ = 0;
 }
 
@@ -62,6 +61,10 @@ GLuint Shader::type() const { return type_; }
 
 bool Shader::compile(const std::string &code) {
   err.clear();
+
+  if (!id_)
+    id_ = glCreateShader(type_);
+  CHECK_GL_ERRORS;
 
   GLint compiled;
   const char *source_code = code.c_str();
@@ -293,9 +296,7 @@ GLint ShaderProgram::getUniLoc(const GLchar *name) {
   //  return glGetUniformLocation(programId, name);
 }
 
-Program::Program() {
-  id_ = glCreateProgram();
-}
+Program::Program() = default;
 
 Program::Program(std::initializer_list<ponos::Path> files) : Program() {
   std::vector<Shader> shaders;
@@ -315,7 +316,6 @@ Program::Program(std::initializer_list<ponos::Path> files) : Program() {
 }
 
 Program::Program(const std::vector<Shader> &shaders) : Program() {
-  destroy();
   link(shaders);
 }
 
@@ -336,8 +336,11 @@ void Program::destroy() {
 }
 
 void Program::attach(const Shader &shader) {
+  if (!id_)
+    create();
   linked_ = false;
   glAttachShader(id_, shader.id_);
+  CHECK_GL_ERRORS;
 }
 
 void Program::attach(const std::vector<Shader> &shader_list) {
@@ -347,18 +350,22 @@ void Program::attach(const std::vector<Shader> &shader_list) {
 
 bool Program::link() {
   if (!id_)
-    id_ = glCreateProgram();
+    create();
   glLinkProgram(id_);
   return checkLinkageErrors();
 }
 
 bool Program::link(const std::vector<Shader> &shaders) {
+  if (!id_)
+    create();
   for (const auto &shader : shaders)
     glAttachShader(id_, shader.id_);
   return link();
 }
 
 bool Program::use() {
+  if (!id_)
+    create();
   if (!linked_)
     if (!link())
       return false;
@@ -486,6 +493,11 @@ GLint Program::getUniLoc(const std::string &name) {
   if (it == uniform_locations_.end())
     return -1;
   return it->second;
+}
+
+void Program::create() {
+  id_ = glCreateProgram();
+  CHECK_GL_ERRORS;
 }
 
 bool Program::checkLinkageErrors() {
