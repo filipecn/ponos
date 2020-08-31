@@ -662,4 +662,61 @@ RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,
   return mesh;
 }
 
+RawMeshSPtr RawMeshes::plane(const Plane &plane,
+                             const point3 &center,
+                             const vec3 &extension,
+                             u32 divisions,
+                             bool generate_normals,
+                             bool generate_uv) {
+  RawMeshSPtr mesh = std::make_shared<RawMesh>();
+  // describe mesh triangles
+  mesh->meshDescriptor.elementSize = 3;
+  mesh->meshDescriptor.count = divisions * divisions * 2;
+  mesh->primitiveType = GeometricPrimitiveType::TRIANGLES;
+  // mesh positions
+  mesh->positionDescriptor.elementSize = 3;
+  mesh->positionDescriptor.count = SQR(divisions + 1);
+  if (generate_uv) {
+    mesh->normalDescriptor.elementSize = 2;
+    mesh->normalDescriptor.count = mesh->positionDescriptor.count;
+  }
+  if (generate_normals) {
+    mesh->normalDescriptor.elementSize = 3;
+    mesh->normalDescriptor.count = mesh->positionDescriptor.count;
+  }
+  if (std::fabs(dot(plane.normal, extension)) > 1e-8)
+    std::cerr << "Extension vector must be normal to plane normal vector.\n";
+  f32 half_size = extension.length() / 2;
+  f32 div_rec = 1.0 / divisions;
+  f32 step = (half_size * 2) * div_rec;
+  auto dx = normalize(extension);
+  auto dy = normalize(cross(vec3(plane.normal), dx));
+  auto origin = center - dx * half_size - dy * half_size;
+  for (u32 x = 0; x <= divisions; ++x)
+    for (u32 y = 0; y <= divisions; ++y) {
+      auto p = origin + dx * step * static_cast<float>(x) + dy * step * static_cast<float>(y);
+      mesh->addPosition({p.x, p.y, p.z});
+      if (generate_normals)
+        mesh->addNormal({plane.normal.x, plane.normal.y, plane.normal.z});
+      if (generate_uv)
+        mesh->addUV({x * div_rec, y * div_rec});
+    }
+  // generate indices
+  int w = divisions + 1;
+  for (int i = 0; i < divisions; ++i)
+    for (int j = 0; j < divisions; ++j) {
+      mesh->addFace({i * w + j, (i + 1) * w + j, i * w + j + 1});
+      mesh->addFace({i * w + j + 1, (i + 1) * w + j, (i + 1) * w + j + 1});
+    }
+  for (auto &index : mesh->indices) {
+    if (generate_uv)
+      index.texcoordIndex = index.positionIndex;
+    if (generate_normals)
+      index.normalIndex = index.positionIndex;
+  }
+  mesh->splitIndexData();
+  mesh->buildInterleavedData();
+  return mesh;
+}
+
 } // namespace ponos

@@ -267,8 +267,8 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
 class ShaderProgram;
 class Program;
 
-/// Interface for device buffers accessed by shaders.
-/// A device buffer used by shaders must have its data laid out in memory in a
+/// Interface for device buffers accessed by a shader.
+/// A device buffer used by a shader must have its data laid out in memory in a
 /// way compatible to the shader layout. It is done by mapping the shader
 /// attribute locations to the buffer.
 class BufferInterface {

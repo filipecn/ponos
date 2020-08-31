@@ -10,7 +10,7 @@ public:
     this->app_->scene.add(grid.get());
     circle_mesh = ponos::RawMeshes::circle();
     mesh = std::make_unique<SceneMeshObject>(circle_mesh.get());
-//    this->app_->scene.add(mesh.get());
+    this->app_->scene.add(mesh.get());
   }
 
   void render(circe::CameraInterface *camera) override {

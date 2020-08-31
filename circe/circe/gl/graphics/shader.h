@@ -82,7 +82,7 @@ public:
   bool compile(const ponos::Path &file, GLuint type);
   ///
   /// \return
-  GLuint id() const;
+  [[nodiscard]] GLuint id() const;
 
   std::string err; //!< compilation error messages (if any)
 
@@ -142,6 +142,9 @@ public:
   /// \param name attribute's name
   /// \return attributes layout location (-1 if not found)
   [[nodiscard]] int locateAttribute(const std::string &name) const;
+  ///
+  /// \return
+  GLuint id() const;
   // Uniforms
   void setUniform(const std::string &name, const ponos::Transform &t);
   void setUniform(const std::string &name, const ponos::mat4 &m);

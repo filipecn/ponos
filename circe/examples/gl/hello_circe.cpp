@@ -45,6 +45,10 @@ int main() {
     s->setUniform("cameraPosition", camera->getPosition());
   };
   app.scene.add(obj.get());
+  auto plane = ponos::RawMeshes::plane(ponos::Plane::XY(),ponos::point3(),
+      ponos::vec3(10,0,0), 20);
+  circe::gl::SceneMeshObject obj2(plane.get(), shader);
+  app.scene.add(&obj2);
   app.run();
   return 0;
 }

@@ -47,6 +47,16 @@ public:
     normal = n;
     offset = o;
   }
+  /// \param invert_normal
+  /// \return a plane with offset = 0 and normal(0,0,1)
+  static Plane XY(bool invert_normal = false) { return {normal3(0, 0, 1), 0}; }
+  /// \param invert_normal
+  /// \return a plane with offset = 0 and normal(0,1,0)
+  static Plane XZ(bool invert_normal = false) { return {normal3(0, 1, 0), 0}; }
+  /// \param invert_normal
+  /// \return a plane with offset = 0 and normal(1,0,0)
+  static Plane YZ(bool invert_normal = false) { return {normal3(1, 0, 0), 0}; }
+
   point3 closestPoint(const point3 &p) const {
     float t = (dot(vec3(normal), vec3(p)) - offset) / vec3(normal).length2();
     return p - t * vec3(normal);

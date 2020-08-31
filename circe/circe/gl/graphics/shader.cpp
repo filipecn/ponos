@@ -388,6 +388,8 @@ int Program::locateAttribute(const std::string &name) const {
   return it->second;
 }
 
+GLuint Program::id() const { return id_; }
+
 void Program::setUniform(const std::string &name, const ponos::Transform &t) {
   GLint loc = getUniLoc(name);
   if (loc == -1) {

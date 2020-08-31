@@ -33,6 +33,8 @@
 #include <circe/gl/scene/scene_mesh.h>
 #include <circe/gl/ui/interactive_object_interface.h>
 
+#include <utility>
+
 namespace circe::gl {
 
 /// The Scene Object Interface represents an drawable object that can be
@@ -77,6 +79,10 @@ public:
   }
   SceneMeshObject(const std::string &filename, ShaderProgramPtr s)
       : SceneMeshObject(filename) {
+    shader_ = s;
+  }
+  SceneMeshObject(const ponos::RawMesh *m, ShaderProgramPtr s) {
+    mesh_ = createSceneMeshPtr(m);
     shader_ = s;
   }
   SceneMeshObject(

@@ -27,6 +27,7 @@
 #define PONOS_GEOMETRIC_SHAPES_H
 
 #include <ponos/structures/raw_mesh.h>
+#include <ponos/geometry/plane.h>
 
 namespace ponos {
 
@@ -63,6 +64,12 @@ RawMesh *create_quad_wireframe_mesh(const point3 &p1, const point3 &p2,
 
 class RawMeshes {
 public:
+  static RawMeshSPtr plane(const Plane &plane,
+                           const point3& center,
+                           const vec3& extension,
+                           u32 divisions = 1,
+                           bool generate_normals = true,
+                           bool generate_uv = true);
   ///
   /// \param radius
   /// \param center
