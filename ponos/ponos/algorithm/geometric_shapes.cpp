@@ -677,8 +677,8 @@ RawMeshSPtr RawMeshes::plane(const Plane &plane,
   mesh->positionDescriptor.elementSize = 3;
   mesh->positionDescriptor.count = SQR(divisions + 1);
   if (generate_uv) {
-    mesh->normalDescriptor.elementSize = 2;
-    mesh->normalDescriptor.count = mesh->positionDescriptor.count;
+    mesh->texcoordDescriptor.elementSize = 2;
+    mesh->texcoordDescriptor.count = mesh->positionDescriptor.count;
   }
   if (generate_normals) {
     mesh->normalDescriptor.elementSize = 3;
