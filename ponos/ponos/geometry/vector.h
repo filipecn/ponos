@@ -50,7 +50,7 @@ public:
   //                           CONSTRUCTORS
   // ***********************************************************************
   Vector2() {}
-  explicit Vector2(T _x, T _y) : x(_x), y(_y) {}
+  Vector2(T _x, T _y) : x(_x), y(_y) {}
   explicit Vector2(const Point2<T> &p) : x(p.x), y(p.y) {}
   explicit Vector2(const Normal2<T> &n) : x(n.x), y(n.y) {}
   explicit Vector2(T f) { x = y = f; }

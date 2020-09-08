@@ -49,7 +49,8 @@ set(PONOS_HEADERS
 		ponos/storage/memory.h
         ponos/storage/array.h
         ponos/common/parallel.h
-        ponos/common/random.h
+        ponos/random/noise.h
+		ponos/random/random.h
 		ponos/common/str.h
         ponos/common/timer.h
         ponos/geometry/bbox.h
@@ -111,7 +112,8 @@ file(GLOB PONOS_SOURCES
         ponos/geometry/*.cpp
         ponos/blas/*.cpp
         ponos/parallel/*.cpp
-        ponos/common/*.cpp
+		ponos/random/*.cpp
+		ponos/common/*.cpp
         ponos/structures/*.cpp
         )
 

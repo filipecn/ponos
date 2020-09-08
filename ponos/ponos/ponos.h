@@ -39,7 +39,8 @@
 #include <ponos/common/file.h>
 #include <ponos/common/file_system.h>
 #include <ponos/common/index.h>
-#include <ponos/common/random.h>
+#include <ponos/random/noise.h>
+#include <ponos/random/random.h>
 #include <ponos/common/timer.h>
 #include <ponos/common/str.h>
 #include <ponos/geometry/bbox.h>

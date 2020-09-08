@@ -45,8 +45,11 @@ int main() {
     s->setUniform("cameraPosition", camera->getPosition());
   };
   app.scene.add(obj.get());
-  auto plane = ponos::RawMeshes::plane(ponos::Plane::XY(),ponos::point3(),
-      ponos::vec3(10,0,0), 20);
+  auto plane = ponos::RawMeshes::plane(ponos::Plane::XY(), ponos::point3(),
+                                       ponos::vec3(10, 0, 0), 20);
+  for (int i = 0; i < 21; ++i)
+    for (int j = 0; j < 21; ++j)
+      plane->positions[21 * 3 * i + 3 * j + 2] = ponos::Perlin::at(ponos::point2(i * 0.3, j * 0.3));
   circe::gl::SceneMeshObject obj2(plane.get(), shader);
   app.scene.add(&obj2);
   app.run();
