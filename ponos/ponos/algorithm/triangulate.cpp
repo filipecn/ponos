@@ -338,7 +338,7 @@ void tetrahedralize(const RawMesh *input, RawMesh *output) {
     p->numberofvertices = 3;
     p->vertexlist = new int[p->numberofvertices];
     for (size_t k = 0; k < 3u; k++)
-      p->vertexlist[k] = input->indices[i * input->meshDescriptor.elementSize + k].positionIndex;
+      p->vertexlist[k] = input->indices[i * input->meshDescriptor.element_size + k].positionIndex;
     in.facetmarkerlist[i] = 1;
   }
   char params[20];
@@ -349,9 +349,9 @@ void tetrahedralize(const RawMesh *input, RawMesh *output) {
     std::cerr << e << std::endl;
   }
   // set fields
-  output->positionDescriptor.elementSize = input->positionDescriptor.elementSize;
+  output->positionDescriptor.element_size = input->positionDescriptor.element_size;
   output->positionDescriptor.count = static_cast<size_t>(out.numberofpoints);
-  output->meshDescriptor.elementSize = 4;
+  output->meshDescriptor.element_size = 4;
   output->meshDescriptor.count = static_cast<size_t>(out.numberoftetrahedra);
   for (int i = 0; i < out.numberofpoints * 3; i++)
     output->positions.emplace_back(out.pointlist[i]);

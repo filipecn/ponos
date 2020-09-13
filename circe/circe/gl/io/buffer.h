@@ -43,19 +43,19 @@ struct BufferDescriptor {
     GLenum type = 0; //!< attribute data type
   };
   std::map<const std::string, Attribute> attributes; //!< name - attribute map
-  GLuint elementSize = 0; //!< how many components are assigned to each element
-  u32 elementCount = 0;   //!< number of elements
-  GLuint elementType;     //!< type of elements  (GL_TRIANGLES, ...)
+  GLuint element_size = 0; //!< how many components are assigned to each element
+  u32 element_count = 0;   //!< number of elements
+  GLuint element_type;     //!< type of elements  (GL_TRIANGLES, ...)
   GLuint type;            //!< buffer type (GL_ARRAY_BUFFER, ...)
   GLuint use;             //!< use  (GL_STATIC_DRAW, ...)
-  GLuint dataType;        //!< (GL_FLOAT, ...)
+  GLuint data_type;        //!< (GL_FLOAT, ...)
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      CONSTRUCTORS     //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   /// Default constructor
   BufferDescriptor()
-      : elementSize(0), elementCount(0), elementType(GL_TRIANGLES),
-        type(GL_ARRAY_BUFFER), use(GL_STATIC_DRAW), dataType(GL_FLOAT) {}
+      : element_size(0), element_count(0), element_type(GL_TRIANGLES),
+        type(GL_ARRAY_BUFFER), use(GL_STATIC_DRAW), data_type(GL_FLOAT) {}
   /// \brief Constructor.
   /// \param _elementSize **[in]** number of data components that compose an
   /// element
@@ -68,30 +68,30 @@ struct BufferDescriptor {
                    GLuint _elementType = GL_TRIANGLES,
                    GLuint _type = GL_ARRAY_BUFFER, GLuint _use = GL_STATIC_DRAW,
                    GLuint _dataType = GL_FLOAT)
-      : elementSize(_elementSize), elementCount(_elementCount),
-        elementType(_elementType), type(_type), use(_use), dataType(_dataType) {
+      : element_size(_elementSize), element_count(_elementCount),
+        element_type(_elementType), type(_type), use(_use), data_type(_dataType) {
   }
   ///
   /// \param other
   BufferDescriptor(const BufferDescriptor &other) {
-    elementSize = other.elementSize;
-    elementCount = other.elementCount;
-    elementType = other.elementType;
+    element_size = other.element_size;
+    element_count = other.element_count;
+    element_type = other.element_type;
     type = other.type;
     use = other.use;
-    dataType = other.dataType;
+    data_type = other.data_type;
     for (auto a : other.attributes)
       attributes[a.first] = a.second;
   }
   ///
   /// \param other
   BufferDescriptor(const BufferDescriptor &&other) {
-    elementSize = other.elementSize;
-    elementCount = other.elementCount;
-    elementType = other.elementType;
+    element_size = other.element_size;
+    element_count = other.element_count;
+    element_type = other.element_type;
     type = other.type;
     use = other.use;
-    dataType = other.dataType;
+    data_type = other.data_type;
     for (auto a : other.attributes)
       attributes[a.first] = a.second;
   }
@@ -99,12 +99,12 @@ struct BufferDescriptor {
   ////////////////////////      OPERATORS        //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   BufferDescriptor &operator=(const BufferDescriptor &other) {
-    elementSize = other.elementSize;
-    elementCount = other.elementCount;
-    elementType = other.elementType;
+    element_size = other.element_size;
+    element_count = other.element_count;
+    element_type = other.element_type;
     type = other.type;
     use = other.use;
-    dataType = other.dataType;
+    data_type = other.data_type;
     for (auto a : other.attributes)
       attributes[a.first] = a.second;
     return *this;
@@ -237,17 +237,17 @@ inline void create_buffer_description_from_mesh(const ponos::RawMesh &m,
     break;
   default:break;
   }
-  i.elementType = type;
-  i.elementCount = m.meshDescriptor.count;
-  i.elementSize = m.meshDescriptor.elementSize;
+  i.element_type = type;
+  i.element_count = m.meshDescriptor.count;
+  i.element_size = m.meshDescriptor.elementSize;
   i.type = GL_ELEMENT_ARRAY_BUFFER;
   i.use = use;
-  i.dataType = GL_UNSIGNED_INT;
-  v.elementCount = m.interleavedDescriptor.count;
-  v.elementSize = m.interleavedDescriptor.elementSize;
+  i.data_type = GL_UNSIGNED_INT;
+  v.element_count = m.interleavedDescriptor.count;
+  v.element_size = m.interleavedDescriptor.elementSize;
   v.type = GL_ARRAY_BUFFER;
   v.use = use;
-  v.dataType = GL_FLOAT;
+  v.data_type = GL_FLOAT;
   v.addAttribute(std::string("position"), m.positionDescriptor.elementSize, 0,
                  GL_FLOAT);
   size_t offset = m.positionDescriptor.elementSize;
@@ -312,23 +312,26 @@ protected:
 /// Device buffer for shader access
 /// \tparam T data type
 template<typename T>
-class Buffer : public BufferInterface {
+class GLBuffer : public BufferInterface {
 public:
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      CONSTRUCTORS     //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
-  Buffer() = default;
+  [[deprecated]]
+  GLBuffer() = default;
   /// \brief Constructor
   /// \param d **[in]** data pointer
   /// \param bd **[in]** buffer description
-  Buffer(const T *d, const BufferDescriptor &bd) : Buffer() { set(d, bd); }
+  [[deprecated]]
+  GLBuffer(const T *d, const BufferDescriptor &bd) : GLBuffer() { set(d, bd); }
   ///  \brief Constructor
   /// \param id **[in]** an existent buffer
   /// \param bd **[in]** buffer description
-  explicit Buffer(const BufferDescriptor &bd, GLuint id = 0)
+  [[deprecated]]
+  explicit GLBuffer(const BufferDescriptor &bd, GLuint id = 0)
       : BufferInterface(bd, id) {}
 
-  ~Buffer() override {
+  ~GLBuffer() override {
     // already destroying GL buffer in base destructor!
     // glDeleteBuffers(1, &this->bufferId);
   }
@@ -340,13 +343,13 @@ public:
   /// deleted
   /// \param size new size (in number of elements)
   void resize(int size) {
-    this->bufferDescriptor.elementCount = size;
+    this->bufferDescriptor.element_count = size;
     if (!this->bufferId)
       return;
     glBindBuffer(this->bufferDescriptor.type, this->bufferId);
     glBufferData(this->bufferDescriptor.type,
-                 this->bufferDescriptor.elementCount *
-                     this->bufferDescriptor.elementSize * sizeof(T),
+                 this->bufferDescriptor.element_count *
+                     this->bufferDescriptor.element_size * sizeof(T),
                  nullptr, this->bufferDescriptor.use);
     CHECK_GL_ERRORS;
   }
@@ -363,8 +366,8 @@ public:
     glGenBuffers(1, &this->bufferId);
     glBindBuffer(this->bufferDescriptor.type, this->bufferId);
     glBufferData(this->bufferDescriptor.type,
-                 this->bufferDescriptor.elementCount *
-                     this->bufferDescriptor.elementSize * sizeof(T),
+                 this->bufferDescriptor.element_count *
+                     this->bufferDescriptor.element_size * sizeof(T),
                  data, this->bufferDescriptor.use);
     CHECK_GL_ERRORS;
   }
@@ -379,15 +382,67 @@ public:
     }
     glBindBuffer(this->bufferDescriptor.type, this->bufferId);
     glBufferSubData(this->bufferDescriptor.type, 0,
-                    this->bufferDescriptor.elementCount *
-                        this->bufferDescriptor.elementSize * sizeof(T),
+                    this->bufferDescriptor.element_count *
+                        this->bufferDescriptor.element_size * sizeof(T),
                     data);
     CHECK_GL_ERRORS;
   }
 };
 
-using VertexBuffer = Buffer<float>;
-using IndexBuffer = Buffer<uint>;
+using VertexBuffer = GLBuffer<float>;
+using IndexBuffer = GLBuffer<uint>;
+
+/// Holds an Open GL Buffer Object that store an array of unformatted memory allocated
+/// by the GPU. These can be used to store vertex data, pixel data retrieved from
+/// images or the framebuffer, and a variety of other things.
+///
+/// Buffer Targets:
+/// GL_ARRAY_BUFFER, GL_ATOMIC_COUNTER_BUFFER, GL_COPY_READ_BUFFER,
+/// GL_COPY_WRITE_BUFFER, GL_DRAW_INDIRECT_BUFFER, GL_DISPATCH_INDIRECT_BUFFER,
+/// GL_ELEMENT_ARRAY_BUFFER, GL_PIXEL_PACK_BUFFER, GL_PIXEL_UNPACK_BUFFER,
+/// GL_QUERY_BUFFER, GL_SHADER_STORAGE_BUFFER, GL_TEXTURE_BUFFER,
+/// GL_TRANSFORM_FEEDBACK_BUFFER, or GL_UNIFORM_BUFFER.
+///
+/// Buffer Usages:
+/// GL_STREAM_DRAW, GL_STREAM_READ, GL_STREAM_COPY, GL_STATIC_DRAW, GL_STATIC_READ,
+/// GL_STATIC_COPY, GL_DYNAMIC_DRAW, GL_DYNAMIC_READ, or GL_DYNAMIC_COPY
+///
+/// Notes:
+/// - This class uses RAII. The object is created on construction and destroyed on
+/// deletion.
+class Buffer {
+public:
+  Buffer();
+  /// Parameters constructor
+  /// \param usage Specifies the expected usage pattern of the data store.
+  /// (ex: GL_STATIC_DRAW)
+  /// \param target Specifies the target buffer object. (ex: GL_ARRAY_BUFFER)
+  /// \param size Specifies the size in bytes of the buffer object.
+  /// \param data Specifies a pointer to data that will be copied into the data
+  /// store for initialization.
+  Buffer(GLuint usage, GLuint target, u64 size = 0, void* data = nullptr);
+  virtual ~Buffer();
+  /// \param _target Specifies the target buffer object. (ex: GL_ARRAY_BUFFER)
+  void setTarget(GLuint _target);
+  /// \param usage Specifies the expected usage pattern of the data store.
+  /// (ex: GL_STATIC_DRAW)
+  void setUsage(GLuint _usage);
+  /// \param size Specifies the size in bytes of the buffer object.
+  void resize(u64 size_in_bytes);
+  /// \return buffer size in bytes
+  [[nodiscard]] inline u64 size() const { return size_; }
+  /// \return buffer usage
+  [[nodiscard]] inline GLuint usage() const { return usage_; }
+  /// \return buffer target
+  [[nodiscard]] inline GLuint target() const { return target_; }
+  /// Deletes buffer data and destroy object
+  void destroy();
+private:
+  GLuint buffer_object_id_{0};
+  u64 size_{0};
+  GLuint target_{0};            //!< buffer type (GL_ARRAY_BUFFER, ...)
+  GLuint usage_{0};             //!< use  (GL_STATIC_DRAW, ...)
+};
 
 } // namespace circe
 

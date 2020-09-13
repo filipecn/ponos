@@ -177,7 +177,7 @@ public:
   // ***********************************************************************
   Vector3() {}
   explicit Vector3(T _f) : x(_f), y(_f), z(_f) {}
-  explicit Vector3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
+  Vector3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
   explicit Vector3(const T *v) {
     x = v[0];
     y = v[1];

@@ -98,4 +98,12 @@ std::ostream &operator<<(std::ostream &out, RenderTexture &pt) {
   return out;
 }
 
+void RenderTexture::set(const TextureAttributes &a, const TextureParameters &p) {
+  Texture::set(a, p);
+  framebuffer.reset(
+      new Framebuffer(attributes.width, attributes.height, attributes.depth));
+  framebuffer->attachColorBuffer(textureObject, attributes.target);
+  framebuffer->disable();
+}
+
 } // namespace circe

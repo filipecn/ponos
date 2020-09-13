@@ -35,7 +35,7 @@ public:
   /// \param p texture parameters
   Texture(const TextureAttributes &a, const TextureParameters &p);
   virtual ~Texture();
-  /// \param a texture attributes
+  virtual /// \param a texture attributes
   /// \param p texture parameters
   void set(const TextureAttributes &a, const TextureParameters &p);
   /// Binds texture

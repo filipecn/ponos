@@ -26,12 +26,12 @@ public:
     instance_set.setInstanceShader(*instance_shader);
     // create instance attributes
     BufferDescriptor trans = BufferDescriptor::forArrayStream(16);
-    trans.addAttribute("transform_matrix", 16, 0, trans.dataType);
+    trans.addAttribute("transform_matrix", 16, 0, trans.data_type);
     tid = instance_set.add(trans);
     // create a buffer for particles colors
     circe::gl::BufferDescriptor col =
         circe::gl::BufferDescriptor::forArrayStream(4);  // r g b a
-    col.addAttribute("color", 4, 0, col.dataType); // 4 -> r g b a
+    col.addAttribute("color", 4, 0, col.data_type); // 4 -> r g b a
     colid = instance_set.add(col);
     // setup scene
     this->app_->scene.add(&instance_set);
@@ -171,12 +171,12 @@ int main() {
   {
     // create a buffer for particles positions + sizes
     circe::gl::BufferDescriptor trans = circe::gl::BufferDescriptor::forArrayStream(16);
-    trans.addAttribute("transform_matrix", 16, 0, trans.dataType);
+    trans.addAttribute("transform_matrix", 16, 0, trans.data_type);
     uint tid = quads->add(trans);
     // create a buffer for particles colors
     circe::gl::BufferDescriptor col =
         circe::gl::BufferDescriptor::forArrayStream(4);  // r g b a
-    col.addAttribute("color", 4, 0, col.dataType); // 4 -> r g b a
+    col.addAttribute("color", 4, 0, col.data_type); // 4 -> r g b a
     uint colid = quads->add(col);
     quads->resize(n);
     circe::ColorPalette palette = circe::HEAT_MATLAB_PALETTE;

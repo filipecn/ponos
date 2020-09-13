@@ -97,8 +97,8 @@ void Quad::draw(const CameraInterface *camera, ponos::Transform t) {
       "projection",
       ponos::transpose(camera->getProjectionTransform().matrix()));
   glDrawElements(GL_TRIANGLES,
-                 mesh_->indexBuffer()->bufferDescriptor.elementCount *
-                     mesh_->indexBuffer()->bufferDescriptor.elementSize,
+                 mesh_->indexBuffer()->bufferDescriptor.element_count *
+                     mesh_->indexBuffer()->bufferDescriptor.element_size,
                  GL_UNSIGNED_INT, 0);
   CHECK_GL_ERRORS;
   shader_->end();

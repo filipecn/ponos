@@ -9,6 +9,8 @@ ViewportDisplay::ViewportDisplay(int _x, int _y, int _width, int _height)
 }
 
 void ViewportDisplay::render(const std::function<void(CameraInterface *)> &f) {
+  if(prepareRenderCallback)
+    prepareRenderCallback(*this);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);

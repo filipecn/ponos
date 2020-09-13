@@ -48,7 +48,7 @@ void BufferInterface::registerAttribute(const std::string &name, GLint location)
       bufferDescriptor.attributes.find(name)->second;
   glVertexAttribPointer(static_cast<GLuint>(location), va.size, va.type,
                         GL_FALSE,
-                        bufferDescriptor.elementSize * sizeof(float),
+                        bufferDescriptor.element_size * sizeof(float),
                         reinterpret_cast<const void *>(va.offset));
 }
 
@@ -71,7 +71,7 @@ void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
       glEnableVertexAttribArray(static_cast<GLuint>(loc + i));
       glVertexAttribPointer(static_cast<GLuint>(loc + i), componentSize,
                             attribute.second.type, GL_FALSE,
-                            bufferDescriptor.elementSize * sizeof(float),
+                            bufferDescriptor.element_size * sizeof(float),
                             (void *) (attribute.second.offset +
                                 i * componentSize * sizeof(float)));
       CHECK_GL_ERRORS;
@@ -99,7 +99,7 @@ void BufferInterface::locateAttributes(const Program &s, uint d) const {
       glEnableVertexAttribArray(static_cast<GLuint>(loc + i));
       glVertexAttribPointer(static_cast<GLuint>(loc + i), componentSize,
                             attribute.second.type, GL_FALSE,
-                            bufferDescriptor.elementSize * sizeof(float),
+                            bufferDescriptor.element_size * sizeof(float),
                             (void *) (attribute.second.offset +
                                 i * componentSize * sizeof(float)));
       CHECK_GL_ERRORS;
@@ -109,5 +109,38 @@ void BufferInterface::locateAttributes(const Program &s, uint d) const {
 }
 
 GLuint BufferInterface::id() const { return bufferId; }
+
+Buffer::Buffer() {
+  glGenBuffers(1, &buffer_object_id_);
+}
+
+Buffer::Buffer(GLuint usage, GLuint target, u64 size, void *data) : Buffer() {
+  setUsage(usage);
+  setTarget(target);
+  resize(size);
+
+  glBufferData(target_, size_, data, usage_);
+}
+
+Buffer::~Buffer() {
+  destroy();
+}
+
+void Buffer::setTarget(GLuint _target) {
+  target_ = _target;
+}
+
+void Buffer::setUsage(GLuint _usage) {
+  usage_ = _usage;
+}
+
+void Buffer::resize(u64 size_in_bytes) {
+  size_ = size_in_bytes;
+}
+
+void Buffer::destroy() {
+  if (buffer_object_id_) CHECK_GL(glDeleteBuffers(1, &buffer_object_id_));
+  buffer_object_id_ = 0;
+}
 
 } // namespace circe

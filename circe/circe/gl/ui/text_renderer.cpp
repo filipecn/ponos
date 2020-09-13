@@ -88,10 +88,10 @@ void TextRenderer::render(std::string s, GLfloat x, GLfloat y, GLfloat scale,
   quad_.shader()->setUniform("text", 0);
   CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
-  glDrawElements(ib->bufferDescriptor.elementType,
-                 ib->bufferDescriptor.elementCount *
-                     ib->bufferDescriptor.elementSize,
-                 ib->bufferDescriptor.dataType, nullptr);
+  glDrawElements(ib->bufferDescriptor.element_type,
+                 ib->bufferDescriptor.element_count *
+                     ib->bufferDescriptor.element_size,
+                 ib->bufferDescriptor.data_type, nullptr);
   CHECK_GL_ERRORS;
   quad_.shader()->end();
 }
@@ -118,10 +118,10 @@ void TextRenderer::render(std::string s, const ponos::point3 &p,
   quad_.shader()->setUniform("text", 0);
   CHECK_GL_ERRORS;
   auto ib = atlas.mesh->indexBuffer();
-  glDrawElements(ib->bufferDescriptor.elementType,
-                 ib->bufferDescriptor.elementCount *
-                     ib->bufferDescriptor.elementSize,
-                 ib->bufferDescriptor.dataType, nullptr);
+  glDrawElements(ib->bufferDescriptor.element_type,
+                 ib->bufferDescriptor.element_count *
+                     ib->bufferDescriptor.element_size,
+                 ib->bufferDescriptor.data_type, nullptr);
   CHECK_GL_ERRORS;
   quad_.shader()->end();
 }

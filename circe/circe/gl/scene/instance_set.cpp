@@ -47,12 +47,12 @@ InstanceSet::~InstanceSet() {
 }
 
 uint InstanceSet::add(BufferDescriptor d) {
-  d.elementCount = count_;
+  d.element_count = count_;
   size_t b = buffers_.size();
-  size_t bs = d.elementCount * d.elementSize;
-  switch (d.dataType) {
+  size_t bs = d.element_count * d.element_size;
+  switch (d.data_type) {
   case GL_UNSIGNED_INT: {
-    buffers_.emplace_back(new Buffer<uint>(d));
+    buffers_.emplace_back(new GLBuffer<uint>(d));
     dataU_.emplace_back(std::vector<uint>());
     buffers_indices_.emplace_back(dataU_.size() - 1);
     if (count_)
@@ -60,7 +60,7 @@ uint InstanceSet::add(BufferDescriptor d) {
     break;
   }
   case GL_UNSIGNED_BYTE: {
-    buffers_.emplace_back(new Buffer<uint>(d));
+    buffers_.emplace_back(new GLBuffer<uint>(d));
     dataC_.emplace_back(std::vector<uchar>());
     buffers_indices_.emplace_back(dataC_.size() - 1);
     if (count_)
@@ -68,7 +68,7 @@ uint InstanceSet::add(BufferDescriptor d) {
     break;
   }
   default: {
-    buffers_.emplace_back(new Buffer<float>(d));
+    buffers_.emplace_back(new GLBuffer<float>(d));
     dataF_.emplace_back(std::vector<float>());
     buffers_indices_.emplace_back(dataF_.size() - 1);
     if (count_)
@@ -83,27 +83,27 @@ uint InstanceSet::add(BufferDescriptor d) {
 void InstanceSet::resize(uint n) {
   count_ = n;
   for (uint i = 0; i < buffers_.size(); i++) {
-    buffers_[i]->bufferDescriptor.elementCount = n;
-    switch (buffers_[i]->bufferDescriptor.dataType) {
+    buffers_[i]->bufferDescriptor.element_count = n;
+    switch (buffers_[i]->bufferDescriptor.data_type) {
     case GL_UNSIGNED_INT:
       dataU_[buffers_indices_[i]].resize(
-          buffers_[i]->bufferDescriptor.elementCount *
-              buffers_[i]->bufferDescriptor.elementSize);
-      dynamic_cast<Buffer<uint> *>(buffers_[i])
+          buffers_[i]->bufferDescriptor.element_count *
+              buffers_[i]->bufferDescriptor.element_size);
+      dynamic_cast<GLBuffer<uint> *>(buffers_[i])
           ->set(&dataU_[buffers_indices_[i]][0], buffers_[i]->bufferDescriptor);
       break;
     case GL_UNSIGNED_BYTE:
       dataC_[buffers_indices_[i]].resize(
-          buffers_[i]->bufferDescriptor.elementCount *
-              buffers_[i]->bufferDescriptor.elementSize);
-      dynamic_cast<Buffer<uchar> *>(buffers_[i])
+          buffers_[i]->bufferDescriptor.element_count *
+              buffers_[i]->bufferDescriptor.element_size);
+      dynamic_cast<GLBuffer<uchar> *>(buffers_[i])
           ->set(&dataC_[buffers_indices_[i]][0], buffers_[i]->bufferDescriptor);
       break;
     default:
       dataF_[buffers_indices_[i]].resize(
-          buffers_[i]->bufferDescriptor.elementCount *
-              buffers_[i]->bufferDescriptor.elementSize);
-      dynamic_cast<Buffer<float> *>(buffers_[i])
+          buffers_[i]->bufferDescriptor.element_count *
+              buffers_[i]->bufferDescriptor.element_size);
+      dynamic_cast<GLBuffer<float> *>(buffers_[i])
           ->set(&dataF_[buffers_indices_[i]][0], buffers_[i]->bufferDescriptor);
     }
   }
@@ -115,7 +115,7 @@ float *InstanceSet::instanceF(uint b, uint i) {
     resize(i + 1);
   data_changed_[b] = true;
   return &dataF_[buffers_indices_[b]]
-  [i * buffers_[b]->bufferDescriptor.elementSize];
+  [i * buffers_[b]->bufferDescriptor.element_size];
 }
 
 uint *InstanceSet::instanceU(uint b, uint i) {
@@ -123,22 +123,22 @@ uint *InstanceSet::instanceU(uint b, uint i) {
     resize(i + 1);
   data_changed_[b] = true;
   return &dataU_[buffers_indices_[b]]
-  [i * buffers_[b]->bufferDescriptor.elementSize];
+  [i * buffers_[b]->bufferDescriptor.element_size];
 }
 
 void InstanceSet::bind(uint b) {
   if (data_changed_[b]) {
-    switch (buffers_[b]->bufferDescriptor.dataType) {
+    switch (buffers_[b]->bufferDescriptor.data_type) {
     case GL_UNSIGNED_INT:
-      dynamic_cast<Buffer<uint> *>(buffers_[b])
+      dynamic_cast<GLBuffer<uint> *>(buffers_[b])
           ->set(&dataU_[buffers_indices_[b]][0]);
       break;
     case GL_UNSIGNED_BYTE:
-      dynamic_cast<Buffer<uchar> *>(buffers_[b])
+      dynamic_cast<GLBuffer<uchar> *>(buffers_[b])
           ->set(&dataC_[buffers_indices_[b]][0]);
       break;
     default:
-      dynamic_cast<Buffer<float> *>(buffers_[b])
+      dynamic_cast<GLBuffer<float> *>(buffers_[b])
           ->set(&dataF_[buffers_indices_[b]][0]);
     }
     data_changed_[b] = false;
@@ -169,10 +169,10 @@ void InstanceSet::draw(const CameraInterface *camera,
   //  ponos::transpose((camera->getProjectionTransform() *
   //      camera->getViewTransform() * camera->getModelTransform()).matrix()));
   glDrawElementsInstanced(
-      base_mesh_->indexBuffer()->bufferDescriptor.elementType,
-      base_mesh_->indexBuffer()->bufferDescriptor.elementSize *
-          base_mesh_->indexBuffer()->bufferDescriptor.elementCount,
-      base_mesh_->indexBuffer()->bufferDescriptor.dataType, 0, count_);
+      base_mesh_->indexBuffer()->bufferDescriptor.element_type,
+      base_mesh_->indexBuffer()->bufferDescriptor.element_size *
+          base_mesh_->indexBuffer()->bufferDescriptor.element_count,
+      base_mesh_->indexBuffer()->bufferDescriptor.data_type, 0, count_);
   CHECK_GL_ERRORS;
   shader_.end();
   base_mesh_->unbind();

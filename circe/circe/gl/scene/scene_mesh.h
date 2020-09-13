@@ -30,12 +30,34 @@
 
 namespace circe::gl {
 
+/// Holds a vertex array object containing a combination of a vertex buffer
+/// and index buffer.
+class SceneModel {
+public:
+  SceneModel();
+  virtual ~SceneModel();
+  bool set(const ponos::RawMesh &raw_mesh);
+  void bind();
+  const VertexBuffer &vertexBuffer() const { return vertex_buffer_; }
+  const IndexBuffer &indexBuffer() const { return index_buffer_; }
+  void draw();
+  void clear();
+protected:
+  GLuint VAO{0};
+  std::vector<float> vertex_data_;
+  std::vector<uint> index_data_;
+  VertexBuffer vertex_buffer_;
+  IndexBuffer index_buffer_;
+};
+
 /// Set of buffers that represent a raw mesh for rendering.
 class SceneMesh {
 public:
+  SceneMesh() = default;
   /// \param rm raw mesh
   explicit SceneMesh(const ponos::RawMesh *rm);
   ~SceneMesh();
+  bool set(const ponos::RawMesh *rm);
   /// Binds buffers
   void bind();
   void unbind();
@@ -97,7 +119,7 @@ private:
 
 using SceneMeshSPtr = std::shared_ptr<SceneMesh>;
 
-template <typename... TArg> SceneMeshSPtr createSceneMeshPtr(TArg &&... Args) {
+template<typename... TArg> SceneMeshSPtr createSceneMeshPtr(TArg &&... Args) {
   return std::make_shared<SceneMesh>(std::forward<TArg>(Args)...);
 }
 

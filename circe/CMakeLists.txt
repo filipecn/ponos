@@ -28,6 +28,7 @@ set(CIRCE_HEADERS
         circe/gl/graphics/post_effect.h
         circe/gl/graphics/shader.h
         circe/gl/graphics/shader_manager.h
+        circe/gl/graphics/shadow_map.h
         circe/gl/helpers/bvh_model.h
         circe/gl/helpers/camera_model.h
         circe/gl/helpers/cartesian_grid.h
@@ -53,11 +54,14 @@ set(CIRCE_HEADERS
         circe/gl/io/texture.h
         circe/gl/io/texture_parameters.h
         circe/io/utils.h
+        circe/gl/io/vertex_array_object.h
         circe/gl/io/viewport_display.h
         circe/gl/io/user_input.h
         circe/gl/scene/bvh.h
         circe/scene/camera_interface.h
         circe/scene/camera_projection.h
+        circe/scene/light.h
+        circe/scene/material.h
         circe/gl/scene/mesh_utils.h
         circe/gl/scene/quad.h
         circe/gl/scene/scene.h
@@ -88,6 +92,7 @@ set(CIRCE_SOURCES
         circe/gl/graphics/post_effect.cpp
         circe/gl/graphics/shader.cpp
         circe/gl/graphics/shader_manager.cpp
+        circe/gl/graphics/shadow_map.cpp
         circe/gl/helpers/cartesian_grid.cpp
         circe/gl/helpers/geometry_drawers.cpp
         # imgui
@@ -104,6 +109,7 @@ set(CIRCE_SOURCES
         circe/gl/io/screen_quad.cpp
         circe/gl/io/texture.cpp
         circe/io/utils.cpp
+        circe/gl/io/vertex_array_object.cpp
         circe/gl/io/viewport_display.cpp
         circe/gl/scene/bvh.cpp
         circe/gl/scene/mesh_utils.cpp

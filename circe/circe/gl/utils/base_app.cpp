@@ -64,11 +64,10 @@ void BaseApp::prepare() {
   ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-void BaseApp::prepareFrame() {
+void BaseApp::prepareFrame(const ViewportDisplay& display) {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-
 }
 
 void BaseApp::finishFrame() {
@@ -81,7 +80,6 @@ void BaseApp::nextFrame() {
   // start frame time
   auto t_start = std::chrono::high_resolution_clock::now();
   // update scene
-  prepareFrame();
   render(app_->getCamera());
   finishFrame();
   frame_counter_++;

@@ -77,6 +77,7 @@ public:
   void key(int k, int scancode, int action, int modifiers);
 
   // render callback
+  std::function<void(const ViewportDisplay&)> prepareRenderCallback;
   std::function<void(CameraInterface *)> renderCallback;
   std::function<void(int, int, int)> buttonCallback;
   std::function<void(double, double)> mouseCallback;

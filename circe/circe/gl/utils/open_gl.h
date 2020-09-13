@@ -30,6 +30,7 @@
 #include <ponos/ponos.h>
 
 #include <circe/colors/color.h>
+#include <signal.h>
 
 namespace circe::gl {
 
@@ -39,11 +40,11 @@ namespace circe::gl {
   {                                                                            \
     A;                                                                         \
     if (checkGL(__FILE__, __LINE__, __FUNCTION__, #A))                         \
-      exit(-1);                                                                \
+      raise(SIGSEGV);                                                          \
   }
 #define CHECK_GL_ERRORS                                                        \
   if (checkGL(__FILE__, __LINE__, __FUNCTION__))                               \
-  exit(-1)
+  raise(SIGSEGV);
 #define CHECK_FRAMEBUFFER checkFramebuffer()
 #else
 #define CHECK_GL

@@ -298,7 +298,7 @@ GLint ShaderProgram::getUniLoc(const GLchar *name) {
 
 Program::Program() = default;
 
-Program::Program(std::initializer_list<ponos::Path> files) : Program() {
+Program::Program(const std::vector<ponos::Path> &files) : Program() {
   std::vector<Shader> shaders;
   for (const auto &file : files) {
     GLuint type = GL_VERTEX_SHADER;
@@ -313,6 +313,10 @@ Program::Program(std::initializer_list<ponos::Path> files) : Program() {
       return;
     }
   link(shaders);
+}
+
+Program::Program(std::initializer_list<ponos::Path> files) : Program() {
+  link(files);
 }
 
 Program::Program(const std::vector<Shader> &shaders) : Program() {
@@ -352,7 +356,10 @@ bool Program::link() {
   if (!id_)
     create();
   glLinkProgram(id_);
-  return checkLinkageErrors();
+  if (!checkLinkageErrors())
+    return false;
+  cacheLocations();
+  return true;
 }
 
 bool Program::link(const std::vector<Shader> &shaders) {
@@ -363,6 +370,23 @@ bool Program::link(const std::vector<Shader> &shaders) {
   return link();
 }
 
+bool Program::link(const std::vector<ponos::Path> &shader_file_list) {
+  std::vector<Shader> shaders;
+  for (const auto &file : shader_file_list) {
+    GLuint type = GL_VERTEX_SHADER;
+    if (file.extension() == "frag")
+      type = GL_FRAGMENT_SHADER;
+    shaders.emplace_back(file, type);
+  }
+  // check for shader errors
+  for (const auto &shader : shaders)
+    if (!shader.id() || !shader.err.empty()) {
+      err = shader.err;
+      return false;
+    }
+  return link(shaders);
+}
+
 bool Program::use() {
   if (!id_)
     create();
@@ -371,6 +395,33 @@ bool Program::use() {
       return false;
   CHECK_GL(glUseProgram(id_));
   return true;
+}
+
+void Program::cacheLocations() {
+  attr_locations_.clear();
+  uniform_locations_.clear();
+
+  GLint i;
+  GLint count;
+
+  GLint size; // size of the variable
+  GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+  const GLsizei bufSize = 30; // maximum name length
+  GLchar name[bufSize]; // variable name in GLSL
+  GLsizei length; // name length
+
+  glGetProgramiv(id_, GL_ACTIVE_ATTRIBUTES, &count);
+  for (i = 0; i < count; i++) {
+    glGetActiveAttrib(id_, (GLuint) i, bufSize, &length, &size, &type, name);
+    attr_locations_[name] = glGetAttribLocation(id_, name);
+  }
+
+  glGetProgramiv(id_, GL_ACTIVE_UNIFORMS, &count);
+  for (i = 0; i < count; i++) {
+    glGetActiveUniform(id_, (GLuint) i, bufSize, &length, &size, &type, name);
+    uniform_locations_[name] = glGetUniformLocation(id_, name);
+  }
 }
 
 void Program::addVertexAttribute(const std::string &name, GLint location) {
@@ -521,6 +572,39 @@ bool Program::checkLinkageErrors() {
   }
   linked_ = true;
   return true;
+}
+
+std::ostream &operator<<(std::ostream &o, const Program &program) {
+  GLint i;
+  GLint count;
+
+  GLint size; // size of the variable
+  GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+  const GLsizei bufSize = 30; // maximum name length
+  GLchar name[bufSize]; // variable name in GLSL
+  GLsizei length; // name length
+
+  glGetProgramiv(program.id_, GL_ACTIVE_ATTRIBUTES, &count);
+  o << "Active Attributes: " << count << std::endl;
+
+  for (i = 0; i < count; i++) {
+    glGetActiveAttrib(program.id_, (GLuint) i, bufSize, &length, &size, &type, name);
+    o << "Attribute #" << i << " Type: " << type << " Name: " << name << " location "
+      << glGetAttribLocation(program.id_, name) << std::endl;
+  }
+
+  glGetProgramiv(program.id_, GL_ACTIVE_UNIFORMS, &count);
+  o << "Active Uniforms: " << count << std::endl;
+
+  for (i = 0; i < count; i++) {
+    glGetActiveUniform(program.id_, (GLuint) i, bufSize, &length, &size, &type, name);
+
+    o << "Uniform #" << i << " Type: " << type << " Name: " << name << " location "
+      << glGetUniformLocation(program.id_, name) << std::endl;
+  }
+
+  return o;
 }
 
 } // namespace circe

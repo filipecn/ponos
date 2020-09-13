@@ -6,6 +6,7 @@
 #include <circe/gl/graphics/compute_shader.h>
 #include <circe/gl/graphics/shader.h>
 #include <circe/gl/graphics/shader_manager.h>
+#include <circe/gl/graphics/shadow_map.h>
 #include <circe/gl/helpers/bvh_model.h>
 #include <circe/gl/helpers/camera_model.h>
 #include <circe/gl/helpers/cartesian_grid.h>
@@ -30,6 +31,8 @@
 #include <circe/gl/io/viewport_display.h>
 #include <circe/gl/scene/bvh.h>
 #include <circe/scene/camera_interface.h>
+#include <circe/scene/light.h>
+#include <circe/scene/material.h>
 #include <circe/gl/scene/instance_set.h>
 #include <circe/gl/scene/mesh_utils.h>
 #include <circe/gl/scene/quad.h>

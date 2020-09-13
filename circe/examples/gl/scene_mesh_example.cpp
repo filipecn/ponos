@@ -82,10 +82,10 @@ int main() {
     //    s.setUniform("ldir", ponos::vec3(1,0,0));
     CHECK_GL_ERRORS;
     auto ib = smesh.indexBuffer();
-    glDrawElements(ib->bufferDescriptor.elementType,
-                   ib->bufferDescriptor.elementCount *
-                       ib->bufferDescriptor.elementSize,
-                   ib->bufferDescriptor.dataType, 0);
+    glDrawElements(ib->bufferDescriptor.element_type,
+                   ib->bufferDescriptor.element_count *
+                       ib->bufferDescriptor.element_size,
+                   ib->bufferDescriptor.data_type, 0);
     CHECK_GL_ERRORS;
     s.end();
   };

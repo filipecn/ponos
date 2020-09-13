@@ -115,9 +115,9 @@ public:
     }
     if (drawCallback)
       drawCallback(shader_.get(), camera, transform * t);
-    glDrawElements(mesh_->indexBuffer()->bufferDescriptor.elementType,
-                   mesh_->indexBuffer()->bufferDescriptor.elementCount *
-                       mesh_->indexBuffer()->bufferDescriptor.elementSize,
+    glDrawElements(mesh_->indexBuffer()->bufferDescriptor.element_type,
+                   mesh_->indexBuffer()->bufferDescriptor.element_count *
+                       mesh_->indexBuffer()->bufferDescriptor.element_size,
                    GL_UNSIGNED_INT, 0);
     mesh_->unbind();
     if (shader_)
@@ -152,9 +152,9 @@ public:
       glEnableVertexAttribArray(0);
     if (draw_callback)
       draw_callback(shader_.get(), camera, transform * t);
-    glDrawElements(mesh_.indexBuffer()->bufferDescriptor.elementType,
-                   mesh_.indexBuffer()->bufferDescriptor.elementCount *
-                       mesh_.indexBuffer()->bufferDescriptor.elementSize,
+    glDrawElements(mesh_.indexBuffer()->bufferDescriptor.element_type,
+                   mesh_.indexBuffer()->bufferDescriptor.element_count *
+                       mesh_.indexBuffer()->bufferDescriptor.element_size,
                    GL_UNSIGNED_INT, 0);
     mesh_.unbind();
     if (shader_)

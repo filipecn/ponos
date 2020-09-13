@@ -98,6 +98,8 @@ class Program {
 public:
   Program();
   /// \param files expect extensions: .frag, .vert
+  explicit Program(const std::vector<ponos::Path> &files);
+  /// \param files expect extensions: .frag, .vert
   Program(std::initializer_list<ponos::Path> files);
   /// Construct from list of shaders
   /// \param shader_list
@@ -127,16 +129,22 @@ public:
   /// \param shader_list pre-compiled shader list
   /// \return
   bool link(const std::vector<Shader> &shader_list);
+  /// Attach and create program
+  /// \param shader_file_list files expect extensions: .frag, .vert
+  /// \return
+  bool link(const std::vector<ponos::Path> &shader_file_list);
   /// Activate program (tries to link if necessary)
   /// \return
   bool use();
   /// Register attribute from shader code
   /// \param name attribute name
   /// \param location layout location (must match shader code)
+  [[deprecated]]
   void addVertexAttribute(const std::string &name, GLint location);
   /// Register uniform from shader code
   /// \param name uniform name
   /// \param location layout location (must match shader code)
+  [[deprecated]]
   void addUniform(const std::string &name, GLint location);
   /// locates attribute **name** in shader's program
   /// \param name attribute's name
@@ -157,11 +165,15 @@ public:
   void setUniform(const std::string &name, int i);
   void setUniform(const std::string &name, float f);
 
+  friend std::ostream &operator<<(std::ostream &o, const Program &program);
+
   std::string err; //!< linkage errors (if any)
 private:
   bool checkLinkageErrors();
-  GLint getUniLoc(const std::string& name);
+  GLint getUniLoc(const std::string &name);
   void create();
+  /// Cache uniform and attribute layout locations
+  void cacheLocations();
 
   GLuint id_{0};
   std::map<std::string, GLint> attr_locations_;

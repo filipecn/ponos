@@ -38,7 +38,7 @@ public:
   Color(float _r, float _g, float _b, float _a = 1.f)
       : r(_r), g(_g), b(_b), a(_a) {}
   Color withAlpha(float alpha) { return {r, g, b, alpha}; }
-  const float *asArray() const { return &r; }
+  [[nodiscard]] const float *asArray() const { return &r; }
   static Color Transparent() { return {0.f, 0.f, 0.f, 0.f}; }
   static Color Black(float alpha = 1.f) { return {0.f, 0.f, 0.f, alpha}; }
   static Color White(float alpha = 1.f) { return {1.f, 1.f, 1.f, alpha}; }
@@ -47,6 +47,7 @@ public:
   static Color Blue(float alpha = 1.f) { return {0.f, 0.f, 1.f, alpha}; }
   static Color Purple(float alpha = 1.f) { return {1.f, 0.f, 1.f, alpha}; }
   static Color Yellow(float alpha = 1.f) { return {1.f, 1.f, 0.f, alpha}; }
+  [[nodiscard]] ponos::vec3 rgb() const { return {r, g, b}; }
   float r, g, b, a;
 };
 

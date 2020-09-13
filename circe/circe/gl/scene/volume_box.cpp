@@ -134,9 +134,9 @@ void VolumeBox2::render(GLenum cullFace) {
   //  glEnable(GL_CULL_FACE);
   //  glFrontFace(GL_CCW);
   //  glCullFace(cullFace);
-  glDrawElements(mesh_->indexBuffer()->bufferDescriptor.elementType,
-                 mesh_->indexBuffer()->bufferDescriptor.elementCount *
-                     mesh_->indexBuffer()->bufferDescriptor.elementSize,
+  glDrawElements(mesh_->indexBuffer()->bufferDescriptor.element_type,
+                 mesh_->indexBuffer()->bufferDescriptor.element_count *
+                     mesh_->indexBuffer()->bufferDescriptor.element_size,
                  GL_UNSIGNED_INT, nullptr);
 }
 
@@ -288,9 +288,9 @@ void VolumeBox::render(GLenum cullFace) {
   glEnable(GL_CULL_FACE);
   glFrontFace(GL_CCW);
   glCullFace(cullFace);
-  glDrawElements(mesh_->indexBuffer()->bufferDescriptor.elementType,
-                 mesh_->indexBuffer()->bufferDescriptor.elementCount *
-                     mesh_->indexBuffer()->bufferDescriptor.elementSize,
+  glDrawElements(mesh_->indexBuffer()->bufferDescriptor.element_type,
+                 mesh_->indexBuffer()->bufferDescriptor.element_count *
+                     mesh_->indexBuffer()->bufferDescriptor.element_size,
                  GL_UNSIGNED_INT, nullptr);
 }
 

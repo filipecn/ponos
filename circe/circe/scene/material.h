@@ -19,51 +19,26 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 ///
-///\file base_app.h
+///\file material.h
 ///\author FilipeCN (filipedecn@gmail.com)
-///\date 2020-06-18
+///\date 2020-09-09
 ///
 ///\brief
 
-#ifndef CIRCE_UTILS_BASE_APP_H
-#define CIRCE_UTILS_BASE_APP_H
+#ifndef PONOS_CIRCE_CIRCE_SCENE_MATERIAL_H
+#define PONOS_CIRCE_CIRCE_SCENE_MATERIAL_H
 
-#include <circe/gl/ui/scene_app.h>
-#include <chrono>
+#include <circe/colors/color.h>
 
-namespace circe::gl {
+namespace circe {
 
-class BaseApp {
-public:
-  template<typename... Args>
-  BaseApp(Args &&... args) {
-    app_ = std::make_unique<circe::gl::SceneApp<>>(std::forward<Args>(args)...);
-    app_->renderCallback = [&]() { this->nextFrame(); };
-    app_->viewports[0].prepareRenderCallback = [&](const ViewportDisplay&vp) {
-      this->prepareFrame(vp);
-    };
-    prepare();
-  }
-  virtual ~BaseApp();
-  virtual void prepare();
-  virtual void render(circe::CameraInterface *camera) = 0;
-  virtual void prepareFrame(const ViewportDisplay& display);
-  virtual void finishFrame();
-  int run();
-
-  ///  Last frame time measured using a high performance timer (if available)
-  float frame_timer = 1.0f;
-
-protected:
-  void nextFrame();
-
-  std::unique_ptr <circe::gl::SceneApp<>> app_;
-  // Frame counter to display fps
-  uint32_t frame_counter_ = 0;
-  uint32_t last_FPS_ = 0;
-  std::chrono::time_point <std::chrono::high_resolution_clock> last_timestamp_;
+struct Material {
+  Color ambient;
+  Color diffuse;
+  Color specular;
+  f32 shininess;
 };
 
-} // circe namespace
+}
 
-#endif //CIRCE_UTILS_BASE_APP_H
+#endif //PONOS_CIRCE_CIRCE_SCENE_MATERIAL_H
