@@ -36,10 +36,13 @@
 #include <iostream>
 #include <stack>
 #include <algorithm>
+#include <filesystem>
 
 #ifdef _WIN32
+#include <direct.h>
 #include <fstream>
 #include <string>
+#include <utility>
 #include <windows.h>
 // Allow use of freopen() without compilation warnings/errors.
 // For use with custom allocated console window.
@@ -52,7 +55,7 @@
 
 namespace ponos {
 
-Path::Path(const std::string &path) : path_(path) {}
+Path::Path(std::string path) : path_(std::move(path)) {}
 
 Path &Path::operator=(const std::string &path) {
   path_ = path;
@@ -137,7 +140,7 @@ std::string Path::extension() const {
   return FileSystem::fileExtension(path_);
 }
 
-bool Path::match_r(const std::string &regular_expression) const {}
+bool Path::match_r(const std::string &regular_expression) const { return false; }
 
 Path Path::cwd() const {
   std::size_t found = path_.find_last_of("/\\");
@@ -154,12 +157,12 @@ bool Path::touch() const {
   return FileSystem::touch(path_);
 }
 
-u64 Path::writeTo(const std::string &content) const {}
+u64 Path::writeTo(const std::string &content) const { return 0; }
 
-u64 Path::appendTo(const std::string &content) const {}
+u64 Path::appendTo(const std::string &content) const { return 0; }
 
 std::string Path::read() const {
-  if(!isFile())
+  if (!isFile())
     return "";
   return FileSystem::readFile(path_);
 }
@@ -324,9 +327,9 @@ bool FileSystem::touch(const Path &path_to_file) {
 }
 
 u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &content, bool is_binary) {
-  auto flags = std::ios::out;
+  std::ios_base::openmode flags = std::ofstream::out;
   if (is_binary)
-    flags |= std::ios::binary;
+    flags |= std::ofstream::binary;
   std::ofstream file(filename, flags);
   if (file.good()) {
     file.write(content.data(), content.size());
@@ -337,7 +340,7 @@ u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &
 }
 
 u64 FileSystem::writeFile(const std::string &filename, const std::string &content, bool is_binary) {
-  auto flags = std::ios::out;
+  std::ios_base::openmode flags = std::ios::out;
   if (is_binary)
     flags |= std::ios::binary;
   std::ofstream file(filename, flags);
@@ -391,23 +394,23 @@ bool FileSystem::isDirectory(const std::string &dir_name) {
 
 std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
   std::vector<Path> l;
-#ifdef WIN32
-  std::string p = path + "\\*";
-            WIN32_FIND_DATA data;
-            HANDLE hFind = FindFirstFile(p.c_str(), &data);
-            if (hFind  != INVALID_HANDLE_VALUE)
-            {
-                do
-                {
-                    res.push_back(data.cFileName);
-                }
-                while (FindNextFile(hFind, &data) != 0);
-                FindClose(hFind);
-                return true;
-            }
-            return false;
-#else
   std::function<void(const std::string &)> ls_;
+#ifdef WIN32
+
+  ls_ = [&](const std::string &directory_path) {
+    for (const auto &entry : std::filesystem::directory_iterator(directory_path)) {
+      auto full_path = entry.path().string();
+      bool is_directory = entry.is_directory();
+      if ((options & ls_options::recursive) == ls_options::recursive && is_directory)
+        ls_(full_path);
+      if ((options & ls_options::directories) == ls_options::directories && !is_directory)
+        continue;
+      if ((options & ls_options::files) == ls_options::files && is_directory)
+        continue;
+      l.emplace_back(normalizePath(full_path));
+    }
+  };
+#else
   ls_ = [&](const std::string &directory_path) {
     DIR *dir = opendir(directory_path.c_str());
     if (dir != nullptr) {
@@ -428,7 +431,10 @@ std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
       closedir(dir);
     }
   };
+#endif
   ls_(path);
+  for(const auto& s : l)
+    std::cerr << s << std::endl;
   if ((options & (ls_options::sort | ls_options::reverse_sort | ls_options::group_directories_first))
       != ls_options::none) {
     bool reverse_order = (options & ls_options::reverse_sort) == ls_options::reverse_sort;
@@ -446,7 +452,6 @@ std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
     std::sort(l.begin(), l.end(), cmp);
   }
   return l;
-#endif
 }
 
 bool FileSystem::mkdir(const std::string &path) {
@@ -457,8 +462,8 @@ bool FileSystem::mkdir(const std::string &path) {
     int status = 0;
 
     if (stat(path_.c_str(), &st) != 0) {
-#if WIN32
-      status = _mkdir(path.c_str());
+#ifdef WIN32
+      status = _mkdir(path_.c_str());
 #else
       status = ::mkdir(path_.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif

@@ -32,6 +32,7 @@
 #include <sstream>
 #include <vector>
 #include <regex>
+#include <functional>
 
 namespace ponos {
 

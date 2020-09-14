@@ -41,7 +41,7 @@ class Path {
 public:
   Path() = default;
   /// \param path
-  explicit Path(const std::string &path);
+  explicit Path(std::string path);
   explicit operator std::string() const { return path_; }
   Path &operator=(const std::string &path);
   Path &operator+=(const std::string &other);

@@ -142,6 +142,7 @@ target_include_directories(circe PUBLIC
         ${TINYOBJLOADER_INCLUDES}
         ${GLAD_INCLUDES}
         ${GLFW_INCLUDE_DIR}
+        ${DIRENT_INCLUDE_DIR}
         )
 target_link_libraries(circe PUBLIC ponos
         ${GLFW_LIBRARIES}
