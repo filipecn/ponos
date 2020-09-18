@@ -29,6 +29,7 @@
 #include <iostream>
 #include <ponos/common/defs.h>
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 #ifndef UNUSED_VARIABLE
 #define UNUSED_VARIABLE(x) ((void)x)

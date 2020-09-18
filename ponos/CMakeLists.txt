@@ -53,6 +53,7 @@ set(PONOS_HEADERS
 		ponos/random/random.h
 		ponos/common/str.h
         ponos/common/timer.h
+		ponos/geometry/math_element.h
         ponos/geometry/bbox.h
         ponos/geometry/ellipse.h
         ponos/geometry/frustum.h
@@ -121,8 +122,15 @@ add_library(ponos STATIC ${PONOS_SOURCES} ${PONOS_HEADERS})
 set_target_properties(ponos PROPERTIES
         OUTPUT_NAME "ponos"
         FOLDER "PONOS")
-target_include_directories(ponos PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(ponos ${ponos_LIBRARIES} ${PONOS_LIBRARIES})
+target_include_directories(ponos PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}
+		${SPDLOG_INCLUDE_DIR}
+		)
+target_link_libraries(ponos
+		${SPDLOG_LIBRARIES}
+		${ponos_LIBRARIES}
+		${PONOS_LIBRARIES})
+add_dependencies(ponos spdlog)
 
 if(BUILD_EXAMPLES)
  #       add_subdirectory(examples)

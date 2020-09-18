@@ -5,6 +5,7 @@ build
 build8
 .idea
 cmake-build-debug
+cmake-build-release
 poseidon/app
 compile_commands.json
 wbuild

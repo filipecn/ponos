@@ -38,8 +38,8 @@
 
 namespace ponos {
 
-template <typename T> class Point2;
-template <typename T> class Vector2 {
+template<typename T> class Point2;
+template<typename T> class Vector2 : public MathElement<T, 2u> {
   static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
                     std::is_same<T, float>::value ||
                     std::is_same<T, double>::value,
@@ -106,31 +106,31 @@ public:
 // ***********************************************************************
 //                           ARITHMETIC
 // ***********************************************************************
-template <typename T>
+template<typename T>
 Vector2<T> operator+(const Vector2<T> &a, const Vector2<T> &b) {
   return Vector2<T>(a.x + b.x, a.y + b.y);
 }
-template <typename T>
+template<typename T>
 Vector2<T> operator-(const Vector2<T> &a, const Vector2<T> &b) {
   return Vector2<T>(a.x - b.x, a.y - b.y);
 }
-template <typename T> Vector2<T> operator*(const Vector2<T> &a, T f) {
+template<typename T> Vector2<T> operator*(const Vector2<T> &a, T f) {
   return Vector2<T>(a.x * f, a.y * f);
 }
-template <typename T> Vector2<T> operator/(const Vector2<T> &a, T f) {
+template<typename T> Vector2<T> operator/(const Vector2<T> &a, T f) {
   T inv = 1.f / f;
   return Vector2<T>(a.x * inv, a.y * inv);
 }
-template <typename T> Vector2<T> operator*(T f, const Vector2<T> &v) {
+template<typename T> Vector2<T> operator*(T f, const Vector2<T> &v) {
   return v * f;
 }
-template <typename T> Vector2<T> operator/(T f, const Vector2<T> &v) {
+template<typename T> Vector2<T> operator/(T f, const Vector2<T> &v) {
   return Vector2<T>(f / v.x, f / v.y);
 }
 // ***********************************************************************
 //                           BOOLEAN
 // ***********************************************************************
-template <typename T>
+template<typename T>
 bool operator==(const Vector2<T> &a, const Vector2<T> &b) {
   return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y);
 }
@@ -138,13 +138,13 @@ bool operator==(const Vector2<T> &a, const Vector2<T> &b) {
 //                           ARITHMETIC
 // ***********************************************************************
 // GEOMETRY
-template <typename T> T dot(const Vector2<T> &a, const Vector2<T> &b) {
+template<typename T> T dot(const Vector2<T> &a, const Vector2<T> &b) {
   return a.x * b.x + a.y * b.y;
 }
-template <typename T> Vector2<T> normalize(const Vector2<T> &v) {
+template<typename T> Vector2<T> normalize(const Vector2<T> &v) {
   return v / v.length();
 }
-template <typename T> Vector2<T> orthonormal(const Vector2<T> &v, bool first) {
+template<typename T> Vector2<T> orthonormal(const Vector2<T> &v, bool first) {
   Vector2<T> n = normalize(v);
   if (first)
     return Vector2<T>(-n.y, n.x);
@@ -156,16 +156,16 @@ template <typename T> Vector2<T> orthonormal(const Vector2<T> &v, bool first) {
  *
  * \returns the projection of **a** onto **b**
  */
-template <typename T>
+template<typename T>
 Vector2<T> project(const Vector2<T> &a, const Vector2<T> &b) {
   return (dot(b, a) / b.length2()) * b;
 }
-template <typename T> T cross(const Vector2<T> &a, const Vector2<T> &b) {
+template<typename T> T cross(const Vector2<T> &a, const Vector2<T> &b) {
   return a.x * b.y - a.y * b.x;
 }
 
-template <typename T> class Point3;
-template <typename T> class Vector3 {
+template<typename T> class Point3;
+template<typename T> class Vector3 : public MathElement<T, 3u> {
   static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
                     std::is_same<T, float>::value ||
                     std::is_same<T, double>::value,
@@ -246,70 +246,70 @@ public:
   T z = T(0.0);
 };
 // ARITHMETIC
-template <typename T>
+template<typename T>
 Vector3<T> operator+(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>(a.x + b.x, a.y + b.y, a.z + b.z);
 }
-template <typename T>
+template<typename T>
 Vector3<T> operator-(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
 }
-template <typename T>
+template<typename T>
 Vector3<T> operator*(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>(a.x * b.x, a.y * b.y, a.z * b.z);
 }
-template <typename T> Vector3<T> operator*(const Vector3<T> &a, const T &f) {
+template<typename T> Vector3<T> operator*(const Vector3<T> &a, const T &f) {
   return Vector3<T>(a.x * f, a.y * f, a.z * f);
 }
-template <typename T> Vector3<T> operator/(const Vector3<T> &a, const T &f) {
+template<typename T> Vector3<T> operator/(const Vector3<T> &a, const T &f) {
   T inv = 1.f / f;
   return Vector3<T>(a.x * inv, a.y * inv, a.z * inv);
 }
-template <typename T> Vector3<T> operator*(T f, const Vector3<T> &v) {
+template<typename T> Vector3<T> operator*(T f, const Vector3<T> &v) {
   return v * f;
 }
 // BOOLEAN
-template <typename T>
+template<typename T>
 bool operator==(const Vector3<T> &a, const Vector3<T> &b) {
   return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y) &&
-         Check::is_equal(a.z, b.z);
+      Check::is_equal(a.z, b.z);
 }
-template <typename T> bool operator<(const Vector3<T> &a, const Vector3<T> &b) {
+template<typename T> bool operator<(const Vector3<T> &a, const Vector3<T> &b) {
   if (a.x < b.x)
     return true;
   if (a.y < b.y)
     return true;
   return a.z < b.z;
 }
-template <typename T> bool operator>(const Vector3<T> &a, const Vector3<T> &b) {
+template<typename T> bool operator>(const Vector3<T> &a, const Vector3<T> &b) {
   if (a.x > b.x)
     return true;
   if (a.y > b.y)
     return true;
   return a.z > b.z;
 }
-template <typename T>
+template<typename T>
 bool operator>=(const Vector3<T> &a, const Vector3<T> &b) {
   return a.x >= b.x && a.y >= b.y && a.z >= b.z;
 }
-template <typename T>
+template<typename T>
 bool operator<=(const Vector3<T> &a, const Vector3<T> &b) {
   return a.x <= b.x && a.y <= b.y && a.z <= b.z;
 }
 // GEOMETRY
-template <typename T> T dot(const Vector3<T> &a, const Vector3<T> &b) {
+template<typename T> T dot(const Vector3<T> &a, const Vector3<T> &b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
-template <typename T>
+template<typename T>
 Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>((a.y * b.z) - (a.z * b.y), (a.z * b.x) - (a.x * b.z),
                     (a.x * b.y) - (a.y * b.x));
 }
-template <typename T>
+template<typename T>
 T triple(const Vector3<T> &a, const Vector3<T> &b, const Vector3<T> &c) {
   return dot(a, cross(b, c));
 }
-template <typename T> Vector3<T> normalize(const Vector3<T> &v) {
+template<typename T> Vector3<T> normalize(const Vector3<T> &v) {
   if (v.length2() == 0.f)
     return v;
   return v / v.length();
@@ -319,29 +319,29 @@ template <typename T> Vector3<T> normalize(const Vector3<T> &v) {
  * \param b **[out]** first tangent
  * \param c **[out]** second tangent
  */
-template <typename T>
+template<typename T>
 void tangential(const Vector3<T> &a, Vector3<T> &b, Vector3<T> &c) {
   b = normalize(cross(a, ((std::abs(a.y) > 0.f || std::abs(a.z) > 0.f)
-                              ? Vector3<T>(1, 0, 0)
-                              : Vector3<T>(0, 1, 1))));
+                          ? Vector3<T>(1, 0, 0)
+                          : Vector3<T>(0, 1, 1))));
   c = normalize(cross(a, b));
 }
-template <typename T> Vector3<T> cos(const Vector3<T> &v) {
+template<typename T> Vector3<T> cos(const Vector3<T> &v) {
   return Vector3<T>(std::cos(v.x), std::cos(v.y), std::cos(v.z));
 }
-template <typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b) {
+template<typename T> Vector3<T> max(const Vector3<T> &a, const Vector3<T> &b) {
   return Vector3<T>(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z));
 }
-template <typename T> Vector3<T> abs(const Vector3<T> &a) {
+template<typename T> Vector3<T> abs(const Vector3<T> &a) {
   return Vector3<T>(std::abs(a.x), std::abs(a.y), std::abs(a.z));
 }
 
-template <typename T> class Vector4 {
+template<typename T> class Vector4 : public MathElement<T, 4> {
 public:
   // ***********************************************************************
   //                           CONSTRUCTORS
   // ***********************************************************************
-  Vector4() {}
+  Vector4() = default;
   explicit Vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
   // ***********************************************************************
   //                            OPERATORS
@@ -397,18 +397,18 @@ public:
   T w = T(0.0);
 };
 // ARITHMETIC
-template <typename T>
+template<typename T>
 Vector4<T> operator+(const Vector4<T> &a, const Vector4<T> &b) {
   return Vector4<T>(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 }
-template <typename T>
+template<typename T>
 Vector4<T> operator-(const Vector4<T> &a, const Vector4<T> &b) {
   return Vector4<T>(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
-template <typename T> Vector4<T> operator*(const Vector4<T> &a, T f) {
+template<typename T> Vector4<T> operator*(const Vector4<T> &a, T f) {
   return Vector4<T>(a.x * f, a.y * f, a.z * f, a.w * f);
 }
-template <typename T> Vector4<T> operator/(const Vector4<T> &a, T f) {
+template<typename T> Vector4<T> operator/(const Vector4<T> &a, T f) {
   T inv = 1.f / f;
   return Vector4<T>(a.x * inv, a.y * inv, a.z * inv, a.w * inv);
 }
@@ -420,17 +420,17 @@ using vec3d = Vector3<double>;
 using vec3f = Vector3<float>;
 using vec2f = Vector2<float>;
 
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &os, const Vector2<T> &v) {
   os << "Vector2 [" << v.x << " " << v.y << "]";
   return os;
 }
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &os, const Vector3<T> &v) {
   os << "Vector3 [" << v.x << " " << v.y << " " << v.z << "]";
   return os;
 }
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &os, const Vector4<T> &v) {
   os << "Vector4 [" << v.x << " " << v.y << " " << v.z << " " << v.w << "]";
   return os;
@@ -441,7 +441,7 @@ std::ostream &operator<<(std::ostream &os, const Vector4<T> &v) {
 // std hash support
 namespace std {
 
-template <typename T> struct hash<ponos::Vector2<T>> {
+template<typename T> struct hash<ponos::Vector2<T>> {
   size_t operator()(ponos::Vector2<T> const &v) const {
     hash<T> hasher;
     size_t s = 0;
@@ -457,7 +457,7 @@ template <typename T> struct hash<ponos::Vector2<T>> {
   }
 };
 
-template <typename T> struct hash<ponos::Vector3<T>> {
+template<typename T> struct hash<ponos::Vector3<T>> {
   size_t operator()(ponos::Vector3<T> const &v) const {
     hash<T> hasher;
     size_t s = 0;

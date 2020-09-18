@@ -26,7 +26,7 @@
 #define PONOS_GEOMETRY_NORMAL_H
 
 #include <iostream>
-#include <ponos/common/defs.h>
+#include <ponos/geometry/math_element.h>
 
 namespace ponos {
 

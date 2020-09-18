@@ -18,6 +18,7 @@
 //#include <circe/helpers/tmesh_model.h>
 #include <circe/gl/helpers/vector_grid.h>
 #include <circe/gl/io/buffer.h>
+#include <circe/gl/io/vertex_array_object.h>
 #include <circe/gl/io/display_renderer.h>
 #include <circe/gl/io/font_texture.h>
 #include <circe/gl/io/framebuffer.h>
@@ -55,7 +56,6 @@
 #include <circe/gl/utils/open_gl.h>
 #include <circe/gl/utils/win32_utils.h>
 #include <circe/gl/utils/base_app.h>
-
 
 namespace circe {
 

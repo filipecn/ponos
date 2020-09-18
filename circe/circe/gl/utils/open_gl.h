@@ -30,9 +30,52 @@
 #include <ponos/ponos.h>
 
 #include <circe/colors/color.h>
-#include <signal.h>
+#include <csignal>
 
 namespace circe::gl {
+
+class OpenGL final {
+public:
+  [[nodiscard]] static u64 dataSizeInBytes(GLuint data_type) {
+    switch (data_type) {
+    case GL_BYTE:
+    case GL_UNSIGNED_BYTE: return 1;
+    case GL_SHORT:
+    case GL_UNSIGNED_SHORT:
+    case GL_HALF_FLOAT: return 2;
+    case GL_INT:
+    case GL_UNSIGNED_INT:
+    case GL_FIXED:
+    case GL_FLOAT:return 4;
+    case GL_DOUBLE: return 8;
+    default: return 0;
+    }
+    return 0;
+  }
+  template<typename T>
+  static GLenum dataTypeEnum() {
+    if (std::is_same_v<T, i32>)
+      return GL_INT;
+    if (std::is_same_v<T, u32>)
+      return GL_UNSIGNED_INT;
+    if (std::is_same_v<T, f32>)
+      return GL_FLOAT;
+    if (std::is_same_v<T, f64>)
+      return GL_DOUBLE;
+    if (std::is_same_v<T, u8>)
+      return GL_UNSIGNED_BYTE;
+    if (std::is_same_v<T, i8>)
+      return GL_BYTE;
+    if (std::is_same_v<T, i16>)
+      return GL_SHORT;
+    if (std::is_same_v<T, u16>)
+      return GL_UNSIGNED_SHORT;
+//    if (std::is_same_v<T, f16>)
+//      return GL_HALF_FLOAT;
+    return GL_FIXED;
+  }
+
+};
 
 #ifdef GL_DEBUG
 

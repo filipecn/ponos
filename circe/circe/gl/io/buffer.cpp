@@ -27,6 +27,8 @@
 
 #include <circe/gl/graphics/shader.h>
 
+#include <utility>
+
 namespace circe::gl {
 
 BufferInterface::BufferInterface(GLuint id) : bufferId(id) {}
@@ -41,11 +43,11 @@ void BufferInterface::bind() const {
 }
 
 void BufferInterface::registerAttribute(const std::string &name, GLint location) const {
-  if (bufferDescriptor.attributes.find(name) ==
-      bufferDescriptor.attributes.end())
+  if (bufferDescriptor.attribute_map.find(name) ==
+      bufferDescriptor.attribute_map.end())
     return;
   const BufferDescriptor::Attribute &va =
-      bufferDescriptor.attributes.find(name)->second;
+      bufferDescriptor.attribute_map.find(name)->second;
   glVertexAttribPointer(static_cast<GLuint>(location), va.size, va.type,
                         GL_FALSE,
                         bufferDescriptor.element_size * sizeof(float),
@@ -53,7 +55,7 @@ void BufferInterface::registerAttribute(const std::string &name, GLint location)
 }
 
 void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
-  for (auto &attribute : bufferDescriptor.attributes) {
+  for (auto &attribute : bufferDescriptor.attribute_map) {
     GLint loc = s.locateAttribute(attribute.first);
     if (loc < 0)
       continue;
@@ -81,7 +83,7 @@ void BufferInterface::locateAttributes(const ShaderProgram &s, uint d) const {
 }
 
 void BufferInterface::locateAttributes(const Program &s, uint d) const {
-  for (auto &attribute : bufferDescriptor.attributes) {
+  for (auto &attribute : bufferDescriptor.attribute_map) {
     GLint loc = s.locateAttribute(attribute.first);
     if (loc < 0)
       continue;
@@ -110,37 +112,122 @@ void BufferInterface::locateAttributes(const Program &s, uint d) const {
 
 GLuint BufferInterface::id() const { return bufferId; }
 
-Buffer::Buffer() {
+DeviceMemory::View::View(DeviceMemory &buffer, const BufferDescriptor &descriptor, u64 offset)
+    : buffer_(buffer), descriptor_(descriptor), offset_(offset) {
+  length_ = std::min(offset_ + descriptor.size(), buffer.size()) - offset_;
+}
+
+void *DeviceMemory::View::mapped(GLbitfield access) {
+  mapped_ = buffer_.mapped(offset_, length_, access);
+  return mapped_;
+}
+
+void DeviceMemory::View::unmap() {
+  buffer_.unmap();
+  mapped_ = nullptr;
+}
+
+DeviceMemory::DeviceMemory() {
   glGenBuffers(1, &buffer_object_id_);
 }
 
-Buffer::Buffer(GLuint usage, GLuint target, u64 size, void *data) : Buffer() {
+DeviceMemory::DeviceMemory(GLuint usage, GLuint target, u64 size, void *data) : DeviceMemory() {
   setUsage(usage);
   setTarget(target);
   resize(size);
-
-  glBufferData(target_, size_, data, usage_);
 }
 
-Buffer::~Buffer() {
+DeviceMemory::~DeviceMemory() {
   destroy();
 }
 
-void Buffer::setTarget(GLuint _target) {
+void DeviceMemory::setTarget(GLuint _target) {
   target_ = _target;
 }
 
-void Buffer::setUsage(GLuint _usage) {
+void DeviceMemory::setUsage(GLuint _usage) {
   usage_ = _usage;
 }
 
-void Buffer::resize(u64 size_in_bytes) {
+void DeviceMemory::resize(u64 size_in_bytes) {
   size_ = size_in_bytes;
 }
 
-void Buffer::destroy() {
+void DeviceMemory::allocate_(void *data) {
+  destroy();
+  glCreateBuffers(1, &buffer_object_id_);
+  glBindBuffer(target_, buffer_object_id_);
+  CHECK_GL(glBufferData(target_, size_, data, usage_));
+}
+
+void DeviceMemory::allocate() {
+  allocate_(nullptr);
+}
+
+void DeviceMemory::allocate(u64 data_size, void *data) {
+  resize(data_size);
+  allocate_(data);
+}
+
+void DeviceMemory::copy(void *data, u64 data_size, u64 offset) {
+  bind();
+  CHECK_GL(glBufferSubData(target_, offset, data_size, data));
+}
+
+void DeviceMemory::bind() {
+  if (!allocated())
+    allocate();
+  glBindBuffer(target_, buffer_object_id_);
+}
+
+void *DeviceMemory::mapped(GLenum access) {
+  bind();
+  void *mapped = glMapBuffer(target_, access);
+  CHECK_GL_ERRORS;
+  return mapped;
+}
+
+void *DeviceMemory::mapped(u64 offset, u64 length, GLbitfield access) {
+  bind();
+  void *mapped = glMapBufferRange(target_, offset, length, access);
+  CHECK_GL_ERRORS;
+  return mapped;
+}
+
+void DeviceMemory::unmap() const {
+  CHECK_GL(glUnmapBuffer(target_));
+}
+
+void DeviceMemory::destroy() {
   if (buffer_object_id_) CHECK_GL(glDeleteBuffers(1, &buffer_object_id_));
   buffer_object_id_ = 0;
+}
+
+Buffer::Buffer() = default;
+
+Buffer::Buffer(const BufferDescriptor &descriptor) {
+  setDescriptor(descriptor);
+}
+
+Buffer::~Buffer() = default;
+
+void Buffer::setDescriptor(const BufferDescriptor &descriptor) {
+  mem_.setTarget(descriptor.type);
+  mem_.setUsage(descriptor.use);
+  mem_.resize(descriptor.size());
+  view_ = std::make_unique<DeviceMemory::View>(mem_, descriptor);
+}
+
+void Buffer::bind() {
+  mem_.bind();
+}
+
+void *Buffer::mapped(GLbitfield access) {
+  return mem_.mapped(access);
+}
+
+void Buffer::unmap() const {
+  mem_.unmap();
 }
 
 } // namespace circe

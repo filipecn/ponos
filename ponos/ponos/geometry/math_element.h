@@ -1,4 +1,4 @@
-/// Copyright (c) 2019, FilipeCN.
+/// Copyright (c) 2020, FilipeCN.
 ///
 /// The MIT License (MIT)
 ///
@@ -19,41 +19,28 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 ///
-/// \file defs.h
-/// \author FilipeCN (filipedecn@gmail.com)
-/// \date 2019-08-16
+///\file math_element.h
+///\author FilipeCN (filipedecn@gmail.com)
+///\date 2020-17-09
 ///
-/// \brief type definitions
+///\brief
 
-#ifndef PONOS_COMMON_DEFS_H
-#define PONOS_COMMON_DEFS_H
+#ifndef PONOS_PONOS_PONOS_GEOMETRY_MATH_ELEMENT_H
+#define PONOS_PONOS_PONOS_GEOMETRY_MATH_ELEMENT_H
 
-#include <cstdint>
+#include <ponos/common/defs.h>
 
-#ifdef PONOS_DOUBLE
-using real_t = double;
-#else
-using real_t = float;
-#endif
+namespace ponos {
 
-using f32 = float;
-using f64 = double;
+/// Interface used by all basic geometric entities, such as point and vectors.
+template<typename NUMERIC_TYPE, u64 COMPONENT_COUNT>
+class MathElement {
+public:
+  NUMERIC_TYPE numeric_data;
+  static inline constexpr u64 componentCount() { return COMPONENT_COUNT; };
+  static inline constexpr u64 numericTypeSizeInBytes() { return sizeof(NUMERIC_TYPE); };
+};
 
-using i8 = int8_t;
-using i16 = int16_t;
-using i32 = int32_t;
-using i64 = int64_t;
+}
 
-using u8 = uint8_t;
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
-
-using ulong = unsigned long;
-using uint = unsigned int;
-using ushort = unsigned short;
-using uchar = unsigned char;
-
-using byte = uint8_t;
-
-#endif
+#endif //PONOS_PONOS_PONOS_GEOMETRY_MATH_ELEMENT_H

@@ -40,7 +40,7 @@ public:
 //    drawModel(cartesian_plane, camera);
     ImGui::Begin("Shadow Map");
     texture_id = shadow_map.depthMap().textureObjectId();
-    ImGui::Image((void*)(intptr_t)(texture_id), {1024, 1024});
+    ImGui::Image((void *) (intptr_t) (texture_id), {1024, 1024});
     ImGui::End();
   }
 
@@ -90,5 +90,6 @@ public:
 };
 
 int main() {
+  spdlog::warn("Easy padding in numbers like {:08d}", 12);
   return HelloCirce().run();
 }

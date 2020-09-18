@@ -33,6 +33,8 @@ include(ExternalProject)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext")
 # tests
 include(catch2)
+# log
+include(spdlog)
 ##########################################
 ##              projects                ##
 ##########################################

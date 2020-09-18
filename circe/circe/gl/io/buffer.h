@@ -36,13 +36,30 @@
 namespace circe::gl {
 
 /// Describes the data contained in a buffer.
+/// Example:
+/// Consider the following interleaved vertex buffer with N+1 vertices
+/// px0 py0 pz0 u0 v0 nx0 ny0 nz0 ... pxN pyN pzN uN vN nxN nyN nzN
+/// containing position, texture coordinates and normal for each vertex.
+/// Data is stored in floats (4 bytes)
+/// The position attribute has offset 0 * 4, size 3 and type GL_FLOAT
+/// The tex coord attribute has offset 3 * 4, size 2 and type GL_FLOAT
+/// The normal attribute has offset 5 * 4, size 3 and type GL_FLOAT
+/// Thus the buffer has the following numbers:
+///  - element_size = 7
+///  - element_count = N + 1
+/// Note:
+///  - Vertex buffers do not use element_type, this field only makes
+///    sense for index buffers.
+///  - Element buffers do not have attributes.
 struct BufferDescriptor {
   struct Attribute {
     u32 offset = 0;  //!< attribute data offset (in bytes)
     u32 size = 0;    //!< attribute number of components
     GLenum type = 0; //!< attribute data type
   };
-  std::map<const std::string, Attribute> attributes; //!< name - attribute map
+  std::map<const std::string, Attribute> attribute_map; //!< name - attribute map
+  std::unordered_map<std::string, u64> attribute_name_id_map;
+  std::vector<Attribute> attributes;
   GLuint element_size = 0; //!< how many components are assigned to each element
   u32 element_count = 0;   //!< number of elements
   GLuint element_type;     //!< type of elements  (GL_TRIANGLES, ...)
@@ -80,8 +97,8 @@ struct BufferDescriptor {
     type = other.type;
     use = other.use;
     data_type = other.data_type;
-    for (auto a : other.attributes)
-      attributes[a.first] = a.second;
+    for (auto a : other.attribute_map)
+      attribute_map[a.first] = a.second;
   }
   ///
   /// \param other
@@ -92,8 +109,8 @@ struct BufferDescriptor {
     type = other.type;
     use = other.use;
     data_type = other.data_type;
-    for (auto a : other.attributes)
-      attributes[a.first] = a.second;
+    for (auto a : other.attribute_map)
+      attribute_map[a.first] = a.second;
   }
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      OPERATORS        //////////////////////////////
@@ -105,8 +122,8 @@ struct BufferDescriptor {
     type = other.type;
     use = other.use;
     data_type = other.data_type;
-    for (auto a : other.attributes)
-      attributes[a.first] = a.second;
+    for (auto a : other.attribute_map)
+      attribute_map[a.first] = a.second;
     return *this;
   }
   /////////////////////////////////////////////////////////////////////////////
@@ -122,8 +139,15 @@ struct BufferDescriptor {
     att.size = _size;
     att.offset = _offset;
     att.type = _type;
-    attributes[_name] = att;
+    attribute_map[_name] = att;
+    attribute_name_id_map[_name] = attributes.size();
+    attributes.emplace_back(att);
   }
+  /// \return data type size in bytes
+  [[nodiscard]] u64 dataSize() const {
+    return OpenGL::dataSizeInBytes(data_type);
+  }
+  [[nodiscard]] u64 size() const { return element_size * element_count * dataSize(); }
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////        STATIC         //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -410,9 +434,57 @@ using IndexBuffer = GLBuffer<uint>;
 /// Notes:
 /// - This class uses RAII. The object is created on construction and destroyed on
 /// deletion.
-class Buffer {
+class DeviceMemory final {
 public:
-  Buffer();
+  /// Buffer views allow us to define how buffer's memory is accessed and
+  /// interpreted. It holds information about vertex attributes and etc.
+  /// Note: Be careful with the destruction order, buffer views must be
+  /// destroyed before their respective buffers.
+  class View final {
+  public:
+    /// \param buffer buffer reference
+    /// \param descriptor buffer description
+    /// \param offset starting position (in bytes) inside buffer
+    explicit View(DeviceMemory &buffer, const BufferDescriptor &descriptor, u64 offset = 0);
+    /// \return view size in bytes
+    [[nodiscard]] inline u64 size() const { return length_; }
+    /// \return view start inside buffer
+    [[nodiscard]] inline u64 offset() const { return offset_; }
+    /// \param access specifies a combination of access flags indicating
+    /// the desired access to the range. (GL_MAP_READ_BIT, GL_MAP_WRITE_BIT)
+    /// \return pointer to mapped memory
+    void *mapped(GLbitfield access);
+    /// invalidate mapped pointer and updates the buffer with changed data
+    void unmap();
+    /// Access a single attribute of an element
+    /// Note: The buffer MUST be previously mapped
+    /// \tparam T attribute data type
+    /// \param attribute_name
+    /// \param element_id
+    /// \return reference to attribute value
+    template<typename T>
+    T &at(const std::string &attribute_name, u64 element_id) {
+      static T dummy{};
+      if (descriptor_.attributes.empty())
+        return dummy;
+      auto it = descriptor_.attribute_name_id_map.find(attribute_name);
+      if (it == descriptor_.attribute_name_id_map.end())
+        return dummy;
+      auto element_address = element_id * descriptor_.element_size * OpenGL::dataSizeInBytes(descriptor_.element_type);
+      auto attribute_id = it->second;
+      auto attribute_address = element_address + descriptor_.attributes[attribute_id].offset;
+      return static_cast<T &>(reinterpret_cast<char *>(mapped_) + attribute_address);
+    }
+
+
+  private:
+    DeviceMemory &buffer_;
+    BufferDescriptor descriptor_;
+    u64 offset_{0};
+    u64 length_{0};
+    void *mapped_{nullptr};
+  };
+  DeviceMemory();
   /// Parameters constructor
   /// \param usage Specifies the expected usage pattern of the data store.
   /// (ex: GL_STATIC_DRAW)
@@ -420,8 +492,8 @@ public:
   /// \param size Specifies the size in bytes of the buffer object.
   /// \param data Specifies a pointer to data that will be copied into the data
   /// store for initialization.
-  Buffer(GLuint usage, GLuint target, u64 size = 0, void* data = nullptr);
-  virtual ~Buffer();
+  DeviceMemory(GLuint usage, GLuint target, u64 size = 0, void *data = nullptr);
+  virtual ~DeviceMemory();
   /// \param _target Specifies the target buffer object. (ex: GL_ARRAY_BUFFER)
   void setTarget(GLuint _target);
   /// \param usage Specifies the expected usage pattern of the data store.
@@ -435,15 +507,60 @@ public:
   [[nodiscard]] inline GLuint usage() const { return usage_; }
   /// \return buffer target
   [[nodiscard]] inline GLuint target() const { return target_; }
+  /// \return
+  [[nodiscard]] inline bool allocated() const { return buffer_object_id_; }
+  /// \return
+  [[nodiscard]] inline GLuint id() const { return buffer_object_id_; }
+  /// Allocates buffer memory on device
+  void allocate();
+  /// \param data_size in bytes
+  /// \param data
+  void allocate(u64 data_size, void *data = nullptr);
+  /// Copies data to the specified buffer region. Allocates buffer if necessary.
+  /// \param data
+  /// \param data_size
+  /// \param offset
+  void copy(void *data, u64 data_size = 0, u64 offset = 0);
+  /// Binds buffer object (Allocates first if necessary)
+  void bind();
+  /// Retrieve a pointer to buffer memory (allocates if necessary).
+  /// \param access Specifies the access policy, indicating whether it will be
+  /// possible to read from, write to, or both read from and write to the buffer
+  /// object's mapped data store. (GL_READ_ONLY, GL_WRITE_ONLY, or GL_READ_WRITE).
+  /// \return
+  void *mapped(GLenum access);
+  /// Retrieve a pointer to buffer memory region (allocates if necessary).
+  /// \param offset start position (in bytes) of mapped memory
+  /// \param length mapped memory region size (in bytes)
+  /// \param access specifies a combination of access flags indicating
+  /// the desired access to the range. (GL_MAP_READ_BIT, GL_MAP_WRITE_BIT)
+  /// \return pointer to mapped memory region
+  void *mapped(u64 offset, u64 length, GLbitfield access);
+  /// invalidate mapped pointer and updates the buffer with changed data
+  void unmap() const;
   /// Deletes buffer data and destroy object
   void destroy();
 private:
+  void allocate_(void *data);
   GLuint buffer_object_id_{0};
   u64 size_{0};
   GLuint target_{0};            //!< buffer type (GL_ARRAY_BUFFER, ...)
   GLuint usage_{0};             //!< use  (GL_STATIC_DRAW, ...)
 };
-
+/// Holds a device memory with a single view of its full range
+class Buffer {
+public:
+  Buffer();
+  explicit Buffer(const BufferDescriptor &descriptor);
+  virtual ~Buffer();
+  void setDescriptor(const BufferDescriptor &descriptor);
+  void bind();
+  void *mapped(GLbitfield access);
+  void unmap() const;
+private:
+  DeviceMemory mem_;
+  std::unique_ptr<DeviceMemory::View> view_;
+};
 } // namespace circe
 
 #endif // CIRCE_IO_BUFFER_H

@@ -39,7 +39,7 @@ namespace ponos {
 ///\brief
 ///
 ///\tparam T
-template <typename T> class Point2 {
+template<typename T> class Point2 : public MathElement<T, 2u> {
   static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
                     std::is_same<T, float>::value ||
                     std::is_same<T, double>::value,
@@ -74,55 +74,55 @@ public:
 };
 
 // ARITHMETIC
-template <typename T>
+template<typename T>
 Point2<T> operator+(const Point2<T> a, const Vector2<T> &v) {
   return Point2<T>(a.x + v.x, a.y + v.y);
 }
-template <typename T>
+template<typename T>
 Point2<T> operator-(const Point2<T> a, const Vector2<T> &v) {
   return Point2<T>(a.x - v.x, a.y - v.y);
 }
-template <typename T> Point2<T> operator+(const Point2<T> a, const T &f) {
+template<typename T> Point2<T> operator+(const Point2<T> a, const T &f) {
   return Point2<T>(a.x + f, a.y + f);
 }
-template <typename T> Point2<T> operator-(const Point2<T> a, const T &f) {
+template<typename T> Point2<T> operator-(const Point2<T> a, const T &f) {
   return Point2<T>(a.x - f, a.y - f);
 }
-template <typename T>
+template<typename T>
 Vector2<T> operator-(const Point2<T> &a, const Point2<T> &b) {
   return Vector2<T>(a.x - b.x, a.y - b.y);
 }
-template <typename T> Point2<T> operator/(const Point2<T> a, real_t f) {
+template<typename T> Point2<T> operator/(const Point2<T> a, real_t f) {
   return Point2<T>(a.x / f, a.y / f);
 }
-template <typename T> Point2<T> operator*(const Point2<T> a, real_t f) {
+template<typename T> Point2<T> operator*(const Point2<T> a, real_t f) {
   return Point2<T>(a.x * f, a.y * f);
 }
-template <typename T> Point2<T> operator*(real_t f, const Point2<T> &a) {
+template<typename T> Point2<T> operator*(real_t f, const Point2<T> &a) {
   return Point2<T>(a.x * f, a.y * f);
 }
 // BOOLEAN
-template <typename T> bool operator==(const Point2<T> &a, const Point2<T> &b) {
+template<typename T> bool operator==(const Point2<T> &a, const Point2<T> &b) {
   return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y);
 }
-template <typename T> bool operator<(const Point2<T> &a, const Point2<T> &b) {
+template<typename T> bool operator<(const Point2<T> &a, const Point2<T> &b) {
   return !(a.x >= b.x || a.y >= b.y);
 }
-template <typename T> bool operator>=(const Point2<T> &a, const Point2<T> &b) {
+template<typename T> bool operator>=(const Point2<T> &a, const Point2<T> &b) {
   return a.x >= b.x && a.y >= b.y;
 }
-template <typename T> bool operator<=(const Point2<T> &a, const Point2<T> &b) {
+template<typename T> bool operator<=(const Point2<T> &a, const Point2<T> &b) {
   return a.x <= b.x && a.y <= b.y;
 }
 // GEOMETRY
-template <typename T> real_t distance(const Point2<T> &a, const Point2<T> &b) {
+template<typename T> real_t distance(const Point2<T> &a, const Point2<T> &b) {
   return (a - b).length();
 }
-template <typename T> real_t distance2(const Point2<T> &a, const Point2<T> &b) {
+template<typename T> real_t distance2(const Point2<T> &a, const Point2<T> &b) {
   return (a - b).length2();
 }
 
-template <typename T> class Point3 {
+template<typename T> class Point3 : public MathElement<T, 3u> {
   static_assert(std::is_same<T, f32>::value || std::is_same<T, f64>::value ||
                     std::is_same<T, float>::value ||
                     std::is_same<T, double>::value,
@@ -175,50 +175,50 @@ public:
 };
 
 // ARITHMETIC
-template <typename T>
+template<typename T>
 Vector3<T> operator-(const Point3<T> &a, const Point3<T> &b) {
   return Vector3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
 }
-template <typename T>
+template<typename T>
 Point3<T> operator-(const Point3<T> &a, const Vector3<T> &v) {
   return Point3<T>(a.x - v.x, a.y - v.y, a.z - v.z);
 }
-template <typename T>
+template<typename T>
 Point3<T> operator+(const Point3<T> &a, const Vector3<T> &v) {
   return Point3<T>(a.x + v.x, a.y + v.y, a.z + v.z);
 }
-template <typename T> Point3<T> operator+(const Point3<T> &a, const real_t &f) {
+template<typename T> Point3<T> operator+(const Point3<T> &a, const real_t &f) {
   return Point3<T>(a.x + f, a.y + f, a.z + f);
 }
-template <typename T> Point3<T> operator-(const Point3<T> &a, const real_t &f) {
+template<typename T> Point3<T> operator-(const Point3<T> &a, const real_t &f) {
   return Point3<T>(a.x - f, a.y - f, a.z - f);
 }
-template <typename T> Point3<T> operator*(const Point3<T> &a, real_t f) {
+template<typename T> Point3<T> operator*(const Point3<T> &a, real_t f) {
   return Point3<T>(a.x * f, a.y * f, a.z * f);
 }
-template <typename T> Point3<T> operator/(const Point3<T> &a, real_t f) {
+template<typename T> Point3<T> operator/(const Point3<T> &a, real_t f) {
   return Point3<T>(a.x / f, a.y / f, a.z / f);
 }
 // BOOLEAN
-template <typename T> bool operator==(const Point3<T> &a, const Point3<T> &b) {
+template<typename T> bool operator==(const Point3<T> &a, const Point3<T> &b) {
   return Check::is_equal(a.x, b.x) && Check::is_equal(a.y, b.y) &&
-         Check::is_equal(a.z, b.z);
+      Check::is_equal(a.z, b.z);
 }
-template <typename T> bool operator!=(const Point3<T> &a, const Point3<T> &b) {
+template<typename T> bool operator!=(const Point3<T> &a, const Point3<T> &b) {
   return !Check::is_equal(a.x, b.x) || !Check::is_equal(a.y, b.y) ||
-         !Check::is_equal(a.z, b.z);
+      !Check::is_equal(a.z, b.z);
 }
-template <typename T> bool operator>=(const Point3<T> &a, const Point3<T> &b) {
+template<typename T> bool operator>=(const Point3<T> &a, const Point3<T> &b) {
   return a.x >= b.x && a.y >= b.y && a.z >= b.z;
 }
-template <typename T> bool operator<=(const Point3<T> &a, const Point3<T> &b) {
+template<typename T> bool operator<=(const Point3<T> &a, const Point3<T> &b) {
   return a.x <= b.x && a.y <= b.y && a.z <= b.z;
 }
 // GEOMETRY
-template <typename T> real_t distance(const Point3<T> &a, const Point3<T> &b) {
+template<typename T> real_t distance(const Point3<T> &a, const Point3<T> &b) {
   return (a - b).length();
 }
-template <typename T> real_t distance2(const Point3<T> &a, const Point3<T> &b) {
+template<typename T> real_t distance2(const Point3<T> &a, const Point3<T> &b) {
   return (a - b).length2();
 }
 
@@ -230,12 +230,12 @@ using point3 = Point3<real_t>;
 using point3f = Point3<float>;
 using point3d = Point3<double>;
 
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &os, const Point2<T> &p) {
   os << "Point2[" << p.x << " " << p.y << "]";
   return os;
 }
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &os, const Point3<T> &p) {
   os << "Point3[" << p.x << " " << p.y << " " << p.z << "]";
   return os;
@@ -246,7 +246,7 @@ std::ostream &operator<<(std::ostream &os, const Point3<T> &p) {
 // std hash support
 namespace std {
 
-template <typename T> struct hash<ponos::Point2<T>> {
+template<typename T> struct hash<ponos::Point2<T>> {
   size_t operator()(ponos::Point2<T> const &v) const {
     hash<T> hasher;
     size_t s = 0;
@@ -262,7 +262,7 @@ template <typename T> struct hash<ponos::Point2<T>> {
   }
 };
 
-template <typename T> struct hash<ponos::Point3<T>> {
+template<typename T> struct hash<ponos::Point3<T>> {
   size_t operator()(ponos::Point3<T> const &v) const {
     hash<T> hasher;
     size_t s = 0;
