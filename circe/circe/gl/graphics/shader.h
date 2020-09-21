@@ -218,7 +218,7 @@ public:
   [[nodiscard]] int locateAttribute(const std::string &name) const;
   /// Register shader attributes into vertex buffer
   /// \param b buffer pointer (must match attribute names)
-  void registerVertexAttributes(const VertexBuffer *b);
+  void registerVertexAttributes(const GLVertexBuffer *b);
   // Uniforms
   void setUniform(const char *name, const ponos::Transform &t);
   void setUniform(const char *name, const ponos::mat4 &m);

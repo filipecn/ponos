@@ -18,7 +18,7 @@
 //#include <circe/helpers/tmesh_model.h>
 #include <circe/gl/helpers/vector_grid.h>
 #include <circe/gl/io/buffer.h>
-#include <circe/gl/io/vertex_array_object.h>
+#include <circe/gl/storage/vertex_array_object.h>
 #include <circe/gl/io/display_renderer.h>
 #include <circe/gl/io/font_texture.h>
 #include <circe/gl/io/framebuffer.h>
@@ -43,6 +43,10 @@
 #include <circe/gl/scene/triangle_mesh.h>
 #include <circe/gl/scene/volume_box.h>
 #include <circe/gl/scene/wireframe_mesh.h>
+#include <circe/gl/storage/device_memory.h>
+#include <circe/gl/storage/index_buffer.h>
+#include <circe/gl/storage/vertex_array_object.h>
+#include <circe/gl/storage/vertex_buffer.h>
 #include <circe/gl/ui/app.h>
 #include <circe/gl/ui/font_manager.h>
 #include <circe/gl/ui/interactive_object_interface.h>

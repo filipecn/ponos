@@ -48,7 +48,7 @@ bool SceneModel::set(const ponos::RawMesh &raw_mesh) {
   return true;
 }
 
-void SceneModel::bind() {
+void SceneModel::bind() const {
   glBindVertexArray(VAO);
 }
 
@@ -106,9 +106,9 @@ void SceneMesh::bind() {
   indexBuffer_.bind();
 }
 
-const VertexBuffer *SceneMesh::vertexBuffer() const { return &vertexBuffer_; }
+const GLVertexBuffer *SceneMesh::vertexBuffer() const { return &vertexBuffer_; }
 
-const IndexBuffer *SceneMesh::indexBuffer() const { return &indexBuffer_; }
+const GLIndexBuffer *SceneMesh::indexBuffer() const { return &indexBuffer_; }
 
 const ponos::RawMesh *SceneMesh::rawMesh() const { return mesh_; }
 
@@ -159,11 +159,11 @@ void SceneDynamicMesh::bind() {
   index_buffer_.bind();
 }
 
-const VertexBuffer *SceneDynamicMesh::vertexBuffer() const {
+const GLVertexBuffer *SceneDynamicMesh::vertexBuffer() const {
   return &vertex_buffer_;
 }
 
-const IndexBuffer *SceneDynamicMesh::indexBuffer() const {
+const GLIndexBuffer *SceneDynamicMesh::indexBuffer() const {
   return &index_buffer_;
 }
 

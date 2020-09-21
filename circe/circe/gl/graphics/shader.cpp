@@ -155,7 +155,7 @@ bool ShaderProgram::begin() {
   return true;
 }
 
-[[maybe_unused]] void ShaderProgram::registerVertexAttributes(const VertexBuffer *b) {
+[[maybe_unused]] void ShaderProgram::registerVertexAttributes(const GLVertexBuffer *b) {
   if (!ShaderManager::instance().useShader(programId))
     return;
   for (const auto &va : attrLocations) {

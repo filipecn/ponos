@@ -131,7 +131,7 @@ void CartesianGrid::updateBuffers() {
     glDeleteBuffers(1, &VAO_grid_);
   glGenVertexArrays(1, &VAO_grid_);
   glBindVertexArray(VAO_grid_);
-  vb.reset(new VertexBuffer(&mesh.positions[0], vd));
+  vb.reset(new GLVertexBuffer(&mesh.positions[0], vd));
   vb->locateAttributes(*gridShader_.get());
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);

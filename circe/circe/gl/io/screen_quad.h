@@ -40,8 +40,8 @@ public:
 
 private:
   ponos::RawMesh mesh_;
-  std::shared_ptr<VertexBuffer> vb_;
-  std::shared_ptr<IndexBuffer> ib_;
+  std::shared_ptr<GLVertexBuffer> vb_;
+  std::shared_ptr<GLIndexBuffer> ib_;
   GLuint VAO;
 };
 }

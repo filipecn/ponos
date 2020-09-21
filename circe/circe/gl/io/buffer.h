@@ -295,19 +295,19 @@ class Program;
 /// A device buffer used by a shader must have its data laid out in memory in a
 /// way compatible to the shader layout. It is done by mapping the shader
 /// attribute locations to the buffer.
-class BufferInterface {
+class GLBufferInterface {
 public:
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      CONSTRUCTORS     //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   /// Default constructor
-  explicit BufferInterface(GLuint id = 0);
+  explicit GLBufferInterface(GLuint id = 0);
   ///
   /// \param b
   /// \param id
-  explicit BufferInterface(BufferDescriptor b, GLuint id = 0);
+  explicit GLBufferInterface(BufferDescriptor b, GLuint id = 0);
   /// Destructor
-  virtual ~BufferInterface();
+  virtual ~GLBufferInterface();
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      METHODS          //////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -336,7 +336,7 @@ protected:
 /// Device buffer for shader access
 /// \tparam T data type
 template<typename T>
-class GLBuffer : public BufferInterface {
+class GLBuffer : public GLBufferInterface {
 public:
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////      CONSTRUCTORS     //////////////////////////////
@@ -353,7 +353,7 @@ public:
   /// \param bd **[in]** buffer description
   [[deprecated]]
   explicit GLBuffer(const BufferDescriptor &bd, GLuint id = 0)
-      : BufferInterface(bd, id) {}
+      : GLBufferInterface(bd, id) {}
 
   ~GLBuffer() override {
     // already destroying GL buffer in base destructor!
@@ -413,154 +413,9 @@ public:
   }
 };
 
-using VertexBuffer = GLBuffer<float>;
-using IndexBuffer = GLBuffer<uint>;
+using GLVertexBuffer = GLBuffer<float>;
+using GLIndexBuffer = GLBuffer<uint>;
 
-/// Holds an Open GL Buffer Object that store an array of unformatted memory allocated
-/// by the GPU. These can be used to store vertex data, pixel data retrieved from
-/// images or the framebuffer, and a variety of other things.
-///
-/// Buffer Targets:
-/// GL_ARRAY_BUFFER, GL_ATOMIC_COUNTER_BUFFER, GL_COPY_READ_BUFFER,
-/// GL_COPY_WRITE_BUFFER, GL_DRAW_INDIRECT_BUFFER, GL_DISPATCH_INDIRECT_BUFFER,
-/// GL_ELEMENT_ARRAY_BUFFER, GL_PIXEL_PACK_BUFFER, GL_PIXEL_UNPACK_BUFFER,
-/// GL_QUERY_BUFFER, GL_SHADER_STORAGE_BUFFER, GL_TEXTURE_BUFFER,
-/// GL_TRANSFORM_FEEDBACK_BUFFER, or GL_UNIFORM_BUFFER.
-///
-/// Buffer Usages:
-/// GL_STREAM_DRAW, GL_STREAM_READ, GL_STREAM_COPY, GL_STATIC_DRAW, GL_STATIC_READ,
-/// GL_STATIC_COPY, GL_DYNAMIC_DRAW, GL_DYNAMIC_READ, or GL_DYNAMIC_COPY
-///
-/// Notes:
-/// - This class uses RAII. The object is created on construction and destroyed on
-/// deletion.
-class DeviceMemory final {
-public:
-  /// Buffer views allow us to define how buffer's memory is accessed and
-  /// interpreted. It holds information about vertex attributes and etc.
-  /// Note: Be careful with the destruction order, buffer views must be
-  /// destroyed before their respective buffers.
-  class View final {
-  public:
-    /// \param buffer buffer reference
-    /// \param descriptor buffer description
-    /// \param offset starting position (in bytes) inside buffer
-    explicit View(DeviceMemory &buffer, const BufferDescriptor &descriptor, u64 offset = 0);
-    /// \return view size in bytes
-    [[nodiscard]] inline u64 size() const { return length_; }
-    /// \return view start inside buffer
-    [[nodiscard]] inline u64 offset() const { return offset_; }
-    /// \param access specifies a combination of access flags indicating
-    /// the desired access to the range. (GL_MAP_READ_BIT, GL_MAP_WRITE_BIT)
-    /// \return pointer to mapped memory
-    void *mapped(GLbitfield access);
-    /// invalidate mapped pointer and updates the buffer with changed data
-    void unmap();
-    /// Access a single attribute of an element
-    /// Note: The buffer MUST be previously mapped
-    /// \tparam T attribute data type
-    /// \param attribute_name
-    /// \param element_id
-    /// \return reference to attribute value
-    template<typename T>
-    T &at(const std::string &attribute_name, u64 element_id) {
-      static T dummy{};
-      if (descriptor_.attributes.empty())
-        return dummy;
-      auto it = descriptor_.attribute_name_id_map.find(attribute_name);
-      if (it == descriptor_.attribute_name_id_map.end())
-        return dummy;
-      auto element_address = element_id * descriptor_.element_size * OpenGL::dataSizeInBytes(descriptor_.element_type);
-      auto attribute_id = it->second;
-      auto attribute_address = element_address + descriptor_.attributes[attribute_id].offset;
-      return static_cast<T &>(reinterpret_cast<char *>(mapped_) + attribute_address);
-    }
-
-
-  private:
-    DeviceMemory &buffer_;
-    BufferDescriptor descriptor_;
-    u64 offset_{0};
-    u64 length_{0};
-    void *mapped_{nullptr};
-  };
-  DeviceMemory();
-  /// Parameters constructor
-  /// \param usage Specifies the expected usage pattern of the data store.
-  /// (ex: GL_STATIC_DRAW)
-  /// \param target Specifies the target buffer object. (ex: GL_ARRAY_BUFFER)
-  /// \param size Specifies the size in bytes of the buffer object.
-  /// \param data Specifies a pointer to data that will be copied into the data
-  /// store for initialization.
-  DeviceMemory(GLuint usage, GLuint target, u64 size = 0, void *data = nullptr);
-  virtual ~DeviceMemory();
-  /// \param _target Specifies the target buffer object. (ex: GL_ARRAY_BUFFER)
-  void setTarget(GLuint _target);
-  /// \param usage Specifies the expected usage pattern of the data store.
-  /// (ex: GL_STATIC_DRAW)
-  void setUsage(GLuint _usage);
-  /// \param size Specifies the size in bytes of the buffer object.
-  void resize(u64 size_in_bytes);
-  /// \return buffer size in bytes
-  [[nodiscard]] inline u64 size() const { return size_; }
-  /// \return buffer usage
-  [[nodiscard]] inline GLuint usage() const { return usage_; }
-  /// \return buffer target
-  [[nodiscard]] inline GLuint target() const { return target_; }
-  /// \return
-  [[nodiscard]] inline bool allocated() const { return buffer_object_id_; }
-  /// \return
-  [[nodiscard]] inline GLuint id() const { return buffer_object_id_; }
-  /// Allocates buffer memory on device
-  void allocate();
-  /// \param data_size in bytes
-  /// \param data
-  void allocate(u64 data_size, void *data = nullptr);
-  /// Copies data to the specified buffer region. Allocates buffer if necessary.
-  /// \param data
-  /// \param data_size
-  /// \param offset
-  void copy(void *data, u64 data_size = 0, u64 offset = 0);
-  /// Binds buffer object (Allocates first if necessary)
-  void bind();
-  /// Retrieve a pointer to buffer memory (allocates if necessary).
-  /// \param access Specifies the access policy, indicating whether it will be
-  /// possible to read from, write to, or both read from and write to the buffer
-  /// object's mapped data store. (GL_READ_ONLY, GL_WRITE_ONLY, or GL_READ_WRITE).
-  /// \return
-  void *mapped(GLenum access);
-  /// Retrieve a pointer to buffer memory region (allocates if necessary).
-  /// \param offset start position (in bytes) of mapped memory
-  /// \param length mapped memory region size (in bytes)
-  /// \param access specifies a combination of access flags indicating
-  /// the desired access to the range. (GL_MAP_READ_BIT, GL_MAP_WRITE_BIT)
-  /// \return pointer to mapped memory region
-  void *mapped(u64 offset, u64 length, GLbitfield access);
-  /// invalidate mapped pointer and updates the buffer with changed data
-  void unmap() const;
-  /// Deletes buffer data and destroy object
-  void destroy();
-private:
-  void allocate_(void *data);
-  GLuint buffer_object_id_{0};
-  u64 size_{0};
-  GLuint target_{0};            //!< buffer type (GL_ARRAY_BUFFER, ...)
-  GLuint usage_{0};             //!< use  (GL_STATIC_DRAW, ...)
-};
-/// Holds a device memory with a single view of its full range
-class Buffer {
-public:
-  Buffer();
-  explicit Buffer(const BufferDescriptor &descriptor);
-  virtual ~Buffer();
-  void setDescriptor(const BufferDescriptor &descriptor);
-  void bind();
-  void *mapped(GLbitfield access);
-  void unmap() const;
-private:
-  DeviceMemory mem_;
-  std::unique_ptr<DeviceMemory::View> view_;
-};
 } // namespace circe
 
 #endif // CIRCE_IO_BUFFER_H

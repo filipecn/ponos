@@ -73,8 +73,8 @@ ScreenQuad::ScreenQuad() {
     glBindVertexArray(VAO);
     BufferDescriptor vd, id;
     create_buffer_description_from_mesh(mesh_, vd, id);
-    vb_.reset(new VertexBuffer(&mesh_.interleavedData[0], vd));
-    ib_.reset(new IndexBuffer(&mesh_.positionsIndices[0], id));
+    vb_.reset(new GLVertexBuffer(&mesh_.interleavedData[0], vd));
+    ib_.reset(new GLIndexBuffer(&mesh_.positionsIndices[0], id));
     vb_->locateAttributes(*shader.get());
     //    shader->registerVertexAttributes(vb_.get());
     // note that this is allowed, the call to glVertexAttribPointer registered

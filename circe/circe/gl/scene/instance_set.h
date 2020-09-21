@@ -77,7 +77,7 @@ private:
   std::vector<std::vector<uint>> dataU_;   ///< unsigned int data
   std::vector<std::vector<float>> dataF_;  ///< float data
   std::vector<std::vector<uchar>> dataC_;  ///< unsigned byte data
-  std::vector<BufferInterface *> buffers_; ///< buffers
+  std::vector<GLBufferInterface *> buffers_; ///< buffers
 };
 
 } // circe namespace

@@ -54,7 +54,6 @@ set(CIRCE_HEADERS
         circe/gl/io/texture.h
         circe/gl/io/texture_parameters.h
         circe/io/utils.h
-        circe/gl/io/vertex_array_object.h
         circe/gl/io/viewport_display.h
         circe/gl/io/user_input.h
         circe/gl/scene/bvh.h
@@ -70,6 +69,11 @@ set(CIRCE_HEADERS
         circe/gl/scene/triangle_mesh.h
         circe/gl/scene/volume_box.h
         circe/gl/scene/wireframe_mesh.h
+        circe/gl/storage/buffer_interface.h
+        circe/gl/storage/device_memory.h
+        circe/gl/storage/index_buffer.h
+        circe/gl/storage/vertex_array_object.h
+        circe/gl/storage/vertex_buffer.h
         circe/gl/ui/app.h
         circe/gl/ui/interactive_object_interface.h
         circe/gl/ui/modifier_cursor.h
@@ -109,7 +113,6 @@ set(CIRCE_SOURCES
         circe/gl/io/screen_quad.cpp
         circe/gl/io/texture.cpp
         circe/io/utils.cpp
-        circe/gl/io/vertex_array_object.cpp
         circe/gl/io/viewport_display.cpp
         circe/gl/scene/bvh.cpp
         circe/gl/scene/mesh_utils.cpp
@@ -118,6 +121,11 @@ set(CIRCE_SOURCES
         circe/gl/scene/triangle_mesh.cpp
         circe/gl/scene/volume_box.cpp
         circe/gl/scene/wireframe_mesh.cpp
+        circe/gl/storage/buffer_interface.cpp
+        circe/gl/storage/device_memory.cpp
+        circe/gl/storage/index_buffer.cpp
+        circe/gl/storage/vertex_array_object.cpp
+        circe/gl/storage/vertex_buffer.cpp
         circe/gl/ui/app.cpp
         circe/gl/ui/text_renderer.cpp
         circe/gl/ui/text_object.cpp

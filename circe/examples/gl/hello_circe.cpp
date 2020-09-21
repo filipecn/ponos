@@ -90,6 +90,36 @@ public:
 };
 
 int main() {
-  spdlog::warn("Easy padding in numbers like {:08d}", 12);
+  circe::gl::SceneApp<> app(800, 800);
+
+  std::vector<f32> vertices = {
+      // x   y    z    u    v
+      0.f, 0.f, 0.f, 0.f, 0.f, // 0
+      1.f, 0.f, 0.f, 1.f, 0.f, // 1
+      1.f, 1.f, 0.f, 1.f, 1.f, // 2
+      0.f, 0.f, 1.f, 0.f, 1.f,  // 3
+      0.f, 1.f, 1.f, 1.f, 1.f, // 4
+  };
+  std::vector<u32> indices = {
+      0, 1, 2, // 0
+      3, 4, 0, // 1
+  };
+
+//  circe::gl::DeviceMemory dmv(GL_STATIC_DRAW, GL_ARRAY_BUFFER,
+//                              vertices.size() * sizeof(f32),
+//                              vertices.data());
+//  circe::gl::DeviceMemory dmi(GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER,
+//                              indices.size() * sizeof(i32),
+//                              indices.data());
+  circe::gl::VertexBuffer vb;
+  vb.attributes.pushAttribute<ponos::point3>("position");
+  vb.attributes.pushAttribute<ponos::point2>("uv");
+  vb = vertices;
+  std::cerr << vb << std::endl;
+  circe::gl::IndexBuffer ib;
+  ib = indices;
+  std::cerr << ib.element_count << std::endl;
+  return app.run();
+
   return HelloCirce().run();
 }

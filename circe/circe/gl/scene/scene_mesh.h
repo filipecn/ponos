@@ -37,17 +37,17 @@ public:
   SceneModel();
   virtual ~SceneModel();
   bool set(const ponos::RawMesh &raw_mesh);
-  void bind();
-  const VertexBuffer &vertexBuffer() const { return vertex_buffer_; }
-  const IndexBuffer &indexBuffer() const { return index_buffer_; }
+  void bind() const;
+  const GLVertexBuffer &vertexBuffer() const { return vertex_buffer_; }
+  const GLIndexBuffer &indexBuffer() const { return index_buffer_; }
   void draw();
   void clear();
 protected:
   GLuint VAO{0};
   std::vector<float> vertex_data_;
   std::vector<uint> index_data_;
-  VertexBuffer vertex_buffer_;
-  IndexBuffer index_buffer_;
+  GLVertexBuffer vertex_buffer_;
+  GLIndexBuffer index_buffer_;
 };
 
 /// Set of buffers that represent a raw mesh for rendering.
@@ -62,9 +62,9 @@ public:
   void bind();
   void unbind();
   /// \return vertex buffer pointer
-  const VertexBuffer *vertexBuffer() const;
+  const GLVertexBuffer *vertexBuffer() const;
   /// \return index buffer pointer
-  const IndexBuffer *indexBuffer() const;
+  const GLIndexBuffer *indexBuffer() const;
   const ponos::RawMesh *rawMesh() const;
 
 protected:
@@ -72,8 +72,8 @@ protected:
   std::vector<float> vertexData_;
   std::vector<uint> indexData_;
   const ponos::RawMesh *mesh_ = nullptr;
-  VertexBuffer vertexBuffer_;
-  IndexBuffer indexBuffer_;
+  GLVertexBuffer vertexBuffer_;
+  GLIndexBuffer indexBuffer_;
 };
 
 /// Set of buffers created that represent a raw mesh for rendering. The mesh
@@ -94,9 +94,9 @@ public:
   /// Unbinds buffers
   void unbind();
   /// \return vertex buffer pointer
-  [[nodiscard]] const VertexBuffer *vertexBuffer() const;
+  [[nodiscard]] const GLVertexBuffer *vertexBuffer() const;
   /// \return index buffer pointer
-  [[nodiscard]] const IndexBuffer *indexBuffer() const;
+  [[nodiscard]] const GLIndexBuffer *indexBuffer() const;
   /// \param vertex_buffer_data **[in]**
   /// \param vertex_count **[in]**
   /// \param index_buffer_data **[in]**
@@ -111,8 +111,8 @@ public:
 
 private:
   GLuint VAO_;
-  VertexBuffer vertex_buffer_;
-  IndexBuffer index_buffer_;
+  GLVertexBuffer vertex_buffer_;
+  GLIndexBuffer index_buffer_;
   BufferDescriptor vertex_buffer_descriptor_;
   BufferDescriptor index_buffer_descriptor_;
 };
