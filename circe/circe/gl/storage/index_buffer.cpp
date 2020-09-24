@@ -63,4 +63,8 @@ GLuint IndexBuffer::bufferTarget() const {
   return GL_ELEMENT_ARRAY_BUFFER;
 }
 
+GLuint IndexBuffer::bufferUsage() const {
+  return GL_STATIC_DRAW;
+}
+
 }

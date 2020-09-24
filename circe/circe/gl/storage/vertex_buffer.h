@@ -113,6 +113,7 @@ public:
   /// \param binding_index new binding index value
   void setBindingIndex(GLuint binding_index);
   [[nodiscard]] GLuint bufferTarget() const override;
+  [[nodiscard]] GLuint bufferUsage() const override;
   u64 dataSizeInBytes() const override;
   /// \tparam T
   /// \param data

@@ -39,6 +39,7 @@ public:
   IndexBuffer();
   ~IndexBuffer() override;
   [[nodiscard]] GLuint bufferTarget() const override;
+  [[nodiscard]] GLuint bufferUsage() const override;
   [[nodiscard]] u64 dataSizeInBytes() const override;
   /// \tparam T
   /// \param data

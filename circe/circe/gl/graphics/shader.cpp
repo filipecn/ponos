@@ -24,12 +24,16 @@
 
 #include <circe/gl/graphics/shader.h>
 #include <ponos/common/file_system.h>
+#include <iomanip>    // std::setw
+#include <ios>        // std::left
 
 namespace circe::gl {
 
 Shader::Shader() = default;
 
-Shader::Shader(GLuint type) : type_(type) {}
+Shader::Shader(GLuint
+               type) :
+    type_(type) {}
 
 Shader::Shader(const std::string &code, GLuint type) : Shader(type) {
   compile(code, type);
@@ -51,7 +55,8 @@ Shader::~Shader() {
   glDeleteShader(id_);
 }
 
-void Shader::setType(GLuint type) {
+void Shader::setType(GLuint
+                     type) {
   type_ = type;
   glDeleteShader(id_);
   id_ = glCreateShader(type_);
@@ -400,6 +405,8 @@ bool Program::use() {
 void Program::cacheLocations() {
   attr_locations_.clear();
   uniform_locations_.clear();
+  uniform_blocks_.clear();
+  ub_map_name_id_.clear();
 
   GLint i;
   GLint count;
@@ -417,10 +424,85 @@ void Program::cacheLocations() {
     attr_locations_[name] = glGetAttribLocation(id_, name);
   }
 
-  glGetProgramiv(id_, GL_ACTIVE_UNIFORMS, &count);
-  for (i = 0; i < count; i++) {
-    glGetActiveUniform(id_, (GLuint) i, bufSize, &length, &size, &type, name);
-    uniform_locations_[name] = glGetUniformLocation(id_, name);
+  static const GLenum uniform_properties[16] = {
+      GL_NAME_LENGTH, // 0
+      GL_TYPE, // 1
+      GL_ARRAY_SIZE, // 2
+      GL_OFFSET, // 3
+      GL_BLOCK_INDEX, // 4
+      GL_ARRAY_STRIDE, // 5
+      GL_MATRIX_STRIDE, // 6
+      GL_IS_ROW_MAJOR, // 7
+      GL_ATOMIC_COUNTER_BUFFER_INDEX, // 8
+      GL_REFERENCED_BY_VERTEX_SHADER, // 9
+      GL_REFERENCED_BY_FRAGMENT_SHADER, // 10
+      GL_REFERENCED_BY_GEOMETRY_SHADER, // 11
+      GL_REFERENCED_BY_TESS_CONTROL_SHADER, // 12
+      GL_REFERENCED_BY_TESS_EVALUATION_SHADER, // 13
+      GL_REFERENCED_BY_COMPUTE_SHADER, // 14
+      GL_LOCATION // 15
+  };
+  auto readUniform = [&](GLint i) -> Uniform {
+    Uniform u;
+    // get properties
+    GLint values[16];
+    glGetProgramResourceiv(id_, GL_UNIFORM, i, 16, uniform_properties, 16, nullptr, values);
+    // get name
+    u.name.resize(values[0]);
+    glGetProgramResourceName(id_, GL_UNIFORM, i, u.name.size(), nullptr, &u.name[0]);
+    u.name.erase(std::find(u.name.begin(), u.name.end(), '\0'), u.name.end());
+    u.index = i;
+    u.type = values[1];
+    u.offset = values[3];
+    u.block_index = values[4];
+    u.array_size = values[2];
+    u.array_stride = values[5];
+    u.matrix_stride = values[6];
+    u.is_row_major = values[7];
+    u.location = values[15];
+    uniform_locations_[u.name] = u.location;
+
+    return u;
+  };
+  // get active uniforms
+  glGetProgramInterfaceiv(id_, GL_UNIFORM, GL_ACTIVE_RESOURCES, &count);
+  for (i = 0; i < count; i++)
+    uniforms_.emplace_back(readUniform(i));
+
+
+  // get active uniform blocks
+  glGetProgramInterfaceiv(id_, GL_UNIFORM_BLOCK, GL_ACTIVE_RESOURCES, &count);
+  static const GLenum uniform_block_properties[11] = {
+      GL_NAME_LENGTH, // 0
+      GL_BUFFER_BINDING, // 1
+      GL_BUFFER_DATA_SIZE, // 2
+      GL_NUM_ACTIVE_VARIABLES, // 3
+      GL_ACTIVE_VARIABLES, // 4
+      GL_REFERENCED_BY_VERTEX_SHADER, // 5
+      GL_REFERENCED_BY_FRAGMENT_SHADER, // 6
+      GL_REFERENCED_BY_GEOMETRY_SHADER, // 7
+      GL_REFERENCED_BY_TESS_CONTROL_SHADER, // 8
+      GL_REFERENCED_BY_TESS_EVALUATION_SHADER, // 9
+      GL_REFERENCED_BY_COMPUTE_SHADER // 10
+  };
+  const GLenum active_uniform_property[1] = {GL_ACTIVE_VARIABLES};
+  for (i = 0; i < count; ++i) {
+    UniformBlock ub;
+    // get properties
+    GLint values[11];
+    glGetProgramResourceiv(id_, GL_UNIFORM_BLOCK, i, 11, uniform_block_properties, 11, nullptr, &values[0]);
+    // get name
+    ub.name.resize(values[0]);
+    glGetProgramResourceName(id_, GL_UNIFORM_BLOCK, i, ub.name.size(), nullptr, &ub.name[0]);
+    ub.name.erase(std::find(ub.name.begin(), ub.name.end(), '\0'), ub.name.end());
+    ub.index = i;
+    ub.buffer_binding = values[1];
+    ub.size_in_bytes = values[2];
+    ub.variable_indices.resize(values[3]);
+    glGetProgramResourceiv(id_, GL_UNIFORM_BLOCK, i, 1, active_uniform_property,
+                           values[3], nullptr, &ub.variable_indices[0]);
+    uniform_blocks_.emplace_back(ub);
+    ub_map_name_id_[ub.name] = i;
   }
 }
 
@@ -541,6 +623,16 @@ void Program::setUniform(const std::string &name, float f) {
   glUniform1f(loc, f);
 }
 
+void Program::setUniformBlockBinding(const std::string &name, GLuint buffer_binding) {
+  auto it = ub_map_name_id_.find(name);
+  if (it == ub_map_name_id_.end())
+    spdlog::warn("Invalid Uniform Block Name");
+  else {
+    uniform_blocks_[it->second].buffer_binding = buffer_binding;
+    glUniformBlockBinding(id_, uniform_blocks_[it->second].index, buffer_binding);
+  }
+}
+
 GLint Program::getUniLoc(const std::string &name) {
   auto it = uniform_locations_.find(name);
   if (it == uniform_locations_.end())
@@ -575,36 +667,70 @@ bool Program::checkLinkageErrors() {
 }
 
 std::ostream &operator<<(std::ostream &o, const Program &program) {
-  GLint i;
-  GLint count;
+  {
+    GLint i;
+    GLint count;
+    {
+      GLint size; // size of the variable
+      GLenum type; // type of the variable (float, vec3 or mat4, etc)
 
-  GLint size; // size of the variable
-  GLenum type; // type of the variable (float, vec3 or mat4, etc)
+      const GLsizei bufSize = 30; // maximum name length
+      GLchar name[bufSize]; // variable name in GLSL
+      GLsizei length; // name length
 
-  const GLsizei bufSize = 30; // maximum name length
-  GLchar name[bufSize]; // variable name in GLSL
-  GLsizei length; // name length
+      glGetProgramiv(program.id_, GL_ACTIVE_ATTRIBUTES, &count);
+      o << "Active Attributes: " << count << std::endl;
 
-  glGetProgramiv(program.id_, GL_ACTIVE_ATTRIBUTES, &count);
-  o << "Active Attributes: " << count << std::endl;
-
-  for (i = 0; i < count; i++) {
-    glGetActiveAttrib(program.id_, (GLuint) i, bufSize, &length, &size, &type, name);
-    o << "Attribute #" << i << " Type: " << type << " Name: " << name << " location "
-      << glGetAttribLocation(program.id_, name) << std::endl;
+      for (i = 0; i < count; i++) {
+        glGetActiveAttrib(program.id_, (GLuint) i, bufSize, &length, &size, &type, name);
+        o << "Attribute #" << i << " Type: " << OpenGL::TypeToStr(type) << " Name: " << name << " location "
+          << glGetAttribLocation(program.id_, name) << std::endl;
+      }
+    }
   }
 
-  glGetProgramiv(program.id_, GL_ACTIVE_UNIFORMS, &count);
-  o << "Active Uniforms: " << count << std::endl;
+#define PRINT_TO_STR(A) \
+o << PREFIX << #A << ": " << A << std::endl;
 
-  for (i = 0; i < count; i++) {
-    glGetActiveUniform(program.id_, (GLuint) i, bufSize, &length, &size, &type, name);
-
-    o << "Uniform #" << i << " Type: " << type << " Name: " << name << " location "
-      << glGetUniformLocation(program.id_, name) << std::endl;
+  std::string PREFIX = "\t";
+  std::string glsl_type;
+  o << "Active Uniforms: " << program.uniforms_.size() << std::endl;
+  for (const auto &u : program.uniforms_) {
+    if (u.block_index >= 0)
+      continue;
+    o << "Uniform #" << u.index << std::endl;
+    PRINT_TO_STR(u.name)
+    PRINT_TO_STR(u.location)
+    o << "\tu.type: " << OpenGL::TypeToStr(u.type, &glsl_type);
+    o << " (" << glsl_type << ")\n";
+    PRINT_TO_STR(u.array_size)
+    PRINT_TO_STR(u.is_row_major)
   }
-
+  o << "Active Uniform BLocks: " << program.uniform_blocks_.size() << std::endl;
+  for (const auto &ub : program.uniform_blocks_) {
+    PREFIX = "\t";
+    o << "Uniform Block #" << ub.index << std::endl;
+    PRINT_TO_STR(ub.name)
+    PRINT_TO_STR(ub.buffer_binding)
+    PRINT_TO_STR(ub.size_in_bytes)
+    o << "\tVariables: " << ub.variable_indices.size() << std::endl;
+    PREFIX = "\t\t\t";
+    for (auto i : ub.variable_indices) {
+      const auto &u = program.uniforms_[i];
+      o << "\t\tUniform Block Variable (Uniform #" << u.index << "):" << std::endl;
+      PRINT_TO_STR(u.name)
+      o << "\t\t\tu.type: " << OpenGL::TypeToStr(u.type, &glsl_type);
+      o << " (" << glsl_type << ")\n";
+      PRINT_TO_STR(u.block_index)
+      PRINT_TO_STR(u.offset)
+      PRINT_TO_STR(u.array_size)
+      PRINT_TO_STR(u.array_stride)
+      PRINT_TO_STR(u.matrix_stride)
+      PRINT_TO_STR(u.is_row_major)
+    }
+  }
   return o;
+#undef PRINT_TO_STR
 }
 
 } // namespace circe

@@ -84,6 +84,10 @@ GLuint VertexBuffer::bufferTarget() const {
   return GL_ARRAY_BUFFER;
 }
 
+GLuint VertexBuffer::bufferUsage() const {
+  return GL_STATIC_DRAW;
+}
+
 u64 VertexBuffer::dataSizeInBytes() const {
   return vertex_count_ * attributes.stride();
 }
@@ -107,8 +111,8 @@ void VertexBuffer::specifyVertexFormat() {
 
 std::ostream &operator<<(std::ostream &os, const VertexBuffer &vb) {
   const auto &attr = vb.attributes.attributes();
-  os << "Vertex Buffer (" << attr.size() << " attributes)(stride = " <<
-     vb.attributes.stride() << ")\n";
+  os << "Vertex Buffer (" << vb.vertex_count_ << " vertices)(" << attr.size()
+     << " attributes)(stride = " << vb.attributes.stride() << ")\n";
   for (u64 i = 0; i < attr.size(); ++i) {
     os << "\tAttribute[" << i << "] with offset " <<
        vb.attributes.attributeOffset(i) << "\n";

@@ -58,10 +58,12 @@ public:
   /// destroyed before their respective buffers.
   class View final {
   public:
+    friend class DeviceMemory;
     /// \param buffer buffer reference
     /// \param length region size in bytes (0 means entire memory)
     /// \param offset starting position (in bytes) inside device memory
     explicit View(DeviceMemory &buffer, u64 length = 0, u64 offset = 0);
+    [[nodiscard]] inline GLuint bufferId() const { return buffer_.buffer_object_id_; }
     /// \return view size in bytes
     [[nodiscard]] inline u64 size() const { return length_; }
     /// \return view start inside buffer
@@ -72,6 +74,8 @@ public:
     /// the desired access to the range. (GL_MAP_READ_BIT, GL_MAP_WRITE_BIT)
     /// \return pointer to mapped memory
     void *mapped(GLbitfield access);
+    void *mapped(u64 offset_into_view, u64 length, GLbitfield access);
+    std::vector<u8> rawData();
     /// invalidate mapped pointer and updates the buffer with changed data
     void unmap();
     void bind();
@@ -145,6 +149,8 @@ public:
   void unmap() const;
   /// Deletes buffer data and destroy object
   void destroy();
+  /// \return
+  [[nodiscard]] std::vector<u8> rawData(u64 offset = 0, u64 length = 0);
 private:
   void allocate_(void *data);
   GLuint buffer_object_id_{0};

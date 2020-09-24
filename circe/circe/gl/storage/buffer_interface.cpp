@@ -47,7 +47,7 @@ void BufferInterface::allocate(GLuint buffer_usage) {
 void BufferInterface::setData(const void *data) {
   if (!mem_) {
     // allocate if necessary
-    allocate(GL_STATIC_DRAW);
+    allocate(bufferUsage());
   }
   auto *m = mem_->mapped(GL_MAP_WRITE_BIT);
   std::memcpy(m, data, dataSizeInBytes());

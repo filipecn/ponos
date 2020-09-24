@@ -47,6 +47,11 @@ void *DeviceMemory::View::mapped(GLbitfield access) {
   return mapped_;
 }
 
+void *DeviceMemory::View::mapped(u64 offset_into_view, u64 length, GLbitfield access) {
+  mapped_ = buffer_.mapped(offset_ + offset_into_view, length_, access);
+  return mapped_;
+}
+
 void DeviceMemory::View::unmap() {
   buffer_.unmap();
   mapped_ = nullptr;
@@ -54,6 +59,9 @@ void DeviceMemory::View::unmap() {
 
 void DeviceMemory::View::bind() {
   buffer_.bind();
+}
+std::vector<u8> DeviceMemory::View::rawData() {
+  return buffer_.rawData(offset_, length_);
 }
 
 DeviceMemory::DeviceMemory() = default;
@@ -121,16 +129,16 @@ void DeviceMemory::bind() {
 
 void *DeviceMemory::mapped(GLenum access) {
   bind();
-  void *mapped = glMapBuffer(target_, access);
+  void *m = glMapBuffer(target_, access);
   CHECK_GL_ERRORS;
-  return mapped;
+  return m;
 }
 
 void *DeviceMemory::mapped(u64 offset, u64 length, GLbitfield access) {
   bind();
-  void *mapped = glMapBufferRange(target_, offset, length, access);
+  void *m = glMapBufferRange(target_, offset, length, access);
   CHECK_GL_ERRORS;
-  return mapped;
+  return m;
 }
 
 void DeviceMemory::unmap() const {
@@ -140,6 +148,16 @@ void DeviceMemory::unmap() const {
 void DeviceMemory::destroy() {
   if (buffer_object_id_) CHECK_GL(glDeleteBuffers(1, &buffer_object_id_));
   buffer_object_id_ = 0;
+}
+
+std::vector<u8> DeviceMemory::rawData(u64 offset, u64 length) {
+  if (length == 0)
+    length = size_;
+  void *m = mapped(offset, length, GL_MAP_READ_BIT);
+  std::vector<u8> data(length);
+  memcpy(data.data(), m, length);
+  unmap();
+  return data;
 }
 
 }

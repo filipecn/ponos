@@ -39,6 +39,8 @@ public:
   /// \return
   [[nodiscard]] virtual GLuint bufferTarget() const = 0;
   /// \return
+  [[nodiscard]] virtual GLuint bufferUsage() const = 0;
+  /// \return
   [[nodiscard]] virtual u64 dataSizeInBytes() const = 0;
   /// Use a pre-existent device buffer to store vertex data
   /// \param device_memory
@@ -48,6 +50,8 @@ public:
   virtual void allocate(GLuint buffer_usage);
   /// \param data
   virtual void setData(const void *data);
+  /// \return
+  inline DeviceMemory::View *memory() { return mem_.get(); }
 
 protected:
   // memory resource

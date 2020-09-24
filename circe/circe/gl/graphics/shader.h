@@ -96,6 +96,26 @@ private:
 // Note: This object can't be copied, only moved
 class Program {
 public:
+  struct Uniform {
+    std::string name;
+    u64 index; //!< uniform index
+    GLint type; //!< GL_TYPE
+    GLint offset; //!< GL_OFFSET
+    GLint block_index; //!< GL_BLOCK_INDEX
+    GLint array_size; //!<  GL_ARRAY_SIZE
+    GLint array_stride; //!< GL_ARRAY_STRIDE
+    GLint matrix_stride; //!< GL_MATRIX_STRIDE
+    GLint is_row_major; //!< GL_IS_ROW_MAJOR
+    GLint location; //!< GL_LOCATION
+  };
+  struct UniformBlock {
+    std::string name;
+    GLuint index; //!< block index
+    GLuint buffer_binding; //!< GL_BUFFER_BINDING
+    GLuint size_in_bytes; //!< GL_BUFFER_DATA_SIZE
+    std::vector<GLint> variable_indices; //!< GL_ACTIVE_VARIABLES
+  };
+
   Program();
   /// \param files expect extensions: .frag, .vert
   explicit Program(const std::vector<ponos::Path> &files);
@@ -152,7 +172,11 @@ public:
   [[nodiscard]] int locateAttribute(const std::string &name) const;
   ///
   /// \return
-  GLuint id() const;
+  [[nodiscard]] GLuint id() const;
+  /// \return
+  [[nodiscard]] inline const std::vector<Uniform> &uniforms() const { return uniforms_; }
+  /// \return
+  [[nodiscard]] inline const std::vector<UniformBlock> &uniformBlocks() const { return uniform_blocks_; }
   // Uniforms
   void setUniform(const std::string &name, const ponos::Transform &t);
   void setUniform(const std::string &name, const ponos::mat4 &m);
@@ -164,6 +188,8 @@ public:
   void setUniform(const std::string &name, const Color &c);
   void setUniform(const std::string &name, int i);
   void setUniform(const std::string &name, float f);
+  // Uniform Blocks
+  void setUniformBlockBinding(const std::string& name, GLuint buffer_binding);
 
   friend std::ostream &operator<<(std::ostream &o, const Program &program);
 
@@ -178,6 +204,9 @@ private:
   GLuint id_{0};
   std::map<std::string, GLint> attr_locations_;
   std::map<std::string, GLint> uniform_locations_;
+  std::map<std::string, u64> ub_map_name_id_;
+  std::vector<Uniform> uniforms_;
+  std::vector<UniformBlock> uniform_blocks_;
   bool linked_{false};
 };
 
