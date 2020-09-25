@@ -129,6 +129,9 @@ TEST_CASE("Str", "[common]") {
     std::vector<std::string> s = {"a", "b", "c"};
     auto ss = Str::join(s, ",");
     REQUIRE(ss == "a,b,c");
+    std::vector<int> ints = {1,2,3};
+    ss = Str::join(ints, " ");
+    REQUIRE(ss == "1 2 3");
   }//
   SECTION("split with delimiter") {
     std::string a = "1 2, 3,4, 5";

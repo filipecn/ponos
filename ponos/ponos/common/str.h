@@ -60,7 +60,19 @@ public:
   /// \param s array of strings
   /// \param separator **[in | ""]**
   /// \return final string
-  static std::string join(const std::vector<std::string> &s, const std::string &separator = "");
+  static std::string join(const std::vector<std::string> &v, const std::string &separator = "");
+  template<typename T>
+  static std::string join(const std::vector<T> &v, const std::string &separator = "") {
+    std::string r;
+    bool first = true;
+    for (const auto &s : v) {
+      if (!first)
+        r += separator;
+      first = false;
+      r = concat(r, s);
+    }
+    return r;
+  }
   /// Splits a string into tokens separated by delimiters
   /// \param s **[in]** input string
   /// \param delimiters **[in | default = " "]** delimiters
