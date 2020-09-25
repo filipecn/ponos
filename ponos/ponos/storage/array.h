@@ -33,10 +33,278 @@
 
 namespace ponos {
 
+/// Auxiliary class to iterate an Array1 inside a for loop.
+/// Ex: for(auto e : array) { e.value = x; }
+///\tparam T Array1 data type
+template<typename T> class Array1Iterator {
+public:
+  class Element {
+  public:
+    Element(T &v, i32 i) : value(v), index(i) {}
+    T &value;
+    const i32 index;
+  };
+  Array1Iterator(std::vector<T> &data, i32 i) :
+      data_(data), i(i) {}
+  [[nodiscard]] u64 size() const { return data_.size(); }
+  Array1Iterator &operator++() {
+    i++;
+    if (i >= data_.size())
+      i = -1;
+    return *this;
+  }
+  Element operator*() {
+    return Element(data_[i], i);
+  }
+  bool operator==(const Array1Iterator &other) {
+    return data_.size() == other.data_.size() && data_.data() == other.data_.data() && i == other.i;
+  }
+  bool operator!=(const Array1Iterator &other) {
+    return data_.size() != other.data_.size() || data_.data() != other.data_.data() || i != other.i;
+  }
+
+private:
+  std::vector<T> &data_;
+  int i = 0;
+};
+/// Auxiliary class to iterate an const Array1 inside a for loop.
+/// Ex: for(auto e : array) { e.value = x; }
+///\tparam T Array1 data type
+template<typename T> class ConstArray1Iterator {
+public:
+  class Element {
+  public:
+    Element(const T &v, i32 i) : value(v), index(i) {}
+    const T &value;
+    const i32 index;
+  };
+  ConstArray1Iterator(const std::vector<T> &data, i32 i)
+      : data_(data), i(i) {}
+  [[nodiscard]] u64 size() const { return data_.size(); }
+  ConstArray1Iterator &operator++() {
+    if (++i >= data_.size())
+      i = -1;
+    return *this;
+  }
+  Element operator*() {
+    return Element(data_[i], i);
+  }
+  bool operator==(const ConstArray1Iterator &other) {
+    return data_.size() == other.data_.size() && data_.data() == other.data_.data() && i == other.i;
+  }
+  bool operator!=(const ConstArray1Iterator &other) {
+    return data_.size() != other.data_.size() || data_.data() != other.data_.data() || i != other.i;
+  }
+
+private:
+  const std::vector<T> &data_;
+  int i = 0;
+};
+/// Holds a linear memory area representing a 1-dimensional array of
+/// ``size`` elements.
+/// - Array1 provides a convenient way to access its elements:
+/// \verbatim embed:rst:leading-slashes
+///    .. code-block:: cpp
+///
+///       for(auto e : my_array1) {
+///         e.value = 0; // element value access
+///         e.index; // element index
+///       }
+/// \endverbatim
+/// \tparam T data type
+template<class T> class Array1 {
+public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
+  Array1() = default;
+  /// \param size dimensions (in elements count)
+  explicit Array1(u64 size) {
+    data_.resize(size);
+  }
+  /// Copy constructor
+  /// \param other **[in]** const reference to other Array1 object
+  Array1(const Array1 &other) {
+    data_ = other.data_;
+  }
+  Array1(const Array1 &&other) = delete;
+  /// Copy constructor
+  /// \param other **[in]** reference to other Array1 object
+  Array1(Array1 &other) {
+    data_ = other.data_;
+  }
+  /// Assign constructor
+  /// \param other **[in]** temporary Array2 object
+  Array1(Array1 &&other) noexcept: data_(other.data_) {
+    other.data_.clear();
+  }
+  /// Constructs an Array1 from a std vector
+  /// \param std_vector **[in]** data
+  Array1(const std::vector<T> &std_vector) {
+    data_ = std_vector;
+  }
+  /// Initialization list constructor
+  /// \param list **[in]** data list
+  /// \verbatim embed:rst:leading-slashes
+  ///    **Example**::
+  ///
+  ///       ponos::Array1<i32> a = {1,2,3,4};
+  /// \endverbatim
+  Array1(std::initializer_list<T> list) {
+    resize(list.size());
+    for (u64 i = 0; i < data_.size(); ++i)
+      (*this)[i] = list.begin()[i];
+  }
+  // TODO  VARIATIC TEMPLATE ARGUMENTS PASS TO VECTOR CONSTRUCTOR
+  ///
+  virtual ~Array1() = default;
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
+  /// Assign operator from raw data
+  /// \param std_vector **[in]** data
+  /// \return Array1<T>&
+  Array1<T> &operator=(const std::vector<T> &std_vector) {
+    data_ = std_vector;
+  }
+  /// Assign operator
+  /// \param other **[in]** const reference to other Array1 object
+  /// \return Array1<T>&
+  Array1<T> &operator=(const Array1<T> &other) {
+    data_ = other.data_;
+    return *this;
+  }
+  /// Assign operator
+  /// \param other **[in]** temporary Array1 object
+  /// \return Array2<T>&
+  Array1<T> &operator=(Array1<T> &&other) noexcept {
+    data_ = other.data_;
+    return *this;
+  }
+  /// Assign ``value`` to all elements
+  /// \param value assign value
+  /// \return *this
+  Array1 &operator=(T value) {
+    std::fill(data_.begin(), data_.end(), value);
+    return *this;
+  }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``i`` is out of bounds.
+  /// \endverbatim
+  /// \param i element index
+  /// \return reference to element at ``i`` position
+  T &operator[](u64 i) {
+    return data_[i];
+  }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``ij`` is out of bounds.
+  /// \endverbatim
+  /// \param i element index
+  /// \return const reference to element at ``i`` position
+  const T &operator[](u64 i) const {
+    return data_[i];
+  }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``i`` is out of bounds.
+  /// \endverbatim
+  /// \param i **[in]** index
+  /// \return T& reference to element in position ``i``
+  T &operator()(u64 i) {
+    return data_[i];
+  }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``i`` is out of bounds.
+  /// \endverbatim
+  /// \param i **[in]** index
+  /// \return const reference to element at ``i`` position
+  const T &operator()(u64 i) const {
+    return data_[i];
+  }
+  // ***********************************************************************
+  //                         GETTERS & SETTERS
+  // ***********************************************************************
+  /// Changes the dimensions
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. note::
+  ///       All previous data is erased.
+  /// \endverbatim
+  /// \param new_size new row and column counts
+  void resize(u64 new_size) {
+    data_.resize(new_size);
+  }
+  /// Computes actual memory usage
+  /// \return memory usage (in bytes)
+  [[nodiscard]] u64 memorySize() const { return data_.size() * sizeof(T); }
+  /// \return dimensions (in elements count)
+  [[nodiscard]] u64 size() const { return data_.size(); }
+  /// \return const pointer to raw data (**row major**)
+  const T *data() const { return data_.data(); }
+  /// \return pointer to raw data (**row major**)
+  T *data() { return data_.data(); }
+  // ***********************************************************************
+  //                            METHODS
+  // ***********************************************************************
+  /// Copies data from another Array1
+  ///
+  /// - This gets resized if necessary.
+  /// \param other **[in]**
+  void copy(const Array1 &other) {
+    data_ = other.data();
+  }
+  /// Checks if ``i`` is not out of bounds
+  /// \param ij position index
+  /// \return ``true`` if position can be accessed
+  [[nodiscard]] bool stores(i32 i) const {
+    return i >= 0 && static_cast<i64>(i) < static_cast<i64>(data_.size());
+  }
+  Array1Iterator<T> begin() {
+    return Array1Iterator<T>(data_, 0);
+  }
+  Array1Iterator<T> end() {
+    return Array1Iterator<T>(data_, -1);
+  }
+  ConstArray1Iterator<T> begin() const {
+    return ConstArray1Iterator<T>(data_, 0);
+  }
+  ConstArray1Iterator<T> end() const {
+    return ConstArray1Iterator<T>(data_, -1);
+  }
+
+private:
+  std::vector<T> data_;
+};
+
+template<typename T>
+std::ostream &operator<<(std::ostream &os, const Array1<T> &array) {
+  os << "Array1[" << array.size() << "]\n\t";
+  for (u32 i = 0; i < array.size(); ++i)
+    os << "[" << i << "]\t";
+  os << std::endl << '\t';
+  for (u32 i = 0; i < array.size(); ++i) {
+    if (std::is_same<T, u8>())
+      os << (int) array[i] << "\t";
+    else
+      os << array[i] << "\t";
+  }
+  os << std::endl;
+  return os;
+}
+
+using array1d = Array1<f64>;
+using array1f = Array1<f32>;
+using array1i = Array1<i32>;
+using array1u = Array1<u32>;
+
+////////////////////////////// ARRAY 2 ////////////////////////////////////////
+
 /// Auxiliary class to iterate an Array2 inside a for loop.
 /// Ex: for(auto e : array) { e.value = x; }
 ///\tparam T Array2 data type
-template <typename T> class Array2Iterator {
+template<typename T> class Array2Iterator {
 public:
   class Element {
   public:
@@ -59,16 +327,16 @@ public:
     return *this;
   }
   Element operator*() {
-    return Element((T &)(*((char *)data_ + j * pitch_ + i * sizeof(T))),
+    return Element((T &) (*((char *) data_ + j * pitch_ + i * sizeof(T))),
                    index2(i, j));
   }
   bool operator==(const Array2Iterator &other) {
     return size_ == other.size_ && data_ == other.data_ && i == other.i &&
-           j == other.j && pitch_ == other.pitch_;
+        j == other.j && pitch_ == other.pitch_;
   }
   bool operator!=(const Array2Iterator &other) {
     return size_ != other.size_ || data_ != other.data_ || i != other.i ||
-           j != other.j || pitch_ != other.pitch_;
+        j != other.j || pitch_ != other.pitch_;
   }
 
 private:
@@ -80,7 +348,7 @@ private:
 /// Auxiliary class to iterate an const Array2 inside a for loop.
 /// Ex: for(auto e : array) { e.value = x; }
 ///\tparam T Array2 data type
-template <typename T> class ConstArray2Iterator {
+template<typename T> class ConstArray2Iterator {
 public:
   class Element {
   public:
@@ -103,7 +371,7 @@ public:
     return *this;
   }
   Element operator*() {
-    return Element((const T &)(*((const char *)data_ + j * pitch_ + i * sizeof(T))),
+    return Element((const T &) (*((const char *) data_ + j * pitch_ + i * sizeof(T))),
                    index2(i, j));
   }
   bool operator==(const ConstArray2Iterator &other) {
@@ -150,7 +418,7 @@ private:
 ///       }
 /// \endverbatim
 /// \tparam T data type
-template <class T> class Array2 {
+template<class T> class Array2 {
 public:
   // ***********************************************************************
   //                           CONSTRUCTORS
@@ -158,7 +426,7 @@ public:
   Array2() = default;
   /// pitch is set to ``size.width`` * ``sizeof(T)``
   /// \param size dimensions (in elements count)
-  Array2(const size2 &size) : pitch_(size.width * sizeof(T)), size_(size) {
+  explicit Array2(const size2 &size) : pitch_(size.width * sizeof(T)), size_(size) {
     data_ = new char[pitch_ * size.height];
   }
   /// \param size dimensions (in elements count)
@@ -258,7 +526,7 @@ public:
   /// \param ij ``ij.i`` for column and ``ij.j`` for row
   /// \return reference to element at ``ij`` position
   T &operator[](index2 ij) {
-    return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
+    return (T &) (*((char *) data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
   /// \verbatim embed:rst:leading-slashes
   ///    .. warning::
@@ -267,7 +535,7 @@ public:
   /// \param ij ``ij.i`` for column and ``ij.j`` for row
   /// \return const reference to element at ``ij`` position
   const T &operator[](index2 ij) const {
-    return (T &)(*((char *)data_ + ij.j * pitch_ + ij.i * sizeof(T)));
+    return (T &) (*((char *) data_ + ij.j * pitch_ + ij.i * sizeof(T)));
   }
   /// \verbatim embed:rst:leading-slashes
   ///    .. warning::
@@ -277,7 +545,7 @@ public:
   /// \param j **[in]** row index
   /// \return T& reference to element in row ``i`` and column ``j``
   T &operator()(u32 i, u32 j) {
-    return (T &)(*((char *)data_ + j * pitch_ + i * sizeof(T)));
+    return (T &) (*((char *) data_ + j * pitch_ + i * sizeof(T)));
   }
   /// \verbatim embed:rst:leading-slashes
   ///    .. warning::
@@ -287,7 +555,7 @@ public:
   /// \param j **[in]** row index
   /// \return const reference to element at ``ij`` position
   const T &operator()(u32 i, u32 j) const {
-    return (T &)(*((char *)data_ + j * pitch_ + i * sizeof(T)));
+    return (T &) (*((char *) data_ + j * pitch_ + i * sizeof(T)));
   }
   // ***********************************************************************
   //                         GETTERS & SETTERS
@@ -299,23 +567,22 @@ public:
   /// \endverbatim
   /// \param new_size new row and column counts
   void resize(const size2 &new_size) {
-    if (data_)
-      delete[](char *) data_;
+    delete[](char *) data_;
     pitch_ = std::max(pitch_, sizeof(T) * new_size.width);
     size_ = new_size;
     data_ = new char[pitch_ * new_size.height];
   }
   /// Computes actual memory usage
   /// \return memory usage (in bytes)
-  size_t memorySize() const { return size_.height * pitch_; }
+  u64 memorySize() const { return size_.height * pitch_; }
   /// \return dimensions (in elements count)
-  size2 size() const { return size_; }
+  [[nodiscard]] size2 size() const { return size_; }
   /// \return pitch size (in bytes)
-  size_t pitch() const { return pitch_; }
+  u64 pitch() const { return pitch_; }
   /// \return const pointer to raw data (**row major**)
-  const T *data() const { return (const T *)data_; }
+  const T *data() const { return (const T *) data_; }
   /// \return pointer to raw data (**row major**)
-  T *data() { return (T *)data_; }
+  T *data() { return (T *) data_; }
   // ***********************************************************************
   //                            METHODS
   // ***********************************************************************
@@ -332,22 +599,22 @@ public:
   /// Checks if ``ij`` is not out of bounds
   /// \param ij position index
   /// \return ``true`` if position can be accessed
-  bool stores(const index2 &ij) const {
+  [[nodiscard]] bool stores(const index2 &ij) const {
     return ij.i >= 0 &&
-           static_cast<i64>(ij.i) < static_cast<i64>(size_.width) &&
-           ij.j >= 0 && static_cast<i64>(ij.j) < static_cast<i64>(size_.height);
+        static_cast<i64>(ij.i) < static_cast<i64>(size_.width) &&
+        ij.j >= 0 && static_cast<i64>(ij.j) < static_cast<i64>(size_.height);
   }
   Array2Iterator<T> begin() {
-    return Array2Iterator<T>((T *)data_, size_, pitch_, index2(0, 0));
+    return Array2Iterator<T>((T *) data_, size_, pitch_, index2(0, 0));
   }
   Array2Iterator<T> end() {
-    return Array2Iterator<T>((T *)data_, size_, pitch_, index2(-1, -1));
+    return Array2Iterator<T>((T *) data_, size_, pitch_, index2(-1, -1));
   }
   ConstArray2Iterator<T> begin() const {
-    return ConstArray2Iterator<T>((T *)data_, size_, pitch_, index2(0, 0));
+    return ConstArray2Iterator<T>((T *) data_, size_, pitch_, index2(0, 0));
   }
   ConstArray2Iterator<T> end() const {
-    return ConstArray2Iterator<T>((T *)data_, size_, pitch_, index2(-1, -1));
+    return ConstArray2Iterator<T>((T *) data_, size_, pitch_, index2(-1, -1));
   }
 
 private:
@@ -356,7 +623,7 @@ private:
   void *data_ = nullptr;
 };
 
-template <typename T>
+template<typename T>
 std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
   os << "Array2[" << array.size() << "]\n\t\t";
   for (u32 i = 0; i < array.size().width; ++i)
@@ -366,7 +633,7 @@ std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
     os << "\t[," << j << "]\t";
     for (u32 i = 0; i < array.size().width; ++i)
       if (std::is_same<T, u8>())
-        os << (int)array[index2(i, j)] << "\t";
+        os << (int) array[index2(i, j)] << "\t";
       else
         os << array[index2(i, j)] << "\t";
     os << std::endl;

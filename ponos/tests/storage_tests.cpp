@@ -4,6 +4,84 @@
 
 using namespace ponos;
 
+TEST_CASE("Array1", "[storage][array]") {
+  SECTION("Constructors") {
+    {
+      Array1<vec2> a(10);
+      REQUIRE(a.size() == 10u);
+      REQUIRE(a.memorySize() == 10 * sizeof(vec2));
+      for (u64 i = 0; i < a.size(); ++i)
+        a[i] = vec2(i, i * 2);
+      Array1<vec2> b = a;
+      for (u64 i = 0; i < a.size(); ++i)
+        REQUIRE(a[i] == b[i]);
+    } //
+    {
+      std::vector<Array1<int>> v;
+      v.emplace_back(10);
+      v.emplace_back(10);
+      v.emplace_back(10);
+      for (int i = 0; i < 3; i++)
+        for (u64 j = 0; j < v[i].size(); ++j)
+          v[i][j] = j * 10;
+      std::vector<Array1<int>> vv = v;
+      for (int i = 0; i < 3; i++)
+        for (u64 j = 0; j < v[i].size(); ++j)
+          REQUIRE(vv[i][j] == j * 10);
+    } //
+    {
+      Array1<int> a = std::move(Array1<int>(10));
+      auto b(Array1<int>(10));
+    } //
+    {
+      std::vector<int> data = {1, 2, 3, 4, 5, 6};
+      Array1<int> a = data;
+      REQUIRE(a.size() == 6);
+      for (u64 i = 0; i < a.size(); ++i)
+        REQUIRE(a[i] == data[i]);
+    } //
+    {
+      Array1<int> a = {1, 2, 3};
+      REQUIRE(a.size() == 3);
+      for (u64 i = 0; i < a.size(); ++i)
+        REQUIRE(a[i] == i + 1);
+    }
+  }//
+  SECTION("Operators") {
+      Array1<int> a(10);
+      a = 3;
+      int count = 0;
+      for (u64 i = 0; i < a.size(); ++i)
+        REQUIRE(a[i] == 3);
+      for (const auto &e : a) {
+        REQUIRE(e.value == 3);
+        count++;
+      }
+      std::cerr << a << std::endl;
+      REQUIRE(count == 10);
+  }//
+  SECTION("Array1-iterator") {
+    Array1<vec2> a( 10);
+    for (auto e : a)
+      e.value = vec2(1, 2);
+    int count = 0;
+    for (auto e : a) {
+      count++;
+      REQUIRE(e.value == vec2(1, 2));
+    }
+    REQUIRE(count == 10);
+  }//
+  SECTION("Const Array1-iterator") {
+    Array1<vec2> a( 10);
+    a = vec2(1, 2);
+    auto f = [](const Array1<vec2> &array) {
+      for (const auto &d : array)
+        REQUIRE(d.value == vec2(1, 2));
+    };
+    f(a);
+  }//
+}
+
 TEST_CASE("Array2", "[storage][array]") {
   SECTION("Constructors") {
     {

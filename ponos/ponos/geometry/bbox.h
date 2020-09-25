@@ -43,6 +43,9 @@ public:
                                     upper(std::max(p1, p2)) {}
   static BBox1 unitBox() { return BBox1<T>(0, 1); }
   bool contains(const T &p) const { return p >= lower && p <= upper; }
+  [[nodiscard]] real_t size() const {
+    return upper - lower;
+  }
   T extends() const { return upper - lower; }
   T center() const { return lower + (upper - lower) * 0.5; }
   T centroid() const { return lower * .5 + upper * .5; }
@@ -56,7 +59,7 @@ typedef BBox1<real_t> bbox1;
 
 template<typename T>
 BBox1<T> make_union(const BBox1<T> &b, const T &p) {
-  BBox1 <T> ret = b;
+  BBox1<T> ret = b;
   ret.lower = std::min(b.lower, p);
   ret.upper = std::max(b.upper, p);
   return ret;

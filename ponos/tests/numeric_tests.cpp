@@ -77,6 +77,174 @@ TEST_CASE("Interpolation", "[numeric][interpolation]") {
   }
 }
 
+TEST_CASE("Grid1", "[numeric][grid]") {
+  SECTION("Sanity") {
+    Grid1<float> g(10, 0.1, 1);
+    for (auto e : g.accessor())
+      e.value = e.index * 10;
+    Grid1<float> gg;
+    gg = g;
+    REQUIRE(g.resolution() == gg.resolution());
+    REQUIRE(g.spacing() == gg.spacing());
+    REQUIRE(g.origin() == gg.origin());
+    for (auto e : g.accessor())
+      REQUIRE(e.value == Approx(gg.accessor()[e.index]).margin(1e-8));
+    g = 7.3f;
+    for (auto e : g.accessor())
+      REQUIRE(e.value == Approx(7.3).margin(1e-8));
+    Array1<float> a(10);
+    a = 1.f;
+    g = a;
+    for (auto e : g.accessor())
+      REQUIRE(e.value == Approx(1).margin(1e-8));
+    gg = g;
+    for (auto e : gg.accessor())
+      REQUIRE(e.value == Approx(1).margin(1e-8));
+  }//
+  SECTION("GridIterator") {
+    Grid1<float> g(10);
+    g.setSpacing(0.1);
+    for (auto e : g.accessor()) {
+      REQUIRE(e.worldPosition() == Approx(e.index * 0.1).margin(1e-7));
+      REQUIRE(e.region().size() == Approx(0.1).margin(1e-7));
+      e.value = e.index * 10;
+    }
+    for (auto e : g.accessor())
+      REQUIRE(e.value == Approx(e.index * 10).margin(1e-8));
+  }//
+  SECTION("GridAccessor") {
+    float dx = 0.01;
+    Grid1<float> g(10, dx);
+    auto f = [](real_t x) -> float { return std::sin(x); };
+    for (u64 i = 0; i < g.resolution(); ++i) {
+      g.accessor()[i] = f(g.accessor().worldPosition(i));
+      REQUIRE(g.accessor()[i] ==
+          Approx(f(g.accessor().worldPosition(i))).margin(1e-8));
+    }
+    // cell info
+    REQUIRE(g.accessor().cellRegion(4).extends() == Approx(dx).margin(1e-8));
+    REQUIRE(g.accessor().cellIndex(5.5 * dx) == 5);
+    REQUIRE(g.accessor().cellPosition(8.7 * dx) == Approx(0.7).margin(1e-6));
+    SECTION("CLAMP_TO_EDGE + LINEAR INTERPOLATION") {
+      auto acc =
+          g.accessor(AddressMode::CLAMP_TO_EDGE, InterpolationMode::LINEAR);
+      REQUIRE(acc[-5] == Approx(f(acc.worldPosition(0))).margin(1e-8));
+      REQUIRE(acc[5] == Approx(f(acc.worldPosition(5))).margin(1e-8));
+      REQUIRE(acc[11] == Approx(f(acc.worldPosition(9))).margin(1e-8));
+      for (u64 j = 0; j < 9; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1000; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-5));
+        }
+      }
+    }//
+    SECTION("CLAMP_TO_EDGE + MONOTONIC CUBIC INTERPOLATION") {
+      auto acc = g.accessor(AddressMode::CLAMP_TO_EDGE,
+                            InterpolationMode::MONOTONIC_CUBIC);
+      for (u64 j = 1; j < 8; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1000; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-7));
+        }
+      }
+    }//
+    SECTION("BORDER + LINEAR INTERPOLATION") {
+      auto acc = g.accessor(AddressMode::BORDER, InterpolationMode::LINEAR);
+      REQUIRE(acc[-5] == Approx(0).margin(1e-8));
+      REQUIRE(acc[11] == Approx(0).margin(1e-8));
+      for (u64 j = 0; j < 9; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-5));
+        }
+      }
+    }//
+    SECTION("BORDER + MONOTONIC CUBIC INTERPOLATION") {
+      auto acc =
+          g.accessor(AddressMode::BORDER, InterpolationMode::MONOTONIC_CUBIC);
+      for (u64 j = 1; j < 8; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1000; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-7));
+        }
+      }
+    }//
+  }//
+  SECTION("ConstGridAccessor") {
+    float dx = 0.01;
+    Grid1<float> g(10, dx);
+    auto f = [](real_t x) -> float { return std::sin(x) * std::cos(x); };
+    for (u64 i = 0; i < g.resolution(); ++i) {
+      g.accessor()[i] = f(g.accessor().worldPosition(i));
+      REQUIRE(g.accessor()[i] ==
+          Approx(f(g.accessor().worldPosition(i))).margin(1e-8));
+    }
+    auto cf = [](const Grid1<float> &g, float dx, const std::function<float(real_t)> &f) {
+      // cell info
+      REQUIRE(g.accessor().cellRegion(4).extends() == Approx(dx).margin(1e-8));
+      REQUIRE(g.accessor().cellIndex(5.5 * dx) == 5);
+      REQUIRE(g.accessor().cellPosition(3.1 * dx) == Approx(0.1).margin(1e-6));
+      REQUIRE(g.accessor().cellPosition(8.7 * dx) == Approx(0.7).margin(1e-6));
+      SECTION("CLAMP_TO_EDGE + LINEAR INTERPOLATION") {
+      auto acc =
+          g.accessor(AddressMode::CLAMP_TO_EDGE, InterpolationMode::LINEAR);
+      REQUIRE(acc[-5] == Approx(f(acc.worldPosition(0))).margin(1e-8));
+      REQUIRE(acc[5] == Approx(f(acc.worldPosition(5))).margin(1e-8));
+      REQUIRE(acc[11] == Approx(f(acc.worldPosition(9))).margin(1e-8));
+      for (u64 j = 0; j < 9; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1000; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-5));
+        }
+      }
+      auto cacc = g.accessor();
+      for (const auto &v : cacc) {
+      }
+    }//
+      SECTION("CLAMP_TO_EDGE + MONOTONIC CUBIC INTERPOLATION") {
+      auto acc = g.accessor(AddressMode::CLAMP_TO_EDGE,
+                            InterpolationMode::MONOTONIC_CUBIC);
+      for (u64 j = 1; j < 8; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1000; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-7));
+        }
+      }
+    }//
+      SECTION("BORDER + LINEAR INTERPOLATION") {
+      auto acc = g.accessor(AddressMode::BORDER, InterpolationMode::LINEAR);
+      REQUIRE(acc[-5] == Approx(0).margin(1e-8));
+      REQUIRE(acc[11] == Approx(0).margin(1e-8));
+      for (u64 j = 0; j < 9; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-5));
+        }
+      }
+    }//
+      SECTION("BORDER + MONOTONIC CUBIC INTERPOLATION") {
+      auto acc =
+          g.accessor(AddressMode::BORDER, InterpolationMode::MONOTONIC_CUBIC);
+      for (u64 j = 1; j < 8; ++j) {
+        RNGSampler sampler;
+        for (int i = 0; i < 1000; ++i) {
+          auto p = sampler.sample(acc.cellRegion(j));
+          REQUIRE(acc(p) == Approx(f(p)).margin(1e-7));
+        }
+      }
+    }//
+    };
+    cf(g, dx, f);
+  }//
+}
+
 TEST_CASE("Grid2", "[numeric][grid]") {
   SECTION("Sanity") {
     Grid2<float> g(size2(10, 10), vec2(0.1, 0.1), point2(1, 2));
@@ -228,7 +396,8 @@ TEST_CASE("Grid2", "[numeric][grid]") {
         }
       }
       auto cacc = g.accessor();
-      for(const auto& v : cacc) {}
+      for (const auto &v : cacc) {
+      }
     }//
       SECTION("CLAMP_TO_EDGE + MONOTONIC CUBIC INTERPOLATION") {
       auto acc = g.accessor(AddressMode::CLAMP_TO_EDGE,
