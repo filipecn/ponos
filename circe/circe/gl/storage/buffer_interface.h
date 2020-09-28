@@ -50,6 +50,8 @@ public:
   virtual void allocate(GLuint buffer_usage);
   /// \param data
   virtual void setData(const void *data);
+  /// bind buffer
+  virtual void bind();
   /// \return
   inline DeviceMemory::View *memory() { return mem_.get(); }
 

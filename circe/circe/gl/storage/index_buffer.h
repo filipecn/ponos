@@ -82,6 +82,8 @@ public:
   GLuint data_type{GL_UNSIGNED_INT};
 };
 
+std::ostream& operator<<(std::ostream& os, const IndexBuffer& index_buffer);
+
 }
 
 #endif //PONOS_CIRCE_CIRCE_GL_STORAGE_INDEX_BUFFER_H

@@ -63,6 +63,9 @@ public:
       std::string name; //!< attribute name (optional)
       u64 size{0};    //!< attribute number of components
       GLenum type{0}; //!< attribute data type (GL_FLOAT,...)
+      GLboolean normalized{GL_FALSE}; //!< Specifies whether fixed-point data values
+      //!< should be normalized (GL_TRUE) or converted directly
+      //!< as fixed-point values (GL_FALSE)
     };
     explicit Attributes();
     /// Param constructor
@@ -76,9 +79,10 @@ public:
     /// \param component_count
     /// \param name attribute name
     /// \param data_type
-    /// \param binding_index
+    /// \param normalized
     /// \return attribute id
-    u64 pushAttribute(u64 component_count, const std::string &name = "", GLenum data_type = GL_FLOAT);
+    u64 pushAttribute(u64 component_count, const std::string &name = "", GLenum data_type = GL_FLOAT,
+                      GLboolean normalized = GL_FALSE);
     /// Push attribute using a ponos type
     /// \tparam T accepts only ponos::MathElement derived objects (point, vector, matrix,...)
     /// \param name attribute name (optional)
@@ -127,7 +131,9 @@ public:
     return *this;
   }
   /// glBindVertexBuffer
-  void bind() const;
+  void bind() override;
+  /// Note: A vertex array object must be bound before calling this method
+  void bindAttributeFormats();
   /// Access a single attribute of an element
   /// Note: The buffer MUST be previously mapped
   /// \tparam T attribute data type
@@ -155,8 +161,6 @@ public:
   Attributes attributes; //!< attribute description
 
 private:
-  /// Note: A vertex array object must be bound before calling this method
-  void specifyVertexFormat();
 
   u64 vertex_count_{0};
   GLuint binding_index_{0};

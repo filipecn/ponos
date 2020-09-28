@@ -36,7 +36,6 @@ void main() {
     float spec = pow(max(dot(viewDir, halfwayDirection), 0.0), material.shininess);
     vec3 lightIntensity = (light.ambient * material.kAmbient +
     light.diffuse * material.kDiffuse * diff +
-    light.specular * material.kSpecular * spec) *
-    vec3(1, 1, 1);
+    light.specular * material.kSpecular * spec) * vec3(1, 1, 1);
     fragColor = vec4(lightIntensity, 1.0);
 }

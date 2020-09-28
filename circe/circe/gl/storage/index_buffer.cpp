@@ -54,8 +54,28 @@ u64 IndexBuffer::dataSizeInBytes() const {
 }
 
 void IndexBuffer::draw() {
+  static GLuint last_element_type = 0;
+  static u32 index_count = 0;
+  if (last_element_type != element_type) {
+    last_element_type = element_type;
+    switch (element_type) {
+    case GL_TRIANGLES: index_count = element_count * 3;
+      break;
+    case GL_TRIANGLE_STRIP:
+    case GL_TRIANGLE_FAN: index_count = element_count + 2;
+      break;
+    case GL_LINES: index_count = element_count * 2;
+      break;
+    case GL_LINE_STRIP: index_count = element_count + 1;
+      break;
+    case GL_LINE_LOOP: index_count = element_count;
+      break;
+    default:spdlog::warn("Assuming one index per element in index buffer size.");
+      index_count = element_count;
+    };
+  }
   mem_->bind();
-  CHECK_GL(glDrawElements(element_type, element_count, data_type,
+  CHECK_GL(glDrawElements(element_type, index_count, data_type,
                           reinterpret_cast<void *>(mem_->offset())));
 }
 
@@ -65,6 +85,13 @@ GLuint IndexBuffer::bufferTarget() const {
 
 GLuint IndexBuffer::bufferUsage() const {
   return GL_STATIC_DRAW;
+}
+
+std::ostream &operator<<(std::ostream &os, const IndexBuffer &index_buffer) {
+  os << "Index Buffer (" << index_buffer.element_count << " elements)(" <<
+     OpenGL::primitiveGLName(index_buffer.element_type) << ")(" <<
+     OpenGL::TypeToStr(index_buffer.data_type) << ")" << std::endl;
+  return os;
 }
 
 }

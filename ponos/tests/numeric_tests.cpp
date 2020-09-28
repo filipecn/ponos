@@ -243,6 +243,18 @@ TEST_CASE("Grid1", "[numeric][grid]") {
     };
     cf(g, dx, f);
   }//
+  SECTION("Linear Interpolation") {
+    SECTION("constant function") {
+      Grid1<float> g(10);
+      g = 4.f;
+      auto acc = g.accessor(AddressMode::CLAMP_TO_EDGE, InterpolationMode::LINEAR);
+      REQUIRE(acc(0.5) == Approx(4.f).margin(1e-6));
+      REQUIRE(acc(-0.5) == Approx(4.f).margin(1e-6));
+      auto acc2 = g.accessor(AddressMode::BORDER, InterpolationMode::LINEAR);
+      REQUIRE(acc2(0.5) == Approx(4.f).margin(1e-6));
+      REQUIRE(acc2(-0.5) == Approx(2.f).margin(1e-6));
+    }
+  }
 }
 
 TEST_CASE("Grid2", "[numeric][grid]") {

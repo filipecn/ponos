@@ -54,4 +54,8 @@ void BufferInterface::setData(const void *data) {
   mem_->unmap();
 }
 
+void BufferInterface::bind() {
+  mem_->bind();
+}
+
 }

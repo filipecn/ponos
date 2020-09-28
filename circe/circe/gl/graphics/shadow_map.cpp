@@ -71,11 +71,11 @@ ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
   CHECK_GL_ERRORS;
 }
 
-ShadowMap::~ShadowMap() {
-
-}
+ShadowMap::~ShadowMap() = default;
 
 void ShadowMap::render(std::function<void()> f) {
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, size_.width, size_.height);
   depth_buffer_.enable();
   glClear(GL_DEPTH_BUFFER_BIT);
@@ -95,8 +95,8 @@ void ShadowMap::bind() const {
 void ShadowMap::setLight(const Light &light) {
   ponos::Transform projection, view;
   if (light.type == circe::LightTypes::DIRECTIONAL) {
-    projection = ponos::ortho(-10, 10, -10, 10, 1, 7.5);
-    view = ponos::lookAtRH(ponos::point3() - 10.f * light.direction, ponos::point3(), ponos::vec3(0, 1, 0));
+    projection = ponos::ortho(-10, 10, -10, 10, 0.5, 7.5);
+    view = ponos::lookAtRH(ponos::point3() + light.direction, ponos::point3(), ponos::vec3(0, 1, 0));
   }
   light_transform_ = projection * view;
 }

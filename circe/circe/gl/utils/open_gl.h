@@ -205,6 +205,24 @@ public:
 //      return GL_HALF_FLOAT;
     return GL_FIXED;
   }
+  static std::string primitiveGLName(GLuint primitive_type) {
+#define RET_STR(A) \
+    if(primitive_type == A) {      \
+    return #A;}
+    RET_STR(GL_POINTS);
+    RET_STR(GL_LINES);
+    RET_STR(GL_LINE_LOOP);
+    RET_STR(GL_LINE_STRIP);
+    RET_STR(GL_TRIANGLES);
+    RET_STR(GL_TRIANGLE_STRIP);
+    RET_STR(GL_TRIANGLE_FAN);
+    RET_STR(GL_LINES_ADJACENCY);
+    RET_STR(GL_LINE_STRIP_ADJACENCY);
+    RET_STR(GL_TRIANGLES_ADJACENCY);
+    RET_STR(GL_TRIANGLE_STRIP_ADJACENCY);
+#undef RET_STR
+    return "";
+  }
 
 };
 

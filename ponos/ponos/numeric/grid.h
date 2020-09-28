@@ -229,13 +229,13 @@ public:
   /// [0,1]).
   [[nodiscard]] real_t cellPosition(real_t world_position) const {
     auto gp = grid_.gridPosition(world_position);
-    return gp - static_cast<i32>(gp);
+    return gp - std::floor(gp);
   }
   /// \param world_position **[in]** (in world coordinates)
   /// \return index of the cell that contains world_position
   [[nodiscard]] i32 cellIndex(real_t world_position) const {
     auto gp = grid_.gridPosition(world_position);
-    return gp;
+    return std::floor(gp);
   }
   /// \param ij **[in]** cell index
   /// \return ij cell's region (in world coordinates)
@@ -354,13 +354,13 @@ public:
   /// [0,1]).
   [[nodiscard]] real_t cellPosition(real_t world_position) const {
     auto gp = grid_.gridPosition(world_position);
-    return gp - static_cast<i32>(gp);
+    return gp - std::floor(gp);
   }
   /// \param world_position **[in]** (in world coordinates)
   /// \return index of the cell that contains world_position
   [[nodiscard]] i32 cellIndex(real_t world_position) const {
     auto gp = grid_.gridPosition(world_position);
-    return static_cast<i32>(gp);
+    return std::floor(gp);
   }
   /// \param ij **[in]** cell index
   /// \return ij cell's region (in world coordinates)
@@ -540,7 +540,7 @@ public:
   }
   /// Gets const raw data
   /// \return const reference to memory data
-  const Array1<T> &data() const { return data_; }
+  const Array1 <T> &data() const { return data_; }
   /// Gets raw data
   /// \return reference to memory data
   Array1 <T> &data() { return data_; }
@@ -718,42 +718,42 @@ public:
       : grid_(grid), address_mode_(address_mode),
         interpolation_mode_(interpolation_mode), border_(border) {}
   /// \return grid resolution
-  size2 resolution() const { return grid_.data_.size(); }
+  [[nodiscard]] size2 resolution() const { return grid_.data_.size(); }
   /// \return grid spacing
-  vec2 spacing() const { return grid_.spacing_; }
+  [[nodiscard]] vec2 spacing() const { return grid_.spacing_; }
   /// \return grid origin (world position of index (0,0))
-  point2 origin() const { return grid_.origin_; }
+  [[nodiscard]] point2 origin() const { return grid_.origin_; }
   /// \param world_position **[in]** (in world coordinates)
   /// \return ``world_position`` in grid coordinates
-  point2 gridPosition(const point2 &world_position) const {
+  [[nodiscard]] point2 gridPosition(const point2 &world_position) const {
     return grid_.to_grid_(world_position);
   }
   /// \param grid_position **[in]** (in grid coordinates)
   /// \return ``grid_position`` in world coordinates
-  point2 worldPosition(const point2 &grid_position) const {
+  [[nodiscard]] point2 worldPosition(const point2 &grid_position) const {
     return grid_.to_world_(grid_position);
   }
   /// \param grid_position **[in]** (in grid coordinates)
   /// \return ``grid_position`` in world coordinates
-  point2 worldPosition(const index2 &grid_position) const {
+  [[nodiscard]] point2 worldPosition(const index2 &grid_position) const {
     return grid_.to_world_(point2(grid_position.i, grid_position.j));
   }
   /// \param world_position **[in]** (in world coordinates)
   /// \return offset of ``world_position`` inside the cell containing it (in
   /// [0,1]).
-  point2 cellPosition(const point2 &world_position) const {
+  [[nodiscard]] point2 cellPosition(const point2 &world_position) const {
     auto gp = grid_.to_grid_(world_position);
-    return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
+    return gp - vec2(std::floor(gp.x), std::floor(gp.y));
   }
   /// \param world_position **[in]** (in world coordinates)
   /// \return index of the cell that contains world_position
-  index2 cellIndex(const point2 &world_position) const {
+  [[nodiscard]] index2 cellIndex(const point2 &world_position) const {
     auto gp = grid_.to_grid_(world_position);
-    return index2(gp.x, gp.y);
+    return index2(std::floor(gp.x), std::floor(gp.y));
   }
   /// \param ij **[in]** cell index
   /// \return ij cell's region (in world coordinates)
-  bbox2 cellRegion(const index2 &ij) const {
+  [[nodiscard]] bbox2 cellRegion(const index2 &ij) const {
     auto wp = grid_.to_world_(point2(ij.i, ij.j));
     return bbox2(wp, wp + grid_.spacing_);
   }
@@ -877,13 +877,13 @@ public:
   /// [0,1]).
   point2 cellPosition(const point2 &world_position) const {
     auto gp = grid_.to_grid_(world_position);
-    return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
+    return gp - vec2(std::floor(gp.x), std::floor(gp.y));
   }
   /// \param world_position **[in]** (in world coordinates)
   /// \return index of the cell that contains world_position
   index2 cellIndex(const point2 &world_position) const {
     auto gp = grid_.to_grid_(world_position);
-    return index2(gp.x, gp.y);
+    return index2(std::floor(gp.x), std::floor(gp.y));
   }
   /// \param ij **[in]** cell index
   /// \return ij cell's region (in world coordinates)

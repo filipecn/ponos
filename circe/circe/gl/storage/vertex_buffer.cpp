@@ -44,13 +44,15 @@ void VertexBuffer::Attributes::pushAttributes(const std::vector<Attribute> &attr
 
 u64 VertexBuffer::Attributes::pushAttribute(u64 component_count,
                                             const std::string &name,
-                                            GLenum data_type) {
+                                            GLenum data_type,
+                                            GLboolean normalized) {
   u64 attribute_id = attributes_.size();
   std::string attribute_name = name.empty() ? std::to_string(attribute_id) : name;
   Attribute attr{
       attribute_name,
       component_count,
-      data_type
+      data_type,
+      normalized
   };
   attributes_.emplace_back(attr);
   attribute_name_id_map_[attribute_name] = attribute_id;
@@ -92,20 +94,20 @@ u64 VertexBuffer::dataSizeInBytes() const {
   return vertex_count_ * attributes.stride();
 }
 
-void VertexBuffer::bind() const {
+void VertexBuffer::bind() {
   CHECK_GL(glBindVertexBuffer(binding_index_, mem_->deviceMemory().id(),
                               mem_->offset(), attributes.stride()));
 }
 
-void VertexBuffer::specifyVertexFormat() {
+void VertexBuffer::bindAttributeFormats() {
+  bind();
   for (u64 i = 0; i < attributes.attributes_.size(); ++i) {
+    glEnableVertexAttribArray(i);
     // specify vertex attribute format
     glVertexAttribFormat(i, attributes.attributes_[i].size,
                          attributes.attributes_[i].type, false, attributes.offsets_[i]);
     // set the details of a single attribute
     glVertexAttribBinding(i, binding_index_);
-    // which buffer binding point it is attached to
-    glEnableVertexAttribArray(i);
   }
 }
 
@@ -118,7 +120,7 @@ std::ostream &operator<<(std::ostream &os, const VertexBuffer &vb) {
        vb.attributes.attributeOffset(i) << "\n";
     os << "\t\tname: " << attr[i].name << std::endl;
     os << "\t\tsize: " << attr[i].size << std::endl;
-    os << "\t\ttype: " << attr[i].type << std::endl;
+    os << "\t\ttype: " << OpenGL::TypeToStr(attr[i].type) << std::endl;
   }
   return os;
 }
