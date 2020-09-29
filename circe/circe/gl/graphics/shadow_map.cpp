@@ -96,9 +96,11 @@ void ShadowMap::setLight(const Light &light) {
   ponos::Transform projection, view;
   if (light.type == circe::LightTypes::DIRECTIONAL) {
     projection = ponos::ortho(-10, 10, -10, 10, 0.5, 7.5);
-    view = ponos::lookAtRH(ponos::point3() + light.direction, ponos::point3(), ponos::vec3(0, 1, 0));
+    view = ponos::lookAtRH(ponos::point3() - light.direction, ponos::point3(), ponos::vec3(0, 1, 0));
   }
   light_transform_ = projection * view;
+  std::cerr << projection.matrix() << std::endl;
+  std::cerr << view.matrix() << std::endl;
 }
 
 const ponos::Transform &ShadowMap::light_transform() const { return light_transform_; }

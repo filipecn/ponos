@@ -253,6 +253,7 @@ TEST_CASE("Grid1", "[numeric][grid]") {
       auto acc2 = g.accessor(AddressMode::BORDER, InterpolationMode::LINEAR);
       REQUIRE(acc2(0.5) == Approx(4.f).margin(1e-6));
       REQUIRE(acc2(-0.5) == Approx(2.f).margin(1e-6));
+      REQUIRE(acc2(9.5) == Approx(2.f).margin(1e-6));
     }
   }
 }

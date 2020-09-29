@@ -147,7 +147,7 @@ public:
   }
   [[nodiscard]] virtual float getNear() const { return projection->znear; }
   [[nodiscard]] virtual float getFar() const { return projection->zfar; }
-  virtual const ponos::Frustum &getFrustum() const { return frustum; }
+  [[nodiscard]] virtual const ponos::Frustum &getFrustum() const { return frustum; }
   ///
   virtual void update() = 0;
 

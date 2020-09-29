@@ -7,10 +7,10 @@ Transform2::Transform2(const mat3 &mat, const mat3 &inv_mat)
     : m(mat), m_inv(inv_mat) {}
 
 Transform2::Transform2(const bbox2 &bbox) {
-  m.m[0][0] = bbox.upper[0] - bbox.lower[0];
-  m.m[1][1] = bbox.upper[1] - bbox.lower[1];
-  m.m[0][2] = bbox.lower[0];
-  m.m[1][2] = bbox.lower[1];
+  m[0][0] = bbox.upper[0] - bbox.lower[0];
+  m[1][1] = bbox.upper[1] - bbox.lower[1];
+  m[0][2] = bbox.lower[0];
+  m[1][2] = bbox.lower[1];
   m_inv = inverse(m);
 }
 
@@ -32,10 +32,10 @@ void Transform2::rotate(real_t angle) {
   real_t cos_a = cosf(RADIANS(angle));
   mat3 M(cos_a, -sin_a, 0.f, sin_a, cos_a, 0.f, 0.f, 0.f, 1.f);
   vec2 t = getTranslate();
-  m.m[0][2] = m.m[1][2] = 0;
+  m[0][2] = m[1][2] = 0;
   m = m * M;
-  m.m[0][2] = t.x;
-  m.m[1][2] = t.y;
+  m[0][2] = t.x;
+  m[1][2] = t.y;
   // TODO update inverse and make a better implementarion
   m_inv = inverse(m);
 }
@@ -68,12 +68,12 @@ Transform::Transform(const real_t mat[4][4]) {
 }
 
 Transform::Transform(const bbox3 &bbox) {
-  m.m[0][0] = bbox.upper[0] - bbox.lower[0];
-  m.m[1][1] = bbox.upper[1] - bbox.lower[1];
-  m.m[2][2] = bbox.upper[2] - bbox.lower[2];
-  m.m[0][3] = bbox.lower[0];
-  m.m[1][3] = bbox.lower[1];
-  m.m[2][3] = bbox.lower[2];
+  m[0][0] = bbox.upper[0] - bbox.lower[0];
+  m[1][1] = bbox.upper[1] - bbox.lower[1];
+  m[2][2] = bbox.upper[2] - bbox.lower[2];
+  m[0][3] = bbox.lower[0];
+  m[1][3] = bbox.lower[1];
+  m[2][3] = bbox.lower[2];
   m_inv = inverse(m);
 }
 
@@ -92,9 +92,9 @@ void Transform::scale(real_t x, real_t y, real_t z) {
 }
 
 bool Transform::swapsHandedness() const {
-  real_t det = (m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1])) -
-               (m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0])) +
-               (m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]));
+  real_t det = (m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])) -
+      (m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])) +
+      (m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]));
   return det < 0;
 }
 
@@ -296,6 +296,8 @@ Transform lookAtRH(const point3 &pos, const point3 &target, const vec3 &up) {
 
 Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
                 real_t near, real_t far) {
+  far *= -1;
+  near *= -1;
   real_t m[4][4];
 
   m[0][0] = 2.f / (right - left);
@@ -324,7 +326,7 @@ Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
 
 Transform orthographic(real_t znear, real_t zfar) {
   return scale(1.f, 1.f, 1.f / (zfar - znear)) *
-         translate(vec3(0.f, 0.f, -znear));
+      translate(vec3(0.f, 0.f, -znear));
 }
 
 } // namespace ponos

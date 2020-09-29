@@ -64,38 +64,38 @@ void Quaternion::fromMatrix(const mat4 &m) {
   const size_t Z = 2;
   const size_t W = 3;
   real_t tr, s;
-  tr = m.m[X][X] + m.m[Y][Y] + m.m[Z][Z];
+  tr = m[X][X] + m[Y][Y] + m[Z][Z];
   if (tr >= 0.f) {
-    s = sqrtf(tr + m.m[W][W]);
+    s = sqrtf(tr + m[W][W]);
     w = s * .5f;
     s = .5f / s;
-    v.x = (m.m[Z][Y] - m.m[Y][Z]) * s;
-    v.y = (m.m[X][Z] - m.m[Z][X]) * s;
-    v.z = (m.m[Y][X] - m.m[X][Y]) * s;
+    v.x = (m[Z][Y] - m[Y][Z]) * s;
+    v.y = (m[X][Z] - m[Z][X]) * s;
+    v.z = (m[Y][X] - m[X][Y]) * s;
   } else {
     size_t h = X;
-    if (m.m[Y][Y] > m.m[X][X])
+    if (m[Y][Y] > m[X][X])
       h = Y;
-    if (m.m[Z][Z] > m.m[h][h])
+    if (m[Z][Z] > m[h][h])
       h = Z;
     switch (h) {
 #define case_macro(i, j, k, I, J, K)                                           \
   case I:                                                                      \
-    s = sqrtf((m.m[I][I] - (m.m[J][J] + m.m[K][K])) + m.m[W][W]);              \
+    s = sqrtf((m[I][I] - (m[J][J] + m[K][K])) + m[W][W]);              \
     v.i = s * .5f;                                                             \
     s = .5f / s;                                                               \
-    v.j = (m.m[I][J] + m.m[J][I]) * s;                                         \
-    v.k = (m.m[K][I] + m.m[I][K]) * s;                                         \
-    w = (m.m[K][J] + m.m[J][K]) * s;                                           \
+    v.j = (m[I][J] + m[J][I]) * s;                                         \
+    v.k = (m[K][I] + m[I][K]) * s;                                         \
+    w = (m[K][J] + m[J][K]) * s;                                           \
     break;
-      case_macro(x, y, z, X, Y, Z);
-      case_macro(y, z, x, Y, Z, X);
-      case_macro(z, x, y, Z, X, Y);
+    case_macro(x, y, z, X, Y, Z);
+    case_macro(y, z, x, Y, Z, X);
+    case_macro(z, x, y, Z, X, Y);
 #undef case_macro
     }
   }
-  if (m.m[W][W] != 1.0) {
-    s = 1.0 / sqrtf(m.m[W][W]);
+  if (m[W][W] != 1.0) {
+    s = 1.0 / sqrtf(m[W][W]);
     w *= s;
     v *= s;
   }

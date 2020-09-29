@@ -83,6 +83,9 @@ public:
     region_.lower.x = region_.lower.y = this->znear = -1.f;
     region_.upper.x = region_.upper.y = this->zfar = 1.f;
   }
+  OrthographicProjection(float left, float right, float bottom, float top) {
+    set(left, right, bottom, top);
+  }
   /// \param z
   void zoom(float z) { region_ = ponos::scale(z, z)(region_); }
   /// \param left

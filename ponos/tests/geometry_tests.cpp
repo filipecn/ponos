@@ -13,8 +13,7 @@ TEST_CASE("Point", "[geometry][point]") {
       REQUIRE(std::hash<point2>()(a) == std::hash<point2>()(b));
       REQUIRE(std::hash<point2>()(a) != std::hash<point2>()(c));
     }
-  }
-  SECTION("Point3") {
+  }SECTION("Point3") {
     SECTION("hash") {
       point3 a(0.00001, 0.1, 0.000000001);
       point3 b(0.00001, 0.1, 0.000000001);
@@ -34,8 +33,7 @@ TEST_CASE("Vector", "[geometry][vector]") {
       REQUIRE(std::hash<vec2>()(a) == std::hash<vec2>()(b));
       REQUIRE(std::hash<vec2>()(a) != std::hash<vec2>()(c));
     }
-  }
-  SECTION("Vector3") {
+  }SECTION("Vector3") {
     SECTION("hash") {
       vec3 a(0.00001, 0.1, 0.000000001);
       vec3 b(0.00001, 0.1, 0.000000001);
@@ -54,8 +52,7 @@ TEST_CASE("BBox3", "[geometry][bbox]") {
     point3 l(-1), u(1);
     REQUIRE(c.lower == l);
     REQUIRE(c.upper == u);
-  }
-  SECTION("access") {
+  }SECTION("access") {
     auto l = point3(0, 1, 2);
     auto u = point3(3, 4, 3);
     bbox3 b(l, u);
@@ -73,3 +70,44 @@ TEST_CASE("BBox3", "[geometry][bbox]") {
     REQUIRE(b.corner(7) == point3(3, 4, 3));
   }
 }
+
+TEST_CASE("Matrix", "[geometry]") {
+  SECTION("Identity") {
+    mat4 m(true);
+    for (int r = 0; r < 4; ++r)
+      for (int c = 0; c < 4; ++c)
+        if (r == c)
+          REQUIRE(m[r][c] == Approx(1).epsilon(1e-8));
+        else
+          REQUIRE(m[r][c] == Approx(0).epsilon(1e-8));
+    REQUIRE(m.isIdentity());
+  }
+}
+
+TEST_CASE("Transform", "[geometry][transform]") {
+  SECTION("Sanity") {
+    Transform t;
+    REQUIRE(t.matrix().isIdentity());
+  }SECTION("orthographic projection") {
+    SECTION("cube") {
+      auto t = Transform::ortho(-10, 10, -20, 20, -1, 1);
+      REQUIRE(t.matrix() == mat4(
+          0.1, 0, 0, -0,//
+          0, 0.05, 0, -0,//
+          0, 0, -1, 0,//
+          0, 0, 0, 1//
+      ));
+    }SECTION("zero to one") {
+      auto t = Transform::ortho(-10, 10, -20, 20, -1, 1,
+                                true, true);
+      REQUIRE(t.matrix() == mat4(
+          0.1, 0, 0, -0,//
+          0, 0.05, 0, -0,//
+          0, 0, -0.5, 0.5,//
+          0, 0, 0, 1//
+      ));
+    }
+
+  }
+}
+

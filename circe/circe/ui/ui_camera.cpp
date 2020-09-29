@@ -108,6 +108,7 @@ UserCamera3D::UserCamera3D(bool left_handed) : left_handed_(left_handed) {
   this->up = ponos::vec3(0.f, 1.f, 0.f);
   this->zoom = 1.f;
   this->projection = std::make_unique<PerspectiveProjection>(45.f, left_handed);
+  this->projection = std::make_unique<OrthographicProjection>(-1.f, 1.f, -1.f, 1.f);
   this->projection->znear = 0.1f;
   this->projection->zfar = 1000.f;
 }

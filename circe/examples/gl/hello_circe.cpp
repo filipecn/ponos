@@ -75,6 +75,7 @@ public:
   } scene_ubo_data;
 
   HelloCirce() : BaseApp(800, 800) {
+    auto c = this->app_->getCamera();
     // setup object model
     ponos::Path assets_path(std::string(ASSETS_PATH));
     loadObject(assets_path + "suzanne.obj");
@@ -175,8 +176,6 @@ public:
     model.vb = vertex_data;
     model.ib = index_data;
     model.ib.element_count = index_data.size() / 3;
-    std::cerr << model.vb << std::endl;
-    std::cerr << model.ib << std::endl;
     // bind attributes
     model.vao.bind();
     model.vb.bindAttributeFormats();
