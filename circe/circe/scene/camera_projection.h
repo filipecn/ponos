@@ -65,7 +65,7 @@ public:
                                                         zero_to_one);
       if (flip_y) {
         auto m = this->transform.matrix();
-        m.m[1][1] *= -1;
+        m[1][1] *= -1;
         this->transform = ponos::Transform(m);
       }
     }

@@ -199,7 +199,7 @@ void ShaderProgram::setUniform(const char *name, const ponos::Transform &t) {
               << " not located. (Must be added first.)\n";
     return;
   }
-  glUniformMatrix4fv(loc, 1, GL_FALSE, &t.matrix().m[0][0]);
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &t.matrix()[0][0]);
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::mat4 &m) {
@@ -209,7 +209,7 @@ void ShaderProgram::setUniform(const char *name, const ponos::mat4 &m) {
               << " not located. (Probably has not been added.\n";
     return;
   }
-  glUniformMatrix4fv(loc, 1, GL_FALSE, &m.m[0][0]);
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &m[0][0]);
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::mat3 &m) {
@@ -219,7 +219,7 @@ void ShaderProgram::setUniform(const char *name, const ponos::mat3 &m) {
               << " not located. (Probably has not been added.\n";
     return;
   }
-  glUniformMatrix3fv(loc, 1, GL_FALSE, &m.m[0][0]);
+  glUniformMatrix3fv(loc, 1, GL_FALSE, &m[0][0]);
 }
 
 void ShaderProgram::setUniform(const char *name, const ponos::vec4 &v) {
@@ -291,6 +291,12 @@ void ShaderProgram::setUniform(const char *name, float f) {
   }
   glUniform1f(loc, f);
 }
+
+bool Program::hasUniform(const std::string & name) const {
+  auto it = uniform_locations_.find(name);
+  return it != uniform_locations_.end();
+}
+
 GLint ShaderProgram::getUniLoc(const GLchar *name) {
   //  if (!ShaderManager::instance().useShader(programId))
   //    return -1;
@@ -530,7 +536,7 @@ void Program::setUniform(const std::string &name, const ponos::Transform &t) {
               << " not located. (Must be added first.)\n";
     return;
   }
-  glUniformMatrix4fv(loc, 1, GL_FALSE, &t.matrix().m[0][0]);
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &t.matrix()[0][0]);
 }
 
 void Program::setUniform(const std::string &name, const ponos::mat4 &m) {
@@ -540,7 +546,7 @@ void Program::setUniform(const std::string &name, const ponos::mat4 &m) {
               << " not located. (Probably has not been added.\n";
     return;
   }
-  glUniformMatrix4fv(loc, 1, GL_FALSE, &m.m[0][0]);
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &m[0][0]);
 }
 
 void Program::setUniform(const std::string &name, const ponos::mat3 &m) {
@@ -550,7 +556,7 @@ void Program::setUniform(const std::string &name, const ponos::mat3 &m) {
               << " not located. (Probably has not been added.\n";
     return;
   }
-  glUniformMatrix3fv(loc, 1, GL_FALSE, &m.m[0][0]);
+  glUniformMatrix3fv(loc, 1, GL_FALSE, &m[0][0]);
 }
 
 void Program::setUniform(const std::string &name, const ponos::vec4 &v) {

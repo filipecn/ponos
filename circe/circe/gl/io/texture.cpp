@@ -98,32 +98,37 @@ std::ostream &operator<<(std::ostream &out, Texture &pt) {
   auto width = static_cast<int>(pt.attributes.width);
   auto height = static_cast<int>(pt.attributes.height);
 
-  unsigned char *data = nullptr;
-
-  data = new unsigned char[(int)(width * height)];
-
-  for (int i(0); i < width; ++i) {
-    for (int j(0); j < height; ++j) {
-      data[j * width + i] = 0;
-    }
-  }
+  u8 *data = nullptr;
+  auto bytes_per_texel = OpenGL::dataSizeInBytes(pt.attributes.type);
+  auto memory_size = width * height * OpenGL::dataSizeInBytes(pt.attributes.type);
+  data = new u8[memory_size];
+  memset(data, 0, memory_size);
 
   glActiveTexture(GL_TEXTURE0);
   std::cerr << "texture object " << pt.textureObject << std::endl;
+  out << width << " x " << height << " texels of type " <<
+      OpenGL::TypeToStr(pt.attributes.type) << " (" << bytes_per_texel
+      << " bytes per texel)" << std::endl;
+  out << "total memory: " << memory_size << " bytes\n";
   glBindTexture(pt.attributes.target, pt.textureObject);
   glGetTexImage(pt.attributes.target, 0, pt.attributes.format,
                 pt.attributes.type, data);
 
   CHECK_GL_ERRORS;
 
-  out << width << " " << height << std::endl;
-
   for (int j(height - 1); j >= 0; --j) {
     for (int i(0); i < width; ++i) {
-      out << (int)data[(int)(j * width + i)] << ",";
+      switch (pt.attributes.type) {
+      case GL_FLOAT:out << reinterpret_cast<f32 *>(data)[(int) (j * width + i)] << ",";
+        break;
+      default:out << static_cast<int>(data[(int) (j * width + i)]) << ",";
+      }
     }
     out << std::endl;
   }
+
+  delete[] data;
+
   return out;
 }
 

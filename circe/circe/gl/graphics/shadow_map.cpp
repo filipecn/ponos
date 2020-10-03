@@ -37,10 +37,12 @@ ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
                        "layout (location = 2) uniform mat4 model;\n"
                        "void main()\n"
                        "{ gl_Position = lightSpaceMatrix * model * vec4(position, 1.0); }", GL_VERTEX_SHADER);
-  Shader fragment_shader("#version 430 core\nvoid main(){}\n", GL_FRAGMENT_SHADER);
+  Shader fragment_shader("#version 430 core\nvoid main(){ "
+                         "gl_FragDepth = gl_FragCoord.z;"
+                         "gl_FragDepth += gl_FrontFacing ? 0.01 : 0.0; }\n", GL_FRAGMENT_SHADER);
   program_.attach(vertex_shader);
   program_.attach(fragment_shader);
-  if(!program_.link()) {
+  if (!program_.link()) {
     std::cerr << program_.err << std::endl;
     exit(-1);
   }
@@ -53,20 +55,21 @@ ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
   attributes.internalFormat = GL_DEPTH_COMPONENT;
   attributes.format = GL_DEPTH_COMPONENT;
   attributes.type = GL_FLOAT;
-  TextureParameters parameters(GL_TEXTURE_2D);
+  float border_color[4] = {1.0, 1.0, 1.0, 1.0,};
+  TextureParameters parameters(GL_TEXTURE_2D, border_color);
   parameters[GL_TEXTURE_MIN_FILTER] = GL_NEAREST;
   parameters[GL_TEXTURE_MAG_FILTER] = GL_NEAREST;
-  parameters[GL_TEXTURE_WRAP_S] = GL_REPEAT;
-  parameters[GL_TEXTURE_WRAP_T] = GL_REPEAT;
+  parameters[GL_TEXTURE_WRAP_S] = GL_CLAMP_TO_BORDER;
+  parameters[GL_TEXTURE_WRAP_T] = GL_CLAMP_TO_BORDER;
   // set depth texture
   depth_map_.set(attributes, parameters);
   // set buffer
   depth_buffer_.set(size.width, size.height);
   depth_buffer_.attachColorBuffer(depth_map_.textureObjectId(), depth_map_.target(), GL_DEPTH_ATTACHMENT);
   depth_buffer_.enable();
-  // Since we don't need a color buffer and Open GL expects one, we must tell Open GL:
   glDrawBuffer(GL_NONE);
   glReadBuffer(GL_NONE);
+  // Since we don't need a color buffer and Open GL expects one, we must tell Open GL:
   depth_buffer_.disable();
   CHECK_GL_ERRORS;
 }
@@ -74,12 +77,11 @@ ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
 ShadowMap::~ShadowMap() = default;
 
 void ShadowMap::render(std::function<void()> f) {
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
   glViewport(0, 0, size_.width, size_.height);
   depth_buffer_.enable();
   glClear(GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
+  depth_map_.bind(GL_TEXTURE0);
   program_.use();
   program_.setUniform("lightSpaceMatrix", ponos::transpose(light_transform_.matrix()));
   program_.setUniform("model", ponos::Transform().matrix());
@@ -95,17 +97,15 @@ void ShadowMap::bind() const {
 void ShadowMap::setLight(const Light &light) {
   ponos::Transform projection, view;
   if (light.type == circe::LightTypes::DIRECTIONAL) {
-    projection = ponos::ortho(-10, 10, -10, 10, 0.5, 7.5);
-    view = ponos::lookAtRH(ponos::point3() - light.direction, ponos::point3(), ponos::vec3(0, 1, 0));
+    projection = ponos::Transform::ortho(-10, 10, -10, 10, -1, 30);
+    view = ponos::Transform::lookAt(ponos::point3() + 20.f * light.direction);
   }
   light_transform_ = projection * view;
-  std::cerr << projection.matrix() << std::endl;
-  std::cerr << view.matrix() << std::endl;
 }
 
 const ponos::Transform &ShadowMap::light_transform() const { return light_transform_; }
 
-const Texture& ShadowMap::depthMap() const {
+const Texture &ShadowMap::depthMap() const {
   return depth_map_;
 }
 

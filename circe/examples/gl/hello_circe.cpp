@@ -22,15 +22,27 @@ struct Light {
 class DepthBufferView {
 public:
   DepthBufferView() {
+    // setup texture image
+    circe::gl::TextureAttributes attributes;
+    attributes.target = GL_TEXTURE_2D;
+    attributes.width = 256;
+    attributes.height = 256;
+    attributes.type = GL_UNSIGNED_BYTE;
+    attributes.internalFormat = GL_RGBA8;
+    attributes.format = GL_RGBA;
+    circe::gl::TextureParameters parameters;
+    image.set(attributes, parameters);
+    // setup shader
     ponos::Path shaders_path(std::string(SHADERS_PATH));
     if (!program.link({shaders_path + "depth_buffer.vert", shaders_path + "depth_buffer.frag"}))
       spdlog::error(program.err);
+    // setup screen quad
     std::vector<f32> vertices = {
         // x y u v
-        0.0, 0.0, 0.0, 0.0, // 0
-        1.0, 0.0, 1.0, 0.0, // 1
+        -1.0, -1.0, 0.0, 0.0, // 0
+        1.0, -1.0, 1.0, 0.0, // 1
         1.0, 1.0, 1.0, 1.0, // 2
-        0.0, 1.0, 0.0, 1.0, // 3
+        -1.0, 1.0, 0.0, 1.0, // 3
     };
     std::vector<u32> indices = {
         0, 1, 2, // 0
@@ -44,18 +56,21 @@ public:
     vao.bind();
     vb.bindAttributeFormats();
   }
-  void draw() {
-    vao.bind();
-    vb.bind();
-    ib.bind();
-    program.use();
-    program.setUniform("depthMap", 0);
-    ib.draw();
+  void update() {
+    image.render([&]() {
+      vao.bind();
+      vb.bind();
+      ib.bind();
+      program.use();
+      program.setUniform("depthMap", 0);
+      ib.draw();
+    });
   }
   circe::gl::Program program;
   circe::gl::VertexArrayObject vao;
   circe::gl::VertexBuffer vb;
   circe::gl::IndexBuffer ib;
+  circe::gl::RenderTexture image;
 };
 
 class HelloCirce : public circe::gl::BaseApp {
@@ -68,6 +83,12 @@ public:
     circe::gl::VertexArrayObject vao;
     circe::gl::VertexBuffer vb;
     circe::gl::IndexBuffer ib;
+    void draw() {
+      vao.bind();
+      vb.bind();
+      ib.bind();
+      ib.draw();
+    }
   };
 
   struct SceneUniformBufferData {
@@ -75,7 +96,6 @@ public:
   } scene_ubo_data;
 
   HelloCirce() : BaseApp(800, 800) {
-    auto c = this->app_->getCamera();
     // setup object model
     ponos::Path assets_path(std::string(ASSETS_PATH));
     loadObject(assets_path + "suzanne.obj");
@@ -87,16 +107,17 @@ public:
     setupModel(cartesian_plane,
                *raw_mesh,
                {shaders_path + "reference_grid.vert", shaders_path + "reference_grid.frag"});
-    // setup light
-    scene_ubo_data.light.position.y = 10.f;
-    scene_ubo_data.light.diffuse = scene_ubo_data.light.specular = scene_ubo_data.light.ambient =
-        circe::Color(1.0, 0.5, 0.5);
     // init shadow map
     circe::Light l;
     l.type = circe::LightTypes::DIRECTIONAL;
-    l.direction = ponos::vec3(-2.0f, 4.0f, -1.f);
+    l.direction = ponos::normalize(ponos::vec3(-1.0f, 1.0f, 1.f));
     shadow_map.setLight(l);
     // setup scene uniform buffer
+    scene_ubo_data.light.position.x = l.direction.x * 20;
+    scene_ubo_data.light.position.y = l.direction.y * 20;
+    scene_ubo_data.light.position.z = l.direction.z * 20;
+    scene_ubo_data.light.diffuse = scene_ubo_data.light.specular = scene_ubo_data.light.ambient =
+        circe::Color(1.0, 0.5, 0.5);
     scene_ubo.push(object.program);
     object.program.setUniformBlockBinding("Scene", 0);
     scene_ubo["Scene"] = &scene_ubo_data;
@@ -104,51 +125,57 @@ public:
 
   void prepareFrame(const circe::gl::ViewportDisplay &display) override {
     circe::gl::BaseApp::prepareFrame(display);
+//    auto p = app_->getCamera()->getPosition();
+//    circe::Light l;
+//    l.type = circe::LightTypes::DIRECTIONAL;
+//    l.direction = ponos::normalize(ponos::vec3(p.x, p.y, p.z));
+//    shadow_map.setLight(l);
     shadow_map.render([&]() {
-      object.ib.draw();
-//      cartesian_plane.mesh.draw();
+//      glDisable( GL_CULL_FACE );
+      cartesian_plane.draw();
+      object.draw();
+//      glEnable( GL_CULL_FACE );
     });
   }
 
   void render(circe::CameraInterface *camera) override {
     drawModel(object, camera);
+    drawModel(cartesian_plane, camera);
     shadow_map.depthMap().bind(GL_TEXTURE0);
-    depth_buffer_view.draw();
-//    drawModel(cartesian_plane, camera);
+    depth_buffer_view.update();
     ImGui::Begin("Shadow Map");
     texture_id = shadow_map.depthMap().textureObjectId();
-    ImGui::Image((void *) (intptr_t) (texture_id), {256, 256});
+    texture_id = depth_buffer_view.image.textureObjectId();
+    ImGui::Image((void *) (intptr_t) (texture_id), {256, 256},
+                 {0, 1}, {1, 0});
     ImGui::End();
   }
 
   void drawModel(Model &model, circe::CameraInterface *camera) {
     model.program.use();
-//    model.program.setUniform("light.position", scene_ubo_data.light.position);
-//    model.program.setUniform("light.ambient", scene_ubo_data.light.ambient);
-//    model.program.setUniform("light.diffuse", scene_ubo_data.light.diffuse);
-//    model.program.setUniform("light.specular", scene_ubo_data.light.specular);
-    model.program.setUniform("material.kAmbient", model.material.ambient.rgb());
-    model.program.setUniform("material.kDiffuse", model.material.diffuse.rgb());
-    model.program.setUniform("material.kSpecular", model.material.specular.rgb());
-    model.program.setUniform("material.shininess", model.material.shininess);
+    if (model.program.hasUniform("material.kAmbient")) {
+      model.program.setUniform("material.kAmbient", model.material.ambient.rgb());
+      model.program.setUniform("material.kDiffuse", model.material.diffuse.rgb());
+      model.program.setUniform("material.kSpecular", model.material.specular.rgb());
+      model.program.setUniform("material.shininess", model.material.shininess);
+    }
     model.program.setUniform("model", ponos::transpose(model.transform.matrix()));
     model.program.setUniform("view",
                              ponos::transpose(camera->getViewTransform().matrix()));
     model.program.setUniform("projection",
                              ponos::transpose(camera->getProjectionTransform().matrix()));
     model.program.setUniform("cameraPosition", camera->getPosition());
+    model.program.setUniform("lightSpaceMatrix", ponos::transpose(shadow_map.light_transform().matrix()));
+    model.program.setUniform("shadowMap", 0);
+    shadow_map.depthMap().bind(GL_TEXTURE0);
     glEnable(GL_DEPTH_TEST);
-    model.vao.bind();
-    model.vb.bind();
-    model.ib.bind();
-    model.ib.draw();
-
+    model.draw();
   }
 
   void loadObject(const ponos::Path &path) {
     ponos::RawMesh rm;
     circe::loadOBJ(path.fullName(), &rm);
-    auto sphere = ponos::RawMeshes::icosphere(ponos::point3(), 1.f, 3, true, false);
+    auto sphere = ponos::RawMeshes::icosphere(ponos::point3(), 1.f, 0, true, false);
     rm.splitIndexData();
     rm.buildInterleavedData();
     ponos::Path shaders_path(std::string(SHADERS_PATH));
@@ -170,8 +197,10 @@ public:
     circe::gl::setup_buffer_data_from_mesh(mesh, vertex_data, index_data);
     // describe vertex buffer
     model.vb.attributes.pushAttribute<ponos::point3>("position");
-    model.vb.attributes.pushAttribute<ponos::vec3>("normal");
-//    model.vb.attributes.pushAttribute<ponos::point2>("uv");
+    if (mesh.normalDescriptor.count)
+      model.vb.attributes.pushAttribute<ponos::vec3>("normal");
+    if (mesh.texcoordDescriptor.count)
+      model.vb.attributes.pushAttribute<ponos::point2>("uv");
     // upload data
     model.vb = vertex_data;
     model.ib = index_data;

@@ -88,7 +88,8 @@ TEST_CASE("Transform", "[geometry][transform]") {
   SECTION("Sanity") {
     Transform t;
     REQUIRE(t.matrix().isIdentity());
-  }SECTION("orthographic projection") {
+  }//
+  SECTION("orthographic projection") {
     SECTION("cube") {
       auto t = Transform::ortho(-10, 10, -20, 20, -1, 1);
       REQUIRE(t.matrix() == mat4(
@@ -97,7 +98,8 @@ TEST_CASE("Transform", "[geometry][transform]") {
           0, 0, -1, 0,//
           0, 0, 0, 1//
       ));
-    }SECTION("zero to one") {
+    }//
+    SECTION("zero to one") {
       auto t = Transform::ortho(-10, 10, -20, 20, -1, 1,
                                 true, true);
       REQUIRE(t.matrix() == mat4(
@@ -106,8 +108,26 @@ TEST_CASE("Transform", "[geometry][transform]") {
           0, 0, -0.5, 0.5,//
           0, 0, 0, 1//
       ));
-    }
-
-  }
+    }//
+  }SECTION("look at") {
+    SECTION("left handed") {
+      auto t = Transform::lookAt({1.f, 0.f, 0.f});
+      REQUIRE(t.matrix() == mat4(
+          0, 0, -1, 0,//
+          0, 1, 0, 0,//
+          1, 0, 0, -1,//
+          0, 0, 0, 1//
+      ));
+    }//
+    SECTION("right handed") {
+      auto t = Transform::lookAt({1.f, 0.f, 0.f}, {0, 0, 0}, {0, 1, 0}, false);
+      REQUIRE(t.matrix() == mat4(
+          0, 0, 1, 0,//
+          0, 1, 0, 0,//
+          -1, 0, 0, 1,//
+          0, 0, 0, 1//
+      ));
+    }//
+  }//
 }
 

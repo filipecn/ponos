@@ -87,8 +87,10 @@ struct TextureParameters {
   /** \brief calls glTexParameteri
    */
   void apply() {
-    for (auto it = parameters.begin(); it != parameters.end(); ++it)
-      glTexParameteri(target, it->first, it->second);
+    for (auto &parameter : parameters)
+      glTexParameteri(target, parameter.first, parameter.second);
+    if (borderColor)
+      glTexParameterfv(target, GL_TEXTURE_BORDER_COLOR, borderColor);
   }
   /** \brief add/edit parameter
    * \param k key (name of parameter (OpenGL enum)

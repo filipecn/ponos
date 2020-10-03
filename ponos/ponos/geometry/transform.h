@@ -245,6 +245,30 @@ public:
   // ***********************************************************************
   //                           STATIC  METHODS
   // ***********************************************************************
+  /// Look At Transform
+  /// This transform is commonly (in graphics) used to orient a camera so that
+  /// it looks at a certain **target** position from its **eye** position.
+  /// Given an **up** vector to define the camera orientation, a new coordinate
+  /// basis consisting of three vectors {r, u, v} is defined. Where
+  /// v = (eye - target) / ||eye - target||
+  /// r = -(v x up) / ||(v x up)||
+  /// u = v x r
+  /// The transform is then composed of a translation (to camera **eye** position)
+  /// and a basis transform to align r with (1,0,0), u with (0,1,0) and v with
+  /// (0,0,1). The final matrix is
+  ///     rx  ry  rz  -dot(t, r)
+  ///     rx  ry  rz  -dot(t, u)
+  ///     rx  ry  rz  -dot(t, v)
+  ///      0   0   0      1
+  /// Note that this transform is built on a left handed coordinate system. Setting
+  /// the option **left_handed** to false switches to the right handed system.
+  /// \param eye camera position
+  /// \param target camera target
+  /// \param up orientation vector
+  /// \param left_handed
+  /// \return
+  static Transform lookAt(const point3 &eye, const point3 &target = {0, 0, 0},
+                          const vec3 &up = {0, 1, 0}, bool left_handed = true);
   /// Orthographic Projection
   /// In an orthographic projection, parallel lines remain parallel and objects
   /// maintain the same size regardless the distance.
@@ -275,34 +299,7 @@ public:
   /// \return
   static Transform ortho(real_t left = -1, real_t right = 1, real_t bottom = -1, real_t top = 1,
                          real_t near = 1, real_t far = -1, bool left_handed = true,
-                         bool zero_to_one = false) {
-    if (near < far) {
-      near = -near;
-      far = -far;
-    }
-    Matrix4x4<real_t> m;
-    // row 0
-    m[0][0] = 2 / (right - left);
-    m[0][1] = 0;
-    m[0][2] = 0;
-    m[0][3] = -(right + left) / (right - left);
-    // row 1
-    m[1][0] = 0;
-    m[1][1] = 2 / (top - bottom);
-    m[1][2] = 0;
-    m[1][3] = -(top + bottom) / (top - bottom);
-    // row 2
-    m[2][0] = 0;
-    m[2][1] = 0;
-    m[2][2] = (zero_to_one ? 1 : 2) / (far - near);
-    m[2][3] = -(zero_to_one ? near : (far + near)) / (far - near);
-    // row 3
-    m[3][0] = 0;
-    m[3][1] = 0;
-    m[3][2] = 0;
-    m[3][3] = 1;
-    return {m, inverse(m)};
-  }
+                         bool zero_to_one = false);
   /// \param fovy
   /// \param aspect
   /// \param z_near

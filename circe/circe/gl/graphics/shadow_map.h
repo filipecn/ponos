@@ -42,7 +42,7 @@ public:
   void render(std::function<void()> f);
   void bind() const;
   [[nodiscard]] const ponos::Transform& light_transform() const;
-  const Texture& depthMap() const;
+  [[nodiscard]] const Texture& depthMap() const;
 private:
   ponos::size2 size_;
   Framebuffer depth_buffer_;

@@ -188,8 +188,9 @@ public:
   void setUniform(const std::string &name, const Color &c);
   void setUniform(const std::string &name, int i);
   void setUniform(const std::string &name, float f);
+  [[nodiscard]] bool hasUniform(const std::string &name) const;
   // Uniform Blocks
-  void setUniformBlockBinding(const std::string& name, GLuint buffer_binding);
+  void setUniformBlockBinding(const std::string &name, GLuint buffer_binding);
 
   friend std::ostream &operator<<(std::ostream &o, const Program &program);
 

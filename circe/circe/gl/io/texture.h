@@ -48,16 +48,16 @@ public:
   void setTexels(unsigned char *texels);
   /// retrieve texture pixel data
   /// \return list of pixels by row major
-  std::vector<unsigned char> texels() const;
-  ponos::size3 size() const;
-  GLuint textureObjectId() const;
-  GLenum target() const;
+  [[nodiscard]] std::vector<unsigned char> texels() const;
+  [[nodiscard]] ponos::size3 size() const;
+  [[nodiscard]] GLuint textureObjectId() const;
+  [[nodiscard]] GLenum target() const;
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 
 protected:
   TextureAttributes attributes;
   TextureParameters parameters;
-  GLuint textureObject;
+  GLuint textureObject{};
 };
 
 } // namespace circe

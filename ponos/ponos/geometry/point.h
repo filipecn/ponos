@@ -131,7 +131,7 @@ template<typename T> class Point3 : public MathElement<T, 3u> {
 public:
   Point3() {}
   explicit Point3(real_t v) { x = y = z = v; }
-  explicit Point3(real_t _x, real_t _y, real_t _z) : x(_x), y(_y), z(_z) {}
+  Point3(real_t _x, real_t _y, real_t _z) : x(_x), y(_y), z(_z) {}
   explicit Point3(const Vector3<T> &v) : x(v.x), y(v.y), z(v.z) {}
   explicit Point3(const Point2<T> &p) : x(p.x), y(p.y), z(0) {}
   explicit Point3(const real_t *v) : x(v[0]), y(v[1]), z(v[2]) {}

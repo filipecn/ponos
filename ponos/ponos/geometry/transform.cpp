@@ -122,6 +122,75 @@ Transform segmentToSegmentTransform(point3 a, point3 b, point3 c, point3 d) {
 
 Transform inverse(const Transform &t) { return {t.m_inv, t.m}; }
 
+Transform Transform::lookAt(const point3 &eye, const point3 &target, const vec3 &up, bool left_handed) {
+  Matrix4x4<real_t> m;
+  vec3 v;
+  if (left_handed)
+    v = normalize(eye - target);
+  else
+    v = normalize(target - eye);
+  auto r = -normalize(cross(v, up));
+  auto u = cross(v, r);
+  auto t = eye - point3();
+  // row 0
+  m[0][0] = r.x;
+  m[0][1] = r.y;
+  m[0][2] = r.z;
+  m[0][3] = -dot(t, r);
+  // row 1
+  m[1][0] = u.x;
+  m[1][1] = u.y;
+  m[1][2] = u.z;
+  m[1][3] = -dot(t, u);
+  // row 2
+  m[2][0] = v.x;
+  m[2][1] = v.y;
+  m[2][2] = v.z;
+  m[2][3] = -dot(t, v);
+  // row 3
+  m[3][0] = 0;
+  m[3][1] = 0;
+  m[3][2] = 0;
+  m[3][3] = 1;
+  return {m, inverse(m)};
+}
+
+Transform Transform::ortho(real_t left,
+                           real_t right,
+                           real_t bottom,
+                           real_t top,
+                           real_t near,
+                           real_t far,
+                           bool left_handed,
+                           bool zero_to_one) {
+  if (near < far) {
+    near = -near;
+    far = -far;
+  }
+  Matrix4x4<real_t> m;
+  // row 0
+  m[0][0] = 2 / (right - left);
+  m[0][1] = 0;
+  m[0][2] = 0;
+  m[0][3] = -(right + left) / (right - left);
+  // row 1
+  m[1][0] = 0;
+  m[1][1] = 2 / (top - bottom);
+  m[1][2] = 0;
+  m[1][3] = -(top + bottom) / (top - bottom);
+  // row 2
+  m[2][0] = 0;
+  m[2][1] = 0;
+  m[2][2] = (zero_to_one ? 1 : 2) / (far - near);
+  m[2][3] = -(zero_to_one ? near : (far + near)) / (far - near);
+  // row 3
+  m[3][0] = 0;
+  m[3][1] = 0;
+  m[3][2] = 0;
+  m[3][3] = 1;
+  return {m, inverse(m)};
+}
+
 Transform translate(const vec3 &d) {
   mat4 m(1.f, 0.f, 0.f, d.x, 0.f, 1.f, 0.f, d.y, 0.f, 0.f, 1.f, d.z, 0.f, 0.f,
          0.f, 1.f);
