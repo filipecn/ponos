@@ -95,6 +95,8 @@ public:
     /// \return region (in world coordinates) of the grid cell respective to
     /// the current index
     [[nodiscard]] bbox1 region() const { return acc_.cellRegion(index); }
+    /// Assign operator
+    Element &operator=(const T &v) { value = v; }
     /// Reference to the grid data stored in the current index
     T &value;
     /// Index of the grid data element
@@ -596,10 +598,11 @@ public:
     Element(T &v, const index2 &ij, const Grid2Accessor<T> &acc)
         : value(v), index(ij), acc_(acc) {}
     /// \return world position coordinates of the current index
-    point2 worldPosition() const { return acc_.worldPosition(index); }
+    [[nodiscard]] point2 worldPosition() const { return acc_.worldPosition(index); }
     /// \return region (in world coordinates) of the grid cell respective to
     /// the current index
-    bbox2 region() const { return acc_.cellRegion(index); }
+    [[nodiscard]] bbox2 region() const { return acc_.cellRegion(index); }
+    Element &operator=(const T &v) { value = v; }
     /// Reference to the grid data stored in the current index
     T &value;
     /// Index of the grid data element

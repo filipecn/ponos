@@ -121,6 +121,15 @@ public:
     scene_ubo.push(object.program);
     object.program.setUniformBlockBinding("Scene", 0);
     scene_ubo["Scene"] = &scene_ubo_data;
+
+    circe::gl::VertexBuffer vb;
+    std::vector<float> data = {0.f, 1.f, 2.f};
+    vb.attributes.pushAttribute<ponos::vec3>("position");
+    vb = data;
+    data.push_back(2.3);
+    data.push_back(2.3);
+    data.push_back(2.3);
+    vb = data;
   }
 
   void prepareFrame(const circe::gl::ViewportDisplay &display) override {

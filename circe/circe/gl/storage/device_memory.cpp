@@ -97,6 +97,7 @@ void DeviceMemory::setUsage(GLuint _usage) {
 }
 
 void DeviceMemory::resize(u64 size_in_bytes) {
+  destroy();
   size_ = size_in_bytes;
 }
 

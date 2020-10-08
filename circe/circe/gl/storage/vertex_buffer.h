@@ -124,8 +124,8 @@ public:
   /// \return
   template<typename T>
   VertexBuffer &operator=(const std::vector<T> &data) {
-    auto data_type = sizeof(T);
-    auto data_size = data.size() * data_type;
+    auto data_type_size = sizeof(T);
+    auto data_size = data.size() * data_type_size;
     vertex_count_ = data_size / attributes.stride();
     setData(reinterpret_cast<const void *>(data.data()));
     return *this;
