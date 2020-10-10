@@ -45,7 +45,7 @@ public:
    */
   RenderTexture(const TextureAttributes &a, const TextureParameters &p);
   ~RenderTexture() override;
-  void set(const TextureAttributes& a, const TextureParameters & p) override;
+  void set(const TextureAttributes &a, const TextureParameters &p) override;
   void render(std::function<void()> f);
   friend std::ostream &operator<<(std::ostream &out, RenderTexture &pt);
 

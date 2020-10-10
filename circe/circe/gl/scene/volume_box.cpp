@@ -30,11 +30,10 @@ VolumeBox2::VolumeBox2(u32 w, u32 h, float *data) : VolumeBox2() {
   TextureAttributes ta;
   ta.width = w;
   ta.height = h;
-  ta.internalFormat = GL_RED;
+  ta.internal_format = GL_RED;
   ta.format = GL_RED;
   ta.type = GL_FLOAT;
   ta.target = GL_TEXTURE_2D;
-  ta.data = data;
   TextureParameters tp;
   tp.target = GL_TEXTURE_2D;
   tp[GL_TEXTURE_MIN_FILTER] = GL_LINEAR;
@@ -43,6 +42,7 @@ VolumeBox2::VolumeBox2(u32 w, u32 h, float *data) : VolumeBox2() {
   tp[GL_TEXTURE_WRAP_T] = GL_CLAMP_TO_BORDER;
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   density_texture_.set(ta, tp);
+  density_texture_.setTexels(data);
 }
 
 VolumeBox2::VolumeBox2() {
@@ -236,11 +236,10 @@ VolumeBox::VolumeBox(size_t w, size_t h, size_t d, float *data) : VolumeBox() {
   ta.width = w;
   ta.height = h;
   ta.depth = d;
-  ta.internalFormat = GL_RED;
+  ta.internal_format = GL_RED;
   ta.format = GL_RED;
   ta.type = GL_FLOAT;
   ta.target = GL_TEXTURE_3D;
-  ta.data = data;
   TextureParameters tp;
   tp.target = GL_TEXTURE_3D;
   tp[GL_TEXTURE_MIN_FILTER] = GL_LINEAR;
@@ -250,6 +249,7 @@ VolumeBox::VolumeBox(size_t w, size_t h, size_t d, float *data) : VolumeBox() {
   tp[GL_TEXTURE_WRAP_R] = GL_CLAMP_TO_BORDER;
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   densityTexture.set(ta, tp);
+  densityTexture.setTexels(data);
 }
 
 VolumeBox::~VolumeBox() = default;

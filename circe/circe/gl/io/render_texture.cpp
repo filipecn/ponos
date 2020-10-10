@@ -29,36 +29,21 @@ namespace circe::gl {
 
 RenderTexture::RenderTexture(const TextureAttributes &a,
                              const TextureParameters &p)
-    : Texture(a, p) /*attributes(a), parameters(p)*/ {
-  /*ASSERT(a.target == p.target);
-
-  glGenTextures(1, &textureObject);
-  glBindTexture(p.target, textureObject);
-  parameters.apply();
-  if (a.target == GL_TEXTURE_3D)
-    glTexImage3D(GL_TEXTURE_3D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, attributes.depth, 0, attributes.format,
-                 attributes.type, NULL);
-  else
-    glTexImage2D(GL_TEXTURE_2D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, 0, attributes.format, attributes.type, 0);
-  CHECK_GL_ERRORS;
-  glBindTexture(attributes.target, 0);
-*/
+    : Texture(a, p) {
   framebuffer.reset(
-      new Framebuffer(attributes.width, attributes.height, attributes.depth));
-  framebuffer->attachColorBuffer(textureObject, attributes.target);
+      new Framebuffer(attributes_.width, attributes_.height, attributes_.depth));
+  framebuffer->attachColorBuffer(texture_object_, attributes_.target);
   framebuffer->disable();
 }
 
 RenderTexture::~RenderTexture() {
-  if (textureObject)
-    glDeleteTextures(1, &textureObject);
+  if (texture_object_)
+    glDeleteTextures(1, &texture_object_);
 }
 
 void RenderTexture::render(std::function<void()> f) {
-  glViewport(0, 0, static_cast<GLsizei>(attributes.width),
-             static_cast<GLsizei>(attributes.height));
+  glViewport(0, 0, static_cast<GLsizei>(attributes_.width),
+             static_cast<GLsizei>(attributes_.height));
   framebuffer->enable();
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -67,12 +52,12 @@ void RenderTexture::render(std::function<void()> f) {
 }
 
 std::ostream &operator<<(std::ostream &out, RenderTexture &pt) {
-  int width = pt.attributes.width;
-  int height = pt.attributes.height;
+  int width = pt.attributes_.width;
+  int height = pt.attributes_.height;
 
-  unsigned char *data = NULL;
+  unsigned char *data = nullptr;
 
-  data = new unsigned char[(int)(width * height)];
+  data = new unsigned char[(int) (width * height)];
 
   for (int i(0); i < width; ++i) {
     for (int j(0); j < height; ++j) {
@@ -81,9 +66,9 @@ std::ostream &operator<<(std::ostream &out, RenderTexture &pt) {
   }
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(pt.attributes.target, pt.textureObject);
-  glGetTexImage(pt.attributes.target, 0, pt.attributes.format,
-                pt.attributes.type, data);
+  glBindTexture(pt.attributes_.target, pt.texture_object_);
+  glGetTexImage(pt.attributes_.target, 0, pt.attributes_.format,
+                pt.attributes_.type, data);
 
   CHECK_GL_ERRORS;
 
@@ -91,7 +76,7 @@ std::ostream &operator<<(std::ostream &out, RenderTexture &pt) {
 
   for (int j(height - 1); j >= 0; --j) {
     for (int i(0); i < width; ++i) {
-      out << (int)data[(int)(j * width + i)] << ",";
+      out << (int) data[(int) (j * width + i)] << ",";
     }
     out << std::endl;
   }
@@ -101,8 +86,8 @@ std::ostream &operator<<(std::ostream &out, RenderTexture &pt) {
 void RenderTexture::set(const TextureAttributes &a, const TextureParameters &p) {
   Texture::set(a, p);
   framebuffer.reset(
-      new Framebuffer(attributes.width, attributes.height, attributes.depth));
-  framebuffer->attachColorBuffer(textureObject, attributes.target);
+      new Framebuffer(attributes_.width, attributes_.height, attributes_.depth));
+  framebuffer->attachColorBuffer(texture_object_, attributes_.target);
   framebuffer->disable();
 }
 

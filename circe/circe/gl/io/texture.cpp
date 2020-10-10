@@ -24,101 +24,152 @@
 
 #include <circe/gl/io/texture.h>
 #include <circe/gl/utils/open_gl.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 namespace circe::gl {
 
-Texture::Texture() = default;
+Texture Texture::fromFile(const ponos::Path &path) {
+  int width, height, channel_count;
+  unsigned char *data = stbi_load(path.fullName().c_str(), &width, &height, &channel_count, 0);
+  if (!data)
+    return std::move(Texture());
+  Texture texture;
+  texture.attributes_.target = GL_TEXTURE_2D;
+  texture.attributes_.width = width;
+  texture.attributes_.height = height;
+  texture.attributes_.depth = 1;
+  texture.attributes_.type = GL_UNSIGNED_BYTE;
+  texture.attributes_.format = (channel_count == 3) ? GL_RGB : GL_RGBA;
+  texture.attributes_.internal_format = GL_RGB;
+  texture.setTexels(data);
+  stbi_image_free(data);
+  return std::move(texture);
+}
 
-Texture::Texture(const TextureAttributes &a, const TextureParameters &p)
-    : attributes(a), parameters(p) {
+Texture::Texture() {
+  glGenTextures(1, &texture_object_);
+  ASSERT(texture_object_);
+}
+
+Texture::Texture(const TextureAttributes &a, const TextureParameters &p, const void *data)
+    : Texture() {
   set(a, p);
 }
 
+Texture::Texture(const Texture &other) {
+  set(other.attributes_, other.parameters_);
+}
+
+Texture::Texture(Texture &&other) noexcept {
+  texture_object_ = other.texture_object_;
+  parameters_changed_ = other.parameters_changed_;
+  parameters_ = other.parameters_;
+  attributes_ = other.attributes_;
+  other.texture_object_ = 0;
+}
+
 Texture::~Texture() {
-  if (textureObject)
-    glDeleteTextures(1, &textureObject);
+  glDeleteTextures(1, &texture_object_);
+}
+
+Texture &Texture::operator=(const Texture &other) {
+  set(other.attributes_, other.parameters_);
+  return *this;
+}
+
+Texture &Texture::operator=(Texture &&other) noexcept {
+  texture_object_ = other.texture_object_;
+  parameters_changed_ = other.parameters_changed_;
+  parameters_ = other.parameters_;
+  attributes_ = other.attributes_;
+  other.texture_object_ = 0;
+  return *this;
 }
 
 void Texture::set(const TextureAttributes &a, const TextureParameters &p) {
   ASSERT(a.target == p.target);
-  attributes = a;
-  parameters = p;
-  glGenTextures(1, &textureObject);
-  ASSERT(textureObject);
-  glBindTexture(p.target, textureObject);
-  parameters.apply();
-  if (a.target == GL_TEXTURE_3D)
-    glTexImage3D(GL_TEXTURE_3D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, attributes.depth, 0, attributes.format,
-                 attributes.type, attributes.data);
-  else
-    glTexImage2D(GL_TEXTURE_2D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, 0, attributes.format, attributes.type,
-                 attributes.data);
-  CHECK_GL_ERRORS;
-  glBindTexture(attributes.target, 0);
+  attributes_ = a;
+  parameters_ = p;
+  setTexels(nullptr);
+  glBindTexture(attributes_.target, texture_object_);
+  parameters_.apply();
+  parameters_changed_ = false;
+  glBindTexture(attributes_.target, 0);
 }
 
-void Texture::setTexels(unsigned char *texels) {
-  attributes.data = texels;
-  glBindTexture(parameters.target, textureObject);
-  if (attributes.target == GL_TEXTURE_3D)
-    glTexImage3D(GL_TEXTURE_3D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, attributes.depth, 0, attributes.format,
-                 attributes.type, attributes.data);
+void Texture::setTexels(const void *texels) const {
+  /// bind texture
+  glBindTexture(attributes_.target, texture_object_);
+  if (parameters_.target == GL_TEXTURE_3D)
+    glTexImage3D(GL_TEXTURE_3D, 0, attributes_.internal_format, attributes_.width,
+                 attributes_.height, attributes_.depth, 0, attributes_.format,
+                 attributes_.type, texels);
   else
-    glTexImage2D(GL_TEXTURE_2D, 0, attributes.internalFormat, attributes.width,
-                 attributes.height, 0, attributes.format, attributes.type,
-                 attributes.data);
+    glTexImage2D(GL_TEXTURE_2D, 0, attributes_.internal_format, attributes_.width,
+                 attributes_.height, 0, attributes_.format, attributes_.type,
+                 texels);
   CHECK_GL_ERRORS;
-  glBindTexture(attributes.target, 0);
+  glBindTexture(attributes_.target, 0);
+}
+
+void Texture::generateMipmap() const {
+  glBindTexture(attributes_.target, texture_object_);
+  glGenerateMipmap(attributes_.target);
+  CHECK_GL_ERRORS;
+  glBindTexture(attributes_.target, 0);
 }
 
 void Texture::bind(GLenum t) const {
   glActiveTexture(t);
-  glBindTexture(attributes.target, textureObject);
+  glBindTexture(attributes_.target, texture_object_);
+  /// update parameters and attributes if necessary
+  if (parameters_changed_) {
+    parameters_.apply();
+    parameters_changed_ = false;
+  }
 }
 
 void Texture::bindImage(GLenum t) const {
   glActiveTexture(t);
-  glBindImageTexture(0, textureObject, 0, GL_FALSE, 0, GL_WRITE_ONLY,
-                     attributes.internalFormat);
+  glBindImageTexture(0, texture_object_, 0, GL_FALSE, 0, GL_WRITE_ONLY,
+                     attributes_.internal_format);
   CHECK_GL_ERRORS;
 }
 
 ponos::size3 Texture::size() const {
-  return ponos::size3(attributes.width, attributes.height, attributes.depth);
+  return ponos::size3(attributes_.width, attributes_.height, attributes_.depth);
 }
 
-GLuint Texture::textureObjectId() const { return textureObject; }
+GLuint Texture::textureObjectId() const { return texture_object_; }
 
-GLenum Texture::target() const { return parameters.target; }
+GLenum Texture::target() const { return parameters_.target; }
 
 std::ostream &operator<<(std::ostream &out, Texture &pt) {
-  auto width = static_cast<int>(pt.attributes.width);
-  auto height = static_cast<int>(pt.attributes.height);
+  auto width = static_cast<int>(pt.attributes_.width);
+  auto height = static_cast<int>(pt.attributes_.height);
 
   u8 *data = nullptr;
-  auto bytes_per_texel = OpenGL::dataSizeInBytes(pt.attributes.type);
-  auto memory_size = width * height * OpenGL::dataSizeInBytes(pt.attributes.type);
+  auto bytes_per_texel = OpenGL::dataSizeInBytes(pt.attributes_.type);
+  auto memory_size = width * height * OpenGL::dataSizeInBytes(pt.attributes_.type);
   data = new u8[memory_size];
   memset(data, 0, memory_size);
 
   glActiveTexture(GL_TEXTURE0);
-  std::cerr << "texture object " << pt.textureObject << std::endl;
+  std::cerr << "texture object " << pt.texture_object_ << std::endl;
   out << width << " x " << height << " texels of type " <<
-      OpenGL::TypeToStr(pt.attributes.type) << " (" << bytes_per_texel
+      OpenGL::TypeToStr(pt.attributes_.type) << " (" << bytes_per_texel
       << " bytes per texel)" << std::endl;
   out << "total memory: " << memory_size << " bytes\n";
-  glBindTexture(pt.attributes.target, pt.textureObject);
-  glGetTexImage(pt.attributes.target, 0, pt.attributes.format,
-                pt.attributes.type, data);
+  glBindTexture(pt.attributes_.target, pt.texture_object_);
+  glGetTexImage(pt.attributes_.target, 0, pt.attributes_.format,
+                pt.attributes_.type, data);
 
   CHECK_GL_ERRORS;
 
   for (int j(height - 1); j >= 0; --j) {
     for (int i(0); i < width; ++i) {
-      switch (pt.attributes.type) {
+      switch (pt.attributes_.type) {
       case GL_FLOAT:out << reinterpret_cast<f32 *>(data)[(int) (j * width + i)] << ",";
         break;
       default:out << static_cast<int>(data[(int) (j * width + i)]) << ",";
@@ -133,17 +184,53 @@ std::ostream &operator<<(std::ostream &out, Texture &pt) {
 }
 
 std::vector<unsigned char> Texture::texels() const {
-  auto width = static_cast<int>(attributes.width);
-  auto height = static_cast<int>(attributes.height);
+  auto width = static_cast<int>(attributes_.width);
+  auto height = static_cast<int>(attributes_.height);
 
   std::vector<unsigned char> data(4 * width * height, 0);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(attributes.target, textureObject);
-  glGetTexImage(attributes.target, 0, attributes.format, attributes.type,
+  glBindTexture(attributes_.target, texture_object_);
+  glGetTexImage(attributes_.target, 0, attributes_.format, attributes_.type,
                 &data[0]);
   CHECK_GL_ERRORS;
   return data;
+}
+
+const TextureAttributes &Texture::attributes() const { return attributes_; }
+
+const TextureParameters &Texture::parameters() const { return parameters_; }
+
+void Texture::setParameter(GLuint k, GLuint value) {
+  parameters_[k] = value;
+  parameters_changed_ = true;
+}
+
+void Texture::resize(const ponos::size3 &new_size) {
+  attributes_.width = new_size.width;
+  attributes_.height = new_size.height;
+  attributes_.depth = new_size.depth;
+}
+
+void Texture::setInternalFormat(GLint internal_format) {
+  attributes_.internal_format = internal_format;
+}
+
+void Texture::setFormat(GLint format) {
+  attributes_.format = format;
+}
+
+void Texture::setType(GLenum type) {
+  attributes_.type = type;
+}
+
+void Texture::setTarget(GLenum target) {
+  attributes_.target = target;
+}
+
+void Texture::resize(const ponos::size2 &new_size) {
+  attributes_.width = new_size.width;
+  attributes_.height = new_size.height;
 }
 
 } // namespace circe

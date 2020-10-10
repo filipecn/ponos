@@ -39,10 +39,10 @@ public:
   virtual ~Framebuffer();
 
   void set(uint w, uint h, uint d = 0);
-  void enable();
-  void disable();
+  void enable() const;
+  static void disable();
   void attachColorBuffer(GLuint textureId, GLenum target,
-                         GLenum attachmentPoint = GL_COLOR_ATTACHMENT0);
+                         GLenum attachmentPoint = GL_COLOR_ATTACHMENT0) const;
 
 private:
   uint width, height, depth;

@@ -46,13 +46,12 @@ struct TextureAttributes {
       0; //!< height of the texture (in texels) or the number of layers
   size_t depth =
       0; //!< height of the texture (in texels) or the number of layers
-  GLint internalFormat =
+  GLint internal_format =
       0; //!< the color components in the texture (ex: GL_RGBA8)
   GLenum format =
       0;           //!< format of pixel data (ex: GL_RGBA, GL_RED_INTEGER, ...)
   GLenum type = 0; //!< data type of pixel data (ex: GL_UNSIGNED_BYTE, GL_FLOAT)
   GLenum target = 0;      //!< target texture (ex: GL_TEXTURE_3D)
-  GLvoid *data = nullptr; //!< specifies a pointer to the image data in memory.
 };
 
 /** \brief set of texture parameters
@@ -62,7 +61,7 @@ struct TextureParameters {
    * \param t texture target
    * \param bc border color
    */
-  TextureParameters(GLuint t = GL_TEXTURE_2D, float *bc = nullptr) {
+  explicit TextureParameters(GLuint t = GL_TEXTURE_2D, float *bc = nullptr) {
     target = t;
     parameters[GL_TEXTURE_WRAP_S] = GL_CLAMP_TO_EDGE;
     parameters[GL_TEXTURE_WRAP_T] = GL_CLAMP_TO_EDGE;
@@ -86,7 +85,7 @@ struct TextureParameters {
   }
   /** \brief calls glTexParameteri
    */
-  void apply() {
+  void apply() const {
     for (auto &parameter : parameters)
       glTexParameteri(target, parameter.first, parameter.second);
     if (borderColor)

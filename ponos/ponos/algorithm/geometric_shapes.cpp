@@ -447,10 +447,10 @@ RawMeshSPtr RawMeshes::circuference(real_t radius, const point2 &center, u32 div
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   real_t step = Constants::two_pi / divisions;
   real_t angle = 0;
-  for (int i = 0; i < divisions; ++i, angle += step)
+  for (u32 i = 0; i < divisions; ++i, angle += step)
     mesh->addPosition({center.x + radius * std::cos(angle), center.y + radius * std::sin(angle)});
-  for (int i = 1; i < divisions; ++i)
-    mesh->addFace({i - 1, i});
+  for (u32 i = 1; i < divisions; ++i)
+    mesh->addFace({static_cast<int>(i) - 1, static_cast<int>(i)});
   mesh->addFace({static_cast<int>(divisions) - 1, 0});
   // fix normal and uvs indices
   for (auto &i : mesh->indices)

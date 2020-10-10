@@ -28,7 +28,7 @@ public:
     attributes.width = 256;
     attributes.height = 256;
     attributes.type = GL_UNSIGNED_BYTE;
-    attributes.internalFormat = GL_RGBA8;
+    attributes.internal_format = GL_RGBA8;
     attributes.format = GL_RGBA;
     circe::gl::TextureParameters parameters;
     image.set(attributes, parameters);
@@ -122,14 +122,7 @@ public:
     object.program.setUniformBlockBinding("Scene", 0);
     scene_ubo["Scene"] = &scene_ubo_data;
 
-    circe::gl::VertexBuffer vb;
-    std::vector<float> data = {0.f, 1.f, 2.f};
-    vb.attributes.pushAttribute<ponos::vec3>("position");
-    vb = data;
-    data.push_back(2.3);
-    data.push_back(2.3);
-    data.push_back(2.3);
-    vb = data;
+    normal_map = circe::gl::Texture::fromFile(assets_path + "brickwall.jpg");
   }
 
   void prepareFrame(const circe::gl::ViewportDisplay &display) override {
@@ -155,12 +148,14 @@ public:
     ImGui::Begin("Shadow Map");
     texture_id = shadow_map.depthMap().textureObjectId();
     texture_id = depth_buffer_view.image.textureObjectId();
+    normal_map.bind(GL_TEXTURE0);
+    texture_id = normal_map.textureObjectId();
     ImGui::Image((void *) (intptr_t) (texture_id), {256, 256},
                  {0, 1}, {1, 0});
     ImGui::End();
   }
 
-  void drawModel(Model &model, circe::CameraInterface *camera) {
+  void drawModel(Model &model, circe::CameraInterface *camera) const {
     model.program.use();
     if (model.program.hasUniform("material.kAmbient")) {
       model.program.setUniform("material.kAmbient", model.material.ambient.rgb());
@@ -219,6 +214,7 @@ public:
     model.vb.bindAttributeFormats();
   }
 
+  circe::gl::Texture normal_map;
   DepthBufferView depth_buffer_view;
   circe::gl::ShadowMap shadow_map;
   circe::gl::UniformBuffer scene_ubo;

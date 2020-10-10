@@ -65,7 +65,7 @@ void Framebuffer::set(uint w, uint h, uint d) {
 }
 
 void Framebuffer::attachColorBuffer(GLuint textureId, GLenum target,
-                                    GLenum attachmentPoint) {
+                                    GLenum attachmentPoint) const  {
   glBindFramebuffer(GL_FRAMEBUFFER, framebufferObject);
 
   // attach the texture to FBO color attachment point
@@ -80,7 +80,7 @@ void Framebuffer::attachColorBuffer(GLuint textureId, GLenum target,
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::enable() {
+void Framebuffer::enable() const {
   glBindFramebuffer(GL_FRAMEBUFFER, framebufferObject);
   glBindRenderbuffer(GL_RENDERBUFFER, renderBufferObject);
 }

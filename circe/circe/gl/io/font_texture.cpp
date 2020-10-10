@@ -61,10 +61,10 @@ void FontAtlas::loadFont(const char *path) {
   textureAttributes.width = font.atlasWidth;
   textureAttributes.height = font.atlasHeight;
   textureAttributes.type = GL_UNSIGNED_BYTE;
-  textureAttributes.internalFormat = GL_RGB;
+  textureAttributes.internal_format = GL_RGB;
   textureAttributes.format = GL_RED;
-  textureAttributes.data = atlasData.get();
   texture.set(textureAttributes, textureParameters);
+  texture.setTexels(atlasData.get());
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glGenerateMipmap(GL_TEXTURE_2D);
 }
@@ -140,7 +140,7 @@ void FontAtlas::setText(std::string text) {
   mesh.reset(new SceneMesh(rawMesh.get()));
 }
 
-void FontAtlas::setText(const std::string& text, ponos::RawMesh &m) const {
+void FontAtlas::setText(const std::string &text, ponos::RawMesh &m) const {
   m.clear();
   m.meshDescriptor.elementSize = 3;
   m.meshDescriptor.count = text.size() * 2;

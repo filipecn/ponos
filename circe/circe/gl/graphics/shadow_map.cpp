@@ -52,7 +52,7 @@ ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
   attributes.width = size.width;
   attributes.depth = 1;
   attributes.target = GL_TEXTURE_2D;
-  attributes.internalFormat = GL_DEPTH_COMPONENT;
+  attributes.internal_format = GL_DEPTH_COMPONENT;
   attributes.format = GL_DEPTH_COMPONENT;
   attributes.type = GL_FLOAT;
   float border_color[4] = {1.0, 1.0, 1.0, 1.0,};

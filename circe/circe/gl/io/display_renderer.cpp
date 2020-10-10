@@ -32,7 +32,7 @@ namespace circe::gl {
 DisplayRenderer::DisplayRenderer(size_t w, size_t h) : curBuffer_(0) {
   attributes_.target = GL_TEXTURE_2D;
   attributes_.type = GL_UNSIGNED_BYTE;
-  attributes_.internalFormat = GL_RGBA8;
+  attributes_.internal_format = GL_RGBA8;
   attributes_.format = GL_RGBA;
   attributes_.width = w;
   attributes_.height = h;

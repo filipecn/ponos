@@ -28,16 +28,40 @@
 #include <circe/gl/io/texture_parameters.h>
 
 namespace circe::gl {
+
+/// Holds an OpenGL texture object
+/// Texture objects are created and deleted upon initialization and destruction,
+/// respectively. So when using a copy constructor or operator, a full copy of
+/// the texture, including texels, is made.
 class Texture {
 public:
+  // ***********************************************************************
+  //                          STATIC METHODS
+  // ***********************************************************************
+  ///
+  /// \param path
+  /// \return Texture object
+  static Texture fromFile(const ponos::Path &path);
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   Texture();
+  /// Parameter constructor
   /// \param a texture attributes
   /// \param p texture parameters
-  Texture(const TextureAttributes &a, const TextureParameters &p);
+  /// \param data
+  Texture(const TextureAttributes &a, const TextureParameters &p, const void *data = nullptr);
+  Texture(const Texture &other);
+  Texture(Texture &&other) noexcept;
   virtual ~Texture();
-  virtual /// \param a texture attributes
-  /// \param p texture parameters
-  void set(const TextureAttributes &a, const TextureParameters &p);
+  // ***********************************************************************
+  //                           OPERATORS
+  // ***********************************************************************
+  Texture &operator=(const Texture &other);
+  Texture &operator=(Texture &&other) noexcept;
+  // ***********************************************************************
+  //                           METHODS
+  // ***********************************************************************
   /// Binds texture
   /// \param t texture unit (ex: GL_TEXTURE0)
   virtual void bind(GLenum t) const;
@@ -45,19 +69,57 @@ public:
   /// writing it from shaders
   /// \param t texture unit  (ex: GL_TEXTURE0)
   virtual void bindImage(GLenum t) const;
-  void setTexels(unsigned char *texels);
+  ///
+  void generateMipmap() const;
+  // ***********************************************************************
+  //                           GETTERS
+  // ***********************************************************************
   /// retrieve texture pixel data
   /// \return list of pixels by row major
   [[nodiscard]] std::vector<unsigned char> texels() const;
+  /// \return texture resolution in texels
   [[nodiscard]] ponos::size3 size() const;
+  /// \return opengl object associated to this texture
   [[nodiscard]] GLuint textureObjectId() const;
+  /// \return
   [[nodiscard]] GLenum target() const;
+  /// \return
+  [[nodiscard]] const TextureAttributes &attributes() const;
+  /// \return
+  [[nodiscard]] const TextureParameters &parameters() const;
+  // ***********************************************************************
+  //                           SETTERS
+  // ***********************************************************************
+  /// Textures can be copied, only moved
+  /// \param a texture attributes
+  /// \param p texture parameters
+  /// \param data
+  virtual void set(const TextureAttributes &a, const TextureParameters &p);
+  /// \param k
+  /// \param value
+  void setParameter(GLuint k, GLuint value);
+  /// \param texels texture content
+  void setTexels(const void *texels) const;
+  /// \param new_size
+  void resize(const ponos::size3 &new_size);
+  /// \param new_size
+  void resize(const ponos::size2 &new_size);
+  /// \param internal_format
+  void setInternalFormat(GLint internal_format);
+  /// \param format
+  void setFormat(GLint format);
+  /// \param type
+  void setType(GLenum type);
+  /// \param target
+  void setTarget(GLenum target);
+
   friend std::ostream &operator<<(std::ostream &out, Texture &pt);
 
 protected:
-  TextureAttributes attributes;
-  TextureParameters parameters;
-  GLuint textureObject{};
+  GLuint texture_object_{};
+  mutable bool parameters_changed_{true};
+  TextureAttributes attributes_;
+  TextureParameters parameters_;
 };
 
 } // namespace circe
