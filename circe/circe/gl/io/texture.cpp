@@ -33,7 +33,7 @@ Texture Texture::fromFile(const ponos::Path &path) {
   int width, height, channel_count;
   unsigned char *data = stbi_load(path.fullName().c_str(), &width, &height, &channel_count, 0);
   if (!data)
-    return std::move(Texture());
+    return Texture();
   Texture texture;
   texture.attributes_.target = GL_TEXTURE_2D;
   texture.attributes_.width = width;
@@ -44,7 +44,7 @@ Texture Texture::fromFile(const ponos::Path &path) {
   texture.attributes_.internal_format = GL_RGB;
   texture.setTexels(data);
   stbi_image_free(data);
-  return std::move(texture);
+  return texture;
 }
 
 Texture::Texture() {

@@ -453,105 +453,102 @@ TEST_CASE("Grid2", "[numeric][grid]") {
   }//
 }
 
-TEST_CASE("VectorGrid", "[numeric][grid]") {
-  SECTION("2d") {
-    SECTION("constructors operatiors") {
-      VectorGrid2<float> empty;
-      REQUIRE(empty.resolution() == size2(0, 0));
-      empty = VectorGrid2<float>(size2(10, 10), vec2(1));
-      REQUIRE(empty.resolution() == size2(10, 10));
-      auto g = empty;
-      REQUIRE(g.resolution() == size2(10, 10));
-      auto g2 = std::move(VectorGrid2<float>(size2(7, 7), vec2(1)));
-      REQUIRE(g2.resolution() == size2(7, 7));
-      std::vector<VectorGrid2<float>> gs;
-      gs.emplace_back(size2(10, 10), vec2(1));
-      gs.emplace_back(size2(7, 7), vec2(1));
-      std::vector<VectorGrid2<float>> gs2 = gs;
-    }SECTION("CELL CENTERED") {
-      VectorGrid2<float> vg(size2(10, 10), vec2(1));
-      REQUIRE(vg.resolution() == size2(10, 10));
-      REQUIRE(vg.u().resolution() == size2(10, 10));
-      REQUIRE(vg.v().resolution() == size2(10, 10));
-      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
-      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
-      REQUIRE(vg.u().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().y == Approx(0).margin(1e-8));
-      VectorGrid2<float> vg2;
-      vg2 = vg;
-      REQUIRE(vg2.resolution() == size2(10, 10));
-      REQUIRE(vg2.u().resolution() == size2(10, 10));
-      REQUIRE(vg2.v().resolution() == size2(10, 10));
-      REQUIRE(vg2.origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg2.origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg2.spacing().x == Approx(1).margin(1e-8));
-      REQUIRE(vg2.spacing().y == Approx(1).margin(1e-8));
-      REQUIRE(vg2.u().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg2.u().origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg2.v().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg2.v().origin().y == Approx(0).margin(1e-8));
-      vg.setGridType(VectorGridType::STAGGERED);
-      REQUIRE(vg.resolution() == size2(10, 10));
-      REQUIRE(vg.u().resolution() == size2(11, 10));
-      REQUIRE(vg.v().resolution() == size2(10, 11));
-      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
-      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
-      REQUIRE(vg.u().origin().x == Approx(-0.5).margin(1e-8));
-      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().y == Approx(-0.5).margin(1e-8));
-    }SECTION("STAGGERED") {
-      VectorGrid2<float> vg(VectorGridType::STAGGERED);
-      vg.setResolution(size2(10, 10));
-      REQUIRE(vg.resolution() == size2(10, 10));
-      REQUIRE(vg.u().resolution() == size2(11, 10));
-      REQUIRE(vg.v().resolution() == size2(10, 11));
-      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
-      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
-      REQUIRE(vg.u().origin().x == Approx(-0.5).margin(1e-8));
-      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().y == Approx(-0.5).margin(1e-8));
-      VectorGrid2<float> vg2;
-      vg2 = vg;
-      REQUIRE(vg2.resolution() == size2(10, 10));
-      REQUIRE(vg2.u().resolution() == size2(11, 10));
-      REQUIRE(vg2.v().resolution() == size2(10, 11));
-      REQUIRE(vg2.origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg2.origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg2.spacing().x == Approx(1).margin(1e-8));
-      REQUIRE(vg2.spacing().y == Approx(1).margin(1e-8));
-      REQUIRE(vg2.u().origin().x == Approx(-0.5).margin(1e-8));
-      REQUIRE(vg2.u().origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg2.v().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg2.v().origin().y == Approx(-0.5).margin(1e-8));
-      vg.setGridType(VectorGridType::CELL_CENTERED);
-      REQUIRE(vg.resolution() == size2(10, 10));
-      REQUIRE(vg.u().resolution() == size2(10, 10));
-      REQUIRE(vg.v().resolution() == size2(10, 10));
-      REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
-      REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
-      REQUIRE(vg.u().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
-      REQUIRE(vg.v().origin().y == Approx(0).margin(1e-8));
-    }
-  }
-}
-
-TEST_CASE("VectorGridAccessor", "[numeric][grid][accessor]") {
-  auto f = [](point2 wp) -> float { return sin(wp.x) * cos(wp.y); };
-  SECTION("2d") {
+TEST_CASE("VectorGrid2", "[numeric][grid]") {
+  SECTION("constructors operators") {
+    VectorGrid2<float> empty;
+    REQUIRE(empty.resolution() == size2(0, 0));
+    empty = VectorGrid2<float>(size2(10, 10), vec2(1));
+    REQUIRE(empty.resolution() == size2(10, 10));
+    auto g = empty;
+    REQUIRE(g.resolution() == size2(10, 10));
+    auto g2 = VectorGrid2<float>(size2(7, 7), vec2(1));
+    REQUIRE(g2.resolution() == size2(7, 7));
+    std::vector<VectorGrid2<float>> gs;
+    gs.emplace_back(size2(10, 10), vec2(1));
+    gs.emplace_back(size2(7, 7), vec2(1));
+    std::vector<VectorGrid2<float>> gs2 = gs;
+  }//
+  SECTION("CELL CENTERED") {
+    VectorGrid2<float> vg(size2(10, 10), vec2(1));
+    REQUIRE(vg.resolution() == size2(10, 10));
+    REQUIRE(vg.u().resolution() == size2(10, 10));
+    REQUIRE(vg.v().resolution() == size2(10, 10));
+    REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+    REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+    REQUIRE(vg.u().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().y == Approx(0).margin(1e-8));
+    VectorGrid2<float> vg2;
+    vg2 = vg;
+    REQUIRE(vg2.resolution() == size2(10, 10));
+    REQUIRE(vg2.u().resolution() == size2(10, 10));
+    REQUIRE(vg2.v().resolution() == size2(10, 10));
+    REQUIRE(vg2.origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg2.origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg2.spacing().x == Approx(1).margin(1e-8));
+    REQUIRE(vg2.spacing().y == Approx(1).margin(1e-8));
+    REQUIRE(vg2.u().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg2.u().origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg2.v().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg2.v().origin().y == Approx(0).margin(1e-8));
+    vg.setGridType(VectorGridType::STAGGERED);
+    REQUIRE(vg.resolution() == size2(10, 10));
+    REQUIRE(vg.u().resolution() == size2(11, 10));
+    REQUIRE(vg.v().resolution() == size2(10, 11));
+    REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+    REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+    REQUIRE(vg.u().origin().x == Approx(-0.5).margin(1e-8));
+    REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().y == Approx(-0.5).margin(1e-8));
+  }//
+  SECTION("STAGGERED") {
+    VectorGrid2<float> vg(VectorGridType::STAGGERED);
+    vg.setResolution(size2(10, 10));
+    REQUIRE(vg.resolution() == size2(10, 10));
+    REQUIRE(vg.u().resolution() == size2(11, 10));
+    REQUIRE(vg.v().resolution() == size2(10, 11));
+    REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+    REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+    REQUIRE(vg.u().origin().x == Approx(-0.5).margin(1e-8));
+    REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().y == Approx(-0.5).margin(1e-8));
+    VectorGrid2<float> vg2;
+    vg2 = vg;
+    REQUIRE(vg2.resolution() == size2(10, 10));
+    REQUIRE(vg2.u().resolution() == size2(11, 10));
+    REQUIRE(vg2.v().resolution() == size2(10, 11));
+    REQUIRE(vg2.origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg2.origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg2.spacing().x == Approx(1).margin(1e-8));
+    REQUIRE(vg2.spacing().y == Approx(1).margin(1e-8));
+    REQUIRE(vg2.u().origin().x == Approx(-0.5).margin(1e-8));
+    REQUIRE(vg2.u().origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg2.v().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg2.v().origin().y == Approx(-0.5).margin(1e-8));
+    vg.setGridType(VectorGridType::CELL_CENTERED);
+    REQUIRE(vg.resolution() == size2(10, 10));
+    REQUIRE(vg.u().resolution() == size2(10, 10));
+    REQUIRE(vg.v().resolution() == size2(10, 10));
+    REQUIRE(vg.origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.spacing().x == Approx(1).margin(1e-8));
+    REQUIRE(vg.spacing().y == Approx(1).margin(1e-8));
+    REQUIRE(vg.u().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.u().origin().y == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().x == Approx(0).margin(1e-8));
+    REQUIRE(vg.v().origin().y == Approx(0).margin(1e-8));
+  }//
+  SECTION("VectorGridAccessor") {
+    auto f = [](point2 wp) -> float { return sin(wp.x) * cos(wp.y); };
     SECTION("CELL CENTERED") {
       VectorGrid2<float> vg(size2(10), vec2(0.1));
       for (auto e : vg.u().accessor()) {
@@ -570,7 +567,8 @@ TEST_CASE("VectorGridAccessor", "[numeric][grid][accessor]") {
         REQUIRE(v.x == Approx(f(acc.worldPosition(ij))));
         REQUIRE(v.y == Approx(f(acc.worldPosition(ij))));
       }
-    }SECTION("STAGGERED") {
+    }//
+    SECTION("STAGGERED") {
       VectorGrid2<float> vg(size2(10), vec2(0.1), point2(),
                             VectorGridType::STAGGERED);
       for (auto e : vg.u().accessor()) {
@@ -595,6 +593,60 @@ TEST_CASE("VectorGridAccessor", "[numeric][grid][accessor]") {
             f(acc.v().worldPosition(ij.up()))) /
             2));
       }
+    }
+  }//
+  SECTION("ConstVectorGridAccessor") {
+    auto f = [](point2 wp) -> float { return sin(wp.x) * cos(wp.y); };
+    SECTION("CELL CENTERED") {
+      VectorGrid2<float> vg(size2(10), vec2(0.1));
+      for (auto e : vg.u().accessor()) {
+        REQUIRE(e.worldPosition().x == Approx(0.1 * e.index.i).margin(1e-8));
+        REQUIRE(e.worldPosition().y == Approx(0.1 * e.index.j).margin(1e-8));
+        e.value = f(e.worldPosition());
+      }
+      for (auto e : vg.v().accessor()) {
+        REQUIRE(e.worldPosition().x == Approx(0.1 * e.index.i).margin(1e-8));
+        REQUIRE(e.worldPosition().y == Approx(0.1 * e.index.j).margin(1e-8));
+        e.value = f(e.worldPosition());
+      }
+      auto ctest = [f](const VectorGrid2<float> &g) {
+        auto acc = g.accessor();
+        for (index2 ij : Index2Range<i32>(g.resolution())) {
+          auto v = acc[ij];
+          REQUIRE(v.x == Approx(f(acc.worldPosition(ij))));
+          REQUIRE(v.y == Approx(f(acc.worldPosition(ij))));
+        }
+      };
+      ctest(vg);
+    }//
+    SECTION("STAGGERED") {
+      VectorGrid2<float> vg(size2(10), vec2(0.1), point2(),
+                            VectorGridType::STAGGERED);
+      for (auto e : vg.u().accessor()) {
+        REQUIRE(e.worldPosition().x ==
+            Approx(0.1 * e.index.i - 0.05).margin(1e-8));
+        REQUIRE(e.worldPosition().y == Approx(0.1 * e.index.j).margin(1e-8));
+        e.value = f(e.worldPosition());
+      }
+      for (auto e : vg.v().accessor()) {
+        REQUIRE(e.worldPosition().x == Approx(0.1 * e.index.i).margin(1e-8));
+        REQUIRE(e.worldPosition().y ==
+            Approx(0.1 * e.index.j - 0.05).margin(1e-8));
+        e.value = f(e.worldPosition());
+      }
+      auto ctest = [f](const VectorGrid2<float> &g) {
+        auto acc = g.accessor();
+        for (index2 ij : Index2Range<i32>(g.resolution())) {
+          auto v = acc[ij];
+          REQUIRE(v.x == Approx((f(acc.u().worldPosition(ij)) +
+              f(acc.u().worldPosition(ij.right()))) /
+              2));
+          REQUIRE(v.y == Approx((f(acc.v().worldPosition(ij)) +
+              f(acc.v().worldPosition(ij.up()))) /
+              2));
+        }
+      };
+      ctest(vg);
     }
   }
 }

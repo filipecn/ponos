@@ -46,6 +46,7 @@ set(PONOS_HEADERS
         ponos/common/index.h
         ponos/common/file.h
 		ponos/common/file_system.h
+		ponos/storage/array_of_structures.h
 		ponos/storage/memory.h
         ponos/storage/array.h
         ponos/common/parallel.h
@@ -116,6 +117,7 @@ file(GLOB PONOS_SOURCES
 		ponos/random/*.cpp
 		ponos/common/*.cpp
         ponos/structures/*.cpp
+		ponos/storage/array_of_structures.cpp
         )
 
 add_library(ponos STATIC ${PONOS_SOURCES} ${PONOS_HEADERS})

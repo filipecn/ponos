@@ -61,41 +61,41 @@ public:
   Grid2Accessor<T> &u() { return u_; }
   Grid2Accessor<T> &v() { return v_; }
   /// \return grid resolution
-  size2 resolution() const { return grid_.resolution_; }
+  [[nodiscard]] size2 resolution() const { return grid_.resolution_; }
   /// \return grid spacing
-  vec2 spacing() const { return grid_.spacing_; }
+  [[nodiscard]] vec2 spacing() const { return grid_.spacing_; }
   /// \return grid origin (world position of index (0,0))
-  point2 origin() const { return grid_.origin_; }
+  [[nodiscard]] point2 origin() const { return grid_.origin_; }
   /// \param world_position (in world coordinates)
   /// \return world_position in grid coordinates
-  point2 gridPosition(const point2 &world_position) const {
+  [[nodiscard]] point2 gridPosition(const point2 &world_position) const {
     return grid_.to_grid_(world_position);
   }
   /// \param grid_position (in grid coordinates)
   /// \return grid_position in world coordinates
-  point2 worldPosition(const point2 &grid_position) const {
+  [[nodiscard]] point2 worldPosition(const point2 &grid_position) const {
     return grid_.to_world_(grid_position);
   }
   /// \param grid_position (in grid coordinates)
   /// \return grid_position in world coordinates
-  point2 worldPosition(const index2 &grid_position) const {
+  [[nodiscard]] point2 worldPosition(const index2 &grid_position) const {
     return grid_.to_world_(point2(grid_position.i, grid_position.j));
   }
   /// \param world_position (in world coordinates)
   /// \return offset of world_position inside the cell containing it (in [0,1]).
-  point2 cellPosition(const point2 &world_position) const {
+  [[nodiscard]] point2 cellPosition(const point2 &world_position) const {
     auto gp = grid_.to_grid_(world_position);
     return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
   }
   /// \param world_position (in world coordinates)
   /// \return index of the cell that contains world_position
-  index2 cellIndex(const point2 &world_position) const {
+  [[nodiscard]] index2 cellIndex(const point2 &world_position) const {
     auto gp = grid_.to_grid_(world_position);
     return index2(gp.x, gp.y);
   }
   /// \param ij cell index
   /// \return ij cell's region (in world coordinates)
-  bbox2 cellRegion(const index2 &ij) const {
+  [[nodiscard]] bbox2 cellRegion(const index2 &ij) const {
     auto wp = grid_.to_world_(point2(ij.i, ij.j));
     return bbox2(wp, wp + grid_.spacing_);
   }
@@ -120,6 +120,76 @@ private:
   Grid2Accessor<T> u_, v_;
 };
 
+template <typename T> class ConstVectorGrid2Accessor {
+public:
+  /// \param grid_type **[in]**
+  /// \param u_acc **[in]**
+  /// \param v_acc **[in]**
+  ConstVectorGrid2Accessor(const VectorGrid2<T> &grid, ConstGrid2Accessor<T> u_acc,
+                      ConstGrid2Accessor<T> v_acc)
+      : grid_(grid), u_(u_acc), v_(v_acc) {}
+  ConstGrid2Accessor<T> &u() { return u_; }
+  ConstGrid2Accessor<T> &v() { return v_; }
+  /// \return grid resolution
+  [[nodiscard]] size2 resolution() const { return grid_.resolution_; }
+  /// \return grid spacing
+  [[nodiscard]] vec2 spacing() const { return grid_.spacing_; }
+  /// \return grid origin (world position of index (0,0))
+  [[nodiscard]] point2 origin() const { return grid_.origin_; }
+  /// \param world_position (in world coordinates)
+  /// \return world_position in grid coordinates
+  [[nodiscard]] point2 gridPosition(const point2 &world_position) const {
+    return grid_.to_grid_(world_position);
+  }
+  /// \param grid_position (in grid coordinates)
+  /// \return grid_position in world coordinates
+  [[nodiscard]] point2 worldPosition(const point2 &grid_position) const {
+    return grid_.to_world_(grid_position);
+  }
+  /// \param grid_position (in grid coordinates)
+  /// \return grid_position in world coordinates
+  [[nodiscard]] point2 worldPosition(const index2 &grid_position) const {
+    return grid_.to_world_(point2(grid_position.i, grid_position.j));
+  }
+  /// \param world_position (in world coordinates)
+  /// \return offset of world_position inside the cell containing it (in [0,1]).
+  [[nodiscard]] point2 cellPosition(const point2 &world_position) const {
+    auto gp = grid_.to_grid_(world_position);
+    return gp - vec2(static_cast<int>(gp.x), static_cast<int>(gp.y));
+  }
+  /// \param world_position (in world coordinates)
+  /// \return index of the cell that contains world_position
+  [[nodiscard]] index2 cellIndex(const point2 &world_position) const {
+    auto gp = grid_.to_grid_(world_position);
+    return index2(gp.x, gp.y);
+  }
+  /// \param ij cell index
+  /// \return ij cell's region (in world coordinates)
+  [[nodiscard]] bbox2 cellRegion(const index2 &ij) const {
+    auto wp = grid_.to_world_(point2(ij.i, ij.j));
+    return bbox2(wp, wp + grid_.spacing_);
+  }
+  /// \param ij **[in]**
+  /// \return Vector2<T>
+  Vector2<T> operator[](const index2 &ij) {
+    switch (grid_.grid_type_) {
+    case VectorGridType::CELL_CENTERED:
+      return Vector2<T>(u_[ij], v_[ij]);
+    case VectorGridType::STAGGERED:
+      return Vector2<T>((u_[ij] + u_[ij.right()]) / 2,
+                        (v_[ij] + v_[ij.up()]) / 2);
+    }
+    return Vector2<T>();
+  }
+  /// \param wp **[in]**
+  /// \return Vector2<T>
+  Vector2<T> operator()(const point2 &wp) { return std::move(Vector2<T>(u_(wp), v_(wp))); }
+
+private:
+  const VectorGrid2<T> &grid_;
+  ConstGrid2Accessor<T> u_, v_;
+};
+
 /// Represents a vector field. Data samples follow the vector grid type.
 /// The origin is at cell centes
 ///                 ---------
@@ -138,11 +208,12 @@ template <typename T> class VectorGrid2 {
 
 public:
   friend class VectorGrid2Accessor<T>;
+  friend class ConstVectorGrid2Accessor<T>;
   // ***********************************************************************
   //                           CONSTRUCTORS
   // ***********************************************************************
   ///
-  VectorGrid2(VectorGridType grid_type = VectorGridType::CELL_CENTERED)
+  explicit VectorGrid2(VectorGridType grid_type = VectorGridType::CELL_CENTERED)
       : grid_type_(grid_type) {
     setSpacing(vec2(1.f));
     setOrigin(point2(0.f));
@@ -166,7 +237,7 @@ public:
     u_ = other.u_;
     v_ = other.v_;
   }
-  VectorGrid2(VectorGrid2<T> &&other) {
+  VectorGrid2(VectorGrid2<T> &&other)  noexcept {
     grid_type_ = other.grid_type_;
     setResolution(other.resolution_);
     setSpacing(other.spacing_);
@@ -210,13 +281,13 @@ public:
       grid_type_ = grid_type;
   }
   /// \return VectorGridType
-  VectorGridType gridType() const { return grid_type_; }
+  [[nodiscard]] VectorGridType gridType() const { return grid_type_; }
   /// \return size2 grid resolution
-  size2 resolution() const { return resolution_; }
+  [[nodiscard]] size2 resolution() const { return resolution_; }
   /// \return vec2f grid spacing (cell size)
-  vec2 spacing() const { return spacing_; }
+  [[nodiscard]] vec2 spacing() const { return spacing_; }
   /// \return grid origin (world position of index (0,0))
-  point2 origin() const { return origin_; }
+  [[nodiscard]] point2 origin() const { return origin_; }
   /// Changes grid resolution
   /// \param res new resolution (in number of cells)
   virtual void setResolution(size2 res) {
@@ -261,8 +332,8 @@ public:
     v_.setSpacing(s);
     setOrigin(origin_);
   }
-  const Grid2<float> &u() const { return u_; }
-  const Grid2<float> &v() const { return v_; }
+  [[nodiscard]] const Grid2<float> &u() const { return u_; }
+  [[nodiscard]] const Grid2<float> &v() const { return v_; }
   Grid2<float> &u() { return u_; }
   Grid2<float> &v() { return v_; }
   /// \param address_mode **[in]**
@@ -274,6 +345,18 @@ public:
       InterpolationMode interpolation_mode = InterpolationMode::MONOTONIC_CUBIC,
       T border = T(0)) {
     return VectorGrid2Accessor<T>(
+        *this, u_.accessor(address_mode, interpolation_mode, border),
+        v_.accessor(address_mode, interpolation_mode, border));
+  }
+  /// \param address_mode **[in]**
+  /// \param interpolation_mode **[in]**
+  /// \param border **[in]**
+  /// \return VectorGrid2Accessor<T>
+  ConstVectorGrid2Accessor<T> accessor(
+      AddressMode address_mode = AddressMode::CLAMP_TO_EDGE,
+      InterpolationMode interpolation_mode = InterpolationMode::MONOTONIC_CUBIC,
+      T border = T(0)) const {
+    return ConstVectorGrid2Accessor<T>(
         *this, u_.accessor(address_mode, interpolation_mode, border),
         v_.accessor(address_mode, interpolation_mode, border));
   }

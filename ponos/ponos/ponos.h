@@ -73,6 +73,7 @@
 #include <ponos/spatial/array.h>
 #include <ponos/spatial/spatial_structure_interface.h>
 #include <ponos/storage/array.h>
+#include <ponos/storage/array_of_structures.h>
 #include <ponos/storage/memory.h>
 #include <ponos/storage/memory_block.h>
 
