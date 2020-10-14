@@ -32,7 +32,7 @@
 
 namespace ponos {
 
-/// Interface used by all basic geometric entities, such as point and vectors.
+/// Interface used by all basic geometric entities, such as point and vector.
 template<typename NUMERIC_TYPE, u64 COMPONENT_COUNT>
 class MathElement {
 public:

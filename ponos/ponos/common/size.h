@@ -43,7 +43,7 @@ template<typename T> class Size2 {
 public:
   Size2() = default;
   explicit Size2(T size) : width(size), height(size) {}
-  explicit Size2(T width, T height) : width(width), height(height) {}
+  Size2(T width, T height) : width(width), height(height) {}
   T total() const { return width * height; }
   T operator[](int i) const { return (&width)[i]; }
   T &operator[](int i) { return (&width)[i]; }
@@ -73,7 +73,7 @@ template<typename T> class Size3 {
 public:
   Size3() = default;
   explicit Size3(T size) : width(size), height(size), depth(size) {}
-  explicit Size3(T width, T height, T depth)
+  Size3(T width, T height, T depth)
       : width(width), height(height), depth(depth) {}
   T total() const { return width * height * depth; }
   T operator[](int i) const { return (&width)[i]; }

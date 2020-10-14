@@ -48,20 +48,20 @@ TEST_CASE("Array1", "[storage][array]") {
     }
   }//
   SECTION("Operators") {
-      Array1<int> a(10);
-      a = 3;
-      int count = 0;
-      for (u64 i = 0; i < a.size(); ++i)
-        REQUIRE(a[i] == 3);
-      for (const auto &e : a) {
-        REQUIRE(e.value == 3);
-        count++;
-      }
-      std::cerr << a << std::endl;
-      REQUIRE(count == 10);
+    Array1<int> a(10);
+    a = 3;
+    int count = 0;
+    for (u64 i = 0; i < a.size(); ++i)
+      REQUIRE(a[i] == 3);
+    for (const auto &e : a) {
+      REQUIRE(e.value == 3);
+      count++;
+    }
+    std::cerr << a << std::endl;
+    REQUIRE(count == 10);
   }//
   SECTION("Array1-iterator") {
-    Array1<vec2> a( 10);
+    Array1<vec2> a(10);
     for (auto e : a)
       e.value = vec2(1, 2);
     int count = 0;
@@ -72,7 +72,7 @@ TEST_CASE("Array1", "[storage][array]") {
     REQUIRE(count == 10);
   }//
   SECTION("Const Array1-iterator") {
-    Array1<vec2> a( 10);
+    Array1<vec2> a(10);
     a = vec2(1, 2);
     auto f = [](const Array1<vec2> &array) {
       for (const auto &d : array)
@@ -161,4 +161,60 @@ TEST_CASE("Array2", "[storage][array]") {
     };
     f(a);
   }//
+}
+
+TEST_CASE("AOS", "[storage][aos]") {
+  SECTION("Sanity Checks") {
+    AoS aos;
+    REQUIRE(aos.pushField<vec3>("vec3") == 0);
+    REQUIRE(aos.pushField<f32>("f32") == 1);
+    REQUIRE(aos.pushField<int>("int") == 2);
+    REQUIRE(aos.fieldName(0) == "vec3");
+    REQUIRE(aos.fieldName(1) == "f32");
+    REQUIRE(aos.fieldName(2) == "int");
+    REQUIRE(aos.size() == 0);
+    aos.resize(4);
+    REQUIRE(aos.size() == 4);
+    REQUIRE(aos.stride() == sizeof(vec3) + sizeof(f32) + sizeof(int));
+    REQUIRE(aos.sizeOf("vec3") == sizeof(vec3));
+    REQUIRE(aos.sizeOf("f32") == sizeof(f32));
+    REQUIRE(aos.sizeOf("int") == sizeof(int));
+    REQUIRE(aos.offsetOf("vec3") == 0);
+    REQUIRE(aos.offsetOf("f32") == sizeof(vec3));
+    REQUIRE(aos.offsetOf("int") == sizeof(vec3) + sizeof(f32));
+    REQUIRE(aos.memorySizeInBytes() == aos.stride() * 4);
+    for (int i = 0; i < 4; ++i) {
+      aos.valueAt<vec3>(0, i) = {1.f + i, 2.f + i, 3.f + i};
+      aos.valueAt<f32>(1, i) = 1.f * i;
+      aos.valueAt<int>(2, i) = i + 1;
+    }
+    for (int i = 0; i < 4; ++i) {
+      REQUIRE(aos.valueAt<vec3>(0, i) == vec3(1.f + i, 2.f + i, 3.f + i));
+      REQUIRE(aos.valueAt<f32>(1, i) == Approx(1.f * i));
+      REQUIRE(aos.valueAt<int>(2, i) == i + 1);
+    }
+  }//
+  SECTION("Accessors") {
+    AoS aos;
+    aos.pushField<vec3>("vec3");
+    aos.pushField<f32>("f32");
+    aos.pushField<int>("int");
+    aos.resize(4);
+    auto vec3_field = aos.field<vec3>("vec3");
+    auto f32_field = aos.field<f32>("f32");
+    auto int_field = aos.field<int>("int");
+    for (int i = 0; i < 4; ++i) {
+      vec3_field[i] = {1.f + i, 2.f + i, 3.f + i};
+      f32_field[i] = 1.f * i;
+      int_field[i] = i + 1;
+    }
+    for (int i = 0; i < 4; ++i) {
+      REQUIRE(aos.valueAt<vec3>(0, i) == vec3(1.f + i, 2.f + i, 3.f + i));
+      REQUIRE(aos.valueAt<f32>(1, i) == Approx(1.f * i));
+      REQUIRE(aos.valueAt<int>(2, i) == i + 1);
+      REQUIRE(vec3_field[i] == vec3(1.f + i, 2.f + i, 3.f + i));
+      REQUIRE(f32_field[i] == 1.f * i);
+      REQUIRE(int_field[i] == i + 1);
+    }
+  }
 }

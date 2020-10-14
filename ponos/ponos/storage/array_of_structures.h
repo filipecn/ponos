@@ -61,10 +61,6 @@ public:
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
-  template<typename T>
-  T &operator()(u64 field_id, u64 i) {
-    return *reinterpret_cast<T *>(data_ + i * struct_size_ + fields_[field_id].offset);
-  }
   // ***********************************************************************
   //                             METHODS
   // ***********************************************************************
@@ -96,12 +92,22 @@ public:
     struct_size_ += d.size;
     return fields_.size() - 1;
   }
+  inline const std::string &fieldName(u64 field_id) const { return fields_[field_id].name; }
   /// \return
   [[nodiscard]] inline u64 size() const { return size_; }
   /// \return
   [[nodiscard]] inline u64 memorySizeInBytes() const { return size_ * struct_size_; }
   /// \return
-  [[nodiscard]] inline u64 structSizeInBytes() const { return struct_size_; }
+  [[nodiscard]] inline u64 stride() const { return struct_size_; }
+  u64 offsetOf(const std::string &field_name) const;
+  u64 offsetOf(u64 field_id) const;
+  u64 sizeOf(const std::string &field_name) const;
+  u64 sizeOf(u64 field_id) const;
+
+  template<typename T>
+  T &valueAt(u64 field_id, u64 i) {
+    return *reinterpret_cast<T *>(data_ + i * struct_size_ + fields_[field_id].offset);
+  }
 
 private:
   u64 size_{0};

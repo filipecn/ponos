@@ -39,9 +39,36 @@ AoS::~AoS() {
 void AoS::resize(u64 new_size) {
   delete[]data_;
   data_ = nullptr;
+  size_ = new_size;
   if (!new_size)
     return;
   data_ = new u8[new_size * struct_size_];
+}
+
+u64 AoS::offsetOf(const std::string &field_name) const {
+  auto it = field_id_map_.find(field_name);
+  if (it == field_id_map_.end()) {
+    spdlog::error("Field {} not found.", field_name);
+    return 0;
+  }
+  return offsetOf(it->second);
+}
+
+u64 AoS::offsetOf(u64 field_id) const {
+  return fields_[field_id].offset;
+}
+
+u64 AoS::sizeOf(const std::string &field_name) const {
+  auto it = field_id_map_.find(field_name);
+  if (it == field_id_map_.end()) {
+    spdlog::error("Field {} not found.", field_name);
+    return 0;
+  }
+  return sizeOf(it->second);
+}
+
+u64 AoS::sizeOf(u64 field_id) const {
+  return fields_[field_id].size;
 }
 
 }
