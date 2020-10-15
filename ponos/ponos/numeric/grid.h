@@ -85,11 +85,11 @@ template<typename T> class ConstGrid1Accessor;
 /// \tparam T grid data type
 template<typename T> class Grid1Iterator {
 public:
+  friend class Grid1Accessor<T>;
   /// Represents the current grid index element being iterated
   class Element {
+    friend class Grid1Iterator<T>;
   public:
-    Element(T &v, const i32 &i, const Grid1Accessor<T> &acc)
-        : value(v), index(i), acc_(acc) {}
     /// \return world position coordinates of the current index
     [[nodiscard]] real_t worldPosition() const { return acc_.worldPosition(index); }
     /// \return region (in world coordinates) of the grid cell respective to
@@ -97,20 +97,16 @@ public:
     [[nodiscard]] bbox1 region() const { return acc_.cellRegion(index); }
     /// Assign operator
     Element &operator=(const T &v) { value = v; }
+    bool operator==(const T &v) const { return Check::is_equal(value, v); }
     /// Reference to the grid data stored in the current index
     T &value;
     /// Index of the grid data element
     i32 index;
-
   private:
+    Element(T &v, const i32 &i, const Grid1Accessor<T> &acc)
+        : value(v), index(i), acc_(acc) {}
     const Grid1Accessor<T> &acc_;
   };
-  ///
-  /// \param grid_accessor grid to be iterated over
-  /// \param ij starting grid index for iteration
-  Grid1Iterator(Grid1Accessor<T> &grid_accessor, i32 i)
-      : acc_(grid_accessor),
-        size_(grid_accessor.resolution()), i_(i) {}
   /// \return increment operator to move to the next grid index
   Grid1Iterator &operator++() {
     ++i_;
@@ -126,6 +122,12 @@ public:
   }
 
 private:
+  ///
+  /// \param grid_accessor grid to be iterated over
+  /// \param ij starting grid index for iteration
+  Grid1Iterator(Grid1Accessor<T> &grid_accessor, i32 i)
+      : acc_(grid_accessor),
+        size_(grid_accessor.resolution()), i_(i) {}
   Grid1Accessor<T> &acc_;
   i32 i_{0};
   u64 size_{0};
@@ -135,22 +137,27 @@ private:
 /// \tparam T grid data type
 template<typename T> class ConstGrid1Iterator {
 public:
+  friend class Grid1Accessor<T>;
   /// Represents the current grid index element being iterated
   class Element {
+    friend class ConstGrid1Iterator<T>;
   public:
-    Element(const T &v, i32 i, const ConstGrid1Accessor<T> &acc)
-        : value(v), index(i), acc_(acc) {}
     /// \return world position coordinates of the current index
     [[nodiscard]] real_t worldPosition() const { return acc_.worldPosition(index); }
     /// \return region (in world coordinates) of the grid cell respective to
     /// the current index
     [[nodiscard]] bbox1 region() const { return acc_.cellRegion(index); }
+    /// \param v
+    /// \return
+    bool operator==(const T &v) const { return Check::is_equal(value, v); }
     /// Reference to the grid data stored in the current index
     const T &value;
     /// Index of the grid data element
     i32 index;
 
   private:
+    Element(const T &v, i32 i, const ConstGrid1Accessor<T> &acc)
+        : value(v), index(i), acc_(acc) {}
     const ConstGrid1Accessor<T> &acc_;
   };
   ///

@@ -22,7 +22,7 @@ int main() {
     std::cerr << "good program " << program.err << std::endl;
 
   // trying to compile with bad shader code
-  circe::gl::Shader bad_shader(GL_VERTEX_SHADER);
+  circe::gl::Shader bad_shader(GL_VERTEX_SHADER, "");
   if (!bad_shader.compile(bad_code))
     std::cerr << bad_shader.err << std::endl;
   circe::gl::Program bad_program;

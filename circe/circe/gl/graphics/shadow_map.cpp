@@ -31,15 +31,15 @@ namespace circe::gl {
 
 ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
   // setup shader program
-  Shader vertex_shader("#version 430 core\n"
-                       "layout (location = 0) in vec3 position;\n"
-                       "layout (location = 1) uniform mat4 lightSpaceMatrix;\n"
-                       "layout (location = 2) uniform mat4 model;\n"
-                       "void main()\n"
-                       "{ gl_Position = lightSpaceMatrix * model * vec4(position, 1.0); }", GL_VERTEX_SHADER);
-  Shader fragment_shader("#version 430 core\nvoid main(){ "
-                         "gl_FragDepth = gl_FragCoord.z;"
-                         "gl_FragDepth += gl_FrontFacing ? 0.01 : 0.0; }\n", GL_FRAGMENT_SHADER);
+  Shader vertex_shader(GL_VERTEX_SHADER, "#version 430 core\n"
+                                         "layout (location = 0) in vec3 position;\n"
+                                         "layout (location = 1) uniform mat4 lightSpaceMatrix;\n"
+                                         "layout (location = 2) uniform mat4 model;\n"
+                                         "void main()\n"
+                                         "{ gl_Position = lightSpaceMatrix * model * vec4(position, 1.0); }");
+  Shader fragment_shader(GL_FRAGMENT_SHADER, "#version 430 core\nvoid main(){ "
+                                             "gl_FragDepth = gl_FragCoord.z;"
+                                             "gl_FragDepth += gl_FrontFacing ? 0.01 : 0.0; }\n");
   program_.attach(vertex_shader);
   program_.attach(fragment_shader);
   if (!program_.link()) {

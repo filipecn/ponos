@@ -31,15 +31,13 @@ namespace circe::gl {
 
 Shader::Shader() = default;
 
-Shader::Shader(GLuint
-               type) :
-    type_(type) {}
-
-Shader::Shader(const std::string &code, GLuint type) : Shader(type) {
-  compile(code, type);
+Shader::Shader(GLuint type, const std::string &code) :
+    type_(type) {
+  if (!code.empty())
+    compile(code, type);
 }
 
-Shader::Shader(const ponos::Path &code, GLuint type) : Shader(type) {
+Shader::Shader(const ponos::Path &code, GLuint type) : Shader(type, "") {
   compile(code, type);
 }
 
@@ -292,7 +290,7 @@ void ShaderProgram::setUniform(const char *name, float f) {
   glUniform1f(loc, f);
 }
 
-bool Program::hasUniform(const std::string & name) const {
+bool Program::hasUniform(const std::string &name) const {
   auto it = uniform_locations_.find(name);
   return it != uniform_locations_.end();
 }

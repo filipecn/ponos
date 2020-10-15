@@ -48,13 +48,20 @@ TEST_CASE("Array1", "[storage][array]") {
     }
   }//
   SECTION("Operators") {
-    Array1<int> a(10);
+    Array1<f32> a(10);
+    a = -1.23323244;
+    std::cerr << a;
     a = 3;
     int count = 0;
     for (u64 i = 0; i < a.size(); ++i)
       REQUIRE(a[i] == 3);
+    for (auto e : a) {
+      REQUIRE(e == 3);
+      e = -e.index;
+    }
     for (const auto &e : a) {
-      REQUIRE(e.value == 3);
+      REQUIRE(e.value == -e.index);
+      REQUIRE(e == -e.index);
       count++;
     }
     std::cerr << a << std::endl;
@@ -128,13 +135,18 @@ TEST_CASE("Array2", "[storage][array]") {
   }//
   SECTION("Operators") {
     {
-      Array2<int> a(size2(10, 10));
+      Array2<f32> a(size2(10, 10));
+      a = -1.324345455;
+      std::cerr << a;
       a = 3;
       int count = 0;
-      for (index2 ij : Index2Range<i32>(a.size()))
+      for (index2 ij : Index2Range<i32>(a.size())) {
         REQUIRE(a[ij] == 3);
+        a[ij] = ij.i * 10 + ij.j;
+      }
       for (const auto &e : a) {
-        REQUIRE(e.value == 3);
+        REQUIRE(e.value == e.index.i * 10 + e.index.j);
+        REQUIRE(e == e.index.i * 10 + e.index.j);
         count++;
       }
       std::cerr << a << std::endl;

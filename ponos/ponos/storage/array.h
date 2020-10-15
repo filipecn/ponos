@@ -30,22 +30,31 @@
 
 #include <ponos/common/index.h>
 #include <ponos/common/size.h>
+#include <iomanip>    // std::setw
+#include <ios>        // std::left
 
 namespace ponos {
-
+/// forward declaration of Array1
+template<typename T> class Array1;
 /// Auxiliary class to iterate an Array1 inside a for loop.
 /// Ex: for(auto e : array) { e.value = x; }
 ///\tparam T Array1 data type
 template<typename T> class Array1Iterator {
 public:
+  friend class Array1<T>;
   class Element {
+    friend class Array1Iterator<T>;
   public:
-    Element(T &v, i32 i) : value(v), index(i) {}
     T &value;
+    Element &operator=(const T &v) {
+      value = v;
+      return *this;
+    }
+    bool operator==(const T &v) const { return value == v; }
     const i32 index;
+  private:
+    Element(T &v, i32 i) : value(v), index(i) {}
   };
-  Array1Iterator(std::vector<T> &data, i32 i) :
-      data_(data), i(i) {}
   [[nodiscard]] u64 size() const { return data_.size(); }
   Array1Iterator &operator++() {
     i++;
@@ -64,6 +73,8 @@ public:
   }
 
 private:
+  Array1Iterator(std::vector<T> &data, i32 i) :
+      data_(data), i(i) {}
   std::vector<T> &data_;
   int i = 0;
 };
@@ -72,14 +83,16 @@ private:
 ///\tparam T Array1 data type
 template<typename T> class ConstArray1Iterator {
 public:
+  friend class Array1<T>;
   class Element {
+    friend class ConstArray1Iterator<T>;
   public:
-    Element(const T &v, i32 i) : value(v), index(i) {}
+    bool operator==(const T &v) const { return value == v; }
     const T &value;
     const i32 index;
+  private:
+    Element(const T &v, i32 i) : value(v), index(i) {}
   };
-  ConstArray1Iterator(const std::vector<T> &data, i32 i)
-      : data_(data), i(i) {}
   [[nodiscard]] u64 size() const { return data_.size(); }
   ConstArray1Iterator &operator++() {
     if (++i >= data_.size())
@@ -97,6 +110,8 @@ public:
   }
 
 private:
+  ConstArray1Iterator(const std::vector<T> &data, i32 i)
+      : data_(data), i(i) {}
   const std::vector<T> &data_;
   int i = 0;
 };
@@ -281,14 +296,21 @@ private:
 template<typename T>
 std::ostream &operator<<(std::ostream &os, const Array1<T> &array) {
   os << "Array1[" << array.size() << "]\n\t";
+  // compute text width
+  int w = 12;
+  if (std::is_same_v<T, u8> || std::is_same_v<T, i8>)
+    w = 4;
   for (u32 i = 0; i < array.size(); ++i)
-    os << "[" << i << "]\t";
+    os << std::setw(w) << std::right << concat("[", i, "]");
   os << std::endl << '\t';
   for (u32 i = 0; i < array.size(); ++i) {
+    os << std::setw(w) << std::right;
     if (std::is_same<T, u8>())
-      os << (int) array[i] << "\t";
+      os << (int) array[i];
+    else if (std::is_same_v<T, f32> || std::is_same_v<T, f64>)
+      os << std::setprecision(8) << array[i];
     else
-      os << array[i] << "\t";
+      os << array[i];
   }
   os << std::endl;
   return os;
@@ -296,25 +318,32 @@ std::ostream &operator<<(std::ostream &os, const Array1<T> &array) {
 
 using array1d = Array1<f64>;
 using array1f = Array1<f32>;
-using array1i = Array1<i32>;
+using array1i [[maybe_unused]] = Array1<i32>;
 using array1u = Array1<u32>;
 
 ////////////////////////////// ARRAY 2 ////////////////////////////////////////
-
+/// forward declaration of Array2
+template<typename T> class Array2;
 /// Auxiliary class to iterate an Array2 inside a for loop.
 /// Ex: for(auto e : array) { e.value = x; }
 ///\tparam T Array2 data type
 template<typename T> class Array2Iterator {
 public:
+  friend class Array2<T>;
   class Element {
+    friend class Array2Iterator<T>;
   public:
-    Element(T &v, const index2 &ij) : value(v), index(ij) {}
+    Element &operator=(const T &v) {
+      value = v;
+      return *this;
+    }
+    bool operator==(const T &v) const { return value == v; }
     T &value;
     const index2 index;
+  private:
+    Element(T &v, const index2 &ij) : value(v), index(ij) {}
   };
-  Array2Iterator(T *data, const size2 &size, size_t pitch, const index2 &ij)
-      : size_(size), data_(data), pitch_(pitch), i(ij.i), j(ij.j) {}
-  size2 size() const { return size_; }
+  [[nodiscard]] size2 size() const { return size_; }
   Array2Iterator &operator++() {
     i++;
     if (i >= static_cast<i64>(size_.width)) {
@@ -340,6 +369,8 @@ public:
   }
 
 private:
+  Array2Iterator(T *data, const size2 &size, size_t pitch, const index2 &ij)
+      : size_(size), data_(data), pitch_(pitch), i(ij.i), j(ij.j) {}
   size2 size_;
   T *data_ = nullptr;
   size_t pitch_ = 0;
@@ -350,15 +381,17 @@ private:
 ///\tparam T Array2 data type
 template<typename T> class ConstArray2Iterator {
 public:
+  friend class Array2<T>;
   class Element {
+    friend class ConstArray2Iterator<T>;
   public:
-    Element(const T &v, const index2 &ij) : value(v), index(ij) {}
+    bool operator==(const T &v) const { return value == v; }
     const T &value;
     const index2 index;
+  private:
+    Element(const T &v, const index2 &ij) : value(v), index(ij) {}
   };
-  ConstArray2Iterator(const T *data, const size2 &size, size_t pitch, const index2 &ij)
-      : size_(size), data_(data), pitch_(pitch), i(ij.i), j(ij.j) {}
-  size2 size() const { return size_; }
+  [[nodiscard]] size2 size() const { return size_; }
   ConstArray2Iterator &operator++() {
     i++;
     if (i >= static_cast<i64>(size_.width)) {
@@ -384,6 +417,8 @@ public:
   }
 
 private:
+  ConstArray2Iterator(const T *data, const size2 &size, size_t pitch, const index2 &ij)
+      : size_(size), data_(data), pitch_(pitch), i(ij.i), j(ij.j) {}
   size2 size_;
   const T *data_ = nullptr;
   size_t pitch_ = 0;
@@ -474,8 +509,7 @@ public:
   }
   ///
   virtual ~Array2() {
-    if (data_)
-      delete[](char *) data_;
+    delete[](char *) data_;
   }
   // ***********************************************************************
   //                            OPERATORS
@@ -502,7 +536,7 @@ public:
   /// Assign operator
   /// \param other **[in]** temporary Array2 object
   /// \return Array2<T>&
-  Array2<T> &operator=(Array2<T> &&other) {
+  Array2<T> &operator=(Array2<T> &&other) noexcept {
     size_ = other.size_;
     pitch_ = other.pitch_;
     data_ = other.data_;
@@ -574,11 +608,11 @@ public:
   }
   /// Computes actual memory usage
   /// \return memory usage (in bytes)
-  u64 memorySize() const { return size_.height * pitch_; }
+  [[nodiscard]] u64 memorySize() const { return size_.height * pitch_; }
   /// \return dimensions (in elements count)
   [[nodiscard]] size2 size() const { return size_; }
   /// \return pitch size (in bytes)
-  u64 pitch() const { return pitch_; }
+  [[nodiscard]] u64 pitch() const { return pitch_; }
   /// \return const pointer to raw data (**row major**)
   const T *data() const { return (const T *) data_; }
   /// \return pointer to raw data (**row major**)
@@ -626,18 +660,30 @@ private:
 template<typename T>
 std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
   os << "Array2[" << array.size() << "]\n\t\t";
+  int w = 12;
+  if (std::is_same_v<T, u8> || std::is_same_v<T, i8>)
+    w = 4;
   for (u32 i = 0; i < array.size().width; ++i)
-    os << "[" << i << ",]\t";
+    os << std::setw(w) << std::right << concat("[", i, "]");
   os << std::endl;
   for (u32 j = 0; j < array.size().height; ++j) {
-    os << "\t[," << j << "]\t";
-    for (u32 i = 0; i < array.size().width; ++i)
-      if (std::is_same<T, u8>())
-        os << (int) array[index2(i, j)] << "\t";
+    os << "\t[," << j << "]";
+    for (u32 i = 0; i < array.size().width; ++i) {
+      os << std::setw(w) << std::right;
+      if (std::is_same<T, u8>() || std::is_same_v<T, i8>)
+        os << (int) array[index2(i, j)];
+      else if (std::is_same_v<T, f32> || std::is_same_v<T, f64>)
+        os << std::setprecision(8) << array[index2(i, j)];
       else
-        os << array[index2(i, j)] << "\t";
+        os << array[index2(i, j)];
+    }
+    os << " [," << j << "]";
     os << std::endl;
   }
+  os << "\t\t";
+  for (u32 i = 0; i < array.size().width; ++i)
+    os << std::setw(w) << std::right << concat("[", i, "]");
+  os << std::endl;
   return os;
 }
 

@@ -42,14 +42,8 @@ class Shader {
 public:
   friend class Program;
   Shader();
-  ///
   /// \param type shader type
-  explicit Shader(GLuint type);
-  /// The code is compiled in construction time
-  /// \param code
-  /// \param type
-  Shader(const std::string &code, GLuint type);
-  ///
+  explicit Shader(GLuint type, const std::string &code);
   /// \param code
   /// \param type
   Shader(const ponos::Path &code, GLuint type);
