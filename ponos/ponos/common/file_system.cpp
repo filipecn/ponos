@@ -37,6 +37,7 @@
 #include <stack>
 #include <algorithm>
 #include <filesystem>
+#include <utility>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -57,8 +58,14 @@ namespace ponos {
 
 Path::Path(std::string path) : path_(std::move(path)) {}
 
-Path &Path::operator=(const std::string &path) {
-  path_ = path;
+Path::Path(const char *const &&path) : path_(path) {}
+
+Path::Path(const Path &other) : path_(other.path_) {}
+
+Path::Path(Path &&other) : path_(std::move(other.path_)) {}
+
+Path &Path::operator=(const Path &path) {
+  path_ = path.path_;
   return *this;
 }
 
@@ -102,12 +109,6 @@ Path &Path::cd(const std::string &path) {
 
 Path &Path::join(const Path &path) {
   path_ = Str::join({path_, path.path_}, separator);
-  path_ = Str::replace_r(path_, separator + separator, separator);
-  return *this;
-}
-
-Path &Path::join(const std::string &path) {
-  path_ = Str::join({path_, path}, separator);
   path_ = Str::replace_r(path_, separator + separator, separator);
   return *this;
 }
@@ -172,33 +173,11 @@ Path operator+(const Path &a, const Path &b) {
   p.join(b);
   return p;
 }
-Path operator+(const std::string &a, const Path &b) {
-  Path path(a);
-  path.join(b);
-  return path;
-}
-Path operator+(const Path &a, const std::string &b) {
-  Path p = a;
-  p.join(b);
-  return p;
-}
+
 bool operator==(const Path &a, const Path &b) {
   return static_cast<std::string>(a) == static_cast<std::string>(b);
 }
-bool operator==(const std::string &a, const Path &b) {
-  return a == static_cast<std::string>(b);
-}
-bool operator==(const Path &a, const std::string &b) {
-  return static_cast<std::string>(a) == b;
-}
 
-bool operator==(const char *a, const Path &b) {
-  return a == b.fullName();
-}
-
-bool operator==(const Path &a, const char *b) {
-  return a.fullName() == b;
-}
 std::ostream &operator<<(std::ostream &o, const Path &path) {
   o << path.fullName();
   return o;
@@ -289,9 +268,9 @@ std::vector<unsigned char> FileSystem::readBinaryFile(const char *filename) {
   return bytes;
 }
 
-std::string FileSystem::readFile(const std::string &filename) {
+std::string FileSystem::readFile(const Path &path) {
   std::string content;
-  std::ifstream file(filename, std::ios::in);
+  std::ifstream file(path.fullName(), std::ios::in);
   if (file.good()) {
     std::ostringstream ss;
     ss << file.rdbuf();
@@ -301,20 +280,25 @@ std::string FileSystem::readFile(const std::string &filename) {
   return content;
 }
 
-std::string FileSystem::readFile(const Path &filename) {
-  return readFile(filename.fullName());
+std::vector<std::string> FileSystem::readLines(const Path &path) {
+  std::vector<std::string> lines;
+  std::ifstream file(path.fullName(), std::ios::in);
+  std::string line;
+  while (std::getline(file, line))
+    lines.emplace_back(std::move(line));
+  return lines;
 }
 
-bool FileSystem::fileExists(const std::string &filename) {
-  if (FILE *file = fopen(filename.c_str(), "r")) {
+bool FileSystem::fileExists(const Path &path) {
+  if (FILE *file = fopen(path.fullName().c_str(), "r")) {
     fclose(file);
     return true;
   }
   return false;
 }
 
-bool FileSystem::touch(const std::string &filename) {
-  std::ofstream file(filename);
+bool FileSystem::touch(const Path &path_to_file) {
+  std::ofstream file(path_to_file.fullName());
   if (file.good()) {
     file.close();
     return true;
@@ -322,15 +306,11 @@ bool FileSystem::touch(const std::string &filename) {
   return false;
 }
 
-bool FileSystem::touch(const Path &path_to_file) {
-  return touch(path_to_file.fullName());
-}
-
-u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &content, bool is_binary) {
+u64 FileSystem::writeFile(const Path &path, const std::vector<char> &content, bool is_binary) {
   std::ios_base::openmode flags = std::ofstream::out;
   if (is_binary)
     flags |= std::ofstream::binary;
-  std::ofstream file(filename, flags);
+  std::ofstream file(path.fullName(), flags);
   if (file.good()) {
     file.write(content.data(), content.size());
     file.close();
@@ -339,11 +319,11 @@ u64 FileSystem::writeFile(const std::string &filename, const std::vector<char> &
   return 0;
 }
 
-u64 FileSystem::writeFile(const std::string &filename, const std::string &content, bool is_binary) {
+u64 FileSystem::writeFile(const Path &path, const std::string &content, bool is_binary) {
   std::ios_base::openmode flags = std::ios::out;
   if (is_binary)
     flags |= std::ios::binary;
-  std::ofstream file(filename, flags);
+  std::ofstream file(path.fullName(), flags);
   if (file.good()) {
     file << content;
     file.close();
@@ -352,11 +332,24 @@ u64 FileSystem::writeFile(const std::string &filename, const std::string &conten
   return 0;
 }
 
-u64 FileSystem::appendToFile(const std::string &filename, const std::vector<char> &content, bool is_binary) {
+u64 FileSystem::writeLine(const Path &path, const std::string &line, bool is_binary) {
+  std::ios_base::openmode flags = std::ios::out;
+  if (is_binary)
+    flags |= std::ios::binary;
+  std::ofstream file(path.fullName(), flags);
+  if (file.good()) {
+    file << line << std::endl;
+    file.close();
+    return line.size();
+  }
+  return 0;
+}
+
+u64 FileSystem::appendToFile(const Path &path, const std::vector<char> &content, bool is_binary) {
   auto flags = std::ios::out | std::ios::app;
   if (is_binary)
     flags |= std::ios::binary;
-  std::ofstream file(filename, flags);
+  std::ofstream file(path.fullName(), flags);
   if (file.good()) {
     file.write(content.data(), content.size());
     file.close();
@@ -365,11 +358,11 @@ u64 FileSystem::appendToFile(const std::string &filename, const std::vector<char
   return 0;
 }
 
-u64 FileSystem::appendToFile(const std::string &filename, const std::string &content, bool is_binary) {
+u64 FileSystem::appendToFile(const Path &path, const std::string &content, bool is_binary) {
   auto flags = std::ios::out | std::ios::app;
   if (is_binary)
     flags |= std::ios::binary;
-  std::ofstream file(filename, flags);
+  std::ofstream file(path.fullName(), flags);
   if (file.good()) {
     file << content;
     file.close();
@@ -378,21 +371,34 @@ u64 FileSystem::appendToFile(const std::string &filename, const std::string &con
   return 0;
 }
 
-bool FileSystem::isFile(const std::string &filename) {
+u64 FileSystem::appendLine(const Path &path, const std::string &line, bool is_binary) {
+  auto flags = std::ios::out | std::ios::app;
+  if (is_binary)
+    flags |= std::ios::binary;
+  std::ofstream file(path.fullName(), flags);
+  if (file.good()) {
+    file << line << std::endl;
+    file.close();
+    return line.size();
+  }
+  return 0;
+}
+
+bool FileSystem::isFile(const Path &path) {
   struct stat st{};
-  if (!stat(filename.c_str(), &st))
+  if (!stat(path.fullName().c_str(), &st))
     return ((st.st_mode) & S_IFMT) == S_IFREG;
   return false;
 }
 
-bool FileSystem::isDirectory(const std::string &dir_name) {
+bool FileSystem::isDirectory(const Path &dir_name) {
   struct stat st{};
-  if (!stat(dir_name.c_str(), &st))
+  if (!stat(dir_name.fullName().c_str(), &st))
     return ((st.st_mode) & S_IFMT) == S_IFDIR;
   return false;
 }
 
-std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
+std::vector<Path> FileSystem::ls(const Path &path, ls_options options) {
   std::vector<Path> l;
   std::function<void(const std::string &)> ls_;
 #ifdef WIN32
@@ -432,9 +438,7 @@ std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
     }
   };
 #endif
-  ls_(path);
-  for(const auto& s : l)
-    std::cerr << s << std::endl;
+  ls_(path.fullName());
   if ((options & (ls_options::sort | ls_options::reverse_sort | ls_options::group_directories_first))
       != ls_options::none) {
     bool reverse_order = (options & ls_options::reverse_sort) == ls_options::reverse_sort;
@@ -454,7 +458,7 @@ std::vector<Path> FileSystem::ls(const std::string &path, ls_options options) {
   return l;
 }
 
-bool FileSystem::mkdir(const std::string &path) {
+bool FileSystem::mkdir(const Path &path) {
   auto mk_single_dir = [](const std::string &path_) -> int {
     std::string npath = normalizePath(path_);
 
@@ -482,7 +486,7 @@ bool FileSystem::mkdir(const std::string &path) {
 #ifdef WIN32
   char *copyOfPath = _strdup(path.c_str());
 #else
-  char *copyOfPath = strdup(path.c_str());
+  char *copyOfPath = strdup(path.fullName().c_str());
 #endif
 
   status = 0;
@@ -497,7 +501,7 @@ bool FileSystem::mkdir(const std::string &path) {
     pp = sp + 1;
   }
   if (status == 0)
-    status = mk_single_dir(path);
+    status = mk_single_dir(path.fullName());
   free(copyOfPath);
   // TODO handle error
   return status == 0;
@@ -522,17 +526,17 @@ std::string FileSystem::normalizePath(const std::string &path, bool with_backsla
     result = "/";
   result = result + tokens[0];
   for (unsigned int i = 1; i < tokens.size(); i++)
-    result = result + "/" + tokens[i];
+    result += "/" + tokens[i];
   return result;
 }
 
-bool FileSystem::copyFile(const std::string &source, const std::string &destination) {
+bool FileSystem::copyFile(const Path &source, const Path &destination) {
   const size_t bufferSize = 8192;
   char buffer[bufferSize];
   size_t size;
 
-  FILE *sourceFile = fopen(source.c_str(), "rb");
-  FILE *destFile = fopen(destination.c_str(), "wb");
+  FILE *sourceFile = fopen(source.fullName().c_str(), "rb");
+  FILE *destFile = fopen(destination.fullName().c_str(), "wb");
 
   if ((sourceFile == nullptr) || (destFile == nullptr))
     return false;
@@ -547,7 +551,7 @@ bool FileSystem::copyFile(const std::string &source, const std::string &destinat
   return true;
 }
 
-std::vector<Path> FileSystem::find(const std::string &path, const std::string &pattern, find_options options) {
+std::vector<Path> FileSystem::find(const Path &path, const std::string &pattern, find_options options) {
   std::vector<Path> found;
   ls_options lso = ls_options::files;
   if ((options & find_options::recursive) == find_options::recursive)

@@ -41,30 +41,32 @@ class Path {
 public:
   Path() = default;
   /// \param path
-  explicit Path(std::string path);
+  Path(const char *const &&path);
+  Path(std::string path);
+  Path(const Path &other);
+  Path(Path &&other);
   explicit operator std::string() const { return path_; }
-  Path &operator=(const std::string &path);
+  Path &operator=(const Path &path);
   Path &operator+=(const std::string &other);
   Path &operator+=(const Path &other);
   Path &join(const Path &path);
-  Path &join(const std::string &path);
   /// Jumpt to path
   /// \param path
   Path &cd(const std::string &path);
   [[nodiscard]] bool exists() const;
-  bool isDirectory() const;
-  bool isFile() const;
+  [[nodiscard]] bool isDirectory() const;
+  [[nodiscard]] bool isFile() const;
   [[nodiscard]] std::vector<std::string> parts() const;
   [[nodiscard]] std::string name() const;
   [[nodiscard]] const std::string &fullName() const;
   [[nodiscard]] std::string extension() const;
-  bool match_r(const std::string &regular_expression) const;
-  Path cwd() const;
-  bool mkdir() const;
-  bool touch() const;
-  u64 writeTo(const std::string &content) const;
-  u64 appendTo(const std::string &content) const;
-  std::string read() const;
+  [[nodiscard]] bool match_r(const std::string &regular_expression) const;
+  [[nodiscard]] Path cwd() const;
+  [[nodiscard]] bool mkdir() const;
+  [[nodiscard]] bool touch() const;
+  [[nodiscard]] u64 writeTo(const std::string &content) const;
+  [[nodiscard]] u64 appendTo(const std::string &content) const;
+  [[nodiscard]] std::string read() const;
 
   std::string separator{"/"};
 private:
@@ -72,13 +74,7 @@ private:
 };
 
 Path operator+(const Path &a, const Path &b);
-Path operator+(const std::string &a, const Path &b);
-Path operator+(const Path &a, const std::string &b);
 bool operator==(const Path &a, const Path &b);
-bool operator==(const std::string &a, const Path &b);
-bool operator==(const Path &a, const std::string &b);
-bool operator==(const char *a, const Path &b);
-bool operator==(const Path &a, const char *b);
 std::ostream &operator<<(std::ostream &o, const Path &path);
 
 /// List of options for ls method
@@ -123,60 +119,66 @@ public:
   /// \param filename **[in]** path/to/file.ext
   /// \return vector of bytes read
   static std::vector<unsigned char> readBinaryFile(const char *filename);
-  /// \param filename **[in]** path/to/file.ext
-  /// \return file's content
-  static std::string readFile(const std::string &filename);
+  /// \param path
+  /// \return
+  static std::vector<std::string> readLines(const Path &path);
   /// \param **[in]** filename path/to/file.ext
   /// \return file's content
   static std::string readFile(const Path &filename);
-  /// Creates an empty file or access it.
-  /// \param filename valid path/to/file.ext
-  /// \return **true** if success
-  static bool touch(const std::string &filename);
   /// Creates an empty file or access it.
   /// \param path_to_file valid file path
   /// \return **true** if success
   static bool touch(const Path &path_to_file);
   /// Writes content to file.
-  /// \param filename **[in]** path/to/file.ext
+  /// \param path **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 writeFile(const std::string &filename,
+  static u64 writeFile(const Path &path,
                        const std::vector<char> &content, bool is_binary = false);
   /// Writes content to file.
-  /// \param filename **[in]** path/to/file.ext
+  /// \param path **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 writeFile(const std::string &filename,
+  static u64 writeFile(const Path &path,
                        const std::string &content, bool is_binary = false);
+  /// \param path
+  /// \param line
+  /// \param is_binary
+  /// \return
+  static u64 writeLine(const Path &path, const std::string &line, bool is_binary = false);
   /// Appends content to file.
-  /// \param filename **[in]** path/to/file.ext
+  /// \param path **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 appendToFile(const std::string &filename,
+  static u64 appendToFile(const Path &path,
                           const std::vector<char> &content, bool is_binary = false);
   /// Appends content to file.
-  /// \param filename **[in]** path/to/file.ext
+  /// \param path **[in]** path/to/file.ext
   /// \param content
   /// \param is_binary **[in | default = false]** write in binary mode
   /// \return number of bytes successfully written.
-  static u64 appendToFile(const std::string &filename,
+  static u64 appendToFile(const Path &path,
                           const std::string &content, bool is_binary = false);
+  /// \param path
+  /// \param line
+  /// \param is_binary
+  /// \return
+  static u64 appendLine(const Path &path, const std::string &line, bool is_binary = false);
   /// Checks if file exists
-  /// \param filename /path/to/file.ext
+  /// \param path /path/to/file.ext
   /// \return **true** if file exists
-  static bool fileExists(const std::string &filename);
+  static bool fileExists(const Path &path);
   /// Checks if filename corresponds to a file.
-  /// \param filename /path/to/file.ext
+  /// \param path /path/to/file.ext
   /// \return **true** if filename points to a file.
-  static bool isFile(const std::string &filename);
+  static bool isFile(const Path &path);
   /// Checks if dir_name corresponds to a directory.
   /// \param dir_name **[in]** /path/to/directory
   /// \return **true** if dir_name points to a directory.
-  static bool isDirectory(const std::string &dir_name);
+  static bool isDirectory(const Path &dir_name);
   /// Lists files inside a directory
   /// \param path **[in]** path/to/directory
   /// \param options **[in | ls_options::none]** options based on ls command:
@@ -188,16 +190,16 @@ public:
   ///     group_directories_first = directories come first in sorting;
   ///     recursive = list directories contents;
   /// \return list of paths
-  static std::vector<Path> ls(const std::string &path, ls_options options = ls_options::none);
+  static std::vector<Path> ls(const Path &path, ls_options options = ls_options::none);
   /// Recursively creates the path of directories
   /// \param path path/to/directory
   /// \return true on success success
-  static bool mkdir(const std::string &path);
+  static bool mkdir(const Path &path);
   ///
   /// \param source
   /// \param destination
   /// \return
-  static bool copyFile(const std::string &source, const std::string &destination);
+  static bool copyFile(const Path &source, const Path &destination);
   ///
   /// \param path
   /// \param with_backslash
@@ -210,7 +212,7 @@ public:
   ///     none = default behaviour;
   ///     recursive = recursively search on directories bellow **path**
   /// \return
-  static std::vector<Path> find(const std::string &path,
+  static std::vector<Path> find(const Path &path,
                                 const std::string &pattern,
                                 find_options options = find_options::none);
 };

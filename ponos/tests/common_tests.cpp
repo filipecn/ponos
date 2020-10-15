@@ -129,7 +129,7 @@ TEST_CASE("Str", "[common]") {
     std::vector<std::string> s = {"a", "b", "c"};
     auto ss = Str::join(s, ",");
     REQUIRE(ss == "a,b,c");
-    std::vector<int> ints = {1,2,3};
+    std::vector<int> ints = {1, 2, 3};
     ss = Str::join(ints, " ");
     REQUIRE(ss == "1 2 3");
   }//
@@ -327,15 +327,27 @@ TEST_CASE("FileSystem", "[common]") {
     { // search ext2
       auto f = FileSystem::find("find_dir", ".*\.ext2", find_options::sort);
       REQUIRE(f.size() == 5);
-      for(int i =0 ; i < 5; ++i)
-        REQUIRE(f[i].name() == concat("file", i , ".ext2"));
+      for (int i = 0; i < 5; ++i)
+        REQUIRE(f[i].name() == concat("file", i, ".ext2"));
     }
     { // search ext1 rec
       auto f = FileSystem::find("find_dir", ".*\.ext1", find_options::sort | find_options::recursive);
       REQUIRE(f.size() == 6);
-      for(int i =0 ; i < 6; ++i)
-        REQUIRE(f[i].name() == concat("file", i , ".ext1"));
+      for (int i = 0; i < 6; ++i)
+        REQUIRE(f[i].name() == concat("file", i, ".ext1"));
     }
+  }//
+  SECTION("lines") {
+    FileSystem::writeLine("lines_file", "line1");
+    auto lines = FileSystem::readLines("lines_file");
+    REQUIRE(lines.size() == 1);
+    REQUIRE(lines[0] == "line1");
+    for (int i = 2; i <= 10; ++i)
+      FileSystem::appendLine("lines_file", "line" + std::to_string(i));
+    lines = FileSystem::readLines("lines_file");
+    REQUIRE(lines.size() == 10);
+    for (int i = 2; i < 10; ++i)
+      REQUIRE(lines[i] == "line" + std::to_string(i + 1));
   }
 }
 
