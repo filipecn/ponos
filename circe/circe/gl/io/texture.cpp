@@ -62,6 +62,8 @@ Texture::Texture(const Texture &other) {
 }
 
 Texture::Texture(Texture &&other) noexcept {
+  if (texture_object_)
+    glDeleteTextures(1, &texture_object_);
   texture_object_ = other.texture_object_;
   parameters_changed_ = other.parameters_changed_;
   parameters_ = other.parameters_;
