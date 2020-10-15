@@ -72,8 +72,9 @@ public:
     /// \param attributes
     explicit Attributes(const std::vector<Attribute> &attributes);
     ~Attributes();
+    void clear();
     /// \param attributes
-    void pushAttributes(const std::vector<Attribute> &attributes);
+    void push(const std::vector<Attribute> &attributes);
     /// Append attribute to vertex format description. Push order is important, as
     /// attribute offsets are computed as attributes are appended.
     /// \param component_count
@@ -81,8 +82,8 @@ public:
     /// \param data_type
     /// \param normalized
     /// \return attribute id
-    u64 pushAttribute(u64 component_count, const std::string &name = "", GLenum data_type = GL_FLOAT,
-                      GLboolean normalized = GL_FALSE);
+    u64 push(u64 component_count, const std::string &name = "", GLenum data_type = GL_FLOAT,
+             GLboolean normalized = GL_FALSE);
     /// Push attribute using a ponos type
     /// \tparam T accepts only ponos::MathElement derived objects (point, vector, matrix,...)
     /// \param name attribute name (optional)
@@ -94,8 +95,8 @@ public:
                 std::is_base_of_v<ponos::MathElement<f32, 4u>, T> ||
                 std::is_base_of_v<ponos::MathElement<f32, 9u>, T> ||
                 std::is_base_of_v<ponos::MathElement<f32, 16u>, T>> * = nullptr>
-    u64 pushAttribute(const std::string &name = "") {
-      return pushAttribute(T::componentCount(), name, OpenGL::dataTypeEnum<decltype(T::numeric_data)>());
+    u64 push(const std::string &name = "") {
+      return push(T::componentCount(), name, OpenGL::dataTypeEnum<decltype(T::numeric_data)>());
     }
     /// \return data size in bytes of a single vertex
     inline u64 stride() const {
@@ -114,6 +115,10 @@ public:
 
   VertexBuffer();
   ~VertexBuffer() override;
+
+  VertexBuffer& operator=(const ponos::AoS& aos);
+
+
   /// \param binding_index new binding index value
   void setBindingIndex(GLuint binding_index);
   [[nodiscard]] GLuint bufferTarget() const override;

@@ -33,6 +33,7 @@
 #include <vector>
 #include <unordered_map>
 #include <spdlog/spdlog.h>
+#include <ponos/geometry/math_element.h>
 
 namespace ponos {
 
@@ -40,6 +41,13 @@ namespace ponos {
 /// This class stores an array of structures that can be defined in runtime
 class AoS {
 public:
+  struct FieldDescription {
+    std::string name;
+    u64 size{0};
+    u64 offset{0};
+    u32 component_count{1};
+    DataType type{DataType::CUSTOM};
+  };
   template<typename T>
   class FieldAccessor {
     friend class AoS;
@@ -52,6 +60,7 @@ public:
     u8 *data_{nullptr};
     u64 stride_{0};
     u64 offset_{0};
+
   };
   // ***********************************************************************
   //                           CONSTRUCTORS
@@ -86,8 +95,21 @@ public:
     FieldDescription d = {
         name,
         sizeof(T),
-        struct_size_
+        struct_size_,
+        1,
+        dataTypeFrom<T>()
     };
+#define MATCH_PONOS_TYPES(Type, DT, C) \
+    if (std::is_base_of_v<ponos::MathElement<Type, C>, T>) { \
+      d.component_count = C; \
+      d.type = DataType::DT;\
+    }
+    MATCH_PONOS_TYPES(f32, F32, 2u)
+    MATCH_PONOS_TYPES(f32, F32, 3u)
+    MATCH_PONOS_TYPES(f32, F32, 4u)
+    MATCH_PONOS_TYPES(f32, F32, 9u)
+    MATCH_PONOS_TYPES(f32, F32, 16u)
+#undef MATCH_PONOS_TYPES
     fields_.emplace_back(d);
     struct_size_ += d.size;
     return fields_.size() - 1;
@@ -103,7 +125,12 @@ public:
   u64 offsetOf(u64 field_id) const;
   u64 sizeOf(const std::string &field_name) const;
   u64 sizeOf(u64 field_id) const;
-
+  /// \return
+  const std::vector<FieldDescription> &fields() const { return fields_; }
+  /// \tparam T
+  /// \param field_id
+  /// \param i
+  /// \return
   template<typename T>
   T &valueAt(u64 field_id, u64 i) {
     return *reinterpret_cast<T *>(data_ + i * struct_size_ + fields_[field_id].offset);
@@ -113,11 +140,6 @@ private:
   u64 size_{0};
   u64 struct_size_{0};
   u8 *data_{nullptr};
-  struct FieldDescription {
-    std::string name;
-    u64 size{0};
-    u64 offset{0};
-  };
   std::vector<FieldDescription> fields_;
   std::unordered_map<std::string, u64> field_id_map_;
 };

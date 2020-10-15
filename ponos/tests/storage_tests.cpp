@@ -173,6 +173,24 @@ TEST_CASE("AOS", "[storage][aos]") {
     REQUIRE(aos.fieldName(1) == "f32");
     REQUIRE(aos.fieldName(2) == "int");
     REQUIRE(aos.size() == 0);
+    // check fields
+    auto fields = aos.fields();
+    REQUIRE(fields.size() == 3);
+    REQUIRE(fields[0].name == "vec3");
+    REQUIRE(fields[0].size == sizeof(vec3));
+    REQUIRE(fields[0].offset == 0);
+    REQUIRE(fields[0].component_count == 3);
+    REQUIRE(fields[0].type == DataType::F32);
+    REQUIRE(fields[1].name == "f32");
+    REQUIRE(fields[1].size == sizeof(f32));
+    REQUIRE(fields[1].offset == sizeof(vec3));
+    REQUIRE(fields[1].component_count == 1);
+    REQUIRE(fields[1].type == DataType::F32);
+    REQUIRE(fields[2].name == "int");
+    REQUIRE(fields[2].size == sizeof(i32));
+    REQUIRE(fields[2].offset == sizeof(vec3) + sizeof(f32));
+    REQUIRE(fields[2].component_count == 1);
+    REQUIRE(fields[2].type == DataType::I32);
     aos.resize(4);
     REQUIRE(aos.size() == 4);
     REQUIRE(aos.stride() == sizeof(vec3) + sizeof(f32) + sizeof(int));

@@ -223,7 +223,23 @@ public:
 #undef RET_STR
     return "";
   }
-
+  static GLenum dataTypeEnum(ponos::DataType T) {
+#define MATCH_TYPE(TT, R) \
+   if(ponos::DataType::TT == T)  \
+   return R;
+    MATCH_TYPE(I8, GL_BYTE)
+    MATCH_TYPE(U8, GL_UNSIGNED_BYTE)
+    MATCH_TYPE(I16, GL_SHORT)
+    MATCH_TYPE(U16, GL_UNSIGNED_SHORT)
+    MATCH_TYPE(F16, GL_HALF_FLOAT)
+    MATCH_TYPE(I32, GL_INT)
+    MATCH_TYPE(U32, GL_UNSIGNED_INT)
+    MATCH_TYPE(I32, GL_FIXED)
+    MATCH_TYPE(F32, GL_FLOAT)
+    MATCH_TYPE(F64, GL_DOUBLE)
+#undef MATCH_TYPE
+    return GL_FIXED;
+  }
 };
 
 #ifdef GL_DEBUG

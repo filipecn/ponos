@@ -32,20 +32,27 @@ namespace circe::gl {
 VertexBuffer::Attributes::Attributes() = default;
 
 VertexBuffer::Attributes::Attributes(const std::vector<Attribute> &attributes) {
-  pushAttributes(attributes);
+  push(attributes);
 }
 
 VertexBuffer::Attributes::~Attributes() = default;
 
-void VertexBuffer::Attributes::pushAttributes(const std::vector<Attribute> &attributes) {
+void VertexBuffer::Attributes::clear() {
+  attributes_.clear();
+  attribute_name_id_map_.clear();
+  offsets_.clear();
+  stride_ = 0;
+}
+
+void VertexBuffer::Attributes::push(const std::vector<Attribute> &attributes) {
   attributes_ = attributes;
   updateOffsets();
 }
 
-u64 VertexBuffer::Attributes::pushAttribute(u64 component_count,
-                                            const std::string &name,
-                                            GLenum data_type,
-                                            GLboolean normalized) {
+u64 VertexBuffer::Attributes::push(u64 component_count,
+                                   const std::string &name,
+                                   GLenum data_type,
+                                   GLboolean normalized) {
   u64 attribute_id = attributes_.size();
   std::string attribute_name = name.empty() ? std::to_string(attribute_id) : name;
   Attribute attr{
@@ -77,6 +84,17 @@ void VertexBuffer::Attributes::updateOffsets() {
 VertexBuffer::VertexBuffer() = default;
 
 VertexBuffer::~VertexBuffer() = default;
+
+VertexBuffer &VertexBuffer::operator=(const ponos::AoS &aos) {
+  // clear existent data/attributes
+  attributes.clear();
+  // push new attributes
+  for (const auto &field : aos.fields())
+    attributes.push(field.component_count, field.name, OpenGL::dataTypeEnum(field.type));
+  vertex_count_ = aos.size();
+  setData(reinterpret_cast<const void *>(aos.data()));
+  return *this;
+}
 
 void VertexBuffer::setBindingIndex(GLuint binding_index) {
   binding_index_ = binding_index;

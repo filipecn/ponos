@@ -49,7 +49,7 @@ public:
   typedef T ScalarType;
   Point2(T f = T(0)) { x = y = f; }
   explicit Point2(const real_t *v) : x(v[0]), y(v[1]) {}
-  explicit Point2(real_t _x, real_t _y) : x(_x), y(_y) {}
+  Point2(real_t _x, real_t _y) : x(_x), y(_y) {}
   // access
   T operator[](int i) const { return (&x)[i]; }
   T &operator[](int i) { return (&x)[i]; }

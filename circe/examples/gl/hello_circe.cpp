@@ -48,8 +48,8 @@ public:
         0, 1, 2, // 0
         0, 2, 3, // 1
     };
-    vb.attributes.pushAttribute<ponos::point2>("position");
-    vb.attributes.pushAttribute<ponos::vec2>("uv");
+    vb.attributes.push<ponos::point2>("position");
+    vb.attributes.push<ponos::vec2>("uv");
     vb = vertices;
     ib.element_count = 2;
     ib = indices;
@@ -195,16 +195,44 @@ public:
       spdlog::error(model.program.err);
       exit(-1);
     }
+
+    {
+      ponos::AoS aos;
+      aos.pushField<ponos::point3>("position");
+      aos.pushField<ponos::vec3>("normal");
+      aos.pushField<ponos::point2>("uv");
+      aos.resize(3);
+      aos.valueAt<ponos::point3>(0, 0) = {0, 0, 0};
+      aos.valueAt<ponos::vec3>(0, 1) = {0, 0, 1};
+      aos.valueAt<ponos::point2>(0, 2) = {0, 0};
+
+      aos.valueAt<ponos::point3>(1, 0) = {10, 0, 0};
+      aos.valueAt<ponos::vec3>(1, 1) = {0, 0, 1};
+      aos.valueAt<ponos::point2>(1, 2) = {1, 0};
+
+      aos.valueAt<ponos::point3>(2, 0) = {0, 10, 0};
+      aos.valueAt<ponos::vec3>(2, 1) = {0, 0, 1};
+      aos.valueAt<ponos::point2>(2, 2) = {0, 1};
+
+      model.vb = aos;
+      std::vector<u32> index_data = {0,1,2};
+      model.ib = index_data;
+      model.vao.bind();
+      model.vb.bindAttributeFormats();
+      return;
+    }
+
+
     // prepare mesh data
     std::vector<float> vertex_data;
     std::vector<u32> index_data;
     circe::gl::setup_buffer_data_from_mesh(mesh, vertex_data, index_data);
     // describe vertex buffer
-    model.vb.attributes.pushAttribute<ponos::point3>("position");
+    model.vb.attributes.push<ponos::point3>("position");
     if (mesh.normalDescriptor.count)
-      model.vb.attributes.pushAttribute<ponos::vec3>("normal");
+      model.vb.attributes.push<ponos::vec3>("normal");
     if (mesh.texcoordDescriptor.count)
-      model.vb.attributes.pushAttribute<ponos::point2>("uv");
+      model.vb.attributes.push<ponos::point2>("uv");
     // upload data
     model.vb = vertex_data;
     model.ib = index_data;

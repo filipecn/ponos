@@ -29,6 +29,7 @@
 #define PONOS_COMMON_DEFS_H
 
 #include <cstdint>
+#include <type_traits>
 
 #ifdef PONOS_DOUBLE
 using real_t = double;
@@ -55,5 +56,43 @@ using ushort = unsigned short;
 using uchar = unsigned char;
 
 using byte = uint8_t;
+
+namespace ponos {
+
+enum class DataType {
+  I8,
+  I16,
+  I32,
+  I64,
+  U8,
+  U16,
+  U32,
+  U64,
+  F16,
+  F32,
+  F64,
+  CUSTOM
+};
+
+template<typename T>
+DataType dataTypeFrom() {
+#define MATCH_TYPE(Type, R) \
+  if(std::is_same_v<T, Type>) \
+    return DataType::R;
+  MATCH_TYPE(i8, I8)
+  MATCH_TYPE(i16, I16)
+  MATCH_TYPE(i32, I32)
+  MATCH_TYPE(i64, I64)
+  MATCH_TYPE(u8, U8)
+  MATCH_TYPE(u16, U16)
+  MATCH_TYPE(u32, U32)
+  MATCH_TYPE(u64, U64)
+  MATCH_TYPE(f32, F32)
+  MATCH_TYPE(f64, F64)
+  return DataType::CUSTOM;
+#undef MATCH_TYPE
+}
+
+}
 
 #endif

@@ -36,7 +36,7 @@ namespace ponos {
 template<typename NUMERIC_TYPE, u64 COMPONENT_COUNT>
 class MathElement {
 public:
-  NUMERIC_TYPE numeric_data;
+  static NUMERIC_TYPE numeric_data;
   static inline constexpr u64 componentCount() { return COMPONENT_COUNT; };
   static inline constexpr u64 numericTypeSizeInBytes() { return sizeof(NUMERIC_TYPE); };
 };
