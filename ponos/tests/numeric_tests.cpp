@@ -290,6 +290,7 @@ TEST_CASE("Grid2", "[numeric][grid]") {
       REQUIRE(e.worldPosition().y == Approx(e.index.j * 0.2).margin(1e-7));
       REQUIRE(e.region().size(0) == Approx(0.1).margin(1e-7));
       REQUIRE(e.region().size(1) == Approx(0.2).margin(1e-7));
+      REQUIRE(e.flatIndex() == e.index.j * g.resolution().width + e.index.i);
       e.value = e.index.i * 10 + e.index.j;
     }
     for (auto e : g.accessor())

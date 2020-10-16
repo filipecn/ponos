@@ -116,7 +116,7 @@ TEST_CASE("Array2", "[storage][array]") {
           REQUIRE(vv[i][ij] == ij.i * 10 + ij.j);
     }
     {
-      Array2<int> a = std::move(Array2<int>(size2(10, 10)));
+      Array2<int> a = Array2<int>(size2(10, 10));
       Array2<int> b(Array2<int>(size2(10, 10)));
     }
     {
@@ -161,6 +161,7 @@ TEST_CASE("Array2", "[storage][array]") {
     for (auto e : a) {
       count++;
       REQUIRE(e.value == vec2(1, 2));
+      REQUIRE(e.flatIndex() == e.index.j * 10 + e.index.i);
     }
     REQUIRE(count == 100);
   }//
@@ -168,8 +169,10 @@ TEST_CASE("Array2", "[storage][array]") {
     Array2<vec2> a(size2(10, 10));
     a = vec2(1, 2);
     auto f = [](const Array2<vec2> &array) {
-      for (const auto &d : array)
+      for (const auto &d : array) {
         REQUIRE(d.value == vec2(1, 2));
+        REQUIRE(d.flatIndex() == d.index.j * 10 + d.index.i);
+      }
     };
     f(a);
   }//

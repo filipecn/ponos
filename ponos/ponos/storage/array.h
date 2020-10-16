@@ -338,10 +338,13 @@ public:
       return *this;
     }
     bool operator==(const T &v) const { return value == v; }
+    /// \return j * width + i
+    [[nodiscard]] u64 flatIndex() const { return index.j * width_ + index.i; }
     T &value;
     const index2 index;
   private:
-    Element(T &v, const index2 &ij) : value(v), index(ij) {}
+    Element(T &v, const index2 &ij, u64 width) : value(v), index(ij), width_{width} {}
+    u64 width_{0};
   };
   [[nodiscard]] size2 size() const { return size_; }
   Array2Iterator &operator++() {
@@ -357,7 +360,7 @@ public:
   }
   Element operator*() {
     return Element((T &) (*((char *) data_ + j * pitch_ + i * sizeof(T))),
-                   index2(i, j));
+                   index2(i, j), size_.width);
   }
   bool operator==(const Array2Iterator &other) {
     return size_ == other.size_ && data_ == other.data_ && i == other.i &&
@@ -386,10 +389,13 @@ public:
     friend class ConstArray2Iterator<T>;
   public:
     bool operator==(const T &v) const { return value == v; }
+    /// \return j * width + i
+    [[nodiscard]] u64 flatIndex() const { return index.j * width_ + index.i; }
     const T &value;
     const index2 index;
   private:
-    Element(const T &v, const index2 &ij) : value(v), index(ij) {}
+    Element(const T &v, const index2 &ij, u64 width) : value(v), index(ij), width_(width) {}
+    u64 width_{0};
   };
   [[nodiscard]] size2 size() const { return size_; }
   ConstArray2Iterator &operator++() {
@@ -405,7 +411,7 @@ public:
   }
   Element operator*() {
     return Element((const T &) (*((const char *) data_ + j * pitch_ + i * sizeof(T))),
-                   index2(i, j));
+                   index2(i, j), size_.width);
   }
   bool operator==(const ConstArray2Iterator &other) {
     return size_ == other.size_ && data_ == other.data_ && i == other.i &&
