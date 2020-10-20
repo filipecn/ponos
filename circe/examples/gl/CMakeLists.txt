@@ -26,6 +26,7 @@ function(buildExample EXAMPLE_NAME)
             ${PONOS_LIBRARIES}
             ${CIRCE_LIBRARIES}
             ${GLFW_LIBRARIES}
+            ${TINYOBJ_LIBRARIES}
             )
     target_include_directories(${EXAMPLE_NAME} PUBLIC
             ${STB_INCLUDES}

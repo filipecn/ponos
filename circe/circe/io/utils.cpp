@@ -39,8 +39,8 @@ void loadOBJ(const std::string &filename, ponos::RawMesh *mesh) {
   std::vector<tinyobj::shape_t> shapes;
   std::vector<tinyobj::material_t> materials;
   std::string err;
-  bool r =
-      tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filename.c_str());
+  bool r = false;
+//      tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filename.c_str());
   if (!r) {
     std::cerr << err << std::endl;
     return;

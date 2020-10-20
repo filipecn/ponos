@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+#include <cmath>
 
 #include <ponos/ponos.h>
 
@@ -9,7 +10,7 @@ TEST_CASE("Interpolation", "[numeric][interpolation]") {
   SECTION("linear") {
     { // 1D
       float dx = 0.01;
-      auto f = [](float x) -> float { return cos(x) * sin(x); };
+      auto f = [](float x) -> float { return std::cos(x) * sin(x); };
       HaltonSequence sampler;
       for (int i = 0; i < 1000; ++i) {
         auto p = sampler.randomFloat();
@@ -17,7 +18,7 @@ TEST_CASE("Interpolation", "[numeric][interpolation]") {
       }
     }
     { // 2D
-      auto f = [](float x, float y) -> float { return cos(x) * sin(y); };
+      auto f = [](float x, float y) -> float { return std::cos(x) * sin(y); };
       RNGSampler sampler;
       float dx = 0.01;
       for (int i = 0; i < 1000; ++i) {
@@ -281,6 +282,15 @@ TEST_CASE("Grid2", "[numeric][grid]") {
     gg = g;
     for (auto e : gg.accessor())
       REQUIRE(e.value == Approx(1).margin(1e-8));
+  }//
+  SECTION("Apply") {
+    Grid2<f32> grid({100, 100});
+    grid.apply([](const ponos::point2 &p) -> f32 { return p.x * 100 + p.y; });
+    for (auto g : grid.accessor())
+      REQUIRE(g.value == Approx(g.worldPosition().x * 100 + g.worldPosition().y));
+    grid = [](const ponos::point2 &p) -> f32 { return p.y * 100 + p.x; };
+    for (auto g : grid.accessor())
+      REQUIRE(g.value == Approx(g.worldPosition().y * 100 + g.worldPosition().x));
   }//
   SECTION("GridIterator") {
     Grid2<float> g(size2(10, 10));

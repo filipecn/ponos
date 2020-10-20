@@ -579,6 +579,28 @@ public:
   }
   /// \verbatim embed:rst:leading-slashes
   ///    .. warning::
+  ///       This method does **not** check if ``ij`` is out of bounds.
+  /// \endverbatim
+  /// \param ij expected to be constructed from j * width + i
+  /// \return reference to element at ``ij`` position
+  T &operator[](u64 ij) {
+    auto j = ij / size_.width;
+    auto i = ij % size_.width;
+    return (T &) (*((char *) data_ + j * pitch_ + i * sizeof(T)));
+  }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
+  ///       This method does **not** check if ``ij`` is out of bounds.
+  /// \endverbatim
+  /// \param ij expected to be constructed from j * width + i
+  /// \return reference to element at ``ij`` position
+  const T &operator[](u64 ij) const {
+    auto j = ij / size_.width;
+    auto i = ij % size_.width;
+    return (T &) (*((char *) data_ + j * pitch_ + i * sizeof(T)));
+  }
+  /// \verbatim embed:rst:leading-slashes
+  ///    .. warning::
   ///       This method does **not** check if ``i`` or ``j`` are out of bounds.
   /// \endverbatim
   /// \param i **[in]** column index

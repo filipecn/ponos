@@ -57,11 +57,13 @@ set(CIRCE_HEADERS
         circe/gl/io/viewport_display.h
         circe/gl/io/user_input.h
         circe/gl/scene/bvh.h
+        circe/gl/scene/scene_model.h
         circe/scene/camera_interface.h
         circe/scene/camera_projection.h
         circe/scene/light.h
         circe/scene/material.h
         circe/gl/scene/mesh_utils.h
+        circe/scene/model.h
         circe/gl/scene/quad.h
         circe/gl/scene/scene.h
         circe/gl/scene/scene_mesh.h
@@ -90,6 +92,7 @@ set(CIRCE_HEADERS
         circe/gl/utils/win32_utils.h
         circe/gl/utils/base_app.h
         circe/circe.h
+        circe/io.h
         )
 
 set(CIRCE_SOURCES
@@ -117,8 +120,10 @@ set(CIRCE_SOURCES
         circe/gl/io/viewport_display.cpp
         circe/gl/scene/bvh.cpp
         circe/gl/scene/mesh_utils.cpp
+        circe/scene/model.cpp
         circe/gl/scene/quad.cpp
         circe/gl/scene/scene_mesh.cpp
+        circe/gl/scene/scene_model.cpp
         circe/gl/scene/triangle_mesh.cpp
         circe/gl/scene/volume_box.cpp
         circe/gl/scene/wireframe_mesh.cpp
@@ -137,6 +142,7 @@ set(CIRCE_SOURCES
         circe/gl/utils/open_gl.cpp
         circe/gl/utils/base_app.cpp
         circe/circe.cpp
+        circe/io.cpp
         circe/gl/scene/instance_set.cpp circe/gl/scene/instance_set.h)
 
 add_library(circe STATIC ${CIRCE_SOURCES} ${CIRCE_HEADERS} ${IMGUI_HEADERS} ${IMGUI_SOURCES})
@@ -149,14 +155,14 @@ target_include_directories(circe PUBLIC
         ${CIRCE_SOURCE_DIR}
         ${STB_INCLUDES}
         ${PLY_INCLUDES}
-        ${TINYOBJLOADER_INCLUDES}
+        ${TINYOBJ_INCLUDE_DIR}
         ${GLAD_INCLUDES}
         ${GLFW_INCLUDE_DIR}
         ${DIRENT_INCLUDE_DIR}
         )
 target_link_libraries(circe PUBLIC ponos
         ${GLFW_LIBRARIES}
-        ${PLY_LIBS} ${TINYOBJLOADER_LIBS} glad
+        ${PLY_LIBS} ${TINYOBJ_LIBRARIES} glad
         )
 # if(glfw AND glad)
 add_dependencies(circe glfw glad)

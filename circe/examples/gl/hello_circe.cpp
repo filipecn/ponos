@@ -247,6 +247,7 @@ public:
   circe::gl::ShadowMap shadow_map;
   circe::gl::UniformBuffer scene_ubo;
   Model object, cartesian_plane;
+  circe::Model mesh;
   GLuint texture_id{0};
 };
 

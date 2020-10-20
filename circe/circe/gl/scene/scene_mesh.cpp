@@ -27,48 +27,50 @@
 
 namespace circe::gl {
 
-SceneModel::SceneModel() = default;
+//SceneModel::SceneModel() = default;
+//
+//SceneModel::~SceneModel() { clear(); }
+//
+//bool SceneModel::set(const ponos::RawMesh &raw_mesh) {
+//  clear();
+//  setup_buffer_data_from_mesh(raw_mesh, vertex_data_, index_data_);
+//  BufferDescriptor ver, ind;
+//  create_buffer_description_from_mesh(raw_mesh, ver, ind);
+//  glGenVertexArrays(1, &VAO);
+//  glBindVertexArray(VAO);
+//  vertex_buffer_.set(&vertex_data_[0], ver);
+//  index_buffer_.set(&index_data_[0], ind);
+//  glBindBuffer(GL_ARRAY_BUFFER, 0);
+//  vertex_buffer_.bind();
+//  index_buffer_.bind();
+//  glBindVertexArray(0);
+//  CHECK_GL_ERRORS;
+//  return true;
+//}
 
-SceneModel::~SceneModel() { clear(); }
+//void SceneModel::bind() const {
+//  glBindVertexArray(VAO);
+//}
 
-bool SceneModel::set(const ponos::RawMesh &raw_mesh) {
-  clear();
-  setup_buffer_data_from_mesh(raw_mesh, vertex_data_, index_data_);
-  BufferDescriptor ver, ind;
-  create_buffer_description_from_mesh(raw_mesh, ver, ind);
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
-  vertex_buffer_.set(&vertex_data_[0], ver);
-  index_buffer_.set(&index_data_[0], ind);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  vertex_buffer_.bind();
-  index_buffer_.bind();
-  glBindVertexArray(0);
-  CHECK_GL_ERRORS;
-  return true;
-}
+//void SceneModel::draw() {
+//  glBindVertexArray(VAO);
+//  glEnable(GL_DEPTH_TEST);
+//  glDrawElements(index_buffer_.bufferDescriptor.element_type,
+//                 index_buffer_.bufferDescriptor.element_count *
+//                     index_buffer_.bufferDescriptor.element_size,
+//                 GL_UNSIGNED_INT, 0);
+//}
 
-void SceneModel::bind() const {
-  glBindVertexArray(VAO);
-}
-
-void SceneModel::draw() {
-  glBindVertexArray(VAO);
-  glEnable(GL_DEPTH_TEST);
-  glDrawElements(index_buffer_.bufferDescriptor.element_type,
-                 index_buffer_.bufferDescriptor.element_count *
-                     index_buffer_.bufferDescriptor.element_size,
-                 GL_UNSIGNED_INT, 0);
-}
-
-void SceneModel::clear() {
-  glBindVertexArray(0);
-  if (VAO)
-    glDeleteVertexArrays(1, &VAO);
-  vertex_data_.clear();
-  index_data_.clear();
-  // TODO : clear buffer too
-}
+//void SceneModel::clear() {
+//  glBindVertexArray(0);
+//  if (VAO)
+//    glDeleteVertexArrays(1, &VAO);
+//  vertex_data_.clear();
+//  index_data_.clear();
+//TODO :
+//clear buffer
+//too
+//}
 
 SceneMesh::SceneMesh(const ponos::RawMesh *rm) : mesh_(rm) {
   set(rm);

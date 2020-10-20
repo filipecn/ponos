@@ -43,6 +43,7 @@
 #include <circe/gl/scene/triangle_mesh.h>
 #include <circe/gl/scene/volume_box.h>
 #include <circe/gl/scene/wireframe_mesh.h>
+#include <circe/scene/model.h>
 #include <circe/gl/storage/device_memory.h>
 #include <circe/gl/storage/index_buffer.h>
 #include <circe/gl/storage/vertex_array_object.h>
@@ -61,6 +62,7 @@
 #include <circe/gl/utils/open_gl.h>
 #include <circe/gl/utils/win32_utils.h>
 #include <circe/gl/utils/base_app.h>
+#include <circe/io.h>
 
 namespace circe {
 

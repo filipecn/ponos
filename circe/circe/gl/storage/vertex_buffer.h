@@ -116,14 +116,14 @@ public:
   VertexBuffer();
   ~VertexBuffer() override;
 
-  VertexBuffer& operator=(const ponos::AoS& aos);
-
+  VertexBuffer &operator=(const ponos::AoS &aos);
 
   /// \param binding_index new binding index value
   void setBindingIndex(GLuint binding_index);
   [[nodiscard]] GLuint bufferTarget() const override;
   [[nodiscard]] GLuint bufferUsage() const override;
   u64 dataSizeInBytes() const override;
+  u64 vertexCount() const { return vertex_count_; }
   /// \tparam T
   /// \param data
   /// \return

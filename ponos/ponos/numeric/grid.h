@@ -164,8 +164,7 @@ public:
   /// \param grid_accessor grid to be iterated over
   /// \param ij starting grid index for iteration
   ConstGrid1Iterator(ConstGrid1Accessor<T> &grid_accessor, i32 i)
-      : acc_(grid_accessor), resolution_(grid_accessor.resolution()),
-        i_(i) {}
+      : acc_(grid_accessor), i_(i), resolution_(grid_accessor.resolution()) {}
   /// \return increment operator to move to the next grid index
   ConstGrid1Iterator &operator++() {
     ++i_;
@@ -1018,7 +1017,7 @@ public:
   }
   /// \brief Assign constructor
   /// \param other **[in]** temporary Grid2 object
-  Grid2(Grid2 &&other) {
+  Grid2(Grid2 &&other) noexcept {
     to_grid_ = other.to_grid_;
     to_world_ = other.to_world_;
     origin_ = other.origin_;
@@ -1077,6 +1076,13 @@ public:
     data_ = values;
     return *this;
   }
+  /// Applies ``f`` to grid data
+  /// \param f
+  /// \return *this
+  Grid2 &operator=(const std::function<T(const ponos::point2 &)> &f) {
+    this->apply(f);
+    return *this;
+  }
   // ***********************************************************************
   //                         GETTERS & SETTERS
   // ***********************************************************************
@@ -1106,6 +1112,12 @@ public:
   /// Gets raw data
   /// \return reference to memory data
   Array2 <T> &data() { return data_; }
+  /// Applies f to all elements
+  /// \param f
+  void apply(const std::function<T(const ponos::point2 &)> &f) {
+    for (auto e : data_)
+      e = f(to_world_(point2(e.index.i, e.index.j)));
+  }
   /// \param address_mode **[in | default = CLAMP_TO_EDGE]** defines how out of
   /// bounds indices are handled
   /// \param interpolation_mode **[in | default = MONOTONIC_CUBIC]** what type

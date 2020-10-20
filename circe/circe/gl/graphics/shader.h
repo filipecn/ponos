@@ -119,7 +119,6 @@ public:
   /// \param shader_list
   explicit Program(const std::vector<Shader> &shader_list);
   Program(const Program &other) = delete;
-  Program(const Program &&other) = delete;
   /// Copy constructor
   /// \param other
   Program(Program &other);

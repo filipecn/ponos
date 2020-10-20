@@ -32,23 +32,23 @@ namespace circe::gl {
 
 /// Holds a vertex array object containing a combination of a vertex buffer
 /// and index buffer.
-class SceneModel {
-public:
-  SceneModel();
-  virtual ~SceneModel();
-  bool set(const ponos::RawMesh &raw_mesh);
-  void bind() const;
-  const GLVertexBuffer &vertexBuffer() const { return vertex_buffer_; }
-  const GLIndexBuffer &indexBuffer() const { return index_buffer_; }
-  void draw();
-  void clear();
-protected:
-  GLuint VAO{0};
-  std::vector<float> vertex_data_;
-  std::vector<uint> index_data_;
-  GLVertexBuffer vertex_buffer_;
-  GLIndexBuffer index_buffer_;
-};
+//class SceneModel {
+//public:
+//  SceneModel();
+//  virtual ~SceneModel();
+//  bool set(const ponos::RawMesh &raw_mesh);
+//  void bind() const;
+//  const GLVertexBuffer &vertexBuffer() const { return vertex_buffer_; }
+//  const GLIndexBuffer &indexBuffer() const { return index_buffer_; }
+//  void draw();
+//  void clear();
+//protected:
+//  GLuint VAO{0};
+//  std::vector<float> vertex_data_;
+//  std::vector<uint> index_data_;
+//  GLVertexBuffer vertex_buffer_;
+//  GLIndexBuffer index_buffer_;
+//};
 
 /// Set of buffers that represent a raw mesh for rendering.
 class SceneMesh {
