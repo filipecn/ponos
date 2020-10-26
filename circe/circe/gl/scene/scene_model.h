@@ -32,18 +32,26 @@
 
 namespace circe::gl {
 
-class SceneModel : public circe::Model {
+class SceneModel {
 public:
   // ***********************************************************************
   //                          STATIC METHODS
   // ***********************************************************************
-  static SceneModel &&fromFile(const ponos::Path &path);
+  static SceneModel fromFile(const ponos::Path &path);
   // ***********************************************************************
   //                           CONSTRUCTORS
   // ***********************************************************************
   SceneModel();
-  ~SceneModel() override;
-
+  explicit SceneModel(const Model &model);
+  explicit SceneModel(Model &&model) noexcept;
+  SceneModel(SceneModel &&other) noexcept;
+  ~SceneModel();
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
+  SceneModel &operator=(SceneModel &&other) noexcept;
+  SceneModel &operator=(const Model &model);
+  SceneModel &operator=(Model &&model) noexcept;
   // ***********************************************************************
   //                             METHODS
   // ***********************************************************************
@@ -59,6 +67,7 @@ private:
   VertexArrayObject vao_;
   VertexBuffer vb_;
   IndexBuffer ib_;
+  Model model_;
 };
 
 }

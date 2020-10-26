@@ -70,13 +70,13 @@ ShadowMap::ShadowMap(const ponos::size2 &size) : size_(size) {
   glDrawBuffer(GL_NONE);
   glReadBuffer(GL_NONE);
   // Since we don't need a color buffer and Open GL expects one, we must tell Open GL:
-  depth_buffer_.disable();
+  circe::gl::Framebuffer::disable();
   CHECK_GL_ERRORS;
 }
 
 ShadowMap::~ShadowMap() = default;
 
-void ShadowMap::render(std::function<void()> f) {
+void ShadowMap::render(const std::function<void()>& f) {
   glEnable(GL_DEPTH_TEST);
   glViewport(0, 0, size_.width, size_.height);
   depth_buffer_.enable();
@@ -87,7 +87,7 @@ void ShadowMap::render(std::function<void()> f) {
   program_.setUniform("model", ponos::Transform().matrix());
   if (f)
     f();
-  depth_buffer_.disable();
+  circe::gl::Framebuffer::disable();
 }
 
 void ShadowMap::bind() const {

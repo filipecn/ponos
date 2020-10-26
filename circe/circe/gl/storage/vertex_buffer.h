@@ -112,12 +112,20 @@ public:
     std::vector<u64> offsets_;  //!< attribute data offset (in bytes)
     u64 stride_{0};
   };
-
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   VertexBuffer();
+  VertexBuffer(VertexBuffer &&other) noexcept;
   ~VertexBuffer() override;
-
+  // ***********************************************************************
+  //                           OPERATORS
+  // ***********************************************************************
   VertexBuffer &operator=(const ponos::AoS &aos);
-
+  VertexBuffer &operator=(VertexBuffer &&other) noexcept ;
+  // ***********************************************************************
+  //                             METHODS
+  // ***********************************************************************
   /// \param binding_index new binding index value
   void setBindingIndex(GLuint binding_index);
   [[nodiscard]] GLuint bufferTarget() const override;

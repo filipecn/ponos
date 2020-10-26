@@ -45,7 +45,8 @@ void BufferInterface::allocate(GLuint buffer_usage) {
 }
 
 void BufferInterface::setData(const void *data) {
-  if (!mem_ || (dataSizeInBytes() != mem_->size() && dm_.allocated())) {
+  if (!mem_ || !using_external_memory_ ||
+      (dataSizeInBytes() != mem_->size() && dm_.allocated())) {
     // allocate if necessary
     allocate(bufferUsage());
   }

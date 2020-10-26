@@ -371,6 +371,20 @@ bool Program::link() {
   return true;
 }
 
+bool Program::link(const ponos::Path &folder, const std::string &shader_name) {
+  std::vector<ponos::Path> shaders;
+  auto ls = ponos::FileSystem::ls(folder);
+  std::vector<std::string> extensions = {"vert", "frag"};
+  for (const auto &f : ls)
+    if (f.isFile() && f.name().substr(0, f.name().size() - 5) == shader_name) {
+      auto ext = f.extension();
+      for (const auto &e : extensions)
+        if (e == ext)
+          shaders.emplace_back(f);
+    }
+  return link(shaders);
+}
+
 bool Program::link(const std::vector<Shader> &shaders) {
   if (!id_)
     create();
@@ -380,6 +394,10 @@ bool Program::link(const std::vector<Shader> &shaders) {
 }
 
 bool Program::link(const std::vector<ponos::Path> &shader_file_list) {
+  if (shader_file_list.empty()) {
+    err = "Empty list of shader files.";
+    return false;
+  }
   std::vector<Shader> shaders;
   for (const auto &file : shader_file_list) {
     GLuint type = GL_VERTEX_SHADER;
@@ -669,7 +687,6 @@ bool Program::checkLinkageErrors() {
   linked_ = true;
   return true;
 }
-
 std::ostream &operator<<(std::ostream &o, const Program &program) {
   {
     GLint i;

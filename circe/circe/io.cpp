@@ -120,9 +120,9 @@ Model io::readOBJ(const ponos::Path &path, u32 mesh_id) {
           attrib.vertices[3 * idx.vertex_index + 2]};
     if (!attrib.normals.empty())
       model.attributeValue<ponos::vec3>(normal_id, vertex.second) = {
-          attrib.vertices[3 * idx.normal_index + 0],
-          attrib.vertices[3 * idx.normal_index + 1],
-          attrib.vertices[3 * idx.normal_index + 2]};
+          attrib.normals[3 * idx.normal_index + 0],
+          attrib.normals[3 * idx.normal_index + 1],
+          attrib.normals[3 * idx.normal_index + 2]};
     if (!attrib.colors.empty())
       model.attributeValue<ponos::vec3>(color_id, vertex.second) = {
           attrib.colors[3 * idx.vertex_index + 0],
@@ -130,8 +130,8 @@ Model io::readOBJ(const ponos::Path &path, u32 mesh_id) {
           attrib.colors[3 * idx.vertex_index + 2]};
     if (!attrib.texcoords.empty())
       model.attributeValue<ponos::vec2>(uv_id, vertex.second) = {
-          attrib.vertices[2 * idx.uv_index + 0],
-          attrib.vertices[2 * idx.uv_index + 1]};
+          attrib.texcoords[2 * idx.uv_index + 0],
+          attrib.texcoords[2 * idx.uv_index + 1]};
   }
   model.setIndices(std::move(index_data));
   return model;

@@ -19,38 +19,59 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 ///
-///\file shadow_map.h
+///\file shapes.h
 ///\author FilipeCN (filipedecn@gmail.com)
-///\date 2020-08-09
+///\date 2020-24-10
 ///
 ///\brief
 
-#ifndef PONOS_CIRCE_CIRCE_GL_GRAPHICS_SHADOW_MAP_H
-#define PONOS_CIRCE_CIRCE_GL_GRAPHICS_SHADOW_MAP_H
+#ifndef PONOS_CIRCE_CIRCE_SCENE_SHAPES_H
+#define PONOS_CIRCE_CIRCE_SCENE_SHAPES_H
 
-#include <circe/scene/light.h>
-#include <circe/gl/io/render_texture.h>
-#include <circe/gl/graphics/shader.h>
+#include <circe/scene/model.h>
+#include <circe/common/bitmask_operators.h>
 
-namespace circe::gl {
+namespace circe {
 
-class ShadowMap {
+enum class shape_options {
+  none = 0x00,
+  normals = 0x01,
+  uvs = 0x02,
+//   = 0x4,
+//   = 0x8,
+//   = 0x10,
+//   = 0x20,
+};
+CIRCE_ENABLE_BITMASK_OPERATORS(shape_options);
+
+class Shapes {
 public:
-  explicit ShadowMap(const ponos::size2 &size = ponos::size2(1024, 1024));
-  ~ShadowMap();
-  void setLight(const circe::Light& light);
-  void render(const std::function<void()>& f);
-  void bind() const;
-  [[nodiscard]] const ponos::Transform& light_transform() const;
-  [[nodiscard]] const Texture& depthMap() const;
-private:
-  ponos::size2 size_;
-  Framebuffer depth_buffer_;
-  Texture depth_map_;
-  Program program_;
-  ponos::Transform light_transform_;
+  ///
+  /// \param center
+  /// \param radius
+  /// \param divisions
+  /// \param options
+  /// \return
+  static Model icosphere(const ponos::point3 &center, real_t radius,
+                         u32 divisions, shape_options options = shape_options::none);
+  ///
+  /// \param divisions
+  /// \param options
+  /// \return
+  static Model icosphere(u32 divisions, shape_options options = shape_options::none);
+  ///
+  /// \param plane
+  /// \param center
+  /// \param extension
+  /// \param divisions
+  /// \param options
+  /// \return
+  static Model plane(const ponos::Plane &plane,
+                     const ponos::point3 &center,
+                     const ponos::vec3 &extension,
+                     u32 divisions = 1, shape_options options = shape_options::none);
 };
 
 }
 
-#endif //PONOS_CIRCE_CIRCE_GL_GRAPHICS_SHADOW_MAP_H
+#endif //PONOS_CIRCE_CIRCE_SCENE_SHAPES_H

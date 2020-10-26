@@ -34,6 +34,7 @@
 #include <circe/scene/camera_interface.h>
 #include <circe/scene/light.h>
 #include <circe/scene/material.h>
+#include <circe/scene/shapes.h>
 #include <circe/gl/scene/instance_set.h>
 #include <circe/gl/scene/mesh_utils.h>
 #include <circe/gl/scene/quad.h>
@@ -43,6 +44,7 @@
 #include <circe/gl/scene/triangle_mesh.h>
 #include <circe/gl/scene/volume_box.h>
 #include <circe/gl/scene/wireframe_mesh.h>
+#include <circe/gl/scene/scene_model.h>
 #include <circe/scene/model.h>
 #include <circe/gl/storage/device_memory.h>
 #include <circe/gl/storage/index_buffer.h>

@@ -96,7 +96,10 @@ public:
     /// the current index
     [[nodiscard]] bbox1 region() const { return acc_.cellRegion(index); }
     /// Assign operator
-    Element &operator=(const T &v) { value = v; }
+    Element &operator=(const T &v) {
+      value = v;
+      return *this;
+    }
     bool operator==(const T &v) const { return Check::is_equal(value, v); }
     /// Reference to the grid data stored in the current index
     T &value;
@@ -608,7 +611,10 @@ public:
     /// \return region (in world coordinates) of the grid cell respective to
     /// the current index
     [[nodiscard]] bbox2 region() const { return acc_.cellRegion(index); }
-    Element &operator=(const T &v) { value = v; }
+    Element &operator=(const T &v) {
+      value = v;
+      return *this;
+    }
     /// \return j * width + i
     [[nodiscard]] u64 flatIndex() const { return index.j * acc_.resolution().width + index.i; }
     /// Reference to the grid data stored in the current index

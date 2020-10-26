@@ -138,6 +138,12 @@ public:
   /// Link pre-attached shaders
   /// \return
   bool link();
+  /// Seach for files matching folder/shader_name.ext, where the values tried
+  /// for ext are frag, vert, ...
+  /// \param folder path/to/folder containing shaders
+  /// \param shader_name shader name without extension
+  /// \return
+  bool link(const ponos::Path& folder, const std::string& shader_name);
   /// Attach and create program
   /// \param shader_list pre-compiled shader list
   /// \return

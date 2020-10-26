@@ -58,6 +58,7 @@ public:
 protected:
   // memory resource
   GLbitfield access_{GL_MAP_WRITE_BIT};
+  bool using_external_memory_{false};
   DeviceMemory dm_;
   std::unique_ptr<DeviceMemory::View> mem_;
 };

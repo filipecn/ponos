@@ -70,6 +70,24 @@ public:
   // ***********************************************************************
   //                            OPERATORS
   // ***********************************************************************
+  AoS &operator=(AoS &&other) noexcept;
+  AoS &operator=(const AoS &other);
+  template<typename T>
+  AoS &operator=(std::vector<T> &&vector_data) {
+    /// TODO: move operation is making a copy instead!
+    if (!struct_size_) {
+      spdlog::warn("[AoS] Fields must be previously registered.");
+      return *this;
+    }
+    if (vector_data.size() * sizeof(T) % struct_size_ != 0)
+      spdlog::warn("[AoS] Vector data with incompatible size.");
+    delete[]data_;
+    data_ = nullptr;
+    size_ = vector_data.size() * sizeof(T) / struct_size_;
+    data_ = new u8[size_ * struct_size_];
+    std::memcpy(data_, vector_data.data(), size_ * struct_size_);
+    return *this;
+  }
   // ***********************************************************************
   //                             METHODS
   // ***********************************************************************
@@ -97,7 +115,7 @@ public:
         sizeof(T),
         struct_size_,
         1,
-        dataTypeFrom<T>()
+        DataTypes::typeFrom<T>()
     };
 #define MATCH_PONOS_TYPES(Type, DT, C) \
     if (std::is_base_of_v<ponos::MathElement<Type, C>, T>) { \
@@ -136,9 +154,49 @@ public:
     return *reinterpret_cast<T *>(data_ + i * struct_size_ + fields_[field_id].offset);
   }
 
+  friend std::ostream &operator<<(std::ostream &o, const AoS &aos) {
+#define PRINT_FIELD_VALUE(T, Type) \
+        if (f.type == DataType::Type) { \
+    const T *ptr = reinterpret_cast<T *>(aos.data_ + offset + f.offset); \
+    for (u32 j = 0; j < f.component_count; ++j) \
+      o << ptr[j] << ((j < f.component_count - 1) ?  " " : ""); \
+    o << ") "; \
+  }
+
+    o << "AoS (struct count: " << aos.size_ << ") (struct size in bytes: "
+      << aos.struct_size_ << ")\n";
+    o << "fields: ";
+    for (const auto &f : aos.fields_) {
+      auto it = aos.field_id_map_.find(f.name);
+      o << "field #" << it->second << " (" << f.name << " ): ";
+      o << "\tbase data type: " << DataTypes::typeName(f.type) << "\n";
+      o << "\tbase data size in bytes: " << f.size << "\n";
+      o << "\tcomponent count: " << f.component_count << "\n";
+      o << "field values:\n";
+      u64 offset = 0;
+      for (u64 i = 0; i < aos.size_; ++i) {
+        o << "[" << i << "](";
+        PRINT_FIELD_VALUE(i8, I8)
+        PRINT_FIELD_VALUE(i16, I16)
+        PRINT_FIELD_VALUE(i32, I32)
+        PRINT_FIELD_VALUE(i64, I64)
+        PRINT_FIELD_VALUE(u8, U8)
+        PRINT_FIELD_VALUE(u16, U16)
+        PRINT_FIELD_VALUE(u32, U32)
+        PRINT_FIELD_VALUE(u64, U64)
+        PRINT_FIELD_VALUE(f32, F32)
+        PRINT_FIELD_VALUE(f64, F64)
+        offset += aos.struct_size_;
+      }
+      o << std::endl;
+    }
+    return o;
+#undef PRINT_FIELD_VALUE
+  }
+
 private:
-  u64 size_{0};
-  u64 struct_size_{0};
+  u64 size_{0}; //!< struct count
+  u64 struct_size_{0}; //!< in bytes
   u8 *data_{nullptr};
   std::vector<FieldDescription> fields_;
   std::unordered_map<std::string, u64> field_id_map_;

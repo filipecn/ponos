@@ -30,6 +30,7 @@
 
 #include <cstdint>
 #include <type_traits>
+#include <string>
 
 #ifdef PONOS_DOUBLE
 using real_t = double;
@@ -74,24 +75,46 @@ enum class DataType {
   CUSTOM
 };
 
-template<typename T>
-DataType dataTypeFrom() {
+class DataTypes {
+public:
+  template<typename T>
+  static DataType typeFrom() {
 #define MATCH_TYPE(Type, R) \
   if(std::is_same_v<T, Type>) \
     return DataType::R;
-  MATCH_TYPE(i8, I8)
-  MATCH_TYPE(i16, I16)
-  MATCH_TYPE(i32, I32)
-  MATCH_TYPE(i64, I64)
-  MATCH_TYPE(u8, U8)
-  MATCH_TYPE(u16, U16)
-  MATCH_TYPE(u32, U32)
-  MATCH_TYPE(u64, U64)
-  MATCH_TYPE(f32, F32)
-  MATCH_TYPE(f64, F64)
-  return DataType::CUSTOM;
+    MATCH_TYPE(i8, I8)
+    MATCH_TYPE(i16, I16)
+    MATCH_TYPE(i32, I32)
+    MATCH_TYPE(i64, I64)
+    MATCH_TYPE(u8, U8)
+    MATCH_TYPE(u16, U16)
+    MATCH_TYPE(u32, U32)
+    MATCH_TYPE(u64, U64)
+    MATCH_TYPE(f32, F32)
+    MATCH_TYPE(f64, F64)
+    return DataType::CUSTOM;
 #undef MATCH_TYPE
-}
+  }
+  static std::string typeName(DataType type) {
+#define DATA_TYPE_NAME(Type) \
+      if(DataType::Type == type) \
+    return #Type;
+    DATA_TYPE_NAME(I8)
+    DATA_TYPE_NAME(I16)
+    DATA_TYPE_NAME(I32)
+    DATA_TYPE_NAME(I64)
+    DATA_TYPE_NAME(U8)
+    DATA_TYPE_NAME(U16)
+    DATA_TYPE_NAME(U32)
+    DATA_TYPE_NAME(U64)
+    DATA_TYPE_NAME(F16)
+    DATA_TYPE_NAME(F32)
+    DATA_TYPE_NAME(F64)
+    DATA_TYPE_NAME(CUSTOM)
+    return "CUSTOM";
+#undef DATA_TYPE_NAME
+  }
+};
 
 }
 

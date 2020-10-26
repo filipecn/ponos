@@ -30,7 +30,7 @@
 
 namespace circe {
 
-Model &&Model::fromFile(const ponos::Path &path) {
+Model Model::fromFile(const ponos::Path &path) {
   if (path.extension() == "obj")
     return std::move(io::readOBJ(path));
   return std::move(Model());
@@ -38,17 +38,40 @@ Model &&Model::fromFile(const ponos::Path &path) {
 
 Model::Model() = default;
 
+Model::Model(Model &&other) noexcept {
+  indices_ = std::move(other.indices_);
+  data_ = std::move(other.data_);
+  element_type_ = other.element_type_;
+}
+
 Model::~Model() = default;
 
+Model &Model::operator=(Model &&other) noexcept {
+  indices_ = std::move(other.indices_);
+  data_ = std::move(other.data_);
+  element_type_ = other.element_type_;
+  return *this;
+}
+
+Model &Model::operator=(const Model &other) {
+  indices_ = other.indices_;
+  data_ = other.data_;
+  element_type_ = other.element_type_;
+  return *this;
+}
+
 Model &Model::operator=(ponos::AoS &&data) {
+  data_ = std::forward<ponos::AoS>(data);
   return *this;
 }
 
 Model &Model::operator=(const ponos::AoS &data) {
+  data_ = data;
   return *this;
 }
 
 Model &Model::operator=(const std::vector<i32> &indices) {
+  indices_ = indices;
   return *this;
 }
 
@@ -62,6 +85,15 @@ void Model::resize(u64 new_size) {
 
 void Model::setIndices(std::vector<i32> &&indices) {
   indices_ = indices;
+}
+
+std::ostream &operator<<(std::ostream &o, const Model &model) {
+  o << "Model:\n" << model.data_;
+  o << "Model Indices:\n";
+  for (auto i : model.indices_)
+    o << i << " ";
+  o << std::endl;
+  return o;
 }
 
 }

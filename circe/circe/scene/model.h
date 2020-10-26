@@ -43,11 +43,12 @@ public:
   // ***********************************************************************
   //                          STATIC METHODS
   // ***********************************************************************
-  static Model &&fromFile(const ponos::Path &path);
+  static Model fromFile(const ponos::Path &path);
   // ***********************************************************************
   //                           CONSTRUCTORS
   // ***********************************************************************
   Model();
+  Model(Model &&other) noexcept;
   virtual ~Model();
   // ***********************************************************************
   //                            OPERATORS
@@ -56,6 +57,9 @@ public:
   Model &operator=(const ponos::AoS &data);
   Model &operator=(const std::vector<i32> &indices);
   Model &operator=(const std::vector<f32> &vertex_data);
+  Model &operator=(Model &&other) noexcept;
+  Model &operator=(const Model &other);
+  friend std::ostream &operator<<(std::ostream &o, const Model &model);
   // ***********************************************************************
   //                             METHODS
   // ***********************************************************************
@@ -73,6 +77,8 @@ public:
   u64 pushAttribute(const std::string &attribute_name) {
     return data_.pushField<T>(attribute_name);
   }
+  const ponos::AoS &data() const { return data_; }
+  const std::vector<i32> &indices() const { return indices_; }
   void resize(u64 new_size);
   void setIndices(std::vector<i32> &&indices);
 

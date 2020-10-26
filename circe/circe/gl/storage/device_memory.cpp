@@ -42,6 +42,16 @@ DeviceMemory::View::View(DeviceMemory &buffer, u64 length, u64 offset)
   length_ = std::min(offset_ + buffer.size(), buffer.size()) - offset_;
 }
 
+DeviceMemory::View &DeviceMemory::View::operator=(DeviceMemory::View &&other) noexcept {
+  if (mapped_) /// TODO: is that right? other object might be used the mapped memory?
+    buffer_.unmap();
+  buffer_ = std::move(other.buffer_);
+  offset_ = other.offset_;
+  length_ = other.length_;
+  mapped_ = other.mapped_;
+  return *this;
+}
+
 void *DeviceMemory::View::mapped(GLbitfield access) {
   mapped_ = buffer_.mapped(offset_, length_, access);
   return mapped_;
@@ -56,7 +66,6 @@ void DeviceMemory::View::unmap() {
   buffer_.unmap();
   mapped_ = nullptr;
 }
-
 void DeviceMemory::View::bind() {
   buffer_.bind();
 }
@@ -79,11 +88,17 @@ DeviceMemory::~DeviceMemory() {
 DeviceMemory::DeviceMemory(DeviceMemory &&other) noexcept {
   buffer_object_id_ = other.buffer_object_id_;
   other.buffer_object_id_ = 0;
+  target_ = other.target_;
+  usage_ = other.usage_;
+  size_ = other.size_;
 }
 
 DeviceMemory &DeviceMemory::operator=(DeviceMemory &&other) noexcept {
   destroy();
   buffer_object_id_ = other.buffer_object_id_;
+  target_ = other.target_;
+  usage_ = other.usage_;
+  size_ = other.size_;
   other.buffer_object_id_ = 0;
   return *this;
 }

@@ -204,6 +204,8 @@ std::string FileSystem::fileExtension(const std::string &filename) {
   size_t i = extension.rfind('.', extension.length());
   if (i != std::string::npos)
     extension = extension.substr(i + 1, extension.length());
+  else
+    extension = "";
   return extension;
 }
 

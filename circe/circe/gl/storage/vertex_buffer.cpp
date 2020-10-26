@@ -83,6 +83,19 @@ void VertexBuffer::Attributes::updateOffsets() {
 
 VertexBuffer::VertexBuffer() = default;
 
+VertexBuffer::VertexBuffer(VertexBuffer &&other) noexcept {
+  attributes = other.attributes;
+  vertex_count_ = other.vertex_count_;
+  binding_index_ = other.binding_index_;
+  access_ = other.access_;
+  dm_ = std::move(other.dm_);
+  this->using_external_memory_ = other.using_external_memory_;
+  if (using_external_memory_)
+    mem_ = std::move(other.mem_);
+  else
+    mem_ = std::make_unique<DeviceMemory::View>(dm_);
+}
+
 VertexBuffer::~VertexBuffer() = default;
 
 VertexBuffer &VertexBuffer::operator=(const ponos::AoS &aos) {
@@ -93,6 +106,20 @@ VertexBuffer &VertexBuffer::operator=(const ponos::AoS &aos) {
     attributes.push(field.component_count, field.name, OpenGL::dataTypeEnum(field.type));
   vertex_count_ = aos.size();
   setData(reinterpret_cast<const void *>(aos.data()));
+  return *this;
+}
+
+VertexBuffer &VertexBuffer::operator=(VertexBuffer &&other) noexcept {
+  attributes = other.attributes;
+  vertex_count_ = other.vertex_count_;
+  binding_index_ = other.binding_index_;
+  access_ = other.access_;
+  dm_ = std::move(other.dm_);
+  this->using_external_memory_ = other.using_external_memory_;
+  if (using_external_memory_)
+    mem_ = std::move(other.mem_);
+  else
+    mem_ = std::make_unique<DeviceMemory::View>(dm_);
   return *this;
 }
 

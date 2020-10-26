@@ -226,6 +226,7 @@ TEST_CASE("AOS", "[storage][aos]") {
       REQUIRE(aos.valueAt<f32>(1, i) == Approx(1.f * i));
       REQUIRE(aos.valueAt<int>(2, i) == i + 1);
     }
+    std::cerr << aos << std::endl;
   }//
   SECTION("Accessors") {
     AoS aos;

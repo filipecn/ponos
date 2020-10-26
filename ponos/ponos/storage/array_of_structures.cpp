@@ -36,6 +36,31 @@ AoS::~AoS() {
   delete[]data_;
 }
 
+AoS &AoS::operator=(AoS &&other) noexcept {
+  delete[]data_;
+  data_ = other.data_;
+  other.data_ = nullptr;
+  size_ = other.size_;
+  struct_size_ = other.struct_size_;
+  fields_ = std::move(other.fields_);
+  field_id_map_ = std::move(other.field_id_map_);
+  return *this;
+}
+
+AoS &AoS::operator=(const AoS &other) {
+  delete[]data_;
+  data_ = nullptr;
+  size_ = other.size_;
+  struct_size_ = other.struct_size_;
+  fields_ = other.fields_;
+  field_id_map_ = other.field_id_map_;
+  if (size_ && struct_size_) {
+    data_ = new u8[size_ * struct_size_];
+    std::memcpy(data_, other.data_, size_ * struct_size_);
+  }
+  return *this;
+}
+
 void AoS::resize(u64 new_size) {
   delete[]data_;
   data_ = nullptr;
@@ -66,7 +91,6 @@ u64 AoS::sizeOf(const std::string &field_name) const {
   }
   return sizeOf(it->second);
 }
-
 u64 AoS::sizeOf(u64 field_id) const {
   return fields_[field_id].size;
 }

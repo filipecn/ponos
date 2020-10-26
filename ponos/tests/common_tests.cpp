@@ -104,7 +104,7 @@ enum class Test : unsigned {
   a1 = 0x1,
   a2 = 0x2,
 };
-ENABLE_BITMASK_OPERATORS(Test);
+PONOS_ENABLE_BITMASK_OPERATORS(Test);
 }
 
 TEST_CASE("bitmask operators") {
@@ -218,8 +218,8 @@ TEST_CASE("FileSystem", "[common]") {
     REQUIRE(FileSystem::basename("/usr/local/file.ext", ".ext") == "file");
     REQUIRE(FileSystem::basename("file.ext", ".ext") == "file");
     REQUIRE(FileSystem::basename("/usr/file.ex", ".ext") == "file.ex");
-    REQUIRE(FileSystem::basename("/usr/") == "");
-    REQUIRE(FileSystem::basename("/usr/", ".ext") == "");
+    REQUIRE(FileSystem::basename("/usr/").empty());
+    REQUIRE(FileSystem::basename("/usr/", ".ext").empty());
   }//
   SECTION("basenames") {
     std::vector<std::string> paths = {
@@ -237,6 +237,7 @@ TEST_CASE("FileSystem", "[common]") {
   }//
   SECTION("file extension") {
     REQUIRE(FileSystem::fileExtension("path/to/file.ext4") == "ext4");
+    REQUIRE(FileSystem::fileExtension("path/to/file").empty());
   }//
   SECTION("read invalid file") {
     REQUIRE(!FileSystem::fileExists("invalid__file"));

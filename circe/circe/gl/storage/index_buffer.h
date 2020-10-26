@@ -36,11 +36,23 @@ namespace circe::gl {
 /// indices assigned by a geometric primitive.
 class IndexBuffer : public BufferInterface {
 public:
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
   IndexBuffer();
   ~IndexBuffer() override;
+  // ***********************************************************************
+  //                             METHODS
+  // ***********************************************************************
   [[nodiscard]] GLuint bufferTarget() const override;
   [[nodiscard]] GLuint bufferUsage() const override;
   [[nodiscard]] u64 dataSizeInBytes() const override;
+  /// glDrawElements
+  void draw();
+  // ***********************************************************************
+  //                            OPERATORS
+  // ***********************************************************************
+  IndexBuffer &operator=(IndexBuffer &&other) noexcept;
   /// \tparam T
   /// \param data
   /// \return
@@ -74,15 +86,15 @@ public:
     setData(reinterpret_cast<const void *>(data.data()));
     return *this;
   }
-  /// glDrawElements
-  void draw();
-
+  // ***********************************************************************
+  //                          PUBLIC FIELDS
+  // ***********************************************************************
   u64 element_count{0};
   GLuint element_type{GL_TRIANGLES};
   GLuint data_type{GL_UNSIGNED_INT};
 };
 
-std::ostream& operator<<(std::ostream& os, const IndexBuffer& index_buffer);
+std::ostream &operator<<(std::ostream &os, const IndexBuffer &index_buffer);
 
 }
 

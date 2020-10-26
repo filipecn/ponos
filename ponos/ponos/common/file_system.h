@@ -87,13 +87,13 @@ enum class ls_options {
   group_directories_first = 0x10,
   recursive = 0x20,
 };
-ENABLE_BITMASK_OPERATORS(ls_options);
+PONOS_ENABLE_BITMASK_OPERATORS(ls_options);
 enum class find_options {
   none = 0x0,
   recursive = 0x1,
   sort = 0x2,
 };
-ENABLE_BITMASK_OPERATORS(find_options);
+PONOS_ENABLE_BITMASK_OPERATORS(find_options);
 
 /// Set of useful functions to manipulate files and directories
 class FileSystem {

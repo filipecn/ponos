@@ -38,27 +38,27 @@
 /// enum class Permissions {..};
 /// PONOS_ENABLE_BITMASK_OPERATORS(Permissions);
 
-#ifndef PONOS_PONOS_PONOS_COMMON_BITMASK_OPERATORS_H
-#define PONOS_PONOS_PONOS_COMMON_BITMASK_OPERATORS_H
+#ifndef CIRCE_COMMON_BITMASK_OPERATORS_H
+#define CIRCE_COMMON_BITMASK_OPERATORS_H
 
 #include <type_traits>
 
-namespace ponos {
+namespace circe {
 
-#define PONOS_ENABLE_BITMASK_OPERATORS(x)  \
+#define CIRCE_ENABLE_BITMASK_OPERATORS(x)  \
 template<>                           \
-struct EnableBitMaskOperators<x>     \
+struct CirceEnableBitMaskOperators<x>     \
 {                                    \
     static const bool enable = true; \
 }
 
 template<typename Enum>
-struct EnableBitMaskOperators {
+struct CirceEnableBitMaskOperators {
   static const bool enable = false;
 };
 
 template<typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+typename std::enable_if<CirceEnableBitMaskOperators<Enum>::enable, Enum>::type
 operator|(Enum lhs, Enum rhs) {
   using underlying = typename std::underlying_type<Enum>::type;
   return static_cast<Enum> (
@@ -68,7 +68,7 @@ operator|(Enum lhs, Enum rhs) {
 }
 
 template<typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+typename std::enable_if<CirceEnableBitMaskOperators<Enum>::enable, Enum>::type
 operator&(Enum lhs, Enum rhs) {
   using underlying = typename std::underlying_type<Enum>::type;
   return static_cast<Enum> (
@@ -78,7 +78,7 @@ operator&(Enum lhs, Enum rhs) {
 }
 
 template<typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+typename std::enable_if<CirceEnableBitMaskOperators<Enum>::enable, Enum>::type
 operator^(Enum lhs, Enum rhs) {
   using underlying = typename std::underlying_type<Enum>::type;
   return static_cast<Enum> (
@@ -88,7 +88,7 @@ operator^(Enum lhs, Enum rhs) {
 }
 
 template<typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+typename std::enable_if<CirceEnableBitMaskOperators<Enum>::enable, Enum>::type
 operator~(Enum rhs) {
   using underlying = typename std::underlying_type<Enum>::type;
   return static_cast<Enum> (

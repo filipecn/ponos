@@ -24,6 +24,7 @@ set(IMGUI_HEADERS
 set(CIRCE_HEADERS
         circe/colors/color.h
         circe/colors/color_palette.h
+        circe/common/bitmask_operators.h
         circe/gl/graphics/compute_shader.h
         circe/gl/graphics/post_effect.h
         circe/gl/graphics/shader.h
@@ -64,6 +65,7 @@ set(CIRCE_HEADERS
         circe/scene/material.h
         circe/gl/scene/mesh_utils.h
         circe/scene/model.h
+        circe/scene/shapes.h
         circe/gl/scene/quad.h
         circe/gl/scene/scene.h
         circe/gl/scene/scene_mesh.h
@@ -121,6 +123,7 @@ set(CIRCE_SOURCES
         circe/gl/scene/bvh.cpp
         circe/gl/scene/mesh_utils.cpp
         circe/scene/model.cpp
+        circe/scene/shapes.cpp
         circe/gl/scene/quad.cpp
         circe/gl/scene/scene_mesh.cpp
         circe/gl/scene/scene_model.cpp

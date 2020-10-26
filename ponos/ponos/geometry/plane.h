@@ -49,15 +49,22 @@ public:
   }
   /// \param invert_normal
   /// \return a plane with offset = 0 and normal(0,0,1)
-  static Plane XY(bool invert_normal = false) { return {normal3(0, 0, 1), 0}; }
+  static Plane XY(bool invert_normal = false) {
+    return {normal3(0, 0, invert_normal ? -1 : 1), 0};
+  }
   /// \param invert_normal
   /// \return a plane with offset = 0 and normal(0,1,0)
-  static Plane XZ(bool invert_normal = false) { return {normal3(0, 1, 0), 0}; }
+  static Plane XZ(bool invert_normal = false) {
+    return {normal3(0, invert_normal ? -1 : 1, 0), 0};
+  }
   /// \param invert_normal
   /// \return a plane with offset = 0 and normal(1,0,0)
-  static Plane YZ(bool invert_normal = false) { return {normal3(1, 0, 0), 0}; }
+  static Plane YZ(bool invert_normal = false) {
+    return {
+        normal3(invert_normal ? -1 : 1, 0, 0), 0};
+  }
 
-  point3 closestPoint(const point3 &p) const {
+  [[nodiscard]] point3 closestPoint(const point3 &p) const {
     float t = (dot(vec3(normal), vec3(p)) - offset) / vec3(normal).length2();
     return p - t * vec3(normal);
   }
@@ -65,13 +72,13 @@ public:
    * \param v
    * \returns projected **v**
    */
-  vec3 project(const vec3 &v) { return ponos::project(v, normal); }
+  [[nodiscard]] vec3 project(const vec3 &v) const { return ponos::project(v, normal); }
   /** \brief  reflects **v** fron plane
    * \param v
    * \returns reflected **v**
    */
-  vec3 reflect(const vec3 &v) { return ponos::reflect(v, normal); }
-  bool onNormalSide(const point3 &p) const {
+  [[nodiscard]] vec3 reflect(const vec3 &v) const { return ponos::reflect(v, normal); }
+  [[nodiscard]] bool onNormalSide(const point3 &p) const {
     return dot(vec3(normal), p - closestPoint(p)) >= 0;
   }
 
@@ -106,28 +113,28 @@ public:
    * \param v
    * \returns projected **v**
    */
-  vec2 project(const vec2 &v) { return ponos::project(v, normal); }
+  [[nodiscard]] vec2 project(const vec2 &v) const { return ponos::project(v, normal); }
   /** \brief  reflects **v** fron plane
    * \param v
    * \returns reflected **v**
    */
-  vec2 reflect(const vec2 &v) { return ponos::reflect(v, normal); }
-  point2 closestPoint(const point2 &p) const override {
+  [[nodiscard]] vec2 reflect(const vec2 &v) const { return ponos::reflect(v, normal); }
+  [[nodiscard]] point2 closestPoint(const point2 &p) const override {
     real_t t = (dot(vec2(normal), vec2(p)) - offset) / vec2(normal).length2();
     return p - t * vec2(normal);
   }
-  normal2 closestNormal(const point2 &p) const override {
+  [[nodiscard]] normal2 closestNormal(const point2 &p) const override {
     if (dot(vec2(normal), vec2(p)) < 0.f)
       return -normal;
     return normal;
   }
-  bbox2 boundingBox() const override { return bbox2(); }
+  [[nodiscard]] bbox2 boundingBox() const override { return bbox2(); }
   void closestIntersection(const Ray2 &r,
                            CurveRayIntersection *i) const override {
     UNUSED_VARIABLE(r);
     UNUSED_VARIABLE(i);
   }
-  double signedDistance(const point2 &p) const override {
+  [[nodiscard]] double signedDistance(const point2 &p) const override {
     return (dot(vec2(p), vec2(normal)) - offset) / vec2(normal).length();
   }
 
