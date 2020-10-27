@@ -33,11 +33,11 @@ Model Shapes::icosphere(const ponos::point3 &center, real_t radius, u32 division
   ponos::AoS aos;
   aos.pushField<ponos::point3>("position");
   u64 struct_size = 3;
-  if ((options & shape_options::normals) == shape_options::normals) {
+  if ((options & shape_options::normal) == shape_options::normal) {
     aos.pushField<ponos::vec3>("normal");
     struct_size += 3;
   }
-  if ((options & shape_options::uvs) == shape_options::uvs) {
+  if ((options & shape_options::uv) == shape_options::uv) {
     aos.pushField<ponos::point2>("uv");
     struct_size += 2;
   }
@@ -103,11 +103,11 @@ Model Shapes::icosphere(const ponos::point3 &center, real_t radius, u32 division
     // project vertex to unit sphere
     (*reinterpret_cast<ponos::vec3 *>(vertex_data.data() + struct_size * i)).normalize();
     // compute normal
-    if ((options & shape_options::normals) == shape_options::normals)
+    if ((options & shape_options::normal) == shape_options::normal)
       (*reinterpret_cast<ponos::vec3 *>(vertex_data.data() + struct_size * i + 3)) =
           (*reinterpret_cast<ponos::vec3 *>(vertex_data.data() + struct_size * i));
     // compute uv
-    if ((options & shape_options::uvs) == shape_options::uvs) {
+    if ((options & shape_options::uv) == shape_options::uv) {
       (*reinterpret_cast<ponos::point2 *>(vertex_data.data() + struct_size * i + 6)).x = std::atan2(
           (*reinterpret_cast<ponos::vec3 *>(vertex_data.data() + struct_size * i)).y,
           (*reinterpret_cast<ponos::vec3 *>(vertex_data.data() + struct_size * i)).x);
@@ -122,7 +122,7 @@ Model Shapes::icosphere(const ponos::point3 &center, real_t radius, u32 division
   aos = std::move(vertex_data);
   Model model;
   model = std::move(aos);
-  model = std::move(index_data);
+  model = index_data;
   return model;
 #undef STORE_POSITION
 #undef ADD_FACE
@@ -137,17 +137,29 @@ Model Shapes::plane(const ponos::Plane &plane,
                     const ponos::vec3 &extension,
                     u32 divisions,
                     shape_options options) {
+  if ((options & shape_options::tangent_space) == shape_options::tangent_space)
+    options = options | shape_options::tangent | shape_options::bitangent;
+  const bool generate_normals = (options & shape_options::normal) == shape_options::normal;
+  bool generate_uvs = (options & shape_options::uv) == shape_options::uv;
+  const bool generate_tangents = (options & shape_options::tangent) == shape_options::tangent;
+  const bool generate_bitangents = (options & shape_options::bitangent) == shape_options::bitangent;
   if (std::fabs(dot(plane.normal, extension)) > 1e-8)
     spdlog::warn("Extension vector must be normal to plane normal vector.");
+  // if the tangent space is needed, uv must be generated as well
+  if (!generate_uvs && (generate_tangents || generate_bitangents)) {
+    spdlog::warn("UV will be generated since tangent space is being generated.");
+    generate_uvs = true;
+  }
   ponos::AoS aos;
-  u64 position_id = aos.pushField<ponos::point3>("position"), normal_id = 0, uv_id = 0;
-  if ((options & shape_options::normals) == shape_options::normals)
-    normal_id = aos.pushField<ponos::vec3>("normal");
-  if ((options & shape_options::uvs) == shape_options::uvs)
-    uv_id = aos.pushField<ponos::vec3>("uvs");
+  const u64 position_id = aos.pushField<ponos::point3>("position");
+  const u64 normal_id = generate_normals ? aos.pushField<ponos::vec3>("normal") : 0;
+  const u64 uv_id = generate_uvs ? aos.pushField<ponos::point2>("uvs") : 0;
+  const u64 tangent_id = generate_tangents ? aos.pushField<ponos::vec3>("tangents") : 0;
+  const u64 bitangent_id = generate_bitangents ? aos.pushField<ponos::vec3>("bitangents") : 0;
+
   aos.resize((divisions + 1) * (divisions + 1));
 
-  f32 half_size = extension.length() / 2;
+  auto half_size = extension.length() / 2;
   f32 div_rec = 1.0 / divisions;
   f32 step = (half_size * 2) * div_rec;
   auto dx = normalize(extension);
@@ -158,10 +170,10 @@ Model Shapes::plane(const ponos::Plane &plane,
     for (u32 y = 0; y <= divisions; ++y) {
       auto p = origin + dx * step * static_cast<float>(x) + dy * step * static_cast<float>(y);
       aos.valueAt<ponos::point3>(position_id, vertex_index) = p;
-      if ((options & shape_options::normals) == shape_options::normals)
+      if (generate_normals)
         aos.valueAt<ponos::normal3>(normal_id, vertex_index) = plane.normal;
-      if ((options & shape_options::uvs) == shape_options::uvs)
-        aos.valueAt<ponos::point2>(normal_id, vertex_index) = {x * div_rec, y * div_rec};
+      if (generate_uvs)
+        aos.valueAt<ponos::point2>(uv_id, vertex_index) = {x * div_rec, y * div_rec};
       vertex_index++;
     }
   u64 w = divisions + 1;
@@ -175,9 +187,46 @@ Model Shapes::plane(const ponos::Plane &plane,
       index_data.emplace_back((i + 1) * w + j);
       index_data.emplace_back((i + 1) * w + j + 1);
     }
+  // compute tangent space
+  if (generate_tangents || generate_bitangents) {
+    auto face_count = index_data.size() / 3;
+    for (u64 i = 0; i < face_count; ++i) {
+      auto edge_a = aos.valueAt<ponos::point3>(position_id, index_data[i * 3 + 1])
+          - aos.valueAt<ponos::point3>(position_id, index_data[i * 3 + 0]);
+      auto edge_b = aos.valueAt<ponos::point3>(position_id, index_data[i * 3 + 2])
+          - aos.valueAt<ponos::point3>(position_id, index_data[i * 3 + 0]);
+      auto delta_uv_a = aos.valueAt<ponos::point2>(uv_id, index_data[i * 3 + 1])
+          - aos.valueAt<ponos::point2>(uv_id, index_data[i * 3 + 0]);
+      auto delta_uv_b = aos.valueAt<ponos::point2>(uv_id, index_data[i * 3 + 2])
+          - aos.valueAt<ponos::point2>(uv_id, index_data[i * 3 + 0]);
+      f32 f = 1.0f / (delta_uv_a.x * delta_uv_b.y - delta_uv_b.x * delta_uv_a.y);
+      if (generate_tangents) {
+        ponos::vec3 tangent(
+            f * (delta_uv_b.y * edge_a.x - delta_uv_a.y * edge_b.x),
+            f * (delta_uv_b.y * edge_a.y - delta_uv_a.y * edge_b.y),
+            f * (delta_uv_b.y * edge_a.z - delta_uv_a.y * edge_b.z)
+        );
+        tangent.normalize();
+        aos.valueAt<ponos::vec3>(tangent_id, index_data[i * 3 + 0]) = tangent;
+        aos.valueAt<ponos::vec3>(tangent_id, index_data[i * 3 + 1]) = tangent;
+        aos.valueAt<ponos::vec3>(tangent_id, index_data[i * 3 + 2]) = tangent;
+      }
+      if (generate_bitangents) {
+        ponos::vec3 bitangent(
+            f * (-delta_uv_b.x * edge_a.x - delta_uv_a.x * edge_b.x),
+            f * (-delta_uv_b.x * edge_a.y - delta_uv_a.x * edge_b.y),
+            f * (-delta_uv_b.x * edge_a.z - delta_uv_a.x * edge_b.z)
+        );
+        bitangent.normalize();
+        aos.valueAt<ponos::vec3>(bitangent_id, index_data[i * 3 + 0]) = bitangent;
+        aos.valueAt<ponos::vec3>(bitangent_id, index_data[i * 3 + 1]) = bitangent;
+        aos.valueAt<ponos::vec3>(bitangent_id, index_data[i * 3 + 2]) = bitangent;
+      }
+    }
+  }
   Model model;
   model = std::move(aos);
-  model = std::move(index_data);
+  model = index_data;
   return model;
 #undef ADD_FACE
 }

@@ -32,15 +32,15 @@
 #include <circe/common/bitmask_operators.h>
 
 namespace circe {
-
+/// Shape's mesh attributes and configurations
 enum class shape_options {
-  none = 0x00,
-  normals = 0x01,
-  uvs = 0x02,
-//   = 0x4,
-//   = 0x8,
-//   = 0x10,
-//   = 0x20,
+  none = 0x00, //!< the mesh contains only positions
+  normal = 0x01, //!< generate vertex normals
+  uv = 0x02, //!< generate vertex uv coordinates
+  tangent_space = 0x4, //!< generate vertex tangent space (stores tangents and bitangents)
+  tangent = 0x8, //!< generate vertex tangent space (stores tangents)
+  bitangent = 0x10, //!< generate vertex tangent space (stores bitangents)
+  unique_positions = 0x20,  //!< vertex attributes are averaged to occupy a single index in the mesh
 };
 CIRCE_ENABLE_BITMASK_OPERATORS(shape_options);
 

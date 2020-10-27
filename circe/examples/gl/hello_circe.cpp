@@ -101,11 +101,11 @@ public:
 
     normal_map = circe::gl::Texture::fromFile(assets_path + "brickwall.jpg");
     /// load cartesian plane
-    cartesian_plane = circe::Shapes::plane(ponos::Plane::XZ(),
+    cartesian_plane = circe::Shapes::plane(ponos::Plane::XY(),
                                            ponos::point3(),
                                            ponos::vec3(100, 0, 0),
                                            20,
-                                           circe::shape_options::uvs | circe::shape_options::normals);
+                                           circe::shape_options::tangent_space | circe::shape_options::normal);
     if (!cartesian_plane.program.link(shaders_path, "scene_object"))
       spdlog::error("Failed to load model shader");
     /// load mesh
