@@ -64,11 +64,11 @@ public:
   //                             METHODS
   // ***********************************************************************
   template<typename T>
-  ponos::AoS::FieldAccessor<T> attributeAccessor(const std::string &attribute_name) {
+  ponos::AoSFieldAccessor<T> attributeAccessor(const std::string &attribute_name) {
     return data_.field<T>(attribute_name);
   }
   template<typename T>
-  ponos::AoS::FieldAccessor<T> attributeAccessor(u64 attribute_index) {
+  ponos::AoSFieldAccessor<T> attributeAccessor(u64 attribute_index) {
     return data_.field<T>(attribute_index);
   }
   template<typename T>

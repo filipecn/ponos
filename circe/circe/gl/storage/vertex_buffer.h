@@ -174,7 +174,6 @@ public:
   Attributes attributes; //!< attribute description
 
 private:
-
   u64 vertex_count_{0};
   GLuint binding_index_{0};
 };
