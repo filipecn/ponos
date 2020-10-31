@@ -45,7 +45,7 @@ set(HERMES_SOURCES
         hermes/storage/cuda_texture_kernels.cu
         )
 
-# find_package(CUDA REQUIRED)
+find_package(CUDA REQUIRED)
 
 set(CMAKE_CUDA_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
