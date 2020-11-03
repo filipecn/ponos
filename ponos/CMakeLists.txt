@@ -58,6 +58,7 @@ set(PONOS_HEADERS
         ponos/geometry/bbox.h
         ponos/geometry/ellipse.h
         ponos/geometry/frustum.h
+		ponos/numeric/differential_operators.h
         ponos/numeric/interpolation.h
         ponos/numeric/fd_matrix.h
         ponos/geometry/interval.h

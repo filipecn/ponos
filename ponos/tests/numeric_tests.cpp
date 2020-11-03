@@ -742,3 +742,35 @@ TEST_CASE("FDMatrix", "[numeric][fdmatrix]") {
     }
   }
 }
+
+TEST_CASE("DiffOps") {
+  SECTION("2D") {
+    SECTION("plane") {
+      Grid2<f32> field({100, 100}, {0.1, 0.1});
+      field = 10;
+      auto grad = DiffOps::grad<f32>(field.constAccessor());
+      REQUIRE(grad.resolution() == ponos::size2(100, 100));
+      REQUIRE(grad.spacing() == ponos::vec2(0.1, 0.1));
+      REQUIRE(grad.origin() == ponos::point2(0, 0));
+      auto acc = grad.accessor();
+      for (int i = 0; i < 100000; ++i) {
+        ponos::point2 wp((rand() % 100) * 0.1, (rand() % 100) * 0.1);
+        auto g = acc(wp);
+        REQUIRE(ponos::Check::is_zero(g.x));
+        REQUIRE(ponos::Check::is_zero(g.y));
+      }
+    }//
+    SECTION("x2 gradient") {
+      Grid2<f32> field({100, 100}, {0.1, 0.1});
+      field = [](const ponos::point2 &p) -> f32 { return p.x * p.x + p.y * p.y; };
+      auto grad = DiffOps::grad(field.constAccessor());
+      auto acc = grad.accessor();
+      for (int i = 0; i < 100000; ++i) {
+        ponos::point2 wp((rand() % 98) * 0.1, (rand() % 98) * 0.1);
+        auto g = acc(wp);
+        REQUIRE(ponos::Check::is_equal(g.x, 2.f, 0.01f));
+        REQUIRE(ponos::Check::is_equal(g.y, 2.f, 0.01f));
+      }
+    }//
+  }//
+}

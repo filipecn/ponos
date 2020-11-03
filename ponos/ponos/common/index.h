@@ -98,16 +98,16 @@ public:
   Index2<T> plus(T _i, T _j) const { return Index2<T>(i + _i, j + _j); }
   /// Generates a copy with ``i`` decremented by ``1``
   /// \return Index2<T> resulting index coordinates (``i-1``, ``j``)
-  Index2<T> left() const { return Index2<T>(i - 1, j); }
+  Index2<T> left(T d = T(1)) const { return Index2<T>(i - d, j); }
   /// Generates a copy with ``i`` incremented by ``1``
   /// \return Index2<T> resulting index coordinates (``i+1``, ``j``)
-  Index2<T> right() const { return Index2<T>(i + 1, j); }
+  Index2<T> right(T d = T(1)) const { return Index2<T>(i + d, j); }
   /// Generates a copy with ``j`` decremented by ``1``
   /// \return Index2<T> resulting index coordinates (``i``, ``j-1``)
-  Index2<T> down() const { return Index2<T>(i, j - 1); }
+  Index2<T> down(T d = T(1)) const { return Index2<T>(i, j - d); }
   /// Generates a copy with ``j`` incremented by ``1``
   /// \return Index2<T> resulting index coordinates (``i``, ``j+1``)
-  Index2<T> up() const { return Index2<T>(i, j + 1); }
+  Index2<T> up(T d = T(1)) const { return Index2<T>(i, j + d); }
   /// Clamps to the inclusive range ``[0, size]``
   /// \param s **[in]** upper bound
   void clampTo(const size2 &s) {
@@ -134,19 +134,19 @@ Index2<T> operator-(const Index2<T> &a, const Index2<T> &b) {
   return Index2<T>(a.i - b.i, a.j - b.j);
 }
 template<typename T, typename U>
-Index2<T> operator+(const Index2<T>& a, const Size2<U>& b) {
+Index2<T> operator+(const Index2<T> &a, const Size2<U> &b) {
   return Index2<T>(a.i + b.width, a.j + b.height);
 }
 template<typename U, typename T>
-Index2<T> operator+(const Size2<U>& b, const Index2<T>& a) {
+Index2<T> operator+(const Size2<U> &b, const Index2<T> &a) {
   return Index2<T>(a.i + b.width, a.j + b.height);
 }
 template<typename T, typename U>
-Index2<T> operator-(const Index2<T>& a, const Size2<U>& b) {
+Index2<T> operator-(const Index2<T> &a, const Size2<U> &b) {
   return Index2<T>(a.i - b.width, a.j - b.height);
 }
 template<typename U, typename T>
-Index2<T> operator-(const Size2<U>& b, const Index2<T>& a) {
+Index2<T> operator-(const Size2<U> &b, const Index2<T> &a) {
   return Index2<T>(b.width - a.i, b.height - a.j);
 }
 /// \brief Computes the manhattan distance between two indices
@@ -307,19 +307,19 @@ Index3<T> operator-(const Index3<T> &a, const Index3<T> &b) {
   return Index3<T>(a.i - b.i, a.j - b.j, a.k - b.k);
 }
 template<typename T, typename U>
-Index3<T> operator+(const Index3<T>& a, const Size3<U>& b) {
+Index3<T> operator+(const Index3<T> &a, const Size3<U> &b) {
   return Index3<T>(a.i + b.width, a.j + b.height, a.k + b.depth);
 }
 template<typename U, typename T>
-Index3<T> operator+(const Size3<U>& b, const Index3<T>& a) {
+Index3<T> operator+(const Size3<U> &b, const Index3<T> &a) {
   return Index3<T>(a.i + b.width, a.j + b.height, a.k + b.depth);
 }
 template<typename T, typename U>
-Index3<T> operator-(const Index3<T>& a, const Size3<U>& b) {
+Index3<T> operator-(const Index3<T> &a, const Size3<U> &b) {
   return Index3<T>(a.i - b.width, a.j - b.height, a.k - b.depth);
 }
 template<typename U, typename T>
-Index3<T> operator-(const Size3<U>& b, const Index3<T>& a) {
+Index3<T> operator-(const Size3<U> &b, const Index3<T> &a) {
   return Index3<T>(b.width - a.i, b.height - a.j, b.depth - a.k);
 }
 // ***********************************************************************
