@@ -61,6 +61,7 @@ set(PONOS_HEADERS
 		ponos/numeric/differential_operators.h
         ponos/numeric/interpolation.h
         ponos/numeric/fd_matrix.h
+		ponos/numeric/grid_interpolator.h
         ponos/geometry/interval.h
         ponos/geometry/interval.inl
         ponos/geometry/line.h

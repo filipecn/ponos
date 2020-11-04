@@ -96,17 +96,21 @@ public:
   /// \param _j **[in]** value incremented to ``j``
   /// \return Index2<T> resulting index coordinates
   Index2<T> plus(T _i, T _j) const { return Index2<T>(i + _i, j + _j); }
-  /// Generates a copy with ``i`` decremented by ``1``
-  /// \return Index2<T> resulting index coordinates (``i-1``, ``j``)
+  /// Generates a copy with ``i`` decremented by ``d``
+  /// \param d **[in | default = 1]** decrement value
+  /// \return Index2<T> resulting index coordinates (``i-d``, ``j``)
   Index2<T> left(T d = T(1)) const { return Index2<T>(i - d, j); }
-  /// Generates a copy with ``i`` incremented by ``1``
-  /// \return Index2<T> resulting index coordinates (``i+1``, ``j``)
+  /// Generates a copy with ``i`` incremented by ``d``
+  /// \param d **[in | default = 1]** increment value
+  /// \return Index2<T> resulting index coordinates (``i+d``, ``j``)
   Index2<T> right(T d = T(1)) const { return Index2<T>(i + d, j); }
-  /// Generates a copy with ``j`` decremented by ``1``
-  /// \return Index2<T> resulting index coordinates (``i``, ``j-1``)
+  /// Generates a copy with ``j`` decremented by ``d``
+  /// \param d **[in | default = 1]** decrement value
+  /// \return Index2<T> resulting index coordinates (``i``, ``j-d``)
   Index2<T> down(T d = T(1)) const { return Index2<T>(i, j - d); }
-  /// Generates a copy with ``j`` incremented by ``1``
-  /// \return Index2<T> resulting index coordinates (``i``, ``j+1``)
+  /// Generates a copy with ``j`` incremented by ``d``
+  /// \param d **[in | default = 1]** increment value
+  /// \return Index2<T> resulting index coordinates (``i``, ``j+d``)
   Index2<T> up(T d = T(1)) const { return Index2<T>(i, j + d); }
   /// Clamps to the inclusive range ``[0, size]``
   /// \param s **[in]** upper bound

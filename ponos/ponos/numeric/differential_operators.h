@@ -19,7 +19,7 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 ///
-/// \file fd_matrix.h
+/// \file differential_operators.h
 /// \author FilipeCN (filipedecn@gmail.com)
 /// \date 2020-11-03
 ///

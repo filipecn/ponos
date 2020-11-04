@@ -66,6 +66,7 @@
 #include <ponos/log/debug.h>
 #include <ponos/numeric/differential_operators.h>
 #include <ponos/numeric/fd_matrix.h>
+#include <ponos/numeric/grid_interpolator.h>
 #include <ponos/numeric/grid.h>
 #include <ponos/numeric/interpolation.h>
 #include <ponos/numeric/numeric.h>
