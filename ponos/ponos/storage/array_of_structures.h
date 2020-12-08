@@ -289,6 +289,12 @@ public:
         + struct_descriptor.fields_[field_id].offset);
   }
 
+  template<typename T>
+  const T &valueAt(u64 field_id, u64 i) const {
+    return *reinterpret_cast<const T *>(data_ + i * struct_descriptor.struct_size_
+        + struct_descriptor.fields_[field_id].offset);
+  }
+
   friend std::ostream &operator<<(std::ostream &o, const AoS &aos) {
 #define PRINT_FIELD_VALUE(T, Type) \
         if (f.type == DataType::Type) { \
