@@ -60,23 +60,40 @@ using byte = uint8_t;
 
 namespace ponos {
 
-enum class DataType {
-  I8,
-  I16,
-  I32,
-  I64,
-  U8,
-  U16,
-  U32,
-  U64,
-  F16,
-  F32,
-  F64,
-  CUSTOM
+enum class DataType : u8 {
+  I8 = 0,
+  I16 = 1,
+  I32 = 2,
+  I64 = 3,
+  U8 = 4,
+  U16 = 5,
+  U32 = 6,
+  U64 = 7,
+  F16 = 8,
+  F32 = 9,
+  F64 = 10,
+  CUSTOM = 11
 };
 
 class DataTypes {
 public:
+  static DataType typeFrom(u8 index) {
+#define MATCH_TYPE(Type) \
+  if((u8)DataType::Type == index) \
+    return DataType::Type;
+    MATCH_TYPE(I8)
+    MATCH_TYPE(I16)
+    MATCH_TYPE(I32)
+    MATCH_TYPE(I64)
+    MATCH_TYPE(U8)
+    MATCH_TYPE(U16)
+    MATCH_TYPE(U32)
+    MATCH_TYPE(U64)
+    MATCH_TYPE(F32)
+    MATCH_TYPE(F64)
+    return DataType::CUSTOM;
+#undef MATCH_TYPE
+  }
   template<typename T>
   static DataType typeFrom() {
 #define MATCH_TYPE(Type, R) \

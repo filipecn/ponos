@@ -29,11 +29,13 @@
 #define PONOS_PONOS_PONOS_STORAGE_ARRAY_OF_STRUCTURES_H
 
 #include <ponos/common/defs.h>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <spdlog/spdlog.h>
 #include <ponos/geometry/math_element.h>
+#include<iostream>
 
 namespace ponos {
 
@@ -118,12 +120,48 @@ public:
     o << "fields: ";
     int i = 0;
     for (const auto &f : sd.fields_) {
-      o << "field #" << i++ << " (" << f.name << " ): ";
+      o << "field #" << i++ << " (" << f.name << " ):\n";
       o << "\tbase data type: " << DataTypes::typeName(f.type) << "\n";
       o << "\tbase data size in bytes: " << f.size << "\n";
       o << "\tcomponent count: " << f.component_count << "\n";
     }
     return o;
+  }
+  friend std::ofstream &operator<<(std::ofstream &o, const StructDescriptor &sd) {
+    o.write(reinterpret_cast<const char *>(&sd.struct_size_), sizeof(u64));
+    u64 field_count = sd.fields_.size();
+    o.write(reinterpret_cast<const char *>(&field_count), sizeof(u64));
+    for (const auto &f : sd.fields_) {
+      o.write(reinterpret_cast<const char *>(&f.size), sizeof(StructDescriptor::Field::size));
+      o.write(reinterpret_cast<const char *>(&f.component_count), sizeof(StructDescriptor::Field::component_count));
+      o.write(reinterpret_cast<const char *>(&f.offset), sizeof(StructDescriptor::Field::offset));
+      o.write(reinterpret_cast<const char *>(&f.type), sizeof(StructDescriptor::Field::type));
+      u64 name_size = f.name.size();
+      o.write(reinterpret_cast<const char *>(&name_size), sizeof(u64));
+      auto name = f.name.c_str();
+      for (int i  =0; i < name_size; ++i)
+          o.write(reinterpret_cast<const char *>(&name[i]), sizeof(char));
+    }
+    return o;
+  }
+
+  friend std::ifstream &operator>>(std::ifstream &i, StructDescriptor &sd) {
+    i.read(reinterpret_cast<char *>(&sd.struct_size_), sizeof(u64));
+    u64 field_count = 0;
+    i.read(reinterpret_cast<char *>(&field_count), sizeof(u64));
+    for (u64 f = 0; f < field_count; ++f) {
+      StructDescriptor::Field field;
+      i.read(reinterpret_cast<char *>(&field.size), sizeof(StructDescriptor::Field::size));
+      i.read(reinterpret_cast<char *>(&field.component_count), sizeof(StructDescriptor::Field::component_count));
+      i.read(reinterpret_cast<char *>(&field.offset), sizeof(StructDescriptor::Field::offset));
+      i.read(reinterpret_cast<char *>(&field.type), sizeof(StructDescriptor::Field::type));
+      u64 name_size = 0;
+      i.read(reinterpret_cast<char *>(&name_size), sizeof(u64));
+      field.name.resize(name_size);
+      i.read(&field.name[0], name_size);
+      sd.fields_.emplace_back(field);
+    }
+    return i;
   }
 
 private:
@@ -152,6 +190,23 @@ private:
   u64 offset_{0};
 };
 
+template<typename T>
+class AoSFieldConstAccessor {
+public:
+  AoSFieldConstAccessor(const u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
+  /// \param data
+  void setDataPtr(u8 *data) { data_ = data; }
+  /// \param i
+  /// \return
+  T &operator[](u64 i) {
+    return *reinterpret_cast<T *>(data_ + i * stride_ + offset_);
+  }
+
+private:
+  const u8 *data_{nullptr};
+  u64 stride_{0};
+  u64 offset_{0};
+};
 /// Accesses a memory block as an array of structures
 class AoSConstAccessor {
 public:
@@ -267,6 +322,17 @@ public:
     return AoSFieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[it->second].offset);
   }
   template<typename T>
+  AoSFieldConstAccessor<T> field(const std::string &name) const {
+    auto it = struct_descriptor.field_id_map_.find(name);
+    if (it == struct_descriptor.field_id_map_.end()) {
+      spdlog::error("Field {} not found.", name);
+      return AoSFieldConstAccessor<T>(nullptr, 0, 0);
+    }
+    return AoSFieldConstAccessor<T>(data_,
+                                    struct_descriptor.struct_size_,
+                                    struct_descriptor.fields_[it->second].offset);
+  }
+  template<typename T>
   u64 pushField(const std::string &name) {
     return struct_descriptor.pushField<T>(name);
   }
@@ -332,6 +398,20 @@ public:
     }
     return o;
 #undef PRINT_FIELD_VALUE
+  }
+  friend std::ofstream &operator<<(std::ofstream &o, const AoS &aos) {
+    o.write(reinterpret_cast<const char *>(&aos.size_), sizeof(u64));
+    o << aos.struct_descriptor;
+    o.write(reinterpret_cast<const char *>(aos.data_), aos.memorySizeInBytes());
+    return o;
+  }
+  friend std::ifstream &operator>>(std::ifstream &i, AoS &aos) {
+    aos = AoS();
+    i.read(reinterpret_cast<char *>(&aos.size_), sizeof(u64));
+    i >> aos.struct_descriptor;
+    aos.data_ = new u8[aos.memorySizeInBytes()];
+    i.read(reinterpret_cast<char *>(aos.data_), aos.memorySizeInBytes());
+    return i;
   }
 
 private:

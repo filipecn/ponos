@@ -327,4 +327,35 @@ TEST_CASE("AOS", "[storage][aos]") {
   }//
   SECTION("Field Accessors") {
   }//
+  SECTION("File") {
+    AoS aos;
+    aos.pushField<vec3>("vec3");
+    aos.pushField<f32>("f32");
+    aos.pushField<int>("int");
+    aos.resize(4);
+    auto acc = aos.accessor();
+    for (int i = 0; i < 4; ++i) {
+      acc.valueAt<vec3>(0, i) = {1.f + i, 2.f + i, 3.f + i};
+      acc.valueAt<f32>(1, i) = 1.f * i;
+      acc.valueAt<int>(2, i) = i + 1;
+    }
+    std::ofstream file_out("aos_data", std::ios::binary);
+    file_out << aos;
+    file_out.close();
+    AoS aos2;
+    std::ifstream file_in("aos_data", std::ios::binary | std::ios::in);
+    file_in >> aos2;
+    file_in.close();
+    REQUIRE(aos.size() == aos2.size());
+    REQUIRE(aos.memorySizeInBytes() == aos2.memorySizeInBytes());
+    REQUIRE(aos.stride() == aos2.stride());
+    auto acc2 = aos2.accessor();
+    for (int i = 0; i < 4; ++i) {
+      REQUIRE(acc2.valueAt<vec3>(0, i).x == Approx(acc.valueAt<vec3>(0,i).x));
+      REQUIRE(acc2.valueAt<vec3>(0, i).y == Approx(acc.valueAt<vec3>(0,i).y));
+      REQUIRE(acc2.valueAt<vec3>(0, i).z == Approx(acc.valueAt<vec3>(0,i).z));
+      REQUIRE(acc2.valueAt<f32>(1, i) == Approx(acc.valueAt<f32>(1,i)));
+      REQUIRE(acc2.valueAt<int>(2, i) == acc.valueAt<int>(2,i));
+    }
+  }
 }
