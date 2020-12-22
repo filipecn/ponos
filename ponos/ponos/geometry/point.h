@@ -129,7 +129,7 @@ template<typename T> class Point3 : public MathElement<T, 3u> {
                 "Size2 must hold an float type!");
 
 public:
-  Point3() {}
+  Point3() = default;
   explicit Point3(real_t v) { x = y = z = v; }
   Point3(real_t _x, real_t _y, real_t _z) : x(_x), y(_y), z(_z) {}
   explicit Point3(const Vector3<T> &v) : x(v.x), y(v.y), z(v.z) {}

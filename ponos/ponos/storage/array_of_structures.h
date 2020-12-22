@@ -112,6 +112,13 @@ public:
   u64 sizeOf(u64 field_id) const;
   inline u64 sizeInBytes() const { return struct_size_; }
   inline const std::vector<Field> &fields() const { return fields_; }
+  bool contains(const std::string &field_name) const { return field_id_map_.count(field_name); }
+  u64 fieldId(const std::string &field_name) const {
+    auto it = field_id_map_.find(field_name);
+    if (it != field_id_map_.end())
+      return it->second;
+    return 0;
+  }
   /// \param o
   /// \param aos
   /// \return
@@ -139,12 +146,11 @@ public:
       u64 name_size = f.name.size();
       o.write(reinterpret_cast<const char *>(&name_size), sizeof(u64));
       auto name = f.name.c_str();
-      for (int i  =0; i < name_size; ++i)
-          o.write(reinterpret_cast<const char *>(&name[i]), sizeof(char));
+      for (int i = 0; i < name_size; ++i)
+        o.write(reinterpret_cast<const char *>(&name[i]), sizeof(char));
     }
     return o;
   }
-
   friend std::ifstream &operator>>(std::ifstream &i, StructDescriptor &sd) {
     i.read(reinterpret_cast<char *>(&sd.struct_size_), sizeof(u64));
     u64 field_count = 0;
@@ -159,6 +165,7 @@ public:
       i.read(reinterpret_cast<char *>(&name_size), sizeof(u64));
       field.name.resize(name_size);
       i.read(&field.name[0], name_size);
+      sd.field_id_map_[field.name] = sd.fields_.size();
       sd.fields_.emplace_back(field);
     }
     return i;
@@ -195,11 +202,11 @@ class AoSFieldConstAccessor {
 public:
   AoSFieldConstAccessor(const u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
   /// \param data
-  void setDataPtr(u8 *data) { data_ = data; }
+  void setDataPtr(const u8 *data) { data_ = data; }
   /// \param i
   /// \return
-  T &operator[](u64 i) {
-    return *reinterpret_cast<T *>(data_ + i * stride_ + offset_);
+  const T &operator[](u64 i) const {
+    return *reinterpret_cast<const T *>(data_ + i * stride_ + offset_);
   }
 
 private:

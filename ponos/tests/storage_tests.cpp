@@ -351,11 +351,17 @@ TEST_CASE("AOS", "[storage][aos]") {
     REQUIRE(aos.stride() == aos2.stride());
     auto acc2 = aos2.accessor();
     for (int i = 0; i < 4; ++i) {
-      REQUIRE(acc2.valueAt<vec3>(0, i).x == Approx(acc.valueAt<vec3>(0,i).x));
-      REQUIRE(acc2.valueAt<vec3>(0, i).y == Approx(acc.valueAt<vec3>(0,i).y));
-      REQUIRE(acc2.valueAt<vec3>(0, i).z == Approx(acc.valueAt<vec3>(0,i).z));
-      REQUIRE(acc2.valueAt<f32>(1, i) == Approx(acc.valueAt<f32>(1,i)));
-      REQUIRE(acc2.valueAt<int>(2, i) == acc.valueAt<int>(2,i));
+      REQUIRE(acc2.valueAt<vec3>(0, i).x == Approx(acc.valueAt<vec3>(0, i).x));
+      REQUIRE(acc2.valueAt<vec3>(0, i).y == Approx(acc.valueAt<vec3>(0, i).y));
+      REQUIRE(acc2.valueAt<vec3>(0, i).z == Approx(acc.valueAt<vec3>(0, i).z));
+      REQUIRE(acc2.valueAt<f32>(1, i) == Approx(acc.valueAt<f32>(1, i)));
+      REQUIRE(acc2.valueAt<int>(2, i) == acc.valueAt<int>(2, i));
+    }
+    auto fields = aos.fields();
+    for (auto f : fields) {
+      REQUIRE(aos.structDescriptor().contains(f.name));
+      REQUIRE(aos2.structDescriptor().contains(f.name));
+      REQUIRE(aos.structDescriptor().fieldId(f.name) == aos2.structDescriptor().fieldId(f.name));
     }
   }
 }
