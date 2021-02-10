@@ -103,6 +103,27 @@ public:
     struct_size_ += d.size;
     return fields_.size() - 1;
   }
+  ///
+  /// \tparam T
+  /// \param data
+  /// \param field_id
+  /// \param i
+  /// \return
+  template<typename T>
+  T &valueAt(void *data, u64 field_id, u64 i) const {
+    return *reinterpret_cast<T *>( reinterpret_cast<u8 *>(data) + i * struct_size_ + fields_[field_id].offset);
+  }
+  ///
+  /// \tparam T
+  /// \param data
+  /// \param field_id
+  /// \param i
+  /// \return
+  template<typename T>
+  const T &valueAt(const void *data, u64 field_id, u64 i) const {
+    return *reinterpret_cast<const T *>( reinterpret_cast<const u8 *>(data) + i * struct_size_
+        + fields_[field_id].offset);
+  }
   /// \param field_id field push id
   /// \return field name
   inline const std::string &fieldName(u64 field_id) const { return fields_[field_id].name; }

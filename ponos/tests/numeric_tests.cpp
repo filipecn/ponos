@@ -6,7 +6,6 @@
 using namespace ponos;
 
 TEST_CASE("Interpolation", "[numeric][interpolation]") {
-
   SECTION("linear") {
     { // 1D
       float dx = 0.01;

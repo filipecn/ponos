@@ -64,7 +64,7 @@ public:
   ///\brief Constructor
   ///\param i **[in]** coordinate value for ``i``
   ///\param j **[in]** coordinate value for ``j``
-  explicit Index2(T i, T j) : i(i), j(j) {}
+  Index2(T i, T j) : i(i), j(j) {}
   /// \brief Constructor from a Size2 object
   /// - ``i`` receives ``size.with`` and ``j`` receives ``size.height``
   /// \tparam S size type

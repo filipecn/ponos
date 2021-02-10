@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Ponos'
-copyright = '2020, filipecn'
+copyright = '2021, filipecn'
 author = 'filipecn'
 
 # The full version, including alpha/beta/rc tags

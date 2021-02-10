@@ -69,6 +69,9 @@ endif (PONOS_HAS_PARENT)
 ##           documentation              ##
 ##########################################
 if(BUILD_DOCS)
+    # pip3 install sphinx
+    # pip3 install breathe
+    # pip3 install sphinx_rtd_theme
     # check if Doxygen is installed
     find_package(Doxygen)
     find_package(Sphinx)

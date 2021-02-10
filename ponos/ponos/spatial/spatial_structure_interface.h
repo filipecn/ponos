@@ -9,8 +9,7 @@ namespace ponos {
 
 /* interface
  * Defines an interface for spatial structures. Acceleration schemes for fast
- * spatial
- * queries and geometric objects arrangement.
+ * spatial queries and geometric objects arrangement.
  */
 template <typename ObjectType> class SpatialStructureInterface2D {
 public:
@@ -47,8 +46,7 @@ public:
 
 /* interface
  * Defines an interface for spatial structures. Acceleration schemes for fast
- * spatial
- * queries and geometric objects arrangement.
+ * spatial queries and geometric objects arrangement.
  */
 template <typename ObjectType> class SpatialStructureInterface {
 public:

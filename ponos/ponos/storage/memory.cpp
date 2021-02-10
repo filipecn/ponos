@@ -26,7 +26,7 @@
 
 namespace ponos {
 
-void *allocAligned(size_t size) {
+void *allocAligned(u64 size) {
 #ifdef _WIN32
   return _aligned_malloc(PONOS_CACHE_L1_LINE_SIZE, size);
 #elif defined(__APPLE__)
@@ -50,7 +50,7 @@ void freeAligned(void *ptr) {
 #endif
 }
 
-MemoryArena::MemoryArena(size_t bs) : blockSize(bs) {}
+MemoryArena::MemoryArena(u64 bs) : blockSize(bs) {}
 
 MemoryArena::~MemoryArena() {
   freeAligned(currentBlock);
@@ -60,13 +60,13 @@ MemoryArena::~MemoryArena() {
     freeAligned(block.second);
 }
 
-void *MemoryArena::alloc(size_t sz) {
+void *MemoryArena::alloc(u64 sz) {
   // round up sz to minimum machine alignment
-  sz = ((sz + 15) & (~15));
+  sz = ((sz + 15u) & (~15u));
   if (currentBlockPos + sz > currentAllocSize) {
     // add current block to usedBlocks list
     if (currentBlock) {
-      usedBlocks.push_back(std::make_pair(currentAllocSize, currentBlock));
+      usedBlocks.emplace_back(currentAllocSize, currentBlock);
       currentBlock = nullptr;
     }
     // get new block of memory for MemoryArena

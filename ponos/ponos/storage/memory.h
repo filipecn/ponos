@@ -39,19 +39,19 @@ namespace ponos {
 
 template <typename T> class IndexPointerInterface {
 public:
-  virtual T *get(size_t i) = 0;
+  virtual T *get(u64 i) = 0;
 };
 
 template <typename T> class IndexPointer {
 public:
   IndexPointer() : array(nullptr), i(0) {}
-  IndexPointer(size_t _i, IndexPointerInterface<T> *a) : array(a), i(_i) {}
+  IndexPointer(u64 _i, IndexPointerInterface<T> *a) : array(a), i(_i) {}
   T *operator->() { return array->get(i); }
-  size_t getIndex() { return i; }
+  u64 getIndex() { return i; }
 
 private:
   IndexPointerInterface<T> *array;
-  size_t i;
+  u64 i;
 };
 
 #ifndef PONOS_CACHE_L1_LINE_SIZE
@@ -64,7 +64,7 @@ private:
 /// Allocates cache-aligned memory blocks of **size** bytes.
 /// \param size bytes
 /// \returns pointer to allocated region.
-void *allocAligned(size_t size);
+void *allocAligned(u64 size);
 /// Frees aligned memory
 /// \param ptr raw pointer
 void freeAligned(void *ptr);
@@ -81,18 +81,18 @@ template <typename T> T *allocAligned(u32 count) {
 class MemoryArena {
 public:
   /// \param bs **[default = 256kB]** size of chunks allocated by MemoryArena
-  MemoryArena(size_t bs = 262144);
+  explicit MemoryArena(u64 bs = 262144);
   virtual ~MemoryArena();
   /// Allocates **sz** bytes
   /// \param sz number of bytes to be allocated
   /// \return void*
-  void *alloc(size_t sz);
+  void *alloc(u64 sz);
   /// Allocates memory for **count** objects of type **T**
   /// \tparam T object type
   /// \param count number of objects
   /// \param runConstructor true to run constructor of objects
   /// \return T* pointer to the first object in array
-  template <typename T> T *alloc(size_t count = 1, bool runConstructor = true) {
+  template <typename T> T *alloc(u64 count = 1, bool runConstructor = true) {
     T *ret = static_cast<T *>(alloc(count * sizeof(T)));
     if (runConstructor)
       for (u32 i = 0; i < count; i++)
@@ -103,12 +103,12 @@ public:
   void freeAll();
 
 private:
-  const size_t blockSize;      //!< size of chunks allocated by MemoryArena
-  size_t currentBlockPos = 0;  //!< offset of the first free location
-  size_t currentAllocSize = 0; //!< total size of the current block allocation
+  const u64 blockSize;      //!< size of chunks allocated by MemoryArena
+  u64 currentBlockPos = 0;  //!< offset of the first free location
+  u64 currentAllocSize = 0; //!< total size of the current block allocation
   uint8_t *currentBlock = nullptr; //!< pointer to the current block of memory
-  std::list<std::pair<size_t, uint8_t *>> usedBlocks; //!< fully used blocks
-  std::list<std::pair<size_t, uint8_t *>>
+  std::list<std::pair<u64, uint8_t *>> usedBlocks; //!< fully used blocks
+  std::list<std::pair<u64, uint8_t *>>
       availableBlocks; //!< allocated but not used blocks
 };
 

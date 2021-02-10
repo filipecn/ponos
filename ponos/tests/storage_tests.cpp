@@ -212,6 +212,36 @@ TEST_CASE("AOS", "[storage][aos]") {
     REQUIRE(sd.offsetOf("f32") == sizeof(vec3));
     REQUIRE(sd.offsetOf("int") == sizeof(vec3) + sizeof(f32));
     std::cerr << sd << std::endl;
+    { // valueAt
+      AoS aos;
+      aos.pushField<size2>("size2");
+      aos.pushField<i32>("i32");
+      aos.resize(5);
+
+      struct SD {
+        size2 s;
+        i32 i;
+      };
+      std::vector<SD> data(5);
+      for (int i = 0; i < 5; ++i) {
+        data[i].s = aos.valueAt<size2>(0, i) = {i * 3u, i * 7u};
+        data[i].i = aos.valueAt<i32>(1, i) = i;
+      }
+      for (int i = 0; i < 5; ++i) {
+        REQUIRE(aos.structDescriptor().valueAt<size2>(reinterpret_cast<const void *>(aos.data()), 0, i)
+                    == size2(i * 3u, i * 7u));
+        REQUIRE(aos.structDescriptor().valueAt<i32>(reinterpret_cast<const void *>(aos.data()), 1, i) == i);
+        // change data
+        aos.structDescriptor().valueAt<size2>(reinterpret_cast<void *>(data.data()), 0, i) = {i * 5u, i * 13u};
+        aos.structDescriptor().valueAt<i32>(reinterpret_cast<void *>(data.data()), 1, i) = -i;
+      }
+      for (int i = 0; i < 5; ++i) {
+        REQUIRE(
+            aos.structDescriptor().valueAt<size2>(reinterpret_cast<const void *>(data.data()), 0, i)
+                == size2(i * 5u, i * 13u));
+        REQUIRE(aos.structDescriptor().valueAt<i32>(reinterpret_cast<const void *>(data.data()), 1, i) == -i);
+      }
+    }
   }//
   SECTION("Sanity Checks") {
     AoS aos;

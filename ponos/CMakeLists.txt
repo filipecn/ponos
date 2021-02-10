@@ -119,7 +119,7 @@ file(GLOB PONOS_SOURCES
 		ponos/random/*.cpp
 		ponos/common/*.cpp
         ponos/structures/*.cpp
-		ponos/storage/array_of_structures.cpp
+		ponos/storage/*.cpp
         )
 
 add_library(ponos STATIC ${PONOS_SOURCES} ${PONOS_HEADERS})
