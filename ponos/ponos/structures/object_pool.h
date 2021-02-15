@@ -260,7 +260,7 @@ public:
     if (poolIndex >= static_cast<int>(end) || poolIndex < 0 ||
         lastPoolIndex < 0)
       return;
-    // std::cout << "destroying " << elementIndex << std::endl;
+    // std::cout << "destroying " << element_index << std::endl;
     pool[poolIndex].destroy();
     pool[poolIndex] = pool[lastPoolIndex];
 

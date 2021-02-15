@@ -187,7 +187,7 @@ private:
   i32 i_{0};
   u64 resolution_{0};
 };
-/// The Grid2Accessor provides access to grid elements following specific rules
+/// The Grid2Accessor provides access to grid elements_ following specific rules
 /// defined on its construction. With the accessor it is possible to:
 /// - Access out of bounds positions;
 /// - Interpolate data on arbitrary positions;
@@ -312,7 +312,7 @@ private:
 };
 /// Auxiliary class to allow c++ iteration in loops.
 /// Ex: for(auto e : grid.accessor()) {}
-/// The ConstGrid1Accessor provides access to const grid elements following specific
+/// The ConstGrid1Accessor provides access to const grid elements_ following specific
 /// rules defined on its construction. With the accessor it is possible to:
 /// - Access out of bounds positions;
 /// - Interpolate data on arbitrary positions;
@@ -712,7 +712,7 @@ private:
   ConstGrid2Accessor<T> &acc_;
   Index2Iterator<i32> it;
 };
-/// The Grid2Accessor provides access to grid elements following specific rules
+/// The Grid2Accessor provides access to grid elements_ following specific rules
 /// defined on its construction. With the accessor it is possible to:
 /// - Access out of bounds positions;
 /// - Interpolate data on arbitrary positions;
@@ -846,7 +846,7 @@ private:
   T border_ = T(0);
   T dummy_ = T(0);
 };
-/// The ConstGrid2Accessor provides access to const grid elements following specific
+/// The ConstGrid2Accessor provides access to const grid elements_ following specific
 /// rules defined on its construction. With the accessor it is possible to:
 /// - Access out of bounds positions;
 /// - Interpolate data on arbitrary positions;
@@ -1126,7 +1126,7 @@ public:
   /// Gets raw data
   /// \return reference to memory data
   Array2<T> &data() { return data_; }
-  /// Applies f to all elements
+  /// Applies f to all elements_
   /// \param f
   void apply(const std::function<T(const ponos::point2 &)> &f) {
     for (auto e : data_)

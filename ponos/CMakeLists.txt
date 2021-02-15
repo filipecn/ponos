@@ -92,7 +92,6 @@ set(PONOS_HEADERS
         ponos/structures/bah.h
         ponos/structures/brep.hpp
         ponos/structures/bvh.h
-        ponos/structures/bvh.inl
         ponos/numeric/grid_interface.h
         #ponos/structures/half_edge3.h
         #ponos/structures/half_edge.h
@@ -120,6 +119,7 @@ file(GLOB PONOS_SOURCES
 		ponos/common/*.cpp
         ponos/structures/*.cpp
 		ponos/storage/*.cpp
+		ponos/numeric/*.cpp
         )
 
 add_library(ponos STATIC ${PONOS_SOURCES} ${PONOS_HEADERS})

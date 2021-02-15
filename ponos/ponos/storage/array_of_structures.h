@@ -167,7 +167,7 @@ public:
       u64 name_size = f.name.size();
       o.write(reinterpret_cast<const char *>(&name_size), sizeof(u64));
       auto name = f.name.c_str();
-      for (int i = 0; i < name_size; ++i)
+      for (u64 i = 0; i < name_size; ++i)
         o.write(reinterpret_cast<const char *>(&name[i]), sizeof(char));
     }
     return o;
@@ -334,7 +334,7 @@ public:
   const StructDescriptor &structDescriptor() const { return struct_descriptor; }
   /// \return
   [[nodiscard]] const u8 *data() const { return data_; }
-  /// \param new_size in number of elements
+  /// \param new_size in number of elements_
   void resize(u64 new_size);
 
   AoSAccessor accessor() { return AoSAccessor(*this); }

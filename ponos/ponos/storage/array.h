@@ -116,8 +116,8 @@ private:
   int i = 0;
 };
 /// Holds a linear memory area representing a 1-dimensional array of
-/// ``size`` elements.
-/// - Array1 provides a convenient way to access its elements:
+/// ``size`` elements_.
+/// - Array1 provides a convenient way to access its elements_:
 /// \verbatim embed:rst:leading-slashes
 ///    .. code-block:: cpp
 ///
@@ -133,7 +133,7 @@ public:
   //                           CONSTRUCTORS
   // ***********************************************************************
   Array1() = default;
-  /// \param size dimensions (in elements count)
+  /// \param size dimensions (in elements_ count)
   explicit Array1(u64 size) {
     data_.resize(size);
   }
@@ -196,7 +196,7 @@ public:
     data_ = other.data_;
     return *this;
   }
-  /// Assign ``value`` to all elements
+  /// Assign ``value`` to all elements_
   /// \param value assign value
   /// \return *this
   Array1 &operator=(T value) {
@@ -254,7 +254,7 @@ public:
   /// Computes actual memory usage
   /// \return memory usage (in bytes)
   [[nodiscard]] u64 memorySize() const { return data_.size() * sizeof(T); }
-  /// \return dimensions (in elements count)
+  /// \return dimensions (in elements_ count)
   [[nodiscard]] u64 size() const { return data_.size(); }
   /// \return const pointer to raw data (**row major**)
   const T *data() const { return data_.data(); }
@@ -431,9 +431,9 @@ private:
   int i = 0, j = 0;
 };
 /// Holds a linear memory area representing a 2-dimensional array of
-/// ``size.width`` * ``size.height`` elements.
+/// ``size.width`` * ``size.height`` elements_.
 ///
-/// - Considering ``size.height`` rows of ``size.width`` elements, data is
+/// - Considering ``size.height`` rows of ``size.width`` elements_, data is
 /// laid out in memory in **row major** fashion.
 ///
 /// - It is also possible to set _row level_ memory alignment via a custom size
@@ -447,9 +447,9 @@ private:
 /// \verbatim embed:rst:leading-slashes"
 ///   .. note::
 ///     This index convention is the **opposite** of some mathematical forms
-///     where matrix elements are indexed by the i-th row and j-th column.
+///     where matrix elements_ are indexed by the i-th row and j-th column.
 /// \endverbatim
-/// - Array2 provides a convenient way to access its elements:
+/// - Array2 provides a convenient way to access its elements_:
 /// \verbatim embed:rst:leading-slashes
 ///    .. code-block:: cpp
 ///
@@ -466,11 +466,11 @@ public:
   // ***********************************************************************
   Array2() = default;
   /// pitch is set to ``size.width`` * ``sizeof(T)``
-  /// \param size dimensions (in elements count)
+  /// \param size dimensions (in elements_ count)
   explicit Array2(const size2 &size) : pitch_(size.width * sizeof(T)), size_(size) {
     data_ = new char[pitch_ * size.height];
   }
-  /// \param size dimensions (in elements count)
+  /// \param size dimensions (in elements_ count)
   /// \param pitch memory size occupied by a single row (in bytes)
   explicit Array2(const size2 &size, size_t pitch)
       : pitch_(pitch), size_(size) {
@@ -549,7 +549,7 @@ public:
     other.data_ = nullptr;
     return *this;
   }
-  /// Assign ``value`` to all elements
+  /// Assign ``value`` to all elements_
   /// \param value assign value
   /// \return *this
   Array2 &operator=(T value) {
@@ -637,7 +637,7 @@ public:
   /// Computes actual memory usage
   /// \return memory usage (in bytes)
   [[nodiscard]] u64 memorySize() const { return size_.height * pitch_; }
-  /// \return dimensions (in elements count)
+  /// \return dimensions (in elements_ count)
   [[nodiscard]] size2 size() const { return size_; }
   /// \return pitch size (in bytes)
   [[nodiscard]] u64 pitch() const { return pitch_; }

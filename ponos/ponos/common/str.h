@@ -46,7 +46,7 @@ class Str {
     concat(s, t...);
   }
 public:
-  /// Concatenates multiple elements into a single string.
+  /// Concatenates multiple elements_ into a single string.
   /// \tparam Args
   /// \param args
   /// \return a single string of the resulting concatenation

@@ -6,6 +6,7 @@ set(SOURCES
         numeric_tests.cpp
         storage_tests.cpp
         random_tests.cpp
+        structures_tests.cpp
         )
 
 add_executable(ponos_tests ${SOURCES})

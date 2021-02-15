@@ -127,7 +127,7 @@ public:
   virtual T getData(int i, int j) const = 0;
   virtual T &getData(int i, int j) = 0;
   virtual void updateDataStructure() = 0;
-  /** iterate through data elements
+  /** iterate through data elements_
    * \param f function called on each element
    */
   void forEach(const std::function<void(T &d, size_t i, size_t j)> &f) {
@@ -135,7 +135,7 @@ public:
       for (size_t j = 0; j < height; j++)
         f(getData(i, j), i, j);
   }
-  /** iterate through data elements
+  /** iterate through data elements_
    * \param f function called on each element
    */
   void

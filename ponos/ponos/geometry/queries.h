@@ -12,12 +12,55 @@
 #include <ponos/geometry/transform.h>
 #include <ponos/geometry/utils.h>
 #include <ponos/geometry/vector.h>
+#include <optional>
 
 namespace ponos {
 
 class GeometricQueries {
 public:
-  static point3 closestPoint(const bbox3 & box, const point3 & p);
+  ///
+  /// \param box
+  /// \param p
+  /// \return
+  static point3 closestPoint(const bbox3 &box, const point3 &p);
+};
+
+class GeometricPredicates {
+public:
+  ///
+  /// \param bounds
+  /// \param ray
+  /// \param inv_dir
+  /// \param dir_is_neg
+  /// \param max_t
+  /// \return
+  static std::optional<real_t> intersect(const ponos::bbox3 &bounds,
+                                         const ray3 &ray,
+                                         const ponos::vec3 &inv_dir,
+                                         const i32 dir_is_neg[3],
+                                         real_t max_t = Constants::real_infinity);
+  ///
+  /// \param bounds
+  /// \param ray
+  /// \param second_hit
+  /// \return
+  static std::optional<real_t> intersect(const ponos::bbox3 &bounds,
+                                         const ray3 &ray, real_t *second_hit = nullptr);
+
+/// BBox / Ray3 intersection test.
+/// **b1** and **b2**, if not null, receive the barycentric coordinates of the
+/// intersection point.
+/// \param p1 **[in]** first triangle's vertex
+/// \param p2 **[in]** second triangle's vertex
+/// \param p3 **[in]** third triangle's vertex
+/// \param ray **[in]**
+/// \param tHit **[out]** intersection (parametric coordinate)
+/// \param b1 **[out]** barycentric coordinate
+/// \param b2 **[out]** barycentric coordinate
+/// return **true** if intersection exists
+  static std::optional<real_t> intersect(const point3 &p1, const point3 &p2,
+                                         const point3 &p3, const Ray3 &ray,
+                                         real_t *b1 = nullptr, real_t *b2 = nullptr);
 };
 
 /** \brief  intersection test
@@ -37,11 +80,11 @@ bool bbox_bbox_intersection(const bbox3 &a, const bbox3 &b);
  * \param b **[in]**
  * /return
  */
-template <typename T>
+template<typename T>
 bool interval_interval_intersection(const Interval<T> &a,
                                     const Interval<T> &b) {
   return (a.low <= b.low && a.high >= b.low) ||
-         (b.low <= a.low && b.high >= a.low);
+      (b.low <= a.low && b.high >= a.low);
 }
 
 /** \brief  intersection test
@@ -70,7 +113,7 @@ bool ray_segment_intersection(const Ray3 &r, const Segment3 &s,
  *
  * /return **true** if intersection exists
  */
-bool plane_line_intersection(const Plane pl, const Line l, point3 &p);
+bool plane_line_intersection(const Plane &pl, const Line &l, point3 &p);
 /** \brief  intersection test
  * \param s **[in]** sphere
  * \param l **[in]** line
@@ -127,6 +170,7 @@ bool bbox_ray_intersection(const bbox2 &box, const Ray2 &ray, real_t &hit1,
  *
  * /return **true** if intersectiton exists
  */
+[[deprecated]]
 bool bbox_ray_intersection(const bbox3 &box, const Ray3 &ray, real_t &hit1,
                            real_t &hit2);
 /** \brief  intersection test
@@ -186,7 +230,7 @@ point3 closest_point_plane(const point3 &p, const Plane &pl);
  *
  * /return closest point to **p** that lies on **s**
  */
-template <typename T>
+template<typename T>
 T closest_point_segment(const Segment<T> &s, const T &p, real_t *t = nullptr) {
   real_t t_ = dot(p - s.a, s.b - s.a) / (s.b - s.a).length2();
   if (t_ < 0.f)
@@ -238,7 +282,7 @@ real_t distance_point_n_plane(const point3 &p, const Plane &pl);
  *
  * /return the squared distance between **p** and **s**
  */
-template <typename T>
+template<typename T>
 real_t distance2_point_segment(const T &p, const Segment<T> &s);
 /** \brief  distance
  * \param p **[in]** point

@@ -75,8 +75,7 @@ void parallel_for(const std::function<void(int)> &f, int count, int chunkSize) {
   if (ThreadPool::threads.empty()) {
     ThreadPool::threadIndex = 0;
     for (int i = 0; i < ThreadPool::numSystemCores() - 1; ++i)
-      ThreadPool::threads.push_back(
-          std::thread(ThreadPool::workerThreadFunc, i + 1));
+      ThreadPool::threads.emplace_back(ThreadPool::workerThreadFunc, i + 1);
   }
   // create enqueue parallel_for_loop for this loop
   ParallelForLoop loop(f, count, chunkSize, 0 /*CurrentProfilerState() TODO*/);

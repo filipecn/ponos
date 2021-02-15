@@ -52,7 +52,7 @@ public:
     uint zcode; ///< morton code of the first position this node can contain
     uint pointIndex; ///< first point present on this node
   };
-  /// Helper class for iterating elements
+  /// Helper class for iterating elements_
   class iterator {
   public:
     /// \param s z point set reference
@@ -90,7 +90,7 @@ public:
       FATAL_ASSERT(depth <= z.maxDepth_);
       return lower_bound<PointElement, uint>(&z.points_[l], s, f, comp) + l + 1;
     }
-    /// \return true if there is more elements to iterate
+    /// \return true if there is more elements_ to iterate
     bool next() const {
       return cur_ < static_cast<int>(zps_.end_) &&
           zps_.points_[cur_].zcode < upperBound_;
@@ -120,7 +120,7 @@ public:
     }
     /// advance on iteration
     void operator++() { cur_++; }
-    /// \return number of elements to iterate (first -> last)
+    /// \return number of elements_ to iterate (first -> last)
     uint count() {
       if (lastIndex_ < 1) {
         lastIndex_ = find(zps_, static_cast<uint>(firstIndex_), zps_.end_ - firstIndex_, upperBound_, depth_);
@@ -172,7 +172,7 @@ public:
       this->clean(this->root_);
       this->root_ = nullptr;
     }
-    /// Searches elements inside an given cube in world coordinates
+    /// Searches elements_ inside an given cube in world coordinates
     /// \param bbox search region in world coordinates
     /// \param f callback to process each element found
     void iteratePoints(const bbox3 &bbox, const std::function<void(uint)> &f) {
@@ -237,7 +237,7 @@ private:
   search_tree *tree_;   ///< tree for search operations
   point3 resolution_;   ///< maximum coordinates
   Transform toSet_;     ///< map to underling grid
-  std::vector<PointElement> points_; ///< array of point elements
+  std::vector<PointElement> points_; ///< array of point elements_
   std::vector<point3> positions_;    ///< points positions
   std::vector<uint> indices_;        ///< map point id -> points_
   uint end_;          ///< current number of active point element
@@ -245,7 +245,7 @@ private:
   uint nbits_;        ///< number of bits used by the maximum coordinate component value
   uint maxDepth_;     ///< maximum depth of search tree, bounded by nbits
   uint maxZCode_;     ///< maximum allowed morton code
-  bool needUpdate_;   ///< indicates if elements must be sorted
+  bool needUpdate_;   ///< indicates if elements_ must be sorted
   bool needZUpdate_;  ///< indicates if morton codes need to be recalculated
   bool sizeChanged_;  ///< indicates if points have been added/removed
 };

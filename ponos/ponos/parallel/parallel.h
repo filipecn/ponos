@@ -19,7 +19,7 @@ public:
   ParallelForLoop(std::function<void(int)> func1D, int64_t maxIndex,
                   int chunkSize, int profilerState);
 
-  bool finished() const;
+  [[nodiscard]] bool finished() const;
 
   std::function<void(int)> func1D;
   const int64_t maxIndex;
@@ -67,7 +67,7 @@ void parallel_for(size_t start, size_t end,
 /* \brief query
  * \param start **[in]** first element index
  * \param end **[in]** last + 1 element index
- * \param array **[in]** array of elements
+ * \param array **[in]** array of elements_
  * \param gs **[in | optional]** grain size
  *
  * \return the index of the first element with maximum value in the array

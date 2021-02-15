@@ -46,7 +46,7 @@ enum class GeometricPrimitiveType {
 };
 
 ///  \brief mesh structure
-/// Stores the elements of the mesh in simple arrays. This class
+/// Stores the elements_ of the mesh in simple arrays. This class
 /// is the one that actually stores the geometry, then other
 /// objects in the system can just use its reference avoiding
 /// duplicating data.
@@ -97,7 +97,7 @@ public:
   void orientFaces(bool ccw = true);
   struct ArrayDescriptor {
     size_t elementSize = 0; //!< number of components per element.
-    size_t count = 0;       //!< number of elements.
+    size_t count = 0;       //!< number of elements_.
   };
   /// clears everything, sets zero to all fields
   void clear();

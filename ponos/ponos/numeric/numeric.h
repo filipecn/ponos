@@ -48,12 +48,19 @@ struct Constants {
   static constexpr real_t inv_pi = 0.31830988618379067154;
   static constexpr real_t inv_two_pi = 0.15915494309189533577;
   static constexpr real_t inv_four_pi = 0.07957747154594766788;
+  static constexpr real_t machine_epsilon = std::numeric_limits<real_t>::epsilon() * .5;
   static real_t real_infinity;
   template<typename T> static constexpr T lowest() {
     return std::numeric_limits<T>::lowest();
   }
   template<typename T> static constexpr T greatest() {
     return std::numeric_limits<T>::max();
+  }
+  /// Compute conservative bounds in error
+  /// \param n
+  /// \return
+  static constexpr real_t gamma(i32 n) {
+    return (n * machine_epsilon) / (1 - n * machine_epsilon);
   }
 };
 ///\brief

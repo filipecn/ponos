@@ -131,3 +131,29 @@ TEST_CASE("Transform", "[geometry][transform]") {
   }//
 }
 
+TEST_CASE("Geometric Predicates", "[geometry]") {
+  SECTION("ray_triangle") {
+    real_t b0{}, b1{};
+    point3 p0 = {-1., -1., 0.};
+    point3 p1 = {1., -1., -0.};
+    point3 p2 = {0., 1., 0.};
+    auto i = GeometricPredicates::intersect(p0, p1, p2,
+                                            {{0., 0., 1.},
+                                             {0., 0., -1.}}, &b0, &b1);
+    REQUIRE(i.has_value());
+    REQUIRE(i.value() == Approx(1));
+    REQUIRE(p0 * b0 + vec3(p1) * b1 + vec3(p2) * (1 - b0 - b1) == point3(0, 0, 0));
+    i = GeometricPredicates::intersect(p0, p1, p2,
+                                       {{-1., -1., 1.},
+                                        {0., 0., -1.}}, &b0, &b1);
+    REQUIRE(i.has_value());
+    REQUIRE(i.value() == Approx(1));
+    REQUIRE(p0 * b0 + vec3(p1) * b1 + vec3(p2) * (1 - b0 - b1) == point3(-1, -1, 0));
+    i = GeometricPredicates::intersect(p0, p1, p2,
+                                       {{0., -1., 1.},
+                                        {0., 0., -1.}}, &b0, &b1);
+    REQUIRE(i.has_value());
+    REQUIRE(i.value() == Approx(1));
+    REQUIRE(p0 * b0 + vec3(p1) * b1 + vec3(p2) * (1 - b0 - b1) == point3(0, -1, 0));
+  }
+}
