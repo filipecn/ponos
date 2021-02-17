@@ -133,6 +133,24 @@ TEST_CASE("Transform", "[geometry][transform]") {
 
 TEST_CASE("Geometric Predicates", "[geometry]") {
   SECTION("ray_triangle") {
+    {
+      point3 a{6.46322, 0.400573, 5.2238};
+      point3 b{6.85173, -0.39896, -1.24055};
+      point3 c{8.03027, 3.73176, -0.479493};
+      auto i = GeometricPredicates::intersect(a, b, c,
+                                              {{20., 1., 0.},
+                                               {-1., 0., 0.}});
+      REQUIRE(i.has_value());
+    }
+    {
+      point3 a = {-8.04074, 2.8569, -0.486101};
+      point3 b = {-6.66026, -0.584077, -1.13166};
+      point3 c = {-6.49687, 0.308156, 4.96059};
+      auto i = GeometricPredicates::intersect(a, b, c,
+                                              {{20., 1., 0.},
+                                               {-1., 0., 0.}});
+      REQUIRE(i.has_value());
+    }
     real_t b0{}, b1{};
     point3 p0 = {-1., -1., 0.};
     point3 p1 = {1., -1., -0.};
@@ -150,8 +168,8 @@ TEST_CASE("Geometric Predicates", "[geometry]") {
     REQUIRE(i.value() == Approx(1));
     REQUIRE(p0 * b0 + vec3(p1) * b1 + vec3(p2) * (1 - b0 - b1) == point3(-1, -1, 0));
     i = GeometricPredicates::intersect(p0, p1, p2,
-                                       {{0., -1., 1.},
-                                        {0., 0., -1.}}, &b0, &b1);
+                                       {{0., -1., -1.},
+                                        {0., 0., 1.}}, &b0, &b1);
     REQUIRE(i.has_value());
     REQUIRE(i.value() == Approx(1));
     REQUIRE(p0 * b0 + vec3(p1) * b1 + vec3(p2) * (1 - b0 - b1) == point3(0, -1, 0));

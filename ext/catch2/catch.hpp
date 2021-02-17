@@ -3615,7 +3615,7 @@ namespace Matchers {
             EqualsMatcher(std::vector<T> const &comparator) : m_comparator( comparator ) {}
 
             bool match(std::vector<T> const &v) const override {
-                // !TBD: This currently works if all elements can be compared using !=
+                // !TBD: This currently works if all elements_ can be compared using !=
                 // - a more general approach would be via a compare template that defaults
                 // to using !=. but could be specialised for, e.g. std::vector<T> etc
                 // - then just call that directly

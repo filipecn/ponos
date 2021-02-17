@@ -475,7 +475,7 @@ std::optional<real_t> GeometricPredicates::intersect(const point3 &p1,
   p2t.z *= sz;
   real_t t_scaled = e0 * p0t.z + e1 * p1t.z + e2 * p2t.z;
   if ((det < 0 && (t_scaled >= 0 || t_scaled < max_t * det)) ||
-      (det < 0 && (t_scaled <= 0 || t_scaled > max_t * det)))
+      (det > 0 && (t_scaled <= 0 || t_scaled > max_t * det)))
     return std::nullopt;
   // compute barycentric coordinates and t value for triangle intersection
   real_t inv_det = 1 / det;
