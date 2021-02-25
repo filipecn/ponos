@@ -7,6 +7,7 @@ set(SOURCES
         storage_tests.cpp
         random_tests.cpp
         structures_tests.cpp
+        parallel_tests.cpp
         )
 
 add_executable(ponos_tests ${SOURCES})

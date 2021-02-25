@@ -505,17 +505,16 @@ protected:
       bounds = make_union(bounds, ei.centroid);
     // 2) compute morton indices of primitives
     std::vector<MortonElement> morton_elements(element_info.size());
-    parallel_for(
-        [&](int i) {
-          constexpr int morton_bits = 10;
-          constexpr int morton_scale = 1u << morton_bits;
-          morton_elements[i].element_index = element_info[i].element_number;
-          vec3 centroid_offset = bounds.offset(element_info[i].centroid) *
-              static_cast<real_t>(morton_scale);
-          morton_elements[i].morton_code = encodeMortonCode(
-              centroid_offset.x, centroid_offset.y, centroid_offset.z);
-        },
-        element_info.size(), 512);
+    Parallel::loop([&](int i) {
+                     constexpr int morton_bits = 10;
+                     constexpr int morton_scale = 1u << morton_bits;
+                     morton_elements[i].element_index = element_info[i].element_number;
+                     vec3 centroid_offset = bounds.offset(element_info[i].centroid) *
+                         static_cast<real_t>(morton_scale);
+                     morton_elements[i].morton_code = encodeMortonCode(
+                         centroid_offset.x, centroid_offset.y, centroid_offset.z);
+                   },
+                   element_info.size(), 512);
     // 3) radix sort element morton indices
     radixSort(&morton_elements);
     // 4) create LBVH treelets at bottom of BVH
@@ -544,19 +543,18 @@ protected:
     //  create LBVHs for treelets in parallel
     std::atomic<int> atomic_total(0), ordered_elements_offset(0);
     ordered_elements.resize(elements_.size());
-    parallel_for(
-        [&](int i) {
-          // generate ith LBVH treelet
-          int nodes_created = 0;
-          const int first_bit_index = 29 - 12;
-          LBVHTreelet &tr = treelets_to_build[i];
-          tr.build_nodes =
-              emitLBVH(tr.build_nodes, element_info, &morton_elements[tr.start_index],
-                       tr.n_elements, &nodes_created, ordered_elements,
-                       &ordered_elements_offset, first_bit_index);
-          atomic_total += nodes_created;
-        },
-        treelets_to_build.size());
+    Parallel::loop([&](int i) {
+                     // generate ith LBVH treelet
+                     int nodes_created = 0;
+                     const int first_bit_index = 29 - 12;
+                     LBVHTreelet &tr = treelets_to_build[i];
+                     tr.build_nodes =
+                         emitLBVH(tr.build_nodes, element_info, &morton_elements[tr.start_index],
+                                  tr.n_elements, &nodes_created, ordered_elements,
+                                  &ordered_elements_offset, first_bit_index);
+                     atomic_total += nodes_created;
+                   },
+                   treelets_to_build.size());
     *total_nodes = atomic_total;
     // 5) create and return SAH BVH from LBVH treelets
     std::vector<BuildNode *> finished_treelets;

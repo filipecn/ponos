@@ -154,7 +154,7 @@ TEST_CASE("Str", "[common]") {
   SECTION("regex contains") {
     REQUIRE(Str::contains_r("subsequence123", "\\b(sub)"));
     REQUIRE(!Str::contains_r("subsequence123", "\\b(qen)"));
-    REQUIRE(Str::contains_r("/usr/local/lib.a", ".*\.a"));
+    REQUIRE(Str::contains_r("/usr/local/lib.a", ".*\\.a"));
   }//
   SECTION("regex search") {
     std::string s("this subject has a submarine as a subsequence");

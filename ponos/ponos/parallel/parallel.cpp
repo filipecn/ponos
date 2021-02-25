@@ -64,7 +64,7 @@ void ThreadPool::workerThreadFunc(int tIndex) {
   // TODO reportThreadStats();
 }
 
-void parallel_for(const std::function<void(int)> &f, int count, int chunkSize) {
+void Parallel::loop(const std::function<void(int)> &f, int count, int chunkSize) {
   // run iterations immediately if not using threads or if count is small
   if (count < chunkSize) {
     for (int i = 0; i < count; i++)
@@ -78,40 +78,41 @@ void parallel_for(const std::function<void(int)> &f, int count, int chunkSize) {
       ThreadPool::threads.emplace_back(ThreadPool::workerThreadFunc, i + 1);
   }
   // create enqueue parallel_for_loop for this loop
-  ParallelForLoop loop(f, count, chunkSize, 0 /*CurrentProfilerState() TODO*/);
+  ParallelForLoop floop(f, count, chunkSize, 0 /*CurrentProfilerState() TODO*/);
   ThreadPool::workListMutex.lock();
-  loop.next = ThreadPool::workList;
-  ThreadPool::workList = &loop;
+  floop.next = ThreadPool::workList;
+  ThreadPool::workList = &floop;
   ThreadPool::workListMutex.unlock();
   // notify worker threads of work to be one
   std::unique_lock<std::mutex> lock(ThreadPool::workListMutex);
   ThreadPool::workListCondition.notify_all();
   // help out with parallel loop iterations in the current thread
-  while (!loop.finished()) {
+  while (!floop.finished()) {
+    std::cerr << "damn\n";
     // run a chunk of loop iterations for loop
     //    find the set of loop iterations to run next
-    int64_t indexStart = loop.nextIndex;
-    int64_t indexEnd = std::min(indexStart + loop.chunkSize, loop.maxIndex);
+    int64_t indexStart = floop.nextIndex;
+    int64_t indexEnd = std::min(indexStart + floop.chunkSize, floop.maxIndex);
     //    update loop to reflect iterations this thread will run
-    loop.nextIndex = indexEnd;
-    if (loop.nextIndex == loop.maxIndex)
-      ThreadPool::workList = loop.next;
-    loop.activeWorkers++;
+    floop.nextIndex = indexEnd;
+    if (floop.nextIndex == floop.maxIndex)
+      ThreadPool::workList = floop.next;
+    floop.activeWorkers++;
     //    run loop indices in [indexStart, indexEnd)
     lock.unlock();
     for (int index = indexStart; index < indexEnd; ++index) {
-      if (loop.func1D)
-        loop.func1D(index);
+      if (floop.func1D)
+        floop.func1D(index);
       // handle other types of loops TODO
     }
     lock.lock();
     //    update loop to reflect completion of iterations]
-    loop.activeWorkers--;
+    floop.activeWorkers--;
   }
 }
 
-void parallel_for(size_t start, size_t end,
-                  std::function<void(size_t first, size_t last)> f, int gs) {
+void Parallel::loop(size_t start, size_t end,
+                    std::function<void(size_t first, size_t last)> f, int gs) {
   if (start >= end)
     return;
   const uint length = end - start;
