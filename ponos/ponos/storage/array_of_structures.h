@@ -198,110 +198,108 @@ private:
   std::unordered_map<std::string, u64> field_id_map_;
 };
 
-/// Provides access to a single struct field in a array of structs
-/// \tparam T
-template<typename T>
-class AoSFieldAccessor {
-public:
-  AoSFieldAccessor(u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
-  /// \param data
-  void setDataPtr(u8 *data) { data_ = data; }
-  /// \param i
-  /// \return
-  T &operator[](u64 i) {
-    return *reinterpret_cast<T *>(data_ + i * stride_ + offset_);
-  }
-
-private:
-  u8 *data_{nullptr};
-  u64 stride_{0};
-  u64 offset_{0};
-};
-
-template<typename T>
-class AoSFieldConstAccessor {
-public:
-  AoSFieldConstAccessor(const u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
-  /// \param data
-  void setDataPtr(const u8 *data) { data_ = data; }
-  /// \param i
-  /// \return
-  const T &operator[](u64 i) const {
-    return *reinterpret_cast<const T *>(data_ + i * stride_ + offset_);
-  }
-
-private:
-  const u8 *data_{nullptr};
-  u64 stride_{0};
-  u64 offset_{0};
-};
-/// Accesses a memory block as an array of structures
-class AoSConstAccessor {
-public:
-  explicit AoSConstAccessor(const AoS &aos);
-  /// \param descriptor
-  explicit AoSConstAccessor(const StructDescriptor &descriptor) : struct_descriptor_{descriptor} {}
-  /// \param descriptor
-  /// \param data
-  AoSConstAccessor(const StructDescriptor &descriptor, const u8 *data, u64 size) :
-      struct_descriptor_{descriptor}, data_{data}, size_{size} {}
-  ///
-  /// \param data
-  void setDataPtr(const u8 *data) { data_ = data; }
-  /// \tparam T
-  /// \param field_id
-  /// \param i
-  /// \return
-  template<typename T>
-  const T &valueAt(u64 field_id, u64 i) const {
-    return *reinterpret_cast<const T *>(data_ + i * struct_descriptor_.struct_size_
-        + struct_descriptor_.fields_[field_id].offset);
-  }
-
-private:
-  const StructDescriptor &struct_descriptor_;
-  const u8 *data_{nullptr};
-  u64 size_{0};
-};
-
-/// Accesses a memory block as an array of structures
-class AoSAccessor {
-public:
-  explicit AoSAccessor(AoS &aos);
-  explicit AoSAccessor(const StructDescriptor &descriptor) :
-      struct_descriptor_{descriptor} {}
-  /// \param descriptor
-  /// \param data
-  AoSAccessor(const StructDescriptor &descriptor, u8 *data, u64 size) :
-      struct_descriptor_{descriptor}, data_{data}, size_{size} {}
-  /// \param data
-  void setDataPtr(u8 *data) { data_ = data; }
-  /// \tparam T
-  /// \param field_id
-  /// \param i
-  /// \return
-  template<typename T>
-  const T &valueAt(u64 field_id, u64 i) const {
-    return *reinterpret_cast<const T *>(data_ + i * struct_descriptor_.struct_size_
-        + struct_descriptor_.fields_[field_id].offset);
-  }
-  template<typename T>
-  T &valueAt(u64 field_id, u64 i) {
-    return *reinterpret_cast<T *>(data_ + i * struct_descriptor_.struct_size_
-        + struct_descriptor_.fields_[field_id].offset);
-  }
-private:
-  const StructDescriptor &struct_descriptor_;
-  u8 *data_{nullptr};
-  u64 size_{0};
-};
-
 /// Array of Structures
 /// This class stores an array of structures that can be defined in runtime
 class AoS {
-  friend class AoSAccessor;
-  friend class AoSConstAccessor;
 public:
+  // ***********************************************************************
+  //                           ACCESSORS
+  // ***********************************************************************
+  /// Provides access to a single struct field in a array of structs
+  /// \tparam T
+  template<typename T>
+  class FieldAccessor {
+  public:
+    FieldAccessor(u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
+    /// \param data
+    void setDataPtr(u8 *data) { data_ = data; }
+    /// \param i
+    /// \return
+    T &operator[](u64 i) {
+      return *reinterpret_cast<T *>(data_ + i * stride_ + offset_);
+    }
+
+  private:
+    u8 *data_{nullptr};
+    u64 stride_{0};
+    u64 offset_{0};
+  };
+  template<typename T>
+  class FieldConstAccessor {
+  public:
+    FieldConstAccessor(const u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
+    /// \param data
+    void setDataPtr(const u8 *data) { data_ = data; }
+    /// \param i
+    /// \return
+    const T &operator[](u64 i) const {
+      return *reinterpret_cast<const T *>(data_ + i * stride_ + offset_);
+    }
+
+  private:
+    const u8 *data_{nullptr};
+    u64 stride_{0};
+    u64 offset_{0};
+  };
+  /// Accesses a memory block as an array of structures
+  class ConstAccessor {
+  public:
+    explicit ConstAccessor(const AoS &aos);
+    /// \param descriptor
+    explicit ConstAccessor(const StructDescriptor &descriptor) : struct_descriptor_{descriptor} {}
+    /// \param descriptor
+    /// \param data
+    ConstAccessor(const StructDescriptor &descriptor, const u8 *data, u64 size) :
+        struct_descriptor_{descriptor}, data_{data}, size_{size} {}
+    ///
+    /// \param data
+    void setDataPtr(const u8 *data) { data_ = data; }
+    /// \tparam T
+    /// \param field_id
+    /// \param i
+    /// \return
+    template<typename T>
+    const T &valueAt(u64 field_id, u64 i) const {
+      return *reinterpret_cast<const T *>(data_ + i * struct_descriptor_.struct_size_
+          + struct_descriptor_.fields_[field_id].offset);
+    }
+
+  private:
+    const StructDescriptor &struct_descriptor_;
+    const u8 *data_{nullptr};
+    u64 size_{0};
+  };
+  /// Accesses a memory block as an array of structures
+  class Accessor {
+  public:
+    explicit Accessor(AoS &aos);
+    explicit Accessor(const StructDescriptor &descriptor) :
+        struct_descriptor_{descriptor} {}
+    /// \param descriptor
+    /// \param data
+    Accessor(const StructDescriptor &descriptor, u8 *data, u64 size) :
+        struct_descriptor_{descriptor}, data_{data}, size_{size} {}
+    /// \param data
+    void setDataPtr(u8 *data) { data_ = data; }
+    /// \tparam T
+    /// \param field_id
+    /// \param i
+    /// \return
+    template<typename T>
+    const T &valueAt(u64 field_id, u64 i) const {
+      return *reinterpret_cast<const T *>(data_ + i * struct_descriptor_.struct_size_
+          + struct_descriptor_.fields_[field_id].offset);
+    }
+    template<typename T>
+    T &valueAt(u64 field_id, u64 i) {
+      return *reinterpret_cast<T *>(data_ + i * struct_descriptor_.struct_size_
+          + struct_descriptor_.fields_[field_id].offset);
+    }
+  private:
+    const StructDescriptor &struct_descriptor_;
+    u8 *data_{nullptr};
+    u64 size_{0};
+  };
   // ***********************************************************************
   //                           CONSTRUCTORS
   // ***********************************************************************
@@ -329,6 +327,12 @@ public:
     return *this;
   }
   // ***********************************************************************
+  //                           METRICS
+  // ***********************************************************************
+  [[nodiscard]] inline u64 size() const { return size_; }
+  [[nodiscard]] inline u64 memorySizeInBytes() const { return size_ * struct_descriptor.struct_size_; }
+  [[nodiscard]] inline u64 stride() const { return struct_descriptor.struct_size_; }
+  // ***********************************************************************
   //                             METHODS
   // ***********************************************************************
   const StructDescriptor &structDescriptor() const { return struct_descriptor; }
@@ -336,41 +340,35 @@ public:
   [[nodiscard]] const u8 *data() const { return data_; }
   /// \param new_size in number of elements_
   void resize(u64 new_size);
-
-  AoSAccessor accessor() { return AoSAccessor(*this); }
-  AoSConstAccessor constAccessor() const { return AoSConstAccessor(*this); }
-
+  // ***********************************************************************
+  //                             ACCESS
+  // ***********************************************************************
+  Accessor accessor() { return Accessor(*this); }
+  ConstAccessor constAccessor() const { return ConstAccessor(*this); }
   template<typename T>
-  AoSFieldAccessor<T> field(const std::string &name) {
+  FieldAccessor<T> field(const std::string &name) {
     auto it = struct_descriptor.field_id_map_.find(name);
     if (it == struct_descriptor.field_id_map_.end()) {
       spdlog::error("Field {} not found.", name);
-      return AoSFieldAccessor<T>(nullptr, 0, 0);
+      return FieldAccessor<T>(nullptr, 0, 0);
     }
-    return AoSFieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[it->second].offset);
+    return FieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[it->second].offset);
   }
   template<typename T>
-  AoSFieldConstAccessor<T> field(const std::string &name) const {
+  FieldConstAccessor<T> field(const std::string &name) const {
     auto it = struct_descriptor.field_id_map_.find(name);
     if (it == struct_descriptor.field_id_map_.end()) {
       spdlog::error("Field {} not found.", name);
-      return AoSFieldConstAccessor<T>(nullptr, 0, 0);
+      return FieldConstAccessor<T>(nullptr, 0, 0);
     }
-    return AoSFieldConstAccessor<T>(data_,
-                                    struct_descriptor.struct_size_,
-                                    struct_descriptor.fields_[it->second].offset);
+    return FieldConstAccessor<T>(data_,
+                                 struct_descriptor.struct_size_,
+                                 struct_descriptor.fields_[it->second].offset);
   }
   template<typename T>
   u64 pushField(const std::string &name) {
     return struct_descriptor.pushField<T>(name);
   }
-  /// \return
-  [[nodiscard]] inline u64 size() const { return size_; }
-  /// \return
-  [[nodiscard]] inline u64 memorySizeInBytes() const { return size_ * struct_descriptor.struct_size_; }
-  /// \return
-  [[nodiscard]] inline u64 stride() const { return struct_descriptor.struct_size_; }
-
   /// \return
   const std::vector<StructDescriptor::Field> &fields() const { return struct_descriptor.fields_; }
   /// \tparam T
@@ -382,13 +380,35 @@ public:
     return *reinterpret_cast<T *>(data_ + i * struct_descriptor.struct_size_
         + struct_descriptor.fields_[field_id].offset);
   }
-
+  ///
+  /// \tparam T
+  /// \param field_id
+  /// \param i
+  /// \return
   template<typename T>
   const T &valueAt(u64 field_id, u64 i) const {
     return *reinterpret_cast<const T *>(data_ + i * struct_descriptor.struct_size_
         + struct_descriptor.fields_[field_id].offset);
   }
-
+  /// \tparam T
+  /// \param field_id
+  /// \return
+  template<typename T>
+  const T &back(u64 field_id) const {
+    return *reinterpret_cast<const T *>(data_ + (size_ - 1) * struct_descriptor.struct_size_
+        + struct_descriptor.fields_[field_id].offset);
+  }
+  /// \tparam T
+  /// \param field_id
+  /// \return
+  template<typename T>
+  T &back(u64 field_id) {
+    return *reinterpret_cast< T *>(data_ + (size_ - 1) * struct_descriptor.struct_size_
+        + struct_descriptor.fields_[field_id].offset);
+  }
+  // ***********************************************************************
+  //                             IO
+  // ***********************************************************************
   friend std::ostream &operator<<(std::ostream &o, const AoS &aos) {
 #define PRINT_FIELD_VALUE(T, Type) \
         if (f.type == DataType::Type) { \

@@ -56,10 +56,10 @@ u64 StructDescriptor::sizeOf(u64 field_id) const {
   return fields_[field_id].size;
 }
 
-AoSConstAccessor::AoSConstAccessor(const AoS &aos) : struct_descriptor_{aos.structDescriptor()}, data_{aos.data_},
+AoS::ConstAccessor::ConstAccessor(const AoS &aos) : struct_descriptor_{aos.structDescriptor()}, data_{aos.data_},
                                                      size_{aos.size_} {}
 
-AoSAccessor::AoSAccessor(AoS &aos) : struct_descriptor_{aos.structDescriptor()}, data_{aos.data_},
+AoS::Accessor::Accessor(AoS &aos) : struct_descriptor_{aos.structDescriptor()}, data_{aos.data_},
                                      size_{aos.size_} {}
 
 AoS::AoS() = default;

@@ -314,6 +314,9 @@ TEST_CASE("AOS", "[storage][aos]") {
       REQUIRE(f32_field[i] == 1.f * i);
       REQUIRE(int_field[i] == i + 1);
     }
+    REQUIRE(aos.back<vec3>(0) == vec3(1.f + 3, 2.f + 3, 3.f + 3));
+    REQUIRE(aos.back<f32>(1) == Approx(1.f * 3));
+    REQUIRE(aos.back<int>(2) == 3 + 1);
   }//
   SECTION("Accessors") {
     AoS aos;

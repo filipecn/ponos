@@ -89,6 +89,8 @@
 #include <ponos/structures/object_pool.h>
 #include <ponos/structures/octree.h>
 #include <ponos/structures/point_set_interface.h>
+#include <ponos/structures/n_mesh.h>
+#include <ponos/structures/p_mesh.h>
 #include <ponos/structures/quad_tree.h>
 #include <ponos/structures/raw_mesh.h>
 #include <ponos/structures/tetrahedron_mesh.h>

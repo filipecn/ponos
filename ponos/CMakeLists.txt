@@ -98,6 +98,8 @@ set(PONOS_HEADERS
         ponos/numeric/level_set.h
         ponos/structures/mesh.h
         ponos/structures/object_pool.h
+		ponos/structures/n_mesh.h
+		ponos/structures/p_mesh.h
         ponos/structures/octree.h
         ponos/structures/octree.inl
         ponos/structures/point_set_interface.h
