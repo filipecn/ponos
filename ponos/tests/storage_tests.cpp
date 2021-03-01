@@ -359,6 +359,23 @@ TEST_CASE("AOS", "[storage][aos]") {
     }
   }//
   SECTION("Field Accessors") {
+    AoS aos;
+    aos.pushField<size2>("sizes");
+    aos.pushField<i32>("i32");
+    aos.resize(5);
+    auto sizes_field = aos.field<size2>(0) = {
+        {0, 1},
+        {1, 2},
+        {2, 3},
+        {3, 4},
+        {4, 5},
+    };
+    auto i32_field = aos.field<i32>(1) = {-1, -2, -3, -4, -5};
+    for (int i = 0; i < 5; ++i) {
+      REQUIRE(sizes_field[i] == size2(i, i + 1));
+      REQUIRE(i32_field[i] == -(i + 1));
+    }
+
   }//
   SECTION("File") {
     AoS aos;

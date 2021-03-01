@@ -211,6 +211,11 @@ public:
   class FieldAccessor {
   public:
     FieldAccessor(u8 *data, u64 stride, u64 offset) : data_{data}, stride_{stride}, offset_{offset} {}
+    FieldAccessor &operator=(const std::vector<T> &data) {
+      for (u64 i = 0; i < data.size(); ++i)
+        (*this)[i] = data[i];
+      return *this;
+    }
     /// \param data
     void setDataPtr(u8 *data) { data_ = data; }
     /// \param i
@@ -344,7 +349,16 @@ public:
   //                             ACCESS
   // ***********************************************************************
   Accessor accessor() { return Accessor(*this); }
+  ConstAccessor accessor() const { return ConstAccessor(*this); }
   ConstAccessor constAccessor() const { return ConstAccessor(*this); }
+  template<typename T>
+  FieldAccessor<T> field(u64 field_id) {
+    if (field_id >= struct_descriptor.fields().size()) {
+      spdlog::error("Field with id {} not found.", field_id);
+      return FieldAccessor<T>(nullptr, 0, 0);
+    }
+    return FieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[field_id].offset);
+  }
   template<typename T>
   FieldAccessor<T> field(const std::string &name) {
     auto it = struct_descriptor.field_id_map_.find(name);
@@ -353,6 +367,14 @@ public:
       return FieldAccessor<T>(nullptr, 0, 0);
     }
     return FieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[it->second].offset);
+  }
+  template<typename T>
+  FieldConstAccessor<T> field(u64 field_id) const {
+    if (field_id >= struct_descriptor.fields().size()) {
+      spdlog::error("Field with id {} not found.", field_id);
+      return FieldConstAccessor<T>(nullptr, 0, 0);
+    }
+    return FieldConstAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[field_id].offset);
   }
   template<typename T>
   FieldConstAccessor<T> field(const std::string &name) const {
