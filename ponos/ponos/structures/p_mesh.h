@@ -254,7 +254,7 @@ public:
     friend class PMesh<N>::ConstFaceAccessor;
   public:
     struct FaceIteratorElement {
-      explicit FaceIteratorElement(u64 face_id, PMesh<N> &mesh)
+      explicit FaceIteratorElement(u64 face_id, const PMesh<N> &mesh)
           : index(face_id), mesh_(mesh) {}
       [[nodiscard]] ponos::point3 centroid() const {
         return mesh_.faceCentroid(index);
@@ -293,7 +293,7 @@ public:
       }
       const u64 index;
     private:
-      PMesh<N> &mesh_;
+      const PMesh<N> &mesh_;
     };
     const_face_iterator &operator++() {
       if (current_face_id_ < mesh_.faceCount())
@@ -697,7 +697,7 @@ public:
       return const_face_iterator(mesh_, mesh_.faceCount());
     }
   private:
-    explicit ConstFaceAccessor(PMesh<N> &mesh) : mesh_{mesh} {}
+    explicit ConstFaceAccessor(const PMesh<N> &mesh) : mesh_{mesh} {}
     const PMesh<N> &mesh_;
   };
   // ***********************************************************************
