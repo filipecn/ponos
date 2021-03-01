@@ -81,6 +81,47 @@ public:
   // ***********************************************************************
   //                         Const Iterators
   // ***********************************************************************
+  class ConstCellStar;
+  class const_cell_star_iterator {
+    friend class NMesh::ConstCellStar;
+  public:
+    struct CellStarElement {
+      explicit CellStarElement(u64 he, const NMesh &mesh) : he_(he), mesh_(mesh) {}
+      [[nodiscard]] u64 cellIndex() const {
+        return mesh_.half_edges_[mesh_.half_edges_[he_].pair].cell;
+      }
+      [[nodiscard]] u64 faceIndex() const {
+        return mesh_.half_edges_[he_].face;
+      }
+      [[nodiscard]] u64 vertexIndex() const {
+        return mesh_.half_edges_[he_].vertex;
+      }
+    private:
+      u64 he_;
+      const NMesh &mesh_;
+    };
+    const_cell_star_iterator &operator++() {
+      i_++;
+      return *this;
+    }
+    CellStarElement operator*() const {
+      return CellStarElement(starting_he_ + i_, mesh_);
+    }
+    bool operator==(const const_cell_star_iterator &other) const {
+      return starting_he_ == other.starting_he_ && i_ == other.i_;
+    }
+    bool operator!=(const const_cell_star_iterator &other) const {
+      return i_ != other.i_ || starting_he_ != other.starting_he_;
+    }
+  private:
+    const_cell_star_iterator(const NMesh &mesh, u64 cell_id, u64 i) :
+        mesh_(mesh), i_(i) {
+      starting_he_ = mesh_.interleaved_cell_data_.valueAt<u64>(0, cell_id);
+    }
+    u64 i_{0};
+    u64 starting_he_{0};
+    const NMesh &mesh_;
+  };
   class ConstVertexStar;
   class const_vertex_star_iterator {
     friend class NMesh::ConstVertexStar;
@@ -93,6 +134,9 @@ public:
       [[nodiscard]] u64 cellIndex() const { return mesh_.half_edges_[he_].cell; }
       [[nodiscard]] u64 faceIndex() const {
         return mesh_.half_edges_[he_].face;
+      }
+      [[nodiscard]] u64 vertexIndex() const {
+        return mesh_.half_edges_[mesh_.half_edges_[he_].pair].vertex;
       }
     private:
       u64 he_;
@@ -133,6 +177,9 @@ public:
       [[nodiscard]] ponos::point3 centroid() const {
         return mesh_.cellCentroid(index);
       }
+      [[nodiscard]] ConstCellStar star() {
+        return ConstCellStar(mesh_, index);
+      }
       const u64 index;
     private:
       const NMesh &mesh_;
@@ -153,7 +200,7 @@ public:
     }
   private:
     explicit const_cell_iterator(const NMesh &mesh, u64 start) : current_cell_id_{start},
-                                                           mesh_(mesh) {}
+                                                                 mesh_(mesh) {}
     u64 current_cell_id_{0};
     const NMesh &mesh_;
   };
@@ -190,7 +237,7 @@ public:
     }
   private:
     explicit const_vertex_iterator(const NMesh &mesh, u64 start) : current_vertex_id_{start},
-                                                             mesh_(mesh) {}
+                                                                   mesh_(mesh) {}
     u64 current_vertex_id_{0};
     const NMesh &mesh_;
   };
@@ -255,13 +302,54 @@ public:
     }
   private:
     explicit const_face_iterator(const NMesh &mesh, u64 start) : current_face_id_{start},
-                                                           mesh_(mesh) {}
+                                                                 mesh_(mesh) {}
     u64 current_face_id_{0};
     const NMesh &mesh_;
   };
   // ***********************************************************************
   //                           Iterators
   // ***********************************************************************
+  class CellStar;
+  class cell_star_iterator {
+    friend class NMesh::CellStar;
+  public:
+    struct CellStarElement {
+      explicit CellStarElement(u64 he, NMesh &mesh) : he_(he), mesh_(mesh) {}
+      [[nodiscard]] u64 cellIndex() const {
+        return mesh_.half_edges_[mesh_.half_edges_[he_].pair].cell;
+      }
+      [[nodiscard]] u64 faceIndex() const {
+        return mesh_.half_edges_[he_].face;
+      }
+      [[nodiscard]] u64 vertexIndex() const {
+        return mesh_.half_edges_[he_].vertex;
+      }
+    private:
+      u64 he_;
+      NMesh &mesh_;
+    };
+    cell_star_iterator &operator++() {
+      i_++;
+      return *this;
+    }
+    CellStarElement operator*() const {
+      return CellStarElement(starting_he_ + i_, mesh_);
+    }
+    bool operator==(const cell_star_iterator &other) const {
+      return starting_he_ == other.starting_he_ && i_ == other.i_;
+    }
+    bool operator!=(const cell_star_iterator &other) const {
+      return i_ != other.i_ || starting_he_ != other.starting_he_;
+    }
+  private:
+    cell_star_iterator(NMesh &mesh, u64 cell_id, u64 i) :
+        mesh_(mesh), i_(i) {
+      starting_he_ = mesh_.interleaved_cell_data_.valueAt<u64>(0, cell_id);
+    }
+    u64 i_{0};
+    u64 starting_he_{0};
+    NMesh &mesh_;
+  };
   class VertexStar;
   class vertex_star_iterator {
     friend class NMesh::VertexStar;
@@ -274,6 +362,9 @@ public:
       [[nodiscard]] u64 cellIndex() const { return mesh_.half_edges_[he_].cell; }
       [[nodiscard]] u64 faceIndex() const {
         return mesh_.half_edges_[he_].face;
+      }
+      [[nodiscard]] u64 vertexIndex() const {
+        return mesh_.half_edges_[mesh_.half_edges_[he_].pair].vertex;
       }
     private:
       u64 he_;
@@ -313,6 +404,9 @@ public:
       explicit CellIteratorElement(u64 cell_id, NMesh &mesh) : index(cell_id), mesh_(mesh) {}
       [[nodiscard]] ponos::point3 centroid() const {
         return mesh_.cellCentroid(index);
+      }
+      [[nodiscard]] CellStar star() {
+        return CellStar(mesh_, index);
       }
       const u64 index;
     private:
@@ -444,6 +538,21 @@ public:
   //                          CONST ACCESSORS
   // ***********************************************************************
   ///
+  class ConstCellStar {
+    friend class NMesh;
+  public:
+    const_cell_star_iterator begin() {
+      return const_cell_star_iterator(mesh_, cell_id_, 0);
+    }
+    const_cell_star_iterator end() {
+      return const_cell_star_iterator(mesh_, cell_id_, mesh_.cellFaceCount(cell_id_));
+    }
+  private:
+    ConstCellStar(const NMesh &mesh, u64 cell_id) : mesh_{mesh}, cell_id_{cell_id} {}
+    u64 cell_id_{0};
+    const NMesh &mesh_;
+  };
+  ///
   class ConstVertexStar {
     friend class NMesh;
   public:
@@ -501,12 +610,27 @@ public:
       return const_face_iterator(mesh_, mesh_.faceCount());
     }
   private:
-    explicit ConstFaceAccessor(const NMesh &mesh) : mesh_{ mesh } {}
+    explicit ConstFaceAccessor(const NMesh &mesh) : mesh_{mesh} {}
     const NMesh &mesh_;
   };
   // ***********************************************************************
   //                           ACCESSORS
   // ***********************************************************************
+  ///
+  class CellStar {
+    friend class NMesh;
+  public:
+    cell_star_iterator begin() {
+      return cell_star_iterator(mesh_, cell_id_, 0);
+    }
+    cell_star_iterator end() {
+      return cell_star_iterator(mesh_, cell_id_, mesh_.cellFaceCount(cell_id_));
+    }
+  private:
+    CellStar(NMesh &mesh, u64 cell_id) : mesh_{mesh}, cell_id_{cell_id} {}
+    u64 cell_id_{0};
+    NMesh &mesh_;
+  };
   ///
   class VertexStar {
     friend class NMesh;
@@ -732,7 +856,7 @@ public:
   ConstVertexAccessor vertices() const {
     return ConstVertexAccessor(*this);
   }
-  ConstFaceAccessor faces() const{
+  ConstFaceAccessor faces() const {
     return ConstFaceAccessor(*this);
   }
   // ***********************************************************************

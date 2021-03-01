@@ -131,6 +131,59 @@ TEST_CASE("NMesh", "[mesh]") {
                      });
     auto dual_mesh = NMesh::buildDualFrom(t_mesh);
     std::cerr << dual_mesh;
+  } //
+  SECTION("CellStar") {
+    //             v8  f11   v9
+    //            f12   c3   f10
+    //   v4   f2   v5   f6   v6   f9   v7
+    //   f3   c0   f1   c1   f5   c2   f8
+    //   v0   f0   v1   f4   v2   f7   v3
+    NMesh mesh = NMesh::buildFrom(
+        {
+            {0.f, 0.f, 0.f}, // v0
+            {1.f, 0.f, 0.f}, // v1
+            {2.f, 0.f, 0.f}, // v2
+            {3.f, 0.f, 0.f}, // v3
+            {0.f, 1.f, 0.f}, // v4
+            {1.f, 1.f, 0.f}, // v5
+            {2.f, 1.f, 0.f}, // v6
+            {3.f, 1.f, 0.f}, // v7
+            {1.f, 2.f, 0.f}, // v8
+            {2.f, 2.f, 0.f}, // v9
+        },
+        {
+            0, 1, 5, 4, // c0
+            1, 2, 6, 5, // c1
+            2, 3, 7, 6, // c2
+            5, 6, 9, 8, // c3
+        }, {4, 4, 4, 4});
+    auto I = Constants::greatest<u64>();
+    u64 expected_cell_id[4][4] = {
+        {I, 1, I, I}, // c0
+        {I, 2, 3, 0}, // c1
+        {I, I, I, 1}, // c2
+        {1, I, I, I}, // c3
+    };
+    u64 expected_face_id[4][4] = {
+        {0, 1, 2, 3}, // c0
+        {4, 5, 6, 1}, // c1
+        {7, 8, 9, 5}, // c2
+        {6, 10, 11, 12}, // c3
+    };
+    u64 expected_vertex_id[4][4] = {
+        {0, 1, 5, 4}, // c0
+        {1, 2, 6, 5}, // c1
+        {2, 3, 7, 6}, // c2
+        {5, 6, 9, 8}, // c3
+    };
+    for (auto C : mesh.cells()) {
+      int i = 0;
+      for (auto c : C.star()) {
+        REQUIRE(c.vertexIndex() == expected_vertex_id[C.index][i]);
+        REQUIRE(c.faceIndex() == expected_face_id[C.index][i]);
+        REQUIRE(c.cellIndex() == expected_cell_id[C.index][i++]);
+      }
+    }
   }
 }
 
@@ -298,6 +351,59 @@ TEST_CASE("PMesh File IO", "[mesh]") {
 }
 
 TEST_CASE("PMesh Iterators", "[mesh]") {
+  SECTION("CellStar") {
+    PMesh<4> mesh;
+    //             v8  f11   v9
+    //            f12   c3   f10
+    //   v4   f2   v5   f6   v6   f9   v7
+    //   f3   c0   f1   c1   f5   c2   f8
+    //   v0   f0   v1   f4   v2   f7   v3
+    mesh.buildFrom(
+        {
+            {0.f, 0.f, 0.f}, // v0
+            {1.f, 0.f, 0.f}, // v1
+            {2.f, 0.f, 0.f}, // v2
+            {3.f, 0.f, 0.f}, // v3
+            {0.f, 1.f, 0.f}, // v4
+            {1.f, 1.f, 0.f}, // v5
+            {2.f, 1.f, 0.f}, // v6
+            {3.f, 1.f, 0.f}, // v7
+            {1.f, 2.f, 0.f}, // v8
+            {2.f, 2.f, 0.f}, // v9
+        },
+        {
+            0, 1, 5, 4, // c0
+            1, 2, 6, 5, // c1
+            2, 3, 7, 6, // c2
+            5, 6, 9, 8, // c3
+        });
+    u64 expected_cell_id[4][4] = {
+        {4, 1, 4, 4}, // c0
+        {6, 2, 3, 0}, // c1
+        {6, 5, 5, 1}, // c2
+        {1, 5, 5, 4}, // c3
+    };
+    u64 expected_face_id[4][4] = {
+        {0, 1, 2, 3}, // c0
+        {4, 5, 6, 1}, // c1
+        {7, 8, 9, 5}, // c2
+        {6, 10, 11, 12}, // c3
+    };
+    u64 expected_vertex_id[4][4] = {
+        {0, 1, 5, 4}, // c0
+        {1, 2, 6, 5}, // c1
+        {2, 3, 7, 6}, // c2
+        {5, 6, 9, 8}, // c3
+    };
+    for (auto C : mesh.cells()) {
+      int i = 0;
+      for (auto c : C.star()) {
+        REQUIRE(c.vertexIndex() == expected_vertex_id[C.index][i]);
+        REQUIRE(c.faceIndex() == expected_face_id[C.index][i]);
+        REQUIRE(c.cellIndex() == expected_cell_id[C.index][i++]);
+      }
+    }
+  }//
   SECTION("VertexStar") {
     PMesh<3> mesh;
     mesh.buildFrom(
