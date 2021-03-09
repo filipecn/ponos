@@ -54,6 +54,39 @@ NMesh::NMesh(NMesh &&other) noexcept {
   interleaved_face_data_ = std::move(other.interleaved_face_data_);
   interleaved_vertex_data_ = std::move(other.interleaved_vertex_data_);
 }
+
+NMesh::NMesh(NMesh &other) {
+  boundary_offset_ = other.boundary_offset_;
+  vertex_positions_ = other.vertex_positions_;
+  half_edges_ = other.half_edges_;
+  interleaved_cell_data_ = other.interleaved_cell_data_;
+  interleaved_face_data_ = other.interleaved_face_data_;
+  interleaved_vertex_data_ = other.interleaved_vertex_data_;
+}
+
+// ***********************************************************************
+
+//                           OPERATORS
+// ***********************************************************************
+NMesh &NMesh::operator=(const NMesh &other) {
+  boundary_offset_ = other.boundary_offset_;
+  vertex_positions_ = other.vertex_positions_;
+  half_edges_ = other.half_edges_;
+  interleaved_cell_data_ = other.interleaved_cell_data_;
+  interleaved_face_data_ = other.interleaved_face_data_;
+  interleaved_vertex_data_ = other.interleaved_vertex_data_;
+  return *this;
+}
+
+NMesh &NMesh::operator=(NMesh &&other) {
+  boundary_offset_ = other.boundary_offset_;
+  vertex_positions_ = std::move(other.vertex_positions_);
+  half_edges_ = std::move(other.half_edges_);
+  interleaved_cell_data_ = std::move(other.interleaved_cell_data_);
+  interleaved_face_data_ = std::move(other.interleaved_face_data_);
+  interleaved_vertex_data_ = std::move(other.interleaved_vertex_data_);
+  return *this;
+}
 // ***********************************************************************
 //                           METHODS
 // ***********************************************************************
@@ -168,11 +201,9 @@ ponos::AoS &NMesh::vertexInterleavedData() { return interleaved_vertex_data_; }
 u64 NMesh::vertexCount() const {
   return vertex_positions_.size();
 }
-
 u64 NMesh::faceCount() const {
   return interleaved_face_data_.size();
 }
-
 u64 NMesh::cellCount() const {
   return interleaved_cell_data_.size();
 }

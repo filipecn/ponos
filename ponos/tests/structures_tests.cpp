@@ -184,7 +184,36 @@ TEST_CASE("NMesh", "[mesh]") {
         REQUIRE(c.cellIndex() == expected_cell_id[C.index][i++]);
       }
     }
-  }
+  }SECTION("Copy Assignment Operators") {
+    auto source = NMesh::buildFrom(
+        {
+            {0.f, 1.f, 0.f}, // v0
+            {0.f, 0.f, 0.f}, // v1
+            {1.f, 0.f, 0.f}, // v2
+            {1.f, 1.f, 0.f}, // v3
+            {2.f, 1.f, 0.f}, // v4
+        },
+        {
+            0, 1, 2, 3, // cell 0
+            3, 2, 4 // cell 1
+        },
+        {4, 3}
+    );
+    NMesh moved = std::move(source);
+    NMesh copied;
+    copied = moved;
+    // METRICS
+    REQUIRE(copied.vertexCount() == 5);
+    REQUIRE(copied.faceCount() == 6);
+    REQUIRE(copied.cellCount() == 2);
+    REQUIRE(copied.cellFaceCount(0) == 4);
+    REQUIRE(copied.cellFaceCount(1) == 3);
+    REQUIRE(moved.vertexCount() == 5);
+    REQUIRE(moved.faceCount() == 6);
+    REQUIRE(moved.cellCount() == 2);
+    REQUIRE(moved.cellFaceCount(0) == 4);
+    REQUIRE(moved.cellFaceCount(1) == 3);
+  }//
 }
 
 TEST_CASE("PMesh", "[mesh]") {
