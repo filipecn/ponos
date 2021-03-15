@@ -45,6 +45,11 @@
 
 namespace ponos {
 
+template<typename E>
+constexpr bool testMaskBit(E mask, E bit) {
+  return (mask & bit) == bit;
+}
+
 #define PONOS_ENABLE_BITMASK_OPERATORS(x)  \
 template<>                           \
 struct EnableBitMaskOperators<x>     \

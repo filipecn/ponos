@@ -28,6 +28,7 @@
 #include "str.h"
 
 #include <iostream>
+#include <utility>
 
 namespace ponos {
 
@@ -99,6 +100,18 @@ std::string Str::replace_r(const std::string &s,
                            std::regex_constants::match_flag_type flags) {
   return std::regex_replace(s, std::regex(pattern), format, flags);
 }
+
+Str::Str() = default;
+
+Str::Str(std::string s) : s_{std::move(s)} {}
+
+Str::Str(const char *s) : s_{s} {}
+
+Str::Str(Str &&other) noexcept: s_{std::move(other.s_)} {}
+
+Str::Str(const Str &other) = default;
+
+Str::~Str() = default;
 
 }
 

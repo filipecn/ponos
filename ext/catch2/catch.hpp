@@ -1525,7 +1525,7 @@ inline id performOptionalSelector( id obj, SEL sel ) {
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable:4180) // We attempt to stream a function (address) by const&, which MSVC complains about but is harmless
+#pragma warning(disable:4180) // We attempt to stream a function (addressOf) by const&, which MSVC complains about but is harmless
 #endif
 
 namespace Catch {

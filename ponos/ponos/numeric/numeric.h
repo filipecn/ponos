@@ -63,6 +63,18 @@ struct Constants {
     return (n * machine_epsilon) / (1 - n * machine_epsilon);
   }
 };
+
+class Numbers {
+public:
+  static inline u8 countDigits(u64 t, u8 base = 10) {
+    u8 count{0};
+    while (t) {
+      count++;
+      t /= base;
+    }
+    return count;
+  }
+};
 ///\brief
 ///
 struct Check {

@@ -56,7 +56,7 @@ enum class GridPosition {
   VERTEX_CENTER,
   GRID_POSITION_TYPES_COUNT
 };
-/// Grid address mode: Defines how out of boundaries grid positions are handled
+/// Grid addressOf mode: Defines how out of boundaries grid positions are handled
 enum class AddressMode {
   ///
   REPEAT,
@@ -255,7 +255,7 @@ public:
     return bbox1(wp, wp + grid_.spacing_);
   }
   /// \param ij **[in]** position index
-  /// \return reference to data stored at ``ij`` based on the address mode
+  /// \return reference to data stored at ``ij`` based on the addressOf mode
   T &operator[](i32 i) {
     auto fi = i;
     switch (address_mode_) {
@@ -279,7 +279,7 @@ public:
   }
   /// \param world_position (in world coordinates)
   /// \return sampled data value in ``world_position`` based on the
-  /// interpolation mode and address mode
+  /// interpolation mode and addressOf mode
   T operator()(real_t world_position) {
     auto cp = cellPosition(world_position);
     auto ip = cellIndex(world_position);
@@ -380,7 +380,7 @@ public:
     return bbox1(wp, wp + grid_.spacing_);
   }
   /// \param ij **[in]** position index
-  /// \return reference to data stored at ``ij`` based on the address mode
+  /// \return reference to data stored at ``ij`` based on the addressOf mode
   const T &operator[](i32 i) const {
     i32 fi = i;
     switch (address_mode_) {
@@ -404,7 +404,7 @@ public:
   }
 /// \param world_position (in world coordinates)
 /// \return sampled data value in ``world_position`` based on the
-/// interpolation mode and address mode
+/// interpolation mode and addressOf mode
   T operator()(real_t world_position) {
     auto cp = cellPosition(world_position);
     auto ip = cellIndex(world_position);
@@ -785,7 +785,7 @@ public:
     return bbox2(wp, wp + grid_.spacing_);
   }
   /// \param ij **[in]** position index
-  /// \return reference to data stored at ``ij`` based on the address mode
+  /// \return reference to data stored at ``ij`` based on the addressOf mode
   T &operator[](const index2 &ij) {
     index2 fij = ij;
     switch (address_mode_) {
@@ -814,7 +814,7 @@ public:
   }
   /// \param world_position (in world coordinates)
   /// \return sampled data value in ``world_position`` based on the
-  /// interpolation mode and address mode
+  /// interpolation mode and addressOf mode
   T operator()(const point2 &world_position) {
     auto cp = cellPosition(world_position);
     auto ip = cellIndex(world_position);
@@ -919,7 +919,7 @@ public:
     return bbox2(wp, wp + grid_.spacing_);
   }
   /// \param ij **[in]** position index
-  /// \return reference to data stored at ``ij`` based on the address mode
+  /// \return reference to data stored at ``ij`` based on the addressOf mode
   const T &operator[](const index2 &ij) const {
     index2 fij = ij;
     switch (address_mode_) {
@@ -948,7 +948,7 @@ public:
   }
   /// \param world_position (in world coordinates)
   /// \return sampled data value in ``world_position`` based on the
-  /// interpolation mode and address mode
+  /// interpolation mode and addressOf mode
   T operator()(const point2 &world_position) const {
     auto cp = cellPosition(world_position);
     auto ip = cellIndex(world_position);

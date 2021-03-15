@@ -85,7 +85,8 @@ set(PONOS_HEADERS
         ponos/geometry/vector.h
         ponos/geometry/vector.inl
         ponos/log/debug.h
-        ponos/parallel/parallel.h
+		ponos/log/memory_dump.h
+		ponos/parallel/parallel.h
         ponos/numeric/grid.h
         ponos/numeric/vector_grid.h
         ponos/storage/memory_block.h

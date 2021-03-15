@@ -176,6 +176,14 @@ TEST_CASE("Str", "[common]") {
     std::string s2("/home//usr/local");
     REQUIRE(Str::replace_r(s2, "\\b//", "/") == "/home/usr/local");
   }//
+  SECTION("string class") {
+    Str s;
+    REQUIRE((s += "abc") == "abc");
+    REQUIRE(s << 2 == "abc2");
+    REQUIRE(s + 2 == "abc2");
+    s = "2";
+    REQUIRE(s == 2);
+  }//
 }
 
 TEST_CASE("Path", "[common]") {
@@ -329,13 +337,13 @@ TEST_CASE("FileSystem", "[common]") {
       auto f = FileSystem::find("find_dir", ".*\.ext2", find_options::sort);
       REQUIRE(f.size() == 5);
       for (int i = 0; i < 5; ++i)
-        REQUIRE(f[i].name() == concat("file", i, ".ext2"));
+        REQUIRE(f[i].name() == Str::concat("file", i, ".ext2"));
     }
     { // search ext1 rec
       auto f = FileSystem::find("find_dir", ".*\.ext1", find_options::sort | find_options::recursive);
       REQUIRE(f.size() == 6);
       for (int i = 0; i < 6; ++i)
-        REQUIRE(f[i].name() == concat("file", i, ".ext1"));
+        REQUIRE(f[i].name() == Str::concat("file", i, ".ext1"));
     }
   }//
   SECTION("lines") {

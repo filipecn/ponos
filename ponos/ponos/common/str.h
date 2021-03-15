@@ -33,6 +33,7 @@
 #include <vector>
 #include <regex>
 #include <functional>
+#include <iomanip>
 
 namespace ponos {
 
@@ -46,6 +47,23 @@ class Str {
     concat(s, t...);
   }
 public:
+  // ***********************************************************************
+  //                           STATIC METHODS
+  // ***********************************************************************
+  template<typename T>
+  static std::string toHex(T i, bool leading_zeros = false, bool zero_x = false) {
+    std::stringstream stream;
+    if (zero_x)
+      stream << "0x";
+    if (leading_zeros)
+      stream << std::setfill('0') << std::setw(sizeof(T) * 2)
+             << std::hex << i;
+    else
+      stream << std::hex << i;
+    if (!i)
+      stream << '0';
+    return stream.str();
+  }
   /// Concatenates multiple elements_ into a single string.
   /// \tparam Args
   /// \param args
@@ -118,7 +136,123 @@ public:
   /// \return A copy of s with all replacements
   static std::string replace_r(const std::string &s, const std::string &pattern, const std::string &format,
                                std::regex_constants::match_flag_type flags = std::regex_constants::match_default);
+  // ***********************************************************************
+  //                           CONSTRUCTORS
+  // ***********************************************************************
+  /// \param s
+  Str();
+  Str(std::string s);
+  Str(const char* s);
+  Str(const Str &other);
+  Str(Str &&other) noexcept;
+  ~Str();
+  // ***********************************************************************
+  //                             ACCESS
+  // ***********************************************************************
+  [[nodiscard]] inline const std::string &str() const { return s_; }
+  [[nodiscard]] inline const char *c_str() const { return s_.c_str(); }
+  // ***********************************************************************
+  //                             METHODS
+  // ***********************************************************************
+  template<class... Args>
+  void append(const Args &... args) {
+    std::ostringstream s;
+    concat(s, args...);
+    s_ += s.str();
+  }
+  template<class... Args>
+  void appendLine(const Args &... args) {
+    std::ostringstream s;
+    concat(s, args...);
+    s_ += s.str() + '\n';
+  }
+  // ***********************************************************************
+  //                             OPERATORS
+  // ***********************************************************************
+  template<typename T>
+  Str &operator=(const T &t) {
+    std::stringstream ss;
+    ss << t;
+    s_ = ss.str();
+    return *this;
+  }
+  template<typename T>
+  Str &operator+=(const T &t) {
+    std::stringstream ss;
+    ss << t;
+    s_ += ss.str();
+    return *this;
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const Str &s) {
+    os << s.str();
+    return os;
+  }
+private:
+  std::string s_;
 };
+
+inline bool operator==(const Str &s, const char *ss) {
+  return s.str() == ss;
+}
+
+inline bool operator==(const char *ss, const Str &s) {
+  return s.str() == ss;
+}
+
+template<typename T>
+inline bool operator==(const T &t, const Str &s) {
+  std::stringstream ss;
+  ss << t;
+  return s.str() == ss.str();
+}
+
+template<typename T>
+inline bool operator==(const Str &s, const T &t) {
+  std::stringstream ss;
+  ss << t;
+  return s.str() == ss.str();
+}
+
+template<typename T>
+inline Str operator+(const Str &s, const T &t) {
+  return {s << t};
+}
+
+template<typename T>
+inline Str operator+(const T &t, const Str &s) {
+  return {s << t};
+}
+
+inline Str operator<<(const char *s, const Str &str) {
+  return {str.str() + s};
+}
+
+inline Str operator<<(const std::string &s, const Str &str) {
+  return {str.str() + s};
+}
+
+inline Str operator<<(const Str &str, const char *s) {
+  return {str.str() + s};
+}
+
+inline Str operator<<(const Str &str, const std::string &s) {
+  return {str.str() + s};
+}
+
+template<typename T>
+inline Str operator<<(const Str &s, T t) {
+  std::stringstream ss;
+  ss << t;
+  return {s + ss.str()};
+}
+
+template<typename T>
+inline Str operator<<(T t, const Str &s) {
+  std::stringstream ss;
+  ss << t;
+  return {s + ss.str()};
+}
 
 }
 

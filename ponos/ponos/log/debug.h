@@ -119,21 +119,6 @@
 
 namespace ponos {
 
-// Condition to stop processing
-inline void concatenate(std::ostringstream &s) { UNUSED_VARIABLE(s); }
-
-template <typename H, typename... T>
-void concatenate(std::ostringstream &s, H p, T... t) {
-  s << p;
-  concatenate(s, t...);
-}
-
-template <class... Args> std::string concat(const Args &... args) {
-  std::ostringstream s;
-  concatenate(s, args...);
-  return s.str();
-}
-
 inline void printBits(u32 n) {
   for (int i = 31; i >= 0; i--)
     if ((1 << i) & n)

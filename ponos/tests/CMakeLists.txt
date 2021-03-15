@@ -3,6 +3,7 @@ set(SOURCES
         blas_tests.cpp
         common_tests.cpp
         geometry_tests.cpp
+        log_tests.cpp
         numeric_tests.cpp
         storage_tests.cpp
         random_tests.cpp

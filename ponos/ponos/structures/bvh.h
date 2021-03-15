@@ -439,14 +439,14 @@ protected:
         // 2) partition elements based on middle point position
         // std::partition tests all elements in an array against a predicate test. Elements
         // that pass in the test are put in the begin of the array, while elements that fail
-        // are tossed to the end. std::partition then returns the address of the first element
+        // are tossed to the end. std::partition then returns the addressOf of the first element
         // that does not pass in the predicate.
         ElementInfo *mid_ptr =
             std::partition(&element_info[start], &element_info[end - 1] + 1,
                            [dim, pmid](const ElementInfo &pi) {
                              return pi.centroid[dim] < pmid;
                            });
-        // convert address to array index
+        // convert addressOf to array index
         mid = mid_ptr - &element_info[0];
         // we are done only if we could successfully separate elements, in the edge case
         // where we end up with a single subset of elements the EqualCounts algorithm is
