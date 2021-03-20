@@ -208,9 +208,9 @@ public:
   private:
     ZPointSet &zps_;
   };
-  /// Default constructor
+  /// default_color constructor
   ZPointSet();
-  /// Default destructor
+  /// default_color destructor
   ~ZPointSet() override;
   /// Constructor
   /// \param maxCoordinates maximum coordinates value for an input point

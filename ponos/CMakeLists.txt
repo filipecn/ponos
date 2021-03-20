@@ -86,6 +86,7 @@ set(PONOS_HEADERS
         ponos/geometry/vector.inl
         ponos/log/debug.h
 		ponos/log/memory_dump.h
+		ponos/log/console_colors.h
 		ponos/parallel/parallel.h
         ponos/numeric/grid.h
         ponos/numeric/vector_grid.h
@@ -117,7 +118,8 @@ file(GLOB PONOS_SOURCES
         ponos/algorithm/*.cpp
         ponos/geometry/*.cpp
         ponos/blas/*.cpp
-        ponos/parallel/*.cpp
+		ponos/log/*.cpp
+		ponos/parallel/*.cpp
 		ponos/random/*.cpp
 		ponos/common/*.cpp
         ponos/structures/*.cpp

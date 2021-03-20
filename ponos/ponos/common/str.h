@@ -176,6 +176,12 @@ public:
     s_ = ss.str();
     return *this;
   }
+
+  Str& operator += (const Str& other) {
+    s_ += other.s_;
+    return *this;
+  }
+
   template<typename T>
   Str &operator+=(const T &t) {
     std::stringstream ss;

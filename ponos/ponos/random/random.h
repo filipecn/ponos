@@ -33,7 +33,7 @@ public:
  */
 class HaltonSequence : public RNG {
 public:
-  /// Default constructor.
+  /// default_color constructor.
   HaltonSequence() : base(2), ind(1) {}
   /// \param b base ( > 1)
   explicit HaltonSequence(uint b) : base(b), ind(1) {}

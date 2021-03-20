@@ -10,7 +10,7 @@ namespace ponos {
  */
 class Timer {
 public:
-  /** \brief Default constructor.
+  /** \brief default_color constructor.
    * Starts the timer.
    */
   Timer() { tick(); }

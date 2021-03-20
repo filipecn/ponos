@@ -32,7 +32,9 @@
 #include <ponos/common/str.h>
 #include <ponos/numeric/numeric.h>
 #include <ponos/common/bitmask_operators.h>
+#include <ponos/log/console_colors.h>
 #include <iostream>
+#include <cstdlib> // system
 
 namespace ponos {
 
@@ -47,13 +49,28 @@ enum class memory_dumper_options {
   hide_header = 0x10,
   cache_align = 0x20,
   hide_zeros = 0x40,
-  hide_ascii = 0x80
+  hide_ascii = 0x80,
+  save_to_string = 0x100,
+  write_to_console = 0x200,
+  colored_output = 0x400
 };
 PONOS_ENABLE_BITMASK_OPERATORS(memory_dumper_options);
 
 /// Auxiliary class for analysing blocks of memory
 class MemoryDumper {
 public:
+  struct Region {
+    std::size_t offset{0};
+    std::size_t size_in_bytes{0};
+    std::size_t count{0};
+    std::string color = ConsoleColors::default_color;
+    std::vector<Region> sub_regions;
+  };
+  ///
+  /// \tparam T
+  /// \param data
+  /// \param size
+  /// \return
   template<typename T>
   static std::string dumpInfo(const T *data, std::size_t size) {
     auto alignment = alignof(T);
@@ -80,14 +97,20 @@ public:
   /// \return
   template<typename T>
   static std::string dump(const T *data, std::size_t size, u32 bytes_per_row = 8,
-                          memory_dumper_options options = memory_dumper_options::none) {
+                          memory_dumper_options options = memory_dumper_options::none,
+                          const std::vector<Region> &regions = {}) {
     // check options
     auto hide_zeros = testMaskBit(options, memory_dumper_options::hide_zeros);
     auto include_header = !testMaskBit(options, memory_dumper_options::hide_header);
     auto align_data = testMaskBit(options, memory_dumper_options::cache_align);
     auto show_ascii = !testMaskBit(options, memory_dumper_options::hide_ascii);
+    auto write_to_console = testMaskBit(options, memory_dumper_options::write_to_console);
+    auto save_string = testMaskBit(options, memory_dumper_options::save_to_string);
+    auto colored_output = testMaskBit(options, memory_dumper_options::colored_output);
+    if (!write_to_console && !save_string)
+      write_to_console = true;
     // output string
-    Str s;
+    Str output_string;
     // address size
     u32 address_digit_count = 8;
     // compute column size for text alignment
@@ -100,13 +123,17 @@ public:
     u8 column_size = std::max(header_digit_count, data_digit_count);
     u8 address_column_size = address_digit_count + 2 + 2; // 0x + \t
     if (include_header) {
-      s += std::string() + std::string(address_column_size, ' ');
+      Str s = std::string(address_column_size, ' ');
       for (u32 i = 0; i < bytes_per_row; ++i) {
         auto bs = binaryToHex(i, true, true);
         if (i % 8 == 0)
           s.append(" ");
         s.append(std::setw(column_size), !bs.empty() ? bs : "0", " ");
       }
+      if (save_string)
+        output_string += s;
+      if (write_to_console)
+        std::cout << s;
     }
     auto alignment = (align_data) ? 64 : 1;
     auto ptr = reinterpret_cast<const u8 * >(data);
@@ -115,19 +142,34 @@ public:
     ptrdiff_t byte_offset = 0;
     auto size_in_bytes = sizeof(T) * size + shift;
     while (byte_offset < size_in_bytes) {
-      s.appendLine();
-      s.append(addressOf(reinterpret_cast<uintptr_t >((void *) (aligned_base_address + byte_offset))).c_str(),
-               "\t");
+      { // ADDRESS
+        Str s;
+        s.appendLine();
+        s.append(addressOf(reinterpret_cast<uintptr_t >((void *) (aligned_base_address + byte_offset))).c_str(),
+                 "  ");
+        if (save_string)
+          output_string += s;
+        if (write_to_console)
+          std::cout << s;
+      }
       std::string ascii_data;
       for (ptrdiff_t i = 0; i < bytes_per_row; i++, byte_offset++) {
-        if (i % 8 == 0)
-          s.append(" ");
+        if (i % 8 == 0) {
+          if (write_to_console)
+            std::cout << " ";
+          if (save_string)
+            output_string.append(" ");
+        }
         if (aligned_base_address + byte_offset < reinterpret_cast<uintptr_t >(ptr) || byte_offset >= size_in_bytes) {
-          s += std::string(column_size, ' ') + " ";
+          if (write_to_console)
+            std::cout << std::string(column_size, ' ') + " ";
+          if (save_string)
+            output_string += std::string(column_size, ' ') + " ";
           ascii_data += '.';
           continue;
         }
         u8 byte = *(reinterpret_cast<u8 *>(aligned_base_address + byte_offset));
+        Str s;
         if (!hide_zeros || byte) {
           if (testMaskBit(options, memory_dumper_options::hexadecimal))
             s.append(binaryToHex(byte), " ");
@@ -141,18 +183,53 @@ public:
             s.append(binaryToHex(byte), " ");
         } else
           s.append(std::string(column_size, ' '), " ");
+
+        if (save_string)
+          output_string += s;
+        if (write_to_console) {
+          if (colored_output)
+            std::cout << byteColor(byte_offset, regions) << s.str() <<
+                      ConsoleColors::default_color << ConsoleColors::reset;
+          else
+            std::cout << s.str();
+        }
         if (std::isalnum(byte))
           ascii_data += byte;
         else
           ascii_data += '.';
       }
-      if (show_ascii)
-        s.append("\t|", ascii_data, "|");
+      if (show_ascii) {
+        if (write_to_console)
+          std::cout << "\t|" << ascii_data << "|";
+        if (save_string)
+          output_string.append("\t|", ascii_data, "|");
+      }
     }
-    return s.str() + '\n';
+    if (save_string)
+      output_string += '\n';
+    if (write_to_console)
+      std::cout << "\n";
+    return output_string.str();
   }
 
 private:
+  static std::string byteColor(std::size_t byte_index, const std::vector<Region> &regions) {
+    std::function<std::string(const std::vector<Region> &, std::size_t)> f;
+    f = [&](const std::vector<Region> &subregions, std::size_t byte_offset) -> std::string {
+      for (const auto &region : subregions) {
+        auto region_start = region.offset;
+        auto region_end = region_start + region.size_in_bytes * region.count;
+        if (byte_offset >= region_start && byte_offset < region_end) {
+          if (region.sub_regions.empty())
+            return region.color;
+          return f(region.sub_regions, (byte_offset - region_start) % region.size_in_bytes);
+        }
+      }
+      return ConsoleColors::dim;
+    };
+    return f(regions, byte_index);
+  }
+
   static std::string addressOf(uintptr_t ptr, u32 digit_count = 8) {
     std::string s;
     for (i8 i = 7; i >= 0; --i)
@@ -168,11 +245,11 @@ private:
     for (int i = sizeof(T) - 1; i >= 0; --i) {
       u8 a = n >> (8 * i + 4) & 0xf;
       u8 b = (n >> (8 * i)) & 0xf;
-      if(a)
+      if (a)
         strip_leading_zeros = false;
       if (!strip_leading_zeros)
         s += (uppercase) ? DIGITS[a] : digits[a];
-      if(b)
+      if (b)
         strip_leading_zeros = false;
       if (!strip_leading_zeros)
         s += (uppercase) ? DIGITS[b] : digits[b];

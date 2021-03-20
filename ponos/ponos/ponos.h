@@ -65,6 +65,7 @@
 #include <ponos/geometry/vector.h>
 #include <ponos/log/debug.h>
 #include <ponos/log/memory_dump.h>
+#include <ponos/log/console_colors.h>
 #include <ponos/numeric/differential_operators.h>
 #include <ponos/numeric/fd_matrix.h>
 #include <ponos/numeric/grid_interpolator.h>

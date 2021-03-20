@@ -37,7 +37,7 @@ namespace ponos {
  */
 class Plane {
 public:
-  /// Default constructor
+  /// default_color constructor
   Plane() { offset = 0; }
   /** Constructor
    * \param n **[in]** normal
@@ -95,7 +95,7 @@ public:
  */
 class ImplicitPlane2D : public ImplicitCurveInterface {
 public:
-  /// Default constructor
+  /// default_color constructor
   ImplicitPlane2D() { offset = 0.f; }
   /** Constructor
    * \param n **[in]** normal
