@@ -30,9 +30,11 @@
 
 #include <ponos/common/defs.h>
 #include <string>
+#include <iostream>
 
 namespace ponos {
 
+/// https://misc.flogisoft.com/bash/tip_colors_and_formatting
 class ConsoleColors {
 public:
   // SET
@@ -91,6 +93,9 @@ public:
   }
   inline static std::string background_color(u8 color_number) {
     return std::string("\e[48;5;") + std::to_string(color_number) + "m";
+  }
+  inline static std::string combine(const std::string &a, const std::string &b) {
+    return "\e[" + a.substr(2, a.size() - 3) + ";" + b.substr(2, b.size() - 3) + "m";
   }
 };
 

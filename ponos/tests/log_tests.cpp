@@ -60,7 +60,9 @@ TEST_CASE("Console Colors", "[log]") {
                 std::to_string(r * 8 + i) << " ";
     std::cout << std::endl;
   }
-
+  std::cout << ConsoleColors::reset << "reset\n";
+  std::cout << ConsoleColors::combine(ConsoleColors::blink, ConsoleColors::green) <<
+  "blink green " << ConsoleColors::reset << std::endl;
 #undef PRINT_COLOR_NAME
 }
 
@@ -121,7 +123,7 @@ TEST_CASE("MemoryDumper", "[log]") {
                              {0,
                               sizeof(S),
                               5,
-                              ConsoleColors::default_color,
+                              ConsoleColors::combine(ConsoleColors::yellow, ConsoleColors::dim),
                               {
                                   // a
                                   {
@@ -160,7 +162,7 @@ TEST_CASE("MemoryDumper", "[log]") {
                              {0,
                               sizeof(S),
                               5,
-                              ConsoleColors::default_color,
+                              ConsoleColors::combine(ConsoleColors::yellow, ConsoleColors::dim),
                               {
                                   // a
                                   {

@@ -141,6 +141,7 @@ public:
     uintptr_t aligned_base_address = reinterpret_cast<uintptr_t >(ptr) - shift;
     ptrdiff_t byte_offset = 0;
     auto size_in_bytes = sizeof(T) * size + shift;
+    auto line_count = 0;
     while (byte_offset < size_in_bytes) {
       { // ADDRESS
         Str s;
@@ -149,8 +150,13 @@ public:
                  "  ");
         if (save_string)
           output_string += s;
-        if (write_to_console)
-          std::cout << s;
+        if (write_to_console) {
+          if (colored_output && line_count % 2)
+            std::cout << ConsoleColors::dim << s << ConsoleColors::reset_dim;
+          else
+            std::cout << s;
+        }
+        line_count++;
       }
       std::string ascii_data;
       for (ptrdiff_t i = 0; i < bytes_per_row; i++, byte_offset++) {
@@ -214,26 +220,30 @@ public:
 
 private:
   static std::string byteColor(std::size_t byte_index, const std::vector<Region> &regions) {
-    std::function<std::string(const std::vector<Region> &, std::size_t)> f;
-    f = [&](const std::vector<Region> &subregions, std::size_t byte_offset) -> std::string {
+    std::function<std::string(const std::vector<Region> &, std::size_t, const std::string &)> f;
+    f = [&](const std::vector<Region> &subregions, std::size_t byte_offset,
+            const std::string &parent_color) -> std::string {
       for (const auto &region : subregions) {
         auto region_start = region.offset;
         auto region_end = region_start + region.size_in_bytes * region.count;
         if (byte_offset >= region_start && byte_offset < region_end) {
           if (region.sub_regions.empty())
             return region.color;
-          return f(region.sub_regions, (byte_offset - region_start) % region.size_in_bytes);
+          return f(region.sub_regions, (byte_offset - region_start) % region.size_in_bytes, region.color);
         }
       }
-      return ConsoleColors::dim;
+      return parent_color;
     };
-    return f(regions, byte_index);
+    return f(regions, byte_index, ConsoleColors::default_color);
   }
 
   static std::string addressOf(uintptr_t ptr, u32 digit_count = 8) {
     std::string s;
-    for (i8 i = 7; i >= 0; --i)
-      s += binaryToHex((ptr >> (i * 8)) & 0xff, false);
+    // TODO: assuming little endianess
+    for (i8 i = 7; i >= 0; --i) {
+      auto h = binaryToHex((ptr >> (i * 8)) & 0xff, true);
+      s += h.substr(h.size() - 2);
+    }
     return "0x" + s.substr(s.size() - digit_count, digit_count);
   }
 
