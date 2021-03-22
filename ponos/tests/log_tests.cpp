@@ -118,7 +118,8 @@ TEST_CASE("MemoryDumper", "[log]") {
       };
       S v[5] = {{1, 1, 1}, {2, 2, 2},
                 {3, 3, 3}, {4, 4, 4}, {5, 5, 5}};
-      MemoryDumper::dump(v, 5, 16, memory_dumper_options::colored_output,
+      MemoryDumper::dump(v, 5, 16, memory_dumper_options::colored_output
+                         | memory_dumper_options::cache_align,
                          {
                              {0,
                               sizeof(S),
@@ -157,7 +158,8 @@ TEST_CASE("MemoryDumper", "[log]") {
       };
       S v[5] = {{1, 1, 1}, {2, 2, 2},
                 {3, 3, 3}, {4, 4, 4}, {5, 5, 5}};
-      MemoryDumper::dump(v, 5, 16, memory_dumper_options::colored_output,
+      MemoryDumper::dump(v, 5, 16, memory_dumper_options::colored_output
+                         | memory_dumper_options::cache_align,
                          {
                              {0,
                               sizeof(S),

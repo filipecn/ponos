@@ -194,7 +194,7 @@ public:
           output_string += s;
         if (write_to_console) {
           if (colored_output)
-            std::cout << byteColor(byte_offset, regions) << s.str() <<
+            std::cout << byteColor(byte_offset - shift, regions) << s.str() <<
                       ConsoleColors::default_color << ConsoleColors::reset;
           else
             std::cout << s.str();
