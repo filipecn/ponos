@@ -34,13 +34,14 @@
 #include <regex>
 #include <functional>
 #include <iomanip>
+#include <iostream>
 
 namespace ponos {
 
 class Str {
-  // Condition to stop processing
+//   Condition to stop processing
   static void concat(std::ostringstream &s) { (void(s)); }
-
+//
   template<typename H, typename... T>
   static void concat(std::ostringstream &s, H p, T... t) {
     s << p;
@@ -81,15 +82,15 @@ public:
   static std::string join(const std::vector<std::string> &v, const std::string &separator = "");
   template<typename T>
   static std::string join(const std::vector<T> &v, const std::string &separator = "") {
-    std::string r;
     bool first = true;
+    std::stringstream r;
     for (const auto &s : v) {
       if (!first)
-        r += separator;
+        r << separator;
       first = false;
-      r = concat(r, s);
+      r << s;
     }
-    return r;
+    return r.str();
   }
   /// Splits a string into tokens separated by delimiters
   /// \param s **[in]** input string
@@ -142,7 +143,7 @@ public:
   /// \param s
   Str();
   Str(std::string s);
-  Str(const char* s);
+  Str(const char *s);
   Str(const Str &other);
   Str(Str &&other) noexcept;
   ~Str();
@@ -169,6 +170,8 @@ public:
   // ***********************************************************************
   //                             OPERATORS
   // ***********************************************************************
+//  operator const std::string &() const { return s_; }
+  Str &operator=(const Str &s) = default;
   template<typename T>
   Str &operator=(const T &t) {
     std::stringstream ss;
@@ -177,7 +180,7 @@ public:
     return *this;
   }
 
-  Str& operator += (const Str& other) {
+  Str &operator+=(const Str &other) {
     s_ += other.s_;
     return *this;
   }
@@ -222,30 +225,33 @@ inline bool operator==(const Str &s, const T &t) {
 
 template<typename T>
 inline Str operator+(const Str &s, const T &t) {
-  return {s << t};
+  std::stringstream ss;
+  ss << s << t;
+  return ss.str();
 }
 
-template<typename T>
-inline Str operator+(const T &t, const Str &s) {
-  return {s << t};
-}
+//template<typename T>
+//inline Str operator+(const T &t, const Str &s) {
+//  return {s << t};
+//}
 
 inline Str operator<<(const char *s, const Str &str) {
   return {str.str() + s};
 }
 
-inline Str operator<<(const std::string &s, const Str &str) {
-  return {str.str() + s};
-}
+//inline Str operator<<(const std::string &s, const Str &str) {
+//  return {str.str() + s};
+//}
 
 inline Str operator<<(const Str &str, const char *s) {
   return {str.str() + s};
 }
 
-inline Str operator<<(const Str &str, const std::string &s) {
-  return {str.str() + s};
-}
+//inline Str operator<<(const Str &str, const std::string &s) {
+//  return {str.str() + s};
+//}
 
+//template<typename T, std::enable_if_t<std::is_same_v<T, std::string> == false>>
 template<typename T>
 inline Str operator<<(const Str &s, T t) {
   std::stringstream ss;
@@ -253,7 +259,7 @@ inline Str operator<<(const Str &s, T t) {
   return {s + ss.str()};
 }
 
-template<typename T>
+template<typename T, std::enable_if_t<std::is_same_v<T, std::string> == false>>
 inline Str operator<<(T t, const Str &s) {
   std::stringstream ss;
   ss << t;

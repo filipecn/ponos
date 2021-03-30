@@ -302,7 +302,7 @@ std::ostream &operator<<(std::ostream &os, const Array1<T> &array) {
   if (std::is_same_v<T, u8> || std::is_same_v<T, i8>)
     w = 4;
   for (u32 i = 0; i < array.size(); ++i)
-    os << std::setw(w) << std::right << Str::concat("[", i, "]");
+    os << std::setw(w) << std::right << (Str() << "[" << i << "]");
   os << std::endl << '\t';
   for (u32 i = 0; i < array.size(); ++i) {
     os << std::setw(w) << std::right;
@@ -693,7 +693,7 @@ std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
   if (std::is_same_v<T, u8> || std::is_same_v<T, i8>)
     w = 4;
   for (u32 i = 0; i < array.size().width; ++i)
-    os << std::setw(w) << std::right << Str::concat("[", i, "]");
+    os << std::setw(w) << std::right << (Str() << "[" << i << "]");
   os << std::endl;
   for (u32 j = 0; j < array.size().height; ++j) {
     os << "\t[," << j << "]";
@@ -711,7 +711,7 @@ std::ostream &operator<<(std::ostream &os, const Array2<T> &array) {
   }
   os << "\t\t";
   for (u32 i = 0; i < array.size().width; ++i)
-    os << std::setw(w) << std::right << Str::concat("[", i, "]");
+    os << std::setw(w) << std::right << (Str() << "[" << i << "]");
   os << std::endl;
   return os;
 }

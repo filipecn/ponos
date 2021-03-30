@@ -36,7 +36,7 @@ namespace ponos {
 ArgParser::ArgParser(std::string bin, std::string description)
     : bin_{std::move(bin)}, description_{std::move(description)} {}
 
-bool ArgParser::parse(int argc, char **argv, bool verbose_parsing) {
+bool ArgParser::parse(int argc, const char **argv, bool verbose_parsing) {
   if(verbose_parsing) {
     std::cout << "parsing arguments:\n\t";
     for(int i = 0; i < argc; ++i)

@@ -29,6 +29,7 @@
 #define PONOS_FILE_SYSTEM_H
 
 #include <ponos/common/defs.h>
+#include <ponos/common/str.h>
 #include <ponos/common/bitmask_operators.h>
 #include <vector>
 #include <string>
@@ -40,12 +41,13 @@ namespace ponos {
 class Path {
 public:
   Path() = default;
+  explicit Path(const Str& path);
   /// \param path
   Path(const char *const &&path);
   Path(std::string path);
   Path(const Path &other);
-  Path(Path &&other);
-  explicit operator std::string() const { return path_; }
+  Path(Path &&other) noexcept;
+  explicit operator std::string() const { return path_.str(); }
   Path &operator=(const Path &path);
   Path &operator+=(const std::string &other);
   Path &operator+=(const Path &other);
@@ -70,10 +72,10 @@ public:
 
   std::string separator{"/"};
 private:
-  std::string path_;
+  Str path_;
 };
 
-Path operator+(const Path &a, const Path &b);
+Path operator+(const Path &a, const Str &b);
 bool operator==(const Path &a, const Path &b);
 std::ostream &operator<<(std::ostream &o, const Path &path);
 

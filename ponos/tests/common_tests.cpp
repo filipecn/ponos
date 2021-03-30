@@ -6,7 +6,7 @@ using namespace ponos;
 
 TEST_CASE("ArgParser") {
   SECTION("simple") {
-    char *argv[3] = {"bin", "int_argument", "3"};
+    const char *argv[3] = {"bin", "int_argument", "3"};
     ArgParser parser("test_bin", "test bin description");
     parser.addArgument("int_argument", "int argument description");
     parser.addArgument("arg2");
@@ -15,7 +15,7 @@ TEST_CASE("ArgParser") {
     REQUIRE(!parser.check("arg2"));
   }//
   SECTION("simple 2") {
-    char *argv[6] = {"bin", "-v", "-f", "100", "-fps", "200"};
+    const char *argv[6] = {"bin", "-v", "-f", "100", "-fps", "200"};
     ArgParser parser;
     parser.addArgument("-f");
     parser.addArgument("-fps");
@@ -27,7 +27,7 @@ TEST_CASE("ArgParser") {
 
   }//
   SECTION("simple 2") {
-    char *argv[4] = {"bin", "100", "200", "-v"};
+    const char *argv[4] = {"bin", "100", "200", "-v"};
     ArgParser parser;
     parser.addArgument("-f");
     parser.addArgument("-fps");
@@ -38,7 +38,7 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.check("-v"));
   }//
   SECTION("simple 3") {
-    char *argv[5] = {"bin", "-f", "100", "-fps", "200"};
+    const char *argv[5] = {"bin", "-f", "100", "-fps", "200"};
     ArgParser parser;
     parser.addArgument("-f");
     parser.addArgument("-fps");
@@ -51,7 +51,7 @@ TEST_CASE("ArgParser") {
 
   }//
   SECTION("required") {
-    char *argv[3] = {"bin", "int_argument", "3"};
+    const char *argv[3] = {"bin", "int_argument", "3"};
     ArgParser parser;
     parser.addArgument("req", "", true);
     parser.addArgument("int_argument");
@@ -59,7 +59,7 @@ TEST_CASE("ArgParser") {
 
   }//
   SECTION("positional arguments") {
-    char *argv[5] = {"bin", "4", "arg", "1", "2"};
+    const char *argv[5] = {"bin", "4", "arg", "1", "2"};
     ArgParser parser;
     parser.addArgument("a0");
     parser.addArgument("a1");
@@ -76,7 +76,7 @@ TEST_CASE("ArgParser") {
     REQUIRE(parser.check("a3"));
   }//
   SECTION("positional arguments mixed") {
-    char *argv[5] = {"bin", "4", "a1", "1", "2"};
+    const char *argv[5] = {"bin", "4", "a1", "1", "2"};
     ArgParser parser;
     parser.addArgument("a0");
     parser.addArgument("a1");
@@ -143,8 +143,8 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(s[3] == " 5");
   }//
   SECTION("concat") {
-    std::string a = Str::concat("a", " ", 2, "b");
-    REQUIRE(a == "a 2b");
+//    std::string a = Str::concat("a", " ", 2, "b");
+//    REQUIRE(a == "a 2b");
   }//
   SECTION("regex match") {
     REQUIRE(Str::match_r("subsequence123", "\\b(sub)([^ ]*)"));
@@ -179,10 +179,11 @@ TEST_CASE("Str", "[common]") {
   SECTION("string class") {
     Str s;
     REQUIRE((s += "abc") == "abc");
-    REQUIRE(s << 2 == "abc2");
+    REQUIRE(s << 2 << 3 == "abc23");
     REQUIRE(s + 2 == "abc2");
-    s = "2";
-    REQUIRE(s == 2);
+    s = "3";
+    REQUIRE(s == 3);
+    std::cerr << "asd" << s << std::endl;
   }//
 }
 
@@ -328,22 +329,22 @@ TEST_CASE("FileSystem", "[common]") {
     REQUIRE(FileSystem::mkdir("find_dir"));
     Path find_dir("find_dir");
     for (int i = 0; i < 5; i++)
-      REQUIRE((find_dir + Str::concat("file", i, ".ext1")).touch());
+      REQUIRE((find_dir + (Str() << "file" << i << ".ext1")).touch());
     for (int i = 0; i < 5; i++)
-      REQUIRE((find_dir + Str::concat("file", i, ".ext2")).touch());
+      REQUIRE((find_dir + (Str() << "file" << i << ".ext2")).touch());
     REQUIRE(FileSystem::mkdir("find_dir/folder"));
     REQUIRE(find_dir.cd("folder").join("file5.ext1").touch());
     { // search ext2
       auto f = FileSystem::find("find_dir", ".*\.ext2", find_options::sort);
       REQUIRE(f.size() == 5);
       for (int i = 0; i < 5; ++i)
-        REQUIRE(f[i].name() == Str::concat("file", i, ".ext2"));
+        REQUIRE(f[i].name() == (Str() << "file" << i << ".ext2"));
     }
     { // search ext1 rec
       auto f = FileSystem::find("find_dir", ".*\.ext1", find_options::sort | find_options::recursive);
       REQUIRE(f.size() == 6);
       for (int i = 0; i < 6; ++i)
-        REQUIRE(f[i].name() == Str::concat("file", i, ".ext1"));
+        REQUIRE(f[i].name() == (Str() << "file" << i << ".ext1"));
     }
   }//
   SECTION("lines") {

@@ -49,7 +49,7 @@ public:
   // ***********************************************************************
   //                           CONSTRUCTORS
   // ***********************************************************************
-  Vector2() {}
+  Vector2() = default;
   Vector2(T _x, T _y) : x(_x), y(_y) {}
   explicit Vector2(const Point2<T> &p) : x(p.x), y(p.y) {}
   explicit Vector2(const Normal2<T> &n) : x(n.x), y(n.y) {}
@@ -226,7 +226,7 @@ public:
   }
   Vector3<T> operator-() const { return Vector3(-x, -y, -z); }
   // ***********************************************************************
-  //                         GETTERS & SETTERS
+  //                               ACCESS
   // ***********************************************************************
   T operator[](int i) const { return (&x)[i]; }
   T &operator[](int i) { return (&x)[i]; }
@@ -234,10 +234,62 @@ public:
     return Vector2<T>((&x)[i], (&x)[j]);
   }
   // ***********************************************************************
-  //                              METHODS
+  //                              METRICS
   // ***********************************************************************
+  /// \note Also called L1-norm, taxicab norm, Manhattan norm
+  /// \note Defined as ||v||_1 = sum_i(|v_i|)
+  /// \return L1-norm of this vector
+  T mLength() const { return std::abs(x) + std::abs(y) + std::abs(z); }
+  /// \note Also called L2-norm, Euclidean norm, Euclidean distance, 2-norm
+  /// \note Defined as ||v|| = (v_i * v_i)^(1/2)
+  /// \return 2-norm of this vector
+  T length() const { return std::sqrt(length2()); }
+  /// \note Also called squared Euclidean distance
+  /// \note Defined as ||v||^2 = v_i * v_i
+  /// \return squared 2-norm of this vector
   T length2() const { return x * x + y * y + z * z; }
-  T length() const { return sqrtf(length2()); }
+  /// \note Also called maximum norm, infinity norm
+  /// \note Defined as ||v||_inf = argmax max(|v_i|)
+  /// \return greatest absolute component value
+  T maxAbs() const {
+    if (std::abs(x) > std::abs(y) && std::abs(x) > std::abs(z))
+      return x;
+    if (std::abs(y) > std::abs(x) && std::abs(y) > std::abs(z))
+      return y;
+    return z;
+  }
+  /// \note Defined as argmax v_i
+  /// \return greatest component value
+  T max() const {
+    if (x > y && x > z)
+      return x;
+    if (y > x && y > z)
+      return y;
+    return z;
+  }
+  /// \note Defined as argmax_i v_i
+  /// \return Index of component with greatest value
+  [[nodiscard]] int maxDimension() const {
+    if (x > y && x > z)
+      return 0;
+    if (y > x && y > z)
+      return 1;
+    return 2;
+  }
+  /// \note Defined as argmax_i |v_i|
+  /// \return Index of dimension with greatest value
+  [[nodiscard]] int maxAbsDimension() const {
+    if (std::abs(x) > std::abs(y) && std::abs(x) > std::abs(z))
+      return 0;
+    if (std::abs(y) > std::abs(x) && std::abs(y) > std::abs(z))
+      return 1;
+    return 2;
+  }
+  // ***********************************************************************
+  //                             OPERATIONS
+  // ***********************************************************************
+  /// \note Normalization by vector length
+  /// \note Defined as v / ||v||
   void normalize() {
     auto l = length();
     if (l != 0.f) {
@@ -246,12 +298,24 @@ public:
       z /= l;
     }
   }
-  [[nodiscard]] int maxDimension() const {
-    if(x > y && x > z)
-      return 0;
-    if(y > x && y > z)
-      return 1;
-    return 2;
+  /// \note Normalization by vector length
+  /// \note Defined as v / ||v||
+  /// \return Normalized vector of this vector
+  Vector3 normalized() const {
+    auto l = length();
+    return (*this) / l;
+  }
+  /// \note b * dot(v,b) / ||b||
+  /// \param b vector to project onto
+  /// \return projection of this vector onto **b**
+  Vector3 projectOnto(const Vector3 &b) {
+    return (dot(b, *this) / b.length2()) * b;
+  }
+  /// \note v - b * dot(v,b) / ||b||
+  /// \param b vector of rejection
+  /// \return rejection of this vector on **b**
+  Vector3 rejectOn(const Vector3 b) {
+    return *this - (dot(b, *this) / b.length2()) * b;
   }
   // ***********************************************************************
   //                           PUBLIC FIELDS
@@ -340,6 +404,15 @@ void tangential(const Vector3<T> &a, Vector3<T> &b, Vector3<T> &c) {
                           ? Vector3<T>(1, 0, 0)
                           : Vector3<T>(0, 1, 1))));
   c = normalize(cross(a, b));
+}
+/// \note b * dot(a,b) / ||b||
+/// \tparam T
+/// \param a
+/// \param b
+/// \return projection of **a** onto **b**
+template<typename T>
+Vector3<T> project(const Vector3<T> &a, const Vector3<T> &b) {
+  return (dot(b, a) / b.length2()) * b;
 }
 template<typename T> Vector3<T> cos(const Vector3<T> &v) {
   return Vector3<T>(std::cos(v.x), std::cos(v.y), std::cos(v.z));

@@ -26,7 +26,6 @@
 ///\brief
 
 #include "file_system.h"
-#include <ponos/common/str.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -56,13 +55,15 @@
 
 namespace ponos {
 
+Path::Path(const Str& path) : path_(path) {}
+
 Path::Path(std::string path) : path_(std::move(path)) {}
 
 Path::Path(const char *const &&path) : path_(path) {}
 
 Path::Path(const Path &other) : path_(other.path_) {}
 
-Path::Path(Path &&other) : path_(std::move(other.path_)) {}
+Path::Path(Path &&other)  noexcept : path_(std::move(other.path_)) {}
 
 Path &Path::operator=(const Path &path) {
   path_ = path.path_;
@@ -81,7 +82,7 @@ Path &Path::operator+=(const Path &other) {
 
 Path &Path::cd(const std::string &path) {
   // TODO: what if path represents a file?
-  auto current_path = Str::split(path_, separator);
+  auto current_path = Str::split(path_.str(), separator);
   std::stack<std::string> stack;
   for (const auto &s : current_path)
     stack.push(s);
@@ -100,7 +101,7 @@ Path &Path::cd(const std::string &path) {
     if (first)
       path_ = stack.top();
     else
-      path_ = Str::concat(stack.top(), separator, path_);
+      path_ = Str() << stack.top() << separator << path_;
     first = false;
     stack.pop();
   }
@@ -108,54 +109,54 @@ Path &Path::cd(const std::string &path) {
 }
 
 Path &Path::join(const Path &path) {
-  path_ = Str::join({path_, path.path_}, separator);
-  path_ = Str::replace_r(path_, separator + separator, separator);
+  path_ = Str::join({path_.str(), path.path_.str()}, separator);
+  path_ = Str::replace_r(path_.str(), separator + separator, separator);
   return *this;
 }
 
 bool Path::exists() const {
-  return FileSystem::isFile(path_) || FileSystem::isDirectory(path_);
+  return FileSystem::isFile(path_.str()) || FileSystem::isDirectory(path_.str());
 }
 
 bool Path::isDirectory() const {
-  return FileSystem::isDirectory(path_);
+  return FileSystem::isDirectory(path_.str());
 }
 
 bool Path::isFile() const {
-  return FileSystem::isFile(path_);
+  return FileSystem::isFile(path_.str());
 }
 
 std::vector<std::string> Path::parts() const {
-  return Str::split(path_, separator);
+  return Str::split(path_.str(), separator);
 }
 
 std::string Path::name() const {
-  return FileSystem::basename(path_);
+  return FileSystem::basename(path_.str());
 }
 
 const std::string &Path::fullName() const {
-  return path_;
+  return path_.str();
 }
 
 std::string Path::extension() const {
-  return FileSystem::fileExtension(path_);
+  return FileSystem::fileExtension(path_.str());
 }
 
 bool Path::match_r(const std::string &regular_expression) const { return false; }
 
 Path Path::cwd() const {
-  std::size_t found = path_.find_last_of("/\\");
+  std::size_t found = path_.str().find_last_of("/\\");
   if (found != std::string::npos)
-    return Path(path_.substr(0, found));
+    return Path(path_.str().substr(0, found));
   return *this;
 }
 
 bool Path::mkdir() const {
-  return FileSystem::mkdir(path_);
+  return FileSystem::mkdir(path_.str());
 }
 
 bool Path::touch() const {
-  return FileSystem::touch(path_);
+  return FileSystem::touch(path_.str());
 }
 
 u64 Path::writeTo(const std::string &content) const { return 0; }
@@ -165,14 +166,15 @@ u64 Path::appendTo(const std::string &content) const { return 0; }
 std::string Path::read() const {
   if (!isFile())
     return "";
-  return FileSystem::readFile(path_);
+  return FileSystem::readFile(path_.str());
 }
 
-Path operator+(const Path &a, const Path &b) {
+Path operator+(const Path &a, const Str &b) {
   Path p = a;
-  p.join(b);
+  p.join(b.str());
   return p;
 }
+
 
 bool operator==(const Path &a, const Path &b) {
   return static_cast<std::string>(a) == static_cast<std::string>(b);
@@ -426,10 +428,10 @@ std::vector<Path> FileSystem::ls(const Path &path, ls_options options) {
       while ((dp = readdir(dir)) != nullptr) {
         if (std::string(dp->d_name) == "." || std::string(dp->d_name) == "..")
           continue;
-        auto full_path = directory_path + Str::concat("/", dp->d_name);
+        auto full_path = directory_path + (Str() << "/" << dp->d_name);
         bool is_directory = isDirectory(full_path);
         if ((options & ls_options::recursive) == ls_options::recursive && is_directory)
-          ls_(full_path);
+          ls_(full_path.fullName());
         if ((options & ls_options::directories) == ls_options::directories && !is_directory)
           continue;
         if ((options & ls_options::files) == ls_options::files && is_directory)
