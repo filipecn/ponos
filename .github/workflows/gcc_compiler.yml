@@ -26,7 +26,8 @@ jobs:
           cd build
           cmake .. -DBUILD_TESTS=ON
           make -j8
-      -name: Test
+
+      - name: Test
         run: |
             cd build/ponos/tests
             ./ponos_tests
