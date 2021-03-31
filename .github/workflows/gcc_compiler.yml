@@ -15,6 +15,9 @@ jobs:
       # checkout repository
       - uses: actions/checkout@v2
 
+      - name: Install lcov
+        run: sudo apt-get install lcov
+
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.8
         with:
