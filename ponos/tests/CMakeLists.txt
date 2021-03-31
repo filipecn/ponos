@@ -25,6 +25,7 @@ if (UNIX AND NOT APPLE)
             COMMAND lcov --remove cov.info '/usr/*' --output-file cov.info
             COMMAND lcov --remove cov.info '*/ext/*' --output-file cov.info
             COMMAND lcov --remove cov.info '*/tests/*' --output-file cov.info
+            COMMAND lcov --remove cov.info '*/spdlog/*' --output-file cov.info
             COMMAND genhtml cov.info --output-directory out
             )
 else (UNIX AND NOT APPLE)

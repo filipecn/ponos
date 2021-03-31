@@ -11,7 +11,7 @@ namespace ponos {
 /// \param a **[in]** lower bound **0**
 /// \param b **[in]** upper bound **1**
 /// \return linear interpolation between **a** and **b** at **t**.
-template <typename T> T lerp(T t, T a, T b) { return (1. - t) * a + t * b; }
+template<typename T> T lerp(T t, T a, T b) { return (1. - t) * a + t * b; }
 /// \param x **[in]** (in [0,1]) parametric coordinate in x
 /// \param y **[in]** (in [0,1]) parametric coordinate in y
 /// \param f00 **[in]** function value at **(0, 0)**
@@ -19,7 +19,7 @@ template <typename T> T lerp(T t, T a, T b) { return (1. - t) * a + t * b; }
 /// \param f11 **[in]** function value at **(1, 1)**
 /// \param f01 **[in]** function value at **(0, 1)**
 /// \return bilinear interpolation value at **(x, y)**
-template <typename T>
+template<typename T>
 inline T bilerp(T x, T y, const T &f00, const T &f10, const T &f11,
                 const T &f01) {
   return lerp(y, lerp(x, f00, f10), lerp(x, f01, f11));
@@ -38,7 +38,7 @@ inline T bilerp(T x, T y, const T &f00, const T &f10, const T &f11,
 /// \param f011 **[in]** function value at **(0, 1, 1)**
 /// \param f111 **[in]** function value at **(1, 1, 1)**
 /// \return trilinear interpolation value at **(x, y, z)**
-template <typename T>
+template<typename T>
 inline T trilerp(T tx, T ty, T tz, const T &f000, const T &f100, const T &f010,
                  const T &f110, const T &f001, const T &f101, const T &f011,
                  const T &f111) {
@@ -51,7 +51,7 @@ inline T trilerp(T tx, T ty, T tz, const T &f000, const T &f100, const T &f010,
  * \param b **[in]** upper bound
  * \return interpolation between **a** and **b** at **t**.
  */
-template <typename T> inline T nearest(T t, const T &a, const T &b) {
+template<typename T> inline T nearest(T t, const T &a, const T &b) {
   return (t < static_cast<T>(0.5)) ? a : b;
 }
 /// Performs 1-dimensional interpolation using the monotonic cubic
@@ -68,7 +68,7 @@ template <typename T> inline T nearest(T t, const T &a, const T &b) {
 /// \param tmtk (in [0,1]) parametric coordinate of the interpolation
 /// point
 /// \return interpolated value at tmtk
-template <typename T>
+template<typename T>
 T monotonicCubicInterpolate(T fkm1, T fk, T fkp1, T fkp2, T tmtk) {
   double Dk = fkp1 - fk;
   double dk = (fkp1 - fkm1) * 0.5;
@@ -107,7 +107,7 @@ T monotonicCubicInterpolate(T fkm1, T fk, T fkp1, T fkp2, T tmtk) {
 /// \param f function values at grid points (f[x][y])
 /// \param cp (in [0,1]) cell parametric coordinates
 /// \return interpolated value at cp
-template <typename T>
+template<typename T>
 float monotonicCubicInterpolate(T f[4][4], const point2 &t) {
   T v[4];
   for (int d = 0; d < 4; d++)
@@ -122,7 +122,7 @@ float monotonicCubicInterpolate(T f[4][4], const point2 &t) {
 /// \param f function values at grid points (f[x][y][z])
 /// \param cp (in [0,1]) cell parametric coordinates
 /// \return interpolated value at cp
-template <typename T>
+template<typename T>
 float monotonicCubicInterpolate(T f[4][4][4], const point3 &t) {
   float v[4][4];
   for (int dz = -1, iz = 0; dz <= 2; dz++, iz++)
@@ -135,7 +135,7 @@ float monotonicCubicInterpolate(T f[4][4][4], const point3 &t) {
     vv[d] = monotonicCubicInterpolate(v[0][d], v[1][d], v[2][d], v[3][d], t.y);
   return monotonicCubicInterpolate(vv[0], vv[1], vv[2], vv[3], t.z);
 }
-template <typename S, typename T>
+template<typename S, typename T>
 inline S catmullRomSpline(const S &f0, const S &f1, const S &f2, const S &f3,
                           T f) {
   S d1 = (f2 - f0) / 2;
@@ -149,18 +149,18 @@ inline S catmullRomSpline(const S &f0, const S &f1, const S &f2, const S &f3,
 
   return a3 * CUBE(f) + a2 * SQR(f) + a1 * f + a0;
 }
-template <typename T>
+template<typename T>
 T bilinearInterpolation(T f00, T f10, T f11, T f01, T x, T y) {
   return f00 * (1.0 - x) * (1.0 - y) + f10 * x * (1.0 - y) +
-         f01 * (1.0 - x) * y + f11 * x * y;
+      f01 * (1.0 - x) * y + f11 * x * y;
 }
-template <typename T> inline T cubicInterpolate(T p[4], T x) {
+template<typename T> inline T cubicInterpolate(T p[4], T x) {
   return p[1] + 0.5 * x *
-                    (p[2] - p[0] +
-                     x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] +
-                          x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
+      (p[2] - p[0] +
+          x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] +
+              x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
 }
-template <typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
+template<typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
   T arr[4];
   arr[0] = cubicInterpolate(p[0], y);
   arr[1] = cubicInterpolate(p[1], y);
@@ -168,52 +168,53 @@ template <typename T> inline T bicubicInterpolate(T p[4][4], T x, T y) {
   arr[3] = cubicInterpolate(p[3], y);
   return cubicInterpolate(arr, x);
 }
-template <typename T>
-inline T trilinearInterpolate(float *p, T ***data, T b,
+template<typename T>
+inline T trilinearInterpolate(const float *p, T ***data, T b,
                               const size3 &dimensions) {
+  i64 dim[3] = {dimensions[0], dimensions[1], dimensions[2]};
   i32 i0 = p[0], j0 = p[1], k0 = p[2];
   i32 i1 = p[0] + 1, j1 = p[1] + 1, k1 = p[2] + 1;
   float x = p[0] - i0;
   float y = p[1] - j0;
   float z = p[2] - k0;
-  T v000 = (i0 < 0 || j0 < 0 || k0 < 0 || i0 >= dimensions[0] ||
-            j0 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i0][j0][k0];
-  T v001 = (i0 < 0 || j0 < 0 || k1 < 0 || i0 >= dimensions[0] ||
-            j0 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i0][j0][k1];
-  T v010 = (i0 < 0 || j1 < 0 || k0 < 0 || i0 >= dimensions[0] ||
-            j1 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i0][j1][k0];
-  T v011 = (i0 < 0 || j1 < 0 || k1 < 0 || i0 >= dimensions[0] ||
-            j1 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i0][j1][k1];
-  T v100 = (i1 < 0 || j0 < 0 || k0 < 0 || i1 >= dimensions[0] ||
-            j0 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i1][j0][k0];
-  T v101 = (i1 < 0 || j0 < 0 || k1 < 0 || i1 >= dimensions[0] ||
-            j0 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i1][j0][k1];
-  T v110 = (i1 < 0 || j1 < 0 || k0 < 0 || i1 >= dimensions[0] ||
-            j1 >= dimensions[1] || k0 >= dimensions[2])
-               ? b
-               : data[i1][j1][k0];
-  T v111 = (i1 < 0 || j1 < 0 || k1 < 0 || i1 >= dimensions[0] ||
-            j1 >= dimensions[1] || k1 >= dimensions[2])
-               ? b
-               : data[i1][j1][k1];
+  T v000 = (i0 < 0 || j0 < 0 || k0 < 0 || i0 >= dim[0] ||
+      j0 >= dim[1] || k0 >= dim[2])
+           ? b
+           : data[i0][j0][k0];
+  T v001 = (i0 < 0 || j0 < 0 || k1 < 0 || i0 >= dim[0] ||
+      j0 >= dim[1] || k1 >= dim[2])
+           ? b
+           : data[i0][j0][k1];
+  T v010 = (i0 < 0 || j1 < 0 || k0 < 0 || i0 >= dim[0] ||
+      j1 >= dim[1] || k0 >= dim[2])
+           ? b
+           : data[i0][j1][k0];
+  T v011 = (i0 < 0 || j1 < 0 || k1 < 0 || i0 >= dim[0] ||
+      j1 >= dim[1] || k1 >= dim[2])
+           ? b
+           : data[i0][j1][k1];
+  T v100 = (i1 < 0 || j0 < 0 || k0 < 0 || i1 >= dim[0] ||
+      j0 >= dim[1] || k0 >= dim[2])
+           ? b
+           : data[i1][j0][k0];
+  T v101 = (i1 < 0 || j0 < 0 || k1 < 0 || i1 >= dim[0] ||
+      j0 >= dim[1] || k1 >= dim[2])
+           ? b
+           : data[i1][j0][k1];
+  T v110 = (i1 < 0 || j1 < 0 || k0 < 0 || i1 >= dim[0] ||
+      j1 >= dim[1] || k0 >= dim[2])
+           ? b
+           : data[i1][j1][k0];
+  T v111 = (i1 < 0 || j1 < 0 || k1 < 0 || i1 >= dim[0] ||
+      j1 >= dim[1] || k1 >= dim[2])
+           ? b
+           : data[i1][j1][k1];
   return v000 * (1.f - x) * (1.f - y) * (1.f - z) +
-         v100 * x * (1.f - y) * (1.f - z) + v010 * (1.f - x) * y * (1.f - z) +
-         v110 * x * y * (1.f - z) + v001 * (1.f - x) * (1.f - y) * z +
-         v101 * x * (1.f - y) * z + v011 * (1.f - x) * y * z + v111 * x * y * z;
+      v100 * x * (1.f - y) * (1.f - z) + v010 * (1.f - x) * y * (1.f - z) +
+      v110 * x * y * (1.f - z) + v001 * (1.f - x) * (1.f - y) * z +
+      v101 * x * (1.f - y) * z + v011 * (1.f - x) * y * z + v111 * x * y * z;
 }
-template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
+template<typename T> inline T tricubicInterpolate(const float *p, T ***data) {
   int x, y, z;
   int i, j, k;
   float dx, dy, dz;
@@ -221,13 +222,13 @@ template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
   T r[4], q[4];
   T vox = T(0);
 
-  x = (int)p[0], y = (int)p[1], z = (int)p[2];
-  dx = p[0] - (float)x, dy = p[1] - (float)y, dz = p[2] - (float)z;
+  x = (int) p[0], y = (int) p[1], z = (int) p[2];
+  dx = p[0] - (float) x, dy = p[1] - (float) y, dz = p[2] - (float) z;
 
-  u[0] = -0.5 * CUBE(dx) + SQR(dx) - 0.5 * dx;
-  u[1] = 1.5 * CUBE(dx) - 2.5 * SQR(dx) + 1;
-  u[2] = -1.5 * CUBE(dx) + 2 * SQR(dx) + 0.5 * dx;
-  u[3] = 0.5 * CUBE(dx) - 0.5 * SQR(dx);
+  u[0] = -0.5f * CUBE(dx) + SQR(dx) - 0.5 * dx;
+  u[1] = 1.5f * CUBE(dx) - 2.5 * SQR(dx) + 1;
+  u[2] = -1.5f * CUBE(dx) + 2 * SQR(dx) + 0.5 * dx;
+  u[3] = 0.5f * CUBE(dx) - 0.5 * SQR(dx);
 
   v[0] = -0.5 * CUBE(dy) + SQR(dy) - 0.5 * dy;
   v[1] = 1.5 * CUBE(dy) - 2.5 * SQR(dy) + 1;
@@ -259,7 +260,7 @@ template <typename T> inline T tricubicInterpolate(float *p, T ***data) {
   }
   return (vox < T(0) ? T(0.0) : vox);
 }
-template <typename T>
+template<typename T>
 T tricubicInterpolate(float *p, T ***data, T b, const int dimensions[3]) {
   int x, y, z;
   int i, j, k;
@@ -268,8 +269,8 @@ T tricubicInterpolate(float *p, T ***data, T b, const int dimensions[3]) {
   T r[4], q[4];
   T vox = T(0);
 
-  x = (int)p[0], y = (int)p[1], z = (int)p[2];
-  dx = p[0] - (float)x, dy = p[1] - (float)y, dz = p[2] - (float)z;
+  x = (int) p[0], y = (int) p[1], z = (int) p[2];
+  dx = p[0] - (float) x, dy = p[1] - (float) y, dz = p[2] - (float) z;
 
   u[0] = -0.5 * CUBE(dx) + SQR(dx) - 0.5 * dx;
   u[1] = 1.5 * CUBE(dx) - 2.5 * SQR(dx) + 1;

@@ -115,7 +115,7 @@ public:
     }
   private:
     const_cell_star_iterator(const NMesh &mesh, u64 cell_id, u64 i) :
-        mesh_(mesh), i_(i) {
+        i_(i), mesh_(mesh) {
       starting_he_ = mesh_.interleaved_cell_data_.valueAt<u64>(0, cell_id);
     }
     u64 i_{0};
@@ -343,7 +343,7 @@ public:
     }
   private:
     cell_star_iterator(NMesh &mesh, u64 cell_id, u64 i) :
-        mesh_(mesh), i_(i) {
+        i_(i), mesh_(mesh) {
       starting_he_ = mesh_.interleaved_cell_data_.valueAt<u64>(0, cell_id);
     }
     u64 i_{0};
@@ -548,7 +548,7 @@ public:
       return const_cell_star_iterator(mesh_, cell_id_, mesh_.cellFaceCount(cell_id_));
     }
   private:
-    ConstCellStar(const NMesh &mesh, u64 cell_id) : mesh_{mesh}, cell_id_{cell_id} {}
+    ConstCellStar(const NMesh &mesh, u64 cell_id) : cell_id_{cell_id}, mesh_{mesh} {}
     u64 cell_id_{0};
     const NMesh &mesh_;
   };
@@ -627,7 +627,7 @@ public:
       return cell_star_iterator(mesh_, cell_id_, mesh_.cellFaceCount(cell_id_));
     }
   private:
-    CellStar(NMesh &mesh, u64 cell_id) : mesh_{mesh}, cell_id_{cell_id} {}
+    CellStar(NMesh &mesh, u64 cell_id) : cell_id_{cell_id}, mesh_{mesh} {}
     u64 cell_id_{0};
     NMesh &mesh_;
   };

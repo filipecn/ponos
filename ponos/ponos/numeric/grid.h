@@ -132,8 +132,8 @@ private:
       : acc_(grid_accessor),
         size_(grid_accessor.resolution()), i_(i) {}
   Grid1Accessor<T> &acc_;
-  i32 i_{0};
   u64 size_{0};
+  i32 i_{0};
 };
 /// Auxiliary class to allow c++ iteration in loops.
 /// Ex: for(auto e : grid.accessor()) {}

@@ -357,9 +357,9 @@ public:
   private:
     cell_star_iterator(PMesh<N> &mesh, u64 cell_id, u64 i) :
         mesh_(mesh), starting_he_(cell_id * N), i_(i) {}
-    u64 i_{0};
-    u64 starting_he_{0};
     PMesh<N> &mesh_;
+    u64 starting_he_{0};
+    u64 i_{0};
   };
   class vertex_star_iterator {
     friend class PMesh<N>::VertexStar;
@@ -557,8 +557,8 @@ public:
     }
   private:
     CellStar(PMesh<N> &mesh, u64 cell_id) : mesh_{mesh}, cell_id_{cell_id} {}
-    u64 cell_id_{0};
     PMesh<N> &mesh_;
+    u64 cell_id_{0};
   };
   ///
   class VertexStar {

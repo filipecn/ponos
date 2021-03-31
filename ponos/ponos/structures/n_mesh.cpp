@@ -179,7 +179,7 @@ NMesh NMesh::buildFrom(const std::vector<ponos::point3> &vertex_positions, const
   cell_index = 0;
   for (u64 cid = 0; cid < cell_count; ++cid)
     cell_he[cid] = cell_index, cell_index += face_count_per_cell[cid];
-  return std::move(mesh);
+  return mesh;
 }
 
 // ***********************************************************************
