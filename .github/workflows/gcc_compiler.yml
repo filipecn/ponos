@@ -18,7 +18,9 @@ jobs:
       - name: Install lcov
         run: sudo apt-get install lcov
       - name: Install coveralls
-        run: pip install --user cpp-coveralls
+        run: |
+          pip install --user cpp-coveralls
+          export PATH=$PATH:/home/runner/.local/bin
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.8
