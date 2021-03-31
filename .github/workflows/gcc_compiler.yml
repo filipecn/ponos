@@ -20,11 +20,17 @@ jobs:
         with:
           cmake-version: '3.19.x'
 
-      - name: Configure
+      - name: Configure & build
         run: |
           mkdir build
           cd build
           cmake .. -DBUILD_TESTS=ON
+          make -j8
+      -name: Test
+        run: |
+            cd build/ponos/tests
+            ./ponos_tests
+
 
 
 
