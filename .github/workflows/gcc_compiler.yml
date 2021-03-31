@@ -20,7 +20,6 @@ jobs:
       - name: Install coveralls
         run: |
           pip install --user cpp-coveralls
-          export PATH=$PATH:/home/runner/.local/bin
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.8
@@ -40,7 +39,10 @@ jobs:
             cmake --build . --target test_ponos -- -j 9
 
       - name: Coverage
-        run: coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+        run: |
+          export PATH=$PATH:/home/runner/.local/bin
+          echo $PATH
+          coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
