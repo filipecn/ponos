@@ -1,0 +1,30 @@
+name: gcc-compiler-ubuntu-linux
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: build ubuntu/gcc
+    runs-on: ubuntu-latest
+
+    steps:
+      # checkout repository
+      - uses: actions/checkout@v2
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.8
+        with:
+          cmake-version: '3.19.x'
+
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DBUILD_TESTS=ON
+
+
+
