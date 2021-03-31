@@ -109,7 +109,8 @@ TEST_CASE("Transform", "[geometry][transform]") {
           0, 0, 0, 1//
       ));
     }//
-  }SECTION("look at") {
+  }//
+  SECTION("look at") {
     SECTION("left handed") {
       auto t = Transform::lookAt({1.f, 0.f, 0.f});
       REQUIRE(t.matrix() == mat4(
