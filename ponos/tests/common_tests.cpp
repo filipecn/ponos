@@ -298,6 +298,7 @@ TEST_CASE("FileSystem", "[common]") {
     //  | file4
     { // simple ls
       auto ls = FileSystem::ls("ls_folder/folder");
+      std::sort(ls.begin(), ls.end(), [](const Path &a, const Path &b) { return a.name() < b.name(); });
       std::vector<std::string> expected = {"file1", "file2", "file3"};
       REQUIRE(ls.size() == expected.size());
       for (u64 i = 0; i < ls.size(); ++i)

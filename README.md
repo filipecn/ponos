@@ -1,5 +1,8 @@
 # Ponos
 
+
+![ubuntu/gcc](https://github.com/filipecn/ponos/workflows/ubuntu/gcc/badge.svg)
+
 [![Build Status](https://travis-ci.org/filipecn/ponos.svg?branch=master)](https://travis-ci.org/filipecn/ponos)
 [![Build status](https://ci.appveyor.com/api/projects/status/elijw5e9rll1meqy/branch/master?svg=true)](https://ci.appveyor.com/project/filipecn/ponos/branch/master)
 [![Stories in Progress](https://badge.waffle.io/filipecn/Ponos.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/filipecn/Ponos)
