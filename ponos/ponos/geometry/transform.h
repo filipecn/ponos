@@ -270,12 +270,12 @@ public:
   static Transform lookAt(const point3 &eye, const point3 &target = {0, 0, 0},
                           const vec3 &up = {0, 1, 0}, bool left_handed = true);
   /// Orthographic Projection
-  /// In an orthographic projection, parallel lines remain parallel and objects
+  /// \note In an orthographic projection, parallel lines remain parallel and objects
   /// maintain the same size regardless the distance.
   /// This transform projects points into the cube (-1,-1,-1) x (1, 1, 1). It is
   /// also possible to choose to project to (-1,-1, 0) x (1, 1, 1) with the
   /// zero_to_one option.
-  /// The matrix takes the form:
+  /// \note The matrix takes the form:
   ///     2 / (r - l)       0             0         -(r + l) / (r - l)
   ///         0         2 / (t - b)       0         -(t + b) / (t - b)
   ///         0             0         2 / (f - n)   -(f + n) / (f - n)
@@ -285,7 +285,7 @@ public:
   ///         0         2 / (t - b)       0         -(t + b) / (t - b)
   ///         0             0         1 / (f - n)          n / (f - n)
   ///         0             0             0                  1
-  /// - Note that n > f. This function negates the values of near and far in case
+  /// \note - Note that n > f. This function negates the values of near and far in case
   /// the given values are f > n. Because by default, this transform uses a
   /// left-handed coordinate system.
   /// \param left

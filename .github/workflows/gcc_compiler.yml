@@ -19,7 +19,7 @@ jobs:
         run: sudo apt-get install lcov
       - name: Install coveralls
         run: |
-          pip install --user cpp-coveralls
+          sudo gem install coveralls-lcov
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.8
@@ -40,9 +40,7 @@ jobs:
 
       - name: Coverage
         run: |
-          export PATH=$PATH:/home/runner/.local/bin
-          echo $PATH
-          coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+          coveralls-lcov build/ponos/tests/cov.info -t ueqvWgTxrfrjbTBHtCLc9fznRZvPCzryb
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
