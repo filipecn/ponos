@@ -90,18 +90,32 @@ TEST_CASE("Transform", "[geometry][transform]") {
     REQUIRE(t.matrix().isIdentity());
   }//
   SECTION("orthographic projection") {
+    SECTION("left handed") {
+      auto t = Transform::ortho(-1, 1, -1, 1, -1, 1);
+      REQUIRE(t(vec3(1, 0, 0)) == vec3(1, 0, 0));
+      REQUIRE(t(vec3(0, 1, 0)) == vec3(0, 1, 0));
+      REQUIRE(t(vec3(0, 0, 1)) == vec3(0, 0, 1));
+    }//
+    SECTION("right handed") {
+      auto t = Transform::ortho(-1, 1, -1, 1, -1, 1,
+                                transform_options::right_handed);
+      REQUIRE(t(vec3(1, 0, 0)) == vec3(1, 0, 0));
+      REQUIRE(t(vec3(0, 1, 0)) == vec3(0, 1, 0));
+      REQUIRE(t(vec3(0, 0, 1)) == vec3(0, 0, -1));
+    }//
     SECTION("cube") {
       auto t = Transform::ortho(-10, 10, -20, 20, -1, 1);
       REQUIRE(t.matrix() == mat4(
-          0.1, 0, 0, -0,//
-          0, 0.05, 0, -0,//
-          0, 0, -1, 0,//
+          0.1, 0, 0, 0,//
+          0, 0.05, 0, 0,//
+          0, 0, 1, 0,//
           0, 0, 0, 1//
       ));
     }//
     SECTION("zero to one") {
       auto t = Transform::ortho(-10, 10, -20, 20, -1, 1,
-                                true, true);
+                                transform_options::right_handed |
+                                    transform_options::zero_to_one);
       REQUIRE(t.matrix() == mat4(
           0.1, 0, 0, -0,//
           0, 0.05, 0, -0,//
@@ -110,22 +124,44 @@ TEST_CASE("Transform", "[geometry][transform]") {
       ));
     }//
   }//
+  SECTION("perspective projection") {
+    SECTION("LH"){
+      auto t = Transform::perspective(90, 1, 1, 10);
+      auto y_scale= 1.f / std::tan(Trigonometry::degrees2radians(90) * 0.5);
+//      REQUIRE(t.matrix() == mat4(
+//          y_scale, 0, 0, 0,//
+//          0, y_scale, 0, 0,//
+//          0, 0, 11./9, -20./9,//
+//          0, 0, 1, 0//
+//      ));
+    }//
+    SECTION("RH"){
+      auto t = Transform::perspective(90, 1, 1, 10, transform_options::right_handed);
+      auto y_scale= 1.f / std::tan(Trigonometry::degrees2radians(90) * 0.5);
+//      REQUIRE(t.matrix() == mat4(
+//          y_scale, 0, 0, 0,//
+//          0, y_scale, 0, 0,//
+//          0, 0, -11./9, 20./9,//
+//          0, 0, -1, 0//
+//      ));
+    }//
+  }//
   SECTION("look at") {
     SECTION("left handed") {
       auto t = Transform::lookAt({1.f, 0.f, 0.f});
       REQUIRE(t.matrix() == mat4(
-          0, 0, -1, 0,//
+          0, 0, 1, 0,//
           0, 1, 0, 0,//
-          1, 0, 0, -1,//
+          -1, 0, 0, 1,//
           0, 0, 0, 1//
       ));
     }//
     SECTION("right handed") {
-      auto t = Transform::lookAt({1.f, 0.f, 0.f}, {0, 0, 0}, {0, 1, 0}, false);
+      auto t = Transform::lookAt({1.f, 0.f, 0.f}, {0, 0, 0}, {0, 1, 0}, transform_options::right_handed);
       REQUIRE(t.matrix() == mat4(
-          0, 0, 1, 0,//
+          0, 0, -1, 0,//
           0, 1, 0, 0,//
-          -1, 0, 0, 1,//
+          1, 0, 0, 1,//
           0, 0, 0, 1//
       ));
     }//

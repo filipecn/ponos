@@ -122,10 +122,13 @@ Transform segmentToSegmentTransform(point3 a, point3 b, point3 c, point3 d) {
 
 Transform inverse(const Transform &t) { return {t.m_inv, t.m}; }
 
-Transform Transform::lookAt(const point3 &eye, const point3 &target, const vec3 &up, bool left_handed) {
+Transform Transform::lookAt(const point3 &eye, const point3 &target, const vec3 &up,
+                            transform_options options) {
+  auto right_handed = testMaskBit(options, transform_options::right_handed);
+
   Matrix4x4<real_t> m;
   vec3 v;
-  if (left_handed)
+  if (right_handed)
     v = normalize(eye - target);
   else
     v = normalize(target - eye);
@@ -136,17 +139,17 @@ Transform Transform::lookAt(const point3 &eye, const point3 &target, const vec3 
   m[0][0] = r.x;
   m[0][1] = r.y;
   m[0][2] = r.z;
-  m[0][3] = -dot(t, r);
+  m[0][3] = (right_handed ? 1. : -1.) * dot(t, r);
   // row 1
   m[1][0] = u.x;
   m[1][1] = u.y;
   m[1][2] = u.z;
-  m[1][3] = -dot(t, u);
+  m[1][3] = (right_handed ? 1. : -1.) * dot(t, u);
   // row 2
   m[2][0] = v.x;
   m[2][1] = v.y;
   m[2][2] = v.z;
-  m[2][3] = -dot(t, v);
+  m[2][3] = (right_handed ? 1. : -1.) * dot(t, v);
   // row 3
   m[3][0] = 0;
   m[3][1] = 0;
@@ -161,33 +164,69 @@ Transform Transform::ortho(real_t left,
                            real_t top,
                            real_t near,
                            real_t far,
-                           bool left_handed,
-                           bool zero_to_one) {
-  if (near < far) {
-    near = -near;
-    far = -far;
-  }
+                           transform_options options) {
+  const auto zero_to_one = testMaskBit(options, transform_options::zero_to_one);
+  auto right_handed = testMaskBit(options, transform_options::right_handed);
+
+  auto w_inv = 1 / (right - left);
+  auto h_inv = 1 / (top - bottom);
+  auto d_inv = 1 / (far - near);
   Matrix4x4<real_t> m;
   // row 0
-  m[0][0] = 2 / (right - left);
+  m[0][0] = 2 * w_inv;
   m[0][1] = 0;
   m[0][2] = 0;
-  m[0][3] = -(right + left) / (right - left);
+  m[0][3] = -(right + left) * w_inv;
   // row 1
   m[1][0] = 0;
-  m[1][1] = 2 / (top - bottom);
+  m[1][1] = 2 * h_inv;
   m[1][2] = 0;
-  m[1][3] = -(top + bottom) / (top - bottom);
+  m[1][3] = -(top + bottom) * h_inv;
   // row 2
   m[2][0] = 0;
   m[2][1] = 0;
-  m[2][2] = (zero_to_one ? 1 : 2) / (far - near);
-  m[2][3] = -(zero_to_one ? near : (far + near)) / (far - near);
+  m[2][2] = (zero_to_one ? 1.f : 2.f) * (right_handed ? -1.f : 1.f) * d_inv;
+  m[2][3] = -(zero_to_one ? near : (far + near)) * d_inv;
   // row 3
   m[3][0] = 0;
   m[3][1] = 0;
   m[3][2] = 0;
   m[3][3] = 1;
+  return {m, inverse(m)};
+}
+
+Transform Transform::perspective(real_t fovy_in_degrees,
+                                 real_t aspect_ratio,
+                                 real_t near,
+                                 real_t far,
+                                 transform_options options) {
+  const auto zero_to_one = testMaskBit(options, transform_options::zero_to_one);
+  auto right_handed = testMaskBit(options, transform_options::right_handed);
+
+  auto y_scale = 1.f / std::tan(Trigonometry::degrees2radians(fovy_in_degrees) * 0.5f);
+  auto d_inv = 1 / (far - near);
+
+  Matrix4x4<real_t> m;
+  // row 0
+  m[0][0] = y_scale / aspect_ratio;
+  m[0][1] = 0;
+  m[0][2] = 0;
+  m[0][3] = 0;
+  // row 1
+  m[1][0] = 0;
+  m[1][1] = y_scale;
+  m[1][2] = 0;
+  m[1][3] = 0;
+  // row 2
+  m[2][0] = 0;
+  m[2][1] = 0;
+  m[2][2] = (right_handed ? -1.f : 1.f) * (zero_to_one ? far : (far + near)) * d_inv;
+  m[2][3] = (right_handed ? 1.f : -1.f) * (zero_to_one ? 1.f : 2.f) * near * far * d_inv;
+  // row 3
+  m[3][0] = 0;
+  m[3][1] = 0;
+  m[3][2] = right_handed ? -1 : 1;
+  m[3][3] = 0;
   return {m, inverse(m)};
 }
 

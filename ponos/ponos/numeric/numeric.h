@@ -64,6 +64,16 @@ struct Constants {
   }
 };
 
+class Trigonometry {
+public:
+  static constexpr real_t radians2degrees(real_t a) {
+    return a * 180.f / Constants::pi;
+  }
+  static constexpr real_t degrees2radians(real_t a) {
+    return a * Constants::pi / 180.f;
+  }
+};
+
 class Numbers {
 public:
   static inline u8 countDigits(u64 t, u8 base = 10) {

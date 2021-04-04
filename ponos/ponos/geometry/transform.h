@@ -32,8 +32,30 @@
 #include <ponos/geometry/ray.h>
 #include <ponos/geometry/vector.h>
 #include <ponos/log/debug.h>
+#include <ponos/common/bitmask_operators.h>
 
 namespace ponos {
+
+enum class transform_options {
+  none = 0x0,
+  x_right = 0x1,
+  y_right = 0x2,
+  z_right = 0x4,
+  left_handed = 0x8,
+  x_left = 0x10,
+  y_left = 0x20,
+  z_left = 0x40,
+  right_handed = 0x80,
+  x_up = 0x100,
+  y_up = 0x200,
+  z_up = 0x400,
+  zero_to_one = 0x800,
+  x_down = 0x1000,
+  y_down = 0x2000,
+  z_down = 0x4000,
+  transpose = 0x8000
+};
+PONOS_ENABLE_BITMASK_OPERATORS(transform_options);
 
 class Transform2 {
 public:
@@ -242,37 +264,37 @@ public:
     }
   }
 
-  // ***********************************************************************
+  // **************************************************************************
   //                           STATIC  METHODS
-  // ***********************************************************************
+  // **************************************************************************
   /// Look At Transform
-  /// This transform is commonly (in graphics) used to orient a camera so that
+  /// \note This transform is commonly used (in graphics) to orient a camera so
   /// it looks at a certain **target** position from its **eye** position.
   /// Given an **up** vector to define the camera orientation, a new coordinate
   /// basis consisting of three vectors {r, u, v} is defined. Where
   /// v = (eye - target) / ||eye - target||
   /// r = -(v x up) / ||(v x up)||
   /// u = v x r
-  /// The transform is then composed of a translation (to camera **eye** position)
-  /// and a basis transform to align r with (1,0,0), u with (0,1,0) and v with
-  /// (0,0,1). The final matrix is
+  /// \note The transform is then composed of a translation (to camera **eye**
+  /// position) and a basis transform to align r with (1,0,0), u with (0,1,0)
+  /// and v with (0,0,1). The final matrix is
   ///     rx  ry  rz  -dot(t, r)
   ///     rx  ry  rz  -dot(t, u)
   ///     rx  ry  rz  -dot(t, v)
   ///      0   0   0      1
-  /// Note that this transform is built on a left handed coordinate system. Setting
-  /// the option **left_handed** to false switches to the right handed system.
+  /// \note Note that this transform is built on a left handed coordinate system.
   /// \param eye camera position
   /// \param target camera target
   /// \param up orientation vector
   /// \param left_handed
   /// \return
   static Transform lookAt(const point3 &eye, const point3 &target = {0, 0, 0},
-                          const vec3 &up = {0, 1, 0}, bool left_handed = true);
+                          const vec3 &up = {0, 1, 0},
+                          transform_options options = transform_options::left_handed);
   /// Orthographic Projection
   /// \note In an orthographic projection, parallel lines remain parallel and objects
   /// maintain the same size regardless the distance.
-  /// This transform projects points into the cube (-1,-1,-1) x (1, 1, 1). It is
+  /// \note This transform projects points into the cube (-1,-1,-1) x (1, 1, 1). It is
   /// also possible to choose to project to (-1,-1, 0) x (1, 1, 1) with the
   /// zero_to_one option.
   /// \note The matrix takes the form:
@@ -280,14 +302,14 @@ public:
   ///         0         2 / (t - b)       0         -(t + b) / (t - b)
   ///         0             0         2 / (f - n)   -(f + n) / (f - n)
   ///         0             0             0                  1
-  /// In the case of zero_to_one == true, the matrix becomes:
+  /// \note In the case of zero_to_one == true, the matrix becomes:
   ///     2 / (r - l)       0             0         -(r + l) / (r - l)
   ///         0         2 / (t - b)       0         -(t + b) / (t - b)
   ///         0             0         1 / (f - n)          n / (f - n)
   ///         0             0             0                  1
-  /// \note - Note that n > f. This function negates the values of near and far in case
-  /// the given values are f > n. Because by default, this transform uses a
-  /// left-handed coordinate system.
+  /// \note - Note that n > f. This function negates the values of near and
+  /// far in case the given values are f > n. Because by default, this
+  /// transform uses a left-handed coordinate system.
   /// \param left
   /// \param right
   /// \param bottom
@@ -297,15 +319,41 @@ public:
   /// \param left_handed
   /// \param zero_to_one
   /// \return
-  static Transform ortho(real_t left = -1, real_t right = 1, real_t bottom = -1, real_t top = 1,
-                         real_t near = 1, real_t far = -1, bool left_handed = true,
-                         bool zero_to_one = false);
+  static Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
+                         real_t near, real_t far,
+                         transform_options options = transform_options::left_handed);
+  /// Perspective Projection
+  /// \note The perspective projection transforms the view frustrum (a pyramid
+  /// truncated by a near plane and a far plane, both orthogonal to the view
+  /// direction) into the cube (-1,-1,-1) x (1, 1, 1).
+  /// \note In a right-handed coordinate system when x points to the right, z
+  /// points forward if y points downward and z points backwards if y points
+  /// upwards.
+  /// \note In a left-handed coordinate system when x points to the right, z
+  /// points forwards if y points upward and z points backward if y points
+  /// downwards.
+  ///
+  /// \note It is also possible to choose to project to (-1,-1, 0) x (1, 1, 1)
+  /// with the zero_to_one option.
+  /// \param fovy
+  /// \param aspect_ratio
+  /// \param near
+  /// \param far
+  /// \param left_handed
+  /// \param zero_to_one
+  /// \return
+  static Transform perspective(real_t fovy_in_degrees,
+                               real_t aspect_ratio,
+                               real_t near,
+                               real_t far,
+                               transform_options options = transform_options::left_handed);
   /// \param fovy
   /// \param aspect
   /// \param z_near
   /// \param z_far
   /// \param zero_to_one
   /// \return
+  [[deprecated]]
   static Transform perspectiveRH(real_t fovy, real_t aspect, real_t z_near,
                                  real_t z_far, bool zero_to_one = false) {
     const real_t tan_half_fovy = std::tan(RADIANS(fovy / 2.f));
@@ -329,6 +377,7 @@ public:
   /// \param target
   /// \param up
   /// \return
+  [[deprecated]]
   static Transform lookAtRH(const point3 &pos,
                             const point3 &target,
                             const vec3 &up) {
@@ -372,15 +421,21 @@ Transform rotateY(real_t angle);
 Transform rotateZ(real_t angle);
 Transform rotate(real_t angle, const vec3 &axis);
 // Same as OpenGL convention
+[[deprecated]]
 Transform frustumTransform(real_t left, real_t right, real_t bottom, real_t top,
                            real_t near, real_t far);
+[[deprecated]]
 Transform perspective(real_t fovy, real_t aspect, real_t zNear, real_t zFar);
+[[deprecated]]
 Transform perspective(real_t fovy, real_t zNear, real_t zFar);
+[[deprecated]]
 Transform lookAt(const point3 &pos, const point3 &target, const vec3 &up);
+[[deprecated]]
 Transform lookAtRH(const point3 &pos, const point3 &target, const vec3 &up);
+[[deprecated]]
 Transform ortho(real_t left, real_t right, real_t bottom, real_t top,
                 real_t near = -1.f, real_t far = 1.f);
-
+[[deprecated]]
 Transform orthographic(real_t znear, real_t zfar);
 } // namespace ponos
 
