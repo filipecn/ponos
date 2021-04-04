@@ -53,7 +53,10 @@ enum class transform_options {
   x_down = 0x1000,
   y_down = 0x2000,
   z_down = 0x4000,
-  transpose = 0x8000
+  transpose = 0x8000,
+  flip_x = 0x10000,
+  flip_y = 0x20000,
+  flip_z = 0x40000,
 };
 PONOS_ENABLE_BITMASK_OPERATORS(transform_options);
 

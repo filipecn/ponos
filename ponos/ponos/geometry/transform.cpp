@@ -167,6 +167,7 @@ Transform Transform::ortho(real_t left,
                            transform_options options) {
   const auto zero_to_one = testMaskBit(options, transform_options::zero_to_one);
   auto right_handed = testMaskBit(options, transform_options::right_handed);
+  auto flip_y = testMaskBit(options, transform_options::flip_y);
 
   auto w_inv = 1 / (right - left);
   auto h_inv = 1 / (top - bottom);
@@ -179,7 +180,7 @@ Transform Transform::ortho(real_t left,
   m[0][3] = -(right + left) * w_inv;
   // row 1
   m[1][0] = 0;
-  m[1][1] = 2 * h_inv;
+  m[1][1] = (flip_y ? -1.f : 1.f) * 2 * h_inv;
   m[1][2] = 0;
   m[1][3] = -(top + bottom) * h_inv;
   // row 2
@@ -192,6 +193,7 @@ Transform Transform::ortho(real_t left,
   m[3][1] = 0;
   m[3][2] = 0;
   m[3][3] = 1;
+
   return {m, inverse(m)};
 }
 
@@ -202,6 +204,7 @@ Transform Transform::perspective(real_t fovy_in_degrees,
                                  transform_options options) {
   const auto zero_to_one = testMaskBit(options, transform_options::zero_to_one);
   auto right_handed = testMaskBit(options, transform_options::right_handed);
+  auto flip_y = testMaskBit(options, transform_options::flip_y);
 
   auto y_scale = 1.f / std::tan(Trigonometry::degrees2radians(fovy_in_degrees) * 0.5f);
   auto d_inv = 1 / (far - near);
@@ -214,7 +217,7 @@ Transform Transform::perspective(real_t fovy_in_degrees,
   m[0][3] = 0;
   // row 1
   m[1][0] = 0;
-  m[1][1] = y_scale;
+  m[1][1] = (flip_y ? -1.f : 1.f) * y_scale;
   m[1][2] = 0;
   m[1][3] = 0;
   // row 2
