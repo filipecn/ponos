@@ -73,15 +73,27 @@
 #ifdef INFO_ENABLED
 
 #ifndef PONOS_PING
-#define PONOS_PING spdlog::info("[PING] in [{}][{}][{}]", __FILE__, __LINE__, __FUNCTION__);
+#define PONOS_PING spdlog::info("[{}][{}][{}]", __FILE__, __LINE__, __FUNCTION__);
 #endif
 
 #ifndef PONOS_LOG
-#define PONOS_LOG(A) spdlog::info("[LOG] in [{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#define PONOS_LOG(A) spdlog::info("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#endif
+
+#ifndef PONOS_LOG_WARNING
+#define PONOS_LOG_WARNING(A) spdlog::warn("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#endif
+
+#ifndef PONOS_LOG_ERROR
+#define PONOS_LOG_ERROR(A) spdlog::error("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#endif
+
+#ifndef PONOS_LOG_CRITICAL
+#define PONOS_LOG_CRITICAL(A) spdlog::critical("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
 #endif
 
 #ifndef PONOS_LOG_VARIABLE
-#define PONOS_LOG_VARIABLE(A) spdlog::info("[LOG] in [{}][{}][{}]: {} = {}", __FILE__, __LINE__, __FUNCTION__, #A, A);
+#define PONOS_LOG_VARIABLE(A) spdlog::info("[{}][{}][{}]: {} = {}", __FILE__, __LINE__, __FUNCTION__, #A, A);
 #endif
 
 #else
@@ -99,13 +111,13 @@
 #define PONOS_CHECK_EXP(expr) \
   if(expr) {}          \
   else {                      \
-    spdlog::warn("[CHECK_EXP FAIL] in [{}][{}][{}]", __FILE__, __LINE__, (#expr));\
+    spdlog::warn("[{}][{}][CHECK_EXP FAIL {}]", __FILE__, __LINE__, (#expr));\
   }
 
 #define PONOS_CHECK_EXP_WITH_LOG(expr, M) \
   if(expr) {}          \
   else {                      \
-    spdlog::warn("[CHECK_EXP FAIL] in [{}][{}][{}]: {}", __FILE__, __LINE__, (#expr), M);\
+    spdlog::warn("[{}][{}][CHECK_EXP FAIL {}]: {}", __FILE__, __LINE__, (#expr), M);\
   }
 #else
 
@@ -124,13 +136,13 @@
 #define PONOS_ASSERT(expr) \
   if(expr) {}          \
   else {                   \
-    spdlog::error("[ASSERT FAIL] in [{}][{}][{}]", __FILE__, __LINE__, #expr);\
+    spdlog::error("[{}][{}][ASSERT FAIL {}]", __FILE__, __LINE__, #expr);\
     debugBreak();                                                                         \
   }
 #define PONOS_ASSERT_WITH_LOG(expr, M) \
   if(expr) {}          \
   else {                   \
-    spdlog::error("[ASSERT FAIL] in [{}][{}][{}]: {}", __FILE__, __LINE__, #expr, M);\
+    spdlog::error("[{}][{}][ASSERT FAIL {}]: {}", __FILE__, __LINE__, #expr, M);\
     debugBreak();                                                                         \
   }
 #else

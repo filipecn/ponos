@@ -39,6 +39,9 @@ TEST_CASE("debug macros", "[log]") {
   }
   PONOS_PING
   PONOS_LOG(3)
+  PONOS_LOG_WARNING("warning")
+  PONOS_LOG_ERROR("error")
+  PONOS_LOG_CRITICAL("critical")
   int a = 0;
   PONOS_LOG_VARIABLE(a)
   PONOS_CHECK_EXP(3 == 3)
