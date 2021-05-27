@@ -274,7 +274,7 @@ public:
     case AddressMode::MIRROR:
     default:break;
     }
-    FATAL_ASSERT(fi >= 0 && fi < grid_.data_.size());
+    PONOS_ASSERT(fi >= 0 && fi < grid_.data_.size());
     return grid_.data()[fi];
   }
   /// \param world_position (in world coordinates)
@@ -399,7 +399,7 @@ public:
     case AddressMode::NONE:
     default:break;
     }
-    FATAL_ASSERT(fi >= 0 && fi < grid_.data_.size());
+    PONOS_ASSERT(fi >= 0 && fi < grid_.data_.size());
     return grid_.data()[fi];
   }
 /// \param world_position (in world coordinates)
@@ -809,7 +809,7 @@ public:
     case AddressMode::MIRROR:break;
     default:break;
     }
-    FATAL_ASSERT(grid_.data().stores(fij));
+    PONOS_ASSERT(grid_.data().stores(fij));
     return grid_.data()[fij];
   }
   /// \param world_position (in world coordinates)
@@ -943,7 +943,7 @@ public:
     case AddressMode::MIRROR:break;
     default:break;
     }
-    FATAL_ASSERT(grid_.data().stores(fij));
+    PONOS_ASSERT(grid_.data().stores(fij));
     return grid_.data()[fij];
   }
   /// \param world_position (in world coordinates)

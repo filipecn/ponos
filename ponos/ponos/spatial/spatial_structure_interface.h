@@ -78,8 +78,8 @@ public:
    */
   virtual ObjectType *intersect(const ponos::Ray3 &r,
                                 float *t = nullptr) const {
-    UNUSED_VARIABLE(t);
-    UNUSED_VARIABLE(r);
+    PONOS_UNUSED_VARIABLE(t);
+    PONOS_UNUSED_VARIABLE(r);
     return nullptr;
   }
 };

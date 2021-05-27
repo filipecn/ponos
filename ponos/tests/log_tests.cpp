@@ -2,8 +2,54 @@
 
 #include <ponos/log/memory_dump.h>
 #include <ponos/log/console_colors.h>
+#include <ponos/log/debug.h>
 
 using namespace ponos;
+
+TEST_CASE("debug macros", "[log]") {
+  SECTION("flow") {
+    {
+      auto rif = [](int a, int b) -> bool {
+        PONOS_RETURN_IF(a == b, true)
+        return false;
+      };
+      auto rnif = [](int a, int b) -> bool {
+        PONOS_RETURN_IF_NOT(a == b, true)
+        return false;
+      };
+      REQUIRE(!rif(3, 2));
+      REQUIRE(rif(3, 3));
+      REQUIRE(rnif(3, 2));
+      REQUIRE(!rnif(3, 3));
+    }
+    {
+      auto rif = [](int a, int b) -> bool {
+        PONOS_RETURN_IF(a == b, true)
+        return false;
+      };
+      auto rnif = [](int a, int b) -> bool {
+        PONOS_RETURN_IF_NOT_WITH_LOG(a == b, true, "message")
+        return false;
+      };
+      REQUIRE(!rif(3, 2));
+      REQUIRE(rif(3, 3));
+      REQUIRE(rnif(3, 2));
+      REQUIRE(!rnif(3, 3));
+    }
+  }
+  PONOS_PING
+  PONOS_LOG(3)
+  int a = 0;
+  PONOS_LOG_VARIABLE(a)
+  PONOS_CHECK_EXP(3 == 3)
+  PONOS_CHECK_EXP(3 == 2)
+  PONOS_CHECK_EXP_WITH_LOG(3 == 3, "message")
+  PONOS_CHECK_EXP_WITH_LOG(3 == 2, "message")
+  PONOS_ASSERT(3 == 3)
+  PONOS_ASSERT(3 == 2)
+  PONOS_ASSERT_WITH_LOG(3 == 3, "message")
+  PONOS_ASSERT_WITH_LOG(3 == 2, "message")
+}
 
 TEST_CASE("Console Colors", "[log]") {
 
@@ -62,7 +108,7 @@ TEST_CASE("Console Colors", "[log]") {
   }
   std::cout << ConsoleColors::reset << "reset\n";
   std::cout << ConsoleColors::combine(ConsoleColors::blink, ConsoleColors::green) <<
-  "blink green " << ConsoleColors::reset << std::endl;
+            "blink green " << ConsoleColors::reset << std::endl;
 #undef PRINT_COLOR_NAME
 }
 
@@ -119,7 +165,7 @@ TEST_CASE("MemoryDumper", "[log]") {
       S v[5] = {{1, 1, 1}, {2, 2, 2},
                 {3, 3, 3}, {4, 4, 4}, {5, 5, 5}};
       MemoryDumper::dump(v, 5, 16, memory_dumper_options::colored_output
-                         | memory_dumper_options::cache_align,
+                             | memory_dumper_options::cache_align,
                          {
                              {0,
                               sizeof(S),
@@ -159,7 +205,7 @@ TEST_CASE("MemoryDumper", "[log]") {
       S v[5] = {{1, 1, 1}, {2, 2, 2},
                 {3, 3, 3}, {4, 4, 4}, {5, 5, 5}};
       MemoryDumper::dump(v, 5, 16, memory_dumper_options::colored_output
-                         | memory_dumper_options::cache_align,
+                             | memory_dumper_options::cache_align,
                          {
                              {0,
                               sizeof(S),

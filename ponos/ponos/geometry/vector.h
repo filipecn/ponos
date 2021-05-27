@@ -211,7 +211,7 @@ public:
     return *this;
   }
   Vector3<T> &operator/=(T f) {
-    CHECK_FLOAT_EQUAL(f, 0.f);
+    PONOS_CHECK_EXP(Check::is_zero(f))
     T inv = 1.f / f;
     x *= inv;
     y *= inv;

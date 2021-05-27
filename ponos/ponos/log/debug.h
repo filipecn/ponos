@@ -31,91 +31,130 @@
 #include <sstream>
 #include <spdlog/spdlog.h>
 
-#ifndef UNUSED_VARIABLE
-#define UNUSED_VARIABLE(x) ((void)x)
+#ifndef PONOS_DEBUG
+#define PONOS_DEBUG
 #endif
+
+#ifndef CHECKS_ENABLED
+#define CHECKS_ENABLED
+#endif
+
+#ifndef ASSERTIONS_ENABLED
+#define ASSERTIONS_ENABLED
+#endif
+
+#ifndef INFO_ENABLED
+#define INFO_ENABLED
+#endif
+
+/****************************************************************************
+                                 UTILS
+****************************************************************************/
 #ifndef LOG_LOCATION
 #define LOG_LOCATION "[" << __FILE__ << "][" << __LINE__ << "]"
 #endif
-#ifndef FATAL_ASSERT
-#define FATAL_ASSERT(A)                                                        \
-  {                                                                            \
-    if (!(A)) {                                                                \
-      std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
-      exit(1);                                                                 \
-    }                                                                          \
-  }
+/****************************************************************************
+                          COMPILATION WARNINGS
+****************************************************************************/
+#ifndef PONOS_UNUSED_VARIABLE
+#define PONOS_UNUSED_VARIABLE(x) ((void)x)
 #endif
-#ifndef ASSERT
-#define ASSERT(A)                                                              \
-  {                                                                            \
-    if (!(A))                                                                  \
-      std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
-  }
+/****************************************************************************
+                               DEBUG MODE
+****************************************************************************/
+#ifdef PONOS_DEBUG
+#define PONOS_DEBUG_CODE(CODE_CONTENT) {CODE_CONTENT}
+#else
+#define PONOS_DEBUG_CODE(CODE_CONTENT)
+#endif
+/****************************************************************************
+                                 INFO
+****************************************************************************/
+#ifdef INFO_ENABLED
+
+#ifndef PONOS_PING
+#define PONOS_PING spdlog::info("[PING] in [{}][{}][{}]", __FILE__, __LINE__, __FUNCTION__);
 #endif
 
-#ifndef ASSERT_MESSAGE
-#define ASSERT_MESSAGE(A, B)                                                   \
-  {                                                                            \
-    if (!(A))                                                                  \
-      std::cerr << "Assertion failed in " << LOG_LOCATION << std::endl         \
-                << B << std::endl;                                             \
-  }
-#endif
-#ifndef ASSERT_EQ
-#define ASSERT_EQ(A, B)                                                        \
-  {                                                                            \
-    if ((A) != (B)) {                                                          \
-      std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
-      std::cout << (A) << " != " << (B) << std::endl;                          \
-    }                                                                          \
-  }
-#endif
-#ifndef CHECK_IN_BETWEEN
-#define CHECK_IN_BETWEEN(A, B, C)                                              \
-  {                                                                            \
-    if (!((A) >= (B) && (A) <= (C)))                                           \
-      std::cout << "Assertion failed in " << LOG_LOCATION << std::endl;        \
-  }
-#endif
-#ifndef CHECK_FLOAT_EQUAL
-#define CHECK_FLOAT_EQUAL(A, B)                                                \
-  {                                                                            \
-    if (fabs((A) - (B)) < 1e-8)                                                \
-      std::cout << LOG_LOCATION << " " << std::endl;                           \
-  }
+#ifndef PONOS_LOG
+#define PONOS_LOG(A) spdlog::info("[LOG] in [{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
 #endif
 
-#ifndef PING
-#define PING std ::cerr << LOG_LOCATION << "[" << __FUNCTION__ << "]: PING\n";
+#ifndef PONOS_LOG_VARIABLE
+#define PONOS_LOG_VARIABLE(A) spdlog::info("[LOG] in [{}][{}][{}]: {} = {}", __FILE__, __LINE__, __FUNCTION__, #A, A);
 #endif
 
-#ifndef LOG
-#define LOG std::cout << LOG_LOCATION << " "
-#endif
-#ifndef PRINT
-#define PRINT(A) std::cout << A << std::endl;
-#endif
-#ifndef DUMP_VECTOR
-#define DUMP_VECTOR(V)                                                         \
-  {                                                                            \
-    std::cout << "VECTOR in " << LOG_LOCATION << std::endl;                    \
-    for (size_t i = 0; i < V.size(); ++i)                                      \
-      std::cout << V[i] << " ";                                                \
-    std::cout << std::endl;                                                    \
+#else
+
+#define PONOS_PING
+#define PONOS_LOG
+#define PONOS_LOG_VARIABLE
+
+#endif // CHECKS_ENABLED
+/****************************************************************************
+                                 CHECKS
+****************************************************************************/
+#ifdef CHECKS_ENABLED
+
+#define PONOS_CHECK_EXP(expr) \
+  if(expr) {}          \
+  else {                      \
+    spdlog::warn("[CHECK_EXP FAIL] in [{}][{}][{}]", __FILE__, __LINE__, (#expr));\
   }
-#endif
-#ifndef DUMP_MATRIX
-#define DUMP_MATRIX(M)                                                         \
-  {                                                                            \
-    std::cout << "MATRIX in " << LOG_LOCATION << std::endl;                    \
-    for (int i = 0; i < M.size(); ++i) {                                       \
-      for (int j = 0; j < M[i].size(); ++j)                                    \
-        std::cout << M[i][j] << " ";                                           \
-    }                                                                          \
-    std::cout << std::endl;                                                    \
+
+#define PONOS_CHECK_EXP_WITH_LOG(expr, M) \
+  if(expr) {}          \
+  else {                      \
+    spdlog::warn("[CHECK_EXP FAIL] in [{}][{}][{}]: {}", __FILE__, __LINE__, (#expr), M);\
   }
-#endif
+#else
+
+#define PONOS_CHECK_EXP(expr)
+#define PONOS_CHECK_EXP_WITH_LOG(expr, M)
+
+#endif // CHECKS_ENABLED
+/****************************************************************************
+                             ASSERTION
+****************************************************************************/
+#ifdef ASSERTIONS_ENABLED
+
+//#define debugBreak() asm ("int 3")
+#define debugBreak()
+
+#define PONOS_ASSERT(expr) \
+  if(expr) {}          \
+  else {                   \
+    spdlog::error("[ASSERT FAIL] in [{}][{}][{}]", __FILE__, __LINE__, #expr);\
+    debugBreak();                                                                         \
+  }
+#define PONOS_ASSERT_WITH_LOG(expr, M) \
+  if(expr) {}          \
+  else {                   \
+    spdlog::error("[ASSERT FAIL] in [{}][{}][{}]: {}", __FILE__, __LINE__, #expr, M);\
+    debugBreak();                                                                         \
+  }
+#else
+
+#define PONOS_ASSERT(expr)
+#define PONOS_ASSERT_WITH_LOG(expr, M)
+
+#endif // ASSERTIONS_ENABLED
+/****************************************************************************
+                             CODE FLOW
+****************************************************************************/
+#define PONOS_RETURN_IF(A, R)                                      \
+  if (A) {                                                             \
+    return R;                                                             \
+  }
+#define PONOS_RETURN_IF_NOT(A, R)                                      \
+  if (!(A)) {                                                             \
+    return R;                                                             \
+  }
+#define PONOS_RETURN_IF_NOT_WITH_LOG(A, R, M)                         \
+  if (!(A)) {                                                         \
+    PONOS_LOG(M)                                                                  \
+    return R;                                                             \
+  }
 
 namespace ponos {
 

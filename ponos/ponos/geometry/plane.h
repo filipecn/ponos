@@ -131,8 +131,8 @@ public:
   [[nodiscard]] bbox2 boundingBox() const override { return bbox2(); }
   void closestIntersection(const Ray2 &r,
                            CurveRayIntersection *i) const override {
-    UNUSED_VARIABLE(r);
-    UNUSED_VARIABLE(i);
+    PONOS_UNUSED_VARIABLE(r);
+    PONOS_UNUSED_VARIABLE(i);
   }
   [[nodiscard]] double signedDistance(const point2 &p) const override {
     return (dot(vec2(p), vec2(normal)) - offset) / vec2(normal).length();

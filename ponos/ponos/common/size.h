@@ -87,6 +87,13 @@ public:
   T depth = T(0);
 };
 
+template<typename T> bool operator==(const Size3<T> &a, const Size3<T> &b) {
+  return a.width == b.width && a.height == b.height && a.depth == b.depth;
+}
+template<typename T> bool operator!=(const Size3<T> &a, const Size3<T> &b) {
+  return a.width != b.width || a.height != b.height || a.depth != b.depth;
+}
+
 using size2 = Size2<u32>;
 using size2_8 = Size2<u8>;
 using size2_16 = Size2<u16>;

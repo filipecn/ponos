@@ -59,7 +59,7 @@ public:
     return *this;
   }
   DenseMatrix<T> operator*(const DenseMatrix<T> &A) const {
-    FATAL_ASSERT(M == A.N && N == A.M);
+    PONOS_ASSERT(M == A.N && N == A.M);
     DenseMatrix<T> R(N, A.M);
     for (size_t r = 0; r < R.N; r++)
       for (size_t c = 0; c < R.M; c++) {

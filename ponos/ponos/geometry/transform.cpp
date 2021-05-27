@@ -18,13 +18,13 @@ void Transform2::reset() { m.setIdentity(); }
 
 void Transform2::translate(const vec2 &d) {
   // TODO update inverse and make a better implementarion
-  UNUSED_VARIABLE(d);
+  PONOS_UNUSED_VARIABLE(d);
 }
 
 void Transform2::scale(real_t x, real_t y) {
   // TODO update inverse and make a better implementarion
-  UNUSED_VARIABLE(x);
-  UNUSED_VARIABLE(y);
+  PONOS_UNUSED_VARIABLE(x);
+  PONOS_UNUSED_VARIABLE(y);
 }
 
 void Transform2::rotate(real_t angle) {
@@ -81,14 +81,14 @@ void Transform::reset() { m.setIdentity(); }
 
 void Transform::translate(const vec3 &d) {
   // TODO update inverse and make a better implementarion
-  UNUSED_VARIABLE(d);
+  PONOS_UNUSED_VARIABLE(d);
 }
 
 void Transform::scale(real_t x, real_t y, real_t z) {
   // TODO update inverse and make a better implementarion
-  UNUSED_VARIABLE(x);
-  UNUSED_VARIABLE(y);
-  UNUSED_VARIABLE(z);
+  PONOS_UNUSED_VARIABLE(x);
+  PONOS_UNUSED_VARIABLE(y);
+  PONOS_UNUSED_VARIABLE(z);
 }
 
 bool Transform::swapsHandedness() const {
@@ -111,10 +111,10 @@ Transform2 scale(const vec2 &s) {
 }
 
 Transform segmentToSegmentTransform(point3 a, point3 b, point3 c, point3 d) {
-  UNUSED_VARIABLE(a);
-  UNUSED_VARIABLE(b);
-  UNUSED_VARIABLE(c);
-  UNUSED_VARIABLE(d);
+  PONOS_UNUSED_VARIABLE(a);
+  PONOS_UNUSED_VARIABLE(b);
+  PONOS_UNUSED_VARIABLE(c);
+  PONOS_UNUSED_VARIABLE(d);
   // Consider two bases a b e f and c d g h
   // TODO implement
   return {};

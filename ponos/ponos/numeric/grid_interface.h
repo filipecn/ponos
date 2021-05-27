@@ -262,7 +262,7 @@ public:
     case GridDataPosition::V_FACE_CENTER:
       return vec2(0.5f, 0.f);
     default:
-      FATAL_ASSERT(false);
+      PONOS_ASSERT(false);
     }
     return vec2();
   }

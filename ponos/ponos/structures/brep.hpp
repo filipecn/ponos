@@ -89,7 +89,7 @@ template <class T, int D> int Brep<T, D>::addEdge(uint a, uint b) {
 template <class T, int D> void Brep<T, D>::removeEdge(uint i) {}
 
 template <class T, int D> int Brep<T, D>::addFace(const std::vector<int> &vs) {
-  UNUSED_VARIABLE(vs);
+  PONOS_UNUSED_VARIABLE(vs);
   /*int newFace = faces.size();
   bool manifold = true;
   for(int v : vs) {
@@ -107,11 +107,11 @@ template <class T, int D> int Brep<T, D>::addFace(const std::vector<int> &vs) {
 }
 
 template <class T, int D> void Brep<T, D>::removeFace(uint i) {
-  UNUSED_VARIABLE(i);
+  PONOS_UNUSED_VARIABLE(i);
 }
 
 template <class T, int D> void Brep<T, D>::updateVertex(uint v) {
-  UNUSED_VARIABLE(v);
+  PONOS_UNUSED_VARIABLE(v);
 }
 } // ponos namespace
 

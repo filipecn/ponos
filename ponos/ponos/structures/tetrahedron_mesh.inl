@@ -29,9 +29,9 @@ TMesh<V, F, E, P>::TMesh(const RawMesh &rm) {
     return;
   }
 #endif
-  FATAL_ASSERT(rm.meshDescriptor.elementSize == 4);
-  FATAL_ASSERT(rm.positionDescriptor.elementSize == 3);
-  FATAL_ASSERT(rm.primitiveType == GeometricPrimitiveType::TETRAHEDRA);
+  PONOS_ASSERT(rm.meshDescriptor.elementSize == 4);
+  PONOS_ASSERT(rm.positionDescriptor.elementSize == 3);
+  PONOS_ASSERT(rm.primitiveType == GeometricPrimitiveType::TETRAHEDRA);
   // add vertices on the same order as found in rm
   for (size_t v = 0; v < rm.positionDescriptor.count; v++) {
     vertices.emplace_back(point3(rm.positions[v * 3 + 0], rm.positions[v * 3 + 1],
@@ -64,7 +64,7 @@ TMesh<V, F, E, P>::TMesh(const RawMesh &rm) {
       edges[faces[faceId].edges[1]].face = faceId;
       faces[faceId].edges[2] = edgesMap[edgeVerticesSorted(c, a)];
       edges[faces[faceId].edges[2]].face = faceId;
-    } else FATAL_ASSERT(0);
+    } else PONOS_ASSERT(0);
     auto it = facesMap.find(makeFaceKey(a, c, b));
     if (it != facesMap.end()) {
       faces[faces.size() - 1].hface = it->second;
@@ -137,7 +137,7 @@ std::vector<size_t> TMesh<V, F, E, P>::tetrahedronVertices(size_t t) const {
       s.insert(edges[e].a);
       s.insert(edges[e].b);
     }
-  FATAL_ASSERT(s.size() == 4u);
+  PONOS_ASSERT(s.size() == 4u);
   std::vector<size_t> r;
   for (auto v : s)
     r.emplace_back(v);

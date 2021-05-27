@@ -512,7 +512,7 @@ RawMeshSPtr RawMeshes::segment(const point3 &a, const point3 &b) {
 
 RawMesh *RawMeshes::cube(const ponos::Transform &transform,
                          bool generateNormals, bool generateUVs) {
-  UNUSED_VARIABLE(transform);
+  PONOS_UNUSED_VARIABLE(transform);
   auto *mesh = new RawMesh();
   //  y          2      3
   //  |_x     6      7
@@ -574,7 +574,7 @@ RawMesh *RawMeshes::cube(const ponos::Transform &transform,
 }
 
 RawMesh *RawMeshes::quad(const ponos::Transform &transform, bool generate_uvs) {
-  UNUSED_VARIABLE(transform);
+  PONOS_UNUSED_VARIABLE(transform);
   auto *mesh = new RawMesh();
   mesh->addPosition({0.f, 0.f});
   mesh->addPosition({1.f, 0.f});
@@ -608,7 +608,7 @@ RawMesh *RawMeshes::quad(const ponos::Transform &transform, bool generate_uvs) {
 
 RawMeshSPtr RawMeshes::cubeWireframe(const Transform &transform,
                                      bool triangleFaces) {
-  UNUSED_VARIABLE(transform);
+  PONOS_UNUSED_VARIABLE(transform);
   RawMeshSPtr mesh = std::make_shared<RawMesh>();
   //  y          2      3
   //  |_x     6      7

@@ -88,17 +88,17 @@ void RawMesh::computeBBox() {
 point3 RawMesh::positionElement(size_t e, size_t v) const {
   return point3(
       positions[indices[e * meshDescriptor.elementSize + v].positionIndex *
-                    positionDescriptor.elementSize +
-                0],
+          positionDescriptor.elementSize +
+          0],
       positions[indices[e * meshDescriptor.elementSize + v].positionIndex *
-                    positionDescriptor.elementSize +
-                1],
+          positionDescriptor.elementSize +
+          1],
       ((positionDescriptor.elementSize == 3)
-           ? positions[indices[e * meshDescriptor.elementSize + v]
-                               .positionIndex *
-                           positionDescriptor.elementSize +
-                       2]
-           : 0.f));
+       ? positions[indices[e * meshDescriptor.elementSize + v]
+              .positionIndex *
+              positionDescriptor.elementSize +
+              2]
+       : 0.f));
 }
 
 bbox3 RawMesh::elementBBox(size_t i) const {
@@ -106,17 +106,17 @@ bbox3 RawMesh::elementBBox(size_t i) const {
   for (size_t v = 0; v < meshDescriptor.elementSize; v++)
     b = make_union(b,
                    point3(positions[indices[i * meshDescriptor.elementSize + v]
-                                            .positionIndex *
-                                        positionDescriptor.elementSize +
-                                    0],
+                              .positionIndex *
+                              positionDescriptor.elementSize +
+                              0],
                           positions[indices[i * meshDescriptor.elementSize + v]
-                                            .positionIndex *
-                                        positionDescriptor.elementSize +
-                                    1],
+                              .positionIndex *
+                              positionDescriptor.elementSize +
+                              1],
                           positions[indices[i * meshDescriptor.elementSize + v]
-                                            .positionIndex *
-                                        positionDescriptor.elementSize +
-                                    2]));
+                              .positionIndex *
+                              positionDescriptor.elementSize +
+                              2]));
   return b;
 }
 
@@ -134,13 +134,13 @@ void RawMesh::buildInterleavedData() {
           texcoords[i * texcoordDescriptor.elementSize + k]);
   }
   interleavedDescriptor.elementSize = positionDescriptor.elementSize +
-                                      normalDescriptor.elementSize +
-                                      texcoordDescriptor.elementSize;
+      normalDescriptor.elementSize +
+      texcoordDescriptor.elementSize;
   interleavedDescriptor.count = positionDescriptor.count;
-  ASSERT_EQ(interleavedData.size(),
-            positionDescriptor.count * positionDescriptor.elementSize +
-                normalDescriptor.count * normalDescriptor.elementSize +
-                texcoordDescriptor.count * texcoordDescriptor.elementSize);
+  PONOS_CHECK_EXP(interleavedData.size() ==
+      positionDescriptor.count * positionDescriptor.elementSize +
+          normalDescriptor.count * normalDescriptor.elementSize +
+          texcoordDescriptor.count * texcoordDescriptor.elementSize)
 }
 
 void RawMesh::orientFaces(bool ccw) {
@@ -170,11 +170,11 @@ void RawMesh::orientFaces(bool ccw) {
 
 void RawMesh::clear() {
   meshDescriptor.elementSize = meshDescriptor.count =
-      positionDescriptor.elementSize = positionDescriptor.count =
-          normalDescriptor.elementSize = normalDescriptor.count =
-              texcoordDescriptor.elementSize = texcoordDescriptor.count =
-                  interleavedDescriptor.elementSize =
-                      interleavedDescriptor.count = 0;
+  positionDescriptor.elementSize = positionDescriptor.count =
+  normalDescriptor.elementSize = normalDescriptor.count =
+  texcoordDescriptor.elementSize = texcoordDescriptor.count =
+  interleavedDescriptor.elementSize =
+  interleavedDescriptor.count = 0;
   indices.clear();
   positions.clear();
   normals.clear();
@@ -186,16 +186,16 @@ void RawMesh::clear() {
 }
 
 void fitToBBox(RawMesh *rm, const bbox2 &bbox) {
-  UNUSED_VARIABLE(bbox);
+  PONOS_UNUSED_VARIABLE(bbox);
   float ratio = rm->bbox.size(1) / rm->bbox.size(0);
   if (rm->bbox.size(0) > rm->bbox.size(1))
     rm->apply(
         scale(1.f / rm->bbox.size(0), ratio * (1.f / rm->bbox.size(0)), 0) *
-        translate(point3() - rm->bbox.lower));
+            translate(point3() - rm->bbox.lower));
   else
     rm->apply(
         scale((1.f / rm->bbox.size(1)) / ratio, 1.f / rm->bbox.size(1), 0) *
-        translate(point3() - rm->bbox.lower));
+            translate(point3() - rm->bbox.lower));
   rm->computeBBox();
 }
 

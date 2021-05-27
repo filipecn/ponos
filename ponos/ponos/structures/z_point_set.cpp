@@ -41,7 +41,7 @@ ZPointSet::ZPointSet() {
 ZPointSet::~ZPointSet() = default;
 
 ZPointSet::ZPointSet(uint maxCoordinates) : ZPointSet() {
-  FATAL_ASSERT(isPowerOf2(maxCoordinates));
+  PONOS_ASSERT(isPowerOf2(maxCoordinates));
   resolution_ = point3(maxCoordinates, maxCoordinates, maxCoordinates);
   // TODO: solve this
   // auto h = 1.f / maxCoordinates;
@@ -60,7 +60,7 @@ void ZPointSet::update() {
     for (uint i = 0; i < end_; i++) {
       point3 gp = toSet_(positions_[points_[i].id]);
       points_[i].zcode = computeIndex(gp);
-      FATAL_ASSERT(points_[i].zcode <= maxZCode_);
+      PONOS_ASSERT(points_[i].zcode <= maxZCode_);
     }
     needZUpdate_ = false;
     needUpdate_ = true;
@@ -111,9 +111,9 @@ uint ZPointSet::add(point3 p) {
   points_[end_].active = true;
   positions_[points_[end_].id] = p;
   point3 sp = toSet_(p);
-  FATAL_ASSERT(sp >= point3() && sp <= resolution_);
+  PONOS_ASSERT(sp >= point3() && sp <= resolution_);
   points_[end_].zcode = computeIndex(sp);
-  FATAL_ASSERT(points_[end_].zcode <= maxZCode_);
+  PONOS_ASSERT(points_[end_].zcode <= maxZCode_);
   end_++;
   needUpdate_ = true;
   sizeChanged_ = true;
@@ -127,15 +127,15 @@ void ZPointSet::setPosition(uint i, point3 p) {
 }
 
 void ZPointSet::remove(uint i) {
-  FATAL_ASSERT(i < indices_.size());
-  FATAL_ASSERT(indices_[i] < points_.size());
+  PONOS_ASSERT(i < indices_.size());
+  PONOS_ASSERT(indices_[i] < points_.size());
   points_[indices_[i]].active = false;
   needUpdate_ = true;
   sizeChanged_ = true;
 }
 
 point3 ZPointSet::operator[](uint i) const {
-  FATAL_ASSERT(i < positions_.size());
+  PONOS_ASSERT(i < positions_.size());
   return positions_[i];
 }
 
@@ -218,8 +218,8 @@ int ZPointSet::intersect(const Ray3 &r, float e) {
 }
 
 void ZPointSet::cast(const Ray3 &r, const std::function<void(uint)> &f) {
-  UNUSED_VARIABLE(r);
-  UNUSED_VARIABLE(f);
+  PONOS_UNUSED_VARIABLE(r);
+  PONOS_UNUSED_VARIABLE(f);
 }
 
 } // namespace ponos

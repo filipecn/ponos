@@ -137,7 +137,7 @@ void report(struct triangulateio *io, int markers, int reporttriangles,
 #endif
 void triangulate(const RawMesh *input, const MeshData *data, RawMesh *output) {
 #ifdef TRIANGLE_INCLUDED
-  UNUSED_VARIABLE(output);
+  PONOS_UNUSED_VARIABLE(output);
   {
     FILE *fp = fopen("D.poly", "w+");
     fprintf(fp, "%lu 2 0 1\n", input->positionDescriptor.count);
@@ -308,15 +308,15 @@ free(in.segmentlist);
 free(in.pointmarkerlist);
       */
 #else
-  UNUSED_VARIABLE(input);
-  UNUSED_VARIABLE(data);
-  UNUSED_VARIABLE(output);
+  PONOS_UNUSED_VARIABLE(input);
+  PONOS_UNUSED_VARIABLE(data);
+  PONOS_UNUSED_VARIABLE(output);
 #endif
 }
 
 void tetrahedralize(const RawMesh *input, RawMesh *output) {
 #ifdef TETGEN_INCLUDED
-  FATAL_ASSERT(input->primitiveType == GeometricPrimitiveType::TRIANGLES);
+  PONOS_ASSERT(input->primitiveType == GeometricPrimitiveType::TRIANGLES);
   // add vertices
   tetgenio in, out;
   in.mesh_dim = 3;
@@ -362,8 +362,8 @@ void tetrahedralize(const RawMesh *input, RawMesh *output) {
   DUMP_VECTOR(input->positions);
   DUMP_VECTOR(output->positions);
 #else
-  UNUSED_VARIABLE(input);
-  UNUSED_VARIABLE(output);
+  PONOS_UNUSED_VARIABLE(input);
+  PONOS_UNUSED_VARIABLE(output);
 #endif
 }
 

@@ -64,7 +64,7 @@ public:
         return;
       firstIndex_ = find(s, 0, s.end_, first_, depth, &upperBound_);
       cur_ = firstIndex_;
-      FATAL_ASSERT(lastIndex_ <= static_cast<int>(zps_.end_));
+      PONOS_ASSERT(lastIndex_ <= static_cast<int>(zps_.end_));
     }
     /// Given a range of indices from points_ array, finds the first element obeying
     /// f and depth restrictions. It performs a lower_bound operation, so the element
@@ -84,10 +84,10 @@ public:
           return 1;
         return 0;
       };
-      FATAL_ASSERT(z.end_ >= l + s);
+      PONOS_ASSERT(z.end_ >= l + s);
       if (upperBound)
         *upperBound = f + (1 << ((z.nbits_ - depth) * 3));
-      FATAL_ASSERT(depth <= z.maxDepth_);
+      PONOS_ASSERT(depth <= z.maxDepth_);
       return lower_bound<PointElement, uint>(&z.points_[l], s, f, comp) + l + 1;
     }
     /// \return true if there is more elements_ to iterate
@@ -97,8 +97,8 @@ public:
     }
     /// \return position of the current element in world coordinates
     point3 getWorldPosition() {
-      FATAL_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
-      FATAL_ASSERT(zps_.points_[cur_].id < zps_.positions_.size());
+      PONOS_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
+      PONOS_ASSERT(zps_.points_[cur_].id < zps_.positions_.size());
       return zps_.positions_[zps_.points_[cur_].id];
     }
     /// sets a new position to current element
@@ -110,12 +110,12 @@ public:
     }
     /// \return id of current element
     uint getId() {
-      FATAL_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
+      PONOS_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
       return zps_.points_[cur_].id;
     }
     /// \return pointer to current point element struct
     PointElement *pointElement() {
-      FATAL_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
+      PONOS_ASSERT(cur_ < static_cast<int>(zps_.points_.size()));
       return &zps_.points_[cur_];
     }
     /// advance on iteration
@@ -124,7 +124,7 @@ public:
     uint count() {
       if (lastIndex_ < 1) {
         lastIndex_ = find(zps_, static_cast<uint>(firstIndex_), zps_.end_ - firstIndex_, upperBound_, depth_);
-        FATAL_ASSERT(lastIndex_ >= firstIndex_);
+        PONOS_ASSERT(lastIndex_ >= firstIndex_);
       }
       return static_cast<uint>(lastIndex_ - firstIndex_);
     }
@@ -144,8 +144,8 @@ public:
     /// \param f **[optional]** refinement criteria
     explicit search_tree(ZPointSet &z, std::function<bool(uint, uint)> f =
     [](uint id, uint depth) -> bool {
-      UNUSED_VARIABLE(id);
-      UNUSED_VARIABLE(depth);
+      PONOS_UNUSED_VARIABLE(id);
+      PONOS_UNUSED_VARIABLE(depth);
       return true;
     })
         : Octree<NodeElement>(), zps_(z) {
@@ -194,8 +194,8 @@ public:
     void computePointsIndices() {
       std::function<void(Octree<NodeElement>::Node *, uint, uint)>
           f = [&](Octree<NodeElement>::Node *node, uint l, uint s) {
-        UNUSED_VARIABLE(l);
-        UNUSED_VARIABLE(s);
+        PONOS_UNUSED_VARIABLE(l);
+        PONOS_UNUSED_VARIABLE(s);
         if (!node)
           return;
         node->data.pointIndex = iterator::find(zps_, l, s, node->data.zcode, node->level());
