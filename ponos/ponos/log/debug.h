@@ -72,27 +72,27 @@
 #ifdef INFO_ENABLED
 
 #ifndef PONOS_PING
-#define PONOS_PING Log::info("[{}][{}][{}]", __FILE__, __LINE__, __FUNCTION__);
+#define PONOS_PING ponos::Log::info("[{}][{}][{}]", __FILE__, __LINE__, __FUNCTION__);
 #endif
 
 #ifndef PONOS_LOG
-#define PONOS_LOG(A) Log::info("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#define PONOS_LOG(A) ponos::Log::info("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
 #endif
 
 #ifndef PONOS_LOG_WARNING
-#define PONOS_LOG_WARNING(A) Log::warn("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#define PONOS_LOG_WARNING(A) ponos::Log::warn("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
 #endif
 
 #ifndef PONOS_LOG_ERROR
-#define PONOS_LOG_ERROR(A) Log::error("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
+#define PONOS_LOG_ERROR(A) ponos::Log::error("[{}][{}][{}]: {}", __FILE__, __LINE__, __FUNCTION__, A);
 #endif
 
 #ifndef PONOS_LOG_CRITICAL
-#define PONOS_LOG_CRITICAL(A) Log::critical("[{}][{}][{}]: %s", __FILE__, __LINE__, __FUNCTION__, A);
+#define PONOS_LOG_CRITICAL(A) ponos::Log::critical("[{}][{}][{}]: %s", __FILE__, __LINE__, __FUNCTION__, A);
 #endif
 
 #ifndef PONOS_LOG_VARIABLE
-#define PONOS_LOG_VARIABLE(A) Log::info("[{}][{}][{}]: {} = {}", __FILE__, __LINE__, __FUNCTION__, #A, A);
+#define PONOS_LOG_VARIABLE(A) ponos::Log::info("[{}][{}][{}]: {} = {}", __FILE__, __LINE__, __FUNCTION__, #A, A);
 #endif
 
 #else
@@ -110,13 +110,13 @@
 #define PONOS_CHECK_EXP(expr) \
   if(expr) {}          \
   else {                      \
-    Log::warn("[{}][{}][CHECK_EXP FAIL {}]", __FILE__, __LINE__, (#expr));\
+    ponos::Log::warn("[{}][{}][CHECK_EXP FAIL {}]", __FILE__, __LINE__, (#expr));\
   }
 
 #define PONOS_CHECK_EXP_WITH_LOG(expr, M) \
   if(expr) {}          \
   else {                      \
-    Log::warn("[{}][{}][CHECK_EXP FAIL {}]: {}", __FILE__, __LINE__, (#expr), M);\
+    ponos::Log::warn("[{}][{}][CHECK_EXP FAIL {}]: {}", __FILE__, __LINE__, (#expr), M);\
   }
 #else
 
@@ -135,13 +135,13 @@
 #define PONOS_ASSERT(expr) \
   if(expr) {}          \
   else {                   \
-    Log::error("[{}][{}][ASSERT FAIL {}]", __FILE__, __LINE__, #expr);\
+    ponos::Log::error("[{}][{}][ASSERT FAIL {}]", __FILE__, __LINE__, #expr);\
     debugBreak();                                                                         \
   }
 #define PONOS_ASSERT_WITH_LOG(expr, M) \
   if(expr) {}          \
   else {                   \
-    Log::error("[{}][{}][ASSERT FAIL {}]: {}", __FILE__, __LINE__, #expr, M);\
+    ponos::Log::error("[{}][{}][ASSERT FAIL {}]: {}", __FILE__, __LINE__, #expr, M);\
     debugBreak();                                                                         \
   }
 #else
