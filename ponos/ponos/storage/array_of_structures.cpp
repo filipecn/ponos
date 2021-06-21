@@ -33,7 +33,7 @@ namespace ponos {
 u64 StructDescriptor::offsetOf(const std::string &field_name) const {
   auto it = field_id_map_.find(field_name);
   if (it == field_id_map_.end()) {
-    spdlog::error("Field {} not found.", field_name);
+    Log::error("Field {} not found.", field_name);
     return 0;
   }
   return offsetOf(it->second);
@@ -46,7 +46,7 @@ u64 StructDescriptor::offsetOf(u64 field_id) const {
 u64 StructDescriptor::sizeOf(const std::string &field_name) const {
   auto it = field_id_map_.find(field_name);
   if (it == field_id_map_.end()) {
-    spdlog::error("Field {} not found.", field_name);
+    Log::error("Field {} not found.", field_name);
     return 0;
   }
   return sizeOf(it->second);

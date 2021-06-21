@@ -33,7 +33,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <spdlog/spdlog.h>
+#include <ponos/log/logging.h>
 #include <ponos/geometry/math_element.h>
 #include<iostream>
 
@@ -319,11 +319,11 @@ public:
   AoS &operator=(std::vector<T> &&vector_data) {
     /// TODO: move operation is making a copy instead!
     if (!struct_descriptor.struct_size_) {
-      spdlog::warn("[AoS] Fields must be previously registered.");
+      Log::warn("[AoS] Fields must be previously registered.");
       return *this;
     }
     if (vector_data.size() * sizeof(T) % struct_descriptor.struct_size_ != 0)
-      spdlog::warn("[AoS] Vector data with incompatible size.");
+      Log::warn("[AoS] Vector data with incompatible size.");
     delete[]data_;
     data_ = nullptr;
     size_ = vector_data.size() * sizeof(T) / struct_descriptor.struct_size_;
@@ -354,7 +354,7 @@ public:
   template<typename T>
   FieldAccessor<T> field(u64 field_id) {
     if (field_id >= struct_descriptor.fields().size()) {
-      spdlog::error("Field with id {} not found.", field_id);
+      Log::error("Field with id {} not found.", field_id);
       return FieldAccessor<T>(nullptr, 0, 0);
     }
     return FieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[field_id].offset);
@@ -363,7 +363,7 @@ public:
   FieldAccessor<T> field(const std::string &name) {
     auto it = struct_descriptor.field_id_map_.find(name);
     if (it == struct_descriptor.field_id_map_.end()) {
-      spdlog::error("Field {} not found.", name);
+      Log::error("Field {} not found.", name);
       return FieldAccessor<T>(nullptr, 0, 0);
     }
     return FieldAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[it->second].offset);
@@ -371,7 +371,7 @@ public:
   template<typename T>
   FieldConstAccessor<T> field(u64 field_id) const {
     if (field_id >= struct_descriptor.fields().size()) {
-      spdlog::error("Field with id {} not found.", field_id);
+      Log::error("Field with id {} not found.", field_id);
       return FieldConstAccessor<T>(nullptr, 0, 0);
     }
     return FieldConstAccessor<T>(data_, struct_descriptor.struct_size_, struct_descriptor.fields_[field_id].offset);
@@ -380,7 +380,7 @@ public:
   FieldConstAccessor<T> field(const std::string &name) const {
     auto it = struct_descriptor.field_id_map_.find(name);
     if (it == struct_descriptor.field_id_map_.end()) {
-      spdlog::error("Field {} not found.", name);
+      Log::error("Field {} not found.", name);
       return FieldConstAccessor<T>(nullptr, 0, 0);
     }
     return FieldConstAccessor<T>(data_,
