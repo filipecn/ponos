@@ -28,7 +28,7 @@ TEST_CASE("debug macros", "[log]") {
         return false;
       };
       auto rnif = [](int a, int b) -> bool {
-        PONOS_RETURN_IF_NOT_WITH_LOG(a == b, true, "message")
+        PONOS_LOG_AND_RETURN_IF_NOT(a == b, true, "message")
         return false;
       };
       REQUIRE(!rif(3, 2));
@@ -37,8 +37,9 @@ TEST_CASE("debug macros", "[log]") {
       REQUIRE(!rnif(3, 3));
     }
   }
+  Log::use_colors = true;
   PONOS_PING
-  PONOS_LOG(3)
+  PONOS_LOG(std::to_string(3).c_str())
   PONOS_LOG_WARNING("warning")
   PONOS_LOG_ERROR("error")
   PONOS_LOG_CRITICAL("critical")
@@ -57,7 +58,7 @@ TEST_CASE("debug macros", "[log]") {
 TEST_CASE("Console Colors", "[log]") {
 
 #define PRINT_COLOR_NAME(COLOR) \
-  std::cout << COLOR << #COLOR << std::endl;
+  std::cout << (COLOR) << #COLOR << std::endl;
 
   PRINT_COLOR_NAME(ConsoleColors::default_color)
   PRINT_COLOR_NAME(ConsoleColors::black)

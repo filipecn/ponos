@@ -115,6 +115,15 @@ TEST_CASE("bitmask operators") {
 }
 
 TEST_CASE("Str", "[common]") {
+  SECTION("format") {
+    REQUIRE(Str::format("word") == "word");
+    REQUIRE(Str::format("word", 3) == "word");
+    REQUIRE(Str::format("word {}") == "word {}");
+    REQUIRE(Str::format("word {}", 3) == "word 3");
+    REQUIRE(Str::format("word {} word {}", 3) == "word 3 word {}");
+    REQUIRE(Str::format("word {} word {}", 3, 4) == "word 3 word 4");
+    REQUIRE(Str::format("word {} word {}", 3, 4, 5) == "word 3 word 4");
+  }//
   SECTION("split") {
     std::string a = "1 22 3 44 5";
     auto s = Str::split(a);
@@ -143,8 +152,8 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(s[3] == " 5");
   }//
   SECTION("concat") {
-//    std::string a = Str::concat("a", " ", 2, "b");
-//    REQUIRE(a == "a 2b");
+    std::string a = Str::concat("a", " ", 2, "b");
+    REQUIRE(a == "a 2b");
   }//
   SECTION("regex match") {
     REQUIRE(Str::match_r("subsequence123", "\\b(sub)([^ ]*)"));
@@ -183,7 +192,6 @@ TEST_CASE("Str", "[common]") {
     REQUIRE(s + 2 == "abc2");
     s = "3";
     REQUIRE(s == 3);
-    std::cerr << "asd" << s << std::endl;
   }//
 }
 

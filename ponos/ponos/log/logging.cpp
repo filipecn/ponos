@@ -1,4 +1,9 @@
-/// Copyright (c) 2020, FilipeCN.
+//
+// Created by filipecn on 20/06/2021.
+//
+
+
+/// Copyright (c) 2021, FilipeCN.
 ///
 /// The MIT License (MIT)
 ///
@@ -19,38 +24,27 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 ///
-///\file shadow_map.h
+///\file logging.cpp
 ///\author FilipeCN (filipedecn@gmail.com)
-///\date 2020-08-09
+///\date 2021-06-20
 ///
 ///\brief
 
-#ifndef PONOS_CIRCE_CIRCE_GL_GRAPHICS_SHADOW_MAP_H
-#define PONOS_CIRCE_CIRCE_GL_GRAPHICS_SHADOW_MAP_H
+#include <ponos/log/logging.h>
 
-#include <circe/scene/light.h>
-#include <circe/gl/io/render_texture.h>
-#include <circe/gl/graphics/shader.h>
+namespace ponos {
 
-namespace circe::gl {
+bool Log::use_colors = false;
 
-class ShadowMap {
-public:
-  explicit ShadowMap(const ponos::size2 &size = ponos::size2(1024, 1024));
-  ~ShadowMap();
-  void setLight(const circe::Light& light);
-  void render(const std::function<void()>& f);
-  void bind() const;
-  [[nodiscard]] const ponos::Transform& light_transform() const;
-  [[nodiscard]] const Texture& depthMap() const;
-private:
-  ponos::size2 size_;
-  Framebuffer depth_buffer_;
-  Texture depth_map_;
-  Program program_;
-  ponos::Transform light_transform_;
-};
+u8 Log::info_color = 247;//253;
+u8 Log::warn_color = 191;//215;
+u8 Log::error_color = 9;
+u8 Log::critical_color = 197;//196;
+
+u8 Log::info_label_color = 247;
+u8 Log::warn_label_color = 191;
+u8 Log::error_label_color = 9;
+u8 Log::critical_label_color = 197;
 
 }
 
-#endif //PONOS_CIRCE_CIRCE_GL_GRAPHICS_SHADOW_MAP_H

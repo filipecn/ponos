@@ -35,22 +35,62 @@
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <ponos/common/defs.h>
 
 namespace ponos {
 
 class Str {
-//   Condition to stop processing
-  static void concat(std::ostringstream &s) { (void(s)); }
-//
-  template<typename H, typename... T>
-  static void concat(std::ostringstream &s, H p, T... t) {
-    s << p;
-    concat(s, t...);
+  template<typename T>
+  static void format_r_(std::stringstream &s, const std::string &fmt, u32 i, const T &first) {
+    auto first_i = i;
+    while (i + 1 < fmt.size() && !(fmt[i] == '{' && fmt[i + 1] == '}'))
+      ++i;
+    if (i + 1 < fmt.size()) {
+      s << fmt.substr(first_i, i - first_i);
+      s << first;
+      s << fmt.substr(i + 2, fmt.size() - i - 2);
+    } else
+      s << fmt.substr(first_i, fmt.size() - first_i);
   }
+
+  template<typename T, typename...Ts>
+  static void format_r_(std::stringstream &s, const std::string &fmt, u32 i, const T &first, Ts &&... rest) {
+    // iterate until first occurrence of pair {}
+    auto first_i = i;
+    while (i + 1 < fmt.size() && !(fmt[i] == '{' && fmt[i + 1] == '}'))
+      ++i;
+    if (i + 1 < fmt.size()) {
+      s << fmt.substr(first_i, i - first_i);
+      s << first;
+      if constexpr(sizeof ...(rest) > 0)
+        format_r_(s, fmt, i + 2, std::forward<Ts>(rest)...);
+      else
+        s << fmt.substr(i + 2, fmt.size() - i - 2);
+    } else
+      s << fmt.substr(first_i, fmt.size() - first_i);
+  }
+
 public:
   // ***********************************************************************
   //                           STATIC METHODS
   // ***********************************************************************
+  ///
+  /// \tparam Ts
+  /// \param fmt
+  /// \param args
+  /// \return
+  template<typename... Ts>
+  static std::string format(const std::string &fmt, Ts &&... args) {
+    std::stringstream s;
+    std::string r;
+    if constexpr(sizeof...(args) > 0) {
+      format_r_(s, fmt, 0, std::forward<Ts>(args) ...);
+      r = s.str();
+    }
+    else
+      r = fmt;
+    return r;
+  }
   template<typename T>
   static std::string toHex(T i, bool leading_zeros = false, bool zero_x = false) {
     std::stringstream stream;
@@ -71,8 +111,8 @@ public:
   /// \return a single string of the resulting concatenation
   template<class... Args>
   static std::string concat(const Args &... args) {
-    std::ostringstream s;
-    concat(s, args...);
+    std::stringstream s;
+    (s << ... << args);
     return s.str();
   }
   /// Concatenate strings together separated by a separator
@@ -158,13 +198,13 @@ public:
   template<class... Args>
   void append(const Args &... args) {
     std::ostringstream s;
-    concat(s, args...);
+    (s << ... << args);
     s_ += s.str();
   }
   template<class... Args>
   void appendLine(const Args &... args) {
     std::ostringstream s;
-    concat(s, args...);
+    (s << ... << args);
     s_ += s.str() + '\n';
   }
   // ***********************************************************************

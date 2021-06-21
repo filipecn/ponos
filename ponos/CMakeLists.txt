@@ -85,6 +85,7 @@ set(PONOS_HEADERS
         ponos/geometry/vector.h
         ponos/geometry/vector.inl
         ponos/log/debug.h
+		ponos/log/logging.h
 		ponos/log/memory_dump.h
 		ponos/log/console_colors.h
 		ponos/parallel/parallel.h
@@ -139,7 +140,6 @@ target_link_libraries(ponos
 		${SPDLOG_LIBRARIES}
 		${ponos_LIBRARIES}
 		${PONOS_LIBRARIES})
-add_dependencies(ponos spdlog)
 
 if(BUILD_EXAMPLES)
  #       add_subdirectory(examples)
